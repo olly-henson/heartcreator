@@ -1,9 +1,9 @@
 # Meditation Nurture Sequence — LIVE GHL VERSION
-# Version 2 — updated 2026-06-30
+# Version 3 — updated 2026-07-02
 
 > These are the emails as they exist live in GHL.
 > Sequence: 9 emails (+ delivery), every other day, triggered by "Meditation Download" tag
-> CTA destination: https://ollyhenson.com/coaching-application
+> CTA destination: https://www.skool.com/heartcreator (updated 2026-07-02 — Heart Creator no longer offers 1-2-1 coaching, only the Skool Community. Email 9's link needs updating in GHL to point here instead of the old /coaching-application link.)
 
 ---
 
@@ -609,7 +609,7 @@ Olly
 ---
 
 ## Email 9
-**Action Name:** Email 9: Pitch — offer the solution to help regulate their nervous system and create.
+**Action Name:** Email 9: Pitch — invite them into the Heart Creator Community.
 **Subject:** The last manifestation email
 
 So {{contact.first_name}}...
@@ -620,22 +620,20 @@ Hopefully it's shifted your perspective on where you need to place your focus if
 
 Now that you know the steps that you need to follow...
 
-I'm going to make you an offer to implement them together.
+I'd love to invite you to implement them alongside me and a community of people doing exactly the same thing.
 
-This is in my 1-2-1 Heart Creator Program 💜
+This is the Heart Creator Community 💜
 
 Plain and simple...
 
-By the end of this program, you'll be able to access your subconscious mind, feel your future as real and create conscious change in your reality.
+Inside, you'll learn to access your subconscious mind, feel your future as real and create conscious change in your reality.
 
 You're going to be able to do that by learning and mastering Heart Coherence.
 
 A powerful practice that shifts you out of 'fight' or 'flight' and into your creative power.
 
-If you'd like to master Heart Coherence to create your reality, please apply 👉 ===> HERE
+If you'd like to join and start creating your reality, you can do that 👉 ===> HERE
 
-Once you've applied, please give me a few days to go over your application and I'll be in touch via WhatsApp and email with the next steps.
-
-Thank you,
+See you inside,
 
 Olly
