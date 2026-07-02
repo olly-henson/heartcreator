@@ -1,0 +1,397 @@
+<!-- HOMEPAGE | Olly Henson Coaching — ollyhenson.com -->
+<!-- GHL: One Custom HTML block. Section + column padding/margin = 0. Full Width. -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;900&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
+  .ohc-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Inter', sans-serif;
+    background: #080010;
+    color: #f8f4ff;
+  }
+
+  /* ── STARS ── */
+  .ohc-stars {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 5%  10%, rgba(255,255,255,0.95) 0%, transparent 100%),
+      radial-gradient(1px 1px at 22% 52%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 48% 8%,  rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 35%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 85% 62%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 75%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 38% 28%, rgba(216,180,254,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 18%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 3%  88%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 77% 92%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 33% 67%, rgba(255,255,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 55% 44%, rgba(216,180,254,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 89% 45%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 70% 15%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 12%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 82% 33%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 90%, rgba(216,180,254,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 96% 60%, rgba(255,255,255,0.6) 0%, transparent 100%);
+    animation: twinkle 7s ease-in-out infinite alternate;
+  }
+  .ohc-stars-2 {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 17% 43%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 73% 27%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 36% 81%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 91% 55%, rgba(255,255,255,0.55) 0%, transparent 100%),
+      radial-gradient(1px 1px at 7%  66%, rgba(216,180,254,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 57% 32%, rgba(255,255,255,0.45) 0%, transparent 100%),
+      radial-gradient(1px 1px at 64% 48%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    animation: twinkle 11s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes twinkle { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+
+  .ohc-nebula {
+    position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 1000px; height: 600px; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(107,33,168,0.07) 0%, rgba(88,28,135,0.03) 40%, transparent 70%);
+    animation: nebula-pulse 6s ease-in-out infinite;
+  }
+  @keyframes nebula-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+    50%       { transform: translateX(-50%) scale(1.08); opacity: 0.8; }
+  }
+
+  /* ── HERO ── */
+  .ohc-hero {
+    position: relative; overflow: hidden;
+    background: #050008;
+    padding: 80px 40px 72px;
+    text-align: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+
+  .ohc-name-tag {
+    display: inline-block; position: relative; z-index: 2;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.25);
+    padding: 5px 16px; border-radius: 50px; margin-bottom: 24px;
+  }
+
+  .ohc-h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(56px, 8vw, 110px);
+    font-weight: 400; line-height: 1.1;
+    color: #f8f4ff; margin: 0 auto 8px;
+    width: 100%;
+    position: relative; z-index: 2;
+  }
+  .ohc-mobile-br { display: none; }
+
+  .ohc-tagline {
+    font-size: clamp(13px, 1.5vw, 18px); color: rgba(255,255,255,0.75); line-height: 1.6;
+    max-width: 580px; margin: 0 auto 40px; position: relative; z-index: 2;
+    font-style: normal; letter-spacing: 3px; text-transform: uppercase; font-weight: 500;
+  }
+
+  .ohc-avatar-wrap {
+    position: relative; z-index: 2; margin-bottom: -8px;
+    width: 100%; max-width: 420px;
+  }
+  .ohc-avatar-wrap img {
+    width: 100%; display: block;
+    object-fit: cover; object-position: top;
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    filter: drop-shadow(0 0 40px rgba(255,255,255,0.2)) drop-shadow(0 0 80px rgba(255,255,255,0.1));
+  }
+
+  /* ── VIDEO ── */
+  .ohc-video-wrap {
+    background: linear-gradient(180deg, #050008 0%, #0f0025 50%, #080010 100%);
+    padding: 60px 40px;
+    text-align: center;
+  }
+  .ohc-video-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.6); margin-bottom: 16px;
+  }
+  .ohc-video-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3vw, 36px); color: #f8f4ff; font-weight: 700; margin-bottom: 32px;
+  }
+  .ohc-video-title em { font-style: italic; color: #a855f7; }
+
+  .ohc-video-container {
+    position: relative; max-width: 760px; margin: 0 auto;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 0 60px rgba(255,255,255,0.12), 0 0 120px rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .ohc-video-container video {
+    width: 100%; aspect-ratio: 16/9;
+    display: block; border: none;
+    background: #000;
+  }
+
+  /* ── CTAs ── */
+  .ohc-ctas {
+    background: #080010;
+    padding: 64px 40px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .ohc-ctas-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.6); margin-bottom: 14px;
+  }
+  .ohc-ctas h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3.5vw, 42px); color: #f8f4ff; font-weight: 700; margin-bottom: 40px;
+  }
+  .ohc-ctas h2 em { font-style: normal; color: #a855f7; }
+
+  .ohc-cta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; max-width: 860px; margin: 0 auto;
+  }
+
+  .ohc-cta-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px; padding: 28px 20px;
+    text-decoration: none; color: #f8f4ff;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .ohc-cta-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  .ohc-cta-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ohc-cta-icon svg { width: 26px; height: 26px; }
+
+  .ohc-cta-name {
+    font-weight: 700; font-size: 15px; color: #f8f4ff;
+  }
+  .ohc-cta-desc {
+    font-size: 12px; color: #c4b5fd; line-height: 1.4; text-align: center;
+  }
+
+  /* icon colours per platform */
+  .icon-yt   { background: rgba(255,0,0,0.15); border: 1px solid rgba(255,0,0,0.3); }
+  .icon-ig   { background: rgba(217,70,239,0.15); border: 1px solid rgba(217,70,239,0.3); }
+  .icon-sk   { background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); }
+  .icon-med  { background: rgba(217,70,239,0.15); border: 1px solid rgba(217,70,239,0.4); }
+
+  /* ── TESTIMONIALS ── */
+  .ohc-testi {
+    background: linear-gradient(180deg, #080010 0%, #0f0025 50%, #080010 100%);
+    padding: 64px 40px; text-align: center;
+  }
+  .ohc-testi-h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3.5vw, 38px); color: #f8f4ff; font-weight: 700; margin-bottom: 40px;
+  }
+  .ohc-testi-h2 em { font-style: italic; color: #a855f7; }
+  .ohc-testi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px; max-width: 860px; margin: 0 auto;
+  }
+  .ohc-card-t {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 18px; padding: 28px 24px; text-align: left; position: relative; overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .ohc-card-t:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(107,33,168,0.3); }
+  .ohc-card-t::before {
+    content: '\201C'; position: absolute; top: -8px; left: 16px;
+    font-size: 90px; color: rgba(168,85,247,0.12);
+    font-family: 'Playfair Display', serif; line-height: 1;
+  }
+  .ohc-testi-stars { color: #d946ef; font-size: 13px; margin-bottom: 10px; }
+  .ohc-testi-text {
+    font-size: 14px; line-height: 1.7; color: #c4b5fd; margin-bottom: 20px; position: relative; z-index: 1;
+  }
+  .ohc-testi-author { display: flex; align-items: center; gap: 10px; }
+  .ohc-avatar {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #d946ef, #6b21a8);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px; color: white;
+  }
+  .ohc-testi-name { font-weight: 600; font-size: 13px; color: #f8f4ff; }
+  .ohc-testi-role { font-size: 11px; color: rgba(196,181,253,0.6); margin-top: 2px; }
+
+  /* ── FOOTER ── */
+  .ohc-footer {
+    background: #040008; border-top: 1px solid rgba(168,85,247,0.12);
+    padding: 28px 40px; text-align: center;
+  }
+  .ohc-footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 10px; flex-wrap: wrap; }
+  .ohc-footer-links a {
+    font-size: 12px; color: rgba(196,181,253,0.45); text-decoration: none; transition: color 0.2s;
+  }
+  .ohc-footer-links a:hover { color: #a855f7; }
+  .ohc-footer-copy { font-size: 11px; color: rgba(196,181,253,0.25); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .ohc-hero { padding: 60px 20px 56px; }
+    .ohc-h1 { font-size: 72px !important; }
+    .ohc-tagline { font-size: 13px !important; letter-spacing: 2px; max-width: 260px !important; }
+    .ohc-video-wrap { padding: 48px 20px; }
+    .ohc-ctas { padding: 48px 20px; }
+    .ohc-testi { padding: 48px 20px; }
+    .ohc-footer { padding: 24px 20px; }
+    .ohc-cta-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div class="ohc-page">
+
+  <!-- HERO -->
+  <div class="ohc-hero">
+    <div class="ohc-stars"></div>
+    <div class="ohc-stars-2"></div>
+    <div class="ohc-nebula"></div>
+
+    <h1 class="ohc-h1">Olly Henson</h1>
+
+    <p class="ohc-tagline">Activating The World's <span style="color:#a855f7;">Heart</span></p>
+
+    <div class="ohc-avatar-wrap">
+      <img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a2ff592e5b9322bddd1e8d7.png" alt="Olly Henson"/>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="ohc-video-wrap">
+    <p class="ohc-video-label">Watch</p>
+    <h2 class="ohc-video-title">A bit more about <span style="color:#a855f7; font-style:normal;">me</span></h2>
+
+    <div class="ohc-video-container">
+      <video controls playsinline preload="metadata">
+        <source src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a368bcb6a6dd1b69a4dd0f2.mov" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <!-- CTAs -->
+  <div class="ohc-ctas">
+    <p class="ohc-ctas-eyebrow">Connect with Olly</p>
+    <h2>Where would you like<br>to go <span style="color:#a855f7;">next?</span></h2>
+
+    <div class="ohc-cta-grid">
+
+      <!-- Free Meditation -->
+      <a href="https://ollyhenson.com/meditation?utm_source=website&utm_medium=homepage&utm_campaign=meditation" class="ohc-cta-card">
+        <div class="ohc-cta-icon icon-med">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d946ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div class="ohc-cta-name">Free Meditation</div>
+        <div class="ohc-cta-desc">Download your free Heart Activation Meditation audio</div>
+      </a>
+
+      <!-- YouTube -->
+      <a href="https://www.youtube.com/@OllyHenson" target="_blank" rel="noopener" class="ohc-cta-card">
+        <div class="ohc-cta-icon icon-yt">
+          <svg viewBox="0 0 24 24" fill="#ff0000">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <div class="ohc-cta-name">YouTube</div>
+        <div class="ohc-cta-desc">Watch longer and deeper content on heart activation</div>
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/theollyhenson" target="_blank" rel="noopener" class="ohc-cta-card">
+        <div class="ohc-cta-icon icon-ig">
+          <svg viewBox="0 0 24 24" fill="#d946ef">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+          </svg>
+        </div>
+        <div class="ohc-cta-name">Instagram</div>
+        <div class="ohc-cta-desc">Learn how to activate the power of your heart on-the-go</div>
+      </a>
+
+      <!-- Skool -->
+      <a href="https://ollyhenson.com/coaching-application?utm_source=website&utm_medium=homepage&utm_campaign=coaching" class="ohc-cta-card">
+        <div class="ohc-cta-icon icon-sk">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="ohc-cta-name">Heart Creator Program</div>
+        <div class="ohc-cta-desc">Become the creator of your reality</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="ohc-testi">
+    <h2 class="ohc-testi-h2">What people are <em>saying</em></h2>
+    <div class="ohc-testi-grid">
+
+      <div class="ohc-card-t">
+        <div class="ohc-testi-stars">★★★★★</div>
+        <p class="ohc-testi-text">"The meditation is not overwhelmingly long or complicated — short and simple so that even I, having the worst monkey mind on the planet, feel I can do it."</p>
+        <div class="ohc-testi-author">
+          <div class="ohc-avatar">I</div>
+          <div>
+            <div class="ohc-testi-name">Isabell</div>
+            <div class="ohc-testi-role">Olly Henson's Coaching Client</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ohc-card-t">
+        <div class="ohc-testi-stars">★★★★★</div>
+        <p class="ohc-testi-text">"One of the biggest wins for this week: I can return to a relaxed state more reliably than before. Already feeling the difference."</p>
+        <div class="ohc-testi-author">
+          <div class="ohc-avatar">A</div>
+          <div>
+            <div class="ohc-testi-name">Anas</div>
+            <div class="ohc-testi-role">Olly Henson's Coaching Client</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="ohc-footer">
+    <nav class="ohc-footer-links">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </nav>
+    <p class="ohc-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script
+  src="https://link.kourse.com/js/external-tracking.js"
+  data-tracking-id="tk_068191bb481e45768fdbfea82d7d1b59">
+</script>

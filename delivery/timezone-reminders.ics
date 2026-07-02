@@ -1,0 +1,32 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Olly Henson Coaching//Timezone Reminders//EN
+BEGIN:VEVENT
+SUMMARY:⚠️ Update RSVP Email — UK clocks back (BST → GMT)
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261027
+DESCRIPTION:Update the Q&A Coaching Call RSVP email in GHL.\n\nChange to:\n7pm GMT · 8pm SAST · 10pm GST · 3pm EST · 2pm CST · 12pm PST\n\nNote: US clocks change on 1 Nov — gap week where US times are 1 hour off.
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⚠️ Update RSVP Email — US clocks back (EDT → EST)
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261102
+DESCRIPTION:Update the Q&A Coaching Call RSVP email in GHL.\n\nUS times now settled. Confirm email reads:\n7pm GMT · 8pm SAST · 10pm GST · 3pm EST · 2pm CST · 12pm PST
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⚠️ Update RSVP Email — US clocks forward (EST → EDT)
+DTSTART;VALUE=DATE:20270308
+DTEND;VALUE=DATE:20270309
+DESCRIPTION:Update the Q&A Coaching Call RSVP email in GHL.\n\nChange US times back to:\n2pm EDT · 1pm CDT · 11am PDT
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:⚠️ Update RSVP Email — UK clocks forward (GMT → BST)
+DTSTART;VALUE=DATE:20270329
+DTEND;VALUE=DATE:20270330
+DESCRIPTION:Update the Q&A Coaching Call RSVP email in GHL.\n\nChange to:\n7pm BST · 8pm SAST · 10pm GST · 2pm EDT · 1pm CDT · 11am PDT
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

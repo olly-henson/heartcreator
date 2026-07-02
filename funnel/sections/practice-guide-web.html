@@ -1,0 +1,310 @@
+<!-- PRACTICE GUIDE WEB PAGE | Olly Henson Coaching -->
+<!-- GHL: One Custom HTML block. Section + column padding/margin = 0. Full Width section. -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
+  .pg-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Inter', sans-serif;
+    background: #080010;
+    color: #f8f4ff;
+  }
+
+  /* ── HERO ── */
+  .pg-hero {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    overflow: hidden;
+  }
+  .pg-hero img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 38%;
+    display: block;
+  }
+  .pg-hero::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 140px;
+    background: linear-gradient(transparent, #080010);
+  }
+
+  /* ── BODY ── */
+  .pg-body {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 28px 80px;
+  }
+
+  /* ── EYEBROW ── */
+  .pg-eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: #a855f7; margin-bottom: 16px; display: block;
+  }
+
+  /* ── TITLE ── */
+  .pg-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 7vw, 56px);
+    font-weight: 900; line-height: 1.15;
+    color: #f8f4ff; margin: 0 0 20px;
+  }
+  .pg-h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, #d946ef, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .pg-subtitle {
+    font-size: clamp(17px, 3vw, 20px);
+    color: #c4b5fd; line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  /* ── DIVIDER ── */
+  .pg-divider {
+    width: 56px; height: 3px;
+    background: linear-gradient(135deg, #d946ef, #a855f7);
+    border-radius: 2px; margin-bottom: 40px;
+  }
+
+  /* ── SCIENCE BOX ── */
+  .pg-science {
+    background: linear-gradient(135deg, rgba(26,5,53,0.9), rgba(45,10,94,0.6));
+    border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 16px;
+    padding: 32px 28px;
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pg-science::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, #d946ef, #a855f7, transparent);
+  }
+  .pg-science-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: #d946ef; margin-bottom: 16px;
+  }
+  .pg-science p {
+    font-size: clamp(16px, 2.5vw, 18px);
+    color: #c4b5fd; line-height: 1.8;
+  }
+  .pg-science p strong { color: #f8f4ff; font-weight: 600; }
+  .pg-science-inner { display: flex; gap: 20px; align-items: center; }
+  .pg-science-inner p { flex: 1; }
+  .pg-science-img-wrap {
+    flex-shrink: 0; width: 200px; height: 200px;
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(168,85,247,0.3);
+  }
+  .pg-science-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  @media (max-width: 480px) {
+    .pg-science-inner { flex-direction: column; }
+    .pg-science-img-wrap { width: 100%; height: 240px; }
+    .pg-hero { height: 280px; }
+    .pg-hero img { object-position: center 10%; }
+  }
+
+  /* ── STEPS ── */
+  .pg-steps-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: #d946ef; margin-bottom: 28px;
+  }
+  .pg-steps { display: flex; flex-direction: column; gap: 32px; margin-bottom: 48px; }
+  .pg-step { display: flex; gap: 20px; align-items: flex-start; }
+  .pg-step-number {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #d946ef, #6b21a8);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 900; color: #fff;
+    box-shadow: 0 2px 16px rgba(217,70,239,0.35);
+  }
+  .pg-step-body { padding-top: 6px; flex: 1; }
+  .pg-step-title {
+    font-size: clamp(17px, 3vw, 20px);
+    font-weight: 700; color: #f8f4ff; margin-bottom: 8px;
+  }
+  .pg-step-desc {
+    font-size: clamp(15px, 2.5vw, 17px);
+    color: #c4b5fd; line-height: 1.8;
+  }
+  .pg-step-desc strong { color: #f0abfc; font-weight: 600; }
+
+  /* ── INSIGHT ── */
+  .pg-insight {
+    background: rgba(217,70,239,0.08);
+    border-left: 3px solid #d946ef;
+    border-radius: 0 12px 12px 0;
+    padding: 24px 24px;
+    margin-bottom: 56px;
+  }
+  .pg-insight p {
+    font-size: clamp(16px, 2.5vw, 18px);
+    color: #c4b5fd; line-height: 1.8; font-style: italic;
+  }
+  .pg-insight p strong { color: #f8f4ff; font-style: normal; }
+
+  /* ── CTA ── */
+  .pg-cta {
+    text-align: center;
+    padding: 48px 0;
+    border-top: 1px solid rgba(168,85,247,0.2);
+  }
+  .pg-cta-label {
+    font-size: clamp(14px, 2vw, 16px);
+    color: #a855f7; margin-bottom: 12px;
+  }
+  .pg-cta-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 900; color: #f8f4ff;
+    line-height: 1.2; margin-bottom: 28px;
+  }
+  .pg-cta-btn {
+    display: inline-block;
+    padding: 20px 40px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #d946ef 0%, #6b21a8 100%);
+    color: #fff; font-family: 'Inter', sans-serif;
+    font-size: clamp(15px, 2.5vw, 17px); font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 30px rgba(217,70,239,0.35);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  .pg-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(217,70,239,0.55);
+  }
+
+  /* ── FOOTER ── */
+  .pg-footer {
+    background: #040008; border-top: 1px solid rgba(168,85,247,0.12);
+    padding: 28px 28px; text-align: center;
+  }
+  .pg-footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 10px; flex-wrap: wrap; }
+  .pg-footer-links a {
+    font-size: 12px; color: rgba(196,181,253,0.45); text-decoration: none;
+  }
+  .pg-footer-copy { font-size: 11px; color: rgba(196,181,253,0.25); }
+</style>
+
+<div class="pg-page">
+
+  <!-- HERO IMAGE -->
+  <div class="pg-hero">
+    <img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a31d998dd7879239a500fb6.png" alt="Heart Activation Meditation">
+  </div>
+
+  <div class="pg-body">
+
+    <span class="pg-eyebrow">Your Free Guide</span>
+
+    <h1 class="pg-h1">How to Perform the<br><em>Heart Activation Meditation</em></h1>
+
+    <p class="pg-subtitle">A simple, powerful practice to move out of your head, into your heart and into the place where real change begins.</p>
+
+    <div class="pg-divider"></div>
+
+    <!-- SCIENCE -->
+    <div class="pg-science">
+      <div class="pg-science-label">The Science Behind It</div>
+      <div class="pg-science-inner">
+        <p>When you slow your breathing and place your attention on your heart, your heart rhythm shifts into what scientists call <strong>heart coherence</strong>. A smooth, ordered pattern that directly calms the stress centres of the brain. Your brainwaves slow down, the mental noise clears and you return to feeling more like yourself. <strong>This coherent state is where you can affirm, visualise, feel and create from.</strong> Not from stress or survival, but from your natural creative power.</p>
+        <div class="pg-science-img-wrap">
+          <img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a31d998dd7879239a500fb6.png" alt="Heart Coherence">
+        </div>
+      </div>
+    </div>
+
+    <!-- STEPS -->
+    <div class="pg-steps-label">The Practice — Step by Step</div>
+    <div class="pg-steps">
+
+      <div class="pg-step">
+        <div class="pg-step-number">1</div>
+        <div class="pg-step-body">
+          <div class="pg-step-title">Close Your Eyes and Relax</div>
+          <div class="pg-step-desc">Close your eyes and let your body soften. Let your shoulders relax. Let your face relax. Let your mind relax. There's nothing you need to do right now.</div>
+        </div>
+      </div>
+
+      <div class="pg-step">
+        <div class="pg-step-number">2</div>
+        <div class="pg-step-body">
+          <div class="pg-step-title">Breathe In Through Your Nose and Out Through Your Mouth</div>
+          <div class="pg-step-desc">Begin to breathe in through your nose and out through your mouth. Let your breath find its natural rhythm.</div>
+        </div>
+      </div>
+
+      <div class="pg-step">
+        <div class="pg-step-number">3</div>
+        <div class="pg-step-body">
+          <div class="pg-step-title">Slow Your Breath Down</div>
+          <div class="pg-step-desc">Breathe the air slowly in. And as you breathe out, breathe the air slowly out. Slowly in and slowly out. There's no rush.</div>
+        </div>
+      </div>
+
+      <div class="pg-step">
+        <div class="pg-step-number">4</div>
+        <div class="pg-step-body">
+          <div class="pg-step-title">Bring Your Attention to Your Heart</div>
+          <div class="pg-step-desc">Guide your attention to the area of your heart. The centre of your chest. Let any tightness in that area relax.</div>
+        </div>
+      </div>
+
+      <div class="pg-step">
+        <div class="pg-step-number">5</div>
+        <div class="pg-step-body">
+          <div class="pg-step-title">Breathe In and Out of Your Heart</div>
+          <div class="pg-step-desc">As you continue to breathe slowly in and slowly out, imagine that the air you're breathing is flowing in and out of your heart. Slowly in and slowly out.</div>
+        </div>
+      </div>
+
+      <div class="pg-step">
+        <div class="pg-step-number">6</div>
+        <div class="pg-step-body">
+          <div class="pg-step-title">Feel the Lightness and the Calm</div>
+          <div class="pg-step-desc">Feel the lightness and the calm as you breathe slowly in and slowly out of your heart. When you're ready, slowly bring your awareness back to your body and open your eyes.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- INSIGHT -->
+    <div class="pg-insight">
+      <p><strong>Remember:</strong> You're not trying to force anything. Relax, breathe and let your heart do the work. The lightness and calm you feel is heart coherence activating. That's your creative state. Stay there as long as feels good.</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="pg-cta">
+      <p class="pg-cta-label">Ready to go deeper?</p>
+      <p class="pg-cta-text">Discover how to create your reality using your heart.</p>
+      <a href="https://ollyhenson.com/coaching-application?ref=practice_guide" class="pg-cta-btn">The Heart Creator Program →</a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="pg-footer">
+    <nav class="pg-footer-links">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </nav>
+    <p class="pg-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script
+  src="https://link.kourse.com/js/external-tracking.js"
+  data-tracking-id="tk_068191bb481e45768fdbfea82d7d1b59">
+</script>

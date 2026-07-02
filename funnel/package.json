@@ -1,0 +1,25 @@
+{
+  "name": "funnel",
+  "version": "1.0.0",
+  "description": "A custom-coded landing page funnel for GHL, built section by section in HTML/CSS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olly-henson/Funnel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/olly-henson/Funnel/issues"
+  },
+  "homepage": "https://github.com/olly-henson/Funnel#readme",
+  "dependencies": {
+    "open": "^11.0.0",
+    "puppeteer": "^25.1.0"
+  }
+}

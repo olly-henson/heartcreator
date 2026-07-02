@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Perform the Heart Activation Meditation — Olly Henson Coaching</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @page {
+      size: 210mm 148mm;
+      margin: 0;
+    }
+
+    body {
+      background: #080010;
+      color: #f8f4ff;
+      font-family: 'Inter', sans-serif;
+      width: 210mm;
+      margin: 0 auto;
+    }
+
+    .page {
+      width: 210mm;
+      background: #080010;
+      position: relative;
+      overflow: hidden;
+      padding: 48px 52px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Background effects */
+    .nebula {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .nebula-1 {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(107,33,168,0.35) 0%, transparent 70%);
+      top: -80px; right: -60px;
+    }
+    .nebula-2 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(217,70,239,0.18) 0%, transparent 70%);
+      bottom: 60px; left: -80px;
+    }
+    .nebula-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(168,85,247,0.2) 0%, transparent 70%);
+      top: 45%; right: 20px;
+    }
+
+    /* Stars */
+    .stars {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(168,85,247,0.25);
+    }
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #d946ef;
+      letter-spacing: 0.5px;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      color: #a855f7;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: rgba(168,85,247,0.12);
+      border: 1px solid rgba(168,85,247,0.3);
+      padding: 4px 12px;
+      border-radius: 50px;
+    }
+
+    /* Title block */
+    .title-block {
+      margin-bottom: 32px;
+    }
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      color: #a855f7;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.15;
+      color: #f8f4ff;
+      margin-bottom: 6px;
+    }
+    h1 em {
+      font-style: italic;
+      background: linear-gradient(135deg, #d946ef, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      font-size: 13.5px;
+      color: #c4b5fd;
+      line-height: 1.6;
+      max-width: 480px;
+      margin-top: 10px;
+    }
+
+    /* Divider */
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(135deg, #d946ef, #a855f7);
+      border-radius: 2px;
+      margin: 20px 0;
+    }
+
+    /* Science box */
+    .science-box {
+      background: linear-gradient(135deg, rgba(26,5,53,0.9), rgba(45,10,94,0.6));
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .science-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #d946ef, #a855f7, transparent);
+    }
+    .science-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #d946ef;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .science-box p {
+      font-size: 12.5px;
+      color: #c4b5fd;
+      line-height: 1.7;
+    }
+    .science-box p strong {
+      color: #f8f4ff;
+      font-weight: 600;
+    }
+
+    /* Steps */
+    .steps-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #d946ef;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .step-number {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #d946ef, #6b21a8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(217,70,239,0.35);
+    }
+    .step-body {
+      padding-top: 4px;
+      flex: 1;
+    }
+    .step-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f8f4ff;
+      margin-bottom: 3px;
+    }
+    .step-desc {
+      font-size: 12px;
+      color: #c4b5fd;
+      line-height: 1.65;
+    }
+    .step-desc strong {
+      color: #f0abfc;
+      font-weight: 600;
+    }
+
+    /* Key insight */
+    .insight {
+      margin-top: 24px;
+      background: rgba(217,70,239,0.08);
+      border-left: 3px solid #d946ef;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+    }
+    .insight p {
+      font-size: 12.5px;
+      color: #c4b5fd;
+      line-height: 1.7;
+      font-style: italic;
+    }
+    .insight p strong {
+      color: #f8f4ff;
+      font-style: normal;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(168,85,247,0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #d946ef;
+    }
+    .footer-url {
+      font-size: 10.5px;
+      color: #a855f7;
+    }
+    .footer-cta {
+      font-size: 10.5px;
+      color: #c4b5fd;
+      text-align: right;
+    }
+    .footer-link {
+      color: #d946ef;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* Hero image */
+    .hero-image-wrap {
+      width: calc(100% + 104px);
+      margin-left: -52px;
+      margin-top: -48px;
+      margin-bottom: 28px;
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
+    }
+    .hero-image-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(transparent, #080010);
+    }
+
+    /* Science box layout */
+    .science-box-inner {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .science-box-inner > div:first-child {
+      flex: 1;
+    }
+    .science-image-wrap {
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(168,85,247,0.3);
+    }
+    .science-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    @media print {
+      html, body {
+        height: auto !important;
+        background: #080010 !important;
+      }
+      .page {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        height: auto !important;
+        page-break-after: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Background -->
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+  <div class="nebula nebula-3"></div>
+  <div class="stars">
+    <div class="star" style="width:1.5px;height:1.5px;top:8%;left:15%"></div>
+    <div class="star" style="width:1px;height:1px;top:12%;left:72%"></div>
+    <div class="star" style="width:2px;height:2px;top:5%;left:88%"></div>
+    <div class="star" style="width:1px;height:1px;top:22%;left:42%"></div>
+    <div class="star" style="width:1.5px;height:1.5px;top:35%;left:6%"></div>
+    <div class="star" style="width:1px;height:1px;top:48%;left:93%"></div>
+    <div class="star" style="width:2px;height:2px;top:62%;left:28%"></div>
+    <div class="star" style="width:1px;height:1px;top:70%;left:81%"></div>
+    <div class="star" style="width:1.5px;height:1.5px;top:80%;left:55%"></div>
+    <div class="star" style="width:1px;height:1px;top:88%;left:18%"></div>
+    <div class="star" style="width:2px;height:2px;top:92%;left:66%"></div>
+    <div class="star" style="width:1px;height:1px;top:18%;left:33%"></div>
+    <div class="star" style="width:1.5px;height:1.5px;top:55%;left:47%"></div>
+    <div class="star" style="width:1px;height:1px;top:75%;left:9%"></div>
+  </div>
+
+  <div class="content">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="brand">Olly Henson Coaching</div>
+      <div class="tag">Practice Guide</div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="hero-image-wrap">
+      <img src="file:///C:/Users/Olly/Downloads/ChatGPT%20Image%20Jun%2012%2C%202026%2C%2009_59_53%20PM.png" alt="Heart Activation Meditation" class="hero-img">
+    </div>
+
+    <!-- Title -->
+    <div class="title-block">
+      <div class="eyebrow">Your Free Guide</div>
+      <h1>How to Perform the<br><em>Heart Activation Meditation</em></h1>
+      <p class="subtitle">A simple, powerful practice to move out of your head, into your heart and into the place where real change begins.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Science -->
+    <div class="science-box">
+      <div class="science-box-inner">
+        <div>
+          <div class="science-label">The Science Behind It</div>
+          <p>When you slow your breathing and place your attention on your heart, your heart rhythm shifts into what scientists call <strong>heart coherence</strong>. A smooth, ordered pattern that directly calms the stress centres of the brain. Your brainwaves slow down, the mental noise clears and you return to feeling more like yourself. <strong>This coherent state is where you can affirm, visualise, feel, and create from.</strong> Not from stress or survival, but from your natural creative power.</p>
+        </div>
+        <div class="science-image-wrap">
+          <img src="file:///C:/Users/Olly/Downloads/ChatGPT%20Image%20Jun%2012%2C%202026%2C%2010_03_38%20PM.png" alt="Heart Coherence" class="science-img">
+        </div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps-label">The Practice — Step by Step</div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-body">
+          <div class="step-title">Breathe In. Breathe Out. Let Everything Go.</div>
+          <div class="step-desc">Take a deep breath in and as you exhale consciously release whatever you've been holding. You don't need to carry it in here.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-body">
+          <div class="step-title">Relax Your Body, One Part at a Time</div>
+          <div class="step-desc">Allow every muscle to soften — from your face down to your feet. The guided meditation will take you through this. Simply follow along and let go.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-body">
+          <div class="step-title">Place Your Attention on Your Heart</div>
+          <div class="step-desc">Gently bring your awareness to the area in the centre of your chest. Not a thought about it — just a feeling of presence there. Rest your attention softly in that space.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-body">
+          <div class="step-title">Breathe Through Your Heart</div>
+          <div class="step-desc">Imagine the air is flowing in and out of your heart directly. In through the heart on the inhale. Out through the heart on the exhale. Keep your focus gently anchored there.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">5</div>
+        <div class="step-body">
+          <div class="step-title">Slow It Down — This Is the Key</div>
+          <div class="step-desc">Breathe <strong>slowly in</strong> and <strong>slowly out</strong>. There's no rush. As you breathe slowly through your heart, notice a growing sense of <strong>inner ease</strong>. This is heart coherence activating. Stay here. This is your creative ground.</div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Insight -->
+    <div class="insight">
+      <p><strong>Remember:</strong> The goal isn't to think your way into this state, it's to feel your way there. Even two minutes of this practice provides six hours of mental, emotional and physical benefits.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>
+        <div class="footer-brand">Olly Henson Coaching</div>
+        <div class="footer-url">ollyhenson.com</div>
+      </div>
+      <div class="footer-cta">
+        Ready to go deeper?<br>
+        <a href="https://ollyhenson.com/coaching-application?ref=Applied from PDF guide" class="footer-link">Click here to discover how to create your reality using your heart.</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  window.addEventListener('load', function() {
+    var h = document.querySelector('.page').getBoundingClientRect().height;
+    var hmm = (h * 0.2646).toFixed(1);
+    var style = document.createElement('style');
+    style.textContent = '@page { size: 210mm ' + hmm + 'mm; margin: 0; }';
+    document.head.appendChild(style);
+  });
+</script>
+</body>
+</html>

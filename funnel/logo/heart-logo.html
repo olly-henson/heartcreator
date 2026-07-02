@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Heart Logo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 800px;
+      height: 800px;
+      background: #080010;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+
+    <!-- Glow filters -->
+    <filter id="glow-lg" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="22" result="b1"/>
+      <feGaussianBlur stdDeviation="10" result="b2"/>
+      <feMerge><feMergeNode in="b1"/><feMergeNode in="b2"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-md" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-sm" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="burst" x="-150%" y="-150%" width="400%" height="400%">
+      <feGaussianBlur stdDeviation="35"/>
+    </filter>
+    <filter id="wave-glow" x="-10%" y="-200%" width="120%" height="500%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="chaos-glow" x="-10%" y="-200%" width="120%" height="500%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Gradients -->
+    <radialGradient id="nebula-bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2d0a5e" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#1a0535" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#080010" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="heart-fill" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#d946ef" stop-opacity="0.4"/>
+      <stop offset="45%" stop-color="#6b21a8" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#080010" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="heart-stroke-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0abfc"/>
+      <stop offset="50%" stop-color="#d946ef"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+
+    <radialGradient id="centre-burst" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="25%" stop-color="#f0abfc" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#d946ef" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#080010" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Chaotic waveform gradient (muted left → bright at heart) -->
+    <linearGradient id="chaos-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4a1568" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="#7c3aed" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#d946ef" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Coherent waveform gradient (heart → right, bright → violet) -->
+    <linearGradient id="coherent-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d946ef" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#c026d3" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.7"/>
+    </linearGradient>
+
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="800" fill="#080010"/>
+
+  <!-- Stars -->
+  <circle cx="120" cy="90" r="1.2" fill="#fff" opacity="0.6"/>
+  <circle cx="680" cy="120" r="1.5" fill="#fff" opacity="0.7"/>
+  <circle cx="740" cy="300" r="1" fill="#c4b5fd" opacity="0.5"/>
+  <circle cx="60" cy="420" r="1.2" fill="#fff" opacity="0.4"/>
+  <circle cx="700" cy="680" r="1.5" fill="#fff" opacity="0.6"/>
+  <circle cx="150" cy="700" r="1" fill="#c4b5fd" opacity="0.5"/>
+  <circle cx="400" cy="60" r="1.8" fill="#f0abfc" opacity="0.7"/>
+  <circle cx="560" cy="180" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="240" cy="160" r="1.2" fill="#fff" opacity="0.4"/>
+
+  <!-- Background nebula glow -->
+  <ellipse cx="400" cy="400" rx="260" ry="240" fill="url(#nebula-bg)"/>
+
+  <!-- ─── CHAOTIC WAVEFORM (left → heart) ─── -->
+  <!-- Glow layer -->
+  <path
+    d="M 30,400
+       L 55,400
+       L 60,392 L 67,410 L 72,400
+       L 82,390 L 86,418 L 90,398 L 95,400
+       L 108,394 L 112,372 L 116,435 L 120,385 L 124,400
+       L 135,396 L 140,412 L 148,400
+       L 158,388 L 163,420 L 168,396 L 172,400
+       L 185,393 L 190,415 L 198,400
+       L 210,390 L 214,366 L 218,438 L 222,382 L 226,400
+       L 238,395 L 244,414 L 252,400
+       L 265,392 L 270,410 L 278,400
+       L 292,388 L 297,420 L 303,396 L 308,400
+       L 322,393 L 328,408 L 336,400
+       L 350,391 L 355,416 L 362,400
+       L 375,395 L 380,400"
+    fill="none"
+    stroke="#d946ef"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    filter="url(#chaos-glow)"
+    opacity="0.4"
+  />
+  <!-- Crisp layer -->
+  <path
+    d="M 30,400
+       L 55,400
+       L 60,392 L 67,410 L 72,400
+       L 82,390 L 86,418 L 90,398 L 95,400
+       L 108,394 L 112,372 L 116,435 L 120,385 L 124,400
+       L 135,396 L 140,412 L 148,400
+       L 158,388 L 163,420 L 168,396 L 172,400
+       L 185,393 L 190,415 L 198,400
+       L 210,390 L 214,366 L 218,438 L 222,382 L 226,400
+       L 238,395 L 244,414 L 252,400
+       L 265,392 L 270,410 L 278,400
+       L 292,388 L 297,420 L 303,396 L 308,400
+       L 322,393 L 328,408 L 336,400
+       L 350,391 L 355,416 L 362,400
+       L 375,395 L 380,400"
+    fill="none"
+    stroke="url(#chaos-grad)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- ─── COHERENT SINE WAVE (heart → right) ─── -->
+  <!-- Glow layer -->
+  <path
+    d="M 420,400
+       C 440,355 460,355 480,400
+       C 500,445 520,445 540,400
+       C 560,355 580,355 600,400
+       C 620,445 640,445 660,400
+       C 680,355 700,355 720,400
+       C 735,432 745,432 760,400
+       L 770,400"
+    fill="none"
+    stroke="#d946ef"
+    stroke-width="6"
+    stroke-linecap="round"
+    filter="url(#wave-glow)"
+    opacity="0.45"
+  />
+  <!-- Crisp layer -->
+  <path
+    d="M 420,400
+       C 440,355 460,355 480,400
+       C 500,445 520,445 540,400
+       C 560,355 580,355 600,400
+       C 620,445 640,445 660,400
+       C 680,355 700,355 720,400
+       C 735,432 745,432 760,400
+       L 770,400"
+    fill="none"
+    stroke="url(#coherent-grad)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+
+  <!-- ─── HEART ─── -->
+  <!-- Big glow halo -->
+  <path
+    d="M 400,490
+       C 395,485 240,430 240,325
+       C 240,258 292,225 340,238
+       C 365,244 385,262 400,288
+       C 415,262 435,244 460,238
+       C 508,225 560,258 560,325
+       C 560,430 405,485 400,490 Z"
+    fill="none"
+    stroke="#d946ef"
+    stroke-width="30"
+    stroke-linejoin="round"
+    filter="url(#glow-lg)"
+    opacity="0.5"
+  />
+
+  <!-- Heart fill -->
+  <path
+    d="M 400,490
+       C 395,485 240,430 240,325
+       C 240,258 292,225 340,238
+       C 365,244 385,262 400,288
+       C 415,262 435,244 460,238
+       C 508,225 560,258 560,325
+       C 560,430 405,485 400,490 Z"
+    fill="url(#heart-fill)"
+  />
+
+  <!-- Heart outline crisp -->
+  <path
+    d="M 400,490
+       C 395,485 240,430 240,325
+       C 240,258 292,225 340,238
+       C 365,244 385,262 400,288
+       C 415,262 435,244 460,238
+       C 508,225 560,258 560,325
+       C 560,430 405,485 400,490 Z"
+    fill="none"
+    stroke="url(#heart-stroke-grad)"
+    stroke-width="2.5"
+    stroke-linejoin="round"
+    filter="url(#glow-sm)"
+  />
+
+  <!-- Centre light burst (behind dot) -->
+  <circle cx="400" cy="390" r="80" fill="url(#centre-burst)" filter="url(#burst)" opacity="1"/>
+
+  <!-- Second tighter glow -->
+  <circle cx="400" cy="390" r="30" fill="#d946ef" filter="url(#glow-md)" opacity="0.6"/>
+
+  <!-- Bright centre point -->
+  <circle cx="400" cy="390" r="5" fill="#ffffff"/>
+  <circle cx="400" cy="390" r="3" fill="#ffffff"/>
+
+  <!-- Tiny spark dots on coherent wave -->
+  <circle cx="480" cy="400" r="2.5" fill="#f0abfc" opacity="0.9" filter="url(#glow-sm)"/>
+  <circle cx="540" cy="400" r="2" fill="#d946ef" opacity="0.8" filter="url(#glow-sm)"/>
+  <circle cx="600" cy="400" r="2.5" fill="#f0abfc" opacity="0.7" filter="url(#glow-sm)"/>
+  <circle cx="660" cy="400" r="2" fill="#a855f7" opacity="0.7" filter="url(#glow-sm)"/>
+  <circle cx="720" cy="400" r="1.5" fill="#a855f7" opacity="0.5"/>
+
+</svg>
+</body>
+</html>

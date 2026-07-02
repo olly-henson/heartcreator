@@ -1,0 +1,8 @@
+# Environment variables — never commit the real .env
+.env
+node_modules/
+package-lock.json
+
+# Scripts containing live API tokens — never commit
+ghl-dashboard-apps-script.js
+monthly-figures-apps-script.js

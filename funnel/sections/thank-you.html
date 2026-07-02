@@ -1,0 +1,220 @@
+<!-- THANK YOU PAGE | Olly Henson Coaching — Meditation Funnel -->
+<!-- GHL: Replace entire Custom HTML block contents with this. Section + column padding/margin = 0. -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
+  .ohc-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Inter', sans-serif;
+    background: #080010;
+    color: #f8f4ff;
+  }
+
+  .ohc-fold {
+    position: relative;
+    overflow: hidden;
+    background: #050008;
+    padding: 64px 40px 72px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ohc-stars {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 5%  10%, rgba(255,255,255,0.95) 0%, transparent 100%),
+      radial-gradient(1px 1px at 22% 52%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 48% 8%,  rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 35%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 85% 62%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 75%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 38% 28%, rgba(216,180,254,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 18%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 3%  88%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 77% 92%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 33% 67%, rgba(255,255,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 55% 44%, rgba(216,180,254,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 12% 38%, rgba(255,255,255,0.65) 0%, transparent 100%),
+      radial-gradient(1px 1px at 89% 45%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 70% 15%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 12%, rgba(255,255,255,0.9) 0%, transparent 100%);
+    animation: twinkle 7s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+  .ohc-nebula {
+    position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 500px; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(107,33,168,0.2) 0%, rgba(88,28,135,0.08) 40%, transparent 70%);
+    animation: nebula-pulse 6s ease-in-out infinite;
+  }
+  @keyframes nebula-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+    50%       { transform: translateX(-50%) scale(1.08); opacity: 1; }
+  }
+
+  .ohc-check {
+    position: relative; z-index: 2;
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, #d946ef, #6b21a8);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    box-shadow: 0 0 30px rgba(217,70,239,0.5);
+    animation: pop-in 0.5s ease-out;
+  }
+  @keyframes pop-in {
+    0%   { transform: scale(0); opacity: 0; }
+    70%  { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .ohc-check svg { width: 30px; height: 30px; stroke: white; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+  .ohc-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 6vw, 76px);
+    font-weight: 900; line-height: 1.1;
+    color: #f8f4ff; margin: 0 auto 16px;
+    max-width: 900px; width: 100%;
+    position: relative; z-index: 2;
+  }
+  .ohc-h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, #d946ef, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .ohc-sub {
+    font-size: clamp(16px, 2vw, 20px); color: #c4b5fd; line-height: 1.6;
+    max-width: 420px; margin: 0 auto 36px; position: relative; z-index: 2;
+  }
+
+  .ohc-focal-image {
+    position: relative; z-index: 2;
+    margin-bottom: 40px;
+  }
+  .ohc-focal-image img {
+    width: 100%; max-width: 520px;
+    border-radius: 20px;
+    box-shadow: 0 0 60px rgba(217,70,239,0.3), 0 0 120px rgba(107,33,168,0.2);
+    display: block; margin: 0 auto;
+  }
+
+  .ohc-cta-wrap {
+    position: relative; z-index: 2;
+  }
+
+  .ohc-cta-label {
+    font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: #c4b5fd; margin-bottom: 16px;
+  }
+
+  .ohc-skool-btn {
+    display: inline-block;
+    padding: 20px 48px;
+    background: linear-gradient(135deg, #d946ef 0%, #6b21a8 100%);
+    color: white; font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700;
+    letter-spacing: 0.5px; border: none; border-radius: 50px; cursor: pointer;
+    text-decoration: none;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 30px rgba(217,70,239,0.4);
+  }
+  .ohc-skool-btn::after {
+    content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform: skewX(-20deg); transition: left 0.5s ease;
+  }
+  .ohc-skool-btn:hover::after { left: 150%; }
+  .ohc-skool-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(217,70,239,0.6); }
+
+  .ohc-footer {
+    background: #040008; border-top: 1px solid rgba(168,85,247,0.12);
+    padding: 28px 40px; text-align: center;
+  }
+  .ohc-footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 10px; flex-wrap: wrap; }
+  .ohc-footer-links a {
+    font-size: 12px; color: rgba(196,181,253,0.45); text-decoration: none; transition: color 0.2s;
+  }
+  .ohc-footer-links a:hover { color: #a855f7; }
+  .ohc-footer-copy { font-size: 11px; color: rgba(196,181,253,0.25); }
+
+  @media (max-width: 600px) {
+    .ohc-fold { padding: 48px 20px 56px; }
+    .ohc-h1 { font-size: 36px; }
+    .ohc-skool-btn { padding: 18px 32px; font-size: 16px; }
+    .ohc-footer { padding: 24px 20px; }
+  }
+</style>
+
+<div class="ohc-page">
+
+  <div class="ohc-fold">
+    <div class="ohc-stars"></div>
+    <div class="ohc-nebula"></div>
+
+    <!-- CHECK ICON -->
+    <div class="ohc-check">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <h1 class="ohc-h1">
+      Your Meditation<br><em>is On Its Way.</em>
+    </h1>
+
+    <p class="ohc-sub">Check your inbox. Your Heart Activation Meditation will be there shortly.</p>
+
+    <!-- GUY IMAGE -->
+    <div class="ohc-focal-image">
+      <img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a2b0038e5084c4b718e68e7.png" alt="Olly Henson"/>
+    </div>
+
+    <!-- SKOOL CTA -->
+    <div class="ohc-cta-wrap">
+      <p class="ohc-cta-label">Ready to start creating?</p>
+      <a href="https://ollyhenson.com/coaching-application?ref=Applied from thank you page" target="_blank" rel="noopener" class="ohc-skool-btn">
+        Heart Creator Program →
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="ohc-footer">
+    <nav class="ohc-footer-links">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </nav>
+    <p class="ohc-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script>
+  function fireLeadEvent() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'generate_lead', {
+        event_category: 'funnel',
+        event_label: 'meditation_optin'
+      });
+    }
+  }
+  if (document.readyState === 'complete') {
+    setTimeout(fireLeadEvent, 1000);
+  } else {
+    window.addEventListener('load', function() { setTimeout(fireLeadEvent, 1000); });
+  }
+</script>
+
+<script
+  src="https://link.kourse.com/js/external-tracking.js"
+  data-tracking-id="tk_068191bb481e45768fdbfea82d7d1b59">
+</script>

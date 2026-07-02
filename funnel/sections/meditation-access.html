@@ -1,0 +1,276 @@
+<!-- MEDITATION DELIVERY PAGE | Olly Henson Coaching -->
+<!-- GHL: One Custom HTML block. Section + column padding/margin = 0. Full Width section. -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
+  .ohc-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Inter', sans-serif;
+    background: #080010;
+    color: #f8f4ff;
+  }
+
+  /* ── HERO ── */
+  .ohc-fold {
+    position: relative;
+    overflow: hidden;
+    background: #050008;
+    padding: 64px 40px 72px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ohc-stars {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 5%  10%, rgba(255,255,255,0.95) 0%, transparent 100%),
+      radial-gradient(1px 1px at 22% 52%, rgba(255,255,255,0.8)  0%, transparent 100%),
+      radial-gradient(2px 2px at 48% 8%,  rgba(255,255,255,0.9)  0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 35%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 85% 62%, rgba(255,255,255,0.9)  0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 75%, rgba(255,255,255,0.7)  0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,0.8)  0%, transparent 100%),
+      radial-gradient(2px 2px at 38% 28%, rgba(216,180,254,0.8)  0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 18%, rgba(255,255,255,0.9)  0%, transparent 100%),
+      radial-gradient(1px 1px at 3%  88%, rgba(255,255,255,0.7)  0%, transparent 100%),
+      radial-gradient(1px 1px at 77% 92%, rgba(255,255,255,0.6)  0%, transparent 100%),
+      radial-gradient(1px 1px at 33% 67%, rgba(255,255,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 55% 44%, rgba(216,180,254,0.7)  0%, transparent 100%),
+      radial-gradient(1px 1px at 12% 38%, rgba(255,255,255,0.65) 0%, transparent 100%),
+      radial-gradient(1px 1px at 89% 45%, rgba(255,255,255,0.8)  0%, transparent 100%),
+      radial-gradient(2px 2px at 70% 15%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(1px 1px at 28% 95%, rgba(216,180,254,0.6)  0%, transparent 100%),
+      radial-gradient(1px 1px at 96% 78%, rgba(255,255,255,0.7)  0%, transparent 100%),
+      radial-gradient(1px 1px at 8%  55%, rgba(255,255,255,0.65) 0%, transparent 100%),
+      radial-gradient(2px 2px at 50% 70%, rgba(217,70,239,0.4)   0%, transparent 100%),
+      radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,0.8)  0%, transparent 100%),
+      radial-gradient(1px 1px at 82% 33%, rgba(255,255,255,0.7)  0%, transparent 100%),
+      radial-gradient(1px 1px at 63% 58%, rgba(216,180,254,0.5)  0%, transparent 100%),
+      radial-gradient(2px 2px at 40% 12%, rgba(255,255,255,0.9)  0%, transparent 100%);
+    animation: twinkle 7s ease-in-out infinite alternate;
+  }
+  .ohc-stars-layer2 {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 17% 43%, rgba(255,255,255,0.5)  0%, transparent 100%),
+      radial-gradient(1px 1px at 73% 27%, rgba(255,255,255,0.6)  0%, transparent 100%),
+      radial-gradient(1px 1px at 36% 81%, rgba(255,255,255,0.4)  0%, transparent 100%),
+      radial-gradient(1px 1px at 91% 55%, rgba(255,255,255,0.55) 0%, transparent 100%),
+      radial-gradient(1px 1px at 7%  66%, rgba(216,180,254,0.5)  0%, transparent 100%),
+      radial-gradient(1px 1px at 57% 32%, rgba(255,255,255,0.45) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 14%, rgba(255,255,255,0.6)  0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 77%, rgba(255,255,255,0.5)  0%, transparent 100%),
+      radial-gradient(1px 1px at 46% 96%, rgba(216,180,254,0.4)  0%, transparent 100%),
+      radial-gradient(1px 1px at 64% 48%, rgba(255,255,255,0.5)  0%, transparent 100%);
+    animation: twinkle 11s ease-in-out infinite alternate-reverse;
+  }
+  .ohc-nebula {
+    position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 1200px; height: 700px; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(217,70,239,0.18) 0%, rgba(107,33,168,0.15) 30%, rgba(88,28,135,0.06) 60%, transparent 75%);
+    animation: nebula-pulse 6s ease-in-out infinite;
+  }
+  .ohc-nebula-low {
+    position: absolute; bottom: -10%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 400px; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(107,33,168,0.12) 0%, rgba(88,28,135,0.05) 50%, transparent 75%);
+    animation: nebula-pulse 9s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes twinkle { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+  @keyframes nebula-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+    50%       { transform: translateX(-50%) scale(1.08); opacity: 1; }
+  }
+
+  /* ── HEADLINE ── */
+  .ohc-tag {
+    display: inline-block; position: relative; z-index: 2;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: #d946ef; border: 1px solid rgba(217,70,239,0.4);
+    padding: 5px 16px; border-radius: 50px; margin-bottom: 20px;
+  }
+  .ohc-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900; line-height: 1.1;
+    color: #f8f4ff; margin: 0 auto 16px;
+    max-width: 800px;
+    position: relative; z-index: 2;
+  }
+  .ohc-h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, #d946ef, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .ohc-sub {
+    font-size: clamp(16px, 2vw, 20px); color: #c4b5fd; line-height: 1.6;
+    max-width: 420px; margin: 0 auto 48px; position: relative; z-index: 2;
+  }
+
+  /* ── VIDEO ── */
+  .ohc-video-wrap {
+    position: relative; z-index: 2;
+    width: 100%; max-width: 760px;
+    margin: 0 auto 48px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 80px rgba(217,70,239,0.4), 0 0 160px rgba(107,33,168,0.3), 0 0 240px rgba(107,33,168,0.15);
+    background: #0f0025;
+    height: 427px;
+  }
+  .ohc-video-wrap iframe {
+    width: 100%; height: 100%;
+    border: none; display: block;
+  }
+  @media (max-width: 760px) {
+    .ohc-video-wrap {
+      height: 0;
+      padding-top: 56.25%;
+    }
+    .ohc-video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+    }
+  }
+  /* Placeholder shown until video URL is added */
+  .ohc-video-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px;
+    color: rgba(196,181,253,0.4);
+    font-size: 14px;
+  }
+  .ohc-video-placeholder svg {
+    width: 64px; height: 64px; opacity: 0.3;
+  }
+
+  /* ── LINKS ── */
+  .ohc-links {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 16px;
+    width: 100%; max-width: 480px;
+    margin: 0 auto;
+  }
+  .ohc-link-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 18px 24px; box-sizing: border-box;
+    border-radius: 50px; font-family: 'Inter', sans-serif;
+    font-size: clamp(13px, 3.5vw, 16px); font-weight: 600; text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .ohc-link-btn-primary {
+    background: linear-gradient(135deg, #d946ef 0%, #6b21a8 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 30px rgba(217,70,239,0.35);
+  }
+  .ohc-link-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(217,70,239,0.55);
+  }
+  .ohc-link-btn-secondary {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(168,85,247,0.35);
+    color: #c4b5fd;
+  }
+  .ohc-link-btn-secondary:hover {
+    transform: translateY(-2px);
+    background: rgba(168,85,247,0.1);
+    border-color: rgba(168,85,247,0.6);
+  }
+
+  /* ── FOOTER ── */
+  .ohc-footer {
+    background: #040008; border-top: 1px solid rgba(168,85,247,0.12);
+    padding: 28px 40px; text-align: center; margin-top: 80px;
+  }
+  .ohc-footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 10px; flex-wrap: wrap; }
+  .ohc-footer-links a {
+    font-size: 12px; color: rgba(196,181,253,0.45); text-decoration: none; transition: color 0.2s;
+  }
+  .ohc-footer-links a:hover { color: #a855f7; }
+  .ohc-footer-copy { font-size: 11px; color: rgba(196,181,253,0.25); }
+
+  .ohc-break { display: none !important; }
+  @media (max-width: 600px) {
+    .ohc-fold { padding: 48px 20px 56px; }
+    .ohc-footer { padding: 24px 20px; }
+    .ohc-break { display: block !important; }
+    .ohc-h1 { font-size: 46px !important; max-width: 400px !important; }
+    .ohc-sub { max-width: 370px !important; font-size: 15px !important; }
+  }
+</style>
+
+<div class="ohc-page">
+
+  <div class="ohc-fold">
+    <div class="ohc-stars"></div>
+    <div class="ohc-stars-layer2"></div>
+    <div class="ohc-nebula"></div>
+    <div class="ohc-nebula-low"></div>
+
+    <span class="ohc-tag">Heart Activation Meditation</span>
+
+    <h1 class="ohc-h1">
+      Your Meditation<br><em>is Ready.</em>
+    </h1>
+
+    <p class="ohc-sub" style="text-align:center;">Press play, close your eyes and let your heart <br class="ohc-break">lead the way.</p>
+
+    <!-- VIDEO — replace src with your hosted video URL when ready -->
+    <div class="ohc-video-wrap">
+      <iframe src="https://www.youtube.com/embed/v58oectFiOg?rel=0&modestbranding=1" title="Heart Activation Meditation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <!-- LINKS -->
+    <div class="ohc-links">
+      <!-- PDF instructions — replace # with your hosted PDF URL -->
+      <a href="https://ollyhenson.com/practice-guide" class="ohc-link-btn ohc-link-btn-primary" target="_blank" rel="noopener" id="ohc-pdf-btn">
+        📖 View the Practice Guide →
+      </a>
+      <!-- Application page -->
+      <a href="https://ollyhenson.com/coaching-application?ref=Applied from meditation page" class="ohc-link-btn ohc-link-btn-primary">
+        The Heart Creator Program →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="ohc-footer">
+    <nav class="ohc-footer-links">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </nav>
+    <p class="ohc-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('ohc-pdf-btn').addEventListener('click', function() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'practice_guide_view', {
+        event_category: 'funnel',
+        event_label: 'practice_guide'
+      });
+    }
+  });
+</script>
+
+<script
+  src="https://link.kourse.com/js/external-tracking.js"
+  data-tracking-id="tk_068191bb481e45768fdbfea82d7d1b59">
+</script>

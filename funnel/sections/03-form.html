@@ -1,0 +1,171 @@
+<!-- SECTION 3: OPT-IN FORM | Olly Henson Coaching — Meditation Funnel -->
+<!-- GHL: Paste into Custom HTML block. Set section margin to 0. -->
+<!--
+  HOW THIS WORKS:
+  - The visible form below is a custom HTML overlay (looks great, fully styled)
+  - When submitted, JavaScript silently fills in the HIDDEN native GHL form
+    (in the invisible section at the bottom of this GHL page)
+  - This preserves GHL attribution, tracking, and contact creation
+  - Update FIELD_MAP below with the real field names from your hidden GHL form
+    (use browser Inspect > Console to find them — see ghl-setup-guide.md Step 5)
+-->
+
+<section class="ohc-form-section">
+  <p class="ohc-form-eyebrow">Your free meditation is one step away</p>
+  <h2>Where should we <strong>send it?</strong></h2>
+  <p class="ohc-form-sub">[PLACEHOLDER: Short line of reassurance, e.g. "No spam, ever. Just your meditation."]</p>
+
+  <div class="ohc-form-card">
+    <form id="ohc-overlay-form" novalidate>
+
+      <div class="ohc-form-row">
+        <div class="ohc-form-field">
+          <input
+            type="text"
+            id="ohc-first-name"
+            name="first_name"
+            placeholder="First Name"
+            required
+            autocomplete="given-name"
+          />
+        </div>
+        <div class="ohc-form-field">
+          <input
+            type="text"
+            id="ohc-last-name"
+            name="last_name"
+            placeholder="Last Name"
+            required
+            autocomplete="family-name"
+          />
+        </div>
+      </div>
+
+      <div class="ohc-form-full">
+        <div class="ohc-form-field">
+          <input
+            type="email"
+            id="ohc-email"
+            name="email"
+            placeholder="Email Address"
+            required
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <button type="submit" class="ohc-btn" id="ohc-submit-btn">
+        Send Me the Meditation →
+      </button>
+
+      <p class="ohc-form-disclaimer">
+        By entering your details you agree to receive emails from Olly Henson Coaching.
+        We respect your privacy and will never share your information.
+      </p>
+    </form>
+  </div>
+</section>
+
+<script>
+(function() {
+
+  // ─────────────────────────────────────────────────────────────────
+  // UPDATE THESE VALUES after inspecting your hidden GHL form
+  // Run the diagnostic in browser console (see ghl-setup-guide.md)
+  // ─────────────────────────────────────────────────────────────────
+  var FIELD_MAP = {
+    first_name: 'PLACEHOLDER_GHL_FIRST_NAME_FIELD',   // e.g. 'first_name' or 'input_1'
+    last_name:  'PLACEHOLDER_GHL_LAST_NAME_FIELD',    // e.g. 'last_name'  or 'input_2'
+    email:      'PLACEHOLDER_GHL_EMAIL_FIELD'         // e.g. 'email'      or 'input_3'
+  };
+  // ─────────────────────────────────────────────────────────────────
+
+  var form = document.getElementById('ohc-overlay-form');
+  var btn  = document.getElementById('ohc-submit-btn');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var firstName = document.getElementById('ohc-first-name').value.trim();
+    var lastName  = document.getElementById('ohc-last-name').value.trim();
+    var email     = document.getElementById('ohc-email').value.trim();
+
+    // Basic validation
+    if (!firstName || !email) {
+      alert('Please fill in your first name and email address.');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    // Find the hidden GHL form and fill it
+    var hiddenForm = findHiddenGHLForm();
+    if (hiddenForm) {
+      fillHiddenField(hiddenForm, FIELD_MAP.first_name, firstName);
+      fillHiddenField(hiddenForm, FIELD_MAP.last_name,  lastName);
+      fillHiddenField(hiddenForm, FIELD_MAP.email,      email);
+
+      // Submit the hidden GHL form
+      var hiddenSubmit = hiddenForm.querySelector('[type="submit"]');
+      if (hiddenSubmit) {
+        hiddenSubmit.click();
+      } else {
+        hiddenForm.submit();
+      }
+    } else {
+      // Fallback: log for debugging
+      console.warn('[OHC] Hidden GHL form not found. Check field names in FIELD_MAP.');
+      btn.textContent = 'Send Me the Meditation →';
+      btn.disabled = false;
+    }
+  });
+
+  function findHiddenGHLForm() {
+    // Looks for a GHL form that is NOT our overlay form
+    var allForms = document.querySelectorAll('form');
+    for (var i = 0; i < allForms.length; i++) {
+      if (allForms[i].id !== 'ohc-overlay-form') {
+        return allForms[i];
+      }
+    }
+    return null;
+  }
+
+  function fillHiddenField(form, fieldName, value) {
+    var field = form.querySelector('[name="' + fieldName + '"]') ||
+                form.querySelector('#' + fieldName);
+    if (field) {
+      field.value = value;
+      // Trigger React/GHL change events
+      var ev = new Event('input', { bubbles: true });
+      field.dispatchEvent(ev);
+      var ev2 = new Event('change', { bubbles: true });
+      field.dispatchEvent(ev2);
+    }
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // ── DIAGNOSTIC HELPER ──────────────────────────────────────────
+  // Run this in browser console to find hidden GHL field names:
+  // ohcDiagnose()
+  window.ohcDiagnose = function() {
+    var forms = document.querySelectorAll('form');
+    console.log('[OHC Diagnostic] Found ' + forms.length + ' form(s) on page:');
+    forms.forEach(function(f, i) {
+      console.log('Form ' + i + ' | id=' + f.id);
+      f.querySelectorAll('input, select, textarea').forEach(function(input) {
+        console.log('  field: name=' + input.name + ' | id=' + input.id + ' | type=' + input.type);
+      });
+    });
+  };
+
+})();
+</script>
