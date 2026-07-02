@@ -12,18 +12,15 @@ A second script — `monthly-figures-apps-script.js` — writes a side-by-side m
 
 **Key behaviour:** Running `syncMonth()` writes the current month as a new row in every section. Re-running it for the same month overwrites that month's row — it never duplicates. Previous months are never touched.
 
-**Sections tracked (months as rows, metrics as columns):**
-- Funnel Overview
-- Pipeline Overview (Looms, Offers)
-- Pipeline 1-2-1 (Sales, Revenue, Conv%)
-- Pipeline Community (Sales, Revenue, Conv%)
-- Total Revenue
-- LTV (cumulative all-time snapshot at time of sync)
+**Sections tracked (months as rows, metrics as columns) — updated 2026-07-02:**
+- Funnel Overview: Opt-in Visits, Leads, Lead Conv%, About Page Visits, Free Trials, About Page Conv. Rate, Free Trials Conv., MRR ($)
 - Where Leads Come From (by source)
 - Platform Performance — Leads / Applications / Sales
 - Upgrade Paths
 - Content Performance — Top 5 by Leads
 - Website Pages (unique visitors)
+
+**Retired 2026-07-02:** Pipeline Overview, Pipeline 1-2-1, Pipeline Community, Total Revenue, and LTV sections are gone. Heart Creator no longer tracks "won" opportunities as a metric — the business model moved to a Skool subscription (see Pricing note below) where GHL can no longer see revenue events directly. Do not re-add a Sales/Pipeline/LTV section unless a new trackable revenue source exists — a zeroed-out dead metric is worse than no section at all.
 
 **Fixed platforms:** instagram, youtube, email, direct, facebook, tiktok. To add a new one, update `KNOWN_PLATFORMS` in the script and add the column to the shell header in `buildShellMonthly()`.
 
@@ -37,6 +34,14 @@ The local script file `ghl-dashboard-apps-script.js` contains a live GHL API tok
 
 ---
 
+## Pricing model (confirmed 2026-07-02)
+
+Heart Creator Community is Skool-only: **$30/month or $300/year**, with a **7-Day Free Trial** (card required, auto-converts unless cancelled). The $5,000 1-2-1 program and $997/yr Community tier are both retired. See [[project_heart_creator_pricing]] memory for full detail. Never reference the old figures in this script or its dashboard labels.
+
+**MRR calculation** (used in the monthly tracker, not this dashboard): `(monthly subscribers × $30) + (annual subscribers × $300 ÷ 12)`.
+
+---
+
 ## Rules and Constraints
 
 ### Never
@@ -45,17 +50,22 @@ The local script file `ghl-dashboard-apps-script.js` contains a live GHL API tok
 - Never commit `ghl-dashboard-apps-script.js` or `monthly-figures-apps-script.js` — both are gitignored for this reason.
 - Never keep dead/parked scripts in the folder if they contain token references, even in comments. Delete them rather than letting them sit.
 - Never assume a new Google Sheet or Apps Script project has the Analytics Data API enabled — always include it as an explicit setup step when giving instructions.
+- Never leave a metric section showing permanent zeros after the underlying data source stops being trackable (e.g. LTV/Pipeline once "won" opportunities can no longer be synced from Skool) — remove the section and its computation entirely rather than leaving dead placeholders. This includes deleting now-unused variables/helper functions in the script, not just the dashboard-build lines that reference them.
+- Never assume a script change to a section header (column names) will retroactively apply to an existing live Google Sheet — `buildDashboard()`/`buildShellMonthly()` only run their shell-building logic on a brand-new sheet. If columns change on an existing sheet, write a one-time migration function (e.g. `fixFunnelOverviewHeader()`, `removeRetiredPipelineSections()`) that Olly runs once, separate from the regular sync function.
+- Never make a manual-entry field a single flat value if the equivalent automated metric is broken out by period (Today/Week/Month/Year/All Time) — Olly expects manual entries to mirror that same period structure so they read consistently against the automated rows above them.
 
 ### Always
 - Always check `.gitignore` covers all token-containing files before confirming the folder is safe to push.
 - When asked about security, scan all file types (`.md`, `.js`, `.mjs`, `.json`) not just the obvious ones — tokens can appear in comments.
 - When a script is deleted (e.g. dashboard-worker.js), remove all references to it from skills files, memory files, and `.gitignore` in the same session.
 - Always save an updated local copy of the script after any edit — the local file is the source of truth, not what's pasted in Apps Script.
+- When the business model changes (e.g. retiring a pricing tier or product), sweep the whole script for stale references — hardcoded dollar figures, tag names, and section labels tied to the old model — not just the section the user explicitly flagged.
 
 ---
 
 ## Changelog
 
+- **2026-07-02** — Business model shift: Heart Creator is now Skool-only at $30/mo or $300/yr with a 7-Day Free Trial; $5,000 1-2-1 and $997/yr Community tiers fully retired. Removed Pipeline (Overview/1-2-1/Community), Total Revenue, and LTV sections and their underlying computations entirely rather than leaving zeroed placeholders. Monthly tracker's Funnel Overview columns changed to reflect the new funnel (About Page Visits, Free Trials, conversion rates, MRR). Added one-time migration functions for existing sheets since header/section changes don't retroactively apply. Manual entries restructured to break out by period (Today/Week/Month/Year/All Time) rather than a single flat value, matching the automated rows.
 - **2026-06-30** — Skills file created. Local script saved for first time (`ghl-dashboard-apps-script.js`). `dashboard-worker.js` deleted (parked, contained token in comment). `.gitignore` updated. Monthly Marketing Figures script and skills file added. Rules and Constraints section added based on session feedback: security scanning, gitignore verification, dead script cleanup, Analytics Data API setup step.
 
 ---
@@ -82,22 +92,11 @@ A Google Apps Script that pulls live data from GHL and GA4 and writes a dark-the
 
 ## What it tracks
 
+**Updated 2026-07-02:** This dashboard now tracks the meditation lead funnel only — Opt-in Visits, Leads, and Opt-in Conv Rate. Pipeline/Sales/LTV tracking was removed entirely (see Changelog). Community-level metrics (Free Trials, About Page Visits, etc.) live on the separate Monthly Marketing Figures sheet instead — see `skills_monthly-figures.md`.
+
 ### Funnel Overview
 - Opt-in page visits, Leads, Opt-in conversion rate
-- App page visits, Applications, App conversion rate
 - All shown across: Today / This Week / This Month / This Year / All Time
-
-### Pipeline — Overview
-- Loom Videos Sent, Offers Sent (by period)
-
-### Pipeline — 1-2-1 ($5,000)
-- Sales count, Revenue, Conversion rate (vs Offers Sent)
-
-### Pipeline — Community ($997)
-- Sales count, Revenue, Conversion rate (vs Offers Sent)
-
-### Lifetime Customer Value
-- Paying Customers, Total Revenue, Average LTV (all time only)
 
 ### Where Leads Come From
 - By UTM source / medium, across all time periods
@@ -148,13 +147,9 @@ A Google Apps Script that pulls live data from GHL and GA4 and writes a dark-the
 | Segment | How it's identified |
 |---|---|
 | Leads | tag contains "meditation download" |
-| Applications | tag contains "heart creator applicant" |
-| Loom Sent | tag contains "loom sent" |
-| Offer Sent | tag contains "offer sent" |
-| 1-2-1 Sales | tag contains "heart creator 1-2-1" |
-| Community Sales | tag contains "heart creator community" |
-| Sales (won) | opportunity status = "won" |
 | Staff (excluded) | contact_type custom field = "Staff" |
+
+**Retired 2026-07-02:** Applications, Loom Sent, Offer Sent, 1-2-1 Sales, Community Sales, and Sales (won) tags/logic are no longer used by this dashboard — those belonged to the retired 1-2-1 application funnel. "Community Sales" (`heart creator community` tag) is still used by the separate Monthly Marketing Figures sheet to count Free Trials — see `skills_monthly-figures.md`.
 
 - Olly's own contact (`olly@ollyhenson.com`) is tagged as Staff and excluded from all metrics
 - Sale date is set manually on the opportunity contact as a Unix ms timestamp when a sale closes

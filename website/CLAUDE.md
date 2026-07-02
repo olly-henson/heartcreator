@@ -28,7 +28,7 @@ website/
 ## Social Links
 - **YouTube:** https://www.youtube.com/@OllyHenson
 - **Instagram:** https://www.instagram.com/theollyhenson
-- **Skool:** https://www.skool.com/the-healing-code-8609
+- **Skool:** https://www.skool.com/heartcreator
 - **Free Meditation:** https://ollyhenson.com/meditation (funnel page)
 
 ## Images

@@ -286,23 +286,24 @@ The science behind the argument. Read `memory/model-for-health.md` for the full 
 
 ## Offers & Funnel
 
-### The Heart Creator Program — $5,000
+**Note:** The $5,000 1-2-1 Heart Creator Program is retired for this business. Heart Creator is now low-ticket, Skool-only. High-ticket 1-2-1 coaching now lives under the separate Fulfilment Coaching business (YouTube-driven, different avatar/messaging — see `C:\Users\Olly\AI OS\fulfilment coaching`).
 
-A 1-2-1 coaching programme for people who are ready to stop learning about change and actually experience it.
+### Heart Creator Community (Skool) — $30/month or $300/year
 
-**Structure:**
-1. **Session 1 — Heart Activation** (45–60 mins): Client is taken through Heart-Focused Breathing to activate their heart for the first time.
-2. **Session 2 — Quick Coherence** (45–60 mins): Client experiences the Quick Coherence technique and learns to generate elevated emotions on demand.
-3. **30-day practice:** Daily Quick Coherence with a guided meditation. Regulates the nervous system, recharges vitality, prepares the client for subconscious reprogramming.
-4. **Session 3 — Intention + Emotion** (1-2-1): Olly helps the client merge a clear intention with an elevated emotion — the core of subconscious reprogramming.
-5. **90-day practice:** Daily meditation merging intention with elevated emotion. Weekly email check-in from Olly.
-6. **Final check-in call:** Review, integration, and transition to the Skool Community.
+The only offer. A roadmap-style membership at `https://www.skool.com/heartcreator`, taking members level by level from regulating the nervous system through to creating and attracting the life they want.
 
-**Application:** Clients apply at `https://ollyhenson.com/coaching-application`. Olly reviews and sends a personal Loom video before pitching.
+**7-Day Free Trial** — card required at signup, converts to paid automatically after 7 days unless cancelled. Tracked via Zapier (Skool "New Paid Member" trigger → GHL tag `heart creator community`) feeding the GHL dashboard and monthly tracker.
 
-### Skool Community — $997/year
+**Roadmap inside (Skool Classroom):**
+1. **Start Here** — orientation
+2. **Release & Let Go** — release subconscious resistance
+3. **Heart Activation** — regulate the nervous system, activate the heart
+4. **Emotional Mastery** — generate elevated emotions on command
+5. **Creative Flow** — merge intention with emotion to create and attract
+6. **Supportive Materials** — resource vault
+7. New levels/programs added over time as built
 
-DIY option. Access to all materials and any new content. Offered as a downsell when the Heart Creator Program is out of reach financially. Also offered at the end of the Heart Creator Program as the ongoing home.
+**Included:** Weekly live Coaching Q&A call with Olly, weekly progress reports/check-ins, daily community support.
 
 ### Lead Magnet — Free Heart Activation Meditation
 
@@ -312,45 +313,42 @@ DIY option. Access to all materials and any new content. Offered as a downsell w
 
 ### Sales Funnel
 
-Free content (Instagram / YouTube) → Free Heart Activation Meditation → Email nurture sequence → Apply for Heart Creator Program (`/coaching-application`) → Olly reviews → Personal Loom video pitch → Joins Heart Creator Program OR downsell to Skool Community OR lost.
+Free content (Instagram) → Free Heart Activation Meditation → Email nurture sequence → Join Heart Creator Community on Skool (7-Day Free Trial) → converts to paying member after 7 days.
 
-**Other application entry points:**
+**Other entry points to Skool:**
 - Thank you page (after meditation download)
 - Meditation access page
+- Practice guide
 - Instagram bio
-- YouTube description and pinned comment
-- Occasional YouTube Community posts
+- Website homepage
 
 ---
 
-## Funnel Architecture (Live as of 2026-06-17)
+## Funnel Architecture (Live as of 2026-06-17; Skool pivot 2026-07-02)
 
 ### Pages (all live)
 | URL | Purpose |
 |-----|---------|
 | `https://ollyhenson.com/meditation` | Opt-in page — free Heart Activation Meditation |
 | `https://ollyhenson.com/thank-you` | Thank you page — confirms delivery, links to Skool |
-| `https://ollyhenson.com/meditation-access` | Meditation access page — YouTube unlisted embed + upgrade CTA |
-| `https://ollyhenson.com/practice-guide` | Practice guide — 6-step guide, upgrade path to HCP |
-| `https://ollyhenson.com/coaching-application` | Application form — The Heart Creator Program |
+| `https://ollyhenson.com/meditation-access` | Meditation access page — YouTube unlisted embed + upgrade CTA to Skool |
+| `https://ollyhenson.com/practice-guide` | Practice guide — 6-step guide, upgrade path to Skool |
 
 ### Automation (all live)
 - **GHL webhook** — opt-in form fires webhook → tags contact "Meditation Download" → triggers 10-email nurture sequence
 - **ManyChat HEART keyword** — Instagram Reels + Stories → DM → sends `https://ollyhenson.com/meditation`
-- **ManyChat PROGRAM keyword** — Instagram DM → sends `https://ollyhenson.com/coaching-application`
+- **Zapier: Skool → GHL** — Skool "New Paid Member" trigger (fires on 7-Day Free Trial signup) → Add/Update Contact in GHL, tag `heart creator community`
 - **UTM tracking** — source, medium, campaign all captured in GHL custom fields
-- **Upgrade path tracking** — `?ref=` parameter on all internal links to coaching application
 
 ### Funnel Flow
 ```
-Content (YouTube / Instagram)
+Content (Instagram)
         ↓
 Free Heart Activation Meditation (/meditation)
         ↓
 10-email nurture sequence (GHL tag: Meditation Download)
         ↓
-        ├── Apply for Heart Creator Program 1-2-1 ($5,000)
-        └── Can't afford 1-2-1? → Heart Creator DIY (Skool) — $997/yr
+Heart Creator Community — Skool (7-Day Free Trial → $30/mo or $300/yr)
 ```
 
 ### Brand Design System (funnel pages)
@@ -364,16 +362,15 @@ Free Heart Activation Meditation (/meditation)
 
 ## CTAs by Platform
 
+**Note:** Heart Creator is now an Instagram-only business (see [[project_heartcreator_fulfilmentcoaching_split]]). YouTube belongs to the separate Fulfilment Coaching business.
+
 | Platform | Primary CTA | Secondary CTA |
 |---------|-------------|---------------|
-| Instagram Reels/Posts | Comment HEART → ManyChat → meditation (reels UTM) | Apply link in bio |
-| Instagram Stories | HEART → ManyChat → meditation (stories UTM) | COACHING → ManyChat → coaching application |
-| Instagram Highlights | COACHING → ManyChat → coaching application | — |
-| YouTube Videos | Free meditation (description + pinned comment) | Apply for Heart Creator Program (description + pinned) |
-| YouTube Community | Free meditation link (comments) | Occasional apply link |
-| YouTube Bio | Meditation link | Apply link |
-| Email nurture | Periodic: apply at /coaching-application | — |
-| Website (ollyhenson.com) | Meditation + Apply | — |
+| Instagram Reels/Posts | Comment HEART → ManyChat → meditation (reels UTM) | Join Heart Creator Community — link in bio |
+| Instagram Stories | HEART → ManyChat → meditation (stories UTM) | Join Heart Creator Community (Skool link) |
+| Instagram Highlights | Join Heart Creator Community (Skool link) | — |
+| Email nurture | Periodic: join the Heart Creator Community | — |
+| Website (ollyhenson.com) | Meditation + Join Heart Creator Community | — |
 
 **CTA tone rules:**
 - Always soft and conversational — never urgent, never pushy

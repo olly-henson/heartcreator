@@ -39,8 +39,8 @@ All live page HTML is in `C:\Users\Olly\AI OS\funnel\sections\`. Read the releva
 | `thank-you.html` | `/thank-you` | https://ollyhenson.com/thank-you |
 | `meditation-access.html` | `/meditation-access` | https://ollyhenson.com/meditation-access |
 | `practice-guide-web.html` | `/practice-guide` | https://ollyhenson.com/practice-guide |
-| `funnel-application.html` | `/coaching-application` | https://ollyhenson.com/coaching-application |
-| `application-thank-you.html` | `/application-thank-you` | https://ollyhenson.com/application-thank-you |
+
+**Retired (1-2-1 application funnel, no longer live):** `funnel-application.html`, `application-thank-you.html` — Heart Creator is now Skool-only, all upgrade CTAs point to `https://www.skool.com/heartcreator`
 
 **After any edit:** confirm the change in chat, then remind Olly to re-paste the updated file into GHL.
 
@@ -112,7 +112,7 @@ funnel/
 - **Olly headshot (thank you page):** `https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a2b0038e5084c4b718e68e7.png`
 
 ## External Links
-- **Skool Community:** `https://www.skool.com/the-healing-code-8609`
+- **Skool Community:** `https://www.skool.com/heartcreator`
 - **GitHub Repo:** `https://github.com/olly-henson/funnel`
 
 ## Design System
@@ -143,7 +143,7 @@ funnel/
 - **Subheading:** Check your inbox. Your Heart Activation Meditation will be there shortly. While you wait, come join the community.
 - **CTA label:** Ready to start creating?
 - **CTA button:** Start Your Free Trial →
-- **CTA link:** https://www.skool.com/the-healing-code-8609
+- **CTA link:** https://www.skool.com/heartcreator
 
 ## Application Form — funnel-application.html
 
@@ -214,7 +214,7 @@ funnel/
 - Styled to match opt-in page (cosmic dark, stars, nebula glow)
 - **Video:** YouTube unlisted embed (ID: `v58oectFiOg`, `rel=0&modestbranding=1`) — views tracked in YouTube Studio under External traffic
 - **Button 1:** "View the Practice Guide →" → `https://ollyhenson.com/practice-guide` (GA4 event: `practice_guide_view`)
-- **Button 2:** "The Heart Creator Program →" → `https://ollyhenson.com/coaching-application?ref=Applied from meditation page`
+- **Button 2:** "Start Creating Today →" → `https://www.skool.com/heartcreator`
 - **Mobile CSS notes:** headline `46px`, subheadline `370px` max-width, video uses `padding-top: 56.25%` trick, desktop video uses fixed `427px` height
 
 ## Meditation Workflow (GHL)
@@ -231,7 +231,7 @@ funnel/
 - Rebuilt from PDF to mobile-first web page (2026-06-17) — PDF was unreadable on mobile
 - **Hero image:** Heart coherence image — `https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a31d998dd7879239a500fb6.png`
 - **Science box image:** Same heart coherence image
-- **CTA:** "The Heart Creator Program →" → `https://ollyhenson.com/coaching-application?ref=practice_guide` (upgrade path)
+- **CTA:** "Start Creating Today →" → `https://www.skool.com/heartcreator` (upgrade path)
 - 6 steps drawn directly from the meditation transcript
 - GA4 fires automatically via GHL site-wide script — no embed needed in HTML
 - **Old PDF:** `sections/practice-guide.html` — kept for reference but no longer linked anywhere

@@ -49,12 +49,7 @@ Each section is a separate table. Months are rows, metrics are columns.
 
 | Section | Metrics |
 |---|---|
-| Funnel Overview | Opt-in Visits, Leads, Lead Conv%, App Visits, Applications, App Conv% |
-| Pipeline — Overview | Looms Sent, Offers Sent |
-| Pipeline — 1-2-1 ($5,000) | Sales, Revenue, Conv% vs Offers |
-| Pipeline — Community ($997) | Sales, Revenue, Conv% vs Offers |
-| Total Revenue | Total Revenue (1-2-1 + Community) |
-| LTV (cumulative) | Paying Customers, Total Revenue, Average LTV — all-time snapshot at time of sync |
+| Funnel Overview | Opt-in Visits, Leads, Lead Conv%, About Page Visits, Free Trials, About Page Conv. Rate, Free Trials Conv., MRR ($) |
 | Where Leads Come From | By UTM source/medium — fixed platforms + other |
 | Platform Performance — Leads | Leads by platform |
 | Platform Performance — Applications | Applications by platform |
@@ -62,6 +57,22 @@ Each section is a separate table. Months are rows, metrics are columns.
 | Upgrade Paths | How people find /coaching-application — fixed paths + other |
 | Content Performance — Top 5 by Leads | Top 5 content pieces that generated leads that month |
 | Website — Unique Visitors by Page | Fixed tracked pages |
+
+---
+
+## Funnel Overview metric definitions (updated 2026-07-02)
+
+- **Free Trials** — automated, counted from GHL contacts tagged `heart creator community` that month (set by the Skool → Zapier → GHL automation on 7-Day Free Trial signup)
+- **About Page Visits, Free Trials Converted, MRR ($)** — manual only. Skool has no public API for page views, trial→paid conversion events, or subscriber revenue, so these are typed in by hand each month on the **"✏️ Manual Entries"** tab (one row per month, auto-created by `syncMonth()` via `getMonthlyManualEntry()`)
+- **About Page Conv. Rate** = Free Trials ÷ About Page Visits (computed)
+- **Free Trials Conv.** = Free Trials Converted ÷ Free Trials (computed)
+- **MRR calculation** (what Olly types into the manual tab): `(monthly subscribers × $30) + (annual subscribers × $300 ÷ 12)` — pull subscriber counts from Skool's own dashboard
+
+---
+
+## Pricing model (confirmed 2026-07-02)
+
+Heart Creator Community is Skool-only: **$30/month or $300/year**, with a **7-Day Free Trial**. The $5,000 1-2-1 program and $997/yr Community tier are both retired — never reference those figures in this script or sheet. See [[project_heart_creator_pricing]] memory for full detail.
 
 ---
 
@@ -151,8 +162,15 @@ Script contains a live GHL API token. Listed in `.gitignore` — never commit. S
 ### Layout decision (confirmed by Olly)
 - Months as **rows**, metrics as **columns** — this is the confirmed layout. Do not revert to columns-for-months in future builds of similar sheets.
 
+### Never (added 2026-07-02)
+- Never leave a metric section showing permanent zeros once its data source stops being trackable — when Pipeline/1-2-1/Community/LTV tracking was retired, the sections and their underlying computed variables (`otoSales`, `otoRev`, `ltvByContact`, etc.) were deleted entirely, not just left unwired.
+- Never assume a column/header rename on an existing live sheet takes effect automatically — `buildShellMonthly()` only builds the shell once, on a brand-new sheet. Any header change to an existing sheet needs a one-time migration function (e.g. `fixFunnelOverviewHeader()`) that Olly runs once, separate from the regular `syncMonth()`.
+- Never leave old section rows (e.g. retired Pipeline tables) sitting in an existing sheet after removing them from the script — write a one-time migration function (e.g. `removeRetiredPipelineSections()`) that actually deletes those rows, since the script no longer writing to a section doesn't remove what's already there.
+- Never make a manual-entry value a single number when it needs to feed a monthly time-series — manual figures here are entered **per month, one row at a time** (About Page Visits, Free Trials Converted, MRR), auto-created by `getMonthlyManualEntry(label)` each time `syncMonth()` runs for a new month.
+
 ---
 
 ## Changelog
 
+- **2026-07-02** — Business model shift: Heart Creator is Skool-only at $30/mo or $300/yr with a 7-Day Free Trial; $5,000 1-2-1 and $997/yr Community fully retired. Removed Pipeline (Overview/1-2-1/Community), Total Revenue, and LTV sections and their computations. Funnel Overview columns replaced (About Page Visits, Free Trials, conversion rates, MRR) to reflect the new funnel. Added monthly manual-entry mechanism (`getMonthlyManualEntry()`) for the 3 figures Skool doesn't expose via API. Added one-time migration functions since header/row changes don't retroactively apply to an existing live sheet.
 - **2026-06-30** — Skills file created alongside script build. Key lessons from session: sheet is standalone not a tab; Analytics Data API must be enabled manually; script creates the tab not the sheet; months-as-rows confirmed as preferred layout; data permanence (old months never overwritten) must be proactively confirmed to user. Rules and Constraints section added.
