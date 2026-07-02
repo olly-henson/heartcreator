@@ -1,0 +1,215 @@
+<!-- LINKS PAGE | Olly Henson Coaching — ollyhenson.com/links -->
+<!-- GHL: One Custom HTML block. Section + column padding/margin = 0. Full Width. -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
+
+  .ohc-links-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Inter', sans-serif;
+    background: #080010;
+    color: #f8f4ff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── STARS ── */
+  .ohc-stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 5%  10%, rgba(255,255,255,0.95) 0%, transparent 100%),
+      radial-gradient(1px 1px at 22% 52%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 48% 8%,  rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 35%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 85% 62%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 75%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 18%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 33% 67%, rgba(255,255,255,0.75) 0%, transparent 100%),
+      radial-gradient(1px 1px at 77% 92%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(2px 2px at 55% 44%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 89% 45%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 12%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 96% 60%, rgba(255,255,255,0.6) 0%, transparent 100%);
+    animation: twinkle 7s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+
+  /* ── CONTENT ── */
+  .ohc-links-inner {
+    position: relative; z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    padding: 60px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .ohc-links-avatar {
+    width: 90px; height: 90px; border-radius: 50%;
+    overflow: hidden; margin-bottom: 4px;
+    border: 2px solid rgba(168,85,247,0.4);
+    box-shadow: 0 0 24px rgba(168,85,247,0.2);
+  }
+  .ohc-links-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top;
+  }
+
+  .ohc-links-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: 48px;
+    color: #f8f4ff;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .ohc-links-bio {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .ohc-links-divider {
+    width: 40px; height: 1px;
+    background: rgba(168,85,247,0.4);
+    margin: 4px auto;
+  }
+
+  /* ── LINK BUTTONS ── */
+  .ohc-link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 18px 24px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ohc-link-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .ohc-link-btn.primary {
+    background: linear-gradient(135deg, #a855f7, #6b21a8);
+    color: #ffffff;
+    box-shadow: 0 4px 24px rgba(168,85,247,0.35);
+  }
+  .ohc-link-btn.primary:hover {
+    box-shadow: 0 8px 32px rgba(168,85,247,0.5);
+  }
+
+  .ohc-link-btn.secondary {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f8f4ff;
+  }
+  .ohc-link-btn.secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  .ohc-link-btn-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  /* ── SOCIAL ICONS ── */
+  .ohc-social-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+  }
+  .ohc-social-link {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .ohc-social-link:hover {
+    background: rgba(168,85,247,0.15);
+    border-color: rgba(168,85,247,0.4);
+  }
+  .ohc-social-link svg { width: 18px; height: 18px; }
+
+  .ohc-links-footer {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    margin-top: 16px;
+    letter-spacing: 1px;
+  }
+</style>
+
+<div class="ohc-links-page">
+  <div class="ohc-stars"></div>
+
+  <div class="ohc-links-inner">
+
+    <!-- Avatar -->
+    <div class="ohc-links-avatar">
+      <img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a2ff592e5b9322bddd1e8d7.png" alt="Olly Henson"/>
+    </div>
+
+    <!-- Name & bio -->
+    <h1 class="ohc-links-name">Olly Henson</h1>
+    <p class="ohc-links-bio">Activate your heart. Create your reality.</p>
+    <div class="ohc-links-divider"></div>
+
+    <!-- Primary CTA — Free Meditation -->
+    <a href="https://ollyhenson.com/meditation?utm_source=instagram&utm_medium=bio&utm_campaign=meditation" class="ohc-link-btn primary">
+      <span class="ohc-link-btn-icon">🎧</span>
+      Free Heart Activation Meditation
+    </a>
+
+    <!-- Secondary CTA — Skool Community -->
+    <a href="https://www.skool.com/heartcreator" target="_blank" rel="noopener" class="ohc-link-btn secondary">
+      <span class="ohc-link-btn-icon">💜</span>
+      Join the Heart Creator Community
+    </a>
+
+    <!-- Secondary CTA — YouTube -->
+    <a href="https://www.youtube.com/@OllyHenson" target="_blank" rel="noopener" class="ohc-link-btn secondary">
+      <span class="ohc-link-btn-icon">▶️</span>
+      Watch on YouTube
+    </a>
+
+    <!-- Social icons -->
+    <div class="ohc-social-row">
+      <a href="https://www.instagram.com/theollyhenson" target="_blank" rel="noopener" class="ohc-social-link">
+        <svg viewBox="0 0 24 24" fill="#f8f4ff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </a>
+      <a href="https://www.youtube.com/@OllyHenson" target="_blank" rel="noopener" class="ohc-social-link">
+        <svg viewBox="0 0 24 24" fill="#f8f4ff"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+    </div>
+
+    <p class="ohc-links-footer">© 2026 Olly Henson Coaching</p>
+    <p class="ohc-links-footer">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2); text-decoration:none;">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2); text-decoration:none;">Terms &amp; Conditions</a>
+    </p>
+
+  </div>
+</div>
