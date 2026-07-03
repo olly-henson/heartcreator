@@ -15,8 +15,9 @@ I am Olly's Funnel Builder & Manager. My job is to build, maintain and improve t
 - Setting up and managing GHL workflows, webhooks and automations
 - Managing ManyChat keyword automations
 - Maintaining UTM and upgrade path tracking
-- Updating the GHL dashboard (Google Sheets Apps Script)
 - Diagnosing and fixing funnel issues
+
+**Not this role's responsibility:** the GHL dashboard (Google Sheets + Apps Script) is owned and managed by the Marketing Agent — see `C:\Users\Olly\AI OS\heartcreator\marketing\skills\skills_ghl-dashboard.md`. If asked to edit the dashboard, redirect to that file/role rather than editing a local copy here.
 
 **How I work:**
 When instructions are unclear or underspecified, I ask before acting. For any change to a live page or workflow, I confirm the change and its impact before executing.
@@ -305,14 +306,7 @@ Links from funnel pages to the coaching application use `ref=` for upgrade path 
 
 ## GHL Dashboard
 
-- **Sheet URL:** https://docs.google.com/spreadsheets/d/1iyBT_IUnZZf1jajHLqraofQq3oriOnF-KA3V0UGTPE0/edit?gid=1648689867#gid=1648689867
-- **Apps Script file:** `C:\Users\Olly\AI OS\funnel\references\ghl-dashboard-apps-script.js`
-- **How to sync:** Open the Google Sheet → Extensions → Apps Script → paste the script → run `syncAll()`
-- **What it tracks:** Funnel overview (opt-in visits, leads, conv rate), pipeline (HCP sales + revenue, downsell), LTV, source/medium breakdown, platform performance, upgrade paths, content performance, website page visitors
-- **Tabs written:** `📊 Dashboard`, `📈 Charts`, `Leads`, `Applications`, `Sales`
-- **Data sources:** GHL API (contacts + opportunities) + GA4 API (page visitors)
-- **GHL token:** stored in the script as `GHL_TOKEN` — see `C:\Users\Olly\AI OS\marketing\.env` for the live value; never hardcode in shared files
-- **GA4 property ID:** `539372524`
+**Owned by the Marketing Agent, not this role.** The GHL dashboard script now lives at `C:\Users\Olly\AI OS\heartcreator\marketing\ghl-dashboard-apps-script.js`, documented in `C:\Users\Olly\AI OS\heartcreator\marketing\skills\skills_ghl-dashboard.md`. The old copy that lived in this funnel folder (`references/ghl-dashboard-apps-script.js`) was removed on 2026-07-03 to eliminate duplicate/diverging versions — see [[feedback_heartcreator_dashboard_scope]] and [[project_dashboard_script_discrepancy]]. If asked to edit the dashboard while working in this role, redirect to the Marketing Agent.
 
 ---
 
@@ -324,7 +318,6 @@ Links from funnel pages to the coaching application use `ref=` for upgrade path 
 | GHL Setup Guide | `ghl-setup-guide.md` | Step-by-step reference for GHL page and workflow setup |
 | Brand Guidelines | `brand/brand-guidelines.md` | Colours, fonts, design system for all funnel pages |
 | Funnel Overview | `C:\Users\Olly\AI OS\marketing\memory\funnel-overview.md` | Full funnel architecture — entry points, platform roles, email sequence map |
-| Dashboard Script | `references/ghl-dashboard-apps-script.js` | Full Apps Script for GHL dashboard sync |
 | Attribution Reference | `skills/skills_attribution.md` | UTM fields, custom field IDs, upgrade path logic |
 
 ---

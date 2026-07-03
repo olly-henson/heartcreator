@@ -74,9 +74,11 @@ Heart Creator Community is Skool-only: **$30/month or $300/year**, with a **7-Da
 
 A Google Apps Script that pulls live data from GHL and GA4 and writes a dark-themed dashboard into a Google Sheet. Run it whenever you want fresh metrics.
 
-**Script file (local copy):** `C:\Users\Olly\AI OS\marketing\ghl-dashboard-apps-script.js`
+**Script file (local copy):** `C:\Users\Olly\AI OS\heartcreator\marketing\ghl-dashboard-apps-script.js` — NOT `C:\Users\Olly\AI OS\marketing\...` (a different, older folder — do not confuse the two)
 **Sheet name:** Olly Henson Coaching — GHL Dashboard
 **How to run:** Google Sheet → Extensions → Apps Script → paste full script → run `syncAll()`
+
+**⚠️ 2026-07-03 correction:** This skills file previously said LTV/Pipeline/Applications were removed and Skool Community metrics moved to a separate Monthly Marketing Figures sheet. That was the *intended* state as of 2026-07-02, but it did not match what was actually live. As of 2026-07-03, confirmed with Olly: the live dashboard DOES include LTV, and Skool Community metrics (Free Trials Started via GHL tag + a manual daily log for About Page Visits/Trials Started/Trials Converted) live directly on this main dashboard, not on Monthly Marketing Figures. Applications/Pipeline-by-product tracking is still correctly removed (Heart Creator has no application funnel). See sections below for the accurate current structure. Before assuming this file is correct next time, confirm against a live dashboard screenshot rather than trusting the doc alone — see [[project_dashboard_script_discrepancy]].
 
 ---
 
@@ -92,23 +94,31 @@ A Google Apps Script that pulls live data from GHL and GA4 and writes a dark-the
 
 ## What it tracks
 
-**Updated 2026-07-02:** This dashboard now tracks the meditation lead funnel only — Opt-in Visits, Leads, and Opt-in Conv Rate. Pipeline/Sales/LTV tracking was removed entirely (see Changelog). Community-level metrics (Free Trials, About Page Visits, etc.) live on the separate Monthly Marketing Figures sheet instead — see `skills_monthly-figures.md`.
+**Corrected 2026-07-03 (see warning above):** This dashboard tracks the meditation lead funnel, Skool Community trial metrics, and LTV — no application funnel or 1-2-1/product-level pipeline (that's retired, see [[feedback_heartcreator_dashboard_scope]]).
 
 ### Funnel Overview
 - Opt-in page visits, Leads, Opt-in conversion rate
 - All shown across: Today / This Week / This Month / This Year / All Time
 
+### Skool Community
+- **Free Trials Started (GHL tag)** — automatic, from the Skool → Zapier → GHL tag automation
+- **Skool About Page Visits, Free Trials Started (Skool log), Free Trials Converted** — from the manual daily log on the "✏️ Manual Entries" tab (Date | About Page Visits | Trials Started | Trials Converted, one row per day). Skool's own dashboard only shows a trailing 30-day window, so figures must be logged before they roll off — see the code comment on `getManualEntries()` for why a flat overwritten total doesn't work here.
+- The two "Trials Started" figures (GHL tag vs Skool log) are shown side by side deliberately, as a cross-check — if they drift apart it flags a broken automation.
+
+### Lifetime Customer Value
+- Paying Customers, Total Revenue, Average LTV — based on all "won" GHL opportunities per unique customer
+
 ### Where Leads Come From
 - By UTM source / medium, across all time periods
 
 ### Platform Performance
-- Leads, Applications, Sales broken down by platform (utm_source)
+- Leads, Sales broken down by platform (utm_source) — no Applications column (retired)
 
 ### Upgrade Paths
-- How people find the coaching application page (via `upgrade_path` custom field, set by `?ref=` param)
+- How people find upgrade destinations (via `upgrade_path` custom field, set by `?ref=` param)
 
 ### Content Performance
-- Leads, Applications, Sales by content piece + platform
+- Leads, Sales by content piece + platform — no Applications column (retired)
 
 ### Email Performance
 - Filtered subset of Content Performance where source = email
@@ -163,8 +173,8 @@ A Google Apps Script that pulls live data from GHL and GA4 and writes a dark-the
 | 📊 Dashboard | Main dark-themed dashboard — rebuilt on every sync |
 | 📈 Charts | 6 charts auto-generated from the data |
 | Leads | Raw lead data with UTM fields |
-| Applications | Raw applicant data with UTM fields |
 | Sales | Raw opportunity data with pipeline stage and sale date |
+| ✏️ Manual Entries | Daily log: Date, About Page Visits, Trials Started, Trials Converted — you fill this in, script reads it |
 
 ---
 
