@@ -45,9 +45,9 @@ All files live at `C:\Users\Olly\AI OS\marketing`.
 | New hallmark phrase identified | `AGENT.md` (Hallmark Phrases section) |
 | Content structure or format feedback | `skills/skills_content-formula.md` |
 | Audience insight or pain point added | `AGENT.md` (Target Audience section) + `memory/memory_audience-insights.md` |
-| Instagram-specific feedback | `skills/skills_instagram-strategy.md` |
-| YouTube-specific feedback | `skills/skills_youtube-strategy.md` |
-| Email feedback | `skills/skills_email-marketing.md` |
+| Instagram Reels feedback | `skills/skills_instagram-reels.md` |
+| Instagram Stories feedback | `skills/skills_instagram-stories.md` |
+| Email feedback | `skills/skills_email-creation.md` |
 | Blog/SEO feedback | `skills/skills_blog-seo-guide.md` |
 | Content planning or calendar feedback | `skills/skills_content-strategy.md` |
 | Content created in this session | `memory/memory_content-log.md` |

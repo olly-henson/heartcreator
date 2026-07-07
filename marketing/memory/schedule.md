@@ -8,15 +8,14 @@
 
 ### Overview
 
-- **Total platforms:** 2
-- **Total weekly posts:** ~8
+- **Total platforms:** 2 (Instagram, Email — YouTube retired 2026-07-03, see [[project_heartcreator_fulfilmentcoaching_split]])
+- **Total weekly posts:** ~7 Reels + Stories + email
 - **Anchor content:** TBD
-- **Repurposing approach:** I don't right now but would like to.
+- **Repurposing approach:** No repurposing between channels — Instagram Reels, Instagram Stories and Email are each run as independent content layers.
 
 ### Platform Schedule
 
-**Instagram:** 5x/week (Reels, Mon–Fri — 1 per weekday)
-**YouTube:** 3x/week (Long-Form Videos: 10-20 minutes long talking head videos)
+**Instagram:** Daily (7x/week) — 1 Reel per day, confirmed 2026-07-04
 
 ---
 

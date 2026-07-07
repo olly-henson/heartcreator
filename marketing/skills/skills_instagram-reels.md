@@ -23,7 +23,7 @@ Every entry in the Instagram Reels Notion database must meet this standard befor
 ### Title
 - The text overlay displayed on screen in the first few seconds — what the viewer reads as the visual hook
 - This is what stops the scroll. It must speak to Rachel's exact emotional state right now
-- **9 words maximum** — space on screen is limited; shorter is always better. Over 9 words risks being cut off or too small to read comfortably
+- **~9 words as a guideline, not a hard cap** — shorter is generally better since screen space is limited, but a slightly longer title is fine if it's the right title. Confirmed by Olly 2026-07-04: don't cut a title down or reject it just to hit 9 words if going over reads better and still fits comfortably on screen
 - Must be specific enough for cold traffic — someone who has never seen Olly's content must immediately recognise themselves in it
 - Must name a felt, daily experience Rachel recognises immediately — not a concept, not a statistic
 - **Must name the niche explicitly** — include "reality creation", "conscious creation" or "subconscious" so Rachel immediately identifies this as for her. A title that could apply to any self-help content will not stop her scroll
@@ -157,7 +157,7 @@ Caption rules (apply to both types):
 - Never classify a Reel as Practical if the opening moment frames Rachel's frustration without a live practice — that makes it Belief-Changing
 - Never create an Engagement or Personal Update Reel — those formats belong to Instagram Stories
 - Never use "manifestation" as the default term — default is "reality creation" or "conscious creation". Manifestation is used only (~25%) when wider reach or virality is the goal
-- Never write a title over 9 words
+- Never pad a title with extra words just to reach the limit, and never cut a genuinely better title down purely to hit 9 words — ~9 words is a guideline, not a hard cap
 - Never write a title that could belong to a generic self-help Reel — it must name the niche (reality creation, conscious creation, subconscious) so Rachel identifies it as specifically for her
 - Never default to a metaphor title when a direct aspirational title is available — metaphors require decoding; direct Promised Land language communicates instantly
 - Never use `#subconsciousmind` — the correct hashtag is `#nevillegoddard`

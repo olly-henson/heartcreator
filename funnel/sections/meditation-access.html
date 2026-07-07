@@ -127,16 +127,17 @@
     background: #0f0025;
     height: 427px;
   }
-  .ohc-video-wrap iframe {
+  .ohc-video-wrap video {
     width: 100%; height: 100%;
     border: none; display: block;
+    object-fit: cover;
   }
   @media (max-width: 760px) {
     .ohc-video-wrap {
       height: 0;
       padding-top: 56.25%;
     }
-    .ohc-video-wrap iframe {
+    .ohc-video-wrap video {
       position: absolute;
       top: 0; left: 0;
     }
@@ -229,9 +230,11 @@
 
     <p class="ohc-sub" style="text-align:center;">Press play, close your eyes and let your heart <br class="ohc-break">lead the way.</p>
 
-    <!-- VIDEO — replace src with your hosted video URL when ready -->
+    <!-- VIDEO — natively hosted in GHL Media Storage -->
     <div class="ohc-video-wrap">
-      <iframe src="https://www.youtube.com/embed/v58oectFiOg?rel=0&modestbranding=1" title="Heart Activation Meditation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <video controls playsinline preload="metadata">
+        <source src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a476f2ee098dfac3773896f.mp4" type="video/mp4">
+      </video>
     </div>
 
     <!-- LINKS -->

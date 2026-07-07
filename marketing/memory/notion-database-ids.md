@@ -17,9 +17,9 @@ metadata:
 |----------|--------------------|---------|
 | YouTube Long-Form Videos | `36e30e58-6a0d-81d4-98d3-e68d37478fc1` | `skills_youtube-longform.md` |
 | YouTube Community Posts | `36e30e58-6a0d-81d1-8d13-e38b0136d61e` | `skills_repurposing-content.md`, `skills_youtube-community.md` |
-| Instagram Reels | `36e30e58-6a0d-81e7-8c2a-e6c4f729915a` | `skills_instagram-reels-db.md` |
-| Instagram Stories | `38430e58-6a0d-813a-91fa-cf0a9dcb8bf6` | `skills_repurposing-content.md` |
-| Email Broadcast Campaigns | `36e30e58-6a0d-811c-b455-ce8fe3da15be` | `skills_repurposing-content.md`, `skills_email-marketing.md` |
+| Instagram Reels | `36e30e58-6a0d-81e7-8c2a-e6c4f729915a` | `skills_instagram-reels.md` |
+| Instagram Stories | `38430e58-6a0d-813a-91fa-cf0a9dcb8bf6` | `skills_instagram-stories.md` |
+| Email Broadcast Campaigns | `36e30e58-6a0d-811c-b455-ce8fe3da15be` | `skills_email-creation.md` |
 
 ---
 

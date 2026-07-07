@@ -159,29 +159,27 @@ Has all the information. Has tried the techniques. Believes it works. But stuck 
 
 ---
 
-### The Email Nurture Series â€” proven content angles for Rachel
+### The Email Nurture Series — proven content angles for Rachel
 
-The 10-email nurture sequence (`email-sequences/meditation-nurture-sequence-LIVE.md`) is written directly for Rachel. Each email maps to a standalone content angle that has already been validated as part of the argument. These work as Reels, YouTube videos or community posts.
+The nurture sequence (`skills/skills_email-creation.md`, Section 7 — v3, updated 2026-07-07 — 8 emails + delivery) is written directly for Rachel. Each email maps to a standalone content angle that has already been validated as part of the argument. These work as Reels or Stories.
 
 | Email | Core angle |
 |-------|-----------|
-| 1 | Recognition â€” "There's a specific kind of frustration that comes with trying to consciously change your life." Validate the gap, name it as physiological not personal |
-| 2 | The techniques do work â€” but only if done from the right state. The seed and the ground metaphor. |
-| 3 | 95% of thoughts and feelings are unconscious. The 0â€“7 download window. Subconscious programmes running the show. |
-| 4 | Fight/flight puts you in high beta. In that state the subconscious is off limits and elevated emotions are out of reach. The glass ceiling explained. |
-| 5 | Olly's $13k story â€” how Heart Coherence created a 364% income increase without understanding why at the time. Proof of the mechanism. |
-| 6 | The subconscious responds to feeling, not conscious thought. Heart Coherence turns on the ability to actually feel elevated emotional states. |
-| 7 | The three-step process: Activate Your Heart â†’ Feel Your Future â†’ Combine Intention with Elevated Emotion. The order is the mechanism. |
-| 8 | "What makes this different?" Heart Coherence doesn't replace what you've done. It creates the conditions that allow it to work. |
-| 9 | The mission angle â€” most dysfunction in the world exists because people are unknowingly running fight/flight. You can break the pattern. |
-| 10 | The pitch â€” Heart Creator Program. Access subconscious â†’ feel the future â†’ imprint it â†’ create with no doubts or resistance. |
+| 1 | Recognition — "If nothing's changing in your life, this is why." The problem isn't mindset, consistency or capability. It's a closed-off heart. |
+| 2 | The techniques do work — but only if the heart is open. Dispenza, Neville Goddard, visualising, affirming all depend on this precondition. |
+| 3 | 95% of thoughts and feelings are unconscious. The Theta brainwave window (0–7 years). Subconscious programmes running the show. |
+| 4 | Olly's proof story — how opening his heart created a 364.12% income increase in late 2018. |
+| 5 | Why most manifestation techniques and teachers don't work — they never address the closed-off heart, only the technique itself. |
+| 6 | The two-step framework: Step 1 — Open Your Heart. Step 2 — Think About & Feel Your Future. The order is the mechanism. |
+| 7 | Summary/emphasis — spend your energy opening your heart, not chasing more techniques. Signs it's working: heart feels full, you carry the feeling all day. |
+| 8 | The pitch — Heart Creator Community, with the 28-day introductory program (Heart Activation Program) that activates the heart first. |
 
 **Key language from this sequence to use in content:**
-- "You can't consciously create your life when your nervous system is running fight or flight in the background"
-- "The techniques work at the level of the technique â€” what none of them address is the state you're in when you use them"
-- "The subconscious doesn't respond to conscious thought. It updates through feeling."
-- "Nothing gets through when survival mode is running the show â€” no matter how clear your intention is"
-- "Heart Coherence doesn't replace what you've already done. It creates the conditions that allow it to work properly."
+- "It's not a mindset problem. It's not a consistency problem. It's a closed-off heart problem."
+- "The techniques you're using do actually work — but only if your heart is open."
+- "When your heart's open, it's easy to feel the emotions of your future and carry them with you all day. That's when change really happens."
+- "Your heart has to be open" — to access the subconscious mind and feel the emotions of a new creation
+- "Step 1 — Open Your Heart. Step 2 — Think About & Feel Your Future." — the order is non-negotiable
 
 ---
 
@@ -224,7 +222,7 @@ A healthy content mix hits all three each week.
 
 ### Active Platforms
 
-- **Instagram** â€” 5x/week (Monâ€“Fri) | Primary format: Reels
+- **Instagram** — Daily (7x/week) | Primary format: Reels
 - **YouTube** â€” 3x/week | Primary format: Long-form talking head (10â€“20 mins)
 - **YouTube Community** â€” Regular posts | 6 post types
 

@@ -14,7 +14,7 @@ The Daily Operations page in Notion is the central tracking hub for all recurrin
 
 **Setup script:** `C:\Users\Olly\AI OS\marketing\assets\scripts\setup_daily_operations.mjs`
 
-This script creates the Daily Operations page and its first database (YouTube Long-Form Videos) via the Notion API. It is safe to re-run — it checks whether the page already exists before creating anything.
+This script originally created the Daily Operations page and its first database (YouTube Long-Form Videos) via the Notion API. YouTube Long-Form is now retired (see below) — the script is kept for reference only, not for re-running.
 
 **To run:**
 ```
@@ -25,74 +25,49 @@ Requires `NOTION_API_TOKEN` in `C:\Users\Olly\AI OS\marketing\.env`.
 
 ---
 
-## What the script builds
-
-| What | Details |
-|------|---------|
-| Daily Operations page | Top-level page with heading, description, divider, and callout links to sub-pages |
-| YouTube Long-Form Content sub-page | Tracking page nested inside Daily Operations |
-| YouTube Long-Form Videos database | Full database with Title, Date, Type of Post, Hook, Transcript, Thumbnail Idea, Recorded, Scheduled fields |
-
----
-
-## Page structure
+## Page structure (current, 2026-07-03)
 
 ```
 Daily Operations (📋)
-  └── YouTube Long-Form Content (🎬)
-        └── YouTube Long-Form Videos [database]
+  └── Instagram Reels (📸)
+        └── Instagram Reels [database]
   └── Instagram Stories (📱)
         └── Instagram Stories [database]
+  └── Email Campaigns (✉️)
+        └── Email Campaigns [database]
+  └── Calendar Management
 ```
 
 New sections follow the same pattern: a sub-page per content channel, with a database inside it, and a callout block on the main Daily Operations page linking to it.
+
+**Removed 2026-07-03 (fully deleted, sent to Notion trash):** YouTube Long-Form Content, YouTube Community Posts, Skool Community Posts Prompts, Sales Conversations, Client Management, Financial Management. These channels/areas are no longer part of Heart Creator marketing/operations. If any of this data is needed later it will need to be restored from Notion's trash before it's permanently purged.
 
 ---
 
 ## Sections
 
-### YouTube Long-Form Content
-Tracks all YouTube long-form video ideas through from Idea to Published.
-
-**Fields:** Title, Date, Type of Post, Hook, Transcript, Thumbnail Idea, Recorded, Scheduled
+### Instagram Reels
+Tracks Instagram Reel ideas through from Idea to Published. See `skills/skills_instagram-reels.md` for the content standard.
 
 ### Instagram Stories
-Tracks Instagram Story ideas. Entries are either created directly or synced from the YouTube Community Posts database (Idea-status entries only). Same content angle — repurposed for the Stories format.
+Tracks Instagram Story ideas through from Idea to Published. See `skills/skills_instagram-stories.md` for the content standard. No longer synced from any other database — written directly for this channel.
 
 **Fields:** Title, Type of Post, Status, Post Content, CTA, Date, Image Idea, Rating
 
-**Field mapping from YouTube Community Posts → Instagram Stories:**
-| YouTube Community Posts | Instagram Stories |
-|------------------------|-------------------|
-| Title | Title |
-| Type of Post | Type of Post |
-| Post Content | Post Content |
-| Pinned Comment | CTA |
-
-Only these 4 fields are synced. All other fields are ignored.
-
-**Sync:** Run `sync_community_to_stories.mjs` to pull all Idea-status entries from YouTube Community Posts into this database. Safe to re-run — skips entries that already exist (matched by Title).
-
-**Trigger:** All new YouTube Community Posts entries default to Idea status. This means every new entry should be synced immediately. Run the sync command or ask the agent to "sync stories" at the start of any session.
+### Email Campaigns
+Tracks the meditation nurture sequence and broadcast emails. See `skills/skills_email-creation.md` for the content standard.
 
 ---
 
 ## Scripts
 
-| Script | What it does | Run when |
-|--------|-------------|----------|
-| `setup_daily_operations.mjs` | Creates the Daily Operations page and YouTube Long-Form Videos database | First-time setup only |
-| `setup_instagram_stories.mjs` | Creates the Instagram Stories sub-page and database inside Daily Operations | First-time setup only |
-| `sync_community_to_stories.mjs` | Copies Idea-status entries from YouTube Community Posts → Instagram Stories | Any time new ideas are added to YouTube Community Posts |
+| Script | What it does | Status |
+|--------|-------------|--------|
+| `setup_daily_operations.mjs` | Originally created the Daily Operations page and YouTube Long-Form Videos database | Retired — kept for reference only |
+| `setup_instagram_stories.mjs` | Created the Instagram Stories sub-page and database inside Daily Operations | First-time setup only, already run |
+| `sync_community_to_stories.mjs` | Previously copied Idea-status entries from YouTube Community Posts → Instagram Stories | Retired 2026-07-03 — YouTube Community Posts database no longer exists |
 
 All scripts live in: `C:\Users\Olly\AI OS\marketing\assets\scripts\`
-
-**To run the sync:**
-```
-node "C:\Users\Olly\AI OS\marketing\assets\scripts\sync_community_to_stories.mjs"
-```
-
-Requires `DAILY_OPS_INSTAGRAM_STORIES_DB_ID` in `.env` (printed when setup script runs).
 
 ---
 
@@ -113,9 +88,9 @@ When Olly asks to add a new content channel or operations area to Daily Operatio
 
 | Database | ID | Env var |
 |----------|----|---------|
-| YouTube Long-Form Videos | Check `.env` | `DAILY_OPS_YOUTUBE_LF_DB_ID` |
-| YouTube Community Posts | `36e30e58-6a0d-81d1-8d13-e38b0136d61e` | — |
+| Instagram Reels | `36e30e58-6a0d-81e7-8c2a-e6c4f729915a` | — |
 | Instagram Stories | `38430e58-6a0d-813a-91fa-cf0a9dcb8bf6` | `DAILY_OPS_INSTAGRAM_STORIES_DB_ID` |
+| Email Campaigns | `36e30e58-6a0d-811c-b455-ce8fe3da15be` | — |
 
 When any setup script runs successfully it prints the database ID. Save it to `.env` immediately.
 
@@ -132,6 +107,7 @@ When any setup script runs successfully it prints the database ID. Save it to `.
 - When adding a callout to Daily Operations, always use the `after` parameter to position it in the right place — never rely on append order
 - When syncing fields between databases, only map the fields Olly has explicitly specified — do not carry across additional fields as a convenience
 - Field names do not always match between databases — always confirm the target field name before mapping (e.g. "Pinned Comment" in YouTube Community Posts → "CTA" in Instagram Stories)
+- When retiring a section from Daily Operations, still ask whether to fully delete or just unlink before acting — but default the recommended option to **full deletion**, not unlinking. Olly chose full deletion twice in the same session (the 5-section batch, then the Financial Management follow-up) even after unlinking was offered as the safer-sounding default. Once a business area is genuinely retired, he wants it gone, not orphaned
 
 ---
 
@@ -146,6 +122,24 @@ When any setup script runs successfully it prints the database ID. Save it to `.
 ---
 
 ## Changelog
+
+**2026-07-03 — Self-review: default to full deletion when retiring sections**
+
+Reviewed the two deletion decisions made earlier this session (5-section batch, then Financial Management). Both times Olly was offered "unlink vs fully delete" as a genuine open choice, and both times he chose full deletion. Lesson: this isn't a coin flip — once a business area is confirmed retired, the expected answer is full deletion. Added as a rule so the question is still asked (destructive action, always confirm) but framed with full deletion as the default recommendation rather than a neutral toss-up.
+
+**2026-07-03 — YouTube/Skool/Sales/Client sections removed**
+
+Olly confirmed Heart Creator marketing now runs on Instagram Reels, Instagram Stories and Email only, with no repurposing between channels. Removed from the live Daily Operations page (fully deleted, sent to Notion trash, not just unlinked):
+- YouTube Long-Form Content (sub-page + database + callout)
+- YouTube Community Posts (sub-page + database + callout)
+- Skool Community Posts Prompts (sub-page + database + callout)
+- Sales Conversations (sub-page + database + callout)
+- Client Management (sub-page + callout — linked to a Google Sheet, sheet itself untouched)
+
+Page structure, sections, scripts table and known database IDs all updated to reflect the current 4-section page: Instagram Reels, Instagram Stories, Email Campaigns, Calendar Management. The `sync_community_to_stories.mjs` script is retired since its source database no longer exists.
+
+**2026-07-03 — Financial Management removed (follow-up)**
+Olly confirmed Financial Management should also be fully deleted (not just unlinked), same treatment as the other 5 sections. Sub-page, database and callout sent to Notion trash. Page structure updated to 4 sections.
 
 **2026-06-19 — Post-build review**
 

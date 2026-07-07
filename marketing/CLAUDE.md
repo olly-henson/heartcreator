@@ -33,7 +33,7 @@ Before executing any skill or content task in this folder, always read the follo
 - `memory/avatar-rachel.md` — primary audience avatar
 - `memory/brand-guidelines.md` — visual and brand identity rules
 - `memory/funnel-overview.md` — full funnel architecture
-- `memory/meditation-nurture-sequence-LIVE.md` — live email sequence (Rachel-specific language and argument flow)
+- `skills/skills_email-creation.md` — email skill, live nurture sequence content and subject line/hook technique, all merged into one file
 - `memory/model-for-health.md` — the science behind the method
 - `memory/prospect_avatars.md` — full set of prospect avatars
 - `memory/prospect_intel.md` — real prospect language and insights
@@ -294,16 +294,18 @@ The only offer. A roadmap-style membership at `https://www.skool.com/heartcreato
 
 **7-Day Free Trial** — card required at signup, converts to paid automatically after 7 days unless cancelled. Tracked via Zapier (Skool "New Paid Member" trigger → GHL tag `heart creator community`) feeding the GHL dashboard and monthly tracker.
 
-**Roadmap inside (Skool Classroom):**
-1. **Start Here** — orientation
-2. **Release & Let Go** — release subconscious resistance
-3. **Heart Activation** — regulate the nervous system, activate the heart
-4. **Emotional Mastery** — generate elevated emotions on command
-5. **Creative Flow** — merge intention with emotion to create and attract
-6. **Supportive Materials** — resource vault
-7. New levels/programs added over time as built
+**Onboarding path (updated 2026-07-07 — supersedes the 4-step "Heart Creator Steps" roadmap):**
+1. **Heart Activation Program (4 weeks)** — activates the heart, turning on their creative power. Prerequisite before they can attract what they want.
+2. **Heart Creator Program** — once the heart is open, they can create their intention. This is where they actively create the reality they want.
+
+**Bonus (Classroom extra, not part of the core path):**
+- **Release & Let Go** — release and let go of subconscious resistance to your new reality
+
+**Dropped (2026-07-07):** "Emotional Mastery" step removed entirely — no longer part of the roadmap.
 
 **Included:** Weekly live Coaching Q&A call with Olly, weekly progress reports/check-ins, daily community support.
+
+**Confirmed About Page copy (2026-07-07):** Opens "Learn how to maintain the belief in your new reality until it happens." Core throughline: prospects can't *maintain the belief* their life will change despite visualizing/meditating/affirming/scripting — Heart Creator's 4 steps exist to help them maintain that belief until the reality happens. Group description (short version): "Learn how to maintain the belief in your new reality until it happens."
 
 ### Lead Magnet — Free Heart Activation Meditation
 
@@ -367,7 +369,7 @@ Heart Creator Community — Skool (7-Day Free Trial → $30/mo or $300/yr)
 | Platform | Primary CTA | Secondary CTA |
 |---------|-------------|---------------|
 | Instagram Reels/Posts | Comment HEART → ManyChat → meditation (reels UTM) | Join Heart Creator Community — link in bio |
-| Instagram Stories | HEART → ManyChat → meditation (stories UTM) | Join Heart Creator Community (Skool link) |
+| Instagram Stories | DM HEART → ManyChat → meditation (stories UTM) | DM COMMUNITY → ManyChat → Skool signup link (stories UTM) |
 | Instagram Highlights | Join Heart Creator Community (Skool link) | — |
 | Email nurture | Periodic: join the Heart Creator Community | — |
 | Website (ollyhenson.com) | Meditation + Join Heart Creator Community | — |
@@ -381,9 +383,10 @@ Heart Creator Community — Skool (7-Day Free Trial → $30/mo or $300/yr)
 
 ## Active Platforms
 
-- **Instagram** — 5x/week (Mon–Fri) | Primary format: Reels | Secondary: Stories, Posts
-- **YouTube** — 3x/week | Primary format: Long-form talking head (10–20 mins)
-- **YouTube Community** — Regular posts | 6 post types: Personal Story, Engagement, Update, Mission, Case Study, Belief-Changing
+- **Instagram** — Daily (7x/week) | Primary format: Reels | Secondary: Stories
+- **Email** — Nurture sequence + broadcast list
+
+**Note (2026-07-03):** YouTube (long-form and Community) and Skool Community posts are no longer part of Heart Creator marketing. The only channels are Instagram Reels, Instagram Stories and email — each with its own standalone skill file, no repurposing workflow between them. Reusable technique from the retired YouTube skills (belief-shift reframe structure, personal story arc) has been folded into `skills/skills_instagram-stories.md` and `skills/skills_email-creation.md`.
 
 ---
 
@@ -445,20 +448,14 @@ These come from real prospects or top-performing content. They outperform paraph
 | Brand Voice | `memory/brand-voice.md` | Voice consistency checklist |
 | Content Strategy | `skills/skills_content-strategy.md` | Planning content calendars |
 | Content Formula | `skills/skills_content-formula.md` | Hooks, structures, post formats |
-| YouTube Long-Form Content | `skills/skills_youtube-longform.md` | YouTube video planning and scripting |
-| Instagram Strategy | `skills/skills_instagram-strategy.md` | Reels, captions, Instagram content |
+| Instagram Reels | `skills/skills_instagram-reels.md` | Reel entries, captions, HEART CTA — the Notion DB skill used for actual Reel creation |
 | Instagram Reel Headlines | `skills/skills_instagram-reel-headlines.md` | Generating Reel headline ideas |
-| YouTube Title Ideas | `skills/skills_youtube-titles.md` | YouTube title queue in Notion |
-| YouTube Community Posts | `skills/skills_youtube-community.md` | All 6 community post types |
-| Repurposing Content | `skills/skills_repurposing-content.md` | **Trigger: "Repurpose content"** → immediately read this file. Produces: YT Community Post + Instagram Story + Broadcast Email. Workflow: YT first, email + stories only when asked. Pre-flight checklist at top of file — complete before writing anything. |
+| Instagram Stories | `skills/skills_instagram-stories.md` | Story content, belief-shift reframe technique, personal story arc, HEART/COMMUNITY CTAs |
 | Blog & SEO | `skills/skills_blog-seo-guide.md` | Blog posts and SEO content |
-| Email Marketing | `skills/skills_email-marketing.md` | Meditation download nurture sequence |
-| Email Nurture Sequence (LIVE) | `email-sequences/meditation-nurture-sequence-LIVE.md` | The 10-email sequence as live in GHL — read for Rachel-specific language, content angles and argument flow |
+| Email Creation | `skills/skills_email-creation.md` | Single skill file for all email work — nurture sequence structure, broadcast campaigns, voice/CTA rules, belief-shift and personal story arc technique, the live 9-email nurture sequence content, and Ben Settle's subject line/content-type techniques (applied by default) |
 | Funnel Overview | `memory/funnel-overview.md` | Full funnel architecture — entry points, platform roles, email sequence map, post-sequence plan |
 | Funnel Technical | `C:\Users\Olly\AI OS\funnel\CLAUDE.md` | GHL page URLs, webhook setup, ManyChat keywords, brand design system, known GHL quirks |
-| Monthly Content Plan | `skills/skills_monthly-content-plan.md` | Full monthly Instagram + YouTube plan |
-| Skool Community Posts | `skills/skills_skool-community-posts.md` | All Skool post types |
-| Skool Live Call Post | `skills/skills_skool-live-call-post.md` | Live training invite posts |
+| Monthly Content Plan | `skills/skills_monthly-content-plan.md` | Full monthly Instagram plan |
 | Daily Review | `skills/skills_daily-review.md` | End-of-session review and improvement |
 | Daily Operations Notion | `skills/skills_daily-operations-notion.md` | Building and managing the Daily Operations Notion page |
 | GHL Dashboard | `skills/skills_ghl-dashboard.md` | Google Sheets + Apps Script dashboard — **this agent's responsibility to manage, edit and update when asked.** Read the skills file first, then edit the local script at `ghl-dashboard-apps-script.js` (gitignored — never commit), then give Olly the updated script to paste into Apps Script. |

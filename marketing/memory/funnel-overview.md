@@ -91,7 +91,7 @@ Once someone downloads the meditation, they enter a 10-email sequence:
 | Email 9 | Honest reminder — what they now know and what they need to do |
 | Email 10 | Pitch — apply for The Heart Creator Program 1-2-1 |
 
-Full sequence: `marketing/email-sequences/meditation-nurture-sequence-LIVE.md`
+Full sequence: `marketing/skills/skills_email-creation.md` (Section 7). Note: table above is stale (references 10 emails and the retired 1-2-1 program) — the live sequence is 9 emails ending in a Skool Community invite, see Section 7 of that file for the current version.
 
 ---
 

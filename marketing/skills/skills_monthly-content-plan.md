@@ -8,8 +8,9 @@
 
 | Platform | Volume | Format | Notion Database |
 |---|---|---|---|
-| Instagram | 1 Reel/weekday, Mon–Fri (5/week, ~22/month) | Headline, hook, key points | Instagram Reels Planner |
-| YouTube | 3 videos/week (~13/month) | Title, hook, key talking points | YouTube Content Planner |
+| Instagram | 1 Reel/day, daily (7/week, ~30/month) | Headline, hook, key points | Instagram Reels Planner |
+
+**Note (2026-07-04):** YouTube is retired for Heart Creator — see [[project_heartcreator_fulfilmentcoaching_split]]. The YouTube row and any YouTube-specific instructions elsewhere in this file are stale and should be ignored.
 
 ---
 
@@ -52,14 +53,15 @@ One row per video. Fields:
 
 Distribute content across the 6 pillars each week. Suggested weekly ratios:
 
-**Instagram (5 Reels/week, 1/weekday Mon–Fri):**
-- Mon — Argument (what they're doing wrong, why nothing is working)
-- Tue — Educational (nervous system, autonomic regulation, root causes)
-- Wed — Mission (Olly's story, why this work matters)
-- Thu — Client Success (mini-wins, transformations, results)
-- Fri — Engagement (questions, polls, relatable moments)
+**Instagram (7 Reels/week, 1/day, confirmed 2026-07-04 now that YouTube is retired):**
 
-Personal pillar (day-to-day, behind the scenes) is woven in opportunistically when a particular day's Reel naturally fits — it doesn't get its own fixed slot. See the Weekly Cadence table in `skills/skills_content-strategy.md` for the canonical day/pillar mapping.
+Reels only use the three types in `skills/skills_instagram-reels.md`: Belief-Changing, Practical, Client Success. Engagement and Personal Update content lives on Instagram Stories instead — see `skills/skills_instagram-stories.md`. Rotate the three Reel types across the week rather than assigning a fixed pillar per day; this table is a starting distribution, not a rigid schedule:
+
+- Most days — Belief-Changing (the core format)
+- 1–2 days/week — Practical (a live technique/practice on screen)
+- As available — Client Success (real proof, Isabell/Anas or future clients)
+
+See the Weekly Cadence table in `skills/skills_content-strategy.md` for further guidance — note that table may also still reference the retired 5-day/Engagement structure and should be read with this update in mind.
 
 **YouTube (3/week):**
 - Argument: 1 per week
