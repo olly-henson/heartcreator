@@ -48,7 +48,7 @@ const PROGRAMMES = [
     scoreFields:  ['confidence'],
   },
   {
-    name:         'Heart Activation',
+    name:         '28 Day Heart-Opening Program',
     sheetId:      '1xMvKWHU0uA60_1lGLigzRdxc5cGyeQST5E-5zGI4iwU',
     masterTab:    'Master',
     completedTab: 'Completed Program',

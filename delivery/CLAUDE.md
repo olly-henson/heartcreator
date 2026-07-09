@@ -61,7 +61,7 @@ Before executing any delivery task, always read the following files in full:
 delivery/
   progress-tracker.gs                  ← Regulate & Restore tracker (Google Apps Script)
   release-and-let-go-tracker.gs           ← Release & Let Go tracker
-  heart-activation-tracker.gs          ← Heart Activation tracker
+  28-day-heart-opening-tracker.gs       ← 28 Day Heart-Opening Program tracker
   emotional-mastery-tracker.gs         ← Emotional Mastery tracker
   creative-flow-tracker.gs             ← Creative Flow tracker (monthly, no fixed end)
   master-tracker.gs                    ← Master Client Tracker (all programs combined)
@@ -111,12 +111,13 @@ A 4-week self-paced program helping clients let go of their past to step into th
 
 ---
 
-### Heart Activation — LIVE
+### 28 Day Heart-Opening Program — LIVE
 
-A 6-week program. Same structure and metrics as Regulate & Restore.
+A 4-week (28-day) program, formerly called Heart Activation (6-week). Same metrics as before.
 
-**Script:** `heart-activation-tracker.gs`
-**Sheet:** Heart Activation Tracking Sheet (Active)
+**Script:** `28-day-heart-opening-tracker.gs`
+**Sheet:** 28 Day Heart-Opening Tracking Sheet (Active)
+**Meditation:** Heart-Opening Meditation (formerly Heart Activation Meditation)
 **Metrics (9, scored 1–10):** Pain, Energy, Anxiety, Calmness, Sleep, Depressive Thoughts, Focus, Mood, Stress Resilience
 **Forms:** Baseline, Weekly Check-In, Final Check-In — linked natively via Google Forms
 **Classroom URL:** https://www.skool.com/the-healing-code-8609/classroom/568dd6c7?md=89c28755c54349259564a5c75425185e
@@ -165,7 +166,7 @@ A separate Google Sheet that pulls active clients from all five program sheets e
 - Release & Let Go: `1xehfDNae1GBC5VsLULhB7VN250sYuuNDcRu5-nhTaxY`
 - Emotional Mastery: `1vdW-EoyQrAt5ZwNGSKnnGq_mGdhALRa1yN7aoQms9C8`
 - Creative Flow: `1sZM7vfzKRtgv4zCnvf6Wm9ATWXST_KPWOnEADJZpKLU`
-- Heart Activation: `1xMvKWHU0uA60_1lGLigzRdxc5cGyeQST5E-5zGI4iwU`
+- 28 Day Heart-Opening Program: `1xMvKWHU0uA60_1lGLigzRdxc5cGyeQST5E-5zGI4iwU`
 
 ---
 
@@ -351,6 +352,19 @@ git push
 ---
 
 ## Changelog
+
+### 2026-07-08 — Session: Heart Activation renamed to 28 Day Heart-Opening Program
+- Renamed program from "Heart Activation" (6-week) to "28 Day Heart-Opening Program" (4-week / 28-day)
+- Script file renamed: `heart-activation-tracker.gs` → `28-day-heart-opening-tracker.gs`
+- In the script: `TOTAL_WEEKS` 6 → 4, program end date 42 days → 28 days
+- All email copy, subjects, "from" name, and dashboard title updated to the new program name
+- Removed "self-regulate throughout your day" line from the baseline confirmation email
+- Meditation renamed: "Heart Activation Meditation" → "Heart-Opening Meditation"
+- `master-tracker.gs` — Program label updated to "28 Day Heart-Opening Program" (line ~51)
+- Google Sheet renamed to "28 Day Heart-Opening Tracking Sheet (Active)"; Google Forms names updated by Olly
+- No sheet tab renames needed — CONFIG references generic tab names (Baseline/Weekly/Final Responses, Master, Completed Program), not tied to Form titles
+- Same underlying spreadsheet/triggers — no need to re-run `initializeTracking()` or `setupTriggers()`
+- `master-tracker.gs` confirmed to have no Resend/email logic — it only aggregates data across program sheets
 
 ### 2026-06-24 — Session 3: Four new programs + Master Sheet built
 - Built Release & Let Go, Heart Activation, Emotional Mastery, and Creative Flow tracker scripts from scratch

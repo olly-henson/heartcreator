@@ -1,5 +1,5 @@
 // ============================================================
-// OLLY HENSON COACHING — Heart Activation 6-Week Tracker
+// OLLY HENSON COACHING — 28 Day Heart-Opening Program Tracker
 // ============================================================
 //
 // SHEET SETUP — tabs required:
@@ -54,7 +54,7 @@ const CONFIG = {
   SENT_LOG_SHEET:    'Sent Log',
   MASTER_SHEET:      'Master',
   COMPLETED_SHEET:   'Completed Program',
-  TOTAL_WEEKS:       6,
+  TOTAL_WEEKS:       4,
 };
 
 // Column positions in Baseline and Weekly Responses sheets (0-based)
@@ -205,7 +205,7 @@ function processBaselineRow(row) {
   const email = String(row[COLS.EMAIL]).trim();
   const name = String(row[COLS.NAME]).trim();
   const startDate = parseDate(row[COLS.TIMESTAMP]);
-  const endDate = addDays(startDate, 42);
+  const endDate = addDays(startDate, 28);
   const nextCheckIn = addDays(startDate, 7);
 
   const masterSheet = ss.getSheetByName(CONFIG.MASTER_SHEET);
@@ -450,7 +450,7 @@ function updateSummaryDashboard() {
   const clientCount = clientRows.length;
 
   dashSheet.getRange(1, 1, 1, 6).merge();
-  dashSheet.getRange(1, 1).setValue('Heart Activation — Results Summary');
+  dashSheet.getRange(1, 1).setValue('28 Day Heart-Opening Program — Results Summary');
   dashSheet.getRange(1, 1).setFontSize(14).setFontWeight('bold').setFontColor('#ffffff').setBackground('#222222').setHorizontalAlignment('center');
   dashSheet.setRowHeight(1, 40);
 
@@ -644,7 +644,7 @@ function sendEmail(to, subject, htmlBody, plainText) {
       'Content-Type': 'application/json',
     },
     payload: JSON.stringify({
-      from: 'Heart Activation Program <olly@ollyhenson.com>',
+      from: '28 Day Heart-Opening Program <olly@ollyhenson.com>',
       to: [to],
       subject: subject,
       html: htmlBody,
@@ -690,27 +690,27 @@ function alreadySentReminder(email, weekNumber) {
 // EMAIL — baseline confirmation
 // ============================================================
 function sendBaselineConfirmation(email, name) {
-  const subject = `Heart Activation starts now`;
+  const subject = `28 Day Heart-Opening Program starts now`;
 
   const html = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
-    <p>Your baseline scores have been recorded and you've officially started the six weeks of Heart Activation.</p>
+    <p>Your baseline scores have been recorded and you've officially started the 28 Day Heart-Opening Program.</p>
     <p>Your first check-in will arrive in your inbox in seven days.</p>
-    <p>Each day, do your best to complete the Heart Activation Meditation and to self-regulate throughout your day.</p>
+    <p>Each day, do your best to complete the Heart-Opening Meditation.</p>
     <p>If you need any help at any point, ask a question ${link('https://www.skool.com/the-healing-code-8609', 'here')} in the community feed.</p>
-    <p>${link(CONFIG.SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent('I\'ve just started the Heart Activation program — excited to get going!'), 'Let us know that you\'ve started here →')}</p>
+    <p>${link(CONFIG.SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent('I\'ve just started the 28 Day Heart-Opening Program — excited to get going!'), 'Let us know that you\'ve started here →')}</p>
     <p>To creating and living your life with confidence and ease.<br>Olly</p>
   `);
 
-  sendEmail(email, subject, html, 'Your baseline scores have been recorded. You\'ve officially started the six weeks of Heart Activation.');
+  sendEmail(email, subject, html, 'Your baseline scores have been recorded. You\'ve officially started the 28 Day Heart-Opening Program.');
   sendBaselineNotificationToOlly(email, name);
 }
 
 function sendBaselineNotificationToOlly(email, name) {
-  const subject = `${name} has started Heart Activation`;
-  const startedText = `${firstName(name)} starts Heart Activation today. You've got this. Keep us posted with how you're doing.`;
+  const subject = `${name} has started the 28 Day Heart-Opening Program`;
+  const startedText = `${firstName(name)} starts the 28 Day Heart-Opening Program today. You've got this. Keep us posted with how you're doing.`;
   const html = wrapHtml(`
-    <p>${name} has just started their six weeks of Heart Activation.</p>
+    <p>${name} has just started the 28 Day Heart-Opening Program.</p>
     <p><strong>Email:</strong> ${email}</p>
     <p>${link(CONFIG.SHARE_BASE_URL + '?type=win&text=' + encodeURIComponent(startedText), 'Share in the community that ' + firstName(name) + ' has started →')}</p>
   `);
@@ -721,7 +721,7 @@ function sendBaselineNotificationToOlly(email, name) {
 // EMAIL — weekly check-in reminder
 // ============================================================
 function sendWeeklyFormEmail(email, name, weekNumber) {
-  const subject = `Your week ${weekNumber} check-in — Heart Activation Program`;
+  const subject = `Your week ${weekNumber} check-in — 28 Day Heart-Opening Program`;
 
   const html = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
@@ -739,11 +739,11 @@ function sendWeeklyFormEmail(email, name, weekNumber) {
 // EMAIL — final check-in reminder
 // ============================================================
 function sendFinalFormEmail(email, name) {
-  const subject = `Your final check-in — Heart Activation Program`;
+  const subject = `Your final check-in — 28 Day Heart-Opening Program`;
 
   const html = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
-    <p>You've made it to your final check-in for Heart Activation — well done for completing the six weeks.</p>
+    <p>You've made it to your final check-in for the 28 Day Heart-Opening Program — well done for completing the four weeks.</p>
     <p>Please complete your final check-in using the link below. This one includes a few extra questions alongside your usual scores.</p>
     <p>${link(CONFIG.FINAL_FORM_URL, 'Complete Your Final Check-In')}</p>
     <p>Once you've done that, you'll get your final progress report.</p>
@@ -819,12 +819,12 @@ function sendProgressReport(email, name, weekNumber, baseline, current, meditati
   ` : ``;
 
   const clientSubject = isFinal
-    ? `Your final progress report — Heart Activation Program`
-    : `Your week ${weekNumber} progress report — Heart Activation Program`;
+    ? `Your final progress report — 28 Day Heart-Opening Program`
+    : `Your week ${weekNumber} progress report — 28 Day Heart-Opening Program`;
 
   const clientHtml = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
-    <p>${isFinal ? 'Congratulations on completing the Heart Activation Program!<br><br>Here are your final results:' : `Here is your Week ${weekNumber} progress report.`}</p>
+    <p>${isFinal ? 'Congratulations on completing the 28 Day Heart-Opening Program!<br><br>Here are your final results:' : `Here is your Week ${weekNumber} progress report.`}</p>
     <table style="border-collapse:collapse;width:100%;font-size:16px;">
       <thead>
         <tr style="background:#f5f5f5;">
@@ -846,7 +846,7 @@ function sendProgressReport(email, name, weekNumber, baseline, current, meditati
   `);
 
   const ollySubject = isFinal
-    ? `[Final report] ${name} — 6-week summary`
+    ? `[Final report] ${name} — 28 Day Heart-Opening Program summary`
     : `[Progress report] ${name} — Week ${weekNumber}`;
 
   const ollyHtml = wrapHtml(`
