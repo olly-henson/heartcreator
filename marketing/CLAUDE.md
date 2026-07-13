@@ -72,7 +72,7 @@ Before executing any skill or content task in this folder, always read the follo
 
 ## What We Do
 
-We help people become the version of themselves they've always known was possible — better health, financial freedom, a transformed relationship, or simply feeling genuinely free — by teaching them to get out of their head and into their heart, where real change actually happens.
+We help people open their hearts so they can embody and feel their future as real, so it happens.
 
 **The subconscious reprogramming is the mechanism, not the destination.** The destination is the life they've been trying to create. Heart Coherence is the tool that makes the mechanism work. Never lead with the mechanism — lead with the life.
 
@@ -164,7 +164,7 @@ They become the version of themselves they've been trying to create. Not through
 
 **Common objections:**
 - "I've tried so many things — why would this be different?"
-- "I understand Heart Coherence but I'm not sure I can feel it consistently"
+- "I understand the Heart-Opening Meditation but I'm not sure I can feel it consistently"
 - "I don't have the time or energy to add something else"
 - "Can I afford this?"
 - "What if I try this and it doesn't work either?"
@@ -201,8 +201,8 @@ Aspirational, direct, mission-driven. Like a guide who has been through the exac
 
 These are signature phrases that make Olly's voice recognisable. Use them naturally when they fit — never force them.
 
-- "Get out of your head and into your heart" — the core argument in one line
-- "Something called Heart Coherence" — always introduce it this way. Never assume the audience knows what it is.
+- "Open your heart so you can feel your future as real" — the core argument in one line
+- "Something called the Heart-Opening Meditation" — always introduce it this way. Never assume the audience knows what it is.
 - "Transformation and creation are not a head game. They are an experience game."
 - "You have to feel it before it happens."
 - "A body in survival mode is not a body that can heal — or create."
@@ -247,13 +247,13 @@ Every piece of content must connect to at least one stage of the argument.
 
 | Stage | What it says |
 |-------|-------------|
-| **Pain** | Can't change their life. They've been trying for years — health, wealth, relationships. They understand the theory. But they still don't feel like the person they're trying to become. Nothing has truly shifted. |
-| **Bleeding Neck Pain** | Nothing is changing. Another week passes. They're starting to wonder if they're the problem. The gap between who they are and who they want to be feels wider, not narrower, despite all the work they've done. |
-| **Current Belief** | They think the problem is consistency, understanding, or finding the right technique. They believe more information or a better process will eventually work. |
-| **Actual Cause** | They are stuck in their head. An overactive fight/flight response keeps them in high beta brainwave state — overthinking, self-doubt, procrastination, inability to feel elevated emotions. You cannot reprogram the subconscious from the head. The subconscious responds to feeling, not information. |
-| **New Mechanism** | Heart Coherence. Getting out of the head and into the heart. Heart-Focused Breathing shifts the nervous system from survival into coherence. Elevated emotions become accessible. And from there — merging a clear intention with an elevated emotion — the subconscious can be genuinely reprogrammed. This is not another technique. It's the missing foundation. |
-| **New Belief** | Transformation and creation are not a head game. They are an experience game. To become the version of you who is living the life you want, you have to feel it first. That requires getting into the heart. |
-| **Promised Land** | Living as the version of yourself you've been trying to become. Not just knowing what it would feel like — actually feeling it. Able to create her reality with confidence and ease. |
+| **Pain** | They've been trying to consciously create change and manifest something in their life for a long time — health, wealth, business growth, healing, a partner, a new career, or anything in between. They understand the theory completely but nothing has truly shifted. They know they need to keep feeling as if their reality has already happened, but they can't, no matter how positive they try to stay. Swarmed with doubts, resistance and feeling stuck. |
+| **Bleeding Neck Pain** | Starting to become disillusioned with manifestation and wondering if it's actually possible for them. Getting sick of content creators saying it's easy and that they just need to feel it. |
+| **Current Belief** | They believe the problem is them — not enough consistency, not the right technique, not deserving it yet. If they just found the right technique or did it more consistently, it would finally work. Think it might be possible for them but not for others. |
+| **Actual Cause** | Their heart is closed off and their nervous system is stuck in survival. Caused by conditioning, trauma, heartbreak, illness, injury or chronic stress. This stops them feeling the emotions of their future — gratitude, appreciation, freedom, abundance, joy. |
+| **New Mechanism** | The Heart-Opening Meditation. Not another technique to add to the pile — the missing foundation that makes all the other techniques work. |
+| **New Belief** | The Heart-Opening Meditation helps them open their heart so they can feel and maintain the feeling of their future until it happens. |
+| **Promised Land** | Able to comfortably embody and feel the future they want to create until it happens. |
 
 **Read `memory/argument_sheet.md` before generating any content.**
 
@@ -263,9 +263,9 @@ Every piece of content must connect to at least one stage of the argument.
 
 Two threads — both are true and both are powerful:
 
-**Thread 1 — Chronic illness:** Olly experienced chronic illness and went through the full journey: doctors who couldn't help, alternative treatments that gave temporary relief, discovering mind-body healing. Heart Coherence became the mechanism that allowed genuine healing.
+**Thread 1 — Chronic illness:** Olly experienced chronic illness and went through the full journey: doctors who couldn't help, alternative treatments that gave temporary relief, discovering mind-body healing. The Heart-Opening Meditation became the mechanism that allowed genuine healing.
 
-**Thread 2 — Conscious creation:** In 2018, Olly accidentally used Heart Coherence to generate $13,000 in one month. Without realising it at the time, unlocking the heart created the conditions to embody the version of himself who could attract and create that outcome.
+**Thread 2 — Conscious creation:** In 2018, Olly accidentally practised the Heart-Opening Meditation and generated $13,000 in one month. Without realising it at the time, opening his heart created the conditions to embody the version of himself who could attract and create that outcome.
 
 **The combined story:** Both threads point to the same thing — unlocking the heart allowed Olly to heal AND become the version of himself who could live the life he wanted. This is the proof that the mechanism works across both dimensions: health and creation.
 
@@ -278,9 +278,9 @@ The science behind the argument. Read `memory/model-for-health.md` for the full 
 - Between 0–7 years, beliefs are downloaded with no filter (theta brainwave state)
 - By adulthood, 95% of thoughts and feelings are unconscious — running the show
 - Every emotional state produces specific chemistry. Survival emotions (fear, anger, guilt) flood the body with cortisol and adrenaline. Elevated emotions (gratitude, love, appreciation) produce oxytocin, DHEA, serotonin.
-- A body in fight/flight is locked in high beta brainwaves — hypervigilance, overthinking, inability to feel elevated emotions
+- A closed heart and a nervous system locked in survival produces high beta brainwaves — hypervigilance, overthinking, inability to feel elevated emotions
 - The subconscious mind cannot be reprogrammed from the head. It responds to feeling and repetition, not information.
-- Heart Coherence shifts the body out of survival mode and into a state where elevated emotions are accessible and subconscious reprogramming becomes possible.
+- The Heart-Opening Meditation shifts the body out of survival mode and into a state where elevated emotions are accessible and subconscious reprogramming becomes possible.
 
 ---
 
@@ -311,7 +311,7 @@ The only offer. A roadmap-style membership at `https://www.skool.com/heartcreato
 
 **URL:** `https://ollyhenson.com/meditation`
 **Delivery:** ManyChat on Instagram (codeword: HEART) + direct link everywhere else
-**What it does:** A short meditation that gives the prospect their first experience of Heart Coherence — getting out of the head and into the heart.
+**What it does:** A short meditation that gives the prospect their first experience of opening their heart.
 
 ### Sales Funnel
 
@@ -383,7 +383,7 @@ Heart Creator Community — Skool (7-Day Free Trial → $30/mo or $300/yr)
 
 ## Active Platforms
 
-- **Instagram** — Daily (7x/week) | Primary format: Reels | Secondary: Stories
+- **Instagram** — 2 Reels/day (14x/week) | Primary format: Reels | Every Reel cross-posted to Facebook (@theollyhenson) for extra reach, same video/caption | Stories: ad hoc, no set frequency - behind-the-scenes, personal updates, testimonials only
 - **Email** — Nurture sequence + broadcast list
 
 **Note (2026-07-03):** YouTube (long-form and Community) and Skool Community posts are no longer part of Heart Creator marketing. The only channels are Instagram Reels, Instagram Stories and email — each with its own standalone skill file, no repurposing workflow between them. Reusable technique from the retired YouTube skills (belief-shift reframe structure, personal story arc) has been folded into `skills/skills_instagram-stories.md` and `skills/skills_email-creation.md`.
@@ -402,8 +402,8 @@ As the programme grows, add new results and wins to this section. Never fabricat
 
 ## Content Pillars
 
-1. **Argument-Based Content** — Lead with the stuck feeling (can't make personal development work), explain why (fight/flight keeps you in your head), offer the mechanism (Heart Coherence gets you into the heart where reprogramming happens).
-2. **Educational Content** — Two sub-categories: (a) nervous system, fight/flight, Heart Coherence, brainwaves, subconscious reprogramming, HeartMath research; (b) the heart itself — its own nervous system, electromagnetic field, more signals to brain than brain sends to heart, sacred meaning across cultures, why "follow your heart" is scientifically grounded. The heart content is eye-opening for most people and highly shareable.
+1. **Argument-Based Content** — Lead with the stuck feeling (can't make manifestation work), explain why (a closed heart keeps you in your head), offer the mechanism (the Heart-Opening Meditation opens the heart where reprogramming happens).
+2. **Educational Content** — Two sub-categories: (a) nervous system, survival state, the Heart-Opening Meditation, brainwaves, subconscious reprogramming, HeartMath research; (b) the heart itself — its own nervous system, electromagnetic field, more signals to brain than brain sends to heart, sacred meaning across cultures, why "follow your heart" is scientifically grounded. The heart content is eye-opening for most people and highly shareable.
 3. **Mission Content** — Why Olly does this work. The bigger picture: a world where more people operate from the heart.
 4. **Personal Story Content** — The chronic illness journey, the $13k month, the moments that proved the mechanism.
 5. **Client Proof Content** — Real results and wins from clients.
@@ -435,7 +435,7 @@ These come from real prospects or top-performing content. They outperform paraph
 3. **Flag uncertainty** — if unsure about a fact, say so before publishing
 4. **Respect privacy** — never share client details or private information without explicit approval
 5. **No plagiarism** — all content must be original or properly attributed
-6. **No cure claims** — never imply that Heart Coherence cures disease or that anyone should stop medication
+6. **No cure claims** — never imply that the Heart-Opening Meditation cures disease or that anyone should stop medication
 7. **Human reviews first** — all public-facing content requires Olly's approval before publishing
 8. **The Override Principle** — Olly can always pause, override, review, or revoke any AI action
 

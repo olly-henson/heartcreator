@@ -6,7 +6,7 @@
 
 ## What We Do
 
-We help people become the version of themselves they've always known was possible — better health, financial freedom, a transformed relationship, or simply feeling genuinely free — by teaching them to get out of their head and into their heart, where real change actually happens.
+We help people open their hearts so they can embody and feel their future as real, so it happens.
 
 **The subconscious reprogramming is the mechanism, not the destination.** Never lead with the mechanism — lead with the life they want to create.
 
@@ -16,13 +16,13 @@ We help people become the version of themselves they've always known was possibl
 
 **It's not the technique — it's the state.**
 
-The techniques work. Visualisation, affirmations, Dispenza meditations, Neville Goddard — they all work. But only when done from the right internal state. The reason nothing is changing is not a technique problem or a consistency problem. It is a state problem. Survival mode keeps people in their analytical mind, blocks access to the subconscious, and makes it impossible to genuinely feel the emotional states needed for change. Heart Coherence solves this. It shifts the nervous system out of survival, slows brainwaves from high beta to alpha, opens the subconscious, and makes genuine feeling possible. That is when the techniques begin to work.
+The techniques work. Visualisation, affirmations, Dispenza meditations, Neville Goddard — they all work. But only when done from the right internal state. The reason nothing is changing is not a technique problem or a consistency problem. It is a state problem. A closed heart and a nervous system stuck in survival keeps people in their analytical mind, blocks access to the subconscious, and makes it impossible to genuinely feel the emotional states needed for change. The Heart-Opening Meditation solves this. It opens the heart, shifts the nervous system out of survival, and makes genuine feeling possible. That is when the techniques begin to work.
 
 ---
 
 ## Niche
 
-**Reality creation, manifestation and subconscious reprogramming.** The primary audience is people actively trying to create a new reality — health, wealth, relationships, identity — who understand the theory but cannot bridge the gap to lived experience. The neuroscience, HeartMath research, and psychology of Heart Coherence give this positioning scientific credibility beyond typical manifestation content. The manifestation world (Abraham Hicks, Neville Goddard, Dispenza followers) is the primary crossover audience — they are already sold on the concept of creating reality with their mind and looking for a reason why it isn't working.
+**Reality creation, manifestation and subconscious reprogramming.** The primary audience is people actively trying to create a new reality — health, wealth, relationships, identity — who understand the theory but cannot bridge the gap to lived experience. The neuroscience, HeartMath research, and psychology behind the Heart-Opening Meditation give this positioning scientific credibility beyond typical manifestation content. The manifestation world (Abraham Hicks, Neville Goddard, Dispenza followers) is the primary crossover audience — they are already sold on the concept of creating reality with their mind and looking for a reason why it isn't working.
 
 ---
 
@@ -34,9 +34,7 @@ The ideal 1-2-1 client sits between Courage (200) and Love (500) on David Hawkin
 
 ## Promised Land
 
-Living as the version of themselves they've been trying to create.
-
-Not just knowing what it would feel like. Actually feeling it. Waking up with clarity, genuine energy, and the unshakeable sense that they are the person they have chosen to be. Able to create her reality with confidence and ease.
+Able to comfortably embody and feel the future that they want to create until it happens.
 
 Their specific creation goal may be:
 - Healing from chronic illness or symptoms
@@ -73,41 +71,27 @@ Not a new, improved version — the one they already were before everything got 
 
 ## Pain — Can't Change Their Life
 
-They have been trying to consciously create change in their life for a long time.
+They've been trying to consciously create change and manifest something in their life for a long time.
 
-They've read the books. They've done the courses. They've sat in Joe Dispenza meditations. They've written Neville Goddard's techniques. They've absorbed Abraham Hicks. They've been to Tony Robbins events. They know the theory completely.
+Could be health, wealth, business growth, healing, finding a partner or a new career. Or anything in between.
 
-But nothing has truly shifted.
+They understand the theory completely but nothing has truly shifted.
 
-They still feel like the same person. They still wake up with the same doubts, the same patterns, the same life.
+They've read the books, watched the videos and tried many different techniques.
 
-They can't truly feel like the version of themselves they're trying to become. They get inspired for a few days — then crash back. The elevated feeling never sticks. And the gap between who they are now and who they want to be doesn't feel like it's closing.
+They know they need to keep feeling as if their reality has already happened, but they just can't, no matter how positive they try to stay.
 
-**The restart cycle:** New book. New course. New meditation practice. New inspiration. A few days of feeling like it's working. Then the familiar crash. Repeat. They are not lazy. They are exhausted from trying harder than most people ever will — with little to show for it.
+They can never truly feel like or believe that their world is changing and that what they want to create is going to happen.
 
-**The cruelest part:** They can sometimes feel it. There are moments where it clicks — a meditation session, a quiet morning, a sudden rush of genuine belief — where they actually feel like the person they're trying to become. It feels real. And then within hours or days the doubts come back, the feeling evaporates, and they're back at square one wondering if what they felt was even real. It's not that the feeling is impossible for them. It's that they can't hold it. And not knowing why is the most frustrating part of all.
-
-**The identity erosion:** They quietly begin to wonder if they are the problem. If everyone else can make this work, why can't they? They feel like a fraud when they say affirmations they don't believe. They feel frustrated when visualisations feel hollow. The person who was once excited about personal development is running out of hope.
+Tend to be swarmed with doubts, resistance and feeling stuck.
 
 ---
 
 ## Bleeding Neck Pain — Nothing Is Changing
 
-Another week passes. Nothing has changed.
+Starting to become disillusioned with manifestation and wondering if it's actually possible for them.
 
-They are starting to wonder whether they are somehow incapable of making this work. Whether the gap between who they are and who they want to be is just too wide. Whether this was ever really possible for someone like them.
-
-They have spent years — and often thousands of pounds or dollars — on courses, programmes, retreats, and coaches. They have given an enormous amount of themselves to this pursuit. And the return has not matched the investment.
-
-**The unasked questions they carry silently:**
-- "Why does everyone else seem to be able to feel this and I can't?"
-- "Why do I understand it completely but still feel nothing when I try to do it?"
-- "Why does the inspired feeling always go away?"
-- "What is wrong with me?"
-- "Is this just not for me?"
-- "How much longer can I keep trying before I give up on this completely?"
-
-*"Terrified of another six months passing whilst still being in the same position."*
+Getting sick of content creators saying that it's easy and that they just need to feel it.
 
 ---
 
@@ -115,85 +99,27 @@ They have spent years — and often thousands of pounds or dollars — on course
 
 They believe the problem is them.
 
-Not enough consistency. Not enough understanding. Not doing the technique correctly. Not meditating long enough. Not thinking about it the right way. Not deserving it yet. Not ready.
+Not enough consistency, not the right technique, not deserving it yet.
 
-They believe that if they could just find the right technique — or do the one they have more consistently — it would finally work. So they keep searching. Keep adding more information. Keep hoping that the next book, the next course, the next video will be the one that makes it click.
+If they just found the right technique or did it more consistently, it would finally work.
 
-They are not sceptics. They believe transformation is possible. They've seen the evidence. They believe in the mind-body connection, in the subconscious mind, in the science behind Heart Coherence.
-
-They just can't figure out why it isn't working for them.
-
-In short: *"I know I can change. I know it's connected to how I think and feel. I just cannot make it work — and I'm not sure if I'm missing something or if I'm just not capable of it."*
-
-The problem is not information. It is not understanding. It is not consistency.
-
-It is that they are trying to create from the wrong place. And they don't know that yet.
+Think it might be possible for them but not for others.
 
 ---
 
 ## Actual Cause
 
-They are stuck in their head.
+Their heart is closed off and their nervous system is stuck in survival.
 
-And the reason they are stuck in their head is an overactive fight/flight response.
+Caused by: conditioning, trauma, heartbreak, illness, injury or chronic stress.
 
-When the nervous system is locked in fight or flight, the brain shifts into high beta brainwaves — hypervigilance. Constantly scanning for threats that are not there. Overthinking. Doubting. Procrastinating. Playing out worst-case scenarios.
-
-In this state:
-- Elevated emotions like joy, freedom, love, and gratitude are inaccessible. The body can produce anger, anxiety, frustration, and despair — but not the elevated states needed for subconscious reprogramming.
-- The brainwaves required for genuine subconscious access (alpha and theta) are blocked by the high beta state.
-- The heart is effectively closed off. There is no pathway to feel the future the prospect is trying to create.
-
-This is why the techniques aren't working. You cannot reprogram the subconscious from the head.
-
-The subconscious mind does not respond to information. It does not respond to intellectual understanding. It responds to feeling and repetition. Specifically — the felt experience of being the version of yourself who already has what you want.
-
-And you cannot access that felt experience when you are locked in survival mode.
-
-**What creates and maintains fight/flight dominance:**
-- Chronic stressful periods
-- Traumatic experiences
-- Childhood beliefs and conditioning (downloaded between 0–7 years with no filter)
-- Constant exposure to fear-based media and news
-- Being around others who are predominantly in survival mode
-- The accumulation of years of trying and failing — which itself becomes a stress response
-
-**The signs of fight/flight dominance:**
-- Anxious more often than not
-- Overthinking that won't switch off
-- Difficulty maintaining elevated emotions despite wanting to
-- Energy that is exhausted but still on edge
-- Feeling like you're always holding something back or faking it
-- Can understand it intellectually but cannot feel it in the body
-
-This is not a character flaw. It is a programme. And the programme can be rewritten.
+This is stopping them from being able to feel the emotions of their future like: gratitude, appreciation, freedom, abundance, joy etc.
 
 ---
 
 ## New Mechanism
 
-**Something called Heart Coherence.**
-
-If fight/flight keeps you in your head and blocks access to elevated emotions, then the answer is to get out of your head and into your heart.
-
-Heart Coherence is the practice of shifting attention from the head to the heart, and from there generating elevated emotional states — appreciation, gratitude, love, care — that the body can actually feel.
-
-When the heart comes online:
-- The nervous system shifts out of fight/flight
-- High beta brainwaves settle into alpha — the same state associated with creativity, access, and flow
-- Elevated emotions become genuinely accessible — not performed, not imagined, actually felt
-- The gap between who you are now and who you want to be can be bridged through genuine felt experience
-
-**Two levels:**
-
-1. **Immediate** — In the moment, Heart Coherence reduces the intensity of survival-based emotions and gives back access to peace, joy, and clarity. This is available within a single session. Anas: *"I can return to a relaxed state more reliably than before. Already feeling the difference."*
-
-2. **Long-term** — Practised consistently, Heart Coherence rewires the default emotional state, trains the nervous system out of survival mode, and — when combined with clear intention — genuinely reprograms the subconscious beliefs driving the loop.
-
-**The three-stage pathway:**
-- **Regulate for Relief** — regulate the nervous system. Reduce the fight/flight dominance so the body has room to feel something different.
-- **Recharge for Radiance** — replace survival emotional states with elevated ones. Change the chemistry the body lives in consistently.
-- **Reclaim for Reconnection** — merge a clear intention with an elevated emotion. Reprogram the subconscious at the deepest level. Become the version of yourself from the inside out.
+**Heart-Opening Meditation.**
 
 This is not another technique to add to the pile. It is the missing foundation that makes all the other techniques work.
 
@@ -201,15 +127,7 @@ This is not another technique to add to the pile. It is the missing foundation t
 
 ## New Belief
 
-Transformation and creation are not a head game. They are an experience game.
-
-To become the version of you who is living the life you want — you have to feel it before it happens.
-
-The subconscious mind cannot tell the difference between a lived experience and an imagined one. Which means that the felt experience of being the person you want to become — generated consistently through Heart Coherence — is the most direct pathway to becoming them.
-
-This is not a concept. It is measurable biology.
-
-Control is not something that comes from more information. It comes from the ability to access your heart — and from there, to feel your way into the life you are creating.
+The Heart-Opening Meditation will help them open their heart so that they can feel and maintain the feeling of their future until it happens.
 
 ---
 
@@ -223,7 +141,7 @@ But it can be changed.
 
 Not through force, willpower, or more information. Through feeling. Through learning to access the heart. Through the consistent, daily practice of merging who you want to become with the felt experience of already being them.
 
-That is what Heart Coherence makes possible.
+That is what the Heart-Opening Meditation makes possible.
 
 And that is the work.
 
@@ -233,7 +151,7 @@ And that is the work.
 
 **To get the world into its heart.**
 
-Most of the world's problems exist because most people are operating from fight or flight. The answer is not more information, more thinking, or more strategy. The answer is the heart.
+Most of the world's problems exist because most people have a closed heart and a nervous system stuck in survival. The answer is not more information, more thinking, or more strategy. The answer is the heart.
 
 Every piece of content connects back to this. The heart is not just a mechanism for creating the life you want. It is the philosophy behind everything Olly teaches.
 
@@ -275,7 +193,7 @@ She is not a new person. She is the version of herself that already existed befo
 
 ### The Vocabulary of This Register
 
-- Heart Coherence / heart-brain coherence
+- Heart-Opening Meditation / opening the heart
 - Elevated emotions
 - Subconscious reprogramming / subconscious programming
 - The programme running in the background
@@ -334,6 +252,6 @@ These speak directly to the prospect who already believes in mind-body healing b
 
 **New angles to test:**
 - The stuck-in-your-head angle — "The reason you can't feel your future no matter how hard you try"
-- The brainwave angle — "Why visualisation doesn't work when you're in fight/flight"
-- The $13k month story — accidental Heart Coherence as proof of the creation mechanism
+- The brainwave angle — "Why visualisation doesn't work when your heart is closed off"
+- The $13k month story — accidentally practising the Heart-Opening Meditation as proof of the creation mechanism
 - The feeling angle — "Transformation isn't a thinking exercise. It's a feeling exercise."

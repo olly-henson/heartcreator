@@ -83,11 +83,11 @@ Once someone downloads the meditation, they enter a 10-email sequence:
 | Email 1 | Recognition — validates their efforts and where they are |
 | Email 2 | Why the techniques aren't working (the seed/ground metaphor) |
 | Email 3 | Why the subconscious must be imprinted for change to happen |
-| Email 4 | What's blocking subconscious access — survival mode / fight or flight |
+| Email 4 | What's blocking subconscious access — a closed heart and survival mode |
 | Email 5 | Proof — the $13k month story |
-| Email 6 | How Heart Coherence gives access to the subconscious |
+| Email 6 | How the Heart-Opening Meditation gives access to the subconscious |
 | Email 7 | The exact steps — Activate → Feel → Combine intention with emotion |
-| Email 8 | Why Heart Coherence is different — creates the conditions, not just another technique |
+| Email 8 | Why the Heart-Opening Meditation is different — creates the conditions, not just another technique |
 | Email 9 | Honest reminder — what they now know and what they need to do |
 | Email 10 | Pitch — apply for The Heart Creator Program 1-2-1 |
 

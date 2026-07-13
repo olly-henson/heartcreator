@@ -41,16 +41,16 @@ But she cannot make it work in practice.
 
 1. Her efforts are valid. She is not the problem.
 2. The issue is not the technique — it is the state she is in when she uses the technique.
-3. She is operating predominantly from survival mode. This keeps her in her head, in high beta brainwaves, which blocks access to her subconscious mind and makes it impossible to genuinely feel the emotional states of her future.
+3. Her heart is closed off and she is operating predominantly from survival mode. This keeps her in her head, in high beta brainwaves, which blocks access to her subconscious mind and makes it impossible to genuinely feel the emotional states of her future.
 4. Because nothing is landing in the subconscious, nothing is changing in her reality — no matter how consistently she does the work.
-5. Heart Coherence is the practice that shifts her out of survival mode, slows her brainwaves down to alpha, and opens genuine access to her subconscious mind.
+5. The Heart-Opening Meditation is the practice that opens her heart, shifts her out of survival mode, slows her brainwaves down to alpha, and opens genuine access to her subconscious mind.
 6. From that state, she can actually feel her future. And when she can feel it, her subconscious can respond to it — and that is when things begin to change.
 
 ## The core argument for Rachel
 
 **It's not the technique — it's the state.**
 
-You cannot reprogram the subconscious from the head. The subconscious responds to feeling, not thinking. Heart Coherence creates the internal state that makes everything she is already doing actually work.
+You cannot reprogram the subconscious from the head. The subconscious responds to feeling, not thinking. The Heart-Opening Meditation creates the internal state that makes everything she is already doing actually work.
 
 ---
 
@@ -74,7 +74,7 @@ They are not sceptics. They are **believers stuck at the door.**
 - "It's not the technique — it's the state"
 - "You're trying to create from your head. The subconscious doesn't respond to thought. It responds to feeling."
 - "Survival mode keeps you in your analytical mind — high beta brainwaves — where the subconscious is off limits"
-- "Heart Coherence shifts you out of survival, slows your brainwaves down, and gives you genuine access to your subconscious"
+- "The Heart-Opening Meditation shifts you out of survival, slows your brainwaves down, and gives you genuine access to your subconscious"
 - "You have to feel it before it happens — and right now, survival mode is making that impossible"
 - "The techniques aren't wrong. The state you're in when you use them is."
 

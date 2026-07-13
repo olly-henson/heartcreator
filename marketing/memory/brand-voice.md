@@ -51,8 +51,8 @@ The tone is aspirational but grounded. Bold but never preachy. Personal but not 
 
 These are Olly's signature expressions. Use them naturally when they fit — never force them.
 
-- "Get out of your head and into your heart" — the argument in one line
-- "Something called Heart Coherence" — always introduce it this way. Never assume the audience knows what it is.
+- "Open your heart so you can feel your future as real" — the argument in one line
+- "Something called the Heart-Opening Meditation" — always introduce it this way. Never assume the audience knows what it is.
 - "Transformation and creation are not a head game. They are an experience game."
 - "You have to feel it before it happens."
 - "A body in survival mode is not a body that can heal — or create."
@@ -95,17 +95,17 @@ The core voice stays the same across platforms, but the expression adapts:
 ## Content Pillars (Voice Context)
 
 ### Argument-Based Content
-Lead with the stuck feeling (can't change their life despite trying), explain the actual cause (fight/flight keeps them in their head, blocking subconscious reprogramming), offer the mechanism (Heart Coherence gets them out of the head and into the heart).
+Lead with the stuck feeling (can't change their life despite trying), explain the actual cause (a closed heart and survival mode keeps them in their head, blocking subconscious reprogramming), offer the mechanism (the Heart-Opening Meditation opens the heart).
 - **Voice lean:** Direct and clear. The argument stated plainly, not hedged.
 - **Audience context:** Meets the prospect inside a felt experience they recognise right now.
 
 ### Educational Content
-The nervous system, fight/flight, Heart Coherence, brainwaves, the subconscious mind, HeartMath research. Science made simple and specific.
+The nervous system, survival mode, the Heart-Opening Meditation, brainwaves, the subconscious mind, HeartMath research. Science made simple and specific.
 - **Voice lean:** Authority — Olly is the expert. But always grounded in plain language.
 - **Audience context:** Makes the argument feel logical and measurable, not woo.
 
 ### Mission Content
-Why Olly does this work. The bigger picture — most of the world's problems exist because most people are operating from fight/flight. More people in their hearts means a better world.
+Why Olly does this work. The bigger picture — most of the world's problems exist because most people have a closed heart and are operating from survival mode. More people in their hearts means a better world.
 - **Voice lean:** Expansive and purposeful. This is the "why" behind everything.
 - **Audience context:** Creates a sense of belonging to something bigger than personal development.
 

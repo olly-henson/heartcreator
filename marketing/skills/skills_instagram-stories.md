@@ -19,16 +19,15 @@ Read `memory/argument_sheet.md` and `memory/avatar-rachel.md` before writing any
 
 ---
 
-## 2. Post Types
+## 2. Post Types (narrowed 2026-07-09 - Stories now ad hoc)
 
-Use the same six-type system as other Heart Creator content. Confirm which type is needed before writing.
+Stories are no longer a planned, scheduled content layer. They are posted ad hoc, whenever Olly has something worth sharing in the moment. Only three types remain active:
 
-- **Personal Story** - a moment from Olly's journey (chronic illness thread or the $13k conscious creation thread). Before / turning point / after arc. See Section 4.
 - **Personal Update** - behind-the-scenes, a real moment, workspace, an activity. Short. Shows Olly is living the life he talks about.
-- **Engagement** - a fun, light, niche-themed poll or open question. Conversational, not business-relevant. e.g. "What's your favourite reality creation movie?"
-- **Personal Mission** - why Olly does this work. Belief-driven, connects to the bigger mission of getting the world into its heart.
-- **Case Study** - a client result (screenshot, quote, written story). Proof-based, focused on the client's experience.
-- **Belief-Changing** - names a belief Rachel is trapped in, validates it, reframes it. One belief per Story sequence. See Section 3.
+- **Personal Story** - a moment from Olly's journey (chronic illness thread or the $13k conscious creation thread). Before / turning point / after arc. See Section 4.
+- **Case Study** - a client result / testimonial (screenshot, quote, written story). Proof-based, focused on the client's experience.
+
+**Retired (2026-07-09):** Engagement, Personal Mission and Belief-Changing post types. Stories are no longer used for lead-gen sequences or belief-shift arcs - that work now lives entirely in Reels. Section 3 (Belief-Changing Structure) is kept below for reference only, not active use.
 
 ---
 
@@ -55,7 +54,7 @@ The reframe itself should be one clean logical sentence, not a science lecture:
 SURVIVAL MODE - soften it
 "It's just because you're still mainly operating from a survival-based state." Never clinical or blaming.
 
-HEART LANGUAGE - not "Heart Coherence" at this stage
+HEART LANGUAGE - not "Heart-Opening Meditation" by name at this stage
 Use "opening your heart" / "getting into your heart" - warm and accessible, not mechanistic.
 
 CLOSE - plant the seed or CTA
@@ -90,7 +89,7 @@ TURNING POINT
 "What I realised was..." / "Things only changed when..."
 
 THE MECHANISM
-Introduce Heart Coherence naturally, not as a pitch. Always "something called Heart Coherence" on first mention.
+Introduce the Heart-Opening Meditation naturally, not as a pitch. Always "something called the Heart-Opening Meditation" on first mention.
 
 THE RESULT
 Specific and grounded, not vague wellness promises.
@@ -110,10 +109,22 @@ Instagram Stories are a series of vertical slides. Each slide is short - the rea
 - **Polls & questions:** use native Instagram stickers for Engagement posts
 - **Quick tips:** one actionable idea spread across 2-3 slides
 - **Social proof:** testimonials, client wins, DM screenshots (with permission) for Case Study posts
-- Post 3-7 stories per day when active
+- Ad hoc posting - no set frequency or daily target; post when there's a genuine behind-the-scenes moment, personal update or testimonial to share
 - No em-dashes or hyphens as clause separators - use a full stop or comma
 - No comma before 'and' or 'or'
 - British English throughout
+
+---
+
+## 5a. Profile Highlights (added 2026-07-09)
+
+Three Highlights live on the @theollyhenson profile, built from saved Stories:
+
+- **About Me** - who Olly is, his story, why he does this work
+- **HCC** - the Heart Creator Community (Skool) - what it is, what's inside, how to join
+- **Testimonials** - client results and proof (Isabell, Anas, and future clients)
+
+When drafting Stories intended for a Highlight, write them so they still make sense out of sequence to someone new arriving on the profile cold - Highlights are viewed by new visitors, not just active followers.
 
 ---
 
@@ -144,10 +155,10 @@ https://www.skool.com/heartcreator?utm_source=instagram&utm_medium=stories&utm_c
 
 - Never fabricate client results - only use real proof from Isabell and Anas (and any future clients)
 - Never use banned words: game changer, deep dive, synergy, leverage, hustle, grind, unlock, skyrocket, supercharge
-- Never assume Rachel knows what Heart Coherence is - always "something called Heart Coherence" on first mention
+- Never assume Rachel knows what the Heart-Opening Meditation is - always "something called the Heart-Opening Meditation" on first mention
 - Never assume Rachel can visualise - lead with effort and willpower as the universal experience
 - Never open a Personal Story with a vague experiential statement - open with a specific fact, number, or date
-- Never name "Heart Coherence" in a Belief-Changing Story - use "opening your heart" / "getting into your heart"
+- Never name the "Heart-Opening Meditation" in a Belief-Changing Story - use "opening your heart" / "getting into your heart"
 - Never state the Belief-Changing reframe as a flat declaration - use "But what if..." questions
 - Never include a destination URL directly in a Story - ManyChat handles delivery
 - Never use em-dashes or hyphens as clause separators
@@ -167,6 +178,11 @@ https://www.skool.com/heartcreator?utm_source=instagram&utm_medium=stories&utm_c
 ---
 
 ## Changelog
+
+**2026-07-09 - Stories narrowed to ad hoc content only**
+- Post Types narrowed from six to three: Personal Update, Personal Story, Case Study/testimonial only. Engagement, Personal Mission and Belief-Changing retired from Stories - lead-gen and belief-shift work now lives entirely in the 2x/day Reels cadence (14x/week)
+- Posting cadence changed from a planned 3-7 stories/day target to fully ad hoc - no set frequency, post when there's something real to share
+- Belief-Changing Structure (Section 3) kept in the file for reference only, not active guidance
 
 **2026-07-03 - Created as standalone skill (v1.0)**
 - Split out from `skills_repurposing-content.md` (Instagram Stories section) and `skills_instagram-strategy.md` (Stories Strategy section) now that Instagram Reels, Instagram Stories and Email are each run as independent content layers rather than one repurposing workflow

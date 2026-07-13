@@ -2,6 +2,14 @@
 
 ---
 
+## Posting Schedule & Cross-Posting (updated 2026-07-09)
+
+- **2 Reels per day**, published to Instagram
+- Every Reel is also cross-posted to the **Facebook page** (@theollyhenson) for extra reach — same video, same caption, no separate Facebook-specific version needed
+- No separate Notion field required to track Facebook — it is a straight cross-post of the same asset published to Instagram
+
+---
+
 ## Notion Database
 
 **Instagram Reels database ID:** `36e30e58-6a0d-81e7-8c2a-e6c4f729915a`
@@ -40,7 +48,7 @@ Every entry in the Instagram Reels Notion database must meet this standard befor
 Aligned with the YouTube Long-Form type system. Three types only.
 
 - **Belief-Changing** = leads with a belief Rachel is stuck in, builds the argument and science, lands the reframe. Personal stories and client proof drop in as the proof layer when available. Most Reels will be this type. Previously called Argument-Based, Educational and Mission-Based — all collapsed into this one type because the entry point (Rachel's frustration or a belief she holds) is the same regardless of how much science the Reel contains
-- **Practical** = takes Rachel through an actual practice or exercise on screen — nervous system regulation, feeling the future as real, a Heart Coherence snippet. The practice is the point, not just the explanation. Previously called Technique
+- **Practical** = takes Rachel through an actual practice or exercise on screen — nervous system regulation, feeling the future as real, a Heart-Opening Meditation snippet. The practice is the point, not just the explanation. Previously called Technique
 - **Client Success** = a real client result — proof-led. Either Olly explains the result or the client speaks for themselves
 
 **Engagement and Personal Update Reels are retired.** Instagram Stories handles both of those formats going forward. Reels are for Belief-Changing, Practical and Client Success only.
@@ -92,7 +100,7 @@ Two caption types. Choose one per Reel — never mix them.
 **HEART CTA** — used when the goal is lead generation. Always starts with the CTA.
 
 ```
-➡️ Comment "HEART" below and I'll send you my free meditation that will help you feel the emotions of your future, so it happens.
+➡️ Comment "HEART" below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens
 
 [Caption body — 2-3 short paragraphs related to the Title angle. One idea per paragraph. Lead with the problem Rachel recognises, build to the reframe or the missing piece.]
 
@@ -102,7 +110,7 @@ Two caption types. Choose one per Reel — never mix them.
 **Technique HEART CTA** — for Technique posts, the caption body gives a real snippet of the technique. Structure:
 
 ```
-➡️ Comment "HEART" below and I'll send you my free meditation that will help you feel the emotions of your future, so it happens.
+➡️ Comment "HEART" below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens
 
 [Invite Rachel to try: "Try this." — short, direct]
 
@@ -115,7 +123,7 @@ Two caption types. Choose one per Reel — never mix them.
 
 [Connect to the mechanism — old programming, survival mode, etc.]
 
-[Point to Heart Coherence as what releases it and installs the new programme]
+[Point to the Heart-Opening Meditation as what releases it and installs the new programme]
 
 #realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction
 ```
@@ -158,10 +166,10 @@ Caption rules (apply to both types):
 - Never create an Engagement or Personal Update Reel — those formats belong to Instagram Stories
 - Never use "manifestation" as the default term — default is "reality creation" or "conscious creation". Manifestation is used only (~25%) when wider reach or virality is the goal
 - Never pad a title with extra words just to reach the limit, and never cut a genuinely better title down purely to hit 9 words — ~9 words is a guideline, not a hard cap
-- Never write a title that could belong to a generic self-help Reel — it must name the niche (reality creation, conscious creation, subconscious) so Rachel identifies it as specifically for her
+- Never write a title that could belong to a generic self-help Reel — it must name the niche (reality creation, conscious creation, subconscious, manifestation) so Rachel identifies it as specifically for her. Example (2026-07-10): "You've read all the books. Still nothing's changed" was rejected as too vague — it could apply to any self-help content. Fixed by naming the niche directly: "You've read every manifestation book. Still nothing's changed". Test: could this title apply to a fitness or productivity Reel too? If yes, it needs a niche word
 - Never default to a metaphor title when a direct aspirational title is available — metaphors require decoding; direct Promised Land language communicates instantly
 - Never use `#subconsciousmind` — the correct hashtag is `#nevillegoddard`
-- Never paraphrase the HEART CTA line — the exact wording is fixed: *"Comment 'HEART' below and I'll send you my free meditation that will help you feel the emotions of your future, so it happens."* Do not reword, shorten, or vary it
+- Never paraphrase the HEART CTA line — the exact wording is fixed: *"Comment 'HEART' below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens"* Do not reword, shorten, or vary it. Keep the hyphen exactly as written — this is a deliberate exception to the no-hyphen caption rule for this fixed line only
 - Never improvise hashtags — the approved set is fixed: `#realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction`. Do not add, remove, or swap any of these
 - Never set a Date on a new entry — Olly chooses dates as he goes
 
@@ -171,6 +179,7 @@ Caption rules (apply to both types):
 - Draft all fields internally before pushing to Notion
 - Present the full entry to Olly for field-by-field review before marking as Recording
 - For Technique posts: ask Olly for the specific steps of the technique before drafting — the Technique field in Notion describes the purpose, not the method. Without the steps you cannot write an accurate Outcome or caption
+- **When building a batch quickly and technique steps aren't already to hand, default new entries to Belief-Changing rather than Practical.** Confirmed 2026-07-10: Olly rejected two Practical placeholders mid-batch ("Try this to feel your future as real", "A 60 second reset...") and converted them to Belief-Changing because he needed the batch out fast and didn't have the steps ready. Only create a Practical entry when the technique is already confirmed — otherwise it stalls the batch waiting on Olly
 
 ---
 
@@ -230,7 +239,7 @@ Why it works: opens with Rachel's lived experience (trying from the head), pivot
 **Title angle:** Reality creation is a heart function, not a brain function
 
 ```
-➡️ Comment "HEART" below and I'll send you my free meditation that will help you feel the emotions of your future, so it happens.
+➡️ Comment "HEART" below and I'll send you my heart-opening meditation that will help you feel your future as real - so it happens
 
 You've been trying to create your reality from your head.
 
@@ -259,10 +268,10 @@ Why it works: opens with the exact programme Rachel has been running (visualisat
 
 ### Caption — Technique HEART CTA (approved by Olly)
 **Title:** Manifestation not working? Try this
-**Technique:** Say intention out loud → notice body resistance → resistance = old programming → Heart Coherence releases it
+**Technique:** Say intention out loud → notice body resistance → resistance = old programming → the Heart-Opening Meditation releases it
 
 ```
-➡️ Comment "HEART" below and I'll send you my free meditation that will help you feel the emotions of your future, so it happens.
+➡️ Comment "HEART" below and I'll send you my heart-opening meditation that will help you feel your future as real - so it happens
 
 Try this.
 
@@ -286,12 +295,12 @@ The work isn't to force belief over the top of it.
 
 It's to release the old programme and replace it with a new one.
 
-That's exactly what Heart Coherence does.
+That's exactly what the Heart-Opening Meditation does.
 
 #realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction
 ```
 
-Why it works: opens with "Try this" — immediately signals this is participatory, not passive. Gives the technique in two steps (say it, notice the body). Names three specific intentions so Rachel can mentally substitute her own. Reframes resistance as evidence of old programming rather than personal failure — removes self-blame before it can take hold. Connects naturally to Heart Coherence as the solution without over-explaining. Each idea is its own line.
+Why it works: opens with "Try this" — immediately signals this is participatory, not passive. Gives the technique in two steps (say it, notice the body). Names three specific intentions so Rachel can mentally substitute her own. Reframes resistance as evidence of old programming rather than personal failure — removes self-blame before it can take hold. Connects naturally to the Heart-Opening Meditation as the solution without over-explaining. Each idea is its own line.
 
 ---
 
@@ -321,6 +330,19 @@ Why: opens with science rather than Rachel's experience. Science belongs inside 
 ---
 
 ## Changelog
+
+**2026-07-13 — Session feedback review**
+- Never list: added concrete before/after example of a rejected vague title ("You've read all the books. Still nothing's changed" → "You've read every manifestation book. Still nothing's changed") to sharpen the existing "must name the niche" rule with a real test case
+- Process: added rule to default to Belief-Changing over Practical when building a batch quickly without confirmed technique steps — reason: two Practical placeholders had to be converted mid-batch on 2026-07-10 because steps weren't ready and Olly needed the batch moving fast
+- No rules removed — the CTA wording and cadence/cross-posting entries below (2026-07-09/07-10) already captured that session's other corrections, nothing further to add for those
+
+**2026-07-10 — CTA wording updated again to name the 28 Day program**
+- HEART CTA line updated: "my heart-opening meditation" → "my 28 Day Heart-Opening meditation" — names the specific program, matching the delivery system rename to the 28 Day Heart-Opening Program. Applied to both the standard and Technique CTA formulas and the Never-paraphrase rule. Existing Notion backlog entries updated to match.
+
+**2026-07-09 — CTA wording updated, cadence and cross-posting added**
+- HEART CTA line updated: "free meditation that will help you feel the emotions of your future, so it happens" → "heart-opening meditation that will help you feel your future as real - so it happens". No longer framed as free — it now leads into the Heart Creator Community (Skool) via ManyChat, not a standalone opt-in funnel
+- This line keeps a hyphen as a clause separator deliberately — confirmed by Olly as an intentional exception to the standing no-hyphen caption rule, for this fixed CTA line only
+- Posting Schedule & Cross-Posting section added: 2 Reels/day, cross-posted to Facebook (@theollyhenson)
 
 **2026-06-30 — Type system aligned with YouTube Long-Form (v2.1)**
 - **Three types only: Belief-Changing, Practical, Client Success** — aligned with the YouTube Long-Form type system. Argument-Based, Educational and Mission-Based all collapsed into Belief-Changing. Technique renamed to Practical with broader scope. Engagement-Based and Personal retired from Reels — Instagram Stories handles both going forward
