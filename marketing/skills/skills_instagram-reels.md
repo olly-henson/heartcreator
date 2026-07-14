@@ -10,6 +10,18 @@
 
 ---
 
+## ⚠️ This Week's CTA Test (2026-07-13 batch only)
+
+All 21 Reels in the 2026-07-13 weekly batch use a **TRIAL CTA** instead of the standard HEART CTA below:
+
+```
+If you'd like to trial seven days of manifestation and reality coaching for free to help you feel and believe in your new reality, just comment "TRIAL" below and I'll send you the details to get started
+```
+
+This fully replaces HEART for this batch — no split test, no HEART Reels this week. Standard HEART CTA and its ManyChat routing remain the default for all future batches unless Olly confirms otherwise after seeing results.
+
+---
+
 ## Notion Database
 
 **Instagram Reels database ID:** `36e30e58-6a0d-81e7-8c2a-e6c4f729915a`
@@ -43,6 +55,8 @@ Every entry in the Instagram Reels Notion database must meet this standard befor
 - Vague titles fail cold audiences — "You can feel it sometimes. You just can't hold it." could apply to anything. "Why manifestation works for some people and not others" tells her exactly who this is for
 - No emojis
 - Test: does a cold Rachel read this and think "that's me"?
+- **There are two audience sub-segments within Rachel — default to segment 2.** (1) Doesn't know why she can't create her reality despite all her effort — general confusion. (2) Knows specifically that she needs to feel her reality as real, but can't — names the exact mechanism gap. Segment 2 is the priority: sharper, more qualified, closer to understanding the actual mechanism. Confirmed 2026-07-13 after Olly rejected a batch of titles for being too conceptual ("How to know if reality creation is actually possible for you", "The missing step nobody talks about in manifestation") instead of naming the felt symptom directly. Default to titles that name the specific symptom — can't hold the feeling, doubts creep back in, affirmations feel empty, visualising doesn't make it feel real — over vague "why isn't this working" framing
+- **Never assume Rachel is executing the technique flawlessly.** Don't write a title or hook premised on "you visualise perfectly and still don't believe it" — the inconsistency and effort of the practice is part of her struggle too, not just a clean execution that mysteriously fails. Corrected 2026-07-13: "You can visualise every day and still not believe your manifestation" replaced "You can visualise your manifestation perfectly and still not believe it" for this reason
 
 ### Type of Post
 Aligned with the YouTube Long-Form type system. Three types only.
@@ -51,7 +65,10 @@ Aligned with the YouTube Long-Form type system. Three types only.
 - **Practical** = takes Rachel through an actual practice or exercise on screen — nervous system regulation, feeling the future as real, a Heart-Opening Meditation snippet. The practice is the point, not just the explanation. Previously called Technique
 - **Client Success** = a real client result — proof-led. Either Olly explains the result or the client speaks for themselves
 
-**Engagement and Personal Update Reels are retired.** Instagram Stories handles both of those formats going forward. Reels are for Belief-Changing, Practical and Client Success only.
+- **Personal Transformation** = a personal story or experiment Olly ran (e.g. "This random manifestation experiment doubled my income") — proof through his own lived result, not a client's. Un-retired 2026-07-13: was the top performer from the previous batch. Distinct from a generic "Personal Update" (day-in-the-life, behind-the-scenes) which still belongs to Instagram Stories only
+- **Use Olly's confirmed personal story facts, not invented experiments.** Draw specific, real numbers and events from his personal story (the 2018 income growth, the chronic illness journey) rather than writing a generic "I tried X for 30 days" premise. Corrected 2026-07-13: "The manifestation experiment that grew my income by 364%" replaced a vaguer invented-experiment title. Specific, real, provable stats outperform generic personal-experiment framing
+
+**Engagement and generic Personal Update Reels remain retired.** Instagram Stories handles those formats. Reels are for Belief-Changing, Practical, Client Success and Personal Transformation.
 
 - When in doubt: if the opening moment names a belief Rachel holds or frames her frustration, it is Belief-Changing
 - **Critical distinction**: a Reel can contain science and education and still be Belief-Changing if the opening moment is Rachel's experience. The first 3 seconds determine the type
@@ -90,6 +107,10 @@ The Outcome varies by post type. Core question for all types: what does Rachel n
 **Client Success:**
 - What does she now believe is possible for herself?
 - What has shifted in her understanding of the mechanism through seeing someone else's result?
+- **Never create a Client Success entry without a real, confirmed client story ready to use.** Confirmed 2026-07-13: Olly swapped a Client Success placeholder to Belief-Changing mid-batch because no client success story was ready that week. If no story is available, default to Belief-Changing instead of holding a placeholder open
+
+**Practical — default felt-sense check (when no specific technique is confirmed):**
+- If Olly hasn't supplied technique steps, the approved fallback content is: ask Rachel to bring to mind what she's trying to create, then check for **calmness, a sense of knowing, and warmth in her heart**. That felt combination is Olly's confirmed default signal for "heart open" vs "heart closed off" (2026-07-13). Still ask Olly for specific steps first — only use this fallback when he explicitly says to keep it generic
 
 ### Caption
 
@@ -163,7 +184,7 @@ Caption rules (apply to both types):
 - Never use "it's not what you think" or "here's the truth" or similar overused marketer transitions — use natural phrasing instead
 - Never write an Outcome that is a generic benefit not tied to the specific Title angle
 - Never classify a Reel as Practical if the opening moment frames Rachel's frustration without a live practice — that makes it Belief-Changing
-- Never create an Engagement or Personal Update Reel — those formats belong to Instagram Stories
+- Never create an Engagement or generic Personal Update Reel (day-in-the-life, behind-the-scenes) — those formats belong to Instagram Stories. A personal experiment or story with a proof-led result (Personal Transformation) is allowed
 - Never use "manifestation" as the default term — default is "reality creation" or "conscious creation". Manifestation is used only (~25%) when wider reach or virality is the goal
 - Never pad a title with extra words just to reach the limit, and never cut a genuinely better title down purely to hit 9 words — ~9 words is a guideline, not a hard cap
 - Never write a title that could belong to a generic self-help Reel — it must name the niche (reality creation, conscious creation, subconscious, manifestation) so Rachel identifies it as specifically for her. Example (2026-07-10): "You've read all the books. Still nothing's changed" was rejected as too vague — it could apply to any self-help content. Fixed by naming the niche directly: "You've read every manifestation book. Still nothing's changed". Test: could this title apply to a fitness or productivity Reel too? If yes, it needs a niche word
@@ -329,7 +350,26 @@ Why: opens with science rather than Rachel's experience. Science belongs inside 
 
 ---
 
+### Title — segment 2 symptom specificity (approved by Olly, 2026-07-13)
+
+**Rejected (too conceptual, segment 1 framing):** "How to know if reality creation is actually possible for you" / "The missing step nobody talks about in manifestation"
+
+**Approved replacements (segment 2, names the felt symptom):** "You can feel your manifestation sometimes. You just can't hold it" / "Doubts creep back into your manifestation even when you're trying to stay positive" / "Why manifestation affirmations feel empty even when you want them true"
+
+Why it works: the rejected titles ask an abstract question. The approved titles describe the exact felt experience of someone who already knows they need to *feel* their reality real but can't — the sharper, more qualified sub-segment Olly wants to attract. See the segment 2 rule under Title above.
+
+---
+
 ## Changelog
+
+**2026-07-14 — Session feedback review (weekly batch build)**
+- Title: added segment 2 vs segment 1 audience distinction — Olly rejected a first pass of titles as too conceptual, wanting titles to name the exact felt symptom (can't hold the feeling, doubts creep back, affirmations feel empty) rather than vague "why isn't this working" framing. Segment 2 (already knows she needs to feel it as real, can't) is the priority sub-segment
+- Title: added rule against assuming Rachel executes techniques flawlessly, after Olly corrected "You can visualise your manifestation perfectly and still not believe it" — the struggle includes inconsistent practice, not just clean execution that mysteriously fails
+- Type of Post (Personal Transformation): added rule to draw on Olly's confirmed real personal story facts rather than inventing generic experiments, after "The manifestation experiment that grew my income by 364%" replaced a vaguer invented premise
+- Outcome (Client Success): added rule never to create a Client Success entry without a real story ready — Olly swapped a placeholder to Belief-Changing mid-batch because no story was available that week
+- Outcome (Practical): documented the approved fallback felt-sense check (calmness, knowing, warmth in the heart) Olly gave when technique steps weren't specified for three Practical entries — usable as a default only when Olly explicitly says to keep it generic
+- Approved Examples: added segment 2 symptom-specificity title comparison (rejected vs approved) as a concrete reference case
+- No rules removed — this session's corrections sharpened existing Title/Outcome/Type rules rather than overriding them
 
 **2026-07-13 — Session feedback review**
 - Never list: added concrete before/after example of a rejected vague title ("You've read all the books. Still nothing's changed" → "You've read every manifestation book. Still nothing's changed") to sharpen the existing "must name the niche" rule with a real test case
