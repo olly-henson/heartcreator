@@ -14,6 +14,8 @@ We help people open their hearts so they can embody and feel their future as rea
 
 ## The core argument in one line
 
+**You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your nervous system is dysregulated.**
+
 **It's not the technique — it's the state.**
 
 The techniques work. Visualisation, affirmations, Dispenza meditations, Neville Goddard — they all work. But only when done from the right internal state. The reason nothing is changing is not a technique problem or a consistency problem. It is a state problem. A closed heart and a nervous system stuck in survival keeps people in their analytical mind, blocks access to the subconscious, and makes it impossible to genuinely feel the emotional states needed for change. The Heart-Opening Meditation solves this. It opens the heart, shifts the nervous system out of survival, and makes genuine feeling possible. That is when the techniques begin to work.
@@ -108,6 +110,8 @@ Think it might be possible for them but not for others.
 ---
 
 ## Actual Cause
+
+They can't create their reality because they can't feel it in their heart. And they can't feel it in their heart because their nervous system is dysregulated.
 
 Their heart is closed off and their nervous system is stuck in survival.
 

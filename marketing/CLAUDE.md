@@ -202,6 +202,7 @@ Aspirational, direct, mission-driven. Like a guide who has been through the exac
 These are signature phrases that make Olly's voice recognisable. Use them naturally when they fit — never force them.
 
 - "Open your heart so you can feel your future as real" — the core argument in one line
+- "You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your nervous system is dysregulated." — the causal chain, use to explain the actual cause
 - "Something called the Heart-Opening Meditation" — always introduce it this way. Never assume the audience knows what it is.
 - "Transformation and creation are not a head game. They are an experience game."
 - "You have to feel it before it happens."
@@ -250,7 +251,7 @@ Every piece of content must connect to at least one stage of the argument.
 | **Pain** | They've been trying to consciously create change and manifest something in their life for a long time — health, wealth, business growth, healing, a partner, a new career, or anything in between. They understand the theory completely but nothing has truly shifted. They know they need to keep feeling as if their reality has already happened, but they can't, no matter how positive they try to stay. Swarmed with doubts, resistance and feeling stuck. |
 | **Bleeding Neck Pain** | Starting to become disillusioned with manifestation and wondering if it's actually possible for them. Getting sick of content creators saying it's easy and that they just need to feel it. |
 | **Current Belief** | They believe the problem is them — not enough consistency, not the right technique, not deserving it yet. If they just found the right technique or did it more consistently, it would finally work. Think it might be possible for them but not for others. |
-| **Actual Cause** | Their heart is closed off and their nervous system is stuck in survival. Caused by conditioning, trauma, heartbreak, illness, injury or chronic stress. This stops them feeling the emotions of their future — gratitude, appreciation, freedom, abundance, joy. |
+| **Actual Cause** | They can't create their reality because they can't feel it in their heart. And they can't feel it in their heart because their nervous system is dysregulated. Their heart is closed off and their nervous system is stuck in survival — caused by conditioning, trauma, heartbreak, illness, injury or chronic stress. This stops them feeling the emotions of their future — gratitude, appreciation, freedom, abundance, joy. |
 | **New Mechanism** | The Heart-Opening Meditation. Not another technique to add to the pile — the missing foundation that makes all the other techniques work. |
 | **New Belief** | The Heart-Opening Meditation helps them open their heart so they can feel and maintain the feeling of their future until it happens. |
 | **Promised Land** | Able to comfortably embody and feel the future they want to create until it happens. |

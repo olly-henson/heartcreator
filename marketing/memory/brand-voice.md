@@ -52,6 +52,7 @@ The tone is aspirational but grounded. Bold but never preachy. Personal but not 
 These are Olly's signature expressions. Use them naturally when they fit — never force them.
 
 - "Open your heart so you can feel your future as real" — the argument in one line
+- "You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your nervous system is dysregulated." — the causal chain, use to explain the actual cause
 - "Something called the Heart-Opening Meditation" — always introduce it this way. Never assume the audience knows what it is.
 - "Transformation and creation are not a head game. They are an experience game."
 - "You have to feel it before it happens."

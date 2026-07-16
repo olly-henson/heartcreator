@@ -15,8 +15,10 @@
 All 21 Reels in the 2026-07-13 weekly batch use a **TRIAL CTA** instead of the standard HEART CTA below:
 
 ```
-If you'd like to trial seven days of manifestation and reality coaching for free to help you feel and believe in your new reality, just comment "TRIAL" below and I'll send you the details to get started
+➡️ Comment 'TRIAL' below if you'd like to trial seven days of manifestation and reality coaching for free to help you feel and believe in your new reality and I'll send you the details to get started
 ```
+
+**Updated 2026-07-14:** wording changed from "If you'd like to trial... just comment 'TRIAL' below" to "➡️ Comment 'TRIAL' below if you'd like to trial..." — leads with the action (comment TRIAL) instead of the condition. Applied across all Free Trial-aim Reels in Scheduled/In Drafts status.
 
 This fully replaces HEART for this batch — no split test, no HEART Reels this week. Standard HEART CTA and its ManyChat routing remain the default for all future batches unless Olly confirms otherwise after seeing results.
 
