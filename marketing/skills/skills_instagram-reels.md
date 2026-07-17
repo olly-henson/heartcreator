@@ -120,17 +120,22 @@ Two caption types. Choose one per Reel — never mix them.
 
 ---
 
-**HEART CTA** — used when the goal is lead generation. Always starts with the CTA.
+**HEART CTA** — used when the goal is lead generation. Always starts with the CTA. **The CTA line itself depends on the Aim field — check it before drafting:**
+
+- **Aim = List building:** `➡️ Comment "HEART" below and I'll send you my free Heart Activation Meditation that will help you keep feeling your new reality as real, so it happens.`
+- **Aim = Free Trial or 1-2-1 Coaching:** `➡️ Comment "HEART" below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens`
+
+The free Heart Activation Meditation is the lead magnet that grows the email/DM list. The 28 Day Heart-Opening line promotes the paid program trial. Using the wrong one sends list-building traffic to the wrong offer — confirmed by Olly 2026-07-16.
 
 ```
-➡️ Comment "HEART" below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens
+[CTA line — chosen per Aim above]
 
 [Caption body — 2-3 short paragraphs related to the Title angle. One idea per paragraph. Lead with the problem Rachel recognises, build to the reframe or the missing piece.]
 
 #realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction
 ```
 
-**Technique HEART CTA** — for Technique posts, the caption body gives a real snippet of the technique. Structure:
+**Technique HEART CTA** — for Technique posts, the caption body gives a real snippet of the technique. Same Aim-based CTA choice applies. Structure:
 
 ```
 ➡️ Comment "HEART" below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens
@@ -189,6 +194,7 @@ Caption rules (apply to both types):
 - Never create an Engagement or generic Personal Update Reel (day-in-the-life, behind-the-scenes) — those formats belong to Instagram Stories. A personal experiment or story with a proof-led result (Personal Transformation) is allowed
 - Never use "manifestation" as the default term — default is "reality creation" or "conscious creation". Manifestation is used only (~25%) when wider reach or virality is the goal
 - Never pad a title with extra words just to reach the limit, and never cut a genuinely better title down purely to hit 9 words — ~9 words is a guideline, not a hard cap
+- Never use the 28 Day Heart-Opening CTA line on a List building Reel, or the free Heart Activation Meditation CTA line on a Free Trial/1-2-1 Coaching Reel — check the Aim field first. Corrected 2026-07-17: a List building Reel was drafted with the 28 Day Heart-Opening CTA by default; Olly flagged it as the wrong CTA since that line promotes the paid trial, not the free list-building lead magnet
 - Never write a title that could belong to a generic self-help Reel — it must name the niche (reality creation, conscious creation, subconscious, manifestation) so Rachel identifies it as specifically for her. Example (2026-07-10): "You've read all the books. Still nothing's changed" was rejected as too vague — it could apply to any self-help content. Fixed by naming the niche directly: "You've read every manifestation book. Still nothing's changed". Test: could this title apply to a fitness or productivity Reel too? If yes, it needs a niche word
 - Never default to a metaphor title when a direct aspirational title is available — metaphors require decoding; direct Promised Land language communicates instantly
 - Never use `#subconsciousmind` — the correct hashtag is `#nevillegoddard`
@@ -289,6 +295,31 @@ Why it works: opens with the exact programme Rachel has been running (visualisat
 
 ---
 
+### Caption — HEART CTA, List building Aim (approved by Olly, 2026-07-17)
+**Title:** This is how long your manifestation will take
+
+```
+➡️ Comment "HEART" below and I'll send you my free Heart Activation Meditation that will help you keep feeling your new reality as real, so it happens.
+
+"How long is this going to take?" is probably the question you ask yourself the most.
+
+The honest answer is there's no fixed timeline.
+
+It comes down to two things.
+
+How well you can actually feel your new reality as real.
+
+And how regulated your nervous system is so you can keep feeling it, instead of dropping back into doubt.
+
+The stronger those two get, the faster it happens.
+
+#realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction
+```
+
+Why it works: uses the free Heart Activation Meditation CTA because Aim = List building, not the 28 Day Heart-Opening line. Names the two real levers (feeling ability, nervous system regulation) instead of a vague "it depends" answer. Frames patience/time as a function of skill building rather than luck or waiting, which reinforces the mechanism instead of undercutting urgency.
+
+---
+
 ### Caption — Technique HEART CTA (approved by Olly)
 **Title:** Manifestation not working? Try this
 **Technique:** Say intention out loud → notice body resistance → resistance = old programming → the Heart-Opening Meditation releases it
@@ -363,6 +394,12 @@ Why it works: the rejected titles ask an abstract question. The approved titles 
 ---
 
 ## Changelog
+
+**2026-07-17 — Session feedback review (CTA-by-Aim correction)**
+- Caption: HEART CTA is no longer a single fixed line — it now branches by the Aim field. Aim = List building uses the free Heart Activation Meditation CTA (lead magnet for growing the list); Aim = Free Trial or 1-2-1 Coaching uses the 28 Day Heart-Opening CTA (promotes the paid trial). Reason: Olly flagged a List building Reel drafted with the 28 Day Heart-Opening CTA as "the wrong CTA" — this file's single-CTA merge (dated 2026-07-10) had gone stale against Olly's 2026-07-16 confirmation that the two CTAs serve different funnel stages and must not be mixed up
+- Never list: added rule against using either CTA line on the wrong Aim, with the 2026-07-17 correction as the concrete case
+- Approved Examples: added a List building HEART CTA caption example ("This is how long your manifestation will take") showing the free Heart Activation Meditation CTA in use, plus the pattern of naming concrete levers (feeling ability, nervous system regulation) when addressing a timeline/patience objection
+- No prior rules removed — this sharpens the existing HEART CTA section rather than overriding a still-valid rule; the Technique HEART CTA formula is unaffected except for inheriting the same Aim-based CTA choice
 
 **2026-07-14 — Session feedback review (weekly batch build)**
 - Title: added segment 2 vs segment 1 audience distinction — Olly rejected a first pass of titles as too conceptual, wanting titles to name the exact felt symptom (can't hold the feeling, doubts creep back, affirmations feel empty) rather than vague "why isn't this working" framing. Segment 2 (already knows she needs to feel it as real, can't) is the priority sub-segment
