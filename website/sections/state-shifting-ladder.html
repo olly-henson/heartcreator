@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State Shifting Ladder — Heart Creator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1e;
+    --ink-soft: #4b4b52;
+    --ink-mute: #86868d;
+    --mist: #f7f7f8;
+    --card: #ffffff;
+    --pine: #d92c4b;
+    --pine-deep: #b31f3c;
+    --gold: #d98a2b;
+    --gold-soft: #faeedd;
+    --line: #e5e5e7;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--mist); color: var(--ink); line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 20px 96px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--pine); font-weight: 600; margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Inter', system-ui, sans-serif; font-weight: 800;
+    font-size: clamp(28px, 5vw, 40px); line-height: 1.15;
+    letter-spacing: -0.01em; margin-bottom: 16px;
+  }
+  .lede { font-size: 17px; color: var(--ink-soft); max-width: 58ch; margin-bottom: 8px; }
+  .lede-sub { font-size: 15px; color: var(--ink-mute); max-width: 58ch; margin-bottom: 10px; }
+  .lede-sub:last-of-type { margin-bottom: 40px; }
+
+  .ladder { position: relative; padding-left: 26px; }
+  .rail {
+    position: absolute; left: 8px; top: 10px; bottom: 10px; width: 4px; border-radius: 2px;
+    background: linear-gradient(to bottom, #8b5cf6 0%, #3b82f6 18%, #22c55e 38%, #eab308 58%, #f97316 72%, #dc2626 86%, #5c0f14 100%);
+  }
+  .rung {
+    background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius);
+    margin-bottom: 9px; overflow: hidden;
+    transition: border-color .15s, box-shadow .2s, opacity .3s;
+  }
+  .rung-head {
+    display: block; width: 100%; text-align: left; font: inherit; cursor: pointer;
+    background: none; border: none; color: var(--ink); padding: 14px 18px;
+  }
+  .rung-head:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+  .rung:hover { border-color: var(--pine); }
+  .rung .meta {
+    display: flex; gap: 10px; align-items: baseline; margin-bottom: 2px;
+    font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-mute); font-weight: 600;
+  }
+  .rung .meta .lvl { color: var(--pine); }
+  .rung .here-desc { font-size: 15.5px; line-height: 1.5; color: var(--ink-soft); }
+
+  .rung.open { border-color: var(--pine); box-shadow: 0 0 0 3px rgba(217,44,75,.14); }
+  .rung.open .here-desc {
+    font-family: 'Inter', system-ui, sans-serif; font-style: italic; font-weight: 600;
+    font-size: clamp(18px, 3.2vw, 22px); color: var(--ink);
+  }
+  .rung.climbed { border-color: var(--pine); background: #fdf1f3; opacity: .7; }
+  .rung.climbed .meta::after {
+    content: "\2713 climbed"; color: var(--pine); letter-spacing: 0.06em; font-size: 11.5px;
+  }
+  .rung-body { display: none; padding: 0 18px 20px; }
+  .rung.open .rung-body { display: block; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .btn {
+    font: inherit; font-weight: 600; font-size: 15px; border-radius: 10px;
+    padding: 12px 22px; cursor: pointer; transition: all .15s; border: 1.5px solid var(--pine);
+  }
+  .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .btn.primary { background: var(--btn-c, var(--pine)); border-color: var(--btn-c, var(--pine)); color: #fff; }
+  .btn.primary:hover { filter: brightness(0.88); }
+  .btn.ghost { background: none; color: var(--pine); }
+  .btn.ghost:hover { background: var(--pine); color: #fff; }
+
+  .threshold-mark { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+  .threshold-mark .bar { flex: 1; height: 1.5px; background: var(--gold); opacity: .55; }
+  .threshold-mark .tag {
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 600; color: var(--gold); white-space: nowrap;
+  }
+  .rung.gold { border-color: var(--gold); }
+  .rung.gold .meta .lvl, .rung.gold .meta { color: var(--gold); }
+  .rung.gold.open { box-shadow: 0 0 0 3px rgba(217,138,43,.18); }
+
+  #summary { display: none; margin-top: 56px; scroll-margin-top: 24px; }
+  .sum-card {
+    background: var(--card); border: 1.5px solid var(--gold); border-radius: var(--radius);
+    padding: 30px 28px;
+  }
+  .sum-title {
+    font-family: 'Inter', system-ui, sans-serif; font-size: clamp(22px, 4vw, 30px);
+    font-weight: 700; margin-bottom: 10px;
+  }
+  .sum-body { font-size: 16px; color: var(--ink-soft); }
+  .sum-body b { color: var(--ink); }
+  .footer-note {
+    margin-top: 60px; font-size: 13px; color: var(--ink-mute);
+    border-top: 1px solid var(--line); padding-top: 18px; max-width: 60ch;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rung, .btn { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Heart Creator · State Shifting Ladder</p>
+  <h1>State Shifting Ladder</h1>
+  <p class="lede">Use this emotional scaling ladder to elevate your state out of survival and put yourself into creative mode.</p>
+  <p class="lede-sub">You can use this before any creative practice or simply to elevate your state during your day.</p>
+  <p class="lede-sub">Either start with the level that you feel you're at right now or work your way from the bottom to the top.</p>
+  <p class="lede-sub">The higher the level you reach the more creative power you gain.</p>
+
+  <div class="ladder">
+    <div class="rail" aria-hidden="true"></div>
+    <div id="rungs"></div>
+  </div>
+
+  <section id="summary">
+    <div class="sum-card">
+      <p class="sum-title" id="s-title"></p>
+      <p class="sum-body" id="s-body"></p>
+      <div class="btn-row">
+        <button class="btn ghost" id="again">Start again</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note">This tool supports everyday shifts in emotional state. It isn't therapy or crisis support. Nothing you do here is stored, tracked, or shared — everything happens in your browser and your data isn't used in any way.</p>
+
+</div>
+
+<script>
+  // Ascending order: index 0 = lowest. Rendered in REVERSE so Peace sits at the top of the page.
+  var LEVELS = [
+    { n: "0–20", name: "Shame", color: "#5c0f14",
+      here: "I feel like I just want to disappear." },
+    { n: "30", name: "Guilt", color: "#8b1a1a",
+      here: "I feel like everything is my fault." },
+    { n: "50", name: "Apathy", color: "#a61b1b",
+      here: "I feel like — what's the point in anything?" },
+    { n: "75", name: "Grief", color: "#c11f1f",
+      here: "I feel so sad — like I've lost something I can't get back." },
+    { n: "100", name: "Fear", color: "#dc2626",
+      here: "I feel worried that something bad is going to happen." },
+    { n: "125", name: "Craving", color: "#e8501f",
+      here: "I feel like I really need something in order to feel good." },
+    { n: "150", name: "Anger", color: "#f97316",
+      here: "I feel like life is so unfair and I'm annoyed at everyone and everything." },
+    { n: "175", name: "Pride", color: "#f59e0b",
+      here: "I feel like I'm above all this. I'm better than everyone." },
+    { n: "200", name: "Courage", color: "#eab308", gold: true,
+      here: "I feel like I CAN do this." },
+    { n: "225", name: "Boredom", color: "#b5cc16",
+      here: "I feel pretty bored right now." },
+    { n: "250", name: "Contentment", color: "#84cc16",
+      here: "I feel like things are ok either way." },
+    { n: "275", name: "Relaxation", color: "#22c55e",
+      here: "I feel calm and relaxed." },
+    { n: "~300", name: "The maybe", color: "#10b981",
+      here: "I feel like good things might actually be possible." },
+    { n: "310", name: "Willingness", color: "#14b8a6",
+      here: "I feel like I'm ready to give this a real go." },
+    { n: "350", name: "Acceptance", color: "#0d9488",
+      here: "I feel like my life is in my own hands." },
+    { n: "330–390", name: "Flow", color: "#06b6d4",
+      here: "I feel completely alive and lost in the moment." },
+    { n: "400", name: "Reason", color: "#0ea5e9",
+      here: "I know the exact steps I need to follow and everything makes sense." },
+    { n: "500", name: "Love", color: "#3b82f6",
+      here: "I feel like I have such a love for life." },
+    { n: "540", name: "Joy & gratitude", color: "#6366f1",
+      here: "I feel like everything is a gift." },
+    { n: "600", name: "Peace", color: "#8b5cf6",
+      here: "I feel like all is well." }
+  ];
+
+  var rungsEl = document.getElementById('rungs');
+  var summaryEl = document.getElementById('summary');
+  var startIdx = null;
+  var curIdx = null;
+  var rungEls = [];
+
+  function build() {
+    rungsEl.innerHTML = '';
+    rungEls = [];
+    for (var i = LEVELS.length - 1; i >= 0; i--) {
+      (function (i) {
+        var lv = LEVELS[i];
+        var rung = document.createElement('div');
+        rung.className = 'rung' + (lv.gold ? ' gold' : '');
+
+        var head = document.createElement('button');
+        head.type = 'button';
+        head.className = 'rung-head';
+        var meta = document.createElement('span');
+        meta.className = 'meta';
+        var lvlSpan = document.createElement('span');
+        lvlSpan.className = 'lvl';
+        lvlSpan.textContent = lv.n;
+        var nameSpan = document.createElement('span');
+        nameSpan.textContent = lv.name;
+        lvlSpan.style.color = lv.color;
+        nameSpan.style.color = lv.color;
+        meta.appendChild(lvlSpan); meta.appendChild(nameSpan);
+        var desc = document.createElement('span');
+        desc.className = 'here-desc';
+        desc.textContent = '“' + lv.here + '”';
+        head.appendChild(meta); head.appendChild(desc);
+        head.addEventListener('click', function () { openLevel(i, true); });
+
+        var body = document.createElement('div');
+        body.className = 'rung-body';
+        var row = document.createElement('div');
+        row.className = 'btn-row';
+        var up = document.createElement('button');
+        up.type = 'button';
+        up.className = 'btn primary';
+        up.style.setProperty('--btn-c', lv.color);
+        if (i < LEVELS.length - 1) {
+          up.textContent = "Next Level";
+          up.addEventListener('click', function () { stepUp(); });
+        } else {
+          up.textContent = "Finish";
+          up.addEventListener('click', function () { finish(); });
+        }
+        row.appendChild(up);
+        body.appendChild(row);
+
+        rung.appendChild(head);
+        rung.appendChild(body);
+        rungsEl.appendChild(rung);
+        rungEls[i] = rung;
+
+        if (lv.gold) {
+          var mark = document.createElement('div');
+          mark.className = 'threshold-mark';
+          mark.innerHTML = '<span class="bar"></span><span class="tag">The threshold</span><span class="bar"></span>';
+          rungsEl.appendChild(mark);
+        }
+      })(i);
+    }
+  }
+
+  function openLevel(i, isFreshChoice) {
+    if (isFreshChoice) {
+      startIdx = i;
+      for (var j = 0; j < rungEls.length; j++) rungEls[j].classList.remove('climbed');
+    }
+    curIdx = i;
+    summaryEl.style.display = 'none';
+    for (var k = 0; k < rungEls.length; k++) rungEls[k].classList.remove('open');
+    rungEls[i].classList.add('open');
+    rungEls[i].scrollIntoView({ block: 'center' });
+  }
+
+  function stepUp() {
+    if (curIdx === null || curIdx >= LEVELS.length - 1) return;
+    rungEls[curIdx].classList.remove('open');
+    rungEls[curIdx].classList.add('climbed');
+    openLevel(curIdx + 1, false);
+  }
+
+  function finish() {
+    if (curIdx === null) return;
+    rungEls[curIdx].classList.remove('open');
+    var climbed = curIdx - startIdx;
+    var from = LEVELS[startIdx], to = LEVELS[curIdx];
+    var title, body;
+    if (climbed === 0) {
+      title = 'Feeling it fully counts.';
+      body = 'You met yourself honestly at <b>' + to.name + '</b> — and let yourself actually feel it instead of running from it. That alone changes the state. Come back any time; one rung is always within reach.';
+    } else if (curIdx === LEVELS.length - 1) {
+      title = 'You reached the top of the ladder.';
+      body = 'Well done, you shifted your state in just a few minutes.';
+    } else {
+      title = 'You climbed ' + climbed + (climbed === 1 ? ' level.' : ' levels.');
+      body = 'Well done, you shifted your state in just a few minutes.';
+    }
+    document.getElementById('s-title').textContent = title;
+    document.getElementById('s-body').innerHTML = body;
+    summaryEl.style.display = 'block';
+    summaryEl.scrollIntoView({ block: 'start' });
+  }
+
+  document.getElementById('again').addEventListener('click', function () {
+    startIdx = null; curIdx = null;
+    for (var j = 0; j < rungEls.length; j++) rungEls[j].classList.remove('open', 'climbed');
+    summaryEl.style.display = 'none';
+    window.scrollTo({ top: 0 });
+  });
+
+  build();
+</script>
+</body>
+</html>
