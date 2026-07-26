@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Creation Formula — Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#6B1E4D;
+    --navy-deep:#3D0F2C;
+    --ink:#2A1420;
+    --orange:#E8672C;
+    --cream:#FBF3F0;
+    --paper:#FFFFFF;
+    --line:#E9DCE3;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Poppins', sans-serif;
+    color:#fff;
+    background:radial-gradient(120% 100% at 20% 0%, #58193F 0%, var(--navy-deep) 55%, #240A19 100%);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:48px 32px;
+  }
+
+  .page{
+    max-width:1400px;
+    width:100%;
+  }
+
+  .eyebrow{
+    display:block;
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--orange);
+    margin-bottom:10px;
+  }
+
+  h1{
+    text-align:center;
+    font-size:clamp(26px,3.4vw,42px);
+    font-weight:700;
+    margin-bottom:32px;
+    color:#fff;
+  }
+
+  .model-row{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    align-items:start;
+    column-gap:8px;
+  }
+
+  .model-step{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    position:relative;
+  }
+
+  .model-step:not(:first-child)::before{
+    content:'\2192';
+    position:absolute;
+    left:calc(-4px - 8px);
+    top:52px;
+    color:rgba(255,255,255,.3);
+    font-size:22px;
+  }
+
+  .step-imgwrap{
+    width:104px;
+    height:104px;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,.15);
+    box-shadow:0 16px 34px rgba(0,0,0,.45);
+    background:rgba(255,255,255,.06);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:12px;
+  }
+  .step-imgwrap img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .step-imgwrap .placeholder{
+    color:rgba(255,255,255,.35);
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+
+  .model-number-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:center;
+    gap:6px;
+    margin-bottom:4px;
+  }
+  .model-number{
+    font-size:26px;
+    font-weight:800;
+    color:var(--orange);
+    line-height:1;
+  }
+  .model-word{
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    line-height:1;
+  }
+
+  .model-caption{
+    font-size:13.5px;
+    line-height:1.5;
+    color:#EBD9E2;
+  }
+
+  @media (max-width:1100px){
+    .model-row{
+      grid-template-columns:repeat(3, 1fr);
+      row-gap:36px;
+    }
+    .model-step:not(:first-child)::before{display:none;}
+  }
+  @media (max-width:640px){
+    body{padding:32px 20px;}
+    .model-row{grid-template-columns:repeat(2, 1fr);}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <span class="eyebrow">Heart Creator</span>
+  <h1>The Creation Formula</h1>
+
+  <div class="model-row">
+
+    <div class="model-step">
+      <div class="step-imgwrap">
+        <img src="images/Step 1.png" alt="Activate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Step 1</div>
+      </div>
+      <div class="model-number-row">
+        <div class="model-number">1</div>
+        <div class="model-word">Activate</div>
+      </div>
+      <div class="model-caption">Generate Heart Coherence to move your nervous system out of survival and into creative mode. The foundational part of the formula.</div>
+    </div>
+
+    <div class="model-step">
+      <div class="step-imgwrap">
+        <img src="images/Step 2.png" alt="Synchronise" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Step 2</div>
+      </div>
+      <div class="model-number-row">
+        <div class="model-number">2</div>
+        <div class="model-word">Synchronise</div>
+      </div>
+      <div class="model-caption">Sending more energy to your brain to create. It begins to slow down your brainwaves and open up access to your subconscious mind.</div>
+    </div>
+
+    <div class="model-step">
+      <div class="step-imgwrap">
+        <img src="images/Step 3.png" alt="Create" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Step 3</div>
+      </div>
+      <div class="model-number-row">
+        <div class="model-number">3</div>
+        <div class="model-word">Create</div>
+      </div>
+      <div class="model-caption">A coherent heart and brain allows you to clearly think about and visualize your new future as real.</div>
+    </div>
+
+    <div class="model-step">
+      <div class="step-imgwrap">
+        <img src="images/Step 4.png" alt="Feel" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Step 4</div>
+      </div>
+      <div class="model-number-row">
+        <div class="model-number">4</div>
+        <div class="model-word">Feel</div>
+      </div>
+      <div class="model-caption">With a creative brain and an open heart, you're able to 'feel' what you're thinking about as if it's already happened.</div>
+    </div>
+
+    <div class="model-step">
+      <div class="step-imgwrap">
+        <img src="images/Step 5.png" alt="Attract" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Step 5</div>
+      </div>
+      <div class="model-number-row">
+        <div class="model-number">5</div>
+        <div class="model-word">Attract</div>
+      </div>
+      <div class="model-caption">As you continue to feel what you're thinking about, you project a signal into the quantum field. Once there's a match with your signal, your creation will start chasing you.</div>
+    </div>
+
+    <div class="model-step">
+      <div class="step-imgwrap">
+        <img src="images/Step 6.png" alt="Experience" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Step 6</div>
+      </div>
+      <div class="model-number-row">
+        <div class="model-number">6</div>
+        <div class="model-word">Experience</div>
+      </div>
+      <div class="model-caption">In the most natural and aligned way for you.</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

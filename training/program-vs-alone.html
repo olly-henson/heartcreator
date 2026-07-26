@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Program vs Alone — About Page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#6B1E4D;
+    --navy-deep:#3D0F2C;
+    --ink:#2A1420;
+    --orange:#E8672C;
+    --struggle:#B33F3F;
+    --create:#3E7A5D;
+    --cream:#FBF3F0;
+    --paper:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Poppins', sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    overflow-x:hidden;
+  }
+
+  /* ---------- steps container ---------- */
+  .steps{
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
+  }
+  .step{
+    min-height:100vh;
+    scroll-snap-align:start;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding:60px 32px;
+    background:radial-gradient(120% 100% at 20% 0%, #58193F 0%, var(--navy-deep) 55%, #240A19 100%);
+  }
+  .step:nth-child(odd){
+    background:radial-gradient(120% 100% at 80% 100%, #3D0F2C 0%, var(--navy-deep) 55%, #240A19 100%);
+  }
+
+  .page{
+    max-width:1100px;
+    width:100%;
+  }
+
+  .compare-row{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:start;
+    gap:40px;
+  }
+  .versus{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    border:2px solid rgba(255,255,255,.25);
+    color:var(--orange);
+    font-size:26px;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:56px;
+  }
+
+  .compare-col{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+
+  .compare-imgwrap{
+    width:100%;
+    max-width:340px;
+    aspect-ratio:1/1;
+    border-radius:20px;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,.15);
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
+    background:rgba(255,255,255,.06);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:20px;
+    margin-bottom:24px;
+  }
+  .compare-imgwrap img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .compare-imgwrap .placeholder{
+    color:rgba(255,255,255,.35);
+    font-size:12px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:0 12px;
+  }
+
+  .compare-label{
+    font-size:clamp(20px,2.4vw,28px);
+    font-weight:800;
+    letter-spacing:.02em;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:72px;
+    line-height:1.2;
+  }
+  .compare-col.is-alone .compare-label{ color:var(--struggle); }
+  .compare-col.is-program .compare-label{ color:var(--create); }
+
+  .compare-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-width:340px;
+    width:100%;
+  }
+  .compare-point{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    text-align:left;
+    font-size:14.5px;
+    line-height:1.5;
+    color:#EBD9E2;
+  }
+  .compare-mark{
+    flex:0 0 20px;
+    width:20px; height:20px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:700;
+    color:#fff;
+    margin-top:1px;
+  }
+  .mark-cross{ background:var(--struggle); }
+  .mark-tick{ background:var(--create); }
+
+  @media (max-width:820px){
+    .compare-row{
+      grid-template-columns:1fr;
+      gap:40px;
+    }
+  }
+
+  /* ---------- creation formula overview section ---------- */
+  .formula-section{
+    margin-top:90px;
+  }
+  .formula-title{
+    text-align:center;
+    color:#fff;
+    font-size:clamp(26px,3.2vw,38px);
+    font-weight:700;
+    margin-bottom:44px;
+  }
+  .formula-row{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    column-gap:8px;
+  }
+  .formula-step{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    position:relative;
+  }
+  .formula-step:not(:first-child)::before{
+    content:'\2192';
+    position:absolute;
+    left:-14px;
+    top:6px;
+    color:rgba(255,255,255,.3);
+    font-size:20px;
+  }
+  .formula-number-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:center;
+    gap:6px;
+    margin-bottom:6px;
+  }
+  .formula-number{
+    font-size:22px;
+    font-weight:800;
+    color:var(--orange);
+    line-height:1;
+  }
+  .formula-word{
+    font-size:17px;
+    font-weight:700;
+    color:#fff;
+    line-height:1;
+  }
+  .formula-caption{
+    font-size:12.5px;
+    line-height:1.5;
+    color:#EBD9E2;
+  }
+
+  @media (max-width:1100px){
+    .formula-row{
+      grid-template-columns:repeat(3, 1fr);
+      row-gap:32px;
+    }
+    .formula-step:not(:first-child)::before{ display:none; }
+  }
+  @media (max-width:640px){
+    .formula-row{ grid-template-columns:repeat(2, 1fr); }
+  }
+
+  /* ---------- individual formula step slides ---------- */
+  .step-inner{
+    max-width:1100px;
+    width:100%;
+    color:#fff;
+    display:grid;
+    grid-template-columns:minmax(220px, 380px) 1fr;
+    align-items:center;
+    gap:60px;
+    text-align:left;
+  }
+
+  .step-number-row{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom:14px;
+  }
+  .step-number{
+    font-size:clamp(50px,6vw,80px);
+    font-weight:800;
+    color:var(--orange);
+    line-height:1;
+  }
+  .step-word{
+    font-size:clamp(24px,2.6vw,36px);
+    font-weight:800;
+    color:#fff;
+    letter-spacing:.02em;
+    line-height:1;
+  }
+
+  .step-imgwrap{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:24px;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,.15);
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    background:rgba(255,255,255,.06);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .step-imgwrap img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .step-imgwrap .placeholder{
+    color:rgba(255,255,255,.35);
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+
+  .step-text{
+    max-width:56ch;
+  }
+
+  .step-title{
+    font-size:clamp(22px,2.6vw,30px);
+    font-weight:700;
+    margin-bottom:18px;
+    color:#fff;
+  }
+  .step-body{
+    font-size:clamp(16px,1.6vw,19px);
+    line-height:1.6;
+    color:#EBD9E2;
+  }
+
+  @media (max-width:820px){
+    .step-inner{
+      grid-template-columns:1fr;
+      text-align:center;
+      gap:28px;
+    }
+    .step-imgwrap{
+      max-width:280px;
+      margin:0 auto;
+    }
+    .step-text{
+      max-width:56ch;
+      margin:0 auto;
+    }
+  }
+
+  /* ---------- side nav dots ---------- */
+  .dots{
+    position:fixed;
+    right:26px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    z-index:10;
+  }
+  .dot{
+    width:11px; height:11px;
+    border-radius:50%;
+    background:rgba(255,255,255,.25);
+    cursor:pointer;
+    border:none;
+    transition:background .2s;
+  }
+  .dot.active{background:var(--orange);}
+
+  /* ---------- progress label ---------- */
+  .progress-label{
+    position:fixed;
+    top:24px;
+    left:32px;
+    color:rgba(255,255,255,.55);
+    font-size:13px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:600;
+    z-index:10;
+  }
+
+  @media (max-width:640px){
+    .dots{right:14px;}
+    .progress-label{left:16px; top:16px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-label" id="progressLabel">Step 1 / 7</div>
+
+<div class="dots" id="dots"></div>
+
+<div class="steps" id="steps">
+
+  <section class="step" data-title="Trying Alone vs Heart Creator">
+    <div class="page">
+      <div class="compare-row">
+
+        <div class="compare-col is-alone">
+          <div class="compare-label">Trying Alone</div>
+          <div class="compare-imgwrap">
+            <img src="program-vs-alone images/Alone Image.png" alt="Trying alone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Alone Image.png</div>
+          </div>
+          <div class="compare-list">
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Keeps doubting if it will happen</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Internal resistance</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Impatience and attachment</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Struggle to visualize</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Can't feel what their future is like</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Can't maintain the feeling</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Loses belief easily</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Moving from technique to technique</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Confused</div>
+            <div class="compare-point"><span class="compare-mark mark-cross">&#10005;</span>Exhausted</div>
+          </div>
+        </div>
+
+        <div class="versus">V</div>
+
+        <div class="compare-col is-program">
+          <div class="compare-label">Inside Heart Creator</div>
+          <div class="compare-imgwrap">
+            <img src="program-vs-alone images/Inside Program Image.png" alt="Inside Heart Creator" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Inside Program Image.png</div>
+          </div>
+          <div class="compare-list">
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Knows it's already happened</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Open and flowing</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Calm feels like it's already done</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Can easily picture future</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Can easily feel the emotions of their future</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Can easily maintain the feeling all day (no matter what happens)</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Doesn't believe - knows</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>One simple daily process to follow</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Clear</div>
+            <div class="compare-point"><span class="compare-mark mark-tick">&#10003;</span>Energised, life is getting better every day</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="formula-title" style="margin-top:90px;">The Creation Formula</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Activate">
+    <div class="step-inner">
+      <div class="step-imgwrap">
+        <img src="images/Step 1.png" alt="Activate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Step 1.png</div>
+      </div>
+      <div class="step-text">
+        <div class="step-number-row">
+          <div class="step-number">1</div>
+          <div class="step-word">Activate</div>
+        </div>
+        <div class="step-title">Activate your creative power by turning on the power of your heart</div>
+        <div class="step-body">Generate Heart Coherence to move your nervous system out of survival and into creative mode. The foundational part of the formula.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Synchronise">
+    <div class="step-inner">
+      <div class="step-imgwrap">
+        <img src="images/Step 2.png" alt="Synchronise" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Step 2.png</div>
+      </div>
+      <div class="step-text">
+        <div class="step-number-row">
+          <div class="step-number">2</div>
+          <div class="step-word">Synchronise</div>
+        </div>
+        <div class="step-title">A coherent heart begins to synchronise with your brain</div>
+        <div class="step-body">Sending more energy to your brain to create. It begins to slow down your brainwaves and open up access to your subconscious mind.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Create">
+    <div class="step-inner">
+      <div class="step-imgwrap">
+        <img src="images/Step 3.png" alt="Create" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Step 3.png</div>
+      </div>
+      <div class="step-text">
+        <div class="step-number-row">
+          <div class="step-number">3</div>
+          <div class="step-word">Create</div>
+        </div>
+        <div class="step-title">Clearly visualize and think about your future without resistance</div>
+        <div class="step-body">A coherent heart and brain allows you to clearly think about and visualize your new future as real.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Feel">
+    <div class="step-inner">
+      <div class="step-imgwrap">
+        <img src="images/Step 4.png" alt="Feel" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Step 4.png</div>
+      </div>
+      <div class="step-text">
+        <div class="step-number-row">
+          <div class="step-number">4</div>
+          <div class="step-word">Feel</div>
+        </div>
+        <div class="step-title">Effortlessly feel your new future as real - as if it's happening now</div>
+        <div class="step-body">With a creative brain and an open heart, you're able to 'feel' what you're thinking about as if it's already happened.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Attract">
+    <div class="step-inner">
+      <div class="step-imgwrap">
+        <img src="images/Step 5.png" alt="Attract" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Step 5.png</div>
+      </div>
+      <div class="step-text">
+        <div class="step-number-row">
+          <div class="step-number">5</div>
+          <div class="step-word">Attract</div>
+        </div>
+        <div class="step-title">Begin to attract synchronicities and opportunities into your life</div>
+        <div class="step-body">As you continue to feel what you're thinking about, you project a signal into the quantum field. Once there's a match with your signal, your creation will start chasing you.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Experience">
+    <div class="step-inner">
+      <div class="step-imgwrap">
+        <img src="images/Step 6.png" alt="Experience" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Step 6.png</div>
+      </div>
+      <div class="step-text">
+        <div class="step-number-row">
+          <div class="step-number">6</div>
+          <div class="step-word">Experience</div>
+        </div>
+        <div class="step-title">Experience what you've created</div>
+        <div class="step-body">In the most natural and aligned way for you.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const stepsEl = document.getElementById('steps');
+  const steps = document.querySelectorAll('.step');
+  const dotsEl = document.getElementById('dots');
+  const progressLabel = document.getElementById('progressLabel');
+
+  steps.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => steps[i].scrollIntoView({behavior:'smooth'}));
+    dotsEl.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.dot');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(steps).indexOf(entry.target);
+        dots.forEach(d => d.classList.remove('active'));
+        dots[idx].classList.add('active');
+        progressLabel.textContent = `Step ${idx + 1} / ${steps.length}`;
+      }
+    });
+  }, { root: stepsEl, threshold: 0.5 });
+
+  steps.forEach(s => observer.observe(s));
+
+  document.addEventListener('keydown', (e) => {
+    const active = document.querySelector('.dot.active');
+    const idx = Array.from(dots).indexOf(active);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      if (steps[idx + 1]) steps[idx + 1].scrollIntoView({behavior:'smooth'});
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      if (steps[idx - 1]) steps[idx - 1].scrollIntoView({behavior:'smooth'});
+    }
+  });
+</script>
+
+</body>
+</html>
