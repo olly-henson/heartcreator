@@ -40,7 +40,7 @@ const PROGRAMMES = [
     scoreFields:  ['feeling in meditation', 'maintaining the feeling', 'tapping in during the day'],
   },
   {
-    name:         'Creative Flow',
+    name:         'The Heart Creator Program',
     sheetId:      '1sZM7vfzKRtgv4zCnvf6Wm9ATWXST_KPWOnEADJZpKLU',
     masterTab:    'Master',
     completedTab: 'Completed Program',

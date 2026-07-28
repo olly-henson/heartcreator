@@ -8,7 +8,7 @@
 
 ## Current focus
 
-All five program trackers are live. Master Client Tracker is live. Next focus is Heart Creator Program delivery materials.
+All five program trackers are live. Master Client Tracker is live. Next focus is The Heart Creator Program delivery materials.
 
 ---
 
@@ -20,7 +20,7 @@ All five program trackers are live. Master Client Tracker is live. Next focus is
 | Heal & Let Go | `heal-and-let-go-tracker.gs` | Live |
 | Heart Activation | `heart-activation-tracker.gs` | Live |
 | Emotional Mastery | `emotional-mastery-tracker.gs` | Live |
-| Creative Flow | `creative-flow-tracker.gs` | Live |
+| The Heart Creator Program | `heart-creator-program-tracker.gs` | Live |
 | Master Client Tracker | `master-tracker.gs` | Live |
 
 ---
@@ -69,6 +69,6 @@ The weekly RSVP email (`Q&A Coaching Call RSVP` in GHL) lists timezones manually
 | `heal-and-let-go-tracker.gs` | Heal & Let Go progress tracker |
 | `heart-activation-tracker.gs` | Heart Activation progress tracker |
 | `emotional-mastery-tracker.gs` | Emotional Mastery progress tracker |
-| `creative-flow-tracker.gs` | Creative Flow monthly tracker |
+| `heart-creator-program-tracker.gs` | The Heart Creator Program monthly tracker |
 | `master-tracker.gs` | Master Client Tracker — all programs combined |
 | `share-worker.js` | Cloudflare Worker — universal share page |

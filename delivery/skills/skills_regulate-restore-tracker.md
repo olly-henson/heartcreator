@@ -238,7 +238,7 @@ If a column is added to the Master sheet:
 | Release & Let Go | `release-and-let-go-tracker.gs` | Weekly (4 weeks) | 4 metrics (1–10) |
 | Heart Activation | `heart-activation-tracker.gs` | Weekly (6 weeks) | 9 metrics (1–10) |
 | Emotional Mastery | `emotional-mastery-tracker.gs` | Weekly (6 weeks) | 3 metrics (1–10) |
-| Creative Flow | `creative-flow-tracker.gs` | Monthly (ongoing) | Confidence (text), Synchronicities, Wins |
+| The Heart Creator Program | `heart-creator-program-tracker.gs` | Monthly (ongoing) | Confidence (text), Synchronicities, Wins |
 | Master Client Tracker | `master-tracker.gs` | Syncs every 5 min | All 5 programs combined |
 
 ---
@@ -254,4 +254,4 @@ If a column is added to the Master sheet:
 - Added 5 new never rules (6–10): response tabs, baseline URL in CONFIG, test data for multiple choice, days vs weeks wording, completed tab append-only
 - Added "Building a New Program Tracker" section with form column order rule, Google Forms linking guidance, setup sequence, and Master Sheet dynamic header finding
 - Added "Programs Now Live" table listing all 5 live trackers and the Master Sheet
-- Lessons source: building Heal & Let Go, Heart Activation, Emotional Mastery, Creative Flow, and Master Client Tracker in a single session
+- Lessons source: building Heal & Let Go, Heart Activation, Emotional Mastery, The Heart Creator Program, and Master Client Tracker in a single session

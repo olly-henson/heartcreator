@@ -1,11 +1,11 @@
 // ============================================================
-// OLLY HENSON COACHING — Creative Flow Monthly Tracker
+// OLLY HENSON COACHING — The Heart Creator Program Monthly Tracker
 // ============================================================
 //
 // SHEET SETUP — tabs required:
-//   - Baseline Responses      (linked natively via Google Forms)
-//   - Monthly Responses       (linked natively via Google Forms)
-//   - Manifestation Responses (linked natively via Google Forms)
+//   - Intentions      (linked natively via Google Forms)
+//   - Check-In       (linked natively via Google Forms)
+//   - It Happened (linked natively via Google Forms)
 //   - Sent Log                (auto-managed by script)
 //   - Master                  (auto-created by script)
 //   - Completed Program       (auto-created by script)
@@ -43,26 +43,25 @@ const CONFIG = {
   MANIFESTATION_FORM_URL: 'https://docs.google.com/forms/d/e/1FAIpQLScuo03eLOri7KVmkzLjo_aeeoLPQ0E16xeVIZTzxOQXsJ42pA/viewform?usp=header',
   SHARE_BASE_URL:       'https://share.ollyhenson.com',
   SKOOL_PROFILE_URL:    'https://www.skool.com/@olly-henson',
-  BASELINE_SHEET:       'Baseline Responses',
-  MONTHLY_SHEET:        'Monthly Responses',
-  MANIFESTATION_SHEET:  'Manifestation Responses',
+  BASELINE_SHEET:       'Intentions',
+  MONTHLY_SHEET:        'Check-In',
+  MANIFESTATION_SHEET:  'It Happened',
   SENT_LOG_SHEET:       'Sent Log',
   MASTER_SHEET:         'Master',
   COMPLETED_SHEET:      'Completed Program',
 };
 
-// Column positions in Baseline Responses sheet (0-based)
+// Column positions in Intentions sheet (0-based)
 const BCOLS = {
   TIMESTAMP:  0,
   NAME:       1,
   EMAIL:      2,
-  CATEGORY:   3,  // What are you creating? (Health / Wealth / Relationship / Career / Business success / Something else)
-  OUTCOME:    4,  // Please add below what you want to create specifically
-  EVIDENCE:   5,  // How will you know that you've created your intention?
-  CONFIDENCE: 6,  // Not confident / Kind of confident / Completely confident
+  OUTCOME:    3,  // Please add below what you want to create specifically
+  EVIDENCE:   4,  // How will you know that you've created your intention?
+  CONFIDENCE: 5,  // Not confident / Kind of confident / Completely confident
 };
 
-// Column positions in Monthly Responses sheet (0-based)
+// Column positions in Check-In sheet (0-based)
 const MCOLS = {
   TIMESTAMP:       0,
   NAME:            1,
@@ -74,7 +73,7 @@ const MCOLS = {
   NEEDS:           7,
 };
 
-// Column positions in Manifestation Responses sheet (0-based)
+// Column positions in It Happened sheet (0-based)
 const MANCOLS = {
   TIMESTAMP:    0,
   NAME:         1,
@@ -90,18 +89,17 @@ const MANCOLS = {
 const MC = {
   NAME:            0,
   EMAIL:           1,
-  CATEGORY:        2,
-  OUTCOME:         3,
-  EVIDENCE:        4,
-  START_DATE:      5,
-  NEXT_CHECKIN:    6,
-  STATUS:          7,
-  MONTH:           8,
-  MEDITATIONS:     9,
-  CONFIDENCE:      10,
-  SYNCHRONICITIES: 11,
-  WINS:            12,
-  NEEDS:           13,
+  OUTCOME:         2,
+  EVIDENCE:        3,
+  START_DATE:      4,
+  NEXT_CHECKIN:    5,
+  STATUS:          6,
+  MONTH:           7,
+  MEDITATIONS:     8,
+  CONFIDENCE:      9,
+  SYNCHRONICITIES: 10,
+  WINS:            11,
+  NEEDS:           12,
 };
 
 // Confidence score map — used to track trend direction
@@ -118,7 +116,7 @@ function checkNewSubmissions() {
   const props = PropertiesService.getScriptProperties();
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // Baseline Responses
+  // Intentions
   const baselineSheet = ss.getSheetByName(CONFIG.BASELINE_SHEET);
   if (baselineSheet) {
     let lastProcessed = parseInt(props.getProperty('lastBaselineRow') || '1');
@@ -136,7 +134,7 @@ function checkNewSubmissions() {
     if (lastRow > lastProcessed) props.setProperty('lastBaselineRow', lastRow.toString());
   }
 
-  // Monthly Responses
+  // Check-In
   const monthlySheet = ss.getSheetByName(CONFIG.MONTHLY_SHEET);
   if (monthlySheet) {
     let lastProcessed = parseInt(props.getProperty('lastMonthlyRow') || '1');
@@ -154,7 +152,7 @@ function checkNewSubmissions() {
     if (lastRow > lastProcessed) props.setProperty('lastMonthlyRow', lastRow.toString());
   }
 
-  // Manifestation Responses
+  // It Happened
   const manifestationSheet = ss.getSheetByName(CONFIG.MANIFESTATION_SHEET);
   if (manifestationSheet) {
     let lastProcessed = parseInt(props.getProperty('lastManifestationRow') || '1');
@@ -180,7 +178,6 @@ function processBaselineRow(row) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const email = String(row[BCOLS.EMAIL]).trim();
   const name = String(row[BCOLS.NAME]).trim();
-  const category = String(row[BCOLS.CATEGORY] || '').trim();
   const outcome = String(row[BCOLS.OUTCOME] || '').trim();
   const evidence = String(row[BCOLS.EVIDENCE] || '').trim();
   const confidence = String(row[BCOLS.CONFIDENCE] || '').trim();
@@ -193,7 +190,7 @@ function processBaselineRow(row) {
     return;
   }
 
-  addToMaster(name, email, category, outcome, evidence, startDate, nextCheckIn, confidence);
+  addToMaster(name, email, outcome, evidence, startDate, nextCheckIn, confidence);
   sendBaselineConfirmation(email, name, outcome, evidence);
 }
 
@@ -275,19 +272,19 @@ function sendMonthlyReminders() {
 // ============================================================
 // MASTER TAB
 // ============================================================
-function addToMaster(name, email, category, outcome, evidence, startDate, nextCheckIn, confidence) {
+function addToMaster(name, email, outcome, evidence, startDate, nextCheckIn, confidence) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let masterSheet = ss.getSheetByName(CONFIG.MASTER_SHEET);
   if (!masterSheet) {
     masterSheet = ss.insertSheet(CONFIG.MASTER_SHEET);
     masterSheet.appendRow([
-      'Name', 'Email', 'Category', 'Chosen Outcome', 'How They\'ll Know', 'Start Date', 'Next Check-In', 'Status', 'Month',
+      'Name', 'Email', 'Chosen Outcome', 'How They\'ll Know', 'Start Date', 'Next Check-In', 'Status', 'Month',
       'Meditations This Month', 'Confidence', 'Synchronicities This Month', 'Wins This Month', 'Needs Help With'
     ]);
   }
 
   masterSheet.appendRow([
-    name, email, category, outcome, evidence, startDate, nextCheckIn, '', 0,
+    name, email, outcome, evidence, startDate, nextCheckIn, '', 0,
     '', confidence, '', '', ''
   ]);
 
@@ -401,7 +398,7 @@ function sendEmail(to, subject, htmlBody, plainText) {
       'Content-Type': 'application/json',
     },
     payload: JSON.stringify({
-      from: 'Creative Flow <olly@ollyhenson.com>',
+      from: 'The Heart Creator Program <olly@ollyhenson.com>',
       to: [to],
       subject: subject,
       html: htmlBody,
@@ -447,30 +444,29 @@ function alreadySentReminder(email, monthNumber) {
 // EMAIL — baseline confirmation
 // ============================================================
 function sendBaselineConfirmation(email, name, outcome, evidence) {
-  const subject = `Creative Flow starts now`;
+  const subject = `The Heart Creator Program starts now`;
 
   const html = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
     <p>And so it begins…</p>
-    <p>Your intentions have been set and you've officially started Creative Flow.</p>
+    <p>Your intentions have been set and you've officially started The Heart Creator Program.</p>
     <p>Your chosen outcome: <strong>${outcome}</strong></p>
     <p>You'll know you've created it when: <strong>${evidence}</strong></p>
     <p>Your first monthly check-in will arrive in 30 days.</p>
-    <p>Between now and then, do your best to complete the daily Creative Flow practice.</p>
-    <p>So that's completing the Creative Flow Meditation 1x per day and anchoring your intention throughout your day.</p>
+    <p>Between now and then, do your best to complete the daily meditation and maintain the belief throughout the day by remembering your symbol.</p>
     <p>If you need any help at any point, ask a question ${link('https://www.skool.com/the-healing-code-8609', 'here')} in the community feed.</p>
-    <p>${link(CONFIG.SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent('I\'ve just started Creative Flow — excited to see what I create!'), 'Let us know that you\'ve started here →')}</p>
-    <p>To creating and living your life with confidence and ease.<br>Olly</p>
+    <p>${link(CONFIG.SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent('I\'ve just started The Heart Creator Program — excited to see what I create!'), 'Let us know that you\'ve started here →')}</p>
+    <p>Here's to you creating your life consciously.<br>Olly</p>
   `);
 
-  sendEmail(email, subject, html, 'You\'ve officially started Creative Flow.');
+  sendEmail(email, subject, html, 'You\'ve officially started The Heart Creator Program.');
   sendBaselineNotificationToOlly(email, name, outcome, evidence);
 }
 
 function sendBaselineNotificationToOlly(email, name, outcome, evidence) {
-  const subject = `${name} has started Creative Flow`;
+  const subject = `${name} has started The Heart Creator Program`;
   const html = wrapHtml(`
-    <p>${name} has just started Creative Flow.</p>
+    <p>${name} has just started The Heart Creator Program.</p>
     <p><strong>Email:</strong> ${email}</p>
     <p><strong>Chosen outcome:</strong> ${outcome}</p>
     <p><strong>How they'll know it's happened:</strong> ${evidence}</p>
@@ -482,15 +478,13 @@ function sendBaselineNotificationToOlly(email, name, outcome, evidence) {
 // EMAIL — monthly check-in reminder
 // ============================================================
 function sendMonthlyFormEmail(email, name, monthNumber) {
-  const subject = `Your month ${monthNumber} check-in — Creative Flow`;
+  const subject = `Your month ${monthNumber} check-in — The Heart Creator Program`;
 
   const html = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
     <p>Here's your Month ${monthNumber} check-in.</p>
-    <p>Please add this month's update via the link below:</p>
-    <p>${link(CONFIG.MONTHLY_FORM_URL, 'Complete Your Month ' + monthNumber + ' Check-In')}</p>
-    <p>Once you've done that, you'll receive your monthly progress report.</p>
-    <p>To creating and living your life with confidence and ease.<br>Olly</p>
+    <p>Let us know how you've been getting on here: ${link(CONFIG.MONTHLY_FORM_URL, 'Complete check-in')}</p>
+    <p>Here's to you creating your life consciously.<br>Olly</p>
   `);
 
   sendEmail(email, subject, html, 'Your Month ' + monthNumber + ' check-in is ready. Complete it here: ' + CONFIG.MONTHLY_FORM_URL);
@@ -509,7 +503,7 @@ function sendMonthlyReport(email, name, monthNumber, meditations, confidence, sy
   const coachUrl = needs ? CONFIG.SHARE_BASE_URL + '?type=coach&text=' + encodeURIComponent(needs) : '';
   const needsLineOlly = needs ? `<p><strong>Client needs help with:</strong> ${needs}<br>${link(coachUrl, 'Help client with this →')}</p>` : '';
 
-  const clientSubject = `Your month ${monthNumber} progress report — Creative Flow`;
+  const clientSubject = `Your month ${monthNumber} progress report — The Heart Creator Program`;
   const clientHtml = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
     <p>Here is your Month ${monthNumber} progress report.</p>
@@ -519,12 +513,12 @@ function sendMonthlyReport(email, name, monthNumber, meditations, confidence, sy
     ${wins ? `<p><strong>Wins this month:</strong><br>${wins}</p>` : ''}
     ${shareUrl ? `<p>${link(shareUrl, 'Share your wins and synchronicities in the community →')}</p>` : ''}
     ${needsLineClient}
-    <p>To creating and living your life with confidence and ease.<br>Olly</p>
+    <p>Here's to you creating your life consciously.<br>Olly</p>
   `);
 
   const ollySubject = `[Monthly report] ${name} — Month ${monthNumber}`;
   const ollyHtml = wrapHtml(`
-    <p><strong>Program:</strong> Creative Flow<br><strong>Client:</strong> ${name} (${email})<br><strong>Month:</strong> ${monthNumber}</p>
+    <p><strong>Program:</strong> The Heart Creator Program<br><strong>Client:</strong> ${name} (${email})<br><strong>Month:</strong> ${monthNumber}</p>
     <p><strong>Meditations this month:</strong> ${meditations}</p>
     <p><strong>Confidence:</strong> ${confidence}</p>
     ${(synchronicities || wins) ? `<p><strong>Synchronicities & wins:</strong><br>${[synchronicities, wins].filter(Boolean).join('<br><br>')}</p>` : ''}
@@ -543,9 +537,9 @@ function sendMonthlyReport(email, name, monthNumber, meditations, confidence, sy
 function sendManifestationCelebration(email, name, outcome, what, how, helped, recommend, improvements, monthsInProgram) {
   const shareText = `I set out to create: ${outcome}\n\nWhat happened: ${what}\n\nHow it happened: ${how}`;
   const shareUrl = CONFIG.SHARE_BASE_URL + '?type=final&text=' + encodeURIComponent(shareText);
-  const ollyShareUrl = CONFIG.SHARE_BASE_URL + '?type=results&text=' + encodeURIComponent(`${firstName(name)} just manifested their outcome after ${monthsInProgram} month${monthsInProgram !== 1 ? 's' : ''} in Creative Flow:\n\n${shareText}`);
+  const ollyShareUrl = CONFIG.SHARE_BASE_URL + '?type=results&text=' + encodeURIComponent(`${firstName(name)} just manifested their outcome after ${monthsInProgram} month${monthsInProgram !== 1 ? 's' : ''} in The Heart Creator Program:\n\n${shareText}`);
 
-  const clientSubject = `🎉 You did it — Creative Flow`;
+  const clientSubject = `🎉 You did it — The Heart Creator Program`;
   const clientHtml = wrapHtml(`
     <p>Hi ${firstName(name)},</p>
     <p>You did it.</p>
@@ -554,15 +548,15 @@ function sendManifestationCelebration(email, name, outcome, what, how, helped, r
     <p><strong>What you created:</strong><br>${what}</p>
     <p><strong>How it happened:</strong><br>${how}</p>
     <p><strong>How the program helped:</strong><br>${helped}</p>
-    <p>This is what Creative Flow is all about. You stayed in the energy of what you wanted, and the universe delivered.</p>
+    <p>This is what The Heart Creator Program is all about. You stayed in the energy of what you wanted, and the universe delivered.</p>
     <p>Well done ${firstName(name)}!</p>
     <p>${link(shareUrl, 'Share your result in the community and inspire others →')}</p>
-    <p>To creating and living your life with confidence and ease.<br>Olly</p>
+    <p>Here's to you creating your life consciously.<br>Olly</p>
   `);
 
   const ollySubject = `🎉 ${name} just manifested their outcome`;
   const ollyHtml = wrapHtml(`
-    <p><strong>${name}</strong> (${email}) has just submitted a manifestation report after <strong>${monthsInProgram} month${monthsInProgram !== 1 ? 's' : ''}</strong> in Creative Flow.</p>
+    <p><strong>${name}</strong> (${email}) has just submitted a manifestation report after <strong>${monthsInProgram} month${monthsInProgram !== 1 ? 's' : ''}</strong> in The Heart Creator Program.</p>
     <p><strong>Chosen outcome:</strong> ${outcome}</p>
     <p><strong>What they created:</strong><br>${what}</p>
     <p><strong>How it happened:</strong><br>${how}</p>
