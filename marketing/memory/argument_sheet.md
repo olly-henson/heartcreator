@@ -2,11 +2,13 @@
 
 > The strategic spine of all content. Every piece of marketing — regardless of format or platform — must connect to at least one stage of this argument. Read this before writing anything.
 
+> **Updated 2026-07-29 to match the v4 email nurture sequence.** The core mechanism explanation shifted from "open your heart / Heart-Opening Meditation" as the headline vocabulary to **survival mode → creative mode** as the primary state-shift language, with **The Creation Formula** as the branded step-by-step system name (replaces "Heart Creator Program"). The heart is still where the *feeling* happens and still where the Mission/Differentiation sections anchor the brand's "why" — but it is no longer the every-email named mechanism. Practically: lead with "get out of survival mode and into creative mode," land on "so you can feel your future as real in your heart." See `C:\Users\Olly\AI OS\heartcreator\marketing\email-sequences\Email Nurture Sequence - v4_.md` for the full sequence this reflects.
+
 ---
 
 ## What We Do
 
-We help people open their hearts so they can embody and feel their future as real, so it happens.
+We help people shift out of survival mode and into creative mode so they can feel their future as real in their heart — so it happens.
 
 **The subconscious reprogramming is the mechanism, not the destination.** Never lead with the mechanism — lead with the life they want to create.
 
@@ -14,11 +16,11 @@ We help people open their hearts so they can embody and feel their future as rea
 
 ## The core argument in one line
 
-**You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your nervous system is dysregulated.**
+**You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your body and nervous system are stuck in survival mode, not creative mode.**
 
 **It's not the technique — it's the state.**
 
-The techniques work. Visualisation, affirmations, Dispenza meditations, Neville Goddard — they all work. But only when done from the right internal state. The reason nothing is changing is not a technique problem or a consistency problem. It is a state problem. A closed heart and a nervous system stuck in survival keeps people in their analytical mind, blocks access to the subconscious, and makes it impossible to genuinely feel the emotional states needed for change. The Heart-Opening Meditation solves this. It opens the heart, shifts the nervous system out of survival, and makes genuine feeling possible. That is when the techniques begin to work.
+The techniques work. Visualisation, affirmations, Dispenza meditations, Neville Goddard — they all work. But only when done from the right internal state. The reason nothing is changing is not a technique problem or a consistency problem. It is a state problem. A body and nervous system stuck in survival mode keeps people in their analytical mind, blocks access to the subconscious, and makes it impossible to genuinely feel and maintain the emotional states needed for change. **The Creation Formula** solves this. It shifts the nervous system out of survival mode and into creative mode, making it possible to truly feel — and keep feeling — the future as real in the heart. That is when the techniques begin to work.
 
 ---
 
@@ -111,27 +113,25 @@ Think it might be possible for them but not for others.
 
 ## Actual Cause
 
-They can't create their reality because they can't feel it in their heart. And they can't feel it in their heart because their nervous system is dysregulated.
-
-Their heart is closed off and their nervous system is stuck in survival.
+They can't create their reality because they can't feel it in their heart. And they can't feel it in their heart because their body and nervous system are stuck in **survival mode**, not **creative mode**.
 
 Caused by: conditioning, trauma, heartbreak, illness, injury or chronic stress.
 
-This is stopping them from being able to feel the emotions of their future like: gratitude, appreciation, freedom, abundance, joy etc.
+This is stopping them from being able to feel — and maintain — the emotions of their future like: gratitude, appreciation, freedom, abundance, joy etc.
 
 ---
 
 ## New Mechanism
 
-**Heart-Opening Meditation.**
+**The Creation Formula.**
 
-This is not another technique to add to the pile. It is the missing foundation that makes all the other techniques work.
+A step-by-step system for shifting the body and nervous system out of survival mode and into creative mode — the state from which it's actually possible to feel, and keep feeling, the future as real. This is not another technique to add to the pile. It is the missing foundation that makes all the other techniques (visualisation, affirmations, Dispenza, Neville Goddard) actually work.
 
 ---
 
 ## New Belief
 
-The Heart-Opening Meditation will help them open their heart so that they can feel and maintain the feeling of their future until it happens.
+The Creation Formula will help them shift out of survival mode and into creative mode so that they can feel — and maintain the feeling of — their future until it happens.
 
 ---
 
@@ -197,7 +197,9 @@ She is not a new person. She is the version of herself that already existed befo
 
 ### The Vocabulary of This Register
 
-- Heart-Opening Meditation / opening the heart
+- Survival mode / creative mode (primary state-shift language as of 2026-07-29)
+- The Creation Formula (branded system name — replaces "Heart Creator Program")
+- Feel it / maintain the feeling — the two-part promise, not just "feel it once"
 - Elevated emotions
 - Subconscious reprogramming / subconscious programming
 - The programme running in the background
@@ -209,6 +211,7 @@ She is not a new person. She is the version of herself that already existed befo
 - The version of you that already exists — waiting
 - Changing your inner world to change your outer experience
 - Getting out of your head and into your heart
+- Heart-Opening Meditation / opening the heart — still valid, but now secondary vocabulary rather than the headline mechanism name (see note at top of file)
 
 Avoid: quantum field, becoming supernatural, quantum healing — Dispenza's specific vocabulary, sounds borrowed.
 

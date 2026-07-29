@@ -51,9 +51,10 @@ The tone is aspirational but grounded. Bold but never preachy. Personal but not 
 
 These are Olly's signature expressions. Use them naturally when they fit — never force them.
 
-- "Open your heart so you can feel your future as real" — the argument in one line
-- "You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your nervous system is dysregulated." — the causal chain, use to explain the actual cause
-- "Something called the Heart-Opening Meditation" — always introduce it this way. Never assume the audience knows what it is.
+- "Get out of survival mode and into creative mode so you can feel your future as real in your heart" — the argument in one line (updated 2026-07-29)
+- "You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your body and nervous system are stuck in survival mode, not creative mode." — the causal chain, use to explain the actual cause
+- "That solution is The Creation Formula" — always introduce the system this way. Never assume the audience knows what it is.
+- "Feel it — and keep feeling it — until it happens" — the two-part promise
 - "Transformation and creation are not a head game. They are an experience game."
 - "You have to feel it before it happens."
 - "A body in survival mode is not a body that can heal — or create."
@@ -96,17 +97,17 @@ The core voice stays the same across platforms, but the expression adapts:
 ## Content Pillars (Voice Context)
 
 ### Argument-Based Content
-Lead with the stuck feeling (can't change their life despite trying), explain the actual cause (a closed heart and survival mode keeps them in their head, blocking subconscious reprogramming), offer the mechanism (the Heart-Opening Meditation opens the heart).
+Lead with the stuck feeling (can't change their life despite trying), explain the actual cause (survival mode, not creative mode, keeps them in their head, blocking subconscious reprogramming), offer the mechanism (The Creation Formula shifts them into creative mode).
 - **Voice lean:** Direct and clear. The argument stated plainly, not hedged.
 - **Audience context:** Meets the prospect inside a felt experience they recognise right now.
 
 ### Educational Content
-The nervous system, survival mode, the Heart-Opening Meditation, brainwaves, the subconscious mind, HeartMath research. Science made simple and specific.
+The nervous system, survival mode vs creative mode, The Creation Formula, brainwaves, the subconscious mind, HeartMath research. Science made simple and specific.
 - **Voice lean:** Authority — Olly is the expert. But always grounded in plain language.
 - **Audience context:** Makes the argument feel logical and measurable, not woo.
 
 ### Mission Content
-Why Olly does this work. The bigger picture — most of the world's problems exist because most people have a closed heart and are operating from survival mode. More people in their hearts means a better world.
+Why Olly does this work. The bigger picture — most of the world's problems exist because most people are stuck in survival mode instead of creative mode. More people in their hearts means a better world.
 - **Voice lean:** Expansive and purposeful. This is the "why" behind everything.
 - **Audience context:** Creates a sense of belonging to something bigger than personal development.
 

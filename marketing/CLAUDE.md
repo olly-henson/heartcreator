@@ -201,9 +201,12 @@ Aspirational, direct, mission-driven. Like a guide who has been through the exac
 
 These are signature phrases that make Olly's voice recognisable. Use them naturally when they fit — never force them.
 
-- "Open your heart so you can feel your future as real" — the core argument in one line
-- "You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your nervous system is dysregulated." — the causal chain, use to explain the actual cause
-- "Something called the Heart-Opening Meditation" — always introduce it this way. Never assume the audience knows what it is.
+> **Updated 2026-07-29:** primary mechanism language shifted to survival mode → creative mode, with **The Creation Formula** as the branded system name (replaces "Heart Creator Program"). "Feel it" is now paired with "maintain the feeling" as a two-part promise. See `memory/argument_sheet.md` for the full rationale and the v4 email nurture sequence it's drawn from.
+
+- "Get out of survival mode and into creative mode so you can feel your future as real in your heart" — the core argument in one line
+- "You can't create your reality because you can't feel it in your heart. And you can't feel it in your heart because your body and nervous system are stuck in survival mode, not creative mode." — the causal chain, use to explain the actual cause
+- "That solution is The Creation Formula" — always introduce the system this way. Never assume the audience knows what it is.
+- "Feel it — and keep feeling it — until it happens" — the two-part promise, not just the initial feeling
 - "Transformation and creation are not a head game. They are an experience game."
 - "You have to feel it before it happens."
 - "A body in survival mode is not a body that can heal — or create."
@@ -213,6 +216,8 @@ These are signature phrases that make Olly's voice recognisable. Use them natura
 - "Not an information problem. An implementation problem."
 - "95% of your thoughts and feelings are unconscious" — grounds the science
 - "I went all in" — personal conviction language
+
+**Secondary/legacy vocabulary (still valid, no longer the headline mechanism name):** "Open your heart," "Heart-Opening Meditation," "Heart Coherence."
 
 ### Banned Words & Phrases
 
@@ -251,10 +256,12 @@ Every piece of content must connect to at least one stage of the argument.
 | **Pain** | They've been trying to consciously create change and manifest something in their life for a long time — health, wealth, business growth, healing, a partner, a new career, or anything in between. They understand the theory completely but nothing has truly shifted. They know they need to keep feeling as if their reality has already happened, but they can't, no matter how positive they try to stay. Swarmed with doubts, resistance and feeling stuck. |
 | **Bleeding Neck Pain** | Starting to become disillusioned with manifestation and wondering if it's actually possible for them. Getting sick of content creators saying it's easy and that they just need to feel it. |
 | **Current Belief** | They believe the problem is them — not enough consistency, not the right technique, not deserving it yet. If they just found the right technique or did it more consistently, it would finally work. Think it might be possible for them but not for others. |
-| **Actual Cause** | They can't create their reality because they can't feel it in their heart. And they can't feel it in their heart because their nervous system is dysregulated. Their heart is closed off and their nervous system is stuck in survival — caused by conditioning, trauma, heartbreak, illness, injury or chronic stress. This stops them feeling the emotions of their future — gratitude, appreciation, freedom, abundance, joy. |
-| **New Mechanism** | The Heart-Opening Meditation. Not another technique to add to the pile — the missing foundation that makes all the other techniques work. |
-| **New Belief** | The Heart-Opening Meditation helps them open their heart so they can feel and maintain the feeling of their future until it happens. |
+| **Actual Cause** | They can't create their reality because they can't feel it in their heart. And they can't feel it in their heart because their body and nervous system are stuck in survival mode, not creative mode — caused by conditioning, trauma, heartbreak, illness, injury or chronic stress. This stops them feeling — and maintaining — the emotions of their future — gratitude, appreciation, freedom, abundance, joy. |
+| **New Mechanism** | The Creation Formula. A step-by-step system for shifting out of survival mode and into creative mode. Not another technique to add to the pile — the missing foundation that makes all the other techniques work. |
+| **New Belief** | The Creation Formula helps them shift out of survival mode and into creative mode so they can feel and maintain the feeling of their future until it happens. |
 | **Promised Land** | Able to comfortably embody and feel the future they want to create until it happens. |
+
+*(Updated 2026-07-29 to match `memory/argument_sheet.md` and the v4 email nurture sequence — mechanism language moved from "Heart-Opening Meditation" to "survival mode → creative mode" / "The Creation Formula.")*
 
 **Read `memory/argument_sheet.md` before generating any content.**
 
@@ -297,7 +304,7 @@ The only offer. A roadmap-style membership at `https://www.skool.com/heartcreato
 
 **Onboarding path (updated 2026-07-07 — supersedes the 4-step "Heart Creator Steps" roadmap):**
 1. **Heart Activation Program (4 weeks)** — activates the heart, turning on their creative power. Prerequisite before they can attract what they want.
-2. **Heart Creator Program** — once the heart is open, they can create their intention. This is where they actively create the reality they want.
+2. **The Creation Formula** (renamed 2026-07-29 from "Heart Creator Program") — once the heart is open, they can create their intention. This is where they actively create the reality they want.
 
 **Bonus (Classroom extra, not part of the core path):**
 - **Release & Let Go** — release and let go of subconscious resistance to your new reality
@@ -384,8 +391,8 @@ Heart Creator Community — Skool (7-Day Free Trial → $30/mo or $300/yr)
 
 ## Active Platforms
 
-- **Instagram** — 2 Reels/day (14x/week) | Primary format: Reels | Every Reel cross-posted to Facebook (@theollyhenson) for extra reach, same video/caption | Stories: ad hoc, no set frequency - behind-the-scenes, personal updates, testimonials only
-- **Email** — Nurture sequence + broadcast list
+- **Instagram** — up to 6 Reels/day (updated 2026-07-29, was 2/day) | Primary format: Reels, unfiltered/low-production rather than polished — treat as a data-generation engine: post volume, watch what wins on views/engagement/leads, then go deeper on winning angles ("content scientist" approach) | Every Reel cross-posted to Facebook (@theollyhenson) for extra reach, same video/caption | Stories: ad hoc, no set frequency - behind-the-scenes, personal updates, testimonials only
+- **Email** — Nurture sequence (v4, 10 emails) + broadcast list
 
 **Note (2026-07-03):** YouTube (long-form and Community) and Skool Community posts are no longer part of Heart Creator marketing. The only channels are Instagram Reels, Instagram Stories and email — each with its own standalone skill file, no repurposing workflow between them. Reusable technique from the retired YouTube skills (belief-shift reframe structure, personal story arc) has been folded into `skills/skills_instagram-stories.md` and `skills/skills_email-creation.md`.
 

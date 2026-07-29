@@ -89,7 +89,7 @@ TURNING POINT
 "What I realised was..." / "Things only changed when..."
 
 THE MECHANISM
-Introduce the Heart-Opening Meditation naturally, not as a pitch. Always "something called the Heart-Opening Meditation" on first mention.
+Introduce The Creation Formula naturally, not as a pitch (updated 2026-07-29 — was "Heart-Opening Meditation," now secondary/supporting language, see [[project_email_sequence_v4_rewrite]]). Always "something called The Creation Formula" on first mention. Frame as shifting from survival mode into creative mode.
 
 THE RESULT
 Specific and grounded, not vague wellness promises.
@@ -155,10 +155,10 @@ https://www.skool.com/heartcreator?utm_source=instagram&utm_medium=stories&utm_c
 
 - Never fabricate client results - only use real proof from Isabell and Anas (and any future clients)
 - Never use banned words: game changer, deep dive, synergy, leverage, hustle, grind, unlock, skyrocket, supercharge
-- Never assume Rachel knows what the Heart-Opening Meditation is - always "something called the Heart-Opening Meditation" on first mention
+- Never assume Rachel knows what The Creation Formula is - always "something called The Creation Formula" on first mention (updated 2026-07-29, was Heart-Opening Meditation)
 - Never assume Rachel can visualise - lead with effort and willpower as the universal experience
 - Never open a Personal Story with a vague experiential statement - open with a specific fact, number, or date
-- Never name the "Heart-Opening Meditation" in a Belief-Changing Story - use "opening your heart" / "getting into your heart"
+- Never name "The Creation Formula" in a Belief-Changing Story - use "opening your heart" / "getting into creative mode" instead
 - Never state the Belief-Changing reframe as a flat declaration - use "But what if..." questions
 - Never include a destination URL directly in a Story - ManyChat handles delivery
 - Never use em-dashes or hyphens as clause separators
@@ -178,6 +178,12 @@ https://www.skool.com/heartcreator?utm_source=instagram&utm_medium=stories&utm_c
 ---
 
 ## Changelog
+
+**2026-07-29 - Session feedback review (mechanism rename)**
+- "THE MECHANISM" story-arc step and "What Never to Write" rules updated to introduce The Creation Formula (not Heart-Opening Meditation) on first mention. Reason: the primary mechanism language shifted business-wide from "open your heart/Heart-Opening Meditation" to "survival mode → creative mode" + "The Creation Formula" as the branded system name — see `memory/argument_sheet.md`.
+- New standing lesson (generalises the 2026-07-03 CTA keyword retirement rule): **whenever Olly renames a core mechanism or offer, treat it the same way as a CTA keyword rename** — update every file this skill file's "What Never to Write" section governs, not just the CTA destination. The mechanism name and the CTA keyword are both liable to change independently and both need checking on any rename event.
+- "Opening your heart" / "getting into your heart" kept as valid warm/early-stage and Belief-Changing-Story-safe language (unchanged) — only the explicit first-mention introduction step changed which name to use.
+- No rules removed — this is a naming substitution within existing structure, not a new constraint.
 
 **2026-07-09 - Stories narrowed to ad hoc content only**
 - Post Types narrowed from six to three: Personal Update, Personal Story, Case Study/testimonial only. Engagement, Personal Mission and Belief-Changing retired from Stories - lead-gen and belief-shift work now lives entirely in the 2x/day Reels cadence (14x/week)

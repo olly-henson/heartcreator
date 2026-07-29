@@ -18,7 +18,7 @@ This is the single skill file for all Heart Creator email work — the nurture s
 
 Two email streams:
 
-1. **Meditation download nurture sequence** — an every-other-day campaign sent to contacts tagged "Meditation Download" in GoHighLevel. Contacts enter after downloading the free Heart Activation Meditation. The single goal of every email: move the prospect one step closer to believing that Heart Coherence is the missing piece that will finally allow them to create the change they've been working toward — and wanting to join the Heart Creator Community on Skool.
+1. **Meditation download nurture sequence** — an every-other-day campaign sent to contacts tagged "Meditation Download" in GoHighLevel. Contacts enter after downloading the free Heart Activation Meditation. The single goal of every email: move the prospect one step closer to believing that shifting out of survival mode and into creative mode (via The Creation Formula) is the missing piece that will finally allow them to create the change they've been working toward — and wanting to join the Heart Creator Community on Skool.
 2. **Broadcast campaigns** — one-off sends to the wider list: old clients, old leads, people who downloaded the meditation but didn't join, people who finished the nurture sequence but haven't joined. See Section 6.
 
 ---
@@ -210,280 +210,194 @@ Before writing, check Section 7 (live nurture sequence) to confirm the content a
 
 ## 7. Live Nurture Sequence (as in GHL)
 
-> Version 3, updated 2026-07-07. This is what's actually live in GHL — replaces the earlier 2026-07-02 v3 draft. Read before writing any new nurture email, and before writing any Instagram Reels, Stories or broadcast content, to avoid duplicating an angle.
+> Version 4, updated 2026-07-29 — replaces v3 (2026-07-07). Read before writing any new nurture email, and before writing any Instagram Reels, Stories or broadcast content, to avoid duplicating an angle.
 >
-> Sequence: 8 emails (+ delivery), every other day, triggered by "Meditation Download" tag.
+> Sequence: 10 emails (0-9), every other day, triggered by "Meditation Download" tag. Email 0 now asks the contact to reply "YES" to keep receiving the series — this is a deliverability/engagement play (improves open rate and inbox placement for the rest of the sequence and future broadcasts), not a hard gate that blocks anything downstream.
+> Mechanism language shifted from "open your heart" / Heart Coherence (every email) to **survival mode → creative mode** as the primary state-shift framing — see `memory/argument_sheet.md` for the full updated argument. The heart is still where the feeling lands ("feel your future as real in your heart") but is no longer the headline mechanism name.
+> Product name: **The Creation Formula** (replaces "Heart Creator Program" as of 2026-07-29 — matches the About Page update).
+> New Email 9 transitions contacts from the nurture sequence into the regular broadcast list — explicit, sets expectations (paid offers will appear, no pressure, unsubscribe with no hard feelings).
 > CTA destination: `https://www.skool.com/heartcreator/about` (Heart Creator no longer offers 1-2-1 coaching, only the Skool Community).
-> Source file: `email-sequences/Email Nurture Sequence - v3_.md`
+> Source file: `email-sequences/Email Nurture Sequence - v4_.md`
 
 ### Avatar & Rationale for This Sequence
 
-**Core Argument:** It's not the technique — it's a closed-off heart.
+**Core Argument:** It's not the technique — it's the state. A body and nervous system stuck in survival mode (not creative mode) blocks the ability to feel — and maintain feeling — the future as real.
 
 **Avatar — Rachel:** High-paid tech professional with a side hustle, busy but spiritual, single, late 30s, US-based. Deeply into personal development. Driven, positive, always talking about her vision for her life, but wants it to come more naturally. Wants a long-term relationship, to start her own business, time and financial freedom, to look and feel a little younger. Believes she can do it but her efforts (visualising, feeling, affirming) aren't working and it's getting frustrating. Has read Dispenza, Neville Goddard, Reality Transurfing. Watches a lot of YouTube but doesn't feel heard. Constantly doubts herself and feels the need to control/force the outcome even though she knows that's not right. Getting bored of content that doesn't address the elephant in the room.
 
 **What Rachel needs to understand:**
-1. Her efforts aren't producing results because her heart is closed off, keeping her in survival mode
-2. An open heart is what gives her access to her subconscious mind and lets her feel elevated emotions like joy, gratitude and freedom
-3. Techniques she's already using (Dispenza, Neville Goddard, visualising, affirming) only work once her heart is open — they were never the problem
-4. Opening the heart is Step 1, non-negotiable and must come before holding an intention (Step 2)
+1. Her efforts aren't producing results because her body/nervous system is stuck in survival mode, not creative mode
+2. Shifting into creative mode is what gives her access to her subconscious mind and lets her feel — and maintain — elevated emotions like joy, gratitude and freedom
+3. Techniques she's already using (Dispenza, Neville Goddard, visualising, affirming) only work once she's in creative mode — they were never the problem
+4. Shifting into creative mode is Step 1, non-negotiable and must come before holding an intention (Step 2)
 
-**Why nothing is working (the sequence's core logic):** it's not a mindset problem, a consistency problem, or a question of capability — it's a "closed-off heart" problem. A closed-off heart keeps the nervous system in survival mode, blocking access to the subconscious mind and to elevated emotions. Once the heart is open, the techniques the prospect has already been using start to actually work.
+**Why nothing is working (the sequence's core logic):** it's not a mindset problem, a consistency problem, or a question of capability — it's a state problem. Survival mode blocks access to the subconscious mind and to elevated emotions. Once the body shifts into creative mode, the techniques the prospect has already been using start to actually work.
 
 **What this sequence must do:**
-1. Recognise where they are and reframe it as a closed-off heart problem, not a personal failing
-2. Validate that the techniques they've tried do work — but only once the heart is open
-3. Explain the science (Theta brainwave state, 95% subconscious) and why the subconscious must be imprinted to create change
-4. Prove the mechanism with Olly's personal story (364.12% income increase, late 2018)
+1. Recognise where they are and reframe it as a state problem, not a personal failing
+2. Show them they're close — the techniques they've tried do work, but only from creative mode
+3. Name what's actually blocking them (mind/body not calm, brainwaves not slowed, heart not open) and why it compounds over months/years if unaddressed
+4. Prove the mechanism with Olly's personal story (364.12% income increase, late 2018, via Heart Coherence)
 5. Explain why most manifestation techniques and teachers don't address this
-6. Give the two-step framework: Step 1 – Open Your Heart, Step 2 – Think About & Feel Your Future
-7. Invite them into the Heart Creator Community, naming the 28-day introductory program that activates the heart
+6. Give the two-step framework: Step 1 – Shift Out of Survival Mode and Into Creative Mode, Step 2 – Think About & Feel Your Future
+7. Sum everything up and pitch The Creation Formula inside the Heart Creator Community
+8. Transition them cleanly into the broadcast list, setting expectations for what's next
 
 ---
 
-### Delivery Email
-**Action Name:** Heart Activation Meditation - Delivery
-**Subject:** Your heart activation meditation is inside
+### Email 0 (Delivery)
+**Action Name:** Heart Activation Meditation - Delivery and expectations for upcoming content
+**Subject:** Your heart meditation is inside
 
 Hi {{contact.first_name}},
 
-Your **Heart Activation Meditation** is ready for you.
+Your Heart Activation Meditation is ready for you.
 
-You can listen and begin to use it [here](https://ollyhenson.com/meditation-access)
+You can listen and begin to use it ===> here
 
-In the coming days, I'll take you through why activating your heart is the most important thing that you can do if you want to create and live in a reality that you love.
+Also a heads up...
 
-If you've struggled up until now to really create the shift in your internal and external world...
+In the coming days, I'm going to take you through what you need to do if you're trying to consciously create something new in your life but nothing is happening.
 
-If it never really 'feels' like things are transforming in the way that you want, activating your heart will change all that.
+If you know what you need to do but you really struggle to 'feel' your reality as real and maintain the belief that it's already happened...
 
-I'll talk to you about it soon,
+The emails over the next few days will help you with this.
+
+If you'd like to receive these, just reply "YES" to this email.
+
+Talk to you soon,
 
 Olly Henson
 
-P.S. If you want to unlock your heart right now so that you can create and live in a reality that you love, join the **Heart Creator Community** [here](https://www.skool.com/heartcreator/about) 💜
+P.S If you're looking for desperate results to get an ex-back or win money quickly, this probably isn't going to be for you so feel free to unsubscribe.
 
 ---
 
 ### Email 1
-**Action Name:** Recognition of where they are and that it's a closed off heart that's the problem.
-**Subject:** If nothing's changing in your life - this is why
+**Action Name:** Recognition of where they are - I know it's frustrating
+**Subject:** I know it's frustrating
 
 So {{contact.first_name}}...
 
-If you've...
+If you've read the books...
 
-Read the books...
+Watched a lot of manifestation content...
 
-Watched the manifestation content...
+And you've tried many different ways to create something new in your life...
 
-And you've tried many different ways to create and change something in your life...
+But nothing's really happening...
 
-But nothing's happening.
+I'm about to tell you why that is.
 
-Here's why...
+Because I'm guessing you know that you need to be clear on what you want and that you need to 'feel' it as real.
 
-Because I'm guessing that you're pretty clued up on what you need to do, right?
+But right now, no matter how hard you try or what technique you use - you just can't maintain the feeling and the belief that it will happen.
 
-You know that you need to be clear about what you want and you need to be able to 'feel' like it's already happened.
+What's going on here is that you don't yet know how to truly 'feel' your future as real in your heart.
 
-But right now, you just can't really create or maintain that 'feeling'...
+When you can feel your future as real in your heart, no matter what happens, that's when things will start to change for you.
 
-No matter how hard you try.
+And you'll get to leave behind the exhaustion and frustration of nothing happening.
 
-I struggled with this for years (and spent a small fortune in the process trying to work out what I was doing wrong).
+It's actually much more practical than you think.
 
-But the good news is...
+In the next couple of emails, I'll take you through how to start opening your heart so that you can truly 'feel' your future as real.
 
-That this gap actually has a very precise explanation.
-
-And it's not a mindset problem...
-
-It's not a consistency problem...
-
-And it's not a question of whether you're capable.
-
-What it is…
-
-Is a 'closed-off heart' problem.
-
-Meaning...
-
-You can't currently get yourself out of survival in order for you to believe wholeheartedly and truly 'feel'...
-
-Like your life has already changed.
-
-And you'll know this because you keep doubting yourself and the process (even though you don't want to).
-
-You're having to force yourself to be positive...
-
-Rather than having a heart full of joy, freedom and gratitude that it's already happened.
-
-Over the next few days...
-
-I'm going to share with you exactly what's closing down your heart...
-
-So that all of your efforts to create the new and amazing life you have in your mind - actually pay off.
-
-Talk to you soon,
+Stay tuned.
 
 Olly
 
 ---
 
 ### Email 2
-**Action Name:** Let them know they are so close and just need to open their heart.
-**Subject:** You are so close to changing your life
+**Action Name:** Let them know they are so close and just need to get into creative mode
+**Subject:** Why you can't 'feel' your future as real
 
 So I want you to know…
 
-You're so very close to creating the change that you want.
+You're actually very close to manifesting what you want.
 
-And that the practices you've been using to try and create change in your life - do actually work.
-
-Whether that's:
-
-The Joe Dispenza meditations…
-
-The Neville Goddard techniques…
-
-Visualising your future and trying to feel it as real…
-
-Affirming your chosen reality as if it's already happened.
-
-But here's the kicker...
-
-They only work if…
-
-**Your heart is open.**
-
-Let me explain...
+There's just one small 'switch' that you need to make that will allow all of your efforts to pay off.
 
 If the techniques that you are using right now feel like they don't really work for long enough…
 
-Or you never truly 'feel' like you've become someone different after using them…
+Or you never truly 'feel' like you're already living in your new life...
 
-And you keep doubting yourself and if this is even possible for you...
+And you keep doubting yourself and if creating what you want is even possible for you...
 
-All this is, is that your heart is closed-off and it's trying to keep you in survival mode - to protect you from change.
+All this is - is that your body and nervous system and are in stress mode - not creative mode.
 
 And it's completely normal.
 
 I experienced the same frustration for many years.
 
-The problem is though...
+This is why, no matter what technique you try, you just can't 'feel' it as real.
 
-That if we want to access our subconscious mind and feel the joy, gratitude and emotions linked to our new creation...
+It doesn't matter how many affirmations we do, how many times we visualize or how many times we try and force ourselves to be positive...
 
-**Our heart has to be open.**
+Things just won't change if our body isn't in creative mode.
 
-When your heart's open, it's easy to feel the emotions of your future and carry them with you all day.
+So getting our nervous system out of survival mode and putting ourselves into creative mode is essential to creating what we want.
 
-That's when change really happens.
-
-I'll explain it a bit more in the next email.
+I'll dive into this a little deeper in the next email.
 
 Talk soon,
 
 Olly
 
-P.S. If you want to skip ahead and start activating your heart today, join us in the **Heart Creator Community** [here](https://www.skool.com/heartcreator/about)
-
 ---
 
 ### Email 3
-**Action Name:** Explain an open heart will allow them to access their subconscious.
-**Subject:** The law of creation that must be followed.
+**Action Name:** Explain what's blocking their manifestation
+**Subject:** this is blocking your manifestation
 
-So...
+So {{contact.first_name}}...
 
-Did you know?
+When we want to create something consciously, here's what has to happen:
 
-That up to the age of seven...
+✅ Our mind needs to be calm
 
-We operate in a brainwave state called:
+✅ Our body needs to be relaxed
 
-**'Theta'**
+✅ Our brainwaves need to slow down so we can access our subconscious mind
 
-And in this state, we become sponge-like.
+✅ And our heart needs to be open so that we can 'feel' our new reality
 
-Absorbing everything that we see, hear and feel.
+Many people simply skip this step or they just don't know how to do it.
 
-Then from the age of seven to fourteen...
+So they try and force visualizing and 'feeling' their new reality but nothing changes.
 
-We start forming our identity so that we can fit in in the world.
+This can go on for months or even years.
 
-Then as we age, our identity, beliefs and how we perceive the world become a solid neural network in the brain.
+Eventually people get tired and in most cases, their life can feel like it's actually getting worse.
 
-Which is great...
+This is because trying to create something new consciously when your body and nervous system are in survival mode...
 
-Until we realise that we want to change something.
+Is like driving your car around with your foot on the gas and the brake at the same time.
 
-Then we get to experience this internal conflict.
+You end up going nowhere whilst burning yourself out.
 
-Where we want to improve an area of our life consciously...
-
-That could be our health, wealth or our relationships...
-
-But for some reason no matter how hard we 'try'...
-
-The change never seems to happen.
-
-We stay - stuck.
-
-That's because in order to change, we have to do that at the subconscious level.
-
-Because our subconscious is responsible for 95% of what we think, feel and do.
-
-And it's where all of the programs that we picked up from
-
-⏩ Our parents and extended family
-
-⏩ The culture we grew up in
-
-⏩ Traumatic experiences
-
-⏩ Our education
-
-⏩ Media
-
-⏩ Our social circle
-
-⏩ And so much more
-
-If your life isn't reflecting what you want or the effort you're putting in to change it...
-
-It's simply because you've not been able to imprint your subconscious mind.
-
-This was a struggle for me too over the years.
-
-But it is **the** most important law of creation.
-
-In the coming emails...
-
-I'll talk more about how to imprint and update your subconscious mind to create change in your life.
-
-Talk to you soon.
+I'll take you through the formula for getting into creative mode in the next few emails so stay tuned.
 
 Olly
 
 ---
 
 ### Email 4
-**Action Name:** Show proof that I opened my heart.
-**Subject:** How I opened my heart and changed my life
+**Action Name:** Show personal proof
+**Subject:** A little secret story about me
 
 I don't know if I ever told you this?
 
-But in November and December 2018, I managed to increase my income by **364.12%**...
+But in November and December 2018, I managed to increase my income by 364.12%...
 
-By opening my heart.
+Through a random experiment.
 
 So in late 2018, my life was in somewhat of a crisis.
 
-I'd been travelling Europe whilst running my remote personal training business and on my return...
+I'd just come back from travelling Europe whilst running my remote personal training business.
 
-A few things happened.
+And a few things happened.
 
 1. I had to move back in with my parents, which at 28, wasn't ideal - (I needed my own space!)
 2. I suffered a serious head injury in September which was significantly affecting my ability to work
@@ -492,37 +406,61 @@ But I needed to raise some cash so that I could move into my own place, buy a ca
 
 So I ran an experiment.
 
-Using a heart-tracking device and a chosen affirmation...
+Using a heart-tracking device and the affirmation:
 
-Somehow I managed to make **$22,834** in November and December 2018.
+"I have so much money and so much freedom."
 
-For comparison, I made $4919 in the same period the year before.
+Well in just two months, I'd made $17,914.16 more than the previous year, which for me at the time - was absolutely huge.
 
-Now this is kind of a big deal because the health and fitness industry is typically very quiet during this time of the year.
-
-Here's what created this dramatic change in my life.
-
-Because if I'm honest...
-
-All of the visualizing, looped affirmations and other techniques were getting me nowhere.
-
-**The Experiment**
+The Experiment
 
 So I'd heard that you could access your subconscious mind, if you were able to get yourself into what's called:
 
-**'Heart Coherence'**
+'Heart Coherence'
 
-Now, Heart Coherence is a practice backed with 30 years of scientific research at the HeartMath Institute, California.
+Heart Coherence is a practice backed with 30 years of scientific research at the HeartMath Institute, California.
 
-And it describes the shift your heart makes when you move yourself out of the 'fight' or 'flight' response and back into a state of balance.
+And it's a practice that helps you balance your nervous system and put you into creative mode.
 
-*(You can see the difference between the two states in the image below)*
+In fact, in the image below, you can see the difference before and after using it and how it positively balances your nervous system: My theory was...
+
+If I could shift myself into creative mode, could I 'feel' the emotions of my future?
+
+Again, I had nothing to lose.
+
+But by the middle of the third day of my experiment, something dramatically shifted in me.
+
+During my practice and for the first time ever...
+
+I could truly 'FEEL' what it was like to be financially free.
+
+In my heart.
+
+And just a few hours after this practice, I had an idea to offer my current clients a no-brainer offer.
+
+And I was driven to put it into action immediately.
+
+This offer would save my clients a lot of money making sure they got even better results the next year.
+
+The result of that, was that I was able to move into my own two-bed apartment and purchased my Vauxhall Astra SRI 2.0. (It was pretty old but I felt cool in it!)
+
+(You can see below the first photo in my new flat, the car and the difference in money in British pounds from 2017 to 2018)But something bigger took place that day.
+
+From that day on, I realised how important it was to be out of stress mode and in creative mode if you ever wanted to create anything new in your life
+
+So the next few years I went all in on turning this into a formula that anyone could use to create what they wanted.
+
+I'll take you through this in the next email.
+
+Talk soon,
+
+Olly
 
 ---
 
 ### Email 5
-**Action Name:** They need to know most techniques and teachers don't help people opening heart.
-**Subject:** Why most manifestation techniques don't work
+**Action Name:** They need to know most techniques and teachers don't help people 'feel'
+**Subject:** This actually annoys me
 
 So {{contact.first_name}},
 
@@ -532,9 +470,7 @@ For a long time, I became quite disillusioned with the manifestation and reality
 
 There seemed to always be an abundance of new techniques and people insisting that I needed to 'feel my future as real'.
 
-But no matter how hard I tried, that never happened.
-
-And if it did - it never lasted.
+But no matter how hard I tried - I just couldn't feel it.
 
 For a long time, no matter how much I visualized...
 
@@ -544,93 +480,99 @@ or even scripted...
 
 Nothing changed.
 
-I never felt that my heart was full of the: joy, love, gratitude and freedom that I wanted to feel in my new life.
+I never truly believed that I was living in my new life.
+
+I might be able to feel it for a few minutes but I could never maintain the feeling.
 
 There always seemed to be something 'missing'.
 
-That missing piece...
+Well that missing piece...
 
-Was having an open heart that can tap into and feel elevated emotions.
+Was actually getting myself into the creative mode.
 
-I'll talk more in the next email about how you can practically open your heart and start creating real change in your life.
+Man I wish I knew this earlier.
+
+Because do you know what used to really annoy me?
+
+It was the insistence that manifestation was easy and that you could change your reality over night.
+
+But there was never any deep substance or proper coaching available to help you uncover what was actually going wrong.
+
+I'll talk more in the next email about how you can practically get into creative mode and actually create what you want.
+
+A heads up, if you're looking for overnight fixes and changing things out of desperation, this isn't going to be for you.
+
+But if you're looking for a step-by-step formula for creating what you want - this will be really helpful.
+
+Chat soon,
 
 Olly
 
 ---
 
 ### Email 6
-**Action Name:** Show them the steps of creating and that an open heart is essential.
-**Subject:** If you make this adjustment - your life will change
+**Action Name:** Clarity on steps for creating what they want
+**Subject:** The no bs way of creating what you want
 
 So below...
 
 Are the exact steps to follow...
 
-if you are wanting to create change in your life.
+If you are wanting to manifest and create something new in your life.
 
-Whether that's health, wealth, relationships or anything in between…
+Whether that's health, wealth, a relationship or anything in between…
 
 It doesn't matter.
 
-These steps are exactly the same.
+1️⃣ Step 1 - Shift Out Of Survival Mode And Into Creative Mode
 
-(It's also really important that they are done in this order.)
-
-1️⃣ **Step 1 - Open Your Heart**
-
-Our nervous system has to come out of survival mode in order for us to unlock the creative power of our heart.
+Your nervous system has to come out of survival mode in order for you to be able to 'feel' your new reality as real.
 
 This is the non-negotiable foundation and it's why most people cannot consciously create change in their life.
 
-Practices like **Heart Coherence** do the following:
+2️⃣ Step 2 - Think About & Feel Your Future
 
-👉 Give you access to your subconscious mind
+Once you're in creative mode...
 
-👉 Open up your capacity to actually feel the emotions of your future like joy, peace, gratitude and freedom
-
-2️⃣ **Step 2 - Think About & Feel Your Future**
-
-Once your heart is open and unlocked...
-
-And your heart's electromagnetic field has expanded - now it's time to create.
+It's time to create.
 
 From this place...
 
-Hold your intention in your mind.
+You can think about what you want as if it's already happened.
 
-The health, the wealth or the new relationship.
+When creative mode is switched on you can now truly 'feel' like you are living in your new future.
 
-Now you're holding this intention in your awareness with a heart and brain that are no longer in survival mode.
+This is what a successful manifestation practice looks like.
 
-This is where your intention reaches your subconscious mind and where you begin to change your body's frequency.
+It won't happen overnight but in just a few days of doing this, you'll start seeing everything working your favour.
 
-Want to activate your heart and start creating change in your life today? Check out the Heart Creator Community [here](https://www.skool.com/heartcreator/about)
-
-Otherwise, I'll talk to you again soon,
+Talk soon,
 
 Olly
 
 ---
 
 ### Email 7
-**Action Name:** Emphasis on opening the heart.
-**Subject:** Ready to start creating change in your life?
+**Action Name:** Summing everything up
+**Subject:** ready?
 
 So {{contact.first_name}},
 
 We've covered a lot in the last few days…
 
-But here's the summary of what you need to do in order to create the change you want in your life:
+But here's the summary of what you need to do in order to manifest the change you want in your life:
 
-👉 Spend some time working on opening your heart and shifting your nervous system out of survival mode.
+👉 Shift your body and nervous system out of survival mode and into creative mode.
+
+This is going to allow you to think about what you want as if it's already happened and actually 'feel' as if it's already happened.
 
 You'll know you're in creative mode and that things will actually change when:
 
-✅ Your heart feels full
+✅ Your heart feels full as you think about your chosen future
 
-✅ You can carry the feeling with you all day
+✅ You can carry the feeling with you all day - no matter what happens
 
-When done right, you'll also feel more alive, like your soul has begun to come back online.
+✅ When done right, you'll also feel more alive, like your soul has begun to come back online.
 
 There's a vitality, calmness and excitement for life again.
 
@@ -645,36 +587,72 @@ Olly
 ---
 
 ### Email 8
-**Action Name:** Pitch to the Heart Creator Community.
-**Subject:** (final email in the series — no formal subject line recorded, see source file)
+**Action Name:** Pitch to use The Creation Formula inside the Heart Creator Community
+**Subject:** hey
 
-So {{contact.first_name}}...
+Hey {{contact.first_name}}...
 
-I hope the content that I've sent you over the last week or so about how to create change in your life has been helpful.
+I hope the content that I've sent you over the last week or so has helped you realize why things aren't changing.
 
 Thank you for taking the time to work through it and understand it.
 
-Hopefully it's shifted your perspective on where you need to place your focus if nothing is working for you right now.
+The good news is that I have solution for you that will help you get unstuck.
 
-Now that you know the steps that you need to follow...
+That will help you shift yourself out of survival mode and into creative mode so that you can actually create what you want in your life.
 
-I'm going to invite you to create and step into your new life together.
+So you can experience the joy of the new job or business...
 
-This is inside our **Heart Creator Community** 💜
+The freedom of the financial abundance...
 
-Plain and simple...
+The gratitude for the amazing relationship...
 
-I have built this community to help you unlock the creative power of your heart so that you can create the change that you want in your life.
+Or the peace from your healing.
 
-Right now, we have an introductory program that has been built to activate your heart in 28 days.
+That solution is 'The Creation Formula'.
 
-If you're ready and willing to become the next version of yourself, join us [here](https://www.skool.com/heartcreator/about)
+This is my step-by-step system inside my private community that will have you feeling your future as real - so that it actually happens.
 
-Hopefully we'll see you on the inside.
-
-Take care,
+You can even try it out for seven days for free here
 
 Olly
+
+---
+
+### Email 9
+**Action Name:** Brief for Broadcast
+**Subject:** Heads up
+
+Hey {{contact.first_name}},
+
+Just a heads up about what's next.
+
+So we've completed the email series where we've been through the basics of what you need to do in order to create what you want.
+
+And I've told you about the solution which is 'The Creation Formula'.
+
+And just so we're both clear, here's what's going to happen now.
+
+You're now going to be added to my daily (well almost daily😉) newsletter.
+
+A few times a week I'll be sending you emails all designed to help you really and truly create your life consciously.
+
+In these emails, there'll be links to paid offerings that I have.
+
+If you're not in a position financially to join right now and still want to receive the emails - awesome.
+
+Just take them with a pinch of salt and if your circumstances change obviously come jump in.
+
+If you also need a bit more time to get to know me and what I do, that's all good too.
+
+Either way, the content is going to resonate with you if you're looking for deeper transformation.
+
+Not click baity over-the-top promise type stuff.
+
+If that's you, it's my absolute pleasure to have you on board and I'll see you in the next email 😎
+
+Olly
+
+P.S If this isn't for you, please unsubscribe - no hard feelings.
 
 ---
 
@@ -785,6 +763,9 @@ These come from real prospects or top-performing content. They outperform paraph
 - Never use em-dashes as clause separators
 - Never use crude language, aggressive urgency, or dismiss named competitors/teachers (see Section 8.5)
 - Never repeat the same subject line technique from Section 8.3 twice in a row across a batch — pick a different one each time even if a technique performed well last time
+- Never assume a sequence Olly is dictating one email at a time is complete just because a pitch/closing-sounding email arrived — track the actual email numbers received and flag any gap in the numbering immediately (lesson from 2026-07-29: Email 4 was skipped and only caught by explicitly noting the 3→5 jump; Email 8 sounded like a natural close but Email 9 followed). Explicitly confirm total count/completion with Olly before treating a sequence as final.
+- Never treat a missing destination URL in dictated email copy (e.g. "===> here" or "try it out ... here" with no link) as an error to flag or fix — Olly's source copy (GHL) has the real links; only ask if genuinely unsure whether a link was meant to be included at all, don't assume it's broken.
+- Never update mechanism/offer naming (e.g. "Heart Coherence," "Heart Creator Program") in this file in isolation — when Olly renames something, check `CLAUDE.md`'s "Always Read Before Executing Any Task" list and update every file on it that references the old name in the same pass, not just this one.
 
 ---
 
@@ -884,6 +865,17 @@ CTA, soft sign-off, or open loop - see Section 5.
 ---
 
 ## Changelog
+
+**2026-07-29 — Nurture sequence replaced with v4; two process lessons added**
+Section 7 fully replaced with the v4 sequence (10 emails, 0-9, no gaps) — primary mechanism language moved from "closed-off heart"/Heart Coherence to "survival mode → creative mode," product renamed Heart Creator Program → The Creation Formula, new Email 9 transitions contacts to the broadcast list, Email 0 adds a reply-YES deliverability mechanic. Avatar & Rationale section rewritten to match. Full detail in `project_email_sequence_v4_rewrite` memory.
+
+Two process lessons added to Section 10 (What Never to Write) from how this session actually went:
+1. **Sequence-completeness tracking:** Olly sent this sequence one email at a time across the session; Email 4 was skipped and only caught because the email numbers were tracked explicitly and the 3→5 jump was flagged rather than assumed intentional. Added a standing rule to always track received numbers and flag gaps immediately, and to confirm total count/completion explicitly rather than assuming a sequence is done when a pitch-sounding email arrives (Email 8 read like a natural close; Email 9 followed).
+2. **Missing links aren't errors:** Email 0 and Email 8 were dictated with no URL behind their link text ("===> here"). Olly confirmed these are populated in his GHL system and don't need fixing or flagging as broken — added a rule against treating this pattern as an error by default.
+
+Also added a rule to always check `CLAUDE.md`'s required-reading list for other files referencing an old mechanism/offer name whenever one changes, rather than updating this file in isolation — this session required syncing `argument_sheet.md`, `CLAUDE.md`, `skills_instagram-reels.md`, `skills_instagram-stories.md`, `avatar-rachel.md`, `brand-voice.md` and `funnel-overview.md` in the same pass, which should be the default expectation for any future rename, not a one-off cleanup.
+
+No prior rules removed — the "closed-off heart" framing from the 2026-07-07 entry below is superseded by the above, not deleted (kept in that entry's history for context).
 
 **2026-07-07 — Nurture sequence replaced with v3 (07/07/2026)**
 Section 7 replaced with the new live sequence from `email-sequences/Email Nurture Sequence - v3_.md` — now 8 emails + delivery (was 9), core reframe changed from "state problem" to "closed-off heart" problem, CTA link updated to `/heartcreator/about`, and Email 8 now references the 28-day Heart Activation Program introductory offer. `skills_content-strategy.md`'s Email Nurture Series content-angle table updated to match — use this version for Instagram Reels, Stories and email broadcast content ideas going forward.

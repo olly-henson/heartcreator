@@ -64,7 +64,7 @@ Every entry in the Instagram Reels Notion database must meet this standard befor
 Aligned with the YouTube Long-Form type system. Three types only.
 
 - **Belief-Changing** = leads with a belief Rachel is stuck in, builds the argument and science, lands the reframe. Personal stories and client proof drop in as the proof layer when available. Most Reels will be this type. Previously called Argument-Based, Educational and Mission-Based — all collapsed into this one type because the entry point (Rachel's frustration or a belief she holds) is the same regardless of how much science the Reel contains
-- **Practical** = takes Rachel through an actual practice or exercise on screen — nervous system regulation, feeling the future as real, a Heart-Opening Meditation snippet. The practice is the point, not just the explanation. Previously called Technique
+- **Practical** = takes Rachel through an actual practice or exercise on screen — nervous system regulation, shifting from survival mode into creative mode, feeling the future as real, a Creation Formula snippet. The practice is the point, not just the explanation. Previously called Technique
 - **Client Success** = a real client result — proof-led. Either Olly explains the result or the client speaks for themselves
 
 - **Personal Transformation** = a personal story or experiment Olly ran (e.g. "This random manifestation experiment doubled my income") — proof through his own lived result, not a client's. Un-retired 2026-07-13: was the top performer from the previous batch. Distinct from a generic "Personal Update" (day-in-the-life, behind-the-scenes) which still belongs to Instagram Stories only
@@ -120,25 +120,25 @@ Two caption types. Choose one per Reel — never mix them.
 
 ---
 
-**HEART CTA** — used when the goal is lead generation. Always starts with the CTA. **The CTA line itself depends on the Aim field — check it before drafting:**
+**HEART / TRIAL CTA** — used when the goal is lead generation. Always starts with the CTA. **The keyword AND CTA line depend on the Aim field — check it before drafting (updated 2026-07-29 — two separate ManyChat keywords now, don't mix them up):**
 
-- **Aim = List building:** `➡️ Comment "HEART" below and I'll send you my free Heart Activation Meditation that will help you keep feeling your new reality as real, so it happens.`
-- **Aim = Free Trial or 1-2-1 Coaching:** `➡️ Comment "HEART" below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens`
+- **Aim = List building:** keyword **HEART** → sends the free meditation link. `➡️ Comment "HEART" below if you'd like access to my free Heart Activation Meditation that will help you start feeling your future as real.`
+- **Aim = Free Trial or 1-2-1 Coaching:** keyword **TRIAL** → sends the Heart Creator Community/Skool link (not HEART — that's list-building only). `➡️ Comment "TRIAL" below for 7 days free access to The Creation Formula that will help you feel your future as real.`
 
-The free Heart Activation Meditation is the lead magnet that grows the email/DM list. The 28 Day Heart-Opening line promotes the paid program trial. Using the wrong one sends list-building traffic to the wrong offer — confirmed by Olly 2026-07-16.
+The free Heart Activation Meditation is the lead magnet that grows the email/DM list. The TRIAL line promotes the paid Community's 7-day free trial. Using the wrong keyword sends traffic to the wrong ManyChat flow — confirmed by Olly 2026-07-29 (live captions logged in the Reel Caption Bank Notion page).
 
 ```
 [CTA line — chosen per Aim above]
 
 [Caption body — 2-3 short paragraphs related to the Title angle. One idea per paragraph. Lead with the problem Rachel recognises, build to the reframe or the missing piece.]
 
-#realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction
+#manifestation #realitycreation #drjoedispenza #nevillegoddard #subconsciousmind
 ```
 
-**Technique HEART CTA** — for Technique posts, the caption body gives a real snippet of the technique. Same Aim-based CTA choice applies. Structure:
+**Technique HEART/TRIAL CTA** — for Technique posts, the caption body gives a real snippet of the technique. Same Aim-based CTA choice applies. Structure:
 
 ```
-➡️ Comment "HEART" below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens
+[CTA line — chosen per Aim above, HEART for list-building / TRIAL for trial]
 
 [Invite Rachel to try: "Try this." — short, direct]
 
@@ -149,11 +149,11 @@ The free Heart Activation Meditation is the lead magnet that grows the email/DM 
 
 [Reframe what she noticed: that's not [negative label]. That's [the real explanation].]
 
-[Connect to the mechanism — old programming, survival mode, etc.]
+[Connect to the mechanism — survival mode vs creative mode, old programming, etc.]
 
-[Point to the Heart-Opening Meditation as what releases it and installs the new programme]
+[Point to The Creation Formula (or the free meditation, if list-building) as what shifts her into creative mode and installs the new programme]
 
-#realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction
+#manifestation #realitycreation #drjoedispenza #nevillegoddard #subconsciousmind
 ```
 
 ---
@@ -194,16 +194,20 @@ Caption rules (apply to both types):
 - Never create an Engagement or generic Personal Update Reel (day-in-the-life, behind-the-scenes) — those formats belong to Instagram Stories. A personal experiment or story with a proof-led result (Personal Transformation) is allowed
 - Never use "manifestation" as the default term — default is "reality creation" or "conscious creation". Manifestation is used only (~25%) when wider reach or virality is the goal
 - Never pad a title with extra words just to reach the limit, and never cut a genuinely better title down purely to hit 9 words — ~9 words is a guideline, not a hard cap
-- Never use the 28 Day Heart-Opening CTA line on a List building Reel, or the free Heart Activation Meditation CTA line on a Free Trial/1-2-1 Coaching Reel — check the Aim field first. Corrected 2026-07-17: a List building Reel was drafted with the 28 Day Heart-Opening CTA by default; Olly flagged it as the wrong CTA since that line promotes the paid trial, not the free list-building lead magnet
+- Never use the TRIAL CTA line on a List building Reel, or the HEART/free meditation CTA line on a Free Trial/1-2-1 Coaching Reel — check the Aim field first, and check the keyword matches the Aim (HEART = list-building only, TRIAL = trial/paid offer only). Corrected 2026-07-17 (under the old naming) and reconfirmed 2026-07-29 under the new HEART/TRIAL split: using the wrong keyword sends traffic to the wrong ManyChat flow entirely, not just the wrong wording
 - Never write a title that could belong to a generic self-help Reel — it must name the niche (reality creation, conscious creation, subconscious, manifestation) so Rachel identifies it as specifically for her. Example (2026-07-10): "You've read all the books. Still nothing's changed" was rejected as too vague — it could apply to any self-help content. Fixed by naming the niche directly: "You've read every manifestation book. Still nothing's changed". Test: could this title apply to a fitness or productivity Reel too? If yes, it needs a niche word
 - Never default to a metaphor title when a direct aspirational title is available — metaphors require decoding; direct Promised Land language communicates instantly
-- Never use `#subconsciousmind` — the correct hashtag is `#nevillegoddard`
-- Never paraphrase the HEART CTA line — the exact wording is fixed: *"Comment 'HEART' below and I'll send you my 28 Day Heart-Opening meditation that will help you feel your future as real - so it happens"* Do not reword, shorten, or vary it. Keep the hyphen exactly as written — this is a deliberate exception to the no-hyphen caption rule for this fixed line only
-- Never improvise hashtags — the approved set is fixed: `#realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction`. Do not add, remove, or swap any of these
+- Never paraphrase the fixed CTA lines (2026-07-29, replaces the earlier single HEART-only rule) — exact wording:
+  - HEART (list-building): *"Comment 'HEART' below if you'd like access to my free Heart Activation Meditation that will help you start feeling your future as real."*
+  - TRIAL (trial/paid offer): *"Comment 'TRIAL' below for 7 days free access to The Creation Formula that will help you feel your future as real."*
+  
+  Do not reword, shorten, or vary either line.
+- Never improvise hashtags — the approved set is fixed (updated 2026-07-29): `#manifestation #realitycreation #drjoedispenza #nevillegoddard #subconsciousmind`. Do not add, remove, or swap any of these. Supersedes the earlier `#realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction` set and the "never use #subconsciousmind" rule — both retired
 - Never set a Date on a new entry — Olly chooses dates as he goes
 
 ### Process
 - **Read this file in full before drafting any caption** — never work from memory. CTA wording and hashtags are fixed and must be taken directly from this file, not recalled. If you draft a caption without reading this file first, the CTA and hashtags will be wrong.
+- **Before finalizing any caption that names the paid offer, cross-check the current name against the About Page live copy (`project_about_page_bio` memory) — don't trust this skill file's fixed CTA lines to already be current.** Lesson from 2026-07-29: the offer was renamed "Heart Creator Program" → "The Creation Formula" the same day the CTA lines were last updated here, and the fixed-hashtag set drifted out of sync with Olly's actual live caption independently of any skill-file edit. Product/mechanism names and hashtag sets get renamed by Olly directly in his live captions before this file is told about it — treat this file as usually-current, not always-current, for anything naming the offer.
 - Lock the title before writing the hook — the hook follows the approved title, not a draft
 - Draft all fields internally before pushing to Notion
 - Present the full entry to Olly for field-by-field review before marking as Recording
@@ -254,6 +258,8 @@ This is set in ManyChat and never goes in the caption — ManyChat handles deliv
 ---
 
 ## Approved Examples
+
+> **Note (2026-07-29):** the examples below were approved before the HEART/TRIAL keyword split and the hashtag set update — their CTA lines and `#lawofattraction` hashtag are now stale. Keep them for structure/tone reference only; use the current fixed CTA lines and hashtag set (see Never-paraphrase and Never-improvise-hashtags rules above) when actually drafting, not the wording shown in these examples.
 
 ### Hook — Educational Reel (approved by Olly)
 **Title:** Reality creation doesn't happen in your head
@@ -394,6 +400,14 @@ Why it works: the rejected titles ask an abstract question. The approved titles 
 ---
 
 ## Changelog
+
+**2026-07-29 — Session feedback review (HEART/TRIAL split + naming-currency lesson)**
+- CTA: split the single HEART CTA into two separate ManyChat keywords — HEART (list-building, sends free meditation) and TRIAL (trial/paid offer, sends the Community/Skool link) — replacing the old single-keyword-with-branching-line approach from 2026-07-17. Reason: Olly clarified the two CTAs now trigger genuinely different ManyChat automations, not just different wording on the same keyword — using the wrong keyword misroutes the DM entirely, not just the phrasing.
+- Never list: rewrote the fixed-CTA-line rule to cover both HEART and TRIAL lines with their exact current wording, sourced directly from Olly's live captions (logged in the Reel Caption Bank Notion page) rather than the skill file's prior assumed wording.
+- Never list: hashtag set updated to `#manifestation #realitycreation #drjoedispenza #nevillegoddard #subconsciousmind`, replacing the older `#lawofattraction`-based set; the old "never use #subconsciousmind" rule was itself retired since it's now the correct 5th tag. Reason: Olly's actual live caption used a different hashtag set than this file had recorded — the file had gone stale without any specific correction event, just drift.
+- Process: added a new rule to cross-check the paid offer's current name (e.g. "The Creation Formula") against the About Page live copy before finalizing any caption, rather than trusting this file's fixed lines to already be current. Reason/lesson: the offer name changed twice in one day this session (Heart Creator Program → The Creation Formula) independently of this skill file being told about it — the underlying lesson is that Olly renames things directly in his live copy first, and this file needs an explicit "check the source of truth" habit rather than assuming its own fixed lines are still accurate.
+- Approved Examples: added a dated staleness note at the top of the section flagging that the worked examples predate the HEART/TRIAL split and old hashtag set — kept for structure/tone reference only, not for copying CTA/hashtag wording verbatim.
+- No rules removed beyond the explicitly superseded hashtag/CTA wording above — the Aim-based branching logic itself (List building vs Trial/Coaching) carries forward unchanged, just remapped onto the new two-keyword system.
 
 **2026-07-17 — Session feedback review (CTA-by-Aim correction)**
 - Caption: HEART CTA is no longer a single fixed line — it now branches by the Aim field. Aim = List building uses the free Heart Activation Meditation CTA (lead magnet for growing the list); Aim = Free Trial or 1-2-1 Coaching uses the 28 Day Heart-Opening CTA (promotes the paid trial). Reason: Olly flagged a List building Reel drafted with the 28 Day Heart-Opening CTA as "the wrong CTA" — this file's single-CTA merge (dated 2026-07-10) had gone stale against Olly's 2026-07-16 confirmation that the two CTAs serve different funnel stages and must not be mixed up
