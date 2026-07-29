@@ -6,6 +6,7 @@
 <title>How To Do The Meditation — Training</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,500;1,600;1,700&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#6B1E4D;
@@ -54,6 +55,85 @@
     align-items:center;
     gap:60px;
     text-align:left;
+  }
+
+  /* ---------- worksheet (copied from choose-your-creation.html) ---------- */
+  .worksheet{
+    width:100%;
+    max-width:280px;
+    background:var(--cream);
+    border-radius:6px;
+    padding:22px 16px;
+    box-shadow:0 30px 70px rgba(0,0,0,.45);
+    transform:rotate(-1deg);
+    color:#000;
+    font-family:'EB Garamond', serif;
+    aspect-ratio:210/297;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+  .ws-diagram{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:start;
+    gap:6px;
+  }
+  .ws-col-heading{
+    font-style:italic;
+    font-weight:700;
+    font-size:13px;
+    color:#000;
+    border-bottom:2px solid #000;
+    display:inline-block;
+    padding-bottom:1px;
+    margin-bottom:1px;
+  }
+  .ws-col-sub{
+    font-style:italic;
+    font-size:10px;
+    color:rgba(0,0,0,.6);
+    margin-bottom:8px;
+  }
+  .ws-col-right{ text-align:left; }
+  .ws-list{
+    list-style:none;
+    counter-reset:ws-counter;
+  }
+  .ws-list li{
+    counter-increment:ws-counter;
+    font-style:italic;
+    font-size:10.5px;
+    line-height:1.3;
+    color:#000;
+    margin-bottom:6px;
+    position:relative;
+    padding-left:14px;
+  }
+  .ws-list li::before{
+    content:counter(ws-counter) ".";
+    position:absolute;
+    left:0;
+    font-weight:700;
+  }
+  .ws-circle-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding-top:4px;
+  }
+  .ws-circle-wrap svg{ width:80px; height:80px; }
+  .ws-intention-line{
+    text-align:center;
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    font-size:11px;
+    color:rgba(0,0,0,.55);
+    margin-bottom:10px;
+  }
+  .ws-intention-line strong{
+    font-weight:700;
+    color:#000;
   }
 
   .step-number-row{
@@ -264,11 +344,54 @@
 </head>
 <body>
 
-<div class="progress-label" id="progressLabel">Step 1 / 7</div>
+<div class="progress-label" id="progressLabel">Step 1 / 8</div>
 
 <div class="dots" id="dots"></div>
 
 <div class="steps" id="steps">
+
+  <section class="step" data-title="Refresh The Feeling">
+    <div class="step-inner">
+      <div class="worksheet">
+        <div class="ws-intention-line">Creation: <strong>Business Growth</strong></div>
+        <div class="ws-diagram">
+          <div class="ws-col ws-col-left">
+            <div class="ws-col-heading">Intention</div>
+            <div class="ws-col-sub">(Thoughts)</div>
+            <ol class="ws-list">
+              <li>Making over $10,000 every month</li>
+              <li>Working with great clients</li>
+              <li>Getting awesome results for my clients</li>
+              <li>Contracts for 6 months to a year</li>
+            </ol>
+          </div>
+          <div class="ws-circle-wrap">
+            <svg viewBox="0 0 200 200" fill="none">
+              <circle cx="100" cy="100" r="92" stroke="rgba(0,0,0,.35)" stroke-width="1" stroke-dasharray="1 9"/>
+              <text x="100" y="120" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="700" font-size="70" fill="#000">B</text>
+            </svg>
+          </div>
+          <div class="ws-col ws-col-right">
+            <div class="ws-col-heading">Elevated Emotion</div>
+            <div class="ws-col-sub">(Feelings)</div>
+            <ol class="ws-list">
+              <li>Free</li>
+              <li>Fulfilled</li>
+              <li>In Integrity</li>
+              <li>Empowered</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div class="step-text">
+        <div class="step-number-row">
+          <div class="step-number">0</div>
+          <div class="step-word">Refresh The Feeling</div>
+        </div>
+        <div class="step-body">Read through your conditions to create the sense of wholeness and prime the emotional state.</div>
+      </div>
+    </div>
+  </section>
 
   <section class="step" data-title="Close Eyes">
     <div class="step-inner">
@@ -356,7 +479,7 @@
               <div class="step-number">5</div>
               <div class="step-word">Intention</div>
             </div>
-            <div class="step-body">Remember your intention, recall your symbol.</div>
+            <div class="step-body">Recall your symbol and remember your overall intention. Then remember your conditions.</div>
           </div>
         </div>
 
@@ -370,7 +493,7 @@
               <div class="step-number">6</div>
               <div class="step-word">Feel</div>
             </div>
-            <div class="step-body">As the feelings come up as you recall your intention, breathe this feeling into your heart a little slower and deeper than normal and release the feeling on the out breath.</div>
+            <div class="step-body">How would it feel if all these conditions were met? Breathe with that feeling into your heart.</div>
           </div>
         </div>
 
