@@ -1,5 +1,8 @@
 # Website Project — Claude Instructions
 
+## Role
+**Website Builder** for Olly Henson Coaching / Heart Creator. This folder's agent builds and maintains the custom-coded ollyhenson.com website — the homepage and any other standalone HTML sections/pages — built as Custom HTML blocks inside GHL Website Builder.
+
 ## What This Project Is
 Custom HTML/CSS homepage for ollyhenson.com, built as one Custom HTML block in GHL Website Builder.
 
@@ -7,7 +10,10 @@ Custom HTML/CSS homepage for ollyhenson.com, built as one Custom HTML block in G
 ```
 website/
   sections/
-    homepage.html    ← entire homepage (one GHL Custom HTML block)
+    homepage.html                          ← entire homepage (one GHL Custom HTML block)
+    links.html                             ← standalone links page
+    meditation-explained-standalone.html   ← standalone meditation explainer page
+    state-shifting-ladder.html             ← interactive tool, embedded in Skool Community (see project_state_shifting_ladder memory — styling locked, don't restyle unasked)
   CLAUDE.md
   README.md
   ghl-setup-guide.md
@@ -22,20 +28,23 @@ website/
 ## How It Works
 - One single Custom HTML block for the entire homepage
 - No lead capture form — page is purely navigational/brand
-- Video is embedded via YouTube iframe (placeholder until video is ready)
+- Video is a self-hosted `.mov` file (native `<video>` tag, not a YouTube embed)
 - All social links open in new tab
 
-## Social Links
-- **YouTube:** https://www.youtube.com/@OllyHenson
+## Social Links (as actually live — updated 2026-07-30)
 - **Instagram:** https://www.instagram.com/theollyhenson
-- **Skool:** https://www.skool.com/heartcreator
-- **Free Meditation:** https://ollyhenson.com/meditation (funnel page)
+- **Skool:** https://www.skool.com/heartcreator (with UTM: `?utm_source=website&utm_medium=homepage&utm_campaign=coaching`)
+- **Facebook:** https://www.facebook.com/theollyhenson (added 2026-07-30, ahead of Reels cross-posting starting)
+- **YouTube:** https://www.youtube.com/@OllyHenson (re-added 2026-07-30, ahead of YouTube content restarting — see `project_skool_growth_boost_strategy` memory)
+
+Note: the standalone Free Meditation CTA card is still **not** on the homepage — removed 2026-07-09 (see `project_heartcreator_website` memory), not re-added. CTA grid is now Instagram, Skool, Facebook, YouTube (4 cards).
 
 ## Images
-- **Olly headshot:** https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a2b0038e5084c4b718e68e7.png
+- **Hero avatar:** `https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a2ff592e5b9322bddd1e8d7.png`
+- **Video:** `https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a368bcb6a6dd1b69a4dd0f2.mov`
 
 ## Design System
-Identical to funnel — see `C:\Users\Olly\AI OS\funnel\brand\brand-guidelines.md`
+Identical to funnel — see `C:\Users\Olly\AI OS\heartcreator\funnel\brand\brand-guidelines.md` (corrected 2026-07-30 — path previously pointed outside the consolidated repo)
 - **Theme:** Space / cosmos
 - **Primary bg:** #080010
 - **Magenta:** #d946ef
@@ -44,17 +53,15 @@ Identical to funnel — see `C:\Users\Olly\AI OS\funnel\brand\brand-guidelines.m
 - **Muted:** #c4b5fd
 - **Fonts:** Playfair Display (headings) + Inter (body)
 
-## Page Structure
-1. Hero — tagline + sub + Olly headshot
-2. Video — placeholder YouTube embed
-3. CTAs — 4 link buttons (YouTube, Instagram, Skool, Free Meditation)
+## Page Structure (updated 2026-07-30)
+1. Hero — `<h1>` "Olly Henson" + tagline "Open Your Heart, Change Your Life" + avatar image
+2. Video — real hosted `.mov`, not a placeholder
+3. CTAs — 4 link cards, in order: Skool ("Start creating your life"), Instagram ("Learn more on Instagram"), Facebook ("Learn more on Facebook"), YouTube ("Learn more on YouTube") — Skool moved first 2026-07-30 (both mobile and desktop), Facebook/YouTube added 2026-07-30, Free Meditation still not re-added (see Social Links above). Social platform cards use a consistent "Learn more on X" desc pattern; Skool is the exception since it's the conversion CTA, not just a follow link.
 4. Testimonials — Isabell + Anas
-5. Footer — Privacy Policy + Terms
+5. Footer — real Privacy Policy + Terms links (`ollyhenson.com/privacy-policy`, `/terms`) — not placeholders
 
 ## Still To Complete
-- [ ] Replace PLACEHOLDER_VIDEO_URL with real YouTube video URL
-- [ ] Replace PLACEHOLDER_PRIVACY_POLICY_URL with real URL
-- [ ] Replace PLACEHOLDER_TERMS_URL with real URL
+Nothing outstanding — all three "Still To Complete" placeholders from the original build (video URL, privacy policy URL, terms URL) are already replaced with real URLs/assets in the live file. Section removed 2026-07-30 after verifying against the actual homepage.html; re-add here if new work items come up.
 
 ## GHL Editor Rules (same as funnel)
 - Section width: Full Width
