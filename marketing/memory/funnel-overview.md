@@ -53,7 +53,7 @@ Live caption copy for both is kept in the **Reel Caption Bank** Notion page: `ht
 
 **Pricing:** $30/month or $300/year, 7-day free trial (card required at signup, converts to paid automatically unless cancelled).
 
-**What's inside:** The Creation Formula (the step-by-step system — renamed 2026-07-29 from "Heart Creator Program"), 24/7 community support, and the community itself. See `project_about_page_bio` memory for the exact live About Page copy.
+**What's inside:** The Creation Formula Meditation (the step-by-step system — renamed 2026-07-29 from "Heart Creator Program"), 24/7 community support, and the community itself. See `project_about_page_bio` memory for the exact live About Page copy.
 
 **Page requirement:** Must work for both audiences. Cold traffic lands here with no prior context — the page needs to be self-contained, clear and compelling on its own.
 
@@ -73,7 +73,7 @@ Triggered by the "Meditation Download" tag in GHL once someone downloads the fre
 | 5 | Why most techniques/teachers don't help people actually *feel* it |
 | 6 | The two-step framework — Step 1: Shift Out of Survival Mode Into Creative Mode, Step 2: Think About & Feel Your Future |
 | 7 | Summary of everything covered so far |
-| 8 | Pitch — The Creation Formula inside the Heart Creator Community, 7-day free trial |
+| 8 | Pitch — The Creation Formula Meditation inside the Heart Creator Community, 7-day free trial |
 | 9 | Transition — explicitly moves them onto the regular broadcast list, sets expectations (paid offers will appear, no pressure, easy unsubscribe) |
 
 Full sequence content: `marketing/skills/skills_email-creation.md` (Section 7) and `marketing/email-sequences/Email Nurture Sequence - v4_.md`.

@@ -18,7 +18,7 @@ This is the single skill file for all Heart Creator email work — the nurture s
 
 Two email streams:
 
-1. **Meditation download nurture sequence** — an every-other-day campaign sent to contacts tagged "Meditation Download" in GoHighLevel. Contacts enter after downloading the free Heart Activation Meditation. The single goal of every email: move the prospect one step closer to believing that shifting out of survival mode and into creative mode (via The Creation Formula) is the missing piece that will finally allow them to create the change they've been working toward — and wanting to join the Heart Creator Community on Skool.
+1. **Meditation download nurture sequence** — an every-other-day campaign sent to contacts tagged "Meditation Download" in GoHighLevel. Contacts enter after downloading the free Heart Activation Meditation. The single goal of every email: move the prospect one step closer to believing that shifting out of survival mode and into creative mode (via The Creation Formula Meditation) is the missing piece that will finally allow them to create the change they've been working toward — and wanting to join the Heart Creator Community on Skool.
 2. **Broadcast campaigns** — one-off sends to the wider list: old clients, old leads, people who downloaded the meditation but didn't join, people who finished the nurture sequence but haven't joined. See Section 6.
 
 ---
@@ -214,7 +214,7 @@ Before writing, check Section 7 (live nurture sequence) to confirm the content a
 >
 > Sequence: 10 emails (0-9), every other day, triggered by "Meditation Download" tag. Email 0 now asks the contact to reply "YES" to keep receiving the series — this is a deliverability/engagement play (improves open rate and inbox placement for the rest of the sequence and future broadcasts), not a hard gate that blocks anything downstream.
 > Mechanism language shifted from "open your heart" / Heart Coherence (every email) to **survival mode → creative mode** as the primary state-shift framing — see `memory/argument_sheet.md` for the full updated argument. The heart is still where the feeling lands ("feel your future as real in your heart") but is no longer the headline mechanism name.
-> Product name: **The Creation Formula** (replaces "Heart Creator Program" as of 2026-07-29 — matches the About Page update).
+> Product name: **The Creation Formula Meditation** (renamed from "Heart Creator Program" 2026-07-29, then "The Creation Formula" → "The Creation Formula Meditation" 2026-07-30 — matches the About Page update; the literal email copy below still says "The Creation Formula" since it was dictated before the 07-30 rename — don't retroactively edit sent/historical email content, but use the Meditation-suffixed name for any new email work).
 > New Email 9 transitions contacts from the nurture sequence into the regular broadcast list — explicit, sets expectations (paid offers will appear, no pressure, unsubscribe with no hard feelings).
 > CTA destination: `https://www.skool.com/heartcreator/about` (Heart Creator no longer offers 1-2-1 coaching, only the Skool Community).
 > Source file: `email-sequences/Email Nurture Sequence - v4_.md`
@@ -240,7 +240,7 @@ Before writing, check Section 7 (live nurture sequence) to confirm the content a
 4. Prove the mechanism with Olly's personal story (364.12% income increase, late 2018, via Heart Coherence)
 5. Explain why most manifestation techniques and teachers don't address this
 6. Give the two-step framework: Step 1 – Shift Out of Survival Mode and Into Creative Mode, Step 2 – Think About & Feel Your Future
-7. Sum everything up and pitch The Creation Formula inside the Heart Creator Community
+7. Sum everything up and pitch The Creation Formula Meditation inside the Heart Creator Community
 8. Transition them cleanly into the broadcast list, setting expectations for what's next
 
 ---

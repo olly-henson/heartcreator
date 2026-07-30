@@ -123,7 +123,7 @@ Two caption types. Choose one per Reel — never mix them.
 **HEART / TRIAL CTA** — used when the goal is lead generation. Always starts with the CTA. **The keyword AND CTA line depend on the Aim field — check it before drafting (updated 2026-07-29 — two separate ManyChat keywords now, don't mix them up):**
 
 - **Aim = List building:** keyword **HEART** → sends the free meditation link. `➡️ Comment "HEART" below if you'd like access to my free Heart Activation Meditation that will help you start feeling your future as real.`
-- **Aim = Free Trial or 1-2-1 Coaching:** keyword **TRIAL** → sends the Heart Creator Community/Skool link (not HEART — that's list-building only). `➡️ Comment "TRIAL" below for 7 days free access to The Creation Formula that will help you feel your future as real.`
+- **Aim = Free Trial or 1-2-1 Coaching:** keyword **TRIAL** → sends the Heart Creator Community/Skool link (not HEART — that's list-building only). `➡️ Comment "TRIAL" below for seven days trialling The Creation Formula Meditation that will help you feel your future as real.`
 
 The free Heart Activation Meditation is the lead magnet that grows the email/DM list. The TRIAL line promotes the paid Community's 7-day free trial. Using the wrong keyword sends traffic to the wrong ManyChat flow — confirmed by Olly 2026-07-29 (live captions logged in the Reel Caption Bank Notion page).
 
@@ -151,7 +151,7 @@ The free Heart Activation Meditation is the lead magnet that grows the email/DM 
 
 [Connect to the mechanism — survival mode vs creative mode, old programming, etc.]
 
-[Point to The Creation Formula (or the free meditation, if list-building) as what shifts her into creative mode and installs the new programme]
+[Point to The Creation Formula Meditation (or the free meditation, if list-building) as what shifts her into creative mode and installs the new programme]
 
 #manifestation #realitycreation #drjoedispenza #nevillegoddard #subconsciousmind
 ```
@@ -199,7 +199,7 @@ Caption rules (apply to both types):
 - Never default to a metaphor title when a direct aspirational title is available — metaphors require decoding; direct Promised Land language communicates instantly
 - Never paraphrase the fixed CTA lines (2026-07-29, replaces the earlier single HEART-only rule) — exact wording:
   - HEART (list-building): *"Comment 'HEART' below if you'd like access to my free Heart Activation Meditation that will help you start feeling your future as real."*
-  - TRIAL (trial/paid offer): *"Comment 'TRIAL' below for 7 days free access to The Creation Formula that will help you feel your future as real."*
+  - TRIAL (trial/paid offer): *"Comment 'TRIAL' below for seven days trialling The Creation Formula Meditation that will help you feel your future as real."*
   
   Do not reword, shorten, or vary either line.
 - Never improvise hashtags — the approved set is fixed (updated 2026-07-29): `#manifestation #realitycreation #drjoedispenza #nevillegoddard #subconsciousmind`. Do not add, remove, or swap any of these. Supersedes the earlier `#realitycreation #manifestation #nevillegoddard #drjoedispenza #lawofattraction` set and the "never use #subconsciousmind" rule — both retired
@@ -400,6 +400,9 @@ Why it works: the rejected titles ask an abstract question. The approved titles 
 ---
 
 ## Changelog
+
+**2026-07-30 — "The Creation Formula" → "The Creation Formula Meditation"**
+Olly renamed the access item again to make it tangible (a meditation, not an abstract "system"/"community"). Updated the TRIAL fixed CTA line and Technique-formula placeholder text. Synced same-day across `argument_sheet.md`, `CLAUDE.md`, `avatar-rachel.md`, `brand-voice.md`, `funnel-overview.md`, `skills_instagram-stories.md`. Confirms the naming-currency lesson from 2026-07-29 below — this is the third name for this access item in two days (Heart Creator Program → The Creation Formula → The Creation Formula Meditation).
 
 **2026-07-29 — Session feedback review (HEART/TRIAL split + naming-currency lesson)**
 - CTA: split the single HEART CTA into two separate ManyChat keywords — HEART (list-building, sends free meditation) and TRIAL (trial/paid offer, sends the Community/Skool link) — replacing the old single-keyword-with-branching-line approach from 2026-07-17. Reason: Olly clarified the two CTAs now trigger genuinely different ManyChat automations, not just different wording on the same keyword — using the wrong keyword misroutes the DM entirely, not just the phrasing.

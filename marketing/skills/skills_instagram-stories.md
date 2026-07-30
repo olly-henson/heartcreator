@@ -89,7 +89,7 @@ TURNING POINT
 "What I realised was..." / "Things only changed when..."
 
 THE MECHANISM
-Introduce The Creation Formula naturally, not as a pitch (updated 2026-07-29 — was "Heart-Opening Meditation," now secondary/supporting language, see [[project_email_sequence_v4_rewrite]]). Always "something called The Creation Formula" on first mention. Frame as shifting from survival mode into creative mode.
+Introduce The Creation Formula Meditation naturally, not as a pitch (updated 2026-07-29, renamed again 2026-07-30 to add "Meditation" — was "Heart-Opening Meditation" originally, see [[project_email_sequence_v4_rewrite]]). Always "something called The Creation Formula Meditation" on first mention. Frame as shifting from survival mode into creative mode.
 
 THE RESULT
 Specific and grounded, not vague wellness promises.
@@ -155,10 +155,10 @@ https://www.skool.com/heartcreator?utm_source=instagram&utm_medium=stories&utm_c
 
 - Never fabricate client results - only use real proof from Isabell and Anas (and any future clients)
 - Never use banned words: game changer, deep dive, synergy, leverage, hustle, grind, unlock, skyrocket, supercharge
-- Never assume Rachel knows what The Creation Formula is - always "something called The Creation Formula" on first mention (updated 2026-07-29, was Heart-Opening Meditation)
+- Never assume Rachel knows what The Creation Formula Meditation is - always "something called The Creation Formula Meditation" on first mention (renamed 2026-07-30 from "The Creation Formula", was Heart-Opening Meditation before that)
 - Never assume Rachel can visualise - lead with effort and willpower as the universal experience
 - Never open a Personal Story with a vague experiential statement - open with a specific fact, number, or date
-- Never name "The Creation Formula" in a Belief-Changing Story - use "opening your heart" / "getting into creative mode" instead
+- Never name "The Creation Formula Meditation" in a Belief-Changing Story - use "opening your heart" / "getting into creative mode" instead
 - Never state the Belief-Changing reframe as a flat declaration - use "But what if..." questions
 - Never include a destination URL directly in a Story - ManyChat handles delivery
 - Never use em-dashes or hyphens as clause separators

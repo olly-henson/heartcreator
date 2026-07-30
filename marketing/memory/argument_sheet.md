@@ -2,7 +2,7 @@
 
 > The strategic spine of all content. Every piece of marketing — regardless of format or platform — must connect to at least one stage of this argument. Read this before writing anything.
 
-> **Updated 2026-07-29 to match the v4 email nurture sequence.** The core mechanism explanation shifted from "open your heart / Heart-Opening Meditation" as the headline vocabulary to **survival mode → creative mode** as the primary state-shift language, with **The Creation Formula** as the branded step-by-step system name (replaces "Heart Creator Program"). The heart is still where the *feeling* happens and still where the Mission/Differentiation sections anchor the brand's "why" — but it is no longer the every-email named mechanism. Practically: lead with "get out of survival mode and into creative mode," land on "so you can feel your future as real in your heart." See `C:\Users\Olly\AI OS\heartcreator\marketing\email-sequences\Email Nurture Sequence - v4_.md` for the full sequence this reflects.
+> **Updated 2026-07-29 to match the v4 email nurture sequence.** The core mechanism explanation shifted from "open your heart / Heart-Opening Meditation" as the headline vocabulary to **survival mode → creative mode** as the primary state-shift language, with **The Creation Formula Meditation** as the branded step-by-step system name (replaces "Heart Creator Program"). The heart is still where the *feeling* happens and still where the Mission/Differentiation sections anchor the brand's "why" — but it is no longer the every-email named mechanism. Practically: lead with "get out of survival mode and into creative mode," land on "so you can feel your future as real in your heart." See `C:\Users\Olly\AI OS\heartcreator\marketing\email-sequences\Email Nurture Sequence - v4_.md` for the full sequence this reflects.
 
 ---
 
@@ -20,7 +20,7 @@ We help people shift out of survival mode and into creative mode so they can fee
 
 **It's not the technique — it's the state.**
 
-The techniques work. Visualisation, affirmations, Dispenza meditations, Neville Goddard — they all work. But only when done from the right internal state. The reason nothing is changing is not a technique problem or a consistency problem. It is a state problem. A body and nervous system stuck in survival mode keeps people in their analytical mind, blocks access to the subconscious, and makes it impossible to genuinely feel and maintain the emotional states needed for change. **The Creation Formula** solves this. It shifts the nervous system out of survival mode and into creative mode, making it possible to truly feel — and keep feeling — the future as real in the heart. That is when the techniques begin to work.
+The techniques work. Visualisation, affirmations, Dispenza meditations, Neville Goddard — they all work. But only when done from the right internal state. The reason nothing is changing is not a technique problem or a consistency problem. It is a state problem. A body and nervous system stuck in survival mode keeps people in their analytical mind, blocks access to the subconscious, and makes it impossible to genuinely feel and maintain the emotional states needed for change. **The Creation Formula Meditation** solves this. It shifts the nervous system out of survival mode and into creative mode, making it possible to truly feel — and keep feeling — the future as real in the heart. That is when the techniques begin to work.
 
 ---
 
@@ -123,7 +123,7 @@ This is stopping them from being able to feel — and maintain — the emotions 
 
 ## New Mechanism
 
-**The Creation Formula.**
+**The Creation Formula Meditation.**
 
 A step-by-step system for shifting the body and nervous system out of survival mode and into creative mode — the state from which it's actually possible to feel, and keep feeling, the future as real. This is not another technique to add to the pile. It is the missing foundation that makes all the other techniques (visualisation, affirmations, Dispenza, Neville Goddard) actually work.
 
@@ -131,7 +131,7 @@ A step-by-step system for shifting the body and nervous system out of survival m
 
 ## New Belief
 
-The Creation Formula will help them shift out of survival mode and into creative mode so that they can feel — and maintain the feeling of — their future until it happens.
+The Creation Formula Meditation will help them shift out of survival mode and into creative mode so that they can feel — and maintain the feeling of — their future until it happens.
 
 ---
 
@@ -198,7 +198,7 @@ She is not a new person. She is the version of herself that already existed befo
 ### The Vocabulary of This Register
 
 - Survival mode / creative mode (primary state-shift language as of 2026-07-29)
-- The Creation Formula (branded system name — replaces "Heart Creator Program")
+- The Creation Formula Meditation (branded system name — replaces "Heart Creator Program")
 - Feel it / maintain the feeling — the two-part promise, not just "feel it once"
 - Elevated emotions
 - Subconscious reprogramming / subconscious programming

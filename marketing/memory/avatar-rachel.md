@@ -43,14 +43,14 @@ But she cannot make it work in practice.
 2. The issue is not the technique — it is the state she is in when she uses the technique.
 3. She is operating predominantly from **survival mode, not creative mode**. This keeps her in her head, in high beta brainwaves, which blocks access to her subconscious mind and makes it impossible to genuinely feel — and maintain — the emotional states of her future.
 4. Because nothing is landing in the subconscious, nothing is changing in her reality — no matter how consistently she does the work.
-5. **The Creation Formula** is the step-by-step system that shifts her out of survival mode and into creative mode, slows her brainwaves down to alpha, and opens genuine access to her subconscious mind.
+5. **The Creation Formula Meditation** is the step-by-step system that shifts her out of survival mode and into creative mode, slows her brainwaves down to alpha, and opens genuine access to her subconscious mind.
 6. From that state, she can actually feel her future — and keep feeling it. And when she can feel it, her subconscious can respond to it — and that is when things begin to change.
 
 ## The core argument for Rachel
 
 **It's not the technique — it's the state.**
 
-You cannot reprogram the subconscious from the head. The subconscious responds to feeling, not thinking. The Creation Formula creates the internal state (creative mode, not survival mode) that makes everything she is already doing actually work.
+You cannot reprogram the subconscious from the head. The subconscious responds to feeling, not thinking. The Creation Formula Meditation creates the internal state (creative mode, not survival mode) that makes everything she is already doing actually work.
 
 ---
 
@@ -74,7 +74,7 @@ They are not sceptics. They are **believers stuck at the door.**
 - "It's not the technique — it's the state"
 - "You're trying to create from your head. The subconscious doesn't respond to thought. It responds to feeling."
 - "Survival mode keeps you in your analytical mind — high beta brainwaves — where the subconscious is off limits"
-- "The Creation Formula shifts you out of survival mode and into creative mode, slows your brainwaves down, and gives you genuine access to your subconscious"
+- "The Creation Formula Meditation shifts you out of survival mode and into creative mode, slows your brainwaves down, and gives you genuine access to your subconscious"
 - "You have to feel it — and keep feeling it — before it happens. Right now, survival mode is making that impossible"
 - "The techniques aren't wrong. The state you're in when you use them is."
 
