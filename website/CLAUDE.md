@@ -35,7 +35,7 @@ website/
 - **Instagram:** https://www.instagram.com/theollyhenson
 - **Skool:** https://www.skool.com/heartcreator (with UTM: `?utm_source=website&utm_medium=homepage&utm_campaign=coaching`)
 - **Facebook:** https://www.facebook.com/theollyhenson (added 2026-07-30, ahead of Reels cross-posting starting)
-- **YouTube:** https://www.youtube.com/@OllyHenson (re-added 2026-07-30, ahead of YouTube content restarting — see `project_skool_growth_boost_strategy` memory)
+- **YouTube:** https://www.youtube.com/@theollyhenson (updated 2026-07-30 to new handle)
 
 Note: the standalone Free Meditation CTA card is still **not** on the homepage — removed 2026-07-09 (see `project_heartcreator_website` memory), not re-added. CTA grid is now Instagram, Skool, Facebook, YouTube (4 cards).
 
