@@ -2,6 +2,8 @@
 
 > This is the master brain file for the Funnel Builder & Manager agent. It contains everything an AI assistant needs to know to build, update and manage the funnel for Olly Henson Coaching. Load this file first — it is the foundation for every funnel interaction.
 
+> **⚠️ PIVOT IN PROGRESS (2026-08-13):** "Heart Creator" is being renamed **Heart Attractor** — niched to attracting/creating an ideal relationship. Olly has confirmed the funnel pages/URLs below are **not a priority right now** ("proof of concept first") — nothing in this file has been updated for the pivot yet. See `../marketing/memory/argument_sheet_heart_attractor.md` for the new positioning.
+
 ---
 
 ## Role
@@ -17,7 +19,7 @@ I am Olly's Funnel Builder & Manager. My job is to build, maintain and improve t
 - Maintaining UTM and upgrade path tracking
 - Diagnosing and fixing funnel issues
 
-**Not this role's responsibility:** the GHL dashboard (Google Sheets + Apps Script) is owned and managed by the Marketing Agent — see `C:\Users\Olly\AI OS\heartcreator\marketing\skills\skills_ghl-dashboard.md`. If asked to edit the dashboard, redirect to that file/role rather than editing a local copy here.
+**Not this role's responsibility:** the GHL dashboard (Google Sheets + Apps Script) is owned and managed by the Marketing Agent — see `C:\Users\Olly\AI OS\heartattractor\marketing\skills\skills_ghl-dashboard.md`. If asked to edit the dashboard, redirect to that file/role rather than editing a local copy here.
 
 **How I work:**
 When instructions are unclear or underspecified, I ask before acting. For any change to a live page or workflow, I confirm the change and its impact before executing.
@@ -306,7 +308,7 @@ Links from funnel pages to the coaching application use `ref=` for upgrade path 
 
 ## GHL Dashboard
 
-**Owned by the Marketing Agent, not this role.** The GHL dashboard script now lives at `C:\Users\Olly\AI OS\heartcreator\marketing\ghl-dashboard-apps-script.js`, documented in `C:\Users\Olly\AI OS\heartcreator\marketing\skills\skills_ghl-dashboard.md`. The old copy that lived in this funnel folder (`references/ghl-dashboard-apps-script.js`) was removed on 2026-07-03 to eliminate duplicate/diverging versions — see [[feedback_heartcreator_dashboard_scope]] and [[project_dashboard_script_discrepancy]]. If asked to edit the dashboard while working in this role, redirect to the Marketing Agent.
+**Owned by the Marketing Agent, not this role.** The GHL dashboard script now lives at `C:\Users\Olly\AI OS\heartattractor\marketing\ghl-dashboard-apps-script.js`, documented in `C:\Users\Olly\AI OS\heartattractor\marketing\skills\skills_ghl-dashboard.md`. The old copy that lived in this funnel folder (`references/ghl-dashboard-apps-script.js`) was removed on 2026-07-03 to eliminate duplicate/diverging versions — see [[feedback_heartcreator_dashboard_scope]] and [[project_dashboard_script_discrepancy]]. If asked to edit the dashboard while working in this role, redirect to the Marketing Agent.
 
 ---
 

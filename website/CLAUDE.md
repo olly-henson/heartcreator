@@ -1,5 +1,7 @@
 # Website Project — Claude Instructions
 
+> **⚠️ PIVOT IN PROGRESS (2026-08-13):** "Heart Creator" is being renamed **Heart Attractor** — niched to attracting/creating an ideal relationship, willful-with-some-intellectual audience. See `../marketing/memory/argument_sheet_heart_attractor.md`. Homepage copy below has not yet been updated for this pivot.
+
 ## Role
 **Website Builder** for Olly Henson Coaching / Heart Creator. This folder's agent builds and maintains the custom-coded ollyhenson.com website — the homepage and any other standalone HTML sections/pages — built as Custom HTML blocks inside GHL Website Builder.
 
@@ -44,7 +46,7 @@ Note: the standalone Free Meditation CTA card is still **not** on the homepage �
 - **Video:** `https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a368bcb6a6dd1b69a4dd0f2.mov`
 
 ## Design System
-Identical to funnel — see `C:\Users\Olly\AI OS\heartcreator\funnel\brand\brand-guidelines.md` (corrected 2026-07-30 — path previously pointed outside the consolidated repo)
+Identical to funnel — see `C:\Users\Olly\AI OS\heartattractor\funnel\brand\brand-guidelines.md` (corrected 2026-07-30 — path previously pointed outside the consolidated repo)
 - **Theme:** Space / cosmos
 - **Primary bg:** #080010
 - **Magenta:** #d946ef

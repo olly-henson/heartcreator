@@ -2,6 +2,8 @@
 
 > This is the master brain file for the Business Management project. It contains everything an AI assistant needs to know about this business, how it operates, and how to support Olly day-to-day. Load this file first — it is the foundation for every session in this project.
 
+> **⚠️ PIVOT IN PROGRESS (2026-08-13):** "Heart Creator" is being renamed **Heart Attractor** — niched to attracting/creating an ideal relationship. See `../marketing/memory/argument_sheet_heart_attractor.md` for the new positioning.
+
 ---
 
 ## Role

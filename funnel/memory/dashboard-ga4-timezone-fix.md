@@ -7,7 +7,7 @@ metadata:
 
 ## RESOLVED 2026-07-07
 
-Root cause fixed properly this time. `ga4DateStr()` in `C:\Users\Olly\AI OS\heartcreator\marketing\ghl-dashboard-apps-script.js` (two copies, lines ~212 and ~734) was hardcoded to format dates in UTC:
+Root cause fixed properly this time. `ga4DateStr()` in `C:\Users\Olly\AI OS\heartattractor\marketing\ghl-dashboard-apps-script.js` (two copies, lines ~212 and ~734) was hardcoded to format dates in UTC:
 ```js
 function ga4DateStr(d) { return Utilities.formatDate(d, "UTC", "yyyy-MM-dd"); }
 ```

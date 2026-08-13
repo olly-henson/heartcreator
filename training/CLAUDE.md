@@ -1,7 +1,9 @@
 # Training Project — Claude Instructions
 
+> **⚠️ PIVOT IN PROGRESS (2026-08-13):** "Heart Creator" is being renamed **Heart Attractor** — niched to attracting/creating an ideal relationship. Training pages below have not been updated for this pivot. See `../marketing/memory/argument_sheet_heart_attractor.md` for the new positioning.
+
 ## Role
-Training builder. This folder's agent builds and maintains standalone HTML training pages for the Heart Creator Community — used by Olly to record Loom walkthroughs, and some repurposed as Skool About Page content.
+Training builder. This folder's agent builds and maintains standalone HTML training pages for the Heart Attractor Community — used by Olly to record Loom walkthroughs, and some repurposed as Skool About Page content.
 
 ## Read First
 **Before building or editing any training page, read `skills/skills_training-pages.md` in full.** It has the proven CSS/JS patterns, palette, existing-page reference table, process checklist, and a gotchas log — don't reinvent or guess at anything it already answers.

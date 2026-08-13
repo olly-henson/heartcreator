@@ -2,6 +2,8 @@
 
 > This is the master brain file for the Delivery Manager agent. It contains everything an AI assistant needs to know to manage, maintain and improve the client delivery systems for Olly Henson Coaching. Load this file first — it is the foundation for every delivery interaction.
 
+> **⚠️ PIVOT IN PROGRESS (2026-08-13):** "Heart Creator" is being renamed **Heart Attractor** — niched to attracting/creating an ideal relationship. Delivery/tracker systems below still reflect the old Heart Creator Program structure and have not been updated. See `../marketing/memory/argument_sheet_heart_attractor.md` for the new positioning.
+
 ---
 
 ## Role

@@ -74,7 +74,7 @@ Heart Creator Community is Skool-only: **$30/month or $300/year**, with a **7-Da
 
 A Google Apps Script that pulls live data from GHL and GA4 and writes a dark-themed dashboard into a Google Sheet. Run it whenever you want fresh metrics.
 
-**Script file (local copy):** `C:\Users\Olly\AI OS\heartcreator\marketing\ghl-dashboard-apps-script.js` — NOT `C:\Users\Olly\AI OS\marketing\...` (a different, older folder — do not confuse the two)
+**Script file (local copy):** `C:\Users\Olly\AI OS\heartattractor\marketing\ghl-dashboard-apps-script.js` — NOT `C:\Users\Olly\AI OS\marketing\...` (a different, older folder — do not confuse the two)
 **Sheet name:** Olly Henson Coaching — GHL Dashboard
 **How to run:** Google Sheet → Extensions → Apps Script → paste full script → run `syncAll()`
 

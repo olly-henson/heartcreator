@@ -1,6 +1,6 @@
 # Training Pages — Skill
 
-Standalone HTML pages used two ways: (1) Olly records Loom videos while scrolling/reading through them, and (2) some are repurposed as content for the Heart Creator Skool Community About Page. All live in `C:\Users\Olly\AI OS\heartcreator\training\` as single self-contained `.html` files (no build step, no external JS framework — open directly in a browser).
+Standalone HTML pages used two ways: (1) Olly records Loom videos while scrolling/reading through them, and (2) some are repurposed as content for the Heart Creator Skool Community About Page. All live in `C:\Users\Olly\AI OS\heartattractor\training\` as single self-contained `.html` files (no build step, no external JS framework — open directly in a browser).
 
 **Read this file in full before building or editing any training page.** It captures the exact CSS/JS patterns already proven across the existing trainings — don't reinvent them from scratch, and don't guess at colors/fonts/sizes that are already defined here.
 

@@ -2,6 +2,8 @@
 
 > This is the master brain file for CEO Olly Henson's AI operating system. It contains everything an AI assistant needs to know about this business, its audience, its voice, and its rules. Load this file first — it is the foundation for every AI interaction.
 
+> **⚠️ PIVOT IN PROGRESS (2026-08-13):** The Skool community formerly called "Heart Creator Community" is being renamed **Heart Attractor** — niched down to helping people attract/create their ideal romantic relationship, for a **willful-with-some-intellectual** audience (not the intellectual/Reason-level audience this file was originally written for). New mechanism is **Heart Coherence** (unbranded/simple, not "The Creation Formula Meditation" or "survival mode → creative mode" language below). See `memory/argument_sheet_heart_attractor.md` for the new positioning (currently DRAFT). **Everything below this banner still describes the old Heart Creator positioning and has not yet been rewritten for Heart Attractor** — treat the audience, argument, mechanism-name, and email/content sections as historical/superseded until this file gets a full pass.
+
 ---
 
 ## Role
