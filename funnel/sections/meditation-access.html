@@ -163,6 +163,10 @@
     width: 100%; max-width: 480px;
     margin: 0 auto;
   }
+  .ohc-cta-label {
+    font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: #c4b5fd; margin-bottom: 4px;
+  }
   .ohc-link-btn {
     display: flex; align-items: center; justify-content: center; gap: 10px;
     width: 100%; padding: 18px 24px; box-sizing: border-box;
@@ -239,13 +243,10 @@
 
     <!-- LINKS -->
     <div class="ohc-links">
-      <!-- PDF instructions — replace # with your hosted PDF URL -->
-      <a href="https://ollyhenson.com/practice-guide" class="ohc-link-btn ohc-link-btn-primary" target="_blank" rel="noopener" id="ohc-pdf-btn">
-        📖 View the Practice Guide →
-      </a>
+      <p class="ohc-cta-label">Ready to attract your partner?</p>
       <!-- Skool Community -->
       <a href="https://www.skool.com/heartcreator" target="_blank" rel="noopener" class="ohc-link-btn ohc-link-btn-primary">
-        Start Creating Today →
+        Find Out More →
       </a>
     </div>
 
@@ -261,17 +262,6 @@
   </footer>
 
 </div>
-
-<script>
-  document.getElementById('ohc-pdf-btn').addEventListener('click', function() {
-    if (typeof gtag === 'function') {
-      gtag('event', 'practice_guide_view', {
-        event_category: 'funnel',
-        event_label: 'practice_guide'
-      });
-    }
-  });
-</script>
 
 <script
   src="https://link.kourse.com/js/external-tracking.js"
