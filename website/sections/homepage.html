@@ -138,6 +138,17 @@
     display: block; border: none;
     background: #000;
   }
+  .ohc-video-placeholder {
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.03);
+  }
+  .ohc-video-placeholder span {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 2.2vw, 22px);
+    color: rgba(196,181,253,0.6);
+    letter-spacing: 1px;
+  }
 
   /* ── CTAs ── */
   .ohc-ctas {
@@ -210,13 +221,14 @@
   }
   .ohc-testi-h2 em { font-style: italic; color: #a855f7; }
   .ohc-testi-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px; max-width: 860px; margin: 0 auto;
+    display: flex; flex-direction: column;
+    gap: 20px; max-width: 900px; margin: 0 auto;
   }
   .ohc-card-t {
     background: rgba(255,255,255,0.04); border: 1px solid rgba(168,85,247,0.2);
-    border-radius: 18px; padding: 28px 24px; text-align: left; position: relative; overflow: hidden;
+    border-radius: 18px; padding: 28px 32px; text-align: left; position: relative; overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex; flex-direction: row; align-items: flex-start; gap: 28px;
   }
   .ohc-card-t:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(107,33,168,0.3); }
   .ohc-card-t::before {
@@ -226,17 +238,26 @@
   }
   .ohc-testi-stars { color: #d946ef; font-size: 13px; margin-bottom: 10px; }
   .ohc-testi-text {
-    font-size: 14px; line-height: 1.7; color: #c4b5fd; margin-bottom: 20px; position: relative; z-index: 1;
+    font-size: 14px; line-height: 1.7; color: #c4b5fd; margin: 0; position: relative; z-index: 1;
   }
-  .ohc-testi-author { display: flex; align-items: center; gap: 10px; }
+  .ohc-testi-body { flex: 1; min-width: 0; }
+  .ohc-testi-author {
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
+    flex-shrink: 0; width: 140px;
+  }
   .ohc-avatar {
-    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-    background: linear-gradient(135deg, #d946ef, #6b21a8);
+    width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+    object-fit: cover;
     display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 15px; color: white;
   }
   .ohc-testi-name { font-weight: 600; font-size: 13px; color: #f8f4ff; }
   .ohc-testi-role { font-size: 11px; color: rgba(196,181,253,0.6); margin-top: 2px; }
+
+  @media (max-width: 700px) {
+    .ohc-card-t { flex-direction: column; align-items: center; text-align: center; }
+    .ohc-testi-body { text-align: left; width: 100%; }
+  }
 
   /* ── FOOTER ── */
   .ohc-footer {
@@ -273,7 +294,7 @@
 
     <h1 class="ohc-h1">Olly Henson</h1>
 
-    <p class="ohc-tagline">Open Your <span style="color:#a855f7;">Heart</span>, Change Your Life</p>
+    <p class="ohc-tagline">Helping People <span style="color:#a855f7;">Consciously</span><br>Change Their Life</p>
 
     <div class="ohc-avatar-wrap">
       <img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a2ff592e5b9322bddd1e8d7.png" alt="Olly Henson"/>
@@ -282,71 +303,8 @@
 
   <!-- VIDEO -->
   <div class="ohc-video-wrap">
-    <p class="ohc-video-label">Watch</p>
-    <h2 class="ohc-video-title">A bit more about <span style="color:#a855f7; font-style:normal;">me</span></h2>
-
-    <div class="ohc-video-container">
-      <video controls playsinline preload="metadata">
-        <source src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a368bcb6a6dd1b69a4dd0f2.mov" type="video/mp4">
-      </video>
-    </div>
-  </div>
-
-  <!-- CTAs -->
-  <div class="ohc-ctas">
-    <p class="ohc-ctas-eyebrow">Connect with Olly</p>
-    <h2>Where would you like<br>to go <span style="color:#a855f7;">next?</span></h2>
-
-    <div class="ohc-cta-grid">
-
-      <!-- Skool -->
-      <a href="https://www.skool.com/heartcreator?utm_source=website&utm_medium=homepage&utm_campaign=coaching" target="_blank" rel="noopener" class="ohc-cta-card">
-        <div class="ohc-cta-icon icon-sk">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-        </div>
-        <div class="ohc-cta-name">Join The Heart Creator Community</div>
-        <div class="ohc-cta-desc">Start creating your life</div>
-      </a>
-
-      <!-- Instagram -->
-      <a href="https://www.instagram.com/theollyhenson" target="_blank" rel="noopener" class="ohc-cta-card">
-        <div class="ohc-cta-icon icon-ig">
-          <svg viewBox="0 0 24 24" fill="#d946ef">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-          </svg>
-        </div>
-        <div class="ohc-cta-name">Instagram</div>
-        <div class="ohc-cta-desc">Learn more on Instagram</div>
-      </a>
-
-      <!-- Facebook -->
-      <a href="https://www.facebook.com/theollyhenson" target="_blank" rel="noopener" class="ohc-cta-card">
-        <div class="ohc-cta-icon icon-fb">
-          <svg viewBox="0 0 24 24" fill="#d946ef">
-            <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.128 22 16.991 22 12z"/>
-          </svg>
-        </div>
-        <div class="ohc-cta-name">Facebook</div>
-        <div class="ohc-cta-desc">Learn more on Facebook</div>
-      </a>
-
-      <!-- YouTube -->
-      <a href="https://www.youtube.com/@theollyhenson" target="_blank" rel="noopener" class="ohc-cta-card">
-        <div class="ohc-cta-icon icon-yt">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-            <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
-          </svg>
-        </div>
-        <div class="ohc-cta-name">YouTube</div>
-        <div class="ohc-cta-desc">Learn more on YouTube</div>
-      </a>
-
+    <div class="ohc-video-container ohc-video-placeholder">
+      <span>Video Coming Soon</span>
     </div>
   </div>
 
@@ -356,26 +314,72 @@
     <div class="ohc-testi-grid">
 
       <div class="ohc-card-t">
-        <div class="ohc-testi-stars">★★★★★</div>
-        <p class="ohc-testi-text">"The meditation is not overwhelmingly long or complicated — short and simple so that even I, having the worst monkey mind on the planet, feel I can do it."</p>
         <div class="ohc-testi-author">
-          <div class="ohc-avatar">I</div>
+          <img class="ohc-avatar" src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a7d847e9115899f03b814ec.png" alt="Mushtaq Osmani"/>
           <div>
-            <div class="ohc-testi-name">Isabell</div>
-            <div class="ohc-testi-role">Olly Henson's Coaching Client</div>
+            <div class="ohc-testi-name">Mushtaq Osmani</div>
+            <div class="ohc-testi-role">Director of Organisational Effectiveness, Macmillan Cancer Support</div>
           </div>
+        </div>
+        <div class="ohc-testi-body">
+          <div class="ohc-testi-stars">★★★★★</div>
+          <p class="ohc-testi-text">"Olly has demonstrated that he's an expert in his field, and has changed the way I, and our Workabuddy community, think about performance enhancement. I approached Olly to deliver a presentation for our online community and have to say, they were blown away. The feedback from the group was unreal and he genuinely created a real buzz of excitement with them. There were practical tips shared, in a really relatable way, and he addressed a lot of concerns that the group raised about their own journey in a compassionate, human way. Would highly recommend Olly again to others, in fact, I have! I've asked the company I work for, NHS England, to snap up Olly as a guest speaker for our organisation wide Health &amp; Wellbeing webinars that are attended in their thousands. Know that Olly will deliver some much needed support to others during such a difficult period that people are going through. His work is literally life-changing, and I don't think I can come up with a better accolade than that."</p>
         </div>
       </div>
 
       <div class="ohc-card-t">
-        <div class="ohc-testi-stars">★★★★★</div>
-        <p class="ohc-testi-text">"One of the biggest wins for this week: I can return to a relaxed state more reliably than before. Already feeling the difference."</p>
         <div class="ohc-testi-author">
-          <div class="ohc-avatar">A</div>
+          <img class="ohc-avatar" src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a7d847e1eb55bdfc3e4cbe1.jpg" alt="Jess Flack"/>
           <div>
-            <div class="ohc-testi-name">Anas</div>
-            <div class="ohc-testi-role">Olly Henson's Coaching Client</div>
+            <div class="ohc-testi-name">Jess Flack FHEA</div>
+            <div class="ohc-testi-role">Next Path Device Consortium Member | European Commission Member</div>
           </div>
+        </div>
+        <div class="ohc-testi-body">
+          <div class="ohc-testi-stars">★★★★★</div>
+          <p class="ohc-testi-text">"I worked with Olly recently on some stress-management HRV breathing exercises to help manage stress and boost my activity in the afternoons following the lunch-time slump. He's supportive and knowledgeable and it was great to have someone help with accountability. I'm now adding breathing space into my daily calendar, some time for me that enables me to be a better employee and mum! Thanks Olly!"</p>
+        </div>
+      </div>
+
+      <div class="ohc-card-t">
+        <div class="ohc-testi-author">
+          <img class="ohc-avatar" src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a7d847e1eb55bdfc3e4cbc8.jpg" alt="Sam Stephens"/>
+          <div>
+            <div class="ohc-testi-name">Sam Stephens</div>
+            <div class="ohc-testi-role">CPO @ Sourceability, Independent Distribution Specialist</div>
+          </div>
+        </div>
+        <div class="ohc-testi-body">
+          <div class="ohc-testi-stars">★★★★★</div>
+          <p class="ohc-testi-text">"Participating in the HeartLife programme with Olly has been life changing for me. Whilst still absolutely a work in progress, I am conquering sleep, more resilient to the challenges life throws up and much more controlled and composed than I was before. The mental effects of the HRV training are so profound that I am sad I never knew about it before. All this in addition to 2 stone of weight loss and a noticeable change in physique. Please don't assume this is just a weight loss or fitness programme, it's a holistic overhaul of the 'self' and the rewards are deep rooted and powerful. I can't recommend it enough."</p>
+        </div>
+      </div>
+
+      <div class="ohc-card-t">
+        <div class="ohc-testi-author">
+          <img class="ohc-avatar" src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a7d847ee20511c6180baec9.jpg" alt="Tom Henry"/>
+          <div>
+            <div class="ohc-testi-name">Tom Henry</div>
+            <div class="ohc-testi-role">Operations Transformation Leader (Consultant Practitioner), Accelerate Opex</div>
+          </div>
+        </div>
+        <div class="ohc-testi-body">
+          <div class="ohc-testi-stars">★★★★★</div>
+          <p class="ohc-testi-text">"Olly has put together a simple and effective system for healthy living, which utilises many of the concepts I'm familiar with in the consulting world when it comes to transformation. Olly's approach is supportive and geared towards sustainable, systemised change. Not quick win awe. I would strongly recommend Olly and his programmes to anyone seeking more energy and focus. Thanks Olly!"</p>
+        </div>
+      </div>
+
+      <div class="ohc-card-t">
+        <div class="ohc-testi-author">
+          <img class="ohc-avatar" src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a7d847eb1a56ba9292da5a5.jpg" alt="Donal Treacy"/>
+          <div>
+            <div class="ohc-testi-name">Donal Treacy</div>
+            <div class="ohc-testi-role">Enterprise Account Executive, Sprout Social, Inc</div>
+          </div>
+        </div>
+        <div class="ohc-testi-body">
+          <div class="ohc-testi-stars">★★★★★</div>
+          <p class="ohc-testi-text">"What I don't think people appreciate enough though is that Olly has helped me to develop resilience to those small every day stress that have always made me fall of the wagon of healthy living. In the uncertain world of corporate sales, stress is a part and parcel of the job. With Olly's help I'm able to use wellness and stress management to ensure I'm bringing my best self into work which has definitely improved my attitude and performance."</p>
         </div>
       </div>
 

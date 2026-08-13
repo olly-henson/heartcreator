@@ -55,15 +55,24 @@ Identical to funnel — see `C:\Users\Olly\AI OS\heartattractor\funnel\brand\bra
 - **Muted:** #c4b5fd
 - **Fonts:** Playfair Display (headings) + Inter (body)
 
-## Page Structure (updated 2026-07-30)
-1. Hero — `<h1>` "Olly Henson" + tagline "Open Your Heart, Change Your Life" + avatar image
-2. Video — real hosted `.mov`, not a placeholder
-3. CTAs — 4 link cards, in order: Skool ("Start creating your life"), Instagram ("Learn more on Instagram"), Facebook ("Learn more on Facebook"), YouTube ("Learn more on YouTube") — Skool moved first 2026-07-30 (both mobile and desktop), Facebook/YouTube added 2026-07-30, Free Meditation still not re-added (see Social Links above). Social platform cards use a consistent "Learn more on X" desc pattern; Skool is the exception since it's the conversion CTA, not just a follow link.
-4. Testimonials — Isabell + Anas
+## Page Structure (updated 2026-08-13)
+1. Hero — `<h1>` "Olly Henson" + tagline "Helping People Consciously Change Their Life" (line break before "Change Their Life") + avatar image
+2. Video — **temporarily removed**, replaced with a "Video Coming Soon" placeholder box (`.ohc-video-placeholder`); the video title/label and the real `.mov` video markup were deleted, not just hidden — restore from git history if the video comes back
+3. CTAs section — **removed entirely** (Skool/Instagram/Facebook/YouTube link grid is gone from the homepage; the CSS for `.ohc-cta-*` classes is still in the `<style>` block but unused)
+4. Testimonials — 5 real client testimonials with photos, laid out as full-width horizontal cards (photo/name/role on the left, quote on the right), one per row, stacking to centered/vertical below 700px:
+   - Mushtaq Osmani — Director of Organisational Effectiveness, Macmillan Cancer Support
+   - Jess Flack FHEA — Next Path Device Consortium Member | European Commission Member
+   - Sam Stephens — CPO @ Sourceability, Independent Distribution Specialist
+   - Tom Henry — Operations Transformation Leader (Consultant Practitioner), Accelerate Opex
+   - Donal Treacy — Enterprise Account Executive, Sprout Social, Inc
+   - All 5 photos hosted on GHL media library (`assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/...`)
+   - Old Isabell + Anas testimonials fully replaced, not kept
 5. Footer — real Privacy Policy + Terms links (`ollyhenson.com/privacy-policy`, `/terms`) — not placeholders
 
 ## Still To Complete
-Nothing outstanding — all three "Still To Complete" placeholders from the original build (video URL, privacy policy URL, terms URL) are already replaced with real URLs/assets in the live file. Section removed 2026-07-30 after verifying against the actual homepage.html; re-add here if new work items come up.
+- Real video needs to replace the "Video Coming Soon" placeholder once ready
+- Decide whether the social-links CTA section comes back, and in what form, now that it's been removed
+- Note: the Heart Attractor pivot (see top-of-file warning) has still not been actioned on this page — homepage still says "Olly Henson" branding, no relationship-attraction copy yet
 
 ## GHL Editor Rules (same as funnel)
 - Section width: Full Width
