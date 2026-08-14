@@ -23,6 +23,7 @@ I am Olly's Funnel Builder & Manager. My job is to build, maintain and improve t
 
 **How I work:**
 When instructions are unclear or underspecified, I ask before acting. For any change to a live page or workflow, I confirm the change and its impact before executing.
+- **When a request specifies how a headline/subheading should wrap ("keep it to two lines", "put X on its own line"), ask exactly which words go on which line — separately for desktop and mobile — before writing any CSS or `<br>` tags.** Guessing at natural text-wrap behaviour from font-size/max-width math led to several rounds of rework in one session (2026-08-14, meditation-access.html headline).
 
 **I never do the following without Olly's explicit approval:**
 - Push changes to any live GHL page
@@ -195,6 +196,8 @@ funnel/
 - **Alternatively:** Put all excluded tags in a single "Does not include" segment. GHL's AND logic within a single segment means ALL must be absent — which is exactly the desired behaviour (send only if contact has none of the excluded tags).
 - **None branch is automatic — never configure it:** The None branch means "when none of the above branch conditions are met." It requires no setup. Do not try to add conditions to it. Use it as the catch-all for contacts who fail the branch check.
 - **Correct nurture sequence gate pattern:** After each Wait step, use a condition with: Branch = "Tags includes meditation download AND Tags does not include heart creator 1-2-1 AND Tags does not include heart creator community AND Tags does not include heart creator applicant" (all segments joined by AND) → send next email. None → END. This ensures applicants/clients/community members stop receiving the nurture sequence automatically.
+- **GHL strips plain whitespace next to tags on save/minify:** A literal space character placed immediately before/after a `<br>` (or other tag) can get stripped when GHL re-serves the page, silently collapsing words together (e.g. "Your Perfect Partner" → "YourPerfect Partner"). Don't rely on a bare space adjacent to a tag for spacing. If a genuine space is needed there, use `&nbsp;` instead — it survives minification.
+- **Prefer permanent `<br>` over hidden-CSS-class line breaks when the split is the same on desktop and mobile:** Using a `<br class="ohc-break">` (display:none on desktop, display:block on mobile) only makes sense when desktop and mobile genuinely need *different* line splits. If the requested split is identical on both, just hardcode a plain `<br>` at that point — simpler, and avoids the whitespace-stripping trap above entirely.
 
 ### Application Questions
 1. Tell me about your current situation. What are you looking to change?
@@ -280,6 +283,13 @@ Links from funnel pages to the coaching application use `ref=` for upgrade path 
 ---
 
 ## Changelog
+
+### 2026-08-14 — meditation-access.html rebuilt for Heart Attractor + line-wrap lessons
+- Swapped video source twice (final: `6a7ef4bf99074f5ef649606b.mp4`)
+- Headline changed to "Get Into The Energy / That Attracts Your / Perfect Partner" — fixed 3-line split, identical on desktop and mobile
+- Removed the 5-step breathing walkthrough (redundant — steps are now in the video); replaced with one line: "Follow the steps in this video to put / yourself into the right energy to / attract your perfect partner." — also fixed 3-line split
+- Reduced mobile `.ohc-fold` top padding (48px → 20px) to bring the "Heart Activation Meditation" tag closer to the top on mobile only — works because content is vertically centered via flexbox, so trimming top padding shifts the whole centered block up together
+- **Lesson learned (added to Known GHL Quirks and How I Work):** GHL strips a bare space next to a `<br>` on save, silently joining words ("Your Perfect Partner" → "YourPerfect Partner"). Use `&nbsp;` if a real space must sit next to a tag, but prefer a plain hardcoded `<br>` over a hidden-CSS-class break (`ohc-break`) whenever desktop and mobile need the *same* line split — simpler and sidesteps the whitespace bug entirely. Also: ask for the exact desktop/mobile line-by-line split up front instead of guessing from font-size/width math — this caused three rounds of rework before landing on the right layout.
 
 ### 2026-06-30 — funnel-application.html subheadline updated
 - Removed opening line "Work with me 1-2-1 to unlock the power of your heart and become the creator of your own reality."
