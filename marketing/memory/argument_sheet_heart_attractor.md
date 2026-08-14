@@ -1,166 +1,150 @@
-# Argument Sheet — Heart Attractor (DRAFT)
+# Argument Sheet — Heart Attractor
 
-> First draft, built 2026-08-12. Heart Creator Community niching down to relationship attraction, targeting a **willful with some intellectual** audience — not the Reason-level intellectual audience the original argument sheet and The Override Sequence mechanism were built for. Structure mirrors `argument_sheet.md` but content, mechanism naming, and vocabulary are deliberately simpler and more direct throughout, per the levels-of-consciousness framework (see `heartcreator/marketing/assets/levels-of-consciousness-summary.md`).
+> The strategic spine of all Heart Attractor content. Every piece of marketing — regardless of format or platform — must connect to at least one stage of this argument. Read this before writing anything. **Updated 2026-08-14** — Actual Cause reframed around Internal Working Models; mechanism now branded as **The Attraction Formula Meditation**.
 >
-> **Not yet finalised.** Needs Olly's review, especially: the mechanism name, the Actual Cause framing (currently general "survival mode" language — may need sharper relationship-specific detail once his personal story is fully drawn out), and whether this replaces or sits alongside the main Heart Creator positioning.
+> Structure mirrors the main Heart Creator `argument_sheet.md` but content, mechanism naming, and vocabulary are for the **willful, with some intellectual** audience — per the Scott Oldford / Frederick Dotson levels-of-consciousness framework. Keep explanations short and concrete; lead with story and outcome, not mechanism detail.
 
 ---
 
-## What We Do
+## Attracting a New Life Partner
 
-We help people use Heart Coherence to become the version of themselves who naturally attracts — and keeps — the relationship they actually want.
+## WHO
 
-**The nervous system shift is the mechanism, not the destination.** Never lead with the mechanism — lead with the relationship they want to create.
-
----
-
-## The Core Argument In One Line
-
-**You're not failing at dating. Your nervous system is stuck in survival mode — and survival mode can't attract or hold onto real love.**
-
-**It's not the technique — it's the state.**
-
-Dating apps, advice, "just be yourself," working on your confidence — none of it is wrong, but none of it works consistently when it's coming from a body and nervous system stuck in survival mode. Survival mode makes people either chase the wrong person, settle, self-sabotage when it gets real, or repel the right person entirely without knowing why. Heart Coherence shifts that. Once the nervous system is out of survival mode, attracting and sustaining the right relationship stops being a struggle.
-
----
-
-## Niche
-
-**Attracting and creating your ideal romantic relationship.** The audience is people who want a specific outcome — meeting the right partner, or transforming an existing relationship — not a broad self-improvement journey. They may have tried dating apps, dating coaches, therapy, or self-help books about relationships, without lasting results.
-
----
-
-## Audience Consciousness Level
-
-**Willful, with some Intellectual** — per the Scott Oldford / Frederick Dotson levels-of-consciousness framework (not the Hawkins scale used for the main Heart Creator positioning). This audience wants:
-- A clear transformation story, not a mechanism explanation
-- One simple path, not multiple options
-- Real, visible proof (a real before/after, a real story) over data or theory
-- Direct, outcome-first language — "attract your person," not abstract psychological framing
-- Some willingness to see reasoning/proof (the intellectual edge) but not deep systems-thinking — keep explanations short and concrete
+People wanting to attract a new relationship for a life partner — searching for things like:
+- How to manifest love / how to attract my soulmate
+- How to become a love magnet
+- How to attract a healthy relationship
+- Why do I keep attracting the same type of partner
+- Am I ready for a relationship / am I self-sabotaging
+- How to stop attracting emotionally unavailable people
 
 ---
 
 ## Promised Land
 
-With the partner they actually want — or a transformed version of the relationship they're already in. Feeling safe, chosen, and able to be fully themselves.
-
-### Specific Identities They're Moving Into
-
-**The Person Who Finally Attracts the Right One**
-Not more swiping, not more advice — the felt shift that makes the right person actually show up, and stay.
-
-**The Person Who Stops Repeating the Pattern**
-No longer drawn to the same type, the same dynamic, the same heartbreak on repeat.
-
-**The Person Who Feels Safe Being Loved**
-Doesn't self-sabotage, pull away, or test the relationship into failure once it gets real.
-
-**The Person Who Doesn't Have to Try So Hard**
-Attraction and connection start to feel natural rather than like a performance or a strategy.
+Living and enjoying their life with their amazing partner — finally feeling chosen, safe, and completely themselves with someone who feels like home.
 
 ---
 
-## Pain — Can't Find or Keep the Right Relationship
+## Pain
 
-Single for longer than they want to be, or stuck in a relationship that isn't what they actually want.
-
-Tried dating apps, been on countless dates, maybe worked with a dating coach or read the books — nothing sticks.
-
-Either keeps attracting the wrong type of person, or the right person shows up and it falls apart anyway.
-
-Watches other people find it and can't understand why it isn't happening for them.
+- Watching everyone else find love while they stay single, year after year
+- Spending money on courses, books and coaches promising "the One" that don't deliver
+- Getting fixated on one person, replaying and overanalyzing every interaction
+- Riding the cycle of hope and heartbreak every time an attempt doesn't work
+- Quietly doubting whether they're even worthy of the relationship they want
 
 ---
 
-## Bleeding Neck Pain — Nothing Is Working
+## Bleeding Neck Pain
 
-Starting to wonder if it's just not meant to happen for them, or if something is actually wrong with them.
-
-Tired of generic dating advice that doesn't address why the same pattern keeps repeating.
+Watching someone they want pull away in real time — and knowing, in that moment, that their own neediness is pushing it away.
 
 ---
 
 ## Current Belief
 
-They believe the problem is them — not attractive enough, too picky, unlucky, bad at dating, or simply "not there yet."
-
-If they just tried harder, dated more, worked on their confidence, or found the right strategy, it would finally happen.
+- I just need to find the right technique
+- I just need to be more consistent with my affirmations, scripting and visualizing
+- I just need to detach and stop caring so much
+- I just need to stay positive
 
 ---
 
-## Actual Cause (⚠️ needs sharpening with Olly's real story)
+## Actual Cause
 
-They can't attract or hold onto the relationship they want because their nervous system is stuck in **survival mode**, not open and coherent.
+Internal Working Models — the unconscious beliefs about your own worthiness and whether others can be trusted, formed in childhood and running the show in every relationship since.
 
-In survival mode, the body reads connection as risk — leading to chasing unavailable people, settling, self-sabotaging once things get real, or unconsciously repelling the right person.
+*"I'm not worthy." "I have to earn love." "Closeness is dangerous."*
 
-Likely caused by: past heartbreak, rejection, family conditioning about relationships, or a belief about not being worthy of real love — installed young, running silently.
+These beliefs were installed long before conscious choice was possible, and they are what's actually directing the chasing, the fixating, the self-sabotage — not a lack of technique, consistency or positivity.
 
 ---
 
 ## New Mechanism
 
-**Heart Coherence** *(working name for the practice itself — may still want a branded system name to match "The Creation Formula Meditation," e.g. "The Heart Attractor Method")*
+**The Attraction Formula Meditation.**
 
-A practice for shifting the nervous system out of survival mode and into coherence — the state from which someone can actually attract and sustain real connection, rather than trying harder from the same stuck state.
-
-**Proof:** Olly's own story — used Heart Coherence to meet his wife and build the relationship he has now. This is the anchor story for the whole positioning, the same way the $13k month story anchors the main Heart Creator argument.
+1. **Heart Coherence** calms the nervous system and gets you past the analytical mind, so you can access your subconscious
+2. **Imprint the qualities** of the person you want into your subconscious mind
+3. **Feel the emotions** of being with this person already into your subconscious mind
+4. **Imprint new beliefs and a self-image** aligned with your new relationship into your subconscious mind
 
 ---
 
 ## New Belief
 
-Heart Coherence will help them shift out of survival mode so they can naturally attract and sustain the relationship they actually want — not by trying harder, but by becoming someone whose nervous system isn't blocking it.
+The Attraction Formula Meditation rewrites your internal working models.
 
 ---
 
-## The Mission (draft — may stay shared with main Heart Creator mission)
+## The Ideology
 
-To get the world into its heart — including into the relationships that matter most.
+The Attraction Formula Meditation is the key to attracting and living an amazing life with your dream partner.
+
+---
+
+## What We Do
+
+We help people use The Attraction Formula Meditation to rewrite the internal working models blocking them from attracting the relationship they want.
+
+**The meditation is the mechanism, not the destination.** Never lead with the mechanism — lead with the relationship they want to create.
+
+---
+
+## The Core Argument In One Line
+
+**You don't force this. You don't detach from it. You rewrite the beliefs running underneath it.**
+
+---
+
+## Audience Consciousness Level
+
+**Willful, with some Intellectual.** This audience wants:
+- A clear transformation story, not a mechanism explanation
+- One simple path, not multiple options
+- Real, visible proof (a real before/after, a real story) over data or theory
+- Direct, outcome-first language — "attract your person," not abstract psychological framing
+- Some willingness to see reasoning/proof (the intellectual edge) but not deep systems-thinking — keep explanations short and concrete. "Internal Working Models" can be named directly (it lands as a credible, slightly clinical hook), but don't over-explain the underlying attachment theory.
+
+---
+
+## Proof
+
+Olly's own story — used Heart Coherence to meet his wife and build the relationship he has now. This is the anchor story for the whole positioning, the same way the $13k month story anchors the main Heart Creator argument.
 
 ---
 
 ## Vocabulary of This Register
 
 - Attract / attraction (plain, outcome-first — not "manifest" or abstract creation language)
-- Your person / the right one
-- Stuck in the same pattern / repeating the same relationship
-- Nervous system in survival mode (kept simple — avoid CEN, gatekeeper, "Override Sequence," or other intellectual-mechanism framing from the main positioning)
-- Becoming the person who naturally attracts [outcome]
-- Heart Coherence
+- Your person / the right one / your dream partner
+- Internal working models / the beliefs running the show
+- "I'm not worthy" / "I have to earn love" / "closeness is dangerous"
+- The Attraction Formula Meditation
+- Heart Coherence (as the first step within the meditation, not the standalone mechanism name)
+- Imprinting new beliefs / a new self-image
+- Chasing energy / neediness vs. safety
+- Letting go without giving up
 
-**Avoid for this audience:** subconscious programming jargon, brainwave/neuroscience detail, "mechanism," "gatekeeper," multi-step named sequences — anything that reads as a system to understand rather than a story to believe.
+**Avoid for this audience:** deep attachment-theory jargon, brainwave/neuroscience detail, "gatekeeper," anything that reads as a system to understand rather than a story to believe.
 
 ---
 
-## Hooks (first draft — untested)
+## Hooks
 
 - "I used this to meet my wife."
 - "Why you keep attracting the wrong person — and it's not your type."
+- "Watching them pull away — and knowing it's your own neediness doing it."
+- "You're not unlovable. You have an unconscious belief that's blocking love — and it's not yours to keep."
+- "Force it. Detach from it. Neither works. Here's what does."
 - "The real reason the right person hasn't shown up yet."
-- "You're not bad at dating. Your nervous system is stuck in survival mode."
-- "What actually changed before I met my wife."
+- "You're not attracting the wrong people. You're not letting the right ones in."
+- "The beliefs about love you formed before you were old enough to choose them are still running the show."
 
 ---
 
 ## Open Questions for Olly
 
-1. ~~Full pivot of Heart Creator Community, or the sharpest entry-point niche within a broader offer?~~ **Resolved 2026-08-12: renaming the community to Heart Attractor.**
-2. ~~Rename to "Heart Attractor," or keep "Heart Creator"?~~ **Resolved 2026-08-12: Heart Attractor confirmed as the community name.**
-3. Need the fuller personal story (before state, what he specifically did, timeline, what he thinks the real subconscious pattern was) to sharpen Actual Cause and the proof story — currently placeholder-level detail.
-4. Does the mechanism need its own branded name (like "The Creation Formula Meditation"), or does "Heart Coherence" stay unbranded and simple for this audience?
-
-## ⚠️ Rename Impact Checklist — Not Yet Actioned
-
-Confirmed name change, but nothing below has been touched yet. Flagging scope before any live changes are made:
-
-- **Skool community URL** — currently `skool.com/heartcreator`; renaming affects the live URL, existing members' bookmarks/links, and any place that URL is hardcoded (funnel pages, emails, bio links)
-- **`heartcreator/marketing/CLAUDE.md`** — brand identity section (name, tagline, niche) still says "Heart Creator" throughout
-- **`heartcreator/funnel/`** — all funnel page copy, brand guidelines file, and possibly the GHL page content reference "Heart Creator" / "Heart Creator Community"
-- **GitHub repo name** (`olly-henson/heartcreator`) — cosmetic only, but worth deciding whether to rename or leave as-is (repo names rarely need to match brand names)
-- **Existing paying members** — will see the name change; may need a heads-up/communication plan
-- **Instagram bio, highlights, any existing content** referencing "Heart Creator"
-- **Email nurture sequence** — currently written around Heart Creator/Creation Formula language
-
-**Not doing any of this until Olly confirms scope and order of operations.**
+- Does "Internal Working Models" stay as-is (clinical but credible), or does it need a plainer public-facing name for hooks/headlines?
+- `marketing/CLAUDE.md` still carries the old Heart Creator positioning in its body (per its pivot banner) and has not been updated to reference this framework — requires Olly's explicit approval before editing.
