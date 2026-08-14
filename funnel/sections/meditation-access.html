@@ -155,6 +155,42 @@
     width: 64px; height: 64px; opacity: 0.3;
   }
 
+  /* ── STEPS ── */
+  .ohc-steps-wrap {
+    position: relative; z-index: 2;
+    width: 100%; max-width: 620px;
+    margin: 0 auto 48px;
+    text-align: left;
+  }
+  .ohc-steps-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: #d946ef; margin-bottom: 24px; text-align: center;
+  }
+  .ohc-steps { display: flex; flex-direction: column; gap: 22px; }
+  .ohc-step { display: flex; gap: 16px; align-items: flex-start; }
+  .ohc-step-number {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #d946ef, #6b21a8);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 700; color: #fff;
+    box-sizing: border-box;
+    box-shadow: 0 2px 16px rgba(217,70,239,0.35);
+  }
+  .ohc-step-number span {
+    display: block;
+    transform: translateY(0.5px);
+  }
+  .ohc-step-body { padding-top: 4px; flex: 1; }
+  .ohc-step-title {
+    font-size: 16px; font-weight: 700; color: #f8f4ff; margin-bottom: 4px;
+  }
+  .ohc-step-desc {
+    font-size: 14px; color: #c4b5fd; line-height: 1.7;
+  }
+
   /* ── LINKS ── */
   .ohc-links {
     position: relative; z-index: 2;
@@ -239,6 +275,54 @@
       <video controls playsinline preload="metadata">
         <source src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a671f71b7fe5a8e31679039.mp4" type="video/mp4">
       </video>
+    </div>
+
+    <!-- STEPS -->
+    <div class="ohc-steps-wrap">
+      <div class="ohc-steps-label">The Practice: Step by Step</div>
+      <div class="ohc-steps">
+
+        <div class="ohc-step">
+          <div class="ohc-step-number"><span>1</span></div>
+          <div class="ohc-step-body">
+            <div class="ohc-step-title">Bring Your Awareness to Your Heart</div>
+            <div class="ohc-step-desc">Place a hand over the centre of your chest and let your attention settle there. This is the space you'll be breathing into.</div>
+          </div>
+        </div>
+
+        <div class="ohc-step">
+          <div class="ohc-step-number"><span>2</span></div>
+          <div class="ohc-step-body">
+            <div class="ohc-step-title">Breathe In For Six Seconds, Into Your Heart</div>
+            <div class="ohc-step-desc">Breathe in slowly, counting as you go. One thousand and one, one thousand and two, one thousand and three, one thousand and four, one thousand and five, one thousand and six.</div>
+          </div>
+        </div>
+
+        <div class="ohc-step">
+          <div class="ohc-step-number"><span>3</span></div>
+          <div class="ohc-step-body">
+            <div class="ohc-step-title">Pause Gently at the Top</div>
+            <div class="ohc-step-desc">Hold the breath for a moment. No strain, just a soft, natural pause.</div>
+          </div>
+        </div>
+
+        <div class="ohc-step">
+          <div class="ohc-step-number"><span>4</span></div>
+          <div class="ohc-step-body">
+            <div class="ohc-step-title">Breathe Out For Six Seconds, From Your Heart</div>
+            <div class="ohc-step-desc">Release the breath slowly out through your heart, counting the same way. One thousand and one, one thousand and two, one thousand and three, one thousand and four, one thousand and five, one thousand and six.</div>
+          </div>
+        </div>
+
+        <div class="ohc-step">
+          <div class="ohc-step-number"><span>5</span></div>
+          <div class="ohc-step-body">
+            <div class="ohc-step-title">Let Yourself Reset, and Begin Again</div>
+            <div class="ohc-step-desc">Once the breath is fully out, let your body settle before the next one. Repeat the cycle for as long as feels good.</div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <!-- LINKS -->
