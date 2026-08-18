@@ -1,0 +1,124 @@
+<!-- YOU'RE ALL SET PAGE | Olly Henson Coaching — Email Preference Redirect -->
+<!-- GHL: Replace entire Custom HTML block contents with this. Section + column padding/margin = 0. -->
+<!-- Purpose: redirect target for the "relationship emails" trigger link inside GHL emails -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
+  .ohc-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Inter', sans-serif;
+    background: #080010;
+    color: #f8f4ff;
+  }
+
+  .ohc-fold {
+    position: relative;
+    overflow: hidden;
+    background: #050008;
+    padding: 64px 40px 72px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ohc-stars {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 5%  10%, rgba(255,255,255,0.95) 0%, transparent 100%),
+      radial-gradient(1px 1px at 22% 52%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 48% 8%,  rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 35%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 85% 62%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 75%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 38% 28%, rgba(216,180,254,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 18%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 3%  88%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 77% 92%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 33% 67%, rgba(255,255,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 55% 44%, rgba(216,180,254,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 12% 38%, rgba(255,255,255,0.65) 0%, transparent 100%),
+      radial-gradient(1px 1px at 89% 45%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 70% 15%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 12%, rgba(255,255,255,0.9) 0%, transparent 100%);
+    animation: twinkle 7s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+  .ohc-nebula {
+    position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 500px; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(107,33,168,0.2) 0%, rgba(88,28,135,0.08) 40%, transparent 70%);
+    animation: nebula-pulse 6s ease-in-out infinite;
+  }
+  @keyframes nebula-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+    50%       { transform: translateX(-50%) scale(1.08); opacity: 1; }
+  }
+
+  .ohc-check {
+    position: relative; z-index: 2;
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, #d946ef, #6b21a8);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    box-shadow: 0 0 30px rgba(217,70,239,0.5);
+    animation: pop-in 0.5s ease-out;
+  }
+  @keyframes pop-in {
+    0%   { transform: scale(0); opacity: 0; }
+    70%  { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .ohc-check svg { width: 30px; height: 30px; stroke: white; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+  .ohc-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 6vw, 76px);
+    font-weight: 900; line-height: 1.1;
+    color: #f8f4ff; margin: 0 auto 20px;
+    max-width: 700px; width: 100%;
+    position: relative; z-index: 2;
+  }
+  .ohc-h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, #d946ef, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .ohc-sub {
+    font-size: clamp(16px, 2vw, 20px); color: #c4b5fd; line-height: 1.6;
+    max-width: 420px; margin: 0 auto; position: relative; z-index: 2;
+  }
+
+  @media (max-width: 600px) {
+    .ohc-fold { padding: 48px 20px 56px; }
+    .ohc-h1 { font-size: 36px; }
+  }
+</style>
+
+<div class="ohc-page">
+
+  <div class="ohc-fold">
+    <div class="ohc-stars"></div>
+    <div class="ohc-nebula"></div>
+
+    <!-- CHECK ICON -->
+    <div class="ohc-check">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <h1 class="ohc-h1">You're <em>All Set.</em></h1>
+
+    <p class="ohc-sub">You'll get all relationship-based emails from now on.</p>
+  </div>
+
+</div>
