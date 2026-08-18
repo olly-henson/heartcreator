@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Attraction Formula — Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#3D1252;
+    --navy-deep:#150818;
+    --ink:#1A0E20;
+    --orange:#B84FE8;
+    --cream:#FBF3F0;
+    --paper:#FFFFFF;
+    --line:#E9DCE3;
+
+    /* ---------- spacing scale — only these values used for gap/padding/margin ---------- */
+    --space-1:4px;
+    --space-2:8px;
+    --space-3:16px;
+    --space-4:24px;
+    --space-5:32px;
+    --space-6:48px;
+    --space-7:64px;
+
+    --column-gap:96px;                    /* inter-column gap, within the requested 64–96px range */
+    --nav-rail-width:var(--space-7);      /* 64px — reserved strip for the dot rail, excluded from grid width */
+    --face-col-width:min(720px, 50vw);    /* left column — fixed-ish, content-sized on purpose */
+    --text-measure:min(840px, 56vw);      /* right column — content-sized, ~60–75ch cap */
+
+    /* right-column content rhythm — explicit, unequal, per-relationship spacing.
+       All clamp()'d against vh, not fixed px, so the WHOLE stack (image + gaps +
+       badge + headline + body) scales down together to fit the fixed-height
+       export frame rather than overflowing it. Upper bound = old fixed values;
+       lower bound = the smallest each can go before becoming illegible. */
+    --gap-image-badge:clamp(16px, 3vh, 32px);
+    --gap-badge-headline:clamp(8px, 1.5vh, 16px);
+    --gap-headline-body:clamp(10px, 1.8vh, 20px);
+    --safe-zone-y:10vh;        /* title-safe margin: 10% of frame height, top AND bottom */
+    --media-radius:20px;       /* shared by webcam box AND image placeholder */
+
+    /* image sizing: a fixed, deliberate proportion of the TEXT column (80%),
+       not derived from the webcam or from a vertical-budget formula — those
+       kept forcing the image to swing between tiny and dominant every time
+       something else changed. 80% reads as a clear supporting visual next to
+       the headline/body, without competing with them or the webcam. */
+    --image-width:80%;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Poppins', sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    overflow-x:hidden;
+  }
+
+  .steps{
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
+    scrollbar-gutter:stable both-edges;
+  }
+  .step{
+    height:100vh;
+    scroll-snap-align:start;
+    position:relative;
+    box-sizing:border-box;
+    /* nav dot rail lives in this strip — excluded from the content area below
+       so the two-column row centers within (100vw - nav-rail-width), not 100vw */
+    padding-right:var(--nav-rail-width);
+    background:radial-gradient(120% 100% at 20% 0%, #4B1466 0%, var(--navy-deep) 55%, #0A0510 100%);
+  }
+  .step:nth-child(odd){
+    background:radial-gradient(120% 100% at 80% 100%, #3D1252 0%, var(--navy-deep) 55%, #0A0510 100%);
+  }
+
+  /* ---------- content-sized two-column block, explicitly centered ----------
+     The webcam column and text column are BOTH content-sized (not 1fr/1fr
+     stretching to fill), because a fixed-width webcam box + a
+     readability-capped text measure is the actual design intent. The whole
+     (webcam + gap + text) block is centered as a unit within the available
+     width via justify-content:center, so leftover space splits evenly
+     left/right. Available width is .step's content box, which already
+     excludes the nav rail via padding-right on .step below — so this centers
+     within (viewport − nav rail), not the full viewport. */
+  .slide-split{
+    height:100%;
+    width:100%;
+    box-sizing:border-box;
+    display:grid;
+    grid-template-columns:var(--face-col-width) var(--text-measure);
+    justify-content:center;
+    align-items:center;
+    column-gap:var(--column-gap);
+  }
+  .face-panel{
+    height:100%;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .face-frame{
+    /* fills 85% of its own (content-sized) column — a substantial
+       video-feed box, not a small placeholder floating in whitespace */
+    width:85%;
+    aspect-ratio:4/3;
+    border-radius:var(--media-radius);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .face-frame img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .content-panel{
+    /* simple: fill the column height, center the stack inside it. No fixed
+       height on the stack itself, no overflow:hidden — text can never clip,
+       and there's no formula fighting the image's size for room. */
+    height:100%;
+    width:100%;
+    box-sizing:border-box;
+    padding-block:var(--safe-zone-y);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    color:#fff;
+  }
+
+  @media (max-width:820px){
+    .step{
+      padding-right:0;
+    }
+    .slide-split{
+      grid-template-columns:1fr;
+      justify-content:stretch;
+      align-items:stretch;
+      row-gap:var(--space-4);
+      padding:var(--space-5) var(--space-4);
+    }
+    .face-frame{
+      width:min(260px, 70vw);
+      margin:0 auto;
+    }
+    .content-panel{
+      height:auto;
+      padding-block:var(--space-4);
+      justify-content:flex-start;
+      overflow-y:auto;
+    }
+  }
+
+  /* ---------- intro slide ---------- */
+  /* badge — the eyebrow label; only the intro slide has one, and it functions
+     as a label FOR the headline (hence the tight 16px gap below it) */
+  .intro-eyebrow{
+    display:inline-block;
+    font-size:clamp(12px, 1.6vh, 14px);
+    font-weight:600;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--orange);
+    border:1px solid rgba(184,79,232,.4);
+    padding:var(--space-2) var(--space-3);
+    border-radius:50px;
+    margin-bottom:var(--gap-badge-headline);
+    width:fit-content;
+  }
+  /* headline — 56–64px range in practice, clamp()'d against vh so it still
+     scales sensibly across frame sizes. */
+  .intro-title{
+    font-family:'Poppins', sans-serif;
+    font-weight:800;
+    line-height:1.15;
+    margin-bottom:var(--gap-headline-body);
+  }
+  .intro-title-line1{
+    display:block;
+    font-size:clamp(40px, 4.5vh, 64px);
+    color:#fff;
+    letter-spacing:.02em;
+    text-wrap:balance;
+  }
+  /* body — clamp()'d against vh so it shrinks with the frame instead of
+     forcing a 3rd line. Width capped tighter (46ch) to bias toward a 2-line
+     wrap at this font size. */
+  .intro-body{
+    font-size:clamp(24px, 2.6vh, 32px);
+    font-weight:400;
+    line-height:1.4;
+    color:#EBD9E2;
+    text-align:left;
+    max-width:46ch;
+  }
+
+  /* numbered slides: the number+word row IS the headline unit (no separate
+     badge on these) — same gap-to-body as the intro's headline */
+  .step-number-row{
+    display:flex;
+    align-items:center;
+    gap:var(--space-3);
+    margin-bottom:var(--gap-headline-body);
+  }
+  .step-number{
+    font-size:clamp(48px, 6vh, 96px);
+    font-weight:800;
+    color:var(--orange);
+    line-height:1;
+  }
+  .step-word{
+    font-size:clamp(40px, 4.5vh, 64px);
+    font-weight:800;
+    color:#fff;
+    letter-spacing:.02em;
+    line-height:1.15;
+  }
+
+  .step-text{
+    width:100%;
+  }
+
+  /* image — same corner radius as the webcam box (--media-radius). WIDTH
+     drives this box: it matches the text column exactly (100% of .step-text,
+     which is 100% of .content-panel, i.e. var(--text-measure)) — same
+     variable the headline/body already size against, so they can't drift out
+     of sync. Height is purely derived from that width via aspect-ratio:16/9,
+     never set independently. */
+  .step-image{
+    width:var(--image-width);
+    aspect-ratio:16/9;
+    border-radius:var(--media-radius);
+    overflow:hidden;
+    background:rgba(255,255,255,.06);
+    border:2px solid rgba(255,255,255,.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:var(--gap-image-badge);
+  }
+  .step-image img{
+    width:100%; height:100%; object-fit:cover; object-position:center top; display:block;
+  }
+  .step-image .placeholder{
+    color:rgba(255,255,255,.32);
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    text-align:center;
+    padding:0 var(--space-4);
+  }
+
+  .step-body{
+    font-size:clamp(24px, 2.6vh, 32px);
+    font-weight:400;
+    line-height:1.4;
+    color:#EBD9E2;
+    max-width:46ch;
+  }
+
+  /* ---------- belief-breakdown (structured multi-row slides — e.g. the four
+     relationship models) ---------- */
+  .belief-breakdown{
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-4);
+  }
+  .belief-row{
+    font-size:clamp(19px,2vw,23px);
+    line-height:1.5;
+    color:#EBD9E2;
+  }
+  .belief-label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--orange);
+    margin-bottom:var(--space-2);
+  }
+
+  .dots{
+    position:fixed;
+    right:var(--space-6);
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    z-index:10;
+  }
+  .dot{
+    width:11px; height:11px;
+    border-radius:50%;
+    background:rgba(255,255,255,.25);
+    cursor:pointer;
+    border:none;
+    transition:background .2s;
+  }
+  .dot.active{background:var(--orange);}
+
+  .progress-label{
+    position:fixed;
+    top:24px;
+    left:32px;
+    color:rgba(255,255,255,.55);
+    font-size:13px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:600;
+    z-index:10;
+  }
+
+  @media (max-width:640px){
+    .dots{right:14px;}
+    .progress-label{left:16px; top:16px;}
+  }
+
+  /* ---------- webcam frame ----------
+     The face-frame is a fixed, reasonably-sized box on the left half of
+     every slide (not full-bleed) — line Olly's webcam screenshare up with
+     it once and it holds position through the whole video. */
+</style>
+</head>
+<body>
+
+<!-- DUMMY CONTENT — titles, body copy and images below are all placeholders
+     until Olly confirms the script and drops in real images. Images use the
+     same onerror-placeholder pattern as about-page-video.html. -->
+
+<div class="progress-label" id="progressLabel">Step 1 / 18</div>
+
+<div class="dots" id="dots"></div>
+
+<div class="steps" id="steps">
+
+  <section class="step" data-title="Intro">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="intro-eyebrow">👉 Heart Attractor Community</div>
+          <div class="intro-title"><span class="intro-title-line1">The Attraction Formula</span></div>
+          <div class="intro-body">A four-step system to change the internal working models blocking love in your life.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="I Used This To Meet My Wife">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 1.png" alt="I Used This To Meet My Wife" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 1.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">1</div>
+            <div class="step-word">I Used This To Meet My Wife</div>
+          </div>
+          <div class="step-body">This is the exact process I used to meet my wife. Not another technique on top of everything else you've already tried.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Trap">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 2.png" alt="The Trap" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 2.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">2</div>
+            <div class="step-word">The Trap</div>
+          </div>
+          <div class="step-body">Affirmations, scripting and forcing yourself to detach do not work. You already know this, because you've tried them.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Pain">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 3.png" alt="The Pain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 3.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">3</div>
+            <div class="step-word">The Pain</div>
+          </div>
+          <div class="step-body">Watching someone you want pull away in real time, knowing in that moment it's your own neediness pushing them out.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="You're Not Broken">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 4.png" alt="You're Not Broken" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 4.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">4</div>
+            <div class="step-word">You're Not Broken</div>
+          </div>
+          <div class="step-body">Your childhood Internal Working Models are running the show. Not a personal flaw. Not a lack of willpower.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Secure Model">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 5.png" alt="The Secure Model" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 5.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">5</div>
+            <div class="step-word">The Secure Model</div>
+          </div>
+          <div class="belief-breakdown">
+            <div class="belief-row"><span class="belief-label">Self-Image</span>"I am worthy of love and care."</div>
+            <div class="belief-row"><span class="belief-label">View Of Others</span>"Others are capable of loving me and are reliable."</div>
+            <div class="belief-row"><span class="belief-label">Relationship Dynamic</span>Comfortable with intimacy, handles conflict constructively, builds stable, long-term bonds.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Anxious-Preoccupied Model">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 6.png" alt="The Anxious-Preoccupied Model" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 6.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">6</div>
+            <div class="step-word">The Anxious-Preoccupied Model</div>
+          </div>
+          <div class="belief-breakdown">
+            <div class="belief-row"><span class="belief-label">Self-Image</span>"I am flawed, needy, or not enough on my own."</div>
+            <div class="belief-row"><span class="belief-label">View Of Others</span>"Others have the validation and safety I need."</div>
+            <div class="belief-row"><span class="belief-label">Relationship Dynamic</span>High fear of abandonment, hyper-vigilant to signs of rejection, prone to suffocating chasing energy.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Dismissive-Avoidant Model">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 7.png" alt="The Dismissive-Avoidant Model" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 7.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">7</div>
+            <div class="step-word">The Dismissive-Avoidant Model</div>
+          </div>
+          <div class="belief-breakdown">
+            <div class="belief-row"><span class="belief-label">Self-Image</span>"I am completely self-sufficient and don't need anyone."</div>
+            <div class="belief-row"><span class="belief-label">View Of Others</span>"Others are unreliable, untrustworthy, or trapping."</div>
+            <div class="belief-row"><span class="belief-label">Relationship Dynamic</span>Keeps emotional walls up, equates intimacy with a loss of freedom, pulls away when things get serious.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Fearful-Avoidant Model">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 8.png" alt="The Fearful-Avoidant Model" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 8.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">8</div>
+            <div class="step-word">The Fearful-Avoidant Model</div>
+          </div>
+          <div class="belief-breakdown">
+            <div class="belief-row"><span class="belief-label">Self-Image</span>"I am broken and unlovable."</div>
+            <div class="belief-row"><span class="belief-label">View Of Others</span>"Others will inevitably hurt, abuse, or abandon me."</div>
+            <div class="belief-row"><span class="belief-label">Relationship Dynamic</span>Deeply desires love but is terrified of it — a chaotic, volatile push-pull dynamic.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="It's Not A Type Problem">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 9.png" alt="It's Not A Type Problem" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 9.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">9</div>
+            <div class="step-word">It's Not A Type Problem</div>
+          </div>
+          <div class="step-body">You don't have a type problem. You're letting the wrong ones in, and it's not a coincidence.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Change The Blueprint">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 10.png" alt="Change The Blueprint" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 10.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">10</div>
+            <div class="step-word">Change The Blueprint</div>
+          </div>
+          <div class="step-body">Stop forcing it. Stop giving up. Change the blueprint running underneath, not your effort or your standards.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Promised Land">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 11.png" alt="The Promised Land" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 11.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">11</div>
+            <div class="step-word">The Promised Land</div>
+          </div>
+          <div class="step-body">Feeling chosen, safe, and completely yourself with someone who feels like home.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Attraction Formula">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 12.png" alt="The Attraction Formula" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 12.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">12</div>
+            <div class="step-word">The Attraction Formula</div>
+          </div>
+          <div class="step-body">A simple daily meditation practice that rewrites the subconscious programs blocking you from love.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Heart Coherence">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 13.png" alt="Heart Coherence" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 13.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">13</div>
+            <div class="step-word">Heart Coherence</div>
+          </div>
+          <div class="step-body">Calms your nervous system so you can bypass the analytical mind and access the subconscious.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Imprint Self-Image">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 14.png" alt="Imprint Self-Image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 14.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">14</div>
+            <div class="step-word">Imprint Self-Image</div>
+          </div>
+          <div class="step-body">Installs the foundational blueprint that you are worthy of safe, healthy love.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Imprint Partner Qualities">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 15.png" alt="Imprint Partner Qualities" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 15.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">15</div>
+            <div class="step-word">Imprint Partner Qualities</div>
+          </div>
+          <div class="step-body">Programs your mind to recognize and feel attracted to healthy partners, not just familiar ones.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Feel The Emotion">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 16.png" alt="Feel The Emotion" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 16.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">16</div>
+            <div class="step-word">Feel The Emotion</div>
+          </div>
+          <div class="step-body">Shifts your body out of desperate chasing energy and into absolute safety.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="CTA">
+    <div class="slide-split">
+      <div class="face-panel">
+        <div class="face-frame">
+          <img src="the attraction formula images/webcam.png" alt="Olly — webcam" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="content-panel">
+        <div class="step-text">
+          <div class="step-image">
+            <img src="the attraction formula images/Slide 17.png" alt="Get The Free Meditation" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder" style="display:none;">Image: Slide 17.png</div>
+          </div>
+          <div class="step-number-row">
+            <div class="step-number">17</div>
+            <div class="step-word">Get The Free Meditation</div>
+          </div>
+          <div class="step-body">Stop trying to fix this with willpower and more techniques. Click the link below for free, instant access to The Attraction Formula Guided Meditation and start rewriting the models blocking you today.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const stepsEl = document.getElementById('steps');
+  const steps = document.querySelectorAll('.step');
+  const dotsEl = document.getElementById('dots');
+  const progressLabel = document.getElementById('progressLabel');
+
+  steps.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => steps[i].scrollIntoView({behavior:'smooth'}));
+    dotsEl.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.dot');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(steps).indexOf(entry.target);
+        dots.forEach(d => d.classList.remove('active'));
+        dots[idx].classList.add('active');
+        progressLabel.textContent = `Step ${idx + 1} / ${steps.length}`;
+      }
+    });
+  }, { root: stepsEl, threshold: 0.6 });
+
+  steps.forEach(s => observer.observe(s));
+
+  document.addEventListener('keydown', (e) => {
+    const active = document.querySelector('.dot.active');
+    const idx = Array.from(dots).indexOf(active);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      if (steps[idx + 1]) steps[idx + 1].scrollIntoView({behavior:'smooth'});
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      if (steps[idx - 1]) steps[idx - 1].scrollIntoView({behavior:'smooth'});
+    }
+  });
+</script>
+
+</body>
+</html>

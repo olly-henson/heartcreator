@@ -4,11 +4,11 @@
 
 ---
 
-## Primary avatar — Rachel
+## Primary avatar — "Analytical Amy"
 
-**Always write to Rachel first.** She is the creative anchor for all content. Full profile in `avatar-rachel.md`.
+**Always write to Amy first.** She is the creative anchor for all content. Full profile in `avatar-amy.md`.
 
-Rachel is a seeker. She has invested deeply in manifestation. She believes it works. She cannot make it work for her love life. The primary reason: she has Internal Working Models — unconscious beliefs about her own worthiness and whether others can be trusted, formed in childhood — running the show. "I'm not worthy," "I have to earn love," "closeness is dangerous." These are what's actually driving the chasing, fixating and self-doubt that push love away. She wants a life partner — someone to live and enjoy her life with.
+Amy is 33, self-aware, still single, and tired of being told to just think positive. She's attachment-theory literate — has read *Attached*, follows nervous-system-regulation content, has probably done therapy — and is skeptical of pure "vibes" manifestation content (Lucky Girl Syndrome, angel numbers), but not a manifestation skeptic outright. She wants the mechanism and the "why" before she'll trust the "how." The primary reason she can't make it work for her love life: she has Internal Working Models — unconscious beliefs about her own worthiness and whether others can be trusted, formed in childhood — running the show. "I'm not worthy," "I have to earn love," "closeness is dangerous." These are what's actually driving the chasing, fixating and self-doubt that push love away. She wants a life partner — someone to live and enjoy her life with.
 
 **The niche is attracting a new life partner.** The audience is people who want this specific outcome, not a broad self-improvement journey — searching things like "how to manifest love," "how to attract my soulmate," "why do I keep attracting the same type of partner."
 

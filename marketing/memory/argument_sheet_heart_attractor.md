@@ -1,6 +1,6 @@
 # Argument Sheet — Heart Attractor
 
-> The strategic spine of all Heart Attractor content. Every piece of marketing — regardless of format or platform — must connect to at least one stage of this argument. Read this before writing anything. **Updated 2026-08-14** — Actual Cause reframed around Internal Working Models; mechanism now branded as **The Attraction Formula Meditation**.
+> The strategic spine of all Heart Attractor content. Every piece of marketing — regardless of format or platform — must connect to at least one stage of this argument. Read this before writing anything. **Updated 2026-08-17** — mechanism renamed to **The Attraction Formula** (dropped "Meditation"); New Mechanism step order changed to lead with imprinting beliefs/self-image before the partner's qualities and the feeling.
 >
 > Structure mirrors the main Heart Creator `argument_sheet.md` but content, mechanism naming, and vocabulary are for the **willful, with some intellectual** audience — per the Scott Oldford / Frederick Dotson levels-of-consciousness framework. Keep explanations short and concrete; lead with story and outcome, not mechanism detail.
 
@@ -63,30 +63,32 @@ These beliefs were installed long before conscious choice was possible, and they
 
 ## New Mechanism
 
-**The Attraction Formula Meditation.**
+**The Attraction Formula.**
+
+The Attraction Formula is a meditation practice that allows you to rewrite the subconscious programs blocking you from attracting and experiencing a relationship that you love.
 
 1. **Heart Coherence** calms the nervous system and gets you past the analytical mind, so you can access your subconscious
-2. **Imprint the qualities** of the person you want into your subconscious mind
-3. **Feel the emotions** of being with this person already into your subconscious mind
-4. **Imprint new beliefs and a self-image** aligned with your new relationship into your subconscious mind
+2. **Imprint new beliefs and a self-image** aligned with your new relationship into your subconscious mind
+3. **Imprint the qualities** of the person you want into your subconscious mind
+4. **Feel the emotions** of being with this person already into your subconscious mind
 
 ---
 
 ## New Belief
 
-The Attraction Formula Meditation rewrites your internal working models.
+The Attraction Formula rewrites your internal working models.
 
 ---
 
 ## The Ideology
 
-The Attraction Formula Meditation is the key to attracting and living an amazing life with your dream partner.
+The Attraction Formula is the key to attracting and living an amazing life with your dream partner.
 
 ---
 
 ## What We Do
 
-We help people use The Attraction Formula Meditation to rewrite the internal working models blocking them from attracting the relationship they want.
+We help people use The Attraction Formula to rewrite the internal working models blocking them from attracting the relationship they want.
 
 **The meditation is the mechanism, not the destination.** Never lead with the mechanism — lead with the relationship they want to create.
 
@@ -121,7 +123,7 @@ Olly's own story — used Heart Coherence to meet his wife and build the relatio
 - Your person / the right one / your dream partner
 - Internal working models / the beliefs running the show
 - "I'm not worthy" / "I have to earn love" / "closeness is dangerous"
-- The Attraction Formula Meditation
+- The Attraction Formula
 - Heart Coherence (as the first step within the meditation, not the standalone mechanism name)
 - Imprinting new beliefs / a new self-image
 - Chasing energy / neediness vs. safety
