@@ -1,0 +1,292 @@
+<!-- ============================================================
+     Heart Attractor — Which Belief Is Blocking You? (Interactive Quiz)
+     GHL page path: TBC (set in Sites > Website Builder), suggested: /belief-quiz
+     Paste as ONE Custom HTML block. Section width: Full Width. Margin/padding: 0.
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  /* Defensive fallback — fills any residual gap from GHL's outer section/row/column
+     padding with the matching dark background instead of default white.
+     The real fix is on the GHL section/row/column itself: Full Width + all margin/padding = 0. */
+  html, body{ background:#0A0510 !important; margin:0 !important; padding:0 !important; }
+
+  .hbq-page{
+    --bg-a:#4B1466; --bg-b:#150818; --bg-c:#0A0510;
+    --accent:#B84FE8; --accent-2:#E1A6FF;
+    --body-text:#EBD9E2;
+    width:100vw !important;
+    position:relative !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    background:radial-gradient(120% 100% at 20% 0%, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+    font-family:'Poppins', sans-serif;
+    color:#fff;
+    min-height:100vh;
+    padding:56px 20px;
+    box-sizing:border-box;
+    overflow-x:hidden;
+  }
+  .hbq-page *{ box-sizing:border-box; }
+  .hbq-wrap{ max-width:900px; margin:0 auto; }
+
+  .hbq-progress-track{
+    width:100%; height:6px; border-radius:3px;
+    background:rgba(255,255,255,.12); overflow:hidden; margin-bottom:40px;
+  }
+  .hbq-progress-fill{
+    height:100%; border-radius:3px;
+    background:linear-gradient(90deg, var(--accent), var(--accent-2));
+    width:0%; transition:width .35s ease;
+  }
+
+  .hbq-screen{ display:none; }
+  .hbq-screen.active{ display:block; animation:hbqFade .35s ease; }
+  @keyframes hbqFade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* Intro */
+  .hbq-eyebrow{
+    display:inline-block; font-size:14px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--accent); border:1px solid rgba(184,79,232,.4); padding:8px 16px; border-radius:50px; margin-bottom:20px;
+  }
+  .hbq-h1{ font-size:clamp(32px,4.6vw,58px); font-weight:800; line-height:1.15; margin-bottom:20px; }
+  .hbq-h1 .hbq-grad{
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hbq-lede{ font-size:clamp(18px,1.6vw,21px); line-height:1.55; color:var(--body-text); max-width:56ch; margin-bottom:36px; }
+
+  /* Question card */
+  .hbq-qlabel{
+    font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,.5); margin-bottom:18px;
+  }
+  .hbq-statement{
+    font-size:clamp(24px,2.8vw,36px); font-weight:700; line-height:1.4; margin-bottom:40px; max-width:26ch;
+  }
+  .hbq-choices{ display:flex; gap:18px; flex-wrap:wrap; }
+  .hbq-choice{
+    flex:1; min-width:200px;
+    padding:22px 24px; font-family:'Poppins', sans-serif; font-size:19px; font-weight:700;
+    background:rgba(255,255,255,.05); border:2px solid rgba(255,255,255,.16); border-radius:14px;
+    color:#fff; cursor:pointer; transition:border-color .15s ease, background .15s ease, transform .1s ease;
+    text-align:center;
+  }
+  .hbq-choice:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .hbq-choice--yes.hbq-selected{ border-color:var(--accent); background:rgba(184,79,232,.18); }
+  .hbq-choice--no.hbq-selected{ border-color:rgba(255,255,255,.4); background:rgba(255,255,255,.1); }
+
+  .hbq-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:36px; }
+  .hbq-back{
+    background:none; border:none; color:rgba(255,255,255,.5); font-family:'Poppins', sans-serif;
+    font-size:14px; cursor:pointer; padding:8px;
+  }
+  .hbq-back:hover{ color:#fff; }
+  .hbq-back:disabled{ visibility:hidden; }
+
+  /* Results */
+  .hbq-result-card{
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.14); border-radius:20px;
+    padding:36px 34px; margin-bottom:22px;
+  }
+  .hbq-result-label{
+    font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,.5); margin-bottom:10px;
+  }
+  .hbq-result-belief{ font-size:clamp(24px,2.2vw,30px); font-weight:800; color:#fff; margin-bottom:18px; line-height:1.3; }
+  .hbq-result-arrow{ color:rgba(255,255,255,.35); font-size:20px; margin:8px 0; }
+  .hbq-result-becomes-label{
+    font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,.5); margin-bottom:8px;
+  }
+  .hbq-result-becomes{ font-size:clamp(24px,2.2vw,30px); font-weight:800; color:var(--accent); line-height:1.3; }
+
+  .hbq-cta-card{
+    background:linear-gradient(135deg, rgba(184,79,232,.16), rgba(184,79,232,.04));
+    border:1px solid rgba(184,79,232,.35); border-radius:20px;
+    padding:40px 36px; text-align:center; margin-top:32px;
+  }
+  .hbq-cta-title{ font-size:clamp(22px,2vw,26px); font-weight:800; margin-bottom:14px; }
+  .hbq-cta-body{ font-size:clamp(16px,1.3vw,18px); color:var(--body-text); line-height:1.6; margin-bottom:26px; max-width:52ch; margin-left:auto; margin-right:auto; }
+  .hbq-cta-btn{
+    display:inline-block; padding:18px 38px;
+    font-family:'Poppins', sans-serif; font-size:18px; font-weight:700; color:#fff; text-decoration:none;
+    background:linear-gradient(135deg, var(--accent), #7A2AA8);
+    border-radius:50px; box-shadow:0 10px 30px rgba(184,79,232,.35);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .hbq-cta-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 36px rgba(184,79,232,.45); }
+
+  .hbq-no-selection{ text-align:center; color:var(--body-text); font-size:16px; line-height:1.6; padding:8px 0 4px; }
+
+  @media (max-width:480px){
+    .hbq-page{ padding:40px 16px; }
+    .hbq-choices{ flex-direction:column; }
+    .hbq-result-card, .hbq-cta-card{ padding:22px 18px; }
+  }
+</style>
+
+<div class="hbq-page">
+  <div class="hbq-wrap">
+
+    <div class="hbq-progress-track"><div class="hbq-progress-fill" id="hbq-progress"></div></div>
+
+    <!-- INTRO -->
+    <div class="hbq-screen active" data-screen="intro">
+      <div class="hbq-eyebrow">👉 The Belief Blocking Quiz</div>
+      <h1 class="hbq-h1">Which Belief Is<br>Blocking Your <span class="hbq-grad">Love&nbsp;Life?</span></h1>
+      <p class="hbq-lede">You'll read 8 short statements. For each one, just answer honestly — is this you, or not? At the end, you'll see exactly which subconscious belief is running the show, and the belief that replaces it.</p>
+      <div class="hbq-nav" style="justify-content:flex-end;">
+        <button type="button" class="hbq-choice" style="flex:none; padding:16px 32px;" id="hbq-start-btn">Start The Quiz →</button>
+      </div>
+    </div>
+
+    <!-- QUESTIONS 1-8 (populated by JS from BELIEFS array below) -->
+    <div class="hbq-screen" data-screen="question"></div>
+
+    <!-- RESULTS -->
+    <div class="hbq-screen" data-screen="results">
+      <div class="hbq-eyebrow">👉 Your Result</div>
+      <h1 class="hbq-h1">Here's What's <span class="hbq-grad">Really Going On</span></h1>
+      <p class="hbq-lede" id="hbq-results-intro"></p>
+
+      <div id="hbq-results-list"></div>
+
+      <div class="hbq-cta-card">
+        <div class="hbq-cta-title">Ready to rewrite these beliefs and meet your person?</div>
+        <div class="hbq-cta-body">The Attraction Formula is a structured program with full support to help you rewrite these subconscious beliefs blocking love in your life, so that you can meet your person.</div>
+        <a href="https://www.skool.com/heartcreator/about?utm_source=belief_quiz&utm_medium=quiz_result&utm_campaign=belief_quiz" class="hbq-cta-btn">Start Your Free Trial →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  // The 8 Internal Working Models — same content as the Rewrite training, kept in sync
+  var BELIEFS = [
+    {
+      quote: "I'm not worthy / not enough",
+      statement: "I sometimes reject genuine love, or find myself drawn to partners who confirm this belief by undervaluing me.",
+      becomes: "I am worthy of love"
+    },
+    {
+      quote: "I have to earn love",
+      statement: "I give too much and try too hard in relationships, performing to be kept rather than trusting I'm loved as I am.",
+      becomes: "I am loved unconditionally"
+    },
+    {
+      quote: "If I need too much, I'll be too much",
+      statement: "I tend to suppress my needs, which quietly builds resentment and distance over time.",
+      becomes: "My needs are valid"
+    },
+    {
+      quote: "Others can't be trusted, people leave",
+      statement: "I get guarded, test people, or push them away before they can leave first.",
+      becomes: "It's safe to let someone in"
+    },
+    {
+      quote: "Closeness is dangerous",
+      statement: "I crave closeness, but once it's within reach, part of me fears it and pulls away right when things get real.",
+      becomes: "Closeness is safe"
+    },
+    {
+      quote: "I will be abandoned",
+      statement: "I constantly monitor for signs someone's pulling away, or push people out before they can leave first.",
+      becomes: "I am safe"
+    },
+    {
+      quote: "I have to manage everyone's emotions to be safe",
+      statement: "I regulate other people's moods, smooth over tension, and walk on eggshells to keep the relationship calm.",
+      becomes: "I am free to let others feel their own way"
+    },
+    {
+      quote: "Closeness is fragile and temporary",
+      statement: "Even when I do get closeness, part of me braces for it to disappear rather than fully relaxing into it.",
+      becomes: "Closeness can be stable and last"
+    }
+  ];
+
+  var answers = new Array(BELIEFS.length).fill(null); // null | true (yes) | false (no)
+  var currentIndex = -1; // -1 = intro, 0..7 = questions, 8 = results
+
+  var questionScreen = document.querySelector('[data-screen="question"]');
+  var progressFill = document.getElementById('hbq-progress');
+  var startBtn = document.getElementById('hbq-start-btn');
+
+  function renderQuestion(i) {
+    var b = BELIEFS[i];
+    var selected = answers[i];
+    questionScreen.innerHTML =
+      '<div class="hbq-qlabel">Question ' + (i + 1) + ' of ' + BELIEFS.length + '</div>' +
+      '<div class="hbq-statement">' + b.statement + '</div>' +
+      '<div class="hbq-choices">' +
+        '<button type="button" class="hbq-choice hbq-choice--yes' + (selected === true ? ' hbq-selected' : '') + '" data-answer="yes">Yes, that\'s me</button>' +
+        '<button type="button" class="hbq-choice hbq-choice--no' + (selected === false ? ' hbq-selected' : '') + '" data-answer="no">Not really</button>' +
+      '</div>' +
+      '<div class="hbq-nav">' +
+        '<button type="button" class="hbq-back" id="hbq-back-btn"' + (i === 0 ? ' disabled' : '') + '>← Back</button>' +
+        '<div></div>' +
+      '</div>';
+
+    questionScreen.querySelectorAll('.hbq-choice').forEach(function(el) {
+      el.addEventListener('click', function() {
+        answers[i] = el.getAttribute('data-answer') === 'yes';
+        goTo(i + 1);
+      });
+    });
+    var backBtn = document.getElementById('hbq-back-btn');
+    if (backBtn) backBtn.addEventListener('click', function() { goTo(i - 1); });
+  }
+
+  function renderResults() {
+    var selected = [];
+    BELIEFS.forEach(function(b, i) { if (answers[i] === true) selected.push(b); });
+
+    var introEl = document.getElementById('hbq-results-intro');
+    var listEl = document.getElementById('hbq-results-list');
+
+    if (selected.length === 0) {
+      introEl.textContent = "None of these landed as strongly for you, which is a good sign. Here's the full list again in case one still resonates on a second look.";
+      listEl.innerHTML = BELIEFS.map(function(b) { return resultCardHTML(b); }).join('');
+    } else {
+      introEl.textContent = selected.length === 1
+        ? "This is the belief showing up most for you right now, and the secure belief that replaces it."
+        : "These are the beliefs showing up most for you right now, and the secure beliefs that replace them.";
+      listEl.innerHTML = selected.map(function(b) { return resultCardHTML(b); }).join('');
+    }
+  }
+
+  function resultCardHTML(b) {
+    return '<div class="hbq-result-card">' +
+      '<div class="hbq-result-label">Your Belief</div>' +
+      '<div class="hbq-result-belief">&ldquo;' + b.quote + '&rdquo;</div>' +
+      '<div class="hbq-result-arrow">&#8595;</div>' +
+      '<div class="hbq-result-becomes-label">Becomes</div>' +
+      '<div class="hbq-result-becomes">&ldquo;' + b.becomes + '&rdquo;</div>' +
+    '</div>';
+  }
+
+  function goTo(index) {
+    currentIndex = index;
+    var pct = Math.max(0, Math.min(100, (index / BELIEFS.length) * 100));
+    progressFill.style.width = pct + '%';
+
+    document.querySelectorAll('.hbq-screen').forEach(function(s) { s.classList.remove('active'); });
+
+    if (index < 0) {
+      document.querySelector('[data-screen="intro"]').classList.add('active');
+    } else if (index < BELIEFS.length) {
+      renderQuestion(index);
+      questionScreen.classList.add('active');
+    } else {
+      renderResults();
+      progressFill.style.width = '100%';
+      document.querySelector('[data-screen="results"]').classList.add('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  startBtn.addEventListener('click', function() { goTo(0); });
+})();
+</script>

@@ -1,6 +1,6 @@
 # Training Project — Claude Instructions
 
-> **⚠️ PIVOT IN PROGRESS (2026-08-13):** "Heart Creator" is being renamed **Heart Attractor** — niched to attracting/creating an ideal relationship. Training pages below have not been updated for this pivot. See `../marketing/memory/argument_sheet_heart_attractor.md` for the new positioning.
+> **⚠️ PIVOT STATUS (updated 2026-08-19):** "Heart Creator" is renamed **Heart Attractor** — niched to attracting a relationship partner. Positioning is locked, see `../marketing/memory/argument_sheet_heart_attractor.md`. Real Heart Attractor classroom content now exists in this folder: `about-page-video.html`, `the-attraction-formula.html`, and the 5 new Classroom modules built 2026-08-19 — `start-here.html`, `regulate.html`, `rewrite.html`, `remember.html`, `relive.html` (mapping to the live Skool Classroom's Start Here / 1. Regulate / 2. Rewrite / 3. Remember / 4. Relive modules). The Attraction Formula Meditation module and Where To Get Support module are still not built. Older pre-pivot trainings (Creation Formula, Heart Activation Meditation, etc.) remain in the folder unconverted — treat those specifically as historical/superseded, not the whole folder.
 
 ## Role
 Training builder. This folder's agent builds and maintains standalone HTML training pages for the Heart Attractor Community — used by Olly to record Loom walkthroughs, and some repurposed as Skool About Page content.

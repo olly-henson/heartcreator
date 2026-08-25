@@ -67,10 +67,14 @@ These beliefs were installed long before conscious choice was possible, and they
 
 The Attraction Formula is a meditation practice that allows you to rewrite the subconscious programs blocking you from attracting and experiencing a relationship that you love.
 
-1. **Heart Coherence** calms the nervous system and gets you past the analytical mind, so you can access your subconscious
-2. **Imprint new beliefs and a self-image** aligned with your new relationship into your subconscious mind
-3. **Imprint the qualities** of the person you want into your subconscious mind
-4. **Feel the emotions** of being with this person already into your subconscious mind
+**The Four R's** (confirmed 2026-08-19 — this is the locked order and naming; supersedes the unnamed numbered list this section previously used):
+
+1. **Regulate** — Calm the nervous system and access the subconscious mind (uses Heart Coherence)
+2. **Rewrite** — Install new beliefs and a self-image aligned with the new relationship
+3. **Remember** — Imprint the qualities of the person you want
+4. **Relive** — Feel the emotions of being with this person already, as if it's already true
+
+Free lead magnet delivers Step 1 (Regulate) only — see "Free Lead Magnet" below.
 
 ---
 
@@ -115,6 +119,60 @@ We help people use The Attraction Formula to rewrite the internal working models
 
 Olly's own story — used Heart Coherence to meet his wife and build the relationship he has now. This is the anchor story for the whole positioning, the same way the $13k month story anchors the main Heart Creator argument.
 
+**Founder story detail (confirmed 2026-08-19):** Breakup from a 7-year relationship in early 2019 → struggled with dating → tried manifestation techniques (Neville Goddard, Joe Dispenza, Abraham Hicks) without lasting results → developed The Attraction Formula → used it himself to meet his now-wife. Used across About Page, Day 1 welcome email, and cover/thumbnail art (black & white wedding photo).
+
+**Open item:** the personal proof line ("it's the exact practice I used to meet my now wife") was dropped from the live About Page copy — flagged to re-add, ideally tied directly to the wedding-photo thumbnail with a caption, since the photo currently reads as aspirational rather than proof.
+
+---
+
+## Free Lead Magnet
+
+**Name:** "The Attraction Formula Meditation — Part 1: Regulate" (also referred to by its original name "Heart Activation Meditation"). Positioned explicitly as **Part 1 of the paid mechanism**, not a separately-branded product — this removes funnel friction between free and paid.
+
+**Delivery:** Instagram Reels → comment 'FORMULA' → ManyChat asks for email → delivers access. Uses the proven free-trial offer format (comment → email capture → free trial link) rather than a separately gated meditation opt-in.
+
+**Bridge messaging once inside:** "You just did Regulate. Rewrite, Remember, and Relive are the next three steps, waiting inside The Attraction Formula in the Heart Attractor community."
+
+---
+
+## Internal Working Models Reference List
+
+**Core 5 (used throughout messaging):**
+1. "I'm not worthy / not enough" → secure counterpart: "I am worthy of love"
+2. "I have to earn love" → "I am loved unconditionally" (updated 2026-08-25 — see note below)
+3. "If I need too much, I'll be too much" → "My needs are valid"
+4. "Others can't be trusted, people leave" → "It's safe to let someone in" (fear centers on them — will they stay)
+5. "Closeness is dangerous" → "Closeness is safe" (fear centers on me — what happens once someone's in)
+
+**Extended list (research-backed, not yet in core framework):**
+6. "I will be abandoned" → "I am safe" (updated 2026-08-25)
+7. "I have to manage everyone's emotions to be safe" (Olly's own personal belief — used in welcome email Day 2/3) → "I am free to let others feel their own way" (updated 2026-08-25 — reworded from "Their emotions are not mine to manage" to remove the negation/"not" framing; Olly's stated preference is affirmations phrased as a positive to move toward, never a "don't")
+8. "Closeness is fragile and temporary" → "Closeness can be stable and last" (updated 2026-08-25)
+
+**2026-08-25 cross-check against clinical/attachment-theory sources (web research):** confirmed "I am worthy of love," "My needs are valid," and "It's safe to let someone in" all match established attachment-theory/codependency-recovery language closely. Belief 7's clinical source match was "Their emotions are not mine to manage" — but this was then reworded to "I am free to let others feel their own way" per Olly's standing preference for affirmations with no negation/"don't" framing (same meaning, positive phrasing). Belief 2's counterpart changed from "Love is freely given" to "I am loved unconditionally" to match schema therapy's unrelenting-standards/self-sacrifice schema language (unconditional acceptance, love not contingent on performance). Belief 6's counterpart changed from "I am secure, whatever happens" to "I am safe" to match the standard affirmation used against the abandonment/instability schema. Belief 8's counterpart changed from "Closeness can last" to "Closeness can be stable and last" to echo the clinical concept of "emotional permanence" in plain language. "Closeness is safe" (belief 5) had no independently-sourced exact match but is a natural, uncontradicted extension of the pattern.
+
+**Standing preference (2026-08-25):** never phrase an affirmation/counter-belief as a negation ("I don't...", "...not mine to..."). Always state what's true/wanted, not what's being avoided.
+
+---
+
+## Terminology Rules
+
+- Use **"partner"** for branded/core assets (framework, Ideology, cover art) — matches attachment-theory/clinical convention Amy would recognize and trust.
+- **"Your person"** is fine for warmer, casual content (Reels, captions, DMs) — covers both intellectual (partner) and willful/emotional (your person) registers per Scott Oldford's audience-level framework.
+- **Don't mix both within a single piece of copy — pick one per asset.**
+- Avoid **"soulmate" / "the One"** — that's manifestation/LOA-world language Amy is actively skeptical of.
+
+---
+
+## Competitive Landscape
+
+Two audience clusters in the broader "attract love" market:
+
+1. **Pure manifestation/LOA** — Gabby Bernstein, Soulmate Sketch, Calling in the One. Cheap ($10–50), emotionally-led, low mechanism depth.
+2. **Attachment-theory/credentialed coaching** — Thais Gibson/Personal Development School ($1,484/yr), Love School ($99/mo), Chris Rackliffe. Higher-priced, quiz-based lead magnets are the norm, community + course structure.
+
+**Heart Attractor sits structurally closer to Cluster 2** (mechanism-led, credentialed-feeling) but is priced/distributed like Cluster 1 ($30/month, Instagram Reels distribution). Flagged as real pricing headroom and a distinct positioning angle: **"real psychology, without the $99/month price tag."**
+
 ---
 
 ## Vocabulary of This Register
@@ -149,4 +207,4 @@ Olly's own story — used Heart Coherence to meet his wife and build the relatio
 ## Open Questions for Olly
 
 - Does "Internal Working Models" stay as-is (clinical but credible), or does it need a plainer public-facing name for hooks/headlines?
-- `marketing/CLAUDE.md` still carries the old Heart Creator positioning in its body (per its pivot banner) and has not been updated to reference this framework — requires Olly's explicit approval before editing.
+- ~~`marketing/CLAUDE.md` still carries the old Heart Creator positioning...~~ — updated 2026-08-19, see [[project_heart_attractor_full_pivot]].

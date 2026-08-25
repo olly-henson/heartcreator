@@ -36,3 +36,7 @@
 
 - `training/about-page-video.html` exists — confirm with Olly whether it's a live draft to continue or reference-only before starting new VSL work.
 - `training/CLAUDE.md` flags that training pages have not yet been updated for the Heart Attractor pivot — any VSL script must be written fresh against the current argument sheet, not copied from old page content.
+
+## Exact design/layout spec (confirmed 2026-08-19)
+
+Full colour palette, typography, layout grid rules, and the hard-won layout-debugging lessons now live in `memory/brand-guidelines-heart-attractor.md` — read that file before building or editing any VSL slide. It also has the locked final headline slide copy and the built visual asset list (wave graphic, belief rewrite graphic, "What's Inside" composite, cover thumbnail).

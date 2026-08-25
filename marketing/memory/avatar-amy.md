@@ -33,6 +33,8 @@
 
 **Primary objection posture:** "I've already tried manifestation and it didn't work for me" is her live, unspoken thought on almost everything she's shown. She needs to be met with "here's why that didn't work and why this is different," not more of the same promise.
 
+**Estimated TAM:** ~1.2–1.5M people fit this profile in core English-speaking markets (US/UK/CA/AU), built from a Fermi estimate anchored on real millennial manifestation-reliance survey data (~35%). This is a total addressable market figure, not a realistic reach target.
+
 ---
 
 ## Lifestyle
@@ -143,3 +145,14 @@ She has tried many things and been disappointed many times. She is cautious of:
 - Hype, urgency and scarcity tactics — pure "vibes" content with no mechanism behind it
 
 Content that acknowledges this directly — rather than ignoring it — builds far more trust than content that simply makes promises.
+
+---
+
+## Terminology Rules (confirmed 2026-08-19)
+
+- Use **"partner"** for branded/core assets (framework, Ideology, cover art) — matches attachment-theory/clinical convention Amy would recognize and trust.
+- **"Your person"** is fine for warmer, casual content (Reels, captions, DMs).
+- **Don't mix both within a single piece of copy — pick one per asset.**
+- Avoid **"soulmate" / "the One"** — LOA-world language Amy is actively skeptical of.
+
+See `memory/argument_sheet_heart_attractor.md` for the full Internal Working Models list, the Four R's mechanism breakdown, and competitive landscape notes.
