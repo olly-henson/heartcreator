@@ -54,6 +54,14 @@ Tags added to the end of a URL that tell GA4 and GHL exactly where a visitor cam
 
 For YouTube, always add `utm_content` with the full video title in kebab-case. Example: video titled "Why Heart Coherence Changes Everything" â†’ `utm_content=why-heart-coherence-changes-everything`
 
+### Facebook
+
+> Added 2026-08-25 — Reels are cross-posted from Instagram to Facebook (@theollyhenson) for extra reach; this is the first Facebook-specific UTM convention logged.
+
+| Placement | utm_source | utm_medium |
+|---|---|---|
+| Reels comments | `facebook` | `comments` |
+
 ### Email
 
 | Placement | utm_source | utm_medium | utm_content |

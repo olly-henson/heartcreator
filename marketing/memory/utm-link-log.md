@@ -16,6 +16,8 @@
 |---|---|---|---|---|---|
 | 2026-06-16 | Instagram | Bio | Meditation Download | — | `https://ollyhenson.com/meditation?utm_source=instagram&utm_medium=bio&utm_campaign=meditation` |
 | 2026-06-16 | Instagram | Bio | Coaching Application | — | `https://ollyhenson.com/coaching-application?utm_source=instagram&utm_medium=bio&utm_campaign=coaching` |
+| 2026-08-25 | Facebook | Reels comments (new platform, no prior convention) | Belief Blocking Quiz | — | `https://ollyhenson.com/quiz?utm_source=facebook&utm_medium=comments&utm_campaign=belief_quiz` |
+| 2026-08-25 | Instagram | ManyChat Reels | Belief Blocking Quiz | — | `https://ollyhenson.com/quiz?utm_source=instagram&utm_medium=reels&utm_campaign=belief_quiz` |
 | 2026-06-17 | Instagram | ManyChat Reels (keyword: HEART) | Meditation Download | — | `https://ollyhenson.com/meditation?utm_source=instagram&utm_medium=reels&utm_campaign=meditation` |
 | 2026-06-17 | Instagram | ManyChat Stories (keyword: HEART) | Meditation Download | — | `https://ollyhenson.com/meditation?utm_source=instagram&utm_medium=stories&utm_campaign=meditation` |
 | 2026-06-17 | Instagram | ManyChat DM (keyword: PROGRAM) | Coaching Application | — | `https://ollyhenson.com/coaching-application?utm_source=instagram&utm_medium=dm&utm_campaign=hcp&ref=Applied%20through%20Insta%20DM%20link` |

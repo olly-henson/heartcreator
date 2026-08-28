@@ -1,0 +1,450 @@
+<!-- ============================================================
+     Heart Attractor — About Page Feature Tiles
+     Built 2026-08-28 per Ben Settle-style live review of the Skool About
+     Page: each top-level feature gets its own section (eyebrow + headline +
+     3 photo cards + one-line caption), matching the reference screenshot
+     Olly shared (tile_all_programs.png style — dark cosmic bg, rounded
+     photo-topped cards, purple progress-bar accent row under each card).
+       Section 1: Your Own Custom Meditation
+       Section 2: The Attraction Formula Program (dedicated single-image page, added 2026-08-28)
+       Section 3: The Heart Attractor Program (dedicated single-image page, added 2026-08-28)
+       Section 4: Bonus Supportive Materials (dedicated single-image page, added 2026-08-28)
+       Section 5: 24/7 Community Support (dedicated single-image page, real community feed screenshot, added 2026-08-28)
+       Section 6: Access To All Programs (matches reference exactly)
+       Section 7: 24/7 Community Support (original 3-card grid version, kept for reference)
+     Each of the 9 photo slots uses the standard onerror placeholder
+     pattern — Olly drops in real photos later. See chat for the photo
+     brief per slot (warm/candid relationship photography style).
+     Paste as ONE Custom HTML block per section, or all three together.
+     Section width: Full Width. Margin/padding: 0.
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  html, body{ background:#0A0510 !important; margin:0 !important; padding:0 !important; }
+
+  .apt-page{
+    --bg-a:#4B1466; --bg-b:#150818; --bg-c:#0A0510;
+    --accent:#B84FE8; --accent-2:#E1A6FF;
+    --body-text:#C9B8D4;
+    width:100vw !important;
+    position:relative !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    background:radial-gradient(140% 160% at 50% 0%, var(--bg-a) 0%, var(--bg-b) 60%, var(--bg-c) 100%);
+    font-family:'Poppins', sans-serif;
+    color:#fff;
+    padding:64px 20px;
+    box-sizing:border-box;
+    overflow-x:hidden;
+  }
+  .apt-page *{ box-sizing:border-box; }
+  .apt-wrap{ max-width:1000px; margin:0 auto; text-align:center; transform:scale(0.81); }
+
+  .apt-eyebrow{
+    font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent-2); margin-bottom:14px;
+  }
+  .apt-h2{ font-size:clamp(27px,3.6vw,40px); font-weight:800; line-height:1.2; margin:0 0 40px; }
+
+  .apt-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; text-align:left; }
+  .apt-card{
+    background:rgba(255,255,255,.04); border:1px solid rgba(184,79,232,.35);
+    border-radius:16px; overflow:hidden;
+  }
+  .apt-card-img{
+    width:100%; aspect-ratio:1400/790; background:rgba(255,255,255,.06);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .apt-card-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .apt-card-img .placeholder{
+    color:rgba(255,255,255,.35); font-size:12px; letter-spacing:.05em; text-transform:uppercase; text-align:center; padding:0 16px;
+  }
+  .apt-card-body{ padding:20px 22px 22px; }
+  .apt-card-title{ font-size:19px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .apt-card-desc{ font-size:14.5px; line-height:1.55; color:var(--body-text); margin-bottom:18px; }
+  .apt-bar-row{ display:flex; align-items:center; gap:10px; }
+  .apt-bar-dot{ width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+  .apt-bar-track{ flex:1; height:6px; border-radius:3px; background:rgba(255,255,255,.1); overflow:hidden; }
+  .apt-bar-fill{ height:100%; width:0%; background:var(--accent); border-radius:3px; }
+  .apt-bar-pct{ font-size:12px; color:rgba(255,255,255,.5); flex-shrink:0; }
+
+  .apt-caption{ margin-top:32px; font-size:15px; color:var(--body-text); }
+
+  /* Step-flow — real product screenshots connected in sequence (Section 1) */
+  .apt-flow{ display:flex; align-items:flex-start; justify-content:center; gap:14px; }
+  .apt-flow-step{ flex:1; max-width:300px; }
+  .apt-flow-frame{
+    border-radius:12px; overflow:hidden; border:2px solid rgba(184,79,232,.4);
+    box-shadow:0 0 0 4px rgba(184,79,232,.08), 0 16px 40px rgba(0,0,0,.4);
+    background:#150818;
+  }
+  .apt-flow-chrome{
+    display:flex; align-items:center; gap:6px; padding:9px 12px;
+    background:rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .apt-flow-chrome span{ width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.25); }
+  .apt-flow-frame img{ width:100%; height:auto; display:block; }
+
+  /* Skool-native card style (single, large) — matches the real Skool course
+     card exactly: white card, rounded image top, black title, grey desc,
+     light progress bar. Used for the dedicated Attraction Formula section. */
+  /* Purple spotlight glow is the DEFAULT treatment for every About Page
+     image frame from here on — do not gate it behind a --spotlight
+     modifier class, fold it straight into the base frame style. */
+  .apt-skool-page-frame{
+    max-width:600px; margin:0 auto; background:#f7f7f8;
+    border:2px solid rgba(184,79,232,.5); border-radius:20px; padding:32px;
+    box-shadow:
+      0 0 0 6px rgba(184,79,232,.16),
+      0 0 100px 20px rgba(184,79,232,.35),
+      0 30px 80px rgba(0,0,0,.6);
+  }
+  .apt-skool-page-frame--spotlight{ /* kept as harmless alias for older markup */ }
+  .apt-skool-card{
+    max-width:520px; margin:0 auto; background:#fff; border-radius:16px;
+    overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.1); text-align:left;
+  }
+  .apt-skool-card-img{ width:100%; aspect-ratio:424/235; background:#eee; }
+  .apt-skool-card-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .apt-skool-card-body{ padding:24px 26px 28px; }
+  .apt-skool-card-title{ font-size:22px; font-weight:800; color:#141414; margin-bottom:14px; }
+  .apt-skool-card-desc{ font-size:15px; line-height:1.55; color:#555; margin-bottom:20px; }
+  .apt-skool-bar-track{ width:100%; height:8px; border-radius:4px; background:#e8e8e8; overflow:hidden; margin-bottom:8px; }
+  .apt-skool-bar-fill{ height:100%; width:0%; background:#d0d0d0; border-radius:4px; }
+  .apt-skool-bar-pct{ font-size:13px; font-weight:700; color:#333; }
+
+  /* Single hero screenshot (Section 1) */
+  .apt-hero-frame{
+    max-width:800px; margin:0 auto; border-radius:16px; overflow:hidden;
+    border:2px solid rgba(184,79,232,.7);
+    box-shadow:
+      0 0 0 6px rgba(184,79,232,.16),
+      0 0 100px 20px rgba(184,79,232,.35),
+      0 30px 80px rgba(0,0,0,.6);
+    background:#0A0510;
+    position:relative;
+  }
+  .apt-hero-frame--spotlight{ /* kept as harmless alias for older markup */ }
+  .apt-hero-chrome{
+    display:flex; align-items:center; gap:16px; padding:12px 16px;
+    background:rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .apt-hero-dots{ display:flex; gap:7px; flex-shrink:0; }
+  .apt-hero-dots span{ width:11px; height:11px; border-radius:50%; }
+  .apt-hero-dots span:nth-child(1){ background:#FF5F57; }
+  .apt-hero-dots span:nth-child(2){ background:#FEBC2E; }
+  .apt-hero-dots span:nth-child(3){ background:#28C840; }
+  .apt-hero-url{
+    flex:1; background:rgba(255,255,255,.05); border-radius:6px; padding:5px 14px;
+    font-size:12.5px; color:rgba(255,255,255,.4); font-family:'Poppins', sans-serif; text-align:center;
+  }
+  .apt-hero-body{
+    padding:32px;
+    background:radial-gradient(120% 100% at 20% 0%, #4B1466 0%, #150818 55%, #0A0510 100%);
+  }
+  .apt-hero-frame img{ width:100%; height:auto; display:block; }
+  .apt-flow-label{ margin-top:14px; text-align:center; }
+  .apt-flow-num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; background:rgba(184,79,232,.35); border:1px solid var(--accent-2);
+    font-size:12px; font-weight:800; color:var(--accent-2); margin-right:8px; vertical-align:middle;
+  }
+  .apt-flow-title{ font-size:15px; font-weight:700; color:#fff; display:inline; vertical-align:middle; }
+  .apt-flow-arrow{ flex-shrink:0; color:var(--accent); font-size:26px; font-weight:800; opacity:.7; }
+
+  @media (max-width:820px){
+    .apt-grid{ grid-template-columns:1fr; }
+    .apt-flow{ flex-direction:column; }
+    .apt-flow-arrow{ transform:rotate(90deg); }
+    .apt-flow-step{ max-width:340px; width:100%; }
+  }
+  @media (max-width:480px){
+    .apt-page{ padding:48px 16px; }
+  }
+</style>
+
+<!-- ============================================================
+     SECTION 1 — Your Own Custom Meditation
+     ============================================================ -->
+<div class="apt-page">
+  <div class="apt-wrap" style="max-width:1220px;">
+    <h2 class="apt-h2" style="margin-top:14px; font-size:calc(clamp(27px,3.6vw,40px) * 1.1);">Where You'll Be Able to Create Your Own Custom Meditation to Address Your Beliefs Specifically</h2>
+
+    <div class="apt-hero-frame apt-hero-frame--spotlight">
+      <div class="apt-hero-chrome">
+        <div class="apt-hero-dots"><span></span><span></span><span></span></div>
+        <div class="apt-hero-url">ollyhenson.com/build-your-meditation</div>
+      </div>
+      <div class="apt-hero-body">
+        <img src="about-page-tile-images/meditation-hero.png" alt="The actual meditation-builder tool inside the community">
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 2 — The Attraction Formula Program (dedicated single page)
+     ============================================================ -->
+<div class="apt-page">
+  <div class="apt-wrap" style="max-width:1360px;">
+    <h2 class="apt-h2" style="margin-top:14px; font-size:calc(clamp(27px,3.6vw,40px) * 0.92);">Inside, You'll Have Access to The 30-Day Attraction Formula Program to Help You Rewrite The Subconscious Beliefs Blocking Love in Your Life…</h2>
+
+    <div class="apt-skool-page-frame apt-skool-page-frame--spotlight">
+      <div class="apt-skool-card">
+        <div class="apt-skool-card-img">
+          <img src="about-page-tile-images/programs-1.jpg" alt="The Attraction Formula Program">
+        </div>
+        <div class="apt-skool-card-body">
+          <div class="apt-skool-card-title">The Attraction Formula Program</div>
+          <div class="apt-skool-card-desc">Rewrite the subconscious programs blocking love so you can attract your dream partner</div>
+          <div class="apt-skool-bar-track"><div class="apt-skool-bar-fill"></div></div>
+          <div class="apt-skool-bar-pct">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 3 — The Heart Attractor Program (dedicated single page)
+     ============================================================ -->
+<div class="apt-page">
+  <div class="apt-wrap" style="max-width:1360px;">
+    <h2 class="apt-h2" style="margin-top:14px; font-size:calc(clamp(27px,3.6vw,40px) * 1.0);">You'll Also Have Access to The Heart Attractor Program Where You'll Learn How to Consciously Attract Your Perfect Partner</h2>
+
+    <div class="apt-skool-page-frame">
+      <div class="apt-skool-card">
+        <div class="apt-skool-card-img" style="aspect-ratio:411/216;">
+          <img src="about-page-tile-images/heart-attractor-program.jpg" alt="The Heart Attractor Program">
+        </div>
+        <div class="apt-skool-card-body">
+          <div class="apt-skool-card-title">The Heart Attractor Program</div>
+          <div class="apt-skool-card-desc">Consciously attract your perfect partner</div>
+          <div class="apt-skool-bar-track"><div class="apt-skool-bar-fill"></div></div>
+          <div class="apt-skool-bar-pct">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 4 — Bonus Supportive Materials (dedicated single page)
+     ============================================================ -->
+<div class="apt-page">
+  <div class="apt-wrap" style="max-width:1220px;">
+    <h2 class="apt-h2" style="margin-top:14px; font-size:calc(clamp(27px,3.6vw,40px) * 1.1);">And Access to All Supportive Materials and Trainings to Help You Find Your Person</h2>
+
+    <div class="apt-skool-page-frame">
+      <div class="apt-skool-card">
+        <div class="apt-skool-card-img" style="aspect-ratio:415/218;">
+          <img src="about-page-tile-images/bonus-materials.jpg" alt="Bonus Supportive Materials">
+        </div>
+        <div class="apt-skool-card-body">
+          <div class="apt-skool-card-title">Bonus Supportive Materials</div>
+          <div class="apt-skool-card-desc">All bonus supportive materials and trainings to help you find your person.</div>
+          <div class="apt-skool-bar-track"><div class="apt-skool-bar-fill"></div></div>
+          <div class="apt-skool-bar-pct">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 5 — 24/7 Community Support (dedicated single page, real screenshot)
+     ============================================================ -->
+<div class="apt-page">
+  <div class="apt-wrap" style="max-width:1220px; transform:scale(0.68);">
+    <h2 class="apt-h2" style="margin-top:14px; font-size:calc(clamp(27px,3.6vw,40px) * 1.1);">With Constant Support and Guidance Inside the Private Community Where You Can Get Any and All Questions Answered Quickly</h2>
+
+    <div class="apt-hero-frame">
+      <div class="apt-hero-chrome">
+        <div class="apt-hero-dots"><span></span><span></span><span></span></div>
+        <div class="apt-hero-url">skool.com/theattractionformula</div>
+      </div>
+      <div class="apt-hero-body" style="background:#f0f0f2;">
+        <img src="about-page-tile-images/community-feed.png" alt="The Attraction Formula private community feed">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 6 — Access To All Programs
+     ============================================================ -->
+<div class="apt-page">
+  <div class="apt-wrap">
+    <div class="apt-eyebrow">Inside The Heart Attractor Community</div>
+    <h2 class="apt-h2">Access to all programs to help you attract your person</h2>
+
+    <div class="apt-grid">
+      <div class="apt-card">
+        <div class="apt-card-img">
+          <img src="about-page-tile-images/programs-1.jpg" alt="The Attraction Formula" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">Photo: warm candlelit couple</div>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-title">The Attraction Formula Program</div>
+          <div class="apt-card-desc">Rewrite the subconscious programs blocking love so you can attract your dream partner</div>
+          <div class="apt-bar-row"><div class="apt-bar-dot"></div><div class="apt-bar-track"><div class="apt-bar-fill"></div></div><div class="apt-bar-pct">0%</div></div>
+        </div>
+      </div>
+
+      <div class="apt-card">
+        <div class="apt-card-img">
+          <img src="about-page-tile-images/programs-2.jpg" alt="The Heart Attractor Program" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">Photo: golden-hour couple, close/smiling</div>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-title">The Heart Attractor Program</div>
+          <div class="apt-card-desc">Consciously attract your perfect partner</div>
+          <div class="apt-bar-row"><div class="apt-bar-dot"></div><div class="apt-bar-track"><div class="apt-bar-fill"></div></div><div class="apt-bar-pct">0%</div></div>
+        </div>
+      </div>
+
+      <div class="apt-card">
+        <div class="apt-card-img">
+          <img src="about-page-tile-images/programs-3.jpg" alt="Bonus Supportive Materials" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">Photo: growth/support metaphor (climbing, helping hand)</div>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-title">Bonus Supportive Materials</div>
+          <div class="apt-card-desc">All bonus supportive materials and trainings to help you find your person.</div>
+          <div class="apt-bar-row"><div class="apt-bar-dot"></div><div class="apt-bar-track"><div class="apt-bar-fill"></div></div><div class="apt-bar-pct">0%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="apt-caption">Every program you need to attract your person — all included, no upsells.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 7 — 24/7 Community Support (3-card grid version, kept for reference)
+     ============================================================ -->
+<div class="apt-page">
+  <div class="apt-wrap">
+    <div class="apt-eyebrow">Inside The Heart Attractor Community</div>
+    <h2 class="apt-h2">24/7 community support and guidance along the way</h2>
+
+    <div class="apt-grid">
+      <div class="apt-card">
+        <div class="apt-card-img">
+          <img src="about-page-tile-images/community-1.jpg" alt="Ask anything, anytime" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">Photo: person connecting via phone/community feel</div>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-title">Ask Anything, Anytime</div>
+          <div class="apt-card-desc">Post a question in the community and get real answers — you're never left stuck wondering what to do next.</div>
+          <div class="apt-bar-row"><div class="apt-bar-dot"></div><div class="apt-bar-track"><div class="apt-bar-fill"></div></div><div class="apt-bar-pct">0%</div></div>
+        </div>
+      </div>
+
+      <div class="apt-card">
+        <div class="apt-card-img">
+          <img src="about-page-tile-images/community-2.jpg" alt="Real responses" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">Photo: someone reaching out, getting a reply</div>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-title">Real Support, Not A Bot</div>
+          <div class="apt-card-desc">Direct guidance from Olly and the community — not an automated FAQ.</div>
+          <div class="apt-bar-row"><div class="apt-bar-dot"></div><div class="apt-bar-track"><div class="apt-bar-fill"></div></div><div class="apt-bar-pct">0%</div></div>
+        </div>
+      </div>
+
+      <div class="apt-card">
+        <div class="apt-card-img">
+          <img src="about-page-tile-images/community-3.jpg" alt="Never alone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">Photo: warm, safe, "never alone" moment</div>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-title">You're Never Doing This Alone</div>
+          <div class="apt-card-desc">A community of people on the same path, cheering you on the whole way to attracting your perfect partner.</div>
+          <div class="apt-bar-row"><div class="apt-bar-dot"></div><div class="apt-bar-track"><div class="apt-bar-fill"></div></div><div class="apt-bar-pct">0%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="apt-caption">Guidance and support whenever you need it — you're never figuring this out alone.</p>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Reverse-pyramid line packing for section headlines — each line's ACTUAL
+  // rendered width must be less than the line above it. Measures real word
+  // widths with a canvas and packs lines by construction (same pattern as
+  // belief-quiz.html's CTA body / belief-quiz-optin.html's subhead), so the
+  // decrease is guaranteed rather than left to text-wrap:balance heuristics.
+  function packHeadline(el) {
+    if (!el.dataset.originalText) el.dataset.originalText = el.textContent.trim();
+    var words = el.dataset.originalText.split(/\s+/);
+    var computed = getComputedStyle(el);
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.font = computed.fontWeight + ' ' + computed.fontSize + ' ' + computed.fontFamily;
+
+    function measure(text) { return ctx.measureText(text).width; }
+    var spaceWidth = measure(' ');
+
+    var containerWidth = el.offsetWidth || el.getBoundingClientRect().width || el.parentElement.getBoundingClientRect().width;
+
+    function packWithBudget(firstLineBudget) {
+      var lines = [];
+      var currentLine = [];
+      var currentWidth = 0;
+      var budget = firstLineBudget;
+      var i = 0;
+
+      while (i < words.length) {
+        var word = words[i];
+        var wordWidth = measure(word);
+        var addedWidth = currentLine.length === 0 ? wordWidth : currentWidth + spaceWidth + wordWidth;
+
+        if (currentLine.length === 0 || addedWidth <= budget) {
+          currentLine.push(word);
+          currentWidth = addedWidth;
+          i++;
+        } else {
+          lines.push({ text: currentLine.join(' '), width: currentWidth });
+          budget = currentWidth - 4;
+          currentLine = [];
+          currentWidth = 0;
+        }
+      }
+      if (currentLine.length > 0) lines.push({ text: currentLine.join(' '), width: currentWidth });
+      return lines;
+    }
+
+    // Search downward from full container width for the narrowest starting
+    // budget that still produces the same (minimal) line count — this pulls
+    // words down from earlier lines onto the last line instead of leaving it
+    // stranded with a single orphan word, while keeping every line strictly
+    // narrower than the one above it.
+    var baseLines = packWithBudget(containerWidth);
+    var baseLineCount = baseLines.length;
+    var best = baseLines;
+
+    for (var frac = 0.97; frac >= 0.55; frac -= 0.01) {
+      var candidate = packWithBudget(containerWidth * frac);
+      if (candidate.length > baseLineCount) break;
+      best = candidate;
+    }
+
+    var lines = best.map(function(l) { return l.text; });
+
+    el.innerHTML = lines.join('<br>');
+  }
+
+  function packAllHeadlines() {
+    document.querySelectorAll('.apt-h2').forEach(function(el) {
+      packHeadline(el);
+    });
+  }
+  window.addEventListener('load', packAllHeadlines);
+  window.addEventListener('resize', packAllHeadlines);
+  packAllHeadlines();
+})();
+</script>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before vs After — Heart Creator Community</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#7A1E5C;
+    --navy-deep:#3A0E38;
+    --ink:#2A1420;
+    --orange:#F0762C;
+    --struggle:#F03A47;
+    --create:#2ECC71;
+    --cream:#FBF3F0;
+    --paper:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Poppins', sans-serif;
+    color:var(--ink);
+    background:#111;
+    /* neutral grey backdrop outside the canvas — not part of the screenshot */
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:40px 0;
+  }
+
+  /*
+    SCREENSHOT INSTRUCTIONS:
+    This canvas is a fixed 1400x790px box, matching the Skool video-thumbnail
+    crop exactly. Take the screenshot as the .canvas box only (not the grey
+    page background around it) — e.g. browser dev tools "Capture node
+    screenshot" on .canvas, or a screenshot tool cropped to its edges.
+
+    Sizes below were chosen with a deliberate height budget (fits inside
+    790px with ~120px to spare) rather than trial-and-error — see the
+    Process Checklist / Gotchas notes in skills_training-pages.md before
+    changing font sizes again, this layout has already been through several
+    overflow rounds.
+  */
+
+  .canvas{
+    width:1400px;
+    height:790px;
+    position:relative;
+    overflow:hidden;
+    background:radial-gradient(140% 120% at 50% 45%, #C2185B 0%, #8A1259 32%, var(--navy) 55%, var(--navy-deep) 80%, #200A22 100%);
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    padding:56px 40px 40px;
+  }
+
+  /* hard divider + VS badge, sitting at true canvas centre */
+  .divider{
+    position:absolute;
+    left:50%;
+    top:56px;
+    bottom:40px;
+    width:2px;
+    background:rgba(255,255,255,.18);
+    transform:translateX(-50%);
+  }
+  .versus{
+    position:absolute;
+    left:50%;
+    /* 244px = canvas top padding (56) + label height (~46) + label margin (22)
+       + half the 240px image height — vertical centre of the two photos,
+       not the canvas's own vertical centre */
+    top:244px;
+    transform:translate(-50%,-50%);
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:var(--navy-deep);
+    border:2px solid var(--orange);
+    color:var(--orange);
+    font-size:22px;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+  }
+
+  /*
+    Everything below is positioned with absolute px coordinates, not
+    flex/grid centering — nested flex centering kept landing off from
+    where the arithmetic said it should. These numbers are computed
+    directly against the canvas's own geometry:
+
+    Canvas is 1400 wide. Divider sits at true centre, x=700.
+    Before section's midpoint (between canvas left edge x=0 and the
+      divider x=700) = 350.
+    After section's midpoint (between the divider x=700 and canvas
+      right edge x=1400) = 1050.
+    Every element below uses left:350px / left:1050px with
+    transform:translateX(-50%), so it is centred exactly ON that x
+    value regardless of its own width — this is what guarantees the
+    image sits in the true middle of its half, not the middle of some
+    padded inner box.
+
+    Vertical stack (label > gap > image > gap > word), 490px tall total,
+    centred in the 694px content area (56 to 750) → group starts at
+    y=158, leaving equal ~102px above and below.
+  */
+  .compare-label{
+    position:absolute;
+    top:110px;
+    font-size:38px;
+    font-weight:800;
+    letter-spacing:.01em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    line-height:1.05;
+  }
+  .compare-label.is-before{ left:350px; transform:translateX(-50%); color:var(--struggle); }
+  .compare-label.is-after{ left:1050px; transform:translateX(-50%); color:var(--create); }
+
+  .compare-imgwrap{
+    position:absolute;
+    top:170px;
+    width:450px;
+    height:450px;
+    border-radius:18px;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,.15);
+    box-shadow:0 16px 40px rgba(0,0,0,.4);
+    background:rgba(255,255,255,.06);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .compare-imgwrap.is-before{ left:350px; transform:translateX(-50%); }
+  .compare-imgwrap.is-after{ left:1050px; transform:translateX(-50%); }
+  .compare-imgwrap img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .compare-imgwrap .placeholder{
+    color:rgba(255,255,255,.35);
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:0 12px;
+  }
+
+  .takeaway{
+    position:absolute;
+    /* shared centre-line, not a shared top — top-aligning would leave the
+       glyphs sitting at slightly different heights, so we centre on a y
+       value instead. That y is set so the gap from the image's bottom
+       edge (620) to the word's top edge equals the gap from the label's
+       bottom edge to the image's top edge (20px both) — image bottom 620
+       + 20px gap = word top edge 640, + half the 67px line height (33.5)
+       = centre-line 673.5. */
+    top:673.5px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    line-height:1;
+  }
+  .takeaway.is-before{ left:350px; transform:translate(-50%,-50%); color:var(--struggle); font-size:67px; }
+  .takeaway.is-after{ left:1050px; transform:translate(-50%,-50%); color:var(--create); font-size:67px; }
+</style>
+</head>
+<body>
+
+<div class="canvas">
+  <div class="divider"></div>
+  <div class="versus">VS</div>
+
+  <div class="compare-label is-before">Before Heart Creator</div>
+  <div class="compare-imgwrap is-before">
+    <img src="before-vs-after images/Before Image.png" alt="Before joining Heart Creator" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+    <div class="placeholder" style="display:none;">Image: Before Image.png</div>
+  </div>
+  <div class="takeaway is-before">Struggling</div>
+
+  <div class="compare-label is-after">After Heart Creator</div>
+  <div class="compare-imgwrap is-after">
+    <img src="before-vs-after images/After Image.png" alt="After joining Heart Creator" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+    <div class="placeholder" style="display:none;">Image: After Image.png</div>
+  </div>
+  <div class="takeaway is-after">Creating</div>
+</div>
+
+</body>
+</html>

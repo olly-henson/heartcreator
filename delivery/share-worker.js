@@ -37,7 +37,7 @@ export default {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Share your win — Heart Creator Community</title>
+  <title>Share your win — The Attraction Formula Community</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -116,7 +116,7 @@ export default {
 </head>
 <body>
   <div class="card">
-    <p class="label">Heart Creator Community</p>
+    <p class="label">The Attraction Formula Community</p>
     <h1>${heading}</h1>
     <textarea id="win" rows="4" readonly>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
     <div class="actions">
