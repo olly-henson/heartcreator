@@ -63,6 +63,20 @@
   .hbq-statement{
     font-size:clamp(24px,2.8vw,36px); font-weight:700; line-height:1.4; margin-bottom:40px; max-width:26ch;
   }
+  .hbq-looks-toggle{
+    background:none; border:none; color:var(--accent-2); font-family:'Poppins', sans-serif;
+    font-size:14px; font-weight:700; cursor:pointer; padding:0; margin:-16px 0 28px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .hbq-looks-toggle:hover{ color:#fff; }
+  .hbq-looks-toggle .hbq-toggle-arrow{ transition:transform .2s ease; display:inline-block; }
+  .hbq-looks-toggle.hbq-open .hbq-toggle-arrow{ transform:rotate(180deg); }
+  .hbq-looks-panel{
+    display:none; margin:10px 0 28px; max-width:52ch;
+    font-size:clamp(15px,1.5vw,17px); font-weight:500; line-height:1.5; color:var(--accent-2);
+  }
+  .hbq-looks-panel.hbq-open{ display:block; }
+
   .hbq-choices{ display:flex; gap:18px; flex-wrap:wrap; }
   .hbq-choice{
     flex:1; min-width:200px;
@@ -169,42 +183,50 @@
     {
       quote: "I'm not worthy / not enough",
       statement: "I sometimes reject genuine love, or find myself drawn to partners who confirm this belief by undervaluing me.",
-      becomes: "I am worthy of love"
+      becomes: "I am worthy of love",
+      looksLike: "You downplay compliments, chase achievements to feel okay, or hold back from someone you like because part of you doesn't believe they'd choose you."
     },
     {
       quote: "I have to earn love",
       statement: "I give too much and try too hard in relationships, performing to be kept rather than trusting I'm loved as I am.",
-      becomes: "I am loved unconditionally"
+      becomes: "I am loved for who I am",
+      looksLike: "You overgive, overperform, or keep proving yourself in relationships — worried that if you stopped, the love would stop too."
     },
     {
       quote: "If I need too much, I'll be too much",
       statement: "I tend to suppress my needs, which quietly builds resentment and distance over time.",
-      becomes: "My needs are valid"
+      becomes: "I am deserving of a love that meets my needs",
+      looksLike: "You shrink your needs, apologize for asking, or go quiet rather than risk being 'a lot' for someone."
     },
     {
       quote: "Others can't be trusted, people leave",
       statement: "I get guarded, test people, or push them away before they can leave first.",
-      becomes: "It's safe to let someone in"
+      becomes: "I am safe to trust in love",
+      looksLike: "You stay guarded even when someone's shown up consistently, or you brace for the exit before things have even really started."
     },
     {
       quote: "Closeness is dangerous",
       statement: "I crave closeness, but once it's within reach, part of me fears it and pulls away right when things get real.",
-      becomes: "Closeness is safe"
+      becomes: "I am safe being close to someone",
+      looksLike: "You pull back right when things get good, pick fights to create distance, or feel unsafe the moment someone gets emotionally close."
     },
     {
       quote: "I will be abandoned",
       statement: "I constantly monitor for signs someone's pulling away, or push people out before they can leave first.",
-      becomes: "I am safe"
+      becomes: "I am secure in love",
+      looksLike: "You read neutral moments as rejection, need constant reassurance, or leave first so you're never the one left."
     },
     {
       quote: "I have to manage everyone's emotions to be safe",
       statement: "I regulate other people's moods, smooth over tension, and walk on eggshells to keep the relationship calm.",
-      becomes: "I am free to let others feel their own way"
+      becomes: "I am free to be loved as I am",
+      looksLike: "You're always reading the room, walking on eggshells, or taking responsibility for how your partner feels before your own."
     },
     {
       quote: "Closeness is fragile and temporary",
       statement: "Even when I do get closeness, part of me braces for it to disappear rather than fully relaxing into it.",
-      becomes: "Closeness can be stable and last"
+      becomes: "I am built for lasting love",
+      looksLike: "You brace for things to fall apart, hold back from fully investing, or treat every good patch as the calm before it ends."
     }
   ];
 
@@ -221,6 +243,8 @@
     questionScreen.innerHTML =
       '<div class="hbq-qlabel">Question ' + (i + 1) + ' of ' + BELIEFS.length + '</div>' +
       '<div class="hbq-statement">' + b.statement + '</div>' +
+      '<button type="button" class="hbq-looks-toggle" id="hbq-looks-toggle">What this looks like <span class="hbq-toggle-arrow">▾</span></button>' +
+      '<div class="hbq-looks-panel" id="hbq-looks-panel">' + b.looksLike + '</div>' +
       '<div class="hbq-choices">' +
         '<button type="button" class="hbq-choice hbq-choice--yes' + (selected === true ? ' hbq-selected' : '') + '" data-answer="yes">Yes, that\'s me</button>' +
         '<button type="button" class="hbq-choice hbq-choice--no' + (selected === false ? ' hbq-selected' : '') + '" data-answer="no">Not really</button>' +
@@ -238,6 +262,15 @@
     });
     var backBtn = document.getElementById('hbq-back-btn');
     if (backBtn) backBtn.addEventListener('click', function() { goTo(i - 1); });
+
+    var looksToggle = document.getElementById('hbq-looks-toggle');
+    var looksPanel = document.getElementById('hbq-looks-panel');
+    if (looksToggle && looksPanel) {
+      looksToggle.addEventListener('click', function() {
+        looksToggle.classList.toggle('hbq-open');
+        looksPanel.classList.toggle('hbq-open');
+      });
+    }
   }
 
   function renderResults() {
@@ -298,12 +331,11 @@
 // for the same pattern), applied on both desktop and mobile per Olly's request.
 (function() {
   var CTA_BODY_WORDS = [
-    {t:'The', bold:false}, {t:'Attraction', bold:false}, {t:'Formula', bold:false}, {t:'Program', bold:false},
-    {t:'is', bold:false}, {t:'a', bold:false}, {t:'30-day', bold:false}, {t:'program', bold:false},
-    {t:'that', bold:false}, {t:'rewires', bold:false}, {t:'your', bold:true}, {t:'specific', bold:true},
-    {t:'subconscious', bold:false}, {t:'beliefs', bold:false}, {t:'blocking', bold:false}, {t:'love,', bold:false},
-    {t:'so', bold:false}, {t:'you', bold:false}, {t:'can', bold:false}, {t:'attract', bold:false},
-    {t:'your', bold:false}, {t:'dream', bold:false}, {t:'partner.', bold:false}
+    {t:'Join', bold:false}, {t:'The', bold:false}, {t:'Attraction', bold:false}, {t:'Formula', bold:false},
+    {t:'Community', bold:false}, {t:'to', bold:false}, {t:'rewrite', bold:false}, {t:'your', bold:false},
+    {t:'beliefs', bold:false}, {t:'in', bold:false}, {t:'30', bold:false}, {t:'days', bold:false},
+    {t:'and', bold:false}, {t:'attract', bold:false}, {t:'your', bold:false}, {t:'dream', bold:false},
+    {t:'partner', bold:false}
   ];
 
   function buildCtaBodyPyramid() {
