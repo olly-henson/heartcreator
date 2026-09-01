@@ -86,7 +86,7 @@
   /* Belief select cards (Step 1) */
   .bym-belief-grid{ display:flex; flex-direction:column; gap:22px; margin-top:20px; }
   .bym-belief-item{
-    padding:18px 20px;
+    padding:18px 20px; cursor:pointer;
     background:rgba(255,255,255,.05); border:2px solid rgba(255,255,255,.14); border-radius:12px;
     transition:border-color .15s ease, background .15s ease;
   }
@@ -109,7 +109,7 @@
   }
   .bym-belief-looks-panel.expanded{ display:block; }
 
-  /* Simple select cards reused for emotion grid (Step 3) */
+  /* Simple select cards */
   .bym-belief-card{
     text-align:left; width:100%; padding:16px 18px;
     background:rgba(255,255,255,.05); border:2px solid rgba(255,255,255,.14); border-radius:12px;
@@ -131,15 +131,6 @@
   }
   .bym-belief-reveal-old{ font-size:19px; font-weight:700; color:rgba(255,255,255,.5); text-decoration:line-through; text-decoration-color:rgba(184,79,232,.5); margin-bottom:20px; }
   .bym-belief-reveal-new{ font-size:clamp(28px,3.4vw,36px); font-weight:800; color:var(--accent); line-height:1.3; }
-  .bym-belief-custom-input{
-    width:100%; padding:14px 16px; font-size:16px; font-weight:700; font-family:'Poppins', sans-serif;
-    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18);
-    border-radius:10px; color:#fff; outline:none;
-  }
-  .bym-belief-custom-input:focus{ border-color:var(--accent); }
-  .bym-belief-custom-input::placeholder{ color:rgba(255,255,255,.4); }
-  .bym-belief-custom-input.selected{ border-color:var(--accent); background:rgba(184,79,232,.16); }
-
   /* Breath / imprint step */
   .bym-breath-steps{ display:flex; flex-direction:column; gap:28px; margin-top:28px; }
   .bym-breath-step{
@@ -214,7 +205,7 @@
   }
   .bym-status{ font-size:13px; color:rgba(255,255,255,.5); margin-top:12px; text-align:center; }
 
-  /* Write-it-down paper mockup (steps 2 + 3) — auto-fills with their actual belief/emotion */
+  /* Write-it-down paper mockup (step 2) — auto-fills with their actual new belief */
   .bym-paper{
     margin-top:18px; background:#FBF3F0; border-radius:6px;
     padding:26px 24px; box-shadow:0 20px 50px rgba(0,0,0,.35);
@@ -296,36 +287,18 @@
 
     <!-- INTRO -->
     <div class="bym-screen active" data-screen="intro">
-      <div class="bym-eyebrow">👉 Rewire Your Subconscious Belief</div>
-      <h1 class="bym-h1">Let's Build Your Own Meditation To Help You Rewire Your Subconscious Beliefs So That You Can <span class="bym-grad">Attract Your Perfect Partner</span></h1>
+      <div class="bym-eyebrow">👉 Rewrite Your Subconscious Belief</div>
+      <h1 class="bym-h1">Let's Build Your Own Meditation To Help You Rewrite Your Subconscious Beliefs So That You Can <span class="bym-grad">Attract Your Dream Partner</span></h1>
       <div class="bym-nav" style="justify-content:flex-start; margin-top:24px;">
         <button type="button" class="bym-next" id="bym-start-btn">Get Started →</button>
       </div>
     </div>
 
-    <!-- STEP 1: DATE -->
-    <div class="bym-screen" data-screen="date">
-      <div class="bym-step-label">Step 1 of 7</div>
-      <h1 class="bym-h1">Today's Date</h1>
-      <p class="bym-lede">Confirm today's date — this is Day 1 of your 30 days.</p>
-      <div class="bym-date-field" style="margin-top:22px;">
-        <div class="bym-date-label">Today's date — Day 1 of your 30 days</div>
-        <div class="bym-date-input-wrap">
-          <input type="date" class="bym-date-input bym-date-input--picker" id="bym-start-date">
-          <div class="bym-date-display" id="bym-start-date-display"></div>
-        </div>
-      </div>
-      <div class="bym-nav">
-        <button type="button" class="bym-back" id="bym-back-date">← Back</button>
-        <button type="button" class="bym-next" id="bym-next-date">Continue →</button>
-      </div>
-    </div>
-
-    <!-- STEP 2: IDENTIFY -->
+    <!-- STEP 1: IDENTIFY -->
     <div class="bym-screen" data-screen="identify">
-      <div class="bym-step-label">Step 2 of 7</div>
+      <div class="bym-step-label">Step 1 of 5</div>
       <h1 class="bym-h1">Identify Your Belief</h1>
-      <p class="bym-lede">Choose the one that's actually true for you — not the one that sounds worst.</p>
+      <p class="bym-lede">Choose the one that's actually true for you — not the one that sounds the worst. If you're unsure, ask a question in the community feed <a href="https://www.skool.com/heartcreator" target="_blank" rel="noopener" style="color:var(--accent-2);">here</a>.</p>
       <div class="bym-belief-grid" id="bym-belief-grid"></div>
       <div class="bym-nav">
         <button type="button" class="bym-back" id="bym-back-1">← Back</button>
@@ -333,9 +306,9 @@
       </div>
     </div>
 
-    <!-- STEP 3: CHOOSE NEW BELIEF -->
+    <!-- STEP 2: CHOOSE NEW BELIEF -->
     <div class="bym-screen" data-screen="choose">
-      <div class="bym-step-label">Step 3 of 7</div>
+      <div class="bym-step-label">Step 2 of 5</div>
       <h1 class="bym-h1">Choose Your New Belief</h1>
       <div class="bym-belief-reveal">
         <div class="bym-belief-reveal-label">Old Belief</div>
@@ -357,35 +330,13 @@
       </div>
     </div>
 
-    <!-- STEP 3: CHOOSE THE EMOTION -->
-    <div class="bym-screen" data-screen="emotion">
-      <div class="bym-step-label">Step 4 of 7</div>
-      <h1 class="bym-h1">Choose The Feeling</h1>
-      <p class="bym-lede" id="bym-emotion-lede">What emotion would "<strong style="color:#fff;"><span id="bym-emotion-belief-ref"></span></strong>" make you feel? Pick the one that's closest.</p>
-      <div class="bym-belief-grid" id="bym-emotion-grid"></div>
-      <input type="text" class="bym-belief-custom-input visible" id="bym-emotion-custom-input" placeholder="Or type your own feeling..." maxlength="30" style="margin-top:16px;">
-      <div class="bym-why" style="margin-top:16px;">
-        <span class="bym-why-icon">📝</span>
-        <span class="bym-why-text" style="font-size:clamp(16px,1.5vw,19px);"><strong>Write it down too.</strong> Under your new belief, add the feeling — that's the pair you'll be working with in the meditation.</span>
-      </div>
-      <div class="bym-paper">
-        <div class="bym-paper-label">My paper</div>
-        <div class="bym-paper-line" id="bym-paper-belief-line-2">"..."</div>
-        <div class="bym-paper-line" id="bym-paper-emotion-line">Feeling: —</div>
-      </div>
-      <div class="bym-nav">
-        <button type="button" class="bym-back" id="bym-back-emotion">← Back</button>
-        <button type="button" class="bym-next" id="bym-next-emotion" disabled>I've written it down →</button>
-      </div>
-    </div>
-
-    <!-- STEP 4: IMPRINT (how to do the meditation) -->
+    <!-- STEP 3: IMPRINT (how to do the meditation) -->
     <div class="bym-screen" data-screen="imprint">
-      <div class="bym-step-label">Step 5 of 7</div>
+      <div class="bym-step-label">Step 3 of 5</div>
       <h1 class="bym-h1">How To Do The Meditation</h1>
       <p class="bym-lede">This video will take you through the steps I'm going to guide you through in this meditation.</p>
       <div class="bym-video-wrap bym-video-wrap--highlight">
-        <video src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a914044747464c6b3abfc6e.mp4" poster="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a914b0c4fe7419354273b67.jpg" controls playsinline></video>
+        <video src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a96fbd09b2eaead5c1db73d.mp4" poster="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a96f8672ae01952f73edcef.jpg" controls playsinline></video>
       </div>
       <div class="bym-breath-steps">
         <div class="bym-breath-step">
@@ -393,31 +344,23 @@
           <div class="bym-breath-body"><div class="bym-breath-title">Close Your Eyes</div><div class="bym-breath-desc">Settle into a comfortable position, sitting up or lying down, and gently close your eyes. Just keep a neutral spine position.</div></div>
         </div>
         <div class="bym-breath-step">
-          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d8ff22d3a753f1a81.png" alt="Relax" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">2</div></div>
-          <div class="bym-breath-body"><div class="bym-breath-title">Relax</div><div class="bym-breath-desc">Let go of any tension, softening from head to toe.</div></div>
+          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d8ff22d3a753f1a81.png" alt="Relax Your Body" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">2</div></div>
+          <div class="bym-breath-body"><div class="bym-breath-title">Relax Your Body</div><div class="bym-breath-desc">Let go of any tension, softening from head to toe.</div></div>
         </div>
         <div class="bym-breath-step">
-          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379def6b5f0786e4a29d.png" alt="Notice Your Heart" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">3</div></div>
-          <div class="bym-breath-body"><div class="bym-breath-title">Notice Your Heart</div><div class="bym-breath-desc">Bring your attention into the centre of your chest and place your focus on your heart. Allow any thoughts or distractions to come and go as you keep your attention there.</div></div>
+          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a96ecf5fac7854efe0ab2a5.png" alt="Sense The Energy" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">3</div></div>
+          <div class="bym-breath-body"><div class="bym-breath-title">Sense The Energy</div><div class="bym-breath-desc">Begin to bring your attention to the energy in your body and the energy that surrounds you. Feel it, become it.</div></div>
         </div>
         <div class="bym-breath-step">
-          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d747464c6b3ab548e.png" alt="Heart-Focused Breathing" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">4</div></div>
-          <div class="bym-breath-body"><div class="bym-breath-title">Heart-Focused Breathing</div><div class="bym-breath-desc">Breathe a little slower and deeper into your heart, and on the out breath, release.</div></div>
+          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d747464c6b3ab5497.png" alt="Recall Your New Belief" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">4</div></div>
+          <div class="bym-breath-body"><div class="bym-breath-title">Recall Your New Belief</div><div class="bym-breath-desc" id="bym-breath-intention">Recall your new belief — the one you just wrote down — and sit with it.</div></div>
         </div>
         <div class="bym-breath-step">
-          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d747464c6b3ab5497.png" alt="New Belief" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">5</div></div>
-          <div class="bym-breath-body"><div class="bym-breath-title">New Belief</div><div class="bym-breath-desc" id="bym-breath-intention">Recall your new belief — the one you just wrote down — and sit with it. Let it settle into you.</div></div>
+          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d747464c6b3ab5497.png" alt="Let It Settle Into You" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">5</div></div>
+          <div class="bym-breath-body"><div class="bym-breath-title">Let It Settle Into You</div><div class="bym-breath-desc">Let the belief settle into you, breathe with it and enjoy it.</div></div>
         </div>
         <div class="bym-breath-step">
-          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a9137a04fe741935425b038.png" alt="Feel" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">6</div></div>
-          <div class="bym-breath-body"><div class="bym-breath-title">Feel</div><div class="bym-breath-desc" id="bym-breath-feel">Recall the emotion that this belief makes you feel and breathe with that feeling and feel it in your heart.</div></div>
-        </div>
-        <div class="bym-breath-step">
-          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d722007d7ff032345.jpg" alt="Step Into That Version Of You" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">7</div></div>
-          <div class="bym-breath-body"><div class="bym-breath-title">Step Into That Version Of You</div><div class="bym-breath-desc">Step into the body of the version of you that embodies this feeling. Be with that feeling and settle into it.</div></div>
-        </div>
-        <div class="bym-breath-step">
-          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d747464c6b3ab54a1.jpg" alt="Return To Your Body" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">8</div></div>
+          <div class="bym-breath-thumb"><img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a91379d747464c6b3ab54a1.jpg" alt="Return To Your Body" onerror="this.parentElement.style.display='none'"><div class="bym-breath-num">6</div></div>
           <div class="bym-breath-body"><div class="bym-breath-title">Return To Your Body</div><div class="bym-breath-desc">Bring your attention back to your body and slowly open your eyes.</div></div>
         </div>
       </div>
@@ -427,11 +370,11 @@
       </div>
     </div>
 
-    <!-- STEP 6: EMAIL MY DETAILS -->
+    <!-- STEP 4: EMAIL MY DETAILS -->
     <div class="bym-screen" data-screen="email">
-      <div class="bym-step-label">Step 6 of 7</div>
+      <div class="bym-step-label">Step 4 of 5</div>
       <h1 class="bym-h1">Email My Meditation Details</h1>
-      <p class="bym-lede">We'll send your new belief, feeling, start/end dates and the meditation steps to your inbox so you've always got them.</p>
+      <p class="bym-lede">We'll send your new belief and the meditation steps to your inbox so you've always got them.</p>
       <div class="bym-date-field">
         <div class="bym-date-label">Your name</div>
         <input type="text" class="bym-date-input" id="bym-name-input" placeholder="Your first name">
@@ -447,14 +390,14 @@
       </div>
     </div>
 
-    <!-- STEP 7: ACTIVATE PROGRAM (copy text, post in community) -->
+    <!-- STEP 5: ACTIVATE PROGRAM (copy text, post in community) -->
     <div class="bym-screen" data-screen="form">
-      <div class="bym-step-label">Step 7 of 7</div>
-      <h1 class="bym-h1">Activate Your Program</h1>
+      <div class="bym-step-label">Step 5 of 5</div>
+      <h1 class="bym-h1">Unlock The Attraction Formula Program</h1>
       <div class="bym-video-wrap">
-        <video src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a9439337fb05fdeb8fbbefd.mp4" poster="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a943a33a90361de8b4e666b.jpg" controls playsinline></video>
+        <video src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a96f5a29019a6088a68e9c7.mp4" poster="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6a96fe37389c8c46140a2919.jpg" controls playsinline></video>
       </div>
-      <p class="bym-lede" style="max-width:none;">Watch this video to learn how to activate your program and unlock your Attraction Formula Meditation.</p>
+      <p class="bym-lede" style="max-width:none;">Watch this video to learn how to unlock The Attraction Formula Program.</p>
       <div class="bym-copy-box" id="bym-copy-text"></div>
       <div class="bym-copy-row">
         <button type="button" class="bym-action-btn bym-action-btn--lg" id="bym-copy-post-btn">Copy Text</button>
@@ -507,11 +450,9 @@
     { quote: "Closeness is fragile and temporary", becomes: "I am built for lasting love", looksLike: "You brace for things to fall apart, hold back from fully investing, or treat every good patch as the calm before it ends." }
   ];
 
-  var EMOTIONS = ["Safe", "Worthy", "Free", "Secure", "Calm", "Confident", "Open", "Whole", "Loved"];
+  var state = { beliefIndex: null, customBelief: null };
 
-  var state = { beliefIndex: null, customBelief: null, emotionIndex: null, customEmotion: null };
-
-  var screens = ['intro', 'date', 'identify', 'choose', 'emotion', 'imprint', 'email', 'form', 'result'];
+  var screens = ['intro', 'identify', 'choose', 'imprint', 'email', 'form', 'result'];
   var progressFill = document.getElementById('bym-progress');
 
   function goToScreen(name) {
@@ -521,9 +462,7 @@
     document.querySelectorAll('.bym-screen').forEach(function(s) { s.classList.remove('active'); });
     document.querySelector('[data-screen="' + name + '"]').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (name === 'date') renderDate();
     if (name === 'choose') renderChoose();
-    if (name === 'emotion') renderEmotion();
     if (name === 'imprint') renderImprint();
     if (name === 'form') renderCopyText();
     if (name === 'result') renderResult();
@@ -534,41 +473,10 @@
     return state.customBelief !== null ? state.customBelief : BELIEFS[state.beliefIndex].becomes;
   }
 
-  function currentEmotion() {
-    if (state.customEmotion) return state.customEmotion;
-    return state.emotionIndex === null ? '' : EMOTIONS[state.emotionIndex];
-  }
-
   // ---- INTRO ----
-  document.getElementById('bym-start-btn').addEventListener('click', function() { goToScreen('date'); });
+  document.getElementById('bym-start-btn').addEventListener('click', function() { goToScreen('identify'); });
 
-  // ---- STEP 1: DATE ----
-  var startDateEl = document.getElementById('bym-start-date');
-  var startDateDisplayEl = document.getElementById('bym-start-date-display');
-
-  function todayISO() {
-    var d = new Date();
-    var m = String(d.getMonth() + 1).padStart(2, '0');
-    var day = String(d.getDate()).padStart(2, '0');
-    return d.getFullYear() + '-' + m + '-' + day;
-  }
-
-  function updateStartDateDisplay() {
-    startDateDisplayEl.textContent = startDateEl.value
-      ? startDateObj(startDateEl.value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-      : '';
-  }
-  startDateEl.addEventListener('change', updateStartDateDisplay);
-
-  function renderDate() {
-    if (!startDateEl.value) startDateEl.value = todayISO();
-    updateStartDateDisplay();
-  }
-
-  document.getElementById('bym-back-date').addEventListener('click', function() { goToScreen('intro'); });
-  document.getElementById('bym-next-date').addEventListener('click', function() { goToScreen('identify'); });
-
-  // ---- STEP 2: IDENTIFY ----
+  // ---- STEP 1: IDENTIFY ----
   var beliefGridEl = document.getElementById('bym-belief-grid');
   var nextBtn1 = document.getElementById('bym-next-1');
   BELIEFS.forEach(function(b, i) {
@@ -583,21 +491,25 @@
     var toggleBtn = item.querySelector('.bym-belief-looks-toggle');
     var panel = item.querySelector('.bym-belief-looks-panel');
 
-    quoteBtn.addEventListener('click', function() {
+    function selectThisBelief() {
       state.beliefIndex = i;
       state.customBelief = null;
       beliefGridEl.querySelectorAll('.bym-belief-item').forEach(function(el) { el.classList.remove('selected'); });
       item.classList.add('selected');
       nextBtn1.disabled = false;
-    });
-    toggleBtn.addEventListener('click', function() {
+    }
+
+    item.addEventListener('click', selectThisBelief);
+    quoteBtn.addEventListener('click', function(e) { e.stopPropagation(); selectThisBelief(); });
+    toggleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
       var showing = panel.classList.toggle('expanded');
       toggleBtn.classList.toggle('expanded', showing);
     });
 
     beliefGridEl.appendChild(item);
   });
-  document.getElementById('bym-back-1').addEventListener('click', function() { goToScreen('date'); });
+  document.getElementById('bym-back-1').addEventListener('click', function() { goToScreen('intro'); });
   nextBtn1.addEventListener('click', function() { goToScreen('choose'); });
 
   // ---- STEP 3: CHOOSE ----
@@ -612,72 +524,19 @@
   }
 
   document.getElementById('bym-back-2').addEventListener('click', function() { goToScreen('identify'); });
-  document.getElementById('bym-next-2').addEventListener('click', function() { goToScreen('emotion'); });
+  document.getElementById('bym-next-2').addEventListener('click', function() { goToScreen('imprint'); });
 
-  // ---- STEP 3: CHOOSE THE EMOTION ----
-  var emotionGridEl = document.getElementById('bym-emotion-grid');
-  var nextBtnEmotion = document.getElementById('bym-next-emotion');
-  var emotionBeliefRefEl = document.getElementById('bym-emotion-belief-ref');
-  var emotionCustomInputEl = document.getElementById('bym-emotion-custom-input');
-  EMOTIONS.forEach(function(emotion, i) {
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'bym-belief-card';
-    btn.textContent = emotion;
-    btn.addEventListener('click', function() {
-      state.emotionIndex = i;
-      state.customEmotion = null;
-      emotionCustomInputEl.value = '';
-      emotionCustomInputEl.classList.remove('selected');
-      emotionGridEl.querySelectorAll('.bym-belief-card').forEach(function(el) { el.classList.remove('selected'); });
-      btn.classList.add('selected');
-      nextBtnEmotion.disabled = false;
-      document.getElementById('bym-paper-emotion-line').textContent = 'Feeling: ' + currentEmotion();
-    });
-    emotionGridEl.appendChild(btn);
-  });
-  emotionCustomInputEl.addEventListener('input', function() {
-    var val = emotionCustomInputEl.value.trim();
-    state.customEmotion = val || null;
-    emotionGridEl.querySelectorAll('.bym-belief-card').forEach(function(el) { el.classList.remove('selected'); });
-    emotionCustomInputEl.classList.toggle('selected', !!val);
-    nextBtnEmotion.disabled = !val;
-    document.getElementById('bym-paper-emotion-line').textContent = 'Feeling: ' + (currentEmotion() || '—');
-  });
-  function renderEmotion() {
-    emotionBeliefRefEl.textContent = currentNewBelief();
-    document.getElementById('bym-paper-belief-line-2').textContent = '"' + currentNewBelief() + '"';
-    document.getElementById('bym-paper-emotion-line').textContent = currentEmotion() ? 'Feeling: ' + currentEmotion() : 'Feeling: —';
-  }
-  document.getElementById('bym-back-emotion').addEventListener('click', function() { goToScreen('choose'); });
-  nextBtnEmotion.addEventListener('click', function() { goToScreen('imprint'); });
-
-  // ---- STEP 4: IMPRINT ----
+  // ---- STEP 3: IMPRINT ----
   function renderImprint() {
-    document.getElementById('bym-breath-intention').textContent = 'Recall your new belief: "' + currentNewBelief() + '" and sit with it. Let it settle into you.';
-    document.getElementById('bym-breath-feel').textContent = 'Recall the feeling of "' + currentEmotion() + '" that this belief makes you feel and breathe with that feeling and feel it in your heart.';
+    document.getElementById('bym-breath-intention').textContent = 'Recall your new belief: "' + currentNewBelief() + '" and sit with it.';
   }
-  document.getElementById('bym-back-3').addEventListener('click', function() { goToScreen('emotion'); });
+  document.getElementById('bym-back-3').addEventListener('click', function() { goToScreen('choose'); });
   document.getElementById('bym-next-3').addEventListener('click', function() { goToScreen('email'); });
 
-  // ---- STEP 6: EMAIL MY DETAILS ----
+  // ---- STEP 4: EMAIL MY DETAILS ----
   var emailInputEl = document.getElementById('bym-email-input');
   var nameInputEl = document.getElementById('bym-name-input');
   var emailStatusEl = document.getElementById('bym-email-status');
-
-  function longFormDate(dateObj) {
-    return dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  }
-
-  function startDateObj(startISO) {
-    return startISO ? new Date(startISO + 'T00:00:00') : new Date();
-  }
-
-  function endDateObj(startISO) {
-    var d = startDateObj(startISO);
-    d.setDate(d.getDate() + 30);
-    return d;
-  }
 
   var nextBtnEmail = document.getElementById('bym-next-email');
   function checkEmailFieldsFilled() {
@@ -706,10 +565,7 @@
         email: email,
         name: nameInputEl.value.trim(),
         oldBelief: b.quote,
-        newBelief: currentNewBelief(),
-        emotion: currentEmotion(),
-        startDate: longFormDate(startDateObj(startDateEl.value)),
-        endDate: longFormDate(endDateObj(startDateEl.value))
+        newBelief: currentNewBelief()
       })
     }).then(function(r) {
       if (!r.ok) throw new Error('failed');
@@ -725,7 +581,7 @@
   var copyStatusEl = document.getElementById('bym-copy-status');
 
   function renderCopyText() {
-    copyTextEl.textContent = "I've completed the Attraction Formula Program set up. About to start my 30 days!";
+    copyTextEl.textContent = "I've built my Attraction Formula Meditation. Ready to start the Attraction Formula Program!";
   }
 
   document.getElementById('bym-copy-post-btn').addEventListener('click', function() {
@@ -757,21 +613,15 @@
   });
 
   document.getElementById('bym-restart-btn').addEventListener('click', function() {
-    state = { beliefIndex: null, customBelief: null, emotionIndex: null, customEmotion: null };
+    state = { beliefIndex: null, customBelief: null };
     beliefGridEl.querySelectorAll('.bym-belief-item').forEach(function(el) { el.classList.remove('selected'); });
     beliefGridEl.querySelectorAll('.bym-belief-looks-panel').forEach(function(el) { el.classList.remove('expanded'); });
     beliefGridEl.querySelectorAll('.bym-belief-looks-toggle').forEach(function(el) { el.classList.remove('expanded'); });
     nextBtn1.disabled = true;
-    emotionGridEl.querySelectorAll('.bym-belief-card').forEach(function(el) { el.classList.remove('selected'); });
-    emotionCustomInputEl.value = '';
-    emotionCustomInputEl.classList.remove('selected');
-    nextBtnEmotion.disabled = true;
     emailInputEl.value = '';
     nameInputEl.value = '';
     nextBtnEmail.disabled = true;
     emailStatusEl.textContent = '';
-    startDateEl.value = '';
-    startDateDisplayEl.textContent = '';
     goToScreen('intro');
   });
 })();

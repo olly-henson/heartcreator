@@ -17,11 +17,11 @@
 // HOW IT WORKS:
 //   build-your-meditation.html POSTs JSON to this worker once someone
 //   enters their email on the "Email My Meditation Details" step:
-//     { email, oldBelief, newBelief, emotion, startDate, endDate }
+//     { email, oldBelief, newBelief }
 //   This worker sends the visitor a summary email via Resend containing
-//   their belief, feeling, start/end dates, and the 7-step meditation
-//   walkthrough — and sends a separate, shorter notification to Olly
-//   (as coach) with just the name/email/belief/emotion/dates.
+//   their belief and the 8-step meditation walkthrough — and sends a
+//   separate, shorter notification to Olly (as coach) with just the
+//   name/email/belief.
 // ============================================================
 
 const OLLY_EMAIL = 'olly@ollyhenson.com';
@@ -31,12 +31,10 @@ const FROM_NAME = 'The Attraction Formula';
 function meditationSteps(data) {
   return [
     { title: 'Close Your Eyes', desc: 'Settle into a comfortable position, sitting up or lying down, and gently close your eyes. Just keep a neutral spine position.' },
-    { title: 'Relax', desc: 'Let go of any tension, softening from head to toe.' },
-    { title: 'Notice Your Heart', desc: 'Bring your attention into the centre of your chest and place your focus on your heart. Allow any thoughts or distractions to come and go as you keep your attention there.' },
-    { title: 'Heart-Focused Breathing', desc: 'Breathe a little slower and deeper into your heart, and on the out breath, release.' },
-    { title: 'New Belief', desc: `Recall your new belief: "${data.newBelief}" and sit with it. Let it settle into you.` },
-    { title: 'Feel', desc: `Recall the feeling of "${data.emotion}" that this belief makes you feel and breathe with that feeling and feel it in your heart.` },
-    { title: 'Step Into That Version Of You', desc: 'Step into the body of the version of you that embodies this feeling. Be with that feeling and settle into it.' },
+    { title: 'Relax Your Body', desc: 'Let go of any tension, softening from head to toe.' },
+    { title: 'Sense The Energy', desc: 'Begin to bring your attention to the energy in your body and the energy that surrounds you. Feel it, become it.' },
+    { title: 'Recall Your New Belief', desc: `Recall your new belief: "${data.newBelief}" and sit with it.` },
+    { title: 'Let It Settle Into You', desc: 'Let the belief settle into you, breathe with it and enjoy it.' },
     { title: 'Return To Your Body', desc: 'Bring your attention back to your body and slowly open your eyes.' },
   ];
 }
@@ -62,12 +60,9 @@ function buildEmailHtml(data) {
 
   return wrapHtml(`
     <p>${greeting}</p>
-    <p>Here's everything from your Attraction Formula setup, saved for you.</p>
+    <p>Here's everything you need for your Attraction Formula Meditation.</p>
     <p><strong style="font-size:19px;">Old belief:</strong> ${data.oldBelief}</p>
     <p><strong style="font-size:19px;">New belief:</strong> ${data.newBelief}</p>
-    <p><strong style="font-size:19px;">Feeling:</strong> ${data.emotion}</p>
-    <p><strong style="font-size:19px;">Start date:</strong> ${data.startDate}<br>
-    <strong style="font-size:19px;">End date (Day 30):</strong> ${data.endDate}</p>
     <p><strong style="font-size:19px;">How to do the meditation:</strong></p>
     ${stepsText}
     <p><a href="https://www.skool.com/heartcreator" style="color:#4B1466;">Got a question, ask it here</a></p>
@@ -82,10 +77,7 @@ function buildCoachEmailHtml(data) {
     <p><strong>Name:</strong> ${data.name || '(not given)'}<br>
     <strong>Email:</strong> ${data.email}</p>
     <p><strong>Old belief:</strong> ${data.oldBelief}<br>
-    <strong>New belief:</strong> ${data.newBelief}<br>
-    <strong>Feeling:</strong> ${data.emotion}</p>
-    <p><strong>Start date:</strong> ${data.startDate}<br>
-    <strong>End date (Day 30):</strong> ${data.endDate}</p>
+    <strong>New belief:</strong> ${data.newBelief}</p>
   `);
 }
 
