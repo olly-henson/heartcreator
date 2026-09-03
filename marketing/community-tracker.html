@@ -1,0 +1,2856 @@
+<title>Business Hub</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Business Hub">
+<meta name="theme-color" content="#150818">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><style>
+  :root{
+    --bg-grad: radial-gradient(1100px 700px at 14% -6%, rgba(184,79,232,.20), transparent 55%),
+               radial-gradient(900px 620px at 100% 8%, rgba(225,166,255,.14), transparent 50%),
+               linear-gradient(160deg, #3D1252 0%, #150818 46%, #0A0510 100%);
+    --surface: rgba(255,255,255,.035);
+    --surface-solid: #180a22;
+    --surface-2: rgba(255,255,255,.055);
+    --border: rgba(184,79,232,.22);
+    --border-soft: rgba(235,217,226,.12);
+    --text: #ffffff;
+    --text-body: #EBD9E2;
+    --text-muted: #a893a8;
+    --accent: #B84FE8;
+    --accent-2: #E1A6FF;
+    --accent-grad: linear-gradient(90deg, #B84FE8, #E1A6FF);
+    --good: #8fd0a8;
+    --warn: #E0B168;
+    --critical: #E88FA6;
+    --radius: 18px;
+    --shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 18px 44px -22px rgba(0,0,0,.65);
+  }
+
+  *{box-sizing:border-box;}
+  /* No spinner arrows on any number field — typed entry only, everywhere,
+     including any month added later. */
+  input[type=number]{ -moz-appearance: textfield; appearance: textfield; }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+  body{
+    margin:0;
+    background: var(--bg-grad);
+    background-attachment: fixed;
+    color: var(--text-body);
+    font-family:'Poppins',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:52px 24px 96px;
+    position:relative;
+  }
+  /* scattered stardust, matches "fill canvas richness" principle */
+  .wrap::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 8% 12%, rgba(255,255,255,.35), transparent),
+      radial-gradient(1.5px 1.5px at 22% 68%, rgba(255,255,255,.22), transparent),
+      radial-gradient(1.5px 1.5px at 78% 22%, rgba(255,255,255,.28), transparent),
+      radial-gradient(1.5px 1.5px at 91% 78%, rgba(255,255,255,.2), transparent),
+      radial-gradient(1.5px 1.5px at 60% 45%, rgba(255,255,255,.16), transparent);
+    z-index:0;
+  }
+  .wrap > *{ position:relative; z-index:1; }
+
+  /* ── Header ───────────────────────────────────────────── */
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:12.5px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+    color: var(--accent-2);
+    margin-bottom:12px;
+  }
+  .titleblock h1{
+    font-family:'Poppins',sans-serif;
+    font-weight:800;
+    font-size:clamp(28px,3.6vw,38px);
+    margin:0 0 8px;
+    text-wrap:balance;
+    letter-spacing:-.01em;
+    background: var(--accent-grad);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .titleblock p{
+    margin:0;
+    color: var(--text-muted);
+    font-size:15px;
+    max-width:56ch;
+  }
+  .saveblock{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:8px;
+  }
+  .savebtn{
+    background: var(--accent-grad);
+    color:#1a0524;
+    border:none;
+    padding:10px 22px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+  }
+  .savebtn:hover{ filter:brightness(1.06); }
+  .savebtn:disabled{ opacity:.55; cursor:default; filter:none; }
+  .savepill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color: var(--text-muted);
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background: var(--good);flex:none;}
+  .dot.unsaved{background: var(--warn);}
+  .dot.saving{background: var(--warn);animation:pulse 1s infinite;}
+  .dot.error{background: var(--critical);}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* ── Tabs ─────────────────────────────────────────────── */
+  .tabbar{
+    display:flex;
+    gap:6px;
+    margin:24px 0 0;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .tabbtn{
+    background:none;
+    border:none;
+    color: var(--text-muted);
+    font-family:'Poppins',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    padding:12px 18px 14px;
+    cursor:pointer;
+    position:relative;
+    top:1px;
+  }
+  .tabbtn:hover{ color: var(--text); }
+  .tabbtn.active{
+    color: var(--text);
+    border-bottom:2px solid var(--accent-2);
+  }
+  .tabpanel[hidden]{ display:none; }
+  .comingsoon{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:40px 32px;
+    margin-top:28px;
+    text-align:center;
+    backdrop-filter: blur(6px);
+  }
+  .comingsoon h2{
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    font-size:20px;
+    color: var(--text);
+    margin:6px 0 10px;
+  }
+  .comingsoon p:last-child{
+    color: var(--text-muted);
+    font-size:14.5px;
+    max-width:48ch;
+    margin:0 auto;
+    line-height:1.55;
+  }
+
+  /* ── MRR goal ─────────────────────────────────────────── */
+  .goalcard{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:22px 24px;
+    margin-bottom:32px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+  }
+  .goalhead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:14px;
+  }
+  .goalnums{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    font-family:'Poppins',sans-serif;
+  }
+  .goalnums #goalCurrent{
+    font-size:30px;
+    font-weight:700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .goalof{ font-size:13px; color: var(--text-muted); }
+  .goalnums #goalTargetLabel{
+    font-size:15px;
+    font-weight:600;
+    color: var(--accent-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .goalbar{
+    height:12px;
+    border-radius:6px;
+    background: var(--surface-2);
+    overflow:hidden;
+    border:1px solid var(--border-soft);
+  }
+  .goalbarfill{
+    height:100%;
+    width:0%;
+    border-radius:6px;
+    background: var(--accent-grad);
+    transition: width .4s ease;
+  }
+  .goalcaption{
+    margin:10px 0 0;
+    font-size:12.5px;
+    color: var(--text-muted);
+  }
+
+  /* ── Settings row ─────────────────────────────────────── */
+  .settingsbar{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:16px 22px;
+    margin:28px 0 32px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+  }
+  .field-inline{ display:flex; align-items:center; gap:10px; }
+  .field-inline label{
+    font-size:12px;
+    color: var(--text-muted);
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .field-inline input[type=number], select{
+    padding:7px 10px;
+    border-radius:9px;
+    border:1px solid var(--border-soft);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:13.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .field-inline input[type=number]{ width:80px; }
+  select{ width:auto; }
+  /* The closed box picks up our custom colors automatically, but most
+     browsers render the open dropdown list using native OS chrome unless
+     each <option> is given an explicit color — without it, options can
+     inherit a light system background with our light text, going invisible. */
+  select option{ color: var(--text); background: #1c0d28; }
+  .settingsbar .divider{ width:1px; height:22px; background: var(--border-soft); }
+
+  /* ── Section labels ───────────────────────────────────── */
+  .section-label{
+    font-size:12.5px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+    color: var(--accent-2);
+    margin:0 0 14px;
+  }
+
+  /* ── KPI grid ─────────────────────────────────────────── */
+  .kpigrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(192px,1fr));
+    gap:12px;
+    margin-bottom:40px;
+  }
+  .kpi{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:18px 20px;
+    box-shadow: var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    backdrop-filter: blur(6px);
+  }
+  .kpi:nth-child(3n+1){ border-color: var(--border); }
+  .kpi .label{
+    font-size:12px;
+    color: var(--text-muted);
+    font-weight:500;
+  }
+  .kpi .value{
+    font-family:'Poppins',sans-serif;
+    font-size:27px;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-.01em;
+    color: var(--text);
+  }
+  .kpi.accent .value{ color: var(--accent-2); }
+
+  /* ── Charts ───────────────────────────────────────────── */
+  .chartsgrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:16px;
+    margin-bottom:40px;
+  }
+  .chartcard{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:20px 22px 14px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+  }
+  .chartcard h3{
+    margin:0 0 2px;
+    font-size:14.5px;
+    font-weight:600;
+    color: var(--text);
+  }
+  .chartcard .chartsub{
+    font-size:12px;
+    color: var(--text-muted);
+    margin-bottom:12px;
+  }
+  .legend{
+    display:flex;
+    gap:16px;
+    font-size:12px;
+    color: var(--text-muted);
+    margin-bottom:8px;
+  }
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend i{width:9px;height:9px;border-radius:3px;display:inline-block;}
+  svg.chart{width:100%;height:150px;overflow:visible;}
+  .gridline{stroke: var(--border-soft); stroke-width:1;}
+  .noline{fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .chartpt{stroke: var(--surface-solid);stroke-width:2;}
+  .chart-tooltip{
+    position:absolute;
+    pointer-events:none;
+    background:#241030;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:6px 11px;
+    font-size:12px;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    opacity:0;
+    transition:opacity .12s;
+    white-space:nowrap;
+    z-index:5;
+    font-variant-numeric: tabular-nums;
+  }
+  .chartwrap{position:relative;}
+
+  /* ── Table ────────────────────────────────────────────── */
+  .tablewrap{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow-x:auto;
+    backdrop-filter: blur(6px);
+  }
+  table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:1080px;
+    font-size:13.5px;
+  }
+  thead th{
+    position:sticky;
+    top:0;
+    background:#1c0d28;
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color: var(--text-muted);
+    font-weight:600;
+    padding:11px 12px;
+    border-bottom:1px solid var(--border-soft);
+    white-space:nowrap;
+  }
+  thead th.calc{ color: var(--accent-2); }
+  tbody td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--border-soft);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+    color: var(--text-body);
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{ background: var(--surface-2); }
+  td.calc{ color: var(--accent-2); font-weight:600; }
+  td.money{ color: var(--text); font-weight:700; }
+  td input{
+    width:74px;
+    padding:6px 7px;
+    border-radius:7px;
+    border:1px solid var(--border-soft);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:13px;
+    font-variant-numeric: tabular-nums;
+  }
+  td input[type=text]{ width:100%; min-width:200px; font-variant-numeric: normal; }
+  .leaderhead{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .rankcell{
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    color: var(--text-muted);
+  }
+  tr.rank1 .rankcell{ color:#ffd76a; }
+  tr.rank2 .rankcell{ color:#d9d9e6; }
+  tr.rank3 .rankcell{ color:#e0a874; }
+  th.sortable{
+    cursor:pointer;
+    user-select:none;
+    white-space:nowrap;
+  }
+  th.sortable:hover{ color: var(--text); }
+  th.sortable.active{ color: var(--accent-2); }
+  th.sortable .arrow{ display:inline-block; margin-left:4px; opacity:.85; }
+
+  /* ── Priority board (Eisenhower Matrix) ─────────────────── */
+  .quadrants{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:14px;
+    margin-bottom:8px;
+  }
+  .quadrant{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-left:4px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:16px 18px;
+    min-height:110px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+  }
+  .q-dofirst{ border-left-color: var(--critical); }
+  .q-schedule{ border-left-color: var(--accent-2); }
+  .q-delegate{ border-left-color: var(--warn); }
+  .q-eliminate{ border-left-color: var(--text-muted); }
+  .quadhead{ display:flex; align-items:baseline; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  .quadtitle{ font-family:'Poppins',sans-serif; font-weight:700; font-size:14.5px; color: var(--text); }
+  .quadsub{ font-size:11px; color: var(--text-muted); text-transform:uppercase; letter-spacing:.04em; }
+  .quadlist{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+  .quadlist li{
+    font-size:13.5px;
+    color: var(--text-body);
+    padding:7px 0;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .quadlist li:last-child{ border-bottom:none; }
+  .quadlist .quadempty{ color: var(--text-muted); font-size:12.5px; font-style:italic; padding:7px 0; }
+
+  /* checkboxes throughout (project urgent/important/done) */
+  td input[type=checkbox]{
+    width:17px; height:17px;
+    accent-color: var(--accent);
+    cursor:pointer;
+  }
+  tr.projectdone td{ opacity:.5; }
+  tr.projectdone input[type=text]{ text-decoration:line-through; }
+
+  /* ── Content calendar (real dates, whole month) ─────────── */
+  .calhead{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .calnav{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:24px;
+  }
+  .calnavbtn{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:8px;
+    color: var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:15px;
+    line-height:1;
+    padding:6px 12px;
+    cursor:pointer;
+  }
+  .calnavbtn:hover{ border-color: var(--border); }
+  .calnavbtn.calToday{ font-size:12px; padding:6px 12px; }
+  .calmonth{
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    color: var(--text);
+    min-width:130px;
+    text-align:center;
+  }
+  .calendar{
+    display:grid;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:6px;
+    margin-top:10px;
+  }
+  .caldow{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color: var(--text-muted);
+    text-align:center;
+    padding-bottom:4px;
+  }
+  .calcell{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    padding:8px 9px;
+    min-height:92px;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    cursor:pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .calcell:hover{ border-color: var(--accent); background: var(--surface-2); }
+  .calcell.outside{ opacity:.35; cursor:default; }
+  .calcell.outside:hover{ border-color: var(--border-soft); background: var(--surface); }
+  .calcell.today{ border-color: var(--accent-2); box-shadow: 0 0 0 1px var(--accent-2) inset; }
+  .caldatehead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .caldatenum{ font-size:12px; font-weight:700; color: var(--text); }
+  .calcount{ font-size:10px; font-weight:700; padding:1px 6px; border-radius:20px; }
+  .calcount.short{ color: var(--warn); background:rgba(224,177,104,.14); }
+  .calcount.met{ color: var(--good); background:rgba(143,208,168,.14); }
+  .calitems{ display:flex; flex-direction:column; gap:3px; overflow:hidden; min-width:0; }
+  .calitem{
+    font-size:10.5px;
+    color: var(--text-body);
+    line-height:1.3;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    min-width:0;
+    max-width:100%;
+  }
+  .calitem.done{ color: var(--good); text-decoration: line-through; opacity:.75; }
+
+  .daymodal-overlay{
+    position:fixed; inset:0;
+    background: rgba(6,2,10,.66);
+    backdrop-filter: blur(2px);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    z-index:100;
+  }
+  .daymodal{
+    width:100%; max-width:460px;
+    max-height:80vh;
+    overflow-y:auto;
+    background: var(--surface-solid);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding:22px 22px 18px;
+  }
+  .daymodal-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .daymodal-head h3{
+    margin:0; font-size:16px; font-weight:700; color: var(--text);
+  }
+  .daymodal-x{
+    background:none; border:none; color: var(--text-muted);
+    cursor:pointer; font-size:16px; padding:2px 8px; border-radius:6px; line-height:1;
+  }
+  .daymodal-x:hover{ color: var(--text); background: var(--surface-2); }
+  .dayitem{
+    display:flex; flex-direction:column; gap:8px;
+    padding:12px 4px;
+    border-bottom:1px solid var(--border-soft);
+    font-size:13.5px;
+    color: var(--text-body);
+    line-height:1.4;
+  }
+  .dayitem:last-child{ border-bottom:none; }
+  .dayitem-top{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .dayitem-check{
+    display:flex; align-items:flex-start; gap:10px;
+    cursor:pointer;
+    flex:1;
+    min-width:0;
+  }
+  .dayitem-check input{ margin-top:2px; flex-shrink:0; }
+  .dayitem.posted .dayitem-check span{ color: var(--good); text-decoration: line-through; opacity:.8; }
+  .dayitem-move{
+    flex-shrink:0;
+    font-size:11.5px;
+    padding:4px 6px;
+    border-radius:6px;
+    border:1px solid var(--border-soft);
+    background: var(--surface-2);
+    color: var(--text-body);
+    font-family:'Poppins',sans-serif;
+    color-scheme: dark;
+  }
+  .dayitem-caption{
+    display:flex; flex-direction:column; gap:6px;
+    margin-left:24px;
+    background: var(--surface-2);
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    padding:8px 10px;
+  }
+  .dayitem-caption textarea{
+    width:100%;
+    min-height:56px;
+    resize:vertical;
+    background:none;
+    border:none;
+    color: var(--text-body);
+    font-family:'Poppins',sans-serif;
+    font-size:12.5px;
+    line-height:1.5;
+    padding:0;
+  }
+  .dayitem-caption textarea:focus{ outline:none; }
+  .dayitem-caption textarea::placeholder{ color: var(--text-muted); }
+  .dayitem-copyrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .copybtn{
+    background: var(--surface);
+    color: var(--text-muted);
+    border:1px solid var(--border-soft);
+    padding:5px 10px;
+    border-radius:7px;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+  }
+  .copybtn:hover{ border-color: var(--accent); color: var(--text); }
+  .copybtn.copied{ color: var(--good); border-color: rgba(143,208,168,.4); }
+  .captiontemplates{
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .capttpl{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+    padding:12px 14px;
+    display:flex; align-items:flex-start; gap:10px;
+  }
+  .capttpl-fields{
+    flex:1; min-width:0;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .capttpl-name{
+    width:160px;
+    max-width:100%;
+    background: var(--surface-2);
+    border:1px solid var(--border-soft);
+    border-radius:8px;
+    color: var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:6px 10px;
+  }
+  .capttpl-name:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .capttpl-name::placeholder{ color: var(--text-muted); text-transform:none; letter-spacing:normal; font-weight:500; }
+  .capttpl-actions{
+    display:flex; flex-direction:column; align-items:stretch; gap:6px;
+    flex-shrink:0;
+  }
+  .capttpl-actions .vidsavebtn{ white-space:nowrap; }
+  .rowdel-btn{
+    background:none; border:none; color: var(--text-muted);
+    cursor:pointer; font-size:14px; padding:4px 6px; border-radius:6px;
+  }
+  .rowdel-btn:hover{ color: var(--critical); background: var(--surface-2); }
+  .capttpl textarea{
+    width:100%;
+    min-height:56px;
+    resize:vertical;
+    background: var(--surface-2);
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    color: var(--text-body);
+    font-family:'Poppins',sans-serif;
+    font-size:13px;
+    line-height:1.5;
+    padding:10px 12px;
+  }
+  .capttpl textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .capttpl textarea::placeholder{ color: var(--text-muted); }
+  .capttpl .rowdel{ padding-top:6px; }
+  .captionchips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .captionchip{
+    background: var(--surface-2);
+    color: var(--text-body);
+    border:1px solid var(--border-soft);
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:11px;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+    max-width:220px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .captionchip:hover{ border-color: var(--accent); color: var(--text); }
+  td input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  td.month{ font-weight:700; color: var(--text); }
+  td.rowdel{text-align:center;}
+  td.rowdel button{
+    background:none;border:none;color: var(--text-muted);
+    cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px;
+  }
+  td.rowdel button:hover{ color: var(--critical); background: var(--surface-2); }
+  /* Wide tables (Video stats tracking especially) scroll horizontally,
+     which was burying the delete ✕ off the right edge with no obvious
+     way back to it. Pinning the whole delete column to the edge means
+     it's always reachable regardless of scroll position. */
+  td.rowdel, th.rowdel{
+    position: sticky;
+    right: 0;
+    background: var(--surface-solid);
+    box-shadow: -8px 0 10px -8px rgba(0,0,0,.4);
+  }
+  th.rowdel{ z-index:6; }
+  tr.locked td.rowdel{ background: var(--surface-solid); }
+  td.rowlock{text-align:center;}
+  .lockbtn{
+    background:none;border:none;cursor:pointer;font-size:15px;
+    padding:2px 6px;border-radius:6px;line-height:1;
+  }
+  .lockbtn:hover{ background: var(--surface-2); }
+  tr.locked{ opacity:.62; }
+  tr.locked input{ cursor:not-allowed; }
+  tr.locked td.month{ color: var(--accent-2); }
+
+  .tablefoot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 18px;
+    border-top:1px solid var(--border-soft);
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .addbtn{
+    background: var(--accent-grad);
+    color:#1a0524;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+  }
+  .addbtn:hover{ filter:brightness(1.06); }
+  .vidsavebtn{
+    background: var(--surface-2);
+    color: var(--text-muted);
+    border:1px solid var(--border-soft);
+    padding:5px 10px;
+    border-radius:8px;
+    font-size:11.5px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+    white-space:nowrap;
+  }
+  .vidsavebtn:hover{ border-color: var(--accent); color: var(--text); }
+  .vidsavebtn.is-saved{
+    background: rgba(143,208,168,.14);
+    color: var(--good);
+    border-color: rgba(143,208,168,.35);
+  }
+  .hint{font-size:12px;color: var(--text-muted);}
+  .slotmode{display:flex; flex-direction:column; gap:4px;}
+  .slotopt{display:flex; align-items:center; gap:6px; font-size:12px; color: var(--text-muted); cursor:pointer; white-space:nowrap;}
+  .slotopt input{margin:0;}
+
+  .glossary{
+    margin-top:40px;
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:24px 26px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+  }
+  .glossary h2{
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    font-size:18px;
+    margin:0 0 14px;
+    color: var(--text);
+  }
+  .glossary dl{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:16px 26px;
+    margin:0;
+  }
+  .glossary dt{ font-weight:600; font-size:13.5px; margin-bottom:3px; color: var(--text); }
+  .glossary dd{ margin:0; color: var(--text-muted); font-size:13px; line-height:1.55; }
+
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+
+  /* ── Phone (the daily "what's due today, tick it off" screen) ────────── */
+  @media (max-width: 640px){
+    .wrap{ padding:28px 14px 72px; }
+    h1{ font-size:22px; }
+    .tabbar{ gap:2px; }
+    .tabbtn{ padding:10px 12px 12px; font-size:13px; }
+    .goalcard{ padding:16px 16px; }
+    .calendar{ gap:4px; }
+    .calcell{ padding:5px 6px; min-height:64px; gap:3px; }
+    .caldatenum{ font-size:11px; }
+    .calcount{ font-size:9px; padding:1px 5px; }
+    .calitem{ font-size:9.5px; }
+    .calhead{ flex-wrap:wrap; gap:10px; }
+    .calnav{ flex-wrap:wrap; }
+    .daymodal{ max-width:100%; padding:18px 16px 14px; }
+    .dayitem-top{ flex-wrap:wrap; }
+    .dayitem-caption{ margin-left:0; }
+  }
+</style>
+<div class="wrap">
+
+  <header>
+    <div class="titleblock">
+      <span class="eyebrow">Heart Attractor</span>
+      <h1>Business Hub</h1>
+      <p>MRR, content and delivery — one place for the numbers that run the community.</p>
+    </div>
+    <div class="saveblock">
+      <button class="savebtn" id="saveBtn" disabled="">Save</button>
+      <div class="savepill"><span class="dot saving" id="saveDot"></span><span id="saveLabel">saving…</span></div>
+    </div>
+  </header>
+
+  <nav class="tabbar" role="tablist">
+    <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false">MRR Tracker</button>
+    <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Content</button>
+    <button class="tabbtn" data-tab="delivery" role="tab" aria-selected="false">Delivery</button>
+  </nav>
+
+  <div id="tab-mrr" class="tabpanel" hidden="">
+
+  <div class="settingsbar">
+    <div class="field-inline">
+      <label for="viewMode">View</label>
+      <select id="viewMode">
+        <option value="month">Monthly</option>
+        <option value="year">Yearly</option>
+        <option value="all">All time</option>
+      </select>
+    </div>
+    <div class="field-inline" id="periodPickerWrap" style="">
+      <label for="periodSel" id="periodLabel">Month</label>
+      <select id="periodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
+    </div>
+    <div class="divider"></div>
+    <span class="hint">Every month below is entered and stored independently — nothing carries over automatically. This view just totals up whichever months you pick.</span>
+  </div>
+
+  <div class="goalcard">
+    <div class="goalhead">
+      <div>
+        <p class="section-label" style="margin-bottom:4px;">MRR goal</p>
+        <div class="goalnums"><span id="goalCurrent">$30/mo</span><span class="goalof">of</span><span id="goalTargetLabel">$40,000/mo</span></div>
+      </div>
+      <div class="field-inline">
+        <label for="targetInput">Target ($/mo)</label>
+        <input type="number" min="0" id="targetInput" value="0">
+      </div>
+    </div>
+    <div class="goalbar"><div class="goalbarfill" id="goalBarFill" style="width: 0.075%;"></div></div>
+    <p class="goalcaption" id="goalCaption">0.1% of target — $39,970/mo to go.</p>
+  </div>
+
+  <p class="section-label" id="glanceLabel">This month at a glance</p>
+  <div class="kpigrid" id="kpiGrid"><div class="kpi"><div class="label">Email leads (quiz)</div><div class="value">59</div></div><div class="kpi"><div class="label">About Page visits</div><div class="value">250</div></div><div class="kpi"><div class="label">Free trials started</div><div class="value">9</div></div><div class="kpi accent"><div class="label">Trial conversion</div><div class="value">3.6%</div></div><div class="kpi"><div class="label">New paying members</div><div class="value">1</div></div><div class="kpi accent"><div class="label">Trial → paid conversion</div><div class="value">11.1%</div></div><div class="kpi"><div class="label">Active members</div><div class="value">1</div></div><div class="kpi"><div class="label">Retention rate</div><div class="value">100.0%</div></div><div class="kpi"><div class="label">MRR</div><div class="value">$30</div></div><div class="kpi"><div class="label">Avg. revenue / member</div><div class="value">$30</div></div><div class="kpi"><div class="label">LTV / member</div><div class="value">—</div></div></div>
+
+  <p class="section-label">Trends</p>
+  <div class="chartsgrid">
+    <div class="chartcard">
+      <h3>MRR</h3>
+      <div class="chartsub">Monthly recurring revenue</div>
+      <div class="chartwrap"><svg class="chart" id="chartMRR"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,10 L316,10" class="noline" stroke="#B84FE8" stroke-width="2"></path><circle cx="4" cy="10" r="3" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="10" r="4.5" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttMRR" style="left: 317px; top: -20px; opacity: 0;">Sept 26 · MRR: $198</div></div>
+    </div>
+    <div class="chartcard">
+      <h3>Active members</h3>
+      <div class="chartsub">Paying members at month end</div>
+      <div class="chartwrap"><svg class="chart" id="chartMembers"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,10 L316,10" class="noline" stroke="#E1A6FF" stroke-width="2"></path><circle cx="4" cy="10" r="3" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="10" r="4.5" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttMembers"></div></div>
+    </div>
+    <div class="chartcard">
+      <h3>Conversion rates</h3>
+      <div class="chartsub">Two hand-offs in the funnel</div>
+      <div class="legend">
+        <span><i style="background:var(--accent-2)"></i>About Page → Trial</span>
+        <span><i style="background:var(--warn)"></i>Trial → Paying</span>
+      </div>
+      <div class="chartwrap"><svg class="chart" id="chartConv"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,89.768 L316,128" class="noline" stroke="#E1A6FF" stroke-width="2"></path><circle cx="4" cy="89.768" r="3" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="128" r="4.5" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><path d="M4,10 L316,128" class="noline" stroke="#E0B168" stroke-width="2"></path><circle cx="4" cy="10" r="3" fill="#E0B168" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="128" r="4.5" fill="#E0B168" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttConv"></div></div>
+    </div>
+  </div>
+
+  <p class="section-label">Monthly log</p>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Month</th>
+          <th>Email leads (quiz)</th>
+          <th>About Page visits</th>
+          <th>Free trials started</th>
+          <th>New paying members</th>
+          <th>Members lost</th>
+          <th>Active members (month end)</th>
+          <th>New member price ($/mo)</th>
+          <th class="calc">Trial conv.</th>
+          <th class="calc">Trial→paid conv.</th>
+          <th class="calc">Visit→paid conv.</th>
+          <th class="calc">Churn</th>
+          <th class="calc">Retention</th>
+          <th class="calc">MRR</th>
+          <th class="calc">LTV</th>
+          <th class="rowdel"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="emailLeads" value="59" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="visits" value="250" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="trials" value="9" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="newMembers" value="1" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="0" data-field="price" value="30" disabled=""></td><td class="calc" data-calc="0">3.6%</td><td class="calc" data-calc="1">11.1%</td><td class="calc" data-calc="2">0.4%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="emailLeads" value="1" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="visits" value="20" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="trials" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="newMembers" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="1" data-field="price" value="99" disabled=""></td><td class="calc" data-calc="0">0.0%</td><td class="calc" data-calc="1">0.0%</td><td class="calc" data-calc="2">0.0%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr></tbody>
+    </table>
+    <div class="tablefoot">
+      <span class="hint">Every field here is typed in by hand for that month only — including Active members. Nothing is calculated from another row. Click 🔓 on a finished month to lock it and stop accidental edits.</span>
+      <button class="addbtn" id="addMonth">+ Add next month</button>
+    </div>
+  </div>
+
+  <div class="glossary">
+    <h2>How each figure is worked out</h2>
+    <dl>
+      <div><dt>Email leads (quiz)</dt><dd>Leads captured through the free quiz funnel — a separate entry point from the About Page, tracked alongside it rather than folded in.</dd></div>
+      <div><dt>Active members (month end)</dt><dd>Typed in by hand each month — the total paying member count as of that month's end. Not calculated from the previous month, so a mistake in one month never throws off another.</dd></div>
+      <div><dt>Trial conversion rate</dt><dd>Free trials started ÷ About Page visits. How well the page turns browsers into trialists.</dd></div>
+      <div><dt>Trial → paid conversion</dt><dd>New paying members ÷ free trials started that month. How well the trial itself sells the community.</dd></div>
+      <div><dt>Visit → paid conversion</dt><dd>New paying members ÷ About Page visits. The full-funnel rate, start to finish.</dd></div>
+      <div><dt>Churn rate</dt><dd>Members lost ÷ that month's active members. Each month calculates this from its own two numbers only.</dd></div>
+      <div><dt>Retention rate</dt><dd>100% minus churn. The share of members who stuck around.</dd></div>
+      <div><dt>New member price</dt><dd>What someone signing up that month pays — $30/mo through August 2026, $99/mo (or $990/yr) from September 2026 onward.</dd></div>
+      <div><dt>MRR</dt><dd>Calculated automatically, but not as Active members × price. Every month's new members lock in at that month's own price and keep contributing it every month afterward — so a member who joined at $30 keeps paying $30 even once the price rises to $99 for new signups. Lost members are removed at the average rate across current members, since exactly which member left isn't tracked. The only figure on this page that isn't fully independent per month — it has to look back, because grandfathered pricing means you can't tell current MRR from one month's numbers alone.</dd></div>
+      <div><dt>Avg. revenue / member</dt><dd>MRR ÷ Active members. The true blended amount each member is worth this month, accounting for mixed pricing.</dd></div>
+      <div><dt>LTV</dt><dd>Avg. revenue per member ÷ churn rate. What an average member is worth over their full membership, based on what they're actually paying rather than the sticker price.</dd></div>
+      <div><dt>Lock 🔓 / 🔒</dt><dd>Marks a month finished and greys out its row so you can't accidentally overwrite it while filling in the next one. Click 🔒 again to unlock and correct something. Locking doesn't save on its own — click Save when you're ready.</dd></div>
+      <div><dt>Save</dt><dd>Nothing publishes until you click Save, top right. The dot turns amber with "unsaved changes" the moment you edit anything, and back to green once it's saved. Your edits stay safe in this browser even before you save — but click Save to make them visible next time you (or anyone else) open this link.</dd></div>
+      <div><dt>Monthly / Yearly / All time view</dt><dd>The glance cards at the top total up whichever months you're viewing — visits, leads, trials and new members are added together; active members, price and MRR use the most recent month with a real Active members count, so live current MRR stays correct even if a later month's Active members field just hasn't been filled in yet.</dd></div>
+      <div><dt>MRR goal</dt><dd>Always shows your true current MRR against the target you set, regardless of which view is selected above. Set the target once — it's saved with everything else.</dd></div>
+    </dl>
+  </div>
+
+  </div><!-- /tab-mrr -->
+
+  <div id="tab-content" class="tabpanel">
+
+    <div class="settingsbar">
+      <div class="field-inline">
+        <label for="contentPeriodSel">Viewing</label>
+        <select id="contentPeriodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
+      </div>
+      <div class="divider"></div>
+      <span class="hint">Every month is entered by hand, same as MRR Tracker — Instagram followers and email list size are whatever they stood at by the end of that month.</span>
+    </div>
+
+    <p class="section-label">This month at a glance</p>
+    <div class="kpigrid" id="contentKpiGrid"><div class="kpi"><div class="label">Instagram followers</div><div class="value">378</div></div><div class="kpi accent"><div class="label">IG growth vs. prev. month</div><div class="value">—</div></div><div class="kpi"><div class="label">Email list</div><div class="value">59</div></div><div class="kpi accent"><div class="label">Email growth vs. prev. month</div><div class="value">—</div></div></div>
+
+    <p class="section-label">Trends</p>
+    <div class="chartsgrid">
+      <div class="chartcard">
+        <h3>Instagram followers</h3>
+        <div class="chartsub">Total followers at month end</div>
+        <div class="chartwrap"><svg class="chart" id="chartIG"><line x1="4" x2="508" y1="10" y2="10" class="gridline"></line><line x1="4" x2="508" y1="69" y2="69" class="gridline"></line><line x1="4" x2="508" y1="128" y2="128" class="gridline"></line><path d="M4,15.647355163727966 L508,10" class="noline" stroke="#B84FE8" stroke-width="2"></path><circle cx="4" cy="15.647355163727966" r="3" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><circle cx="508" cy="10" r="4.5" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="508" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttIG"></div></div>
+      </div>
+      <div class="chartcard">
+        <h3>Email list</h3>
+        <div class="chartsub">Total subscribers at month end</div>
+        <div class="chartwrap"><svg class="chart" id="chartEmail"><line x1="4" x2="508" y1="10" y2="10" class="gridline"></line><line x1="4" x2="508" y1="69" y2="69" class="gridline"></line><line x1="4" x2="508" y1="128" y2="128" class="gridline"></line><path d="M4,11.966666666666669 L508,10" class="noline" stroke="#E1A6FF" stroke-width="2"></path><circle cx="4" cy="11.966666666666669" r="3" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><circle cx="508" cy="10" r="4.5" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="508" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttEmail"></div></div>
+      </div>
+    </div>
+
+    <p class="section-label">Monthly log</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Month</th>
+            <th>Instagram followers</th>
+            <th>Email list</th>
+            <th class="calc">IG growth</th>
+            <th class="calc">Email growth</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="contentTbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="igFollowers" value="378" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="emailList" value="59" disabled=""></td><td class="calc" data-ccalc="0">—</td><td class="calc" data-ccalc="1">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="igFollowers" value="397" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="emailList" value="60" disabled=""></td><td class="calc" data-ccalc="0">+19</td><td class="calc" data-ccalc="1">+1</td><td class="rowdel"></td></tr></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Growth compares to the previous row in this table — it's just a display, not something you enter.</span>
+        <button class="addbtn" id="contentAddMonth">+ Add next month</button>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:40px;">Caption templates</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">Save a few go-to captions here — on the calendar, tap one to drop it straight into a video's caption box, then tweak it for that specific post if needed.</span>
+    <div id="captionTemplates" class="captiontemplates"><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="0"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
+
+#manifestlove #lawofattraction" data-ctpli="0"></textarea></div><div class="rowdel"><button title="Remove caption template">✕</button></div></div></div>
+    <button class="addbtn" id="captionTemplateAdd" style="margin-top:10px;">+ Add caption template</button>
+
+    <p class="section-label" style="margin-top:32px;">Video ideas</p>
+    <span class="hint" style="display:block; margin:-6px 0 20px;">Type an idea, then choose whether it fills the next open slot or a specific date. Once it has both a title and a date it drops off this list and lives on the calendar below instead — aiming for at least 3 a day.</span>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="min-width:260px;">Idea</th>
+            <th style="width:190px;">Scheduling</th>
+            <th style="width:150px;">Date</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="ideaTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Click a calendar date and tick a video off as posted to pull it into Video stats tracking below — no retyping once it's live.</span>
+        <button class="addbtn" id="ideaAdd">+ Add idea</button>
+      </div>
+    </div>
+
+    <div class="calhead">
+      <p class="section-label" style="margin:40px 0 0;">Calendar</p>
+      <div class="calnav">
+        <button class="calnavbtn" id="calPrev" title="Previous month">‹</button>
+        <span class="calmonth" id="calMonthLabel">September 2026</span>
+        <button class="calnavbtn" id="calNext" title="Next month">›</button>
+        <button class="calnavbtn calToday" id="calToday">Today</button>
+      </div>
+    </div>
+    <div class="calendar" id="calendar"><div class="caldow">Mon</div><div class="caldow">Tue</div><div class="caldow">Wed</div><div class="caldow">Thu</div><div class="caldow">Fri</div><div class="caldow">Sat</div><div class="caldow">Sun</div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">31</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">1</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">2</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell today"><div class="caldatehead"><span class="caldatenum">3</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem" title="Why you can't stop doubting if you're going to manifest love ♥️">Why you can't stop doubting if you're going to manifest love ♥️</div><div class="calitem" title="How long should you wait before giving up on manifesting love? ♥️">How long should you wait before giving up on manifesting love? ♥️</div><div class="calitem" title="If you're still doubting that you can manifest love - you MUST change this today ♥️">If you're still doubting that you can manifest love - you MUST change this today ♥️</div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">4</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">5</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">6</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">7</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">8</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">9</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">10</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">11</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">12</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">13</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">14</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">15</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">16</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">17</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">18</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">19</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">20</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">21</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">22</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">23</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">24</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">25</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">26</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">27</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">28</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">29</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">30</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">1</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">2</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">4</span></div><div class="calitems"></div></div></div>
+
+    <p class="section-label" style="margin-top:40px;">Video stats tracking</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:70px; text-align:center;">Saved</th>
+            <th style="min-width:220px;">Title</th>
+            <th class="calc">Date</th>
+            <th>Month</th>
+            <th>Views</th>
+            <th>Likes</th>
+            <th>Comments</th>
+            <th>Shares</th>
+            <th>Saves</th>
+            <th>Community comments</th>
+            <th class="calc">Engagement rate</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="outlierTbody"><tr data-orow="0"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="0" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="0" data-ofield="title" value="You don't need manifestation to attract your partner  ♥️ You need this..." placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="0" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="0" data-ofield="views" value="2423"></td><td><input type="number" min="0" data-oi="0" data-ofield="likes" value="20"></td><td><input type="number" min="0" data-oi="0" data-ofield="comments" value="8"></td><td><input type="number" min="0" data-oi="0" data-ofield="shares" value="25"></td><td><input type="number" min="0" data-oi="0" data-ofield="saves" value="61"></td><td><input type="number" min="0" data-oi="0" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">4.7%</td><td class="rowdel"><button data-odel="0" title="Remove video">✕</button></td></tr><tr data-orow="1"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="1" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="1" data-ofield="title" value="The one dangerous belief that keeps people lonely forever" placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="1" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="1" data-ofield="views" value="1924"></td><td><input type="number" min="0" data-oi="1" data-ofield="likes" value="12"></td><td><input type="number" min="0" data-oi="1" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="1" data-ofield="shares" value="16"></td><td><input type="number" min="0" data-oi="1" data-ofield="saves" value="67"></td><td><input type="number" min="0" data-oi="1" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">4.9%</td><td class="rowdel"><button data-odel="1" title="Remove video">✕</button></td></tr><tr data-orow="2"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="2" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="2" data-ofield="title" value="If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 " placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="2" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="2" data-ofield="views" value="1769"></td><td><input type="number" min="0" data-oi="2" data-ofield="likes" value="18"></td><td><input type="number" min="0" data-oi="2" data-ofield="comments" value="2"></td><td><input type="number" min="0" data-oi="2" data-ofield="shares" value="12"></td><td><input type="number" min="0" data-oi="2" data-ofield="saves" value="42"></td><td><input type="number" min="0" data-oi="2" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">4.2%</td><td class="rowdel"><button data-odel="2" title="Remove video">✕</button></td></tr><tr data-orow="3"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="3" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="3" data-ofield="title" value="Before you give up trying to manifest love - watch this video ♥️ " placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="3" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="3" data-ofield="views" value="2363"></td><td><input type="number" min="0" data-oi="3" data-ofield="likes" value="22"></td><td><input type="number" min="0" data-oi="3" data-ofield="comments" value="15"></td><td><input type="number" min="0" data-oi="3" data-ofield="shares" value="20"></td><td><input type="number" min="0" data-oi="3" data-ofield="saves" value="64"></td><td><input type="number" min="0" data-oi="3" data-ofield="communityComments" value="6"></td><td class="calc" data-oecalc="">5.1%</td><td class="rowdel"><button data-odel="3" title="Remove video">✕</button></td></tr><tr data-orow="4"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="4" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="4" data-ofield="title" value="How to stop doubting that you'll manifest your partner - quickly ♥️" placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="4" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="4" data-ofield="views" value="2011"></td><td><input type="number" min="0" data-oi="4" data-ofield="likes" value="12"></td><td><input type="number" min="0" data-oi="4" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="4" data-ofield="shares" value="23"></td><td><input type="number" min="0" data-oi="4" data-ofield="saves" value="76"></td><td><input type="number" min="0" data-oi="4" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">5.5%</td><td class="rowdel"><button data-odel="4" title="Remove video">✕</button></td></tr><tr data-orow="5"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="5" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="5" data-ofield="title" value="How do you maintain the belief that you're already with your dream partner?  🤔" placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="5" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="5" data-ofield="views" value="1689"></td><td><input type="number" min="0" data-oi="5" data-ofield="likes" value="9"></td><td><input type="number" min="0" data-oi="5" data-ofield="comments" value="5"></td><td><input type="number" min="0" data-oi="5" data-ofield="shares" value="14"></td><td><input type="number" min="0" data-oi="5" data-ofield="saves" value="43"></td><td><input type="number" min="0" data-oi="5" data-ofield="communityComments" value="2"></td><td class="calc" data-oecalc="">4.2%</td><td class="rowdel"><button data-odel="5" title="Remove video">✕</button></td></tr></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Click Save once a video's stats are in to add it to the leaderboard below — click it again to pull it back off. Engagement rate = (likes + comments + shares + saves) ÷ views. Community comments is a subset of Comments — just the ones asking about joining, so you can spot which posts actually drive people to the community. Date is pulled automatically from the calendar for anything scheduled there — it's blank for videos added straight here. Month is just for reference — add a video whenever it breaks out, no fixed cadence.</span>
+        <button class="addbtn" id="outlierAdd">+ Add video</button>
+      </div>
+    </div>
+
+    <div class="leaderhead">
+      <p class="section-label" style="margin:40px 0 0;">Leaderboard — all videos</p>
+      <span class="hint" style="margin-top:24px;">Every video marked Saved in Video stats tracking above, ranked from 1 down. Ranked by Priority Score by default — weighted mostly toward Community comments, so it surfaces videos that actually drive people to join, not just the biggest reach. Click any column to rank by that instead.</span>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:44px;">#</th>
+            <th style="min-width:220px;">Title</th>
+            <th>Month</th>
+            <th class="sortable active" data-sortkey="priority">Priority <span class="arrow">▼</span></th>
+            <th class="sortable" data-sortkey="views">Views</th>
+            <th class="sortable" data-sortkey="likes">Likes</th>
+            <th class="sortable" data-sortkey="comments">Comments</th>
+            <th class="sortable" data-sortkey="shares">Shares</th>
+            <th class="sortable" data-sortkey="saves">Saves</th>
+            <th class="sortable" data-sortkey="communityComments">Community comments</th>
+            <th class="calc sortable" data-sortkey="engagement">Engagement rate</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardTbody"><tr class="rank1"><td class="rankcell">1</td><td>Before you give up trying to manifest love - watch this video ♥️ </td><td>Sept 26</td><td class="calc">97</td><td>2,363</td><td>22</td><td>15</td><td>20</td><td>64</td><td>6</td><td class="calc">5.1%</td></tr><tr class="rank2"><td class="rankcell">2</td><td>How do you maintain the belief that you're already with your dream partner?  🤔</td><td>Sept 26</td><td class="calc">42</td><td>1,689</td><td>9</td><td>5</td><td>14</td><td>43</td><td>2</td><td class="calc">4.2%</td></tr><tr class="rank3"><td class="rankcell">3</td><td>You don't need manifestation to attract your partner  ♥️ You need this...</td><td>Aug 26</td><td class="calc">39</td><td>2,423</td><td>20</td><td>8</td><td>25</td><td>61</td><td>0</td><td class="calc">4.7%</td></tr><tr><td class="rankcell">4</td><td>How to stop doubting that you'll manifest your partner - quickly ♥️</td><td>Sept 26</td><td class="calc">29</td><td>2,011</td><td>12</td><td>0</td><td>23</td><td>76</td><td>0</td><td class="calc">5.5%</td></tr><tr><td class="rankcell">5</td><td>The one dangerous belief that keeps people lonely forever</td><td>Aug 26</td><td class="calc">26</td><td>1,924</td><td>12</td><td>0</td><td>16</td><td>67</td><td>0</td><td class="calc">4.9%</td></tr><tr><td class="rankcell">6</td><td>If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 </td><td>Aug 26</td><td class="calc">26</td><td>1,769</td><td>18</td><td>2</td><td>12</td><td>42</td><td>0</td><td class="calc">4.2%</td></tr></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div id="tab-delivery" class="tabpanel" hidden="">
+
+    <p class="section-label">Priority board</p>
+    <span class="hint" style="display:block; margin:-6px 0 20px;">Eisenhower Matrix — tag each project Urgent and/or Important in the list below, and it sorts itself into a quadrant here. Work top-left to bottom-right.</span>
+    <div class="quadrants">
+      <div class="quadrant q-dofirst">
+        <div class="quadhead"><span class="quadtitle">Do first</span><span class="quadsub">Urgent &amp; important</span></div>
+        <ul class="quadlist" id="quadDoFirst"><li>Attraction Formula Meditation Recording</li><li>Attraction Formula Program Check-Ins</li></ul>
+      </div>
+      <div class="quadrant q-schedule">
+        <div class="quadhead"><span class="quadtitle">Schedule</span><span class="quadsub">Important, not urgent</span></div>
+        <ul class="quadlist" id="quadSchedule"><li>1-2-1 call with Chloe</li></ul>
+      </div>
+      <div class="quadrant q-delegate">
+        <div class="quadhead"><span class="quadtitle">Delegate</span><span class="quadsub">Urgent, not important</span></div>
+        <ul class="quadlist" id="quadDelegate"><li class="quadempty">Nothing here right now.</li></ul>
+      </div>
+      <div class="quadrant q-eliminate">
+        <div class="quadhead"><span class="quadtitle">Eliminate</span><span class="quadsub">Neither</span></div>
+        <ul class="quadlist" id="quadEliminate"><li class="quadempty">Nothing here right now.</li></ul>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:40px;">Projects</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="min-width:260px;">Project</th>
+            <th>Urgent</th>
+            <th>Important</th>
+            <th>Done</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="projectTbody"><tr data-prow="0"><td><input type="text" data-pi="0" data-pfield="title" value="1-2-1 call with Chloe" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="urgent"></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="done"></td><td class="rowdel"><button data-pdel="0" title="Remove project">✕</button></td></tr><tr data-prow="1"><td><input type="text" data-pi="1" data-pfield="title" value="Attraction Formula Meditation Recording" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="done"></td><td class="rowdel"><button data-pdel="1" title="Remove project">✕</button></td></tr><tr data-prow="2"><td><input type="text" data-pi="2" data-pfield="title" value="Attraction Formula Program Check-Ins" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="done"></td><td class="rowdel"><button data-pdel="2" title="Remove project">✕</button></td></tr></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Tick Urgent and/or Important to place it on the priority board above. Tick Done to clear it off the board.</span>
+        <button class="addbtn" id="projectAdd">+ Add project</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="daymodal-overlay" id="dayModalOverlay" hidden="">
+  <div class="daymodal">
+    <div class="daymodal-head">
+      <h3 id="dayModalTitle">Thursday 3 September</h3>
+      <button class="daymodal-x" id="dayModalClose" title="Close">✕</button>
+    </div>
+    <div id="dayModalBody"><label class="dayitem"><input type="checkbox" data-postedi="0"><span>Why you can't stop doubting if you're going to manifest love ♥️</span></label><label class="dayitem"><input type="checkbox" data-postedi="1"><span>How long should you wait before giving up on manifesting love? ♥️</span></label><label class="dayitem"><input type="checkbox" data-postedi="2"><span>If you're still doubting that you can manifest love - you MUST change this today ♥️</span></label></div>
+  </div>
+</div>
+
+<script type="application/json" id="state-data">{"rows":[{"month":"2026-08","emailLeads":59,"visits":250,"trials":9,"newMembers":1,"lost":0,"activeMembers":1,"price":30,"locked":true},{"month":"2026-09","emailLeads":1,"visits":20,"trials":0,"newMembers":0,"lost":0,"activeMembers":1,"price":99,"locked":true}],"mrrTarget":40000,"content":{"rows":[{"month":"2026-08","igFollowers":378,"emailList":59,"locked":true},{"month":"2026-09","igFollowers":397,"emailList":60,"locked":true}],"outliers":[{"title":"You don't need manifestation to attract your partner  ♥️ You need this...","month":"2026-08","views":2423,"likes":20,"comments":8,"shares":25,"saves":61,"saved":true},{"title":"The one dangerous belief that keeps people lonely forever","month":"2026-08","views":1924,"likes":12,"comments":0,"shares":16,"saves":67,"saved":true},{"title":"If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 ","month":"2026-08","views":1769,"likes":18,"comments":2,"shares":12,"saves":42,"saved":true},{"title":"Before you give up trying to manifest love - watch this video ♥️ ","month":"2026-09","views":2363,"likes":22,"comments":15,"shares":20,"saves":64,"communityComments":6,"saved":true},{"title":"How to stop doubting that you'll manifest your partner - quickly ♥️","month":"2026-09","views":2011,"likes":12,"comments":0,"shares":23,"saves":76,"saved":true},{"title":"How do you maintain the belief that you're already with your dream partner?  🤔","month":"2026-09","views":1689,"likes":9,"comments":5,"shares":14,"saves":43,"communityComments":2,"saved":true}],"ideas":[{"title":"Why you can't stop doubting if you're going to manifest love ♥️","date":"2026-09-03","mode":"auto","synced":false,"posted":false},{"title":"How long should you wait before giving up on manifesting love? ♥️","date":"2026-09-03","mode":"auto","synced":true},{"title":"If you're still doubting that you can manifest love - you MUST change this today ♥️","date":"2026-09-03","mode":"auto","synced":true}],"captionTemplates":[{"name":"QUIZ","text":"➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"}]},"delivery":{"projects":[{"title":"1-2-1 call with Chloe","urgent":false,"important":true,"done":false},{"title":"Attraction Formula Meditation Recording","urgent":true,"important":true,"done":false},{"title":"Attraction Formula Program Check-Ins","urgent":true,"important":true,"done":false}]}}</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var DEFAULT_STATE = {
+    mrrTarget: 0,
+    rows: [
+      { month:"2026-07", emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:30 },
+      { month:"2026-08", emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:30 },
+      { month:"2026-09", emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:99 }
+    ],
+    content: {
+      rows: [
+        { month:"2026-09", igFollowers:0, emailList:0, locked:false }
+      ],
+      outliers: [],
+      ideas: [],
+      captionTemplates: [] // [{ name, text }]
+    },
+    delivery: { projects: [] }
+  };
+
+  var state = null;
+  var artifact = null;
+
+  function readEmbeddedState(){
+    var el = document.getElementById("state-data");
+    if (el) {
+      try { return JSON.parse(el.textContent); } catch(e){}
+    }
+    return null;
+  }
+
+  function fmtInt(n){ return Math.round(n).toLocaleString("en-GB"); }
+  function fmtMoney(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+  function fmtPct(n){ return (isFinite(n) ? n.toFixed(1) : "0.0") + "%"; }
+  function safeDiv(a,b){ return b > 0 ? (a/b) : 0; }
+
+  function monthLabel(ym){
+    var parts = ym.split("-");
+    var d = new Date(Number(parts[0]), Number(parts[1])-1, 1);
+    return d.toLocaleDateString("en-GB",{month:"short",year:"2-digit"});
+  }
+  function nextMonth(ym){
+    var parts = ym.split("-").map(Number);
+    var m = parts[1] + 1, y = parts[0];
+    if (m > 12){ m = 1; y++; }
+    return y + "-" + String(m).padStart(2,"0");
+  }
+
+  // Every month is entered independently — nothing here reads a previous or
+  // later row. Each row's calculated figures come only from its own six
+  // input fields, so a value typed into one month can never shift another.
+  // Non-MRR figures for one row — self-contained, no reference to any other
+  // month, so a change here can never bleed into another row.
+  function computeRow(r){
+    var price = Number(r.price) || 0;   // new-member signup price that month
+    var active = Number(r.activeMembers) || 0;
+    var visits = Number(r.visits) || 0, trials = Number(r.trials) || 0;
+    var newM = Number(r.newMembers) || 0, lost = Number(r.lost) || 0;
+    var trialConv = safeDiv(trials, visits) * 100;
+    var trialToPaid = safeDiv(newM, trials) * 100;
+    var visitToPaid = safeDiv(newM, visits) * 100;
+    var churn = safeDiv(lost, active) * 100;
+    var retention = 100 - churn;
+    return Object.assign({}, r, {
+      emailLeads: Number(r.emailLeads) || 0, visits: visits, trials: trials,
+      newMembers: newM, lost: lost, activeMembers: active, price: price,
+      trialConv: trialConv, trialToPaid: trialToPaid, visitToPaid: visitToPaid,
+      churn: churn, retention: retention
+    });
+  }
+
+  // MRR is the one figure that's genuinely cumulative rather than per-month:
+  // members who joined at an old price keep paying that price after a price
+  // rise ("grandfathering"), so MRR can't be read off a single month's own
+  // fields. It's calculated automatically as a running cohort total — each
+  // month's new members lock in at that month's price and keep contributing
+  // it every month after, until they're recorded as lost (removed at the
+  // average rate across current members, since we don't track exactly which
+  // member left). Every other figure on this page stays fully independent
+  // per month — only MRR (and what's derived from it, ARPU and LTV) chains.
+  function computeRows(s){
+    var rows = s.rows.map(computeRow);
+    var runningMrr = 0, runningCount = 0;
+    rows.forEach(function(r){
+      runningMrr += r.newMembers * r.price;
+      runningCount += r.newMembers;
+      if (r.lost > 0 && runningCount > 0){
+        var avgRev = runningMrr / runningCount;
+        var removed = Math.min(r.lost, runningCount);
+        runningMrr = Math.max(0, runningMrr - avgRev * removed);
+        runningCount = Math.max(0, runningCount - removed);
+      }
+      r.mrr = runningMrr;
+      r.arpu = safeDiv(r.mrr, r.activeMembers);
+      r.ltv = r.churn > 0 ? r.arpu / (r.churn/100) : null;
+    });
+    return rows;
+  }
+
+  // Totals a period (a Monthly single row, a Yearly set of months, or All
+  // time) purely by summing each month's own inputs — flow metrics (leads,
+  // visits, trials, new/lost members) add up; point-in-time metrics (active
+  // members, price, MRR, LTV) are read from the most recent month in the
+  // period, since they describe a snapshot, not a flow.
+  function aggregatePeriod(rows){
+    if (!rows.length) return null;
+    var sorted = rows.slice().sort(function(a,b){ return a.month < b.month ? -1 : 1; });
+    // "Latest" for a snapshot metric (active members, price, MRR) must be
+    // judged by Active members specifically, not "any field is non-zero" —
+    // a month can have real visits/leads typed in while Active members is
+    // still sitting at 0 because that field just hasn't been filled in yet.
+    // Using any-field-nonzero picked that half-filled month and read current
+    // MRR as $0 even with real paying members recorded the month before.
+    var withMembers = sorted.filter(function(r){ return r.activeMembers > 0; });
+    var latest = withMembers.length ? withMembers[withMembers.length-1] : sorted[sorted.length-1];
+    var sum = { emailLeads:0, visits:0, trials:0, newMembers:0, lost:0 };
+    sorted.forEach(function(r){
+      sum.emailLeads += r.emailLeads; sum.visits += r.visits; sum.trials += r.trials;
+      sum.newMembers += r.newMembers; sum.lost += r.lost;
+    });
+    var trialConv = safeDiv(sum.trials, sum.visits) * 100;
+    var trialToPaid = safeDiv(sum.newMembers, sum.trials) * 100;
+    var visitToPaid = safeDiv(sum.newMembers, sum.visits) * 100;
+    var churn = safeDiv(sum.lost, latest.activeMembers) * 100;
+    var retention = 100 - churn;
+    var mrr = Number(latest.mrr) || 0;
+    var arpu = safeDiv(mrr, latest.activeMembers);
+    var ltv = churn > 0 ? arpu / (churn/100) : null;
+    return Object.assign({}, sum, {
+      activeMembers: latest.activeMembers, price: latest.price, mrr: mrr,
+      trialConv: trialConv, trialToPaid: trialToPaid, visitToPaid: visitToPaid,
+      churn: churn, retention: retention, arpu: arpu, ltv: ltv,
+      monthCount: sorted.length
+    });
+  }
+
+  // ── Persistence ────────────────────────────────────────────────────────
+  function localSave(s){
+    try { localStorage.setItem("heart-attractor-community-tracker", JSON.stringify(s)); } catch(e){}
+  }
+  function localLoad(){
+    try {
+      var raw = localStorage.getItem("heart-attractor-community-tracker");
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+
+  function setSaveState(kind){
+    // kind: "saved" | "unsaved" | "saving" | "error"
+    var dot = document.getElementById("saveDot");
+    var label = document.getElementById("saveLabel");
+    var btn = document.getElementById("saveBtn");
+    dot.classList.remove("saving","unsaved","error");
+    if (kind === "saved"){ label.textContent = "saved"; btn.disabled = true; }
+    else if (kind === "unsaved"){ dot.classList.add("unsaved"); label.textContent = "unsaved changes"; btn.disabled = false; }
+    else if (kind === "saving"){ dot.classList.add("saving"); label.textContent = "saving…"; btn.disabled = true; }
+    else if (kind === "error"){ dot.classList.add("error"); label.textContent = "save failed — try again"; btn.disabled = false; }
+  }
+
+  // Republish payload mirrors the authored fragment: head bits (title/link/style)
+  // plus body content, with the embedded JSON state swapped for the live state.
+  function buildDoc(s){
+    var headHtml = document.head.innerHTML;
+    var bodyHtml = document.body.innerHTML;
+    var marker = /<script type="application\/json" id="state-data">[\s\S]*?<\/script>/;
+    var block = '<script type="application/json" id="state-data">' + JSON.stringify(s) + '<' + '/script>';
+    if (marker.test(bodyHtml)) bodyHtml = bodyHtml.replace(marker, block);
+    else bodyHtml = block + "\n" + bodyHtml;
+    return headHtml + "\n" + bodyHtml;
+  }
+
+  // No autosave — edits only ever update `state` in memory and the local
+  // browser copy, until the Save button explicitly publishes them. This
+  // removes the multi-writer race that was silently overwriting entries:
+  // nothing goes to the shared artifact until you deliberately say so.
+  function markDirty(){
+    localSave(state);
+    setSaveState("unsaved");
+  }
+
+  function saveNow(){
+    localSave(state);
+    if (!artifact){ setSaveState("saved"); return; }
+    setSaveState("saving");
+    artifact.publish(buildDoc(state)).then(function(){
+      setSaveState("saved");
+    }).catch(function(){
+      // Someone else saved in between — our copy may now be behind theirs.
+      // Don't silently overwrite it: tell the user and let them retry once
+      // they've confirmed which version they want to keep.
+      setSaveState("error");
+    });
+  }
+
+  // ── Rendering ──────────────────────────────────────────────────────────
+  var viewMode = "month";     // "month" | "year" | "all"
+  var selectedPeriod = null;  // a "YYYY-MM" for month mode, "YYYY" for year mode
+
+  function render(){
+    var rows = computeRows(state);
+    renderPeriodPicker(rows);
+    renderKPIs(rows);
+    renderTable(rows);
+    renderCharts(rows);
+    renderGoal(rows);
+  }
+
+  // Always the true current MRR — every entered month, regardless of which
+  // Monthly/Yearly/All time view is selected above, so the goal bar never
+  // moves just because someone changed the view.
+  function renderGoal(rows){
+    var input = document.getElementById("targetInput");
+    if (document.activeElement !== input) input.value = state.mrrTarget || 0;
+
+    var agg = aggregatePeriod(rows);
+    var current = agg ? agg.mrr : 0;
+    var target = Number(state.mrrTarget) || 0;
+
+    document.getElementById("goalCurrent").textContent = fmtMoney(current) + "/mo";
+    document.getElementById("goalTargetLabel").textContent = fmtMoney(target) + "/mo";
+
+    var fill = document.getElementById("goalBarFill");
+    var caption = document.getElementById("goalCaption");
+    if (target <= 0){
+      fill.style.width = "0%";
+      caption.textContent = "Set a target to start tracking progress.";
+      return;
+    }
+    var pct = Math.max(0, Math.min(100, (current/target)*100));
+    fill.style.width = pct + "%";
+    if (current >= target) caption.textContent = "Target reached — " + fmtMoney(current - target) + "/mo over.";
+    else caption.textContent = pct.toFixed(1) + "% of target — " + fmtMoney(target - current) + "/mo to go.";
+  }
+
+  function yearOf(ym){ return ym.split("-")[0]; }
+
+  function renderPeriodPicker(rows){
+    var wrap = document.getElementById("periodPickerWrap");
+    var label = document.getElementById("periodLabel");
+    var sel = document.getElementById("periodSel");
+    var glanceLabel = document.getElementById("glanceLabel");
+
+    if (viewMode === "all"){
+      wrap.style.display = "none";
+      glanceLabel.textContent = "All time at a glance";
+      return;
+    }
+    wrap.style.display = "";
+
+    if (viewMode === "month"){
+      label.textContent = "Month";
+      var current = sel.value;
+      sel.innerHTML = "";
+      rows.forEach(function(r){
+        var opt = document.createElement("option");
+        opt.value = r.month;
+        opt.textContent = monthLabel(r.month);
+        sel.appendChild(opt);
+      });
+      selectedPeriod = (current && rows.some(function(r){return r.month===current;})) ? current
+        : (rows.some(function(r){return r.month===selectedPeriod;}) ? selectedPeriod : rows[rows.length-1].month);
+      sel.value = selectedPeriod;
+      glanceLabel.textContent = "This month at a glance";
+    } else {
+      label.textContent = "Year";
+      var years = Array.from(new Set(rows.map(function(r){ return yearOf(r.month); }))).sort();
+      var currentY = sel.value;
+      sel.innerHTML = "";
+      years.forEach(function(y){
+        var opt = document.createElement("option");
+        opt.value = y; opt.textContent = y;
+        sel.appendChild(opt);
+      });
+      selectedPeriod = (currentY && years.indexOf(currentY) !== -1) ? currentY
+        : (years.indexOf(selectedPeriod) !== -1 ? selectedPeriod : years[years.length-1]);
+      sel.value = selectedPeriod;
+      glanceLabel.textContent = "This year at a glance";
+    }
+  }
+
+  function kpiCard(label, value, cls){
+    var div = document.createElement("div");
+    div.className = "kpi" + (cls ? " " + cls : "");
+    div.innerHTML = '<div class="label">'+label+'</div><div class="value">'+value+'</div>';
+    return div;
+  }
+
+  function renderKPIs(rows){
+    var grid = document.getElementById("kpiGrid");
+    grid.innerHTML = "";
+    if (!rows.length) return;
+
+    var periodRows;
+    if (viewMode === "all") periodRows = rows;
+    else if (viewMode === "year") periodRows = rows.filter(function(r){ return yearOf(r.month) === selectedPeriod; });
+    else periodRows = rows.filter(function(r){ return r.month === selectedPeriod; });
+    if (!periodRows.length) return;
+
+    var sel = aggregatePeriod(periodRows);
+
+    grid.appendChild(kpiCard("Email leads (quiz)", fmtInt(sel.emailLeads)));
+    grid.appendChild(kpiCard("About Page visits", fmtInt(sel.visits)));
+    grid.appendChild(kpiCard("Free trials started", fmtInt(sel.trials)));
+    grid.appendChild(kpiCard("Trial conversion", fmtPct(sel.trialConv), "accent"));
+    grid.appendChild(kpiCard("New paying members", fmtInt(sel.newMembers)));
+    grid.appendChild(kpiCard("Trial → paid conversion", fmtPct(sel.trialToPaid), "accent"));
+    grid.appendChild(kpiCard("Active members" + (sel.monthCount>1 ? " (latest)" : ""), fmtInt(sel.activeMembers)));
+    grid.appendChild(kpiCard("Retention rate", fmtPct(sel.retention)));
+    grid.appendChild(kpiCard("MRR" + (sel.monthCount>1 ? " (latest)" : ""), fmtMoney(sel.mrr)));
+    grid.appendChild(kpiCard("Avg. revenue / member", fmtMoney(sel.arpu)));
+    grid.appendChild(kpiCard("LTV / member", sel.ltv != null ? fmtMoney(sel.ltv) : "—"));
+  }
+
+  // Row count the table body is currently built for. The table is only torn
+  // down and rebuilt when this changes (a month added/removed) or on first
+  // render — an edit inside a cell updates that row's calculated cells in
+  // place instead. Rebuilding on every keystroke's blur destroyed the input
+  // elements mid-edit, which lost keyboard focus and made Tab jump to an
+  // unrelated row — the cause of values landing in the wrong month.
+  var tableBuiltForCount = -1;
+
+  function calcCellsHTML(r){
+    return [
+      fmtPct(r.trialConv), fmtPct(r.trialToPaid), fmtPct(r.visitToPaid),
+      fmtPct(r.churn), fmtPct(r.retention), fmtMoney(r.mrr), (r.ltv!=null?fmtMoney(r.ltv):"—")
+    ];
+  }
+
+  function buildRow(r, i, rowCount){
+    var tr = document.createElement("tr");
+    tr.dataset.row = i;
+    if (r.locked) tr.classList.add("locked");
+    var dis = r.locked ? " disabled" : "";
+    tr.innerHTML =
+      '<td class="rowlock"><button class="lockbtn" data-lock="'+i+'" title="'+(r.locked?'Unlock this month':'Lock this month')+'">'+(r.locked?'🔒':'🔓')+'</button></td>' +
+      '<td class="month">'+monthLabel(r.month)+'</td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="emailLeads" value="'+r.emailLeads+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="visits" value="'+r.visits+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="trials" value="'+r.trials+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="newMembers" value="'+r.newMembers+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="lost" value="'+r.lost+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="activeMembers" value="'+r.activeMembers+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" step="0.5" data-i="'+i+'" data-field="price" value="'+r.price+'"'+dis+'></td>' +
+      '<td class="calc" data-calc="0"></td>' +
+      '<td class="calc" data-calc="1"></td>' +
+      '<td class="calc" data-calc="2"></td>' +
+      '<td class="calc" data-calc="3"></td>' +
+      '<td class="calc" data-calc="4"></td>' +
+      '<td class="money" data-calc="5"></td>' +
+      '<td class="money" data-calc="6"></td>' +
+      '<td class="rowdel">'+(rowCount>1 && !r.locked ? '<button data-del="'+i+'" title="Remove month">✕</button>' : '')+'</td>';
+    updateRowCalcCells(tr, r, rowCount, i);
+    return tr;
+  }
+
+  function updateRowCalcCells(tr, r, rows, i){
+    var vals = calcCellsHTML(r);
+    vals.forEach(function(v, idx){
+      var cell = tr.querySelector('[data-calc="'+idx+'"]');
+      if (cell) cell.textContent = v;
+    });
+  }
+
+  function renderTable(rows){
+    var tbody = document.getElementById("tbody");
+    if (rows.length !== tableBuiltForCount){
+      tbody.innerHTML = "";
+      rows.forEach(function(r, i){ tbody.appendChild(buildRow(r, i, rows.length)); });
+      wireTableEvents(tbody);
+      tableBuiltForCount = rows.length;
+    } else {
+      rows.forEach(function(r, i){
+        var tr = tbody.querySelector('tr[data-row="'+i+'"]');
+        if (tr) updateRowCalcCells(tr, r);
+      });
+    }
+  }
+
+  function wireTableEvents(tbody){
+    tbody.querySelectorAll("input").forEach(function(inp){
+      // "input" fires on every keystroke as well as an arrow-spinner click —
+      // "change" alone only fires once the field is left, which made typed
+      // values look like they hadn't registered until you clicked away.
+      inp.addEventListener("input", function(){
+        var i = Number(inp.dataset.i), f = inp.dataset.field;
+        state.rows[i][f] = Number(inp.value) || 0;
+        markDirty();
+        render();
+      });
+    });
+    tbody.querySelectorAll("[data-lock]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.lock);
+        state.rows[i].locked = !state.rows[i].locked;
+        markDirty();
+        tableBuiltForCount = -1; // force rebuild — disabled state changed
+        render();
+      });
+    });
+    tbody.querySelectorAll("[data-del]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.del);
+        state.rows.splice(i,1);
+        tableBuiltForCount = -1; // force rebuild — indices shift
+        markDirty();
+        render();
+      });
+    });
+  }
+
+  // ── Charts (single-hue line, hand-drawn SVG; no library needed) ────────
+  function drawLine(svgId, ttId, rows, series, opts){
+    var svg = document.getElementById(svgId);
+    var tt = document.getElementById(ttId);
+    svg.innerHTML = "";
+    var w = svg.clientWidth || 320, h = 150;
+    var padL = 4, padR = 4, padT = 10, padB = 22;
+    var innerW = w - padL - padR, innerH = h - padT - padB;
+
+    var allVals = [];
+    series.forEach(function(s){ rows.forEach(function(r){ var v = s.get(r); if (v!=null && isFinite(v)) allVals.push(v); }); });
+    var maxV = Math.max.apply(null, allVals.concat([opts && opts.minMax || 1]));
+    var minV = Math.min(0, Math.min.apply(null, allVals.length ? allVals : [0]));
+    if (maxV === minV) maxV = minV + 1;
+
+    function x(i){ return padL + (rows.length<=1 ? innerW/2 : innerW * i/(rows.length-1)); }
+    function y(v){ return padT + innerH - ((v-minV)/(maxV-minV))*innerH; }
+
+    for (var g=0; g<=2; g++){
+      var gy = padT + innerH*g/2;
+      var gl = document.createElementNS("http://www.w3.org/2000/svg","line");
+      gl.setAttribute("x1", padL); gl.setAttribute("x2", w-padR);
+      gl.setAttribute("y1", gy); gl.setAttribute("y2", gy);
+      gl.setAttribute("class","gridline");
+      svg.appendChild(gl);
+    }
+
+    series.forEach(function(s){
+      var pts = rows.map(function(r,i){ var v=s.get(r); return v==null?null:[x(i),y(v)]; });
+      var d = "";
+      pts.forEach(function(p){ if(!p) return; d += (d===""?"M":"L")+p[0]+","+p[1]+" "; });
+      var path = document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d", d.trim());
+      path.setAttribute("class","noline");
+      path.setAttribute("stroke", s.color);
+      path.setAttribute("stroke-width", "2");
+      svg.appendChild(path);
+
+      pts.forEach(function(p,i){
+        if (!p) return;
+        var isLast = i === pts.length-1;
+        var c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        c.setAttribute("cx",p[0]); c.setAttribute("cy",p[1]);
+        c.setAttribute("r", isLast ? 4.5 : 3);
+        c.setAttribute("fill", s.color);
+        c.setAttribute("class","chartpt");
+        c.style.cursor = "pointer";
+        c.addEventListener("mouseenter", function(){
+          tt.textContent = monthLabel(rows[i].month) + " · " + s.name + ": " + s.fmt(s.get(rows[i]));
+          tt.style.left = p[0] + "px";
+          tt.style.top = (p[1]-30) + "px";
+          tt.style.opacity = "1";
+        });
+        c.addEventListener("mouseleave", function(){ tt.style.opacity = "0"; });
+        svg.appendChild(c);
+      });
+    });
+
+    var showIdx = rows.length <= 5 ? rows.map(function(_,i){return i;}) : [0, Math.floor((rows.length-1)/2), rows.length-1];
+    showIdx.forEach(function(i){
+      var t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x", x(i)); t.setAttribute("y", h-4);
+      t.setAttribute("text-anchor", i===0?"start":(i===rows.length-1?"end":"middle"));
+      t.setAttribute("font-size","10.5");
+      t.style.fill = "var(--text-muted)";
+      t.textContent = monthLabel(rows[i].month);
+      svg.appendChild(t);
+    });
+  }
+
+  function renderCharts(rows){
+    var cs = getComputedStyle(document.documentElement);
+    var accentVar = cs.getPropertyValue('--accent').trim() || "#B84FE8";
+    var accent2Var = cs.getPropertyValue('--accent-2').trim() || "#E1A6FF";
+    var warnVar = cs.getPropertyValue('--warn').trim() || "#E0B168";
+
+    drawLine("chartMRR","ttMRR", rows, [
+      { name:"MRR", color: accentVar, get:function(r){return r.mrr;}, fmt:fmtMoney }
+    ]);
+    drawLine("chartMembers","ttMembers", rows, [
+      { name:"Active members", color: accent2Var, get:function(r){return r.activeMembers;}, fmt:fmtInt }
+    ]);
+    drawLine("chartConv","ttConv", rows, [
+      { name:"About Page → Trial", color: accent2Var, get:function(r){return r.trialConv;}, fmt:fmtPct },
+      { name:"Trial → Paying", color: warnVar, get:function(r){return r.trialToPaid;}, fmt:fmtPct }
+    ], { minMax: 10 });
+  }
+
+  // ── Content tab ───────────────────────────────────────────────────────
+  // Same pattern as MRR Tracker: one row per month, typed in by hand,
+  // nothing carried over automatically except the on-screen "growth"
+  // figure, which is just a display comparing to the previous row — not a
+  // value stored anywhere, so it never causes the wrong-month bleed the
+  // funnel numbers used to.
+  var contentSelectedMonth = null;
+
+  function renderContentTab(){
+    var rows = (state.content && state.content.rows) ? state.content.rows.slice() : [];
+    rows.sort(function(a,b){ return a.month < b.month ? -1 : 1; });
+
+    var sel = document.getElementById("contentPeriodSel");
+    var current = sel.value;
+    sel.innerHTML = "";
+    rows.forEach(function(r){
+      var opt = document.createElement("option");
+      opt.value = r.month; opt.textContent = monthLabel(r.month);
+      sel.appendChild(opt);
+    });
+    if (rows.length){
+      contentSelectedMonth = (current && rows.some(function(r){return r.month===current;})) ? current
+        : (rows.some(function(r){return r.month===contentSelectedMonth;}) ? contentSelectedMonth : rows[rows.length-1].month);
+      sel.value = contentSelectedMonth;
+    }
+
+    renderContentKPIs(rows);
+    renderContentTable(rows);
+    renderContentCharts(rows);
+    renderOutliers();
+  }
+
+  function contentGrowth(rows, i, field){
+    if (i === 0) return null;
+    return rows[i][field] - rows[i-1][field];
+  }
+
+  function renderContentKPIs(rows){
+    var grid = document.getElementById("contentKpiGrid");
+    grid.innerHTML = "";
+    if (!rows.length) return;
+    var idx = rows.findIndex(function(r){ return r.month === contentSelectedMonth; });
+    if (idx === -1) idx = rows.length - 1;
+    var r = rows[idx];
+    var igG = contentGrowth(rows, idx, "igFollowers");
+    var emG = contentGrowth(rows, idx, "emailList");
+
+    grid.appendChild(kpiCard("Instagram followers", fmtInt(r.igFollowers)));
+    grid.appendChild(kpiCard("IG growth vs. prev. month", igG==null ? "—" : (igG>=0?"+":"")+fmtInt(igG), "accent"));
+    grid.appendChild(kpiCard("Email list", fmtInt(r.emailList)));
+    grid.appendChild(kpiCard("Email growth vs. prev. month", emG==null ? "—" : (emG>=0?"+":"")+fmtInt(emG), "accent"));
+  }
+
+  var contentTableBuiltForCount = -1;
+
+  function buildContentRow(r, i, rows, rowCount){
+    var tr = document.createElement("tr");
+    tr.dataset.row = i;
+    if (r.locked) tr.classList.add("locked");
+    var dis = r.locked ? " disabled" : "";
+    tr.innerHTML =
+      '<td class="rowlock"><button class="lockbtn" data-clock="'+i+'" title="'+(r.locked?'Unlock this month':'Lock this month')+'">'+(r.locked?'🔒':'🔓')+'</button></td>' +
+      '<td class="month">'+monthLabel(r.month)+'</td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="igFollowers" value="'+r.igFollowers+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="emailList" value="'+r.emailList+'"'+dis+'></td>' +
+      '<td class="calc" data-ccalc="0"></td>' +
+      '<td class="calc" data-ccalc="1"></td>' +
+      '<td class="rowdel">'+(rowCount>1 && !r.locked ? '<button data-cdel="'+i+'" title="Remove month">✕</button>' : '')+'</td>';
+    updateContentRowCalc(tr, rows, i);
+    return tr;
+  }
+
+  function updateContentRowCalc(tr, rows, i){
+    var igG = contentGrowth(rows, i, "igFollowers");
+    var emG = contentGrowth(rows, i, "emailList");
+    var c0 = tr.querySelector('[data-ccalc="0"]'); if (c0) c0.textContent = igG==null?"—":(igG>=0?"+":"")+fmtInt(igG);
+    var c1 = tr.querySelector('[data-ccalc="1"]'); if (c1) c1.textContent = emG==null?"—":(emG>=0?"+":"")+fmtInt(emG);
+  }
+
+  function renderContentTable(rows){
+    var tbody = document.getElementById("contentTbody");
+    if (rows.length !== contentTableBuiltForCount){
+      tbody.innerHTML = "";
+      rows.forEach(function(r, i){ tbody.appendChild(buildContentRow(r, i, rows, rows.length)); });
+      wireContentTableEvents(tbody, rows);
+      contentTableBuiltForCount = rows.length;
+    } else {
+      rows.forEach(function(r, i){
+        var tr = tbody.querySelector('tr[data-row="'+i+'"]');
+        if (tr) updateContentRowCalc(tr, rows, i);
+      });
+    }
+  }
+
+  function wireContentTableEvents(tbody, rows){
+    tbody.querySelectorAll("input").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        var i = Number(inp.dataset.i), f = inp.dataset.field;
+        state.content.rows[i][f] = Number(inp.value) || 0;
+        markDirty();
+        renderContentTab();
+      });
+    });
+    tbody.querySelectorAll("[data-clock]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.clock);
+        state.content.rows[i].locked = !state.content.rows[i].locked;
+        markDirty();
+        contentTableBuiltForCount = -1;
+        renderContentTab();
+      });
+    });
+    tbody.querySelectorAll("[data-cdel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.cdel);
+        state.content.rows.splice(i,1);
+        markDirty();
+        renderContentTab();
+      });
+    });
+  }
+
+  function renderContentCharts(rows){
+    var cs = getComputedStyle(document.documentElement);
+    var accentVar = cs.getPropertyValue('--accent').trim() || "#B84FE8";
+    var accent2Var = cs.getPropertyValue('--accent-2').trim() || "#E1A6FF";
+    drawLine("chartIG","ttIG", rows, [
+      { name:"Instagram followers", color: accentVar, get:function(r){return r.igFollowers;}, fmt:fmtInt }
+    ]);
+    drawLine("chartEmail","ttEmail", rows, [
+      { name:"Email list", color: accent2Var, get:function(r){return r.emailList;}, fmt:fmtInt }
+    ]);
+  }
+
+  document.getElementById("contentPeriodSel").addEventListener("change", function(e){
+    contentSelectedMonth = e.target.value;
+    renderContentTab();
+  });
+  document.getElementById("contentAddMonth").addEventListener("click", function(){
+    if (!state.content) state.content = { rows: [] };
+    var rows = state.content.rows;
+    var last = rows.length ? rows[rows.length-1] : null;
+    var nm = last ? nextMonth(last.month) : "2026-01";
+    rows.push({ month:nm, igFollowers:0, emailList:0, locked:false });
+    markDirty(); renderContentTab();
+  });
+
+  // ── Video ideas + content calendar ──────────────────────────────────
+  // Type an idea, then pick a real date — it drops into that day on the
+  // calendar below. The first time an idea gets a date, it's copied into
+  // Video stats tracking automatically (title only, stats at 0) so there's
+  // nothing to retype once the real numbers come in. `synced` stops that
+  // happening twice if the date gets changed later.
+  var DOW_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  var DAILY_REEL_TARGET = 3;
+  var ideaTableBuiltForCount = -1;
+  var calCursor = new Date(); // which month the calendar is showing — UI-only, resets on reload
+
+  function renderIdeasAndWeek(){
+    if (!state.content.ideas) state.content.ideas = [];
+    renderIdeas();
+    renderCalendar();
+  }
+
+  function buildIdeaRow(idea, i){
+    var tr = document.createElement("tr");
+    tr.dataset.idrow = i;
+    var mode = idea.mode === "specific" ? "specific" : "auto";
+    tr.innerHTML =
+      '<td><input type="text" data-idi="'+i+'" data-idfield="title" value="'+String(idea.title||"").replace(/"/g,"&quot;")+'" placeholder="Video idea"></td>' +
+      '<td class="slotmode">' +
+        '<label class="slotopt"><input type="checkbox" data-idi="'+i+'" data-slotmode="auto"'+(mode==="auto"?" checked":"")+'> Add to next available slot</label>' +
+        '<label class="slotopt"><input type="checkbox" data-idi="'+i+'" data-slotmode="specific"'+(mode==="specific"?" checked":"")+'> Add to specific date</label>' +
+      '</td>' +
+      '<td><input type="date" data-idi="'+i+'" data-idfield="date" value="'+(idea.date||"")+'"'+(mode==="auto"?" disabled":"")+'></td>' +
+      '<td class="rowdel"><button data-iddel="'+i+'" title="Remove idea">✕</button></td>';
+    return tr;
+  }
+
+  // Once an idea has both a title and a date it's live on the calendar
+  // below — no reason to keep it sitting in this list too, or it just
+  // grows forever. It stays here only while still being set up (no
+  // title yet, or "specific date" mode waiting on a date pick).
+  function isIdeaPlaced(idea){
+    return !!(idea.title && idea.date);
+  }
+
+  function renderIdeas(){
+    var all = state.content.ideas;
+    var tbody = document.getElementById("ideaTbody");
+    var visible = [];
+    all.forEach(function(idea, i){ if (!isIdeaPlaced(idea)) visible.push(i); });
+    if (visible.length !== ideaTableBuiltForCount){
+      tbody.innerHTML = "";
+      visible.forEach(function(i){ tbody.appendChild(buildIdeaRow(all[i], i)); });
+      wireIdeaEvents(tbody);
+      ideaTableBuiltForCount = visible.length;
+    }
+  }
+
+  function wireIdeaEvents(tbody){
+    tbody.querySelectorAll("input[type=text]").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        var i = Number(inp.dataset.idi);
+        var idea = state.content.ideas[i];
+        idea.title = inp.value;
+        markDirty();
+        renderCalendar();
+      });
+      // Leaving the field is the moment to check whether this idea now
+      // has everything it needs to drop off this list and live purely on
+      // the calendar — checking on every keystroke would yank the row
+      // (and keyboard focus) out from under whoever's still typing.
+      inp.addEventListener("blur", function(){
+        renderIdeas();
+      });
+    });
+    tbody.querySelectorAll("input[type=date]").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var i = Number(inp.dataset.idi);
+        var idea = state.content.ideas[i];
+        idea.date = inp.value;
+        markDirty();
+        renderIdeas();
+        renderCalendar();
+        renderOutliers();
+      });
+    });
+    tbody.querySelectorAll("input[data-slotmode]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var i = Number(cb.dataset.idi);
+        var idea = state.content.ideas[i];
+        var mode = cb.dataset.slotmode;
+        if (!cb.checked){
+          // one option must always be selected — put it back on
+          cb.checked = true;
+          return;
+        }
+        idea.mode = mode;
+        var tr = cb.closest("tr");
+        tr.querySelectorAll("input[data-slotmode]").forEach(function(other){
+          if (other !== cb) other.checked = false;
+        });
+        var dateInput = tr.querySelector("input[type=date]");
+        if (mode === "auto"){
+          idea.date = findNextAvailableDate(i);
+          dateInput.value = idea.date;
+          dateInput.disabled = true;
+        } else {
+          dateInput.disabled = false;
+          dateInput.focus();
+        }
+        markDirty();
+        renderIdeas();
+        renderCalendar();
+      });
+    });
+    tbody.querySelectorAll("[data-iddel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.iddel);
+        state.content.ideas.splice(i,1);
+        ideaTableBuiltForCount = -1;
+        markDirty();
+        renderIdeasAndWeek();
+      });
+    });
+  }
+
+  // Only called once an idea is ticked off as posted in the calendar's day
+  // panel — not while it's still just sitting on a date. Safe to call
+  // more than once for the same idea: dedupes by title, so it only ever
+  // creates the tracking row once.
+  function syncIdeaToOutliers(idea){
+    if (!state.content.outliers) state.content.outliers = [];
+    if (!idea.title) return;
+    var already = state.content.outliers.some(function(v){ return v.title === idea.title; });
+    idea.synced = true;
+    if (already) return;
+    state.content.outliers.push({
+      title: idea.title, month:"", views:0, likes:0, comments:0,
+      shares:0, saves:0, communityComments:0, saved:false
+    });
+    outlierTableBuiltForCount = -1;
+  }
+
+  // Mirror of syncIdeaToOutliers — unticking posted pulls the row back
+  // out. If real numbers were already logged against it, confirm first
+  // so a stray click can't silently wipe them.
+  function removeIdeaFromOutliers(idea){
+    if (!state.content.outliers || !idea.title) return;
+    var i = state.content.outliers.findIndex(function(v){ return v.title === idea.title; });
+    if (i === -1) return;
+    var v = state.content.outliers[i];
+    var hasStats = (Number(v.views)||0) > 0 || (Number(v.likes)||0) > 0 || (Number(v.comments)||0) > 0;
+    if (hasStats && !window.confirm('"'+idea.title+'" already has stats logged in Video stats tracking. Untick it anyway and remove it?')){
+      idea.posted = true;
+      return;
+    }
+    idea.synced = false;
+    state.content.outliers.splice(i, 1);
+    outlierTableBuiltForCount = -1;
+  }
+
+  function isoDate(d){ return Utilities_formatLocalDate(d); }
+  function Utilities_formatLocalDate(d){
+    var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+    return y+"-"+m+"-"+day;
+  }
+  function todayISO(){ return isoDate(new Date()); }
+
+  // Walks forward from today and returns the first date that hasn't
+  // already hit the daily reel target — used to auto-slot a new idea.
+  // The date field stays a normal editable input, so this is just a
+  // starting point, not a lock.
+  function findNextAvailableDate(excludeIndex){
+    var d = new Date();
+    for (var i = 0; i < 365; i++){
+      var iso = isoDate(d);
+      var count = state.content.ideas.filter(function(idea, idx){
+        return idea.date === iso && idea.title && idx !== excludeIndex;
+      }).length;
+      if (count < DAILY_REEL_TARGET) return iso;
+      d.setDate(d.getDate() + 1);
+    }
+    return todayISO();
+  }
+
+  function renderCalendar(){
+    var label = document.getElementById("calMonthLabel");
+    label.textContent = calCursor.toLocaleDateString("en-GB", { month:"long", year:"numeric" });
+
+    var grid = document.getElementById("calendar");
+    grid.innerHTML = "";
+    DOW_LABELS.forEach(function(d){
+      var h = document.createElement("div");
+      h.className = "caldow";
+      h.textContent = d;
+      grid.appendChild(h);
+    });
+
+    var year = calCursor.getFullYear(), month = calCursor.getMonth();
+    var firstOfMonth = new Date(year, month, 1);
+    // Monday-start grid — shift Sunday(0) to the end of the week.
+    var startOffset = (firstOfMonth.getDay() + 6) % 7;
+    var gridStart = new Date(year, month, 1 - startOffset);
+
+    var list = state.content.ideas || [];
+    var today = todayISO();
+
+    for (var i = 0; i < 42; i++){
+      let cellDate = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
+      let cellISO = isoDate(cellDate);
+      var outside = cellDate.getMonth() !== month;
+      var dayIdeas = list.filter(function(idea){ return idea.date === cellISO && idea.title; });
+
+      var cell = document.createElement("div");
+      cell.className = "calcell" + (outside ? " outside" : "") + (cellISO === today ? " today" : "");
+
+      var countHTML = "";
+      if (!outside){
+        var metClass = dayIdeas.length >= DAILY_REEL_TARGET ? "met" : "short";
+        countHTML = '<span class="calcount '+metClass+'">'+dayIdeas.length+'/'+DAILY_REEL_TARGET+'</span>';
+      }
+      cell.innerHTML = '<div class="caldatehead"><span class="caldatenum">'+cellDate.getDate()+'</span>'+countHTML+'</div>';
+
+      var itemsWrap = document.createElement("div");
+      itemsWrap.className = "calitems";
+      dayIdeas.slice(0, 4).forEach(function(idea){
+        var it = document.createElement("div");
+        it.className = "calitem" + (idea.posted ? " done" : "");
+        it.title = idea.title;
+        it.textContent = (idea.posted ? "✓ " : "") + idea.title;
+        itemsWrap.appendChild(it);
+      });
+      if (dayIdeas.length > 4){
+        var more = document.createElement("div");
+        more.className = "calitem";
+        more.style.color = "var(--text-muted)";
+        more.textContent = "+"+(dayIdeas.length-4)+" more";
+        itemsWrap.appendChild(more);
+      }
+      cell.appendChild(itemsWrap);
+      if (!outside){
+        cell.addEventListener("click", function(){ openDayModal(cellISO); });
+      }
+      grid.appendChild(cell);
+
+      // Skip generating the remaining rows once we've covered the month
+      // and filled out its final week — avoids a needless trailing blank
+      // week for months that fit in 5 rows.
+      if (i >= 34 && cellDate.getMonth() !== month && (i+1) % 7 === 0) break;
+    }
+  }
+
+  // ── Day detail modal — click any date to see what's due and tick it
+  // off once it's posted. `posted` lives on the idea itself, so it also
+  // shows on the calendar tile (✓, struck through).
+  var dayModalDate = null;
+
+  function openDayModal(iso){
+    dayModalDate = iso;
+    renderDayModal();
+    document.getElementById("dayModalOverlay").hidden = false;
+  }
+
+  function closeDayModal(){
+    document.getElementById("dayModalOverlay").hidden = true;
+    dayModalDate = null;
+  }
+
+  function renderDayModal(){
+    if (!dayModalDate) return;
+    var d = new Date(dayModalDate+"T00:00:00");
+    document.getElementById("dayModalTitle").textContent =
+      d.toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long" });
+
+    var body = document.getElementById("dayModalBody");
+    body.innerHTML = "";
+    var list = state.content.ideas || [];
+    var dayIdeas = [];
+    list.forEach(function(idea, i){
+      if (idea.date === dayModalDate && idea.title) dayIdeas.push(i);
+    });
+
+    if (!dayIdeas.length){
+      body.innerHTML = '<p class="hint">Nothing scheduled for this day yet.</p>';
+      return;
+    }
+
+    dayIdeas.forEach(function(i){
+      var idea = state.content.ideas[i];
+      var row = document.createElement("div");
+      row.className = "dayitem" + (idea.posted ? " posted" : "");
+
+      var top = document.createElement("div");
+      top.className = "dayitem-top";
+
+      var label = document.createElement("label");
+      label.className = "dayitem-check";
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!idea.posted;
+      cb.dataset.postedi = i;
+      var span = document.createElement("span");
+      span.textContent = idea.title;
+      label.appendChild(cb);
+      label.appendChild(span);
+
+      var moveInput = document.createElement("input");
+      moveInput.type = "date";
+      moveInput.className = "dayitem-move";
+      moveInput.value = idea.date || "";
+      moveInput.title = "Move to another date";
+      moveInput.dataset.movei = i;
+
+      top.appendChild(label);
+      top.appendChild(moveInput);
+      row.appendChild(top);
+
+      // Caption lives here, not in the ideas list — it's only useful once
+      // something's actually scheduled, and this is the screen you're on
+      // the moment you're about to post: pick a template (or don't),
+      // tweak it if you want, copy title + caption, paste into Instagram,
+      // tick it off. Picking a template just fills the box for this one
+      // video — it's a starting point, not a link back to the template.
+      var captionWrap = document.createElement("div");
+      captionWrap.className = "dayitem-caption";
+
+      var templates = (state.content.captionTemplates || []).filter(function(tpl){ return tpl && tpl.text; });
+      if (templates.length){
+        var chipRow = document.createElement("div");
+        chipRow.className = "captionchips";
+        templates.forEach(function(tpl){
+          var chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "captionchip";
+          chip.textContent = tpl.name && tpl.name.trim() ? tpl.name : (tpl.text.length > 40 ? tpl.text.slice(0,40)+"…" : tpl.text);
+          chip.title = tpl.text;
+          chip.addEventListener("click", function(){
+            idea.caption = tpl.text;
+            captionArea.value = tpl.text;
+            markDirty();
+          });
+          chipRow.appendChild(chip);
+        });
+        captionWrap.appendChild(chipRow);
+      }
+
+      var captionArea = document.createElement("textarea");
+      captionArea.placeholder = "Caption for this reel (optional)…";
+      captionArea.value = idea.caption || "";
+      captionArea.dataset.captioni = i;
+
+      var copyRow = document.createElement("div");
+      copyRow.className = "dayitem-copyrow";
+      var copyTitleBtn = document.createElement("button");
+      copyTitleBtn.className = "copybtn";
+      copyTitleBtn.type = "button";
+      copyTitleBtn.textContent = "Copy title";
+      var copyCaptionBtn = document.createElement("button");
+      copyCaptionBtn.className = "copybtn";
+      copyCaptionBtn.type = "button";
+      copyCaptionBtn.textContent = "Copy caption";
+      copyRow.appendChild(copyTitleBtn);
+      copyRow.appendChild(copyCaptionBtn);
+      captionWrap.appendChild(captionArea);
+      captionWrap.appendChild(copyRow);
+      row.appendChild(captionWrap);
+
+      body.appendChild(row);
+
+      moveInput.addEventListener("change", function(){
+        idea.date = moveInput.value;
+        idea.mode = "specific";
+        // Video stats tracking pulls its Date column live from this idea
+        // by title match, so moving it here updates that automatically —
+        // nothing else to sync.
+        markDirty();
+        renderDayModal();
+        renderCalendar();
+        renderOutliers();
+      });
+
+      captionArea.addEventListener("input", function(){
+        idea.caption = captionArea.value;
+        markDirty();
+      });
+
+      copyTitleBtn.addEventListener("click", function(){
+        copyToClipboard(idea.title, copyTitleBtn);
+      });
+      copyCaptionBtn.addEventListener("click", function(){
+        copyToClipboard(idea.caption || "", copyCaptionBtn);
+      });
+
+      cb.addEventListener("change", function(){
+        idea.posted = cb.checked;
+        // This is the one and only trigger that adds a video to Video
+        // stats tracking — not typing the title, not setting the date.
+        // Unticking pulls it back out again (with a confirm if real
+        // stats were already logged against it).
+        if (idea.posted && idea.title){
+          syncIdeaToOutliers(idea);
+        } else if (!idea.posted && idea.title){
+          removeIdeaFromOutliers(idea);
+        }
+        markDirty();
+        renderDayModal();
+        renderCalendar();
+        renderOutliers();
+      });
+    });
+  }
+
+  // Falls back to a manual copy prompt if the Clipboard API is blocked —
+  // it needs a secure context and a real click to work, which this always
+  // is, but never leave someone stuck with no way to grab the text.
+  function copyToClipboard(text, btn){
+    var original = btn.textContent;
+    if (!text){
+      btn.textContent = "Nothing to copy";
+      setTimeout(function(){ btn.textContent = original; }, 1200);
+      return;
+    }
+    function flash(){
+      btn.textContent = "Copied!";
+      btn.classList.add("copied");
+      setTimeout(function(){
+        btn.textContent = original;
+        btn.classList.remove("copied");
+      }, 1200);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flash).catch(function(){
+        window.prompt("Copy this text:", text);
+      });
+    } else {
+      window.prompt("Copy this text:", text);
+    }
+  }
+
+  document.getElementById("dayModalClose").addEventListener("click", closeDayModal);
+  document.getElementById("dayModalOverlay").addEventListener("click", function(e){
+    if (e.target === this) closeDayModal();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && dayModalDate) closeDayModal();
+  });
+
+  document.getElementById("calPrev").addEventListener("click", function(){
+    calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()-1, 1);
+    renderCalendar();
+  });
+  document.getElementById("calNext").addEventListener("click", function(){
+    calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+1, 1);
+    renderCalendar();
+  });
+  document.getElementById("calToday").addEventListener("click", function(){
+    calCursor = new Date();
+    renderCalendar();
+  });
+
+  document.getElementById("ideaAdd").addEventListener("click", function(){
+    if (!state.content.ideas) state.content.ideas = [];
+    state.content.ideas.push({ title:"", date: findNextAvailableDate(), mode:"auto", synced:false });
+    markDirty();
+    renderIdeasAndWeek();
+  });
+
+  // ── Caption templates — quick-pick text for the calendar day panel ──────
+  function renderCaptionTemplates(){
+    var list = state.content.captionTemplates || [];
+    var wrap = document.getElementById("captionTemplates");
+    wrap.innerHTML = "";
+    list.forEach(function(tpl, i){
+      var row = document.createElement("div");
+      row.className = "capttpl";
+
+      var fields = document.createElement("div");
+      fields.className = "capttpl-fields";
+
+      var nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.className = "capttpl-name";
+      nameInput.placeholder = "Name — e.g. QUIZ";
+      nameInput.value = tpl.name || "";
+      nameInput.dataset.ctpli = i;
+
+      var ta = document.createElement("textarea");
+      ta.placeholder = "e.g. Comment HEART for the free meditation 💜\n\n#manifestlove #lawofattraction";
+      ta.value = tpl.text || "";
+      ta.dataset.ctpli = i;
+
+      fields.appendChild(nameInput);
+      fields.appendChild(ta);
+
+      var actions = document.createElement("div");
+      actions.className = "capttpl-actions";
+      var save = document.createElement("button");
+      save.type = "button";
+      save.className = "vidsavebtn";
+      save.textContent = "Save";
+      save.title = "Save this caption template";
+      var del = document.createElement("button");
+      del.className = "rowdel-btn";
+      del.title = "Remove caption template";
+      del.textContent = "✕";
+      actions.appendChild(save);
+      actions.appendChild(del);
+
+      row.appendChild(fields);
+      row.appendChild(actions);
+      wrap.appendChild(row);
+
+      nameInput.addEventListener("input", function(){
+        state.content.captionTemplates[i].name = nameInput.value;
+        markDirty();
+      });
+      ta.addEventListener("input", function(){
+        state.content.captionTemplates[i].text = ta.value;
+        markDirty();
+      });
+      save.addEventListener("click", function(){
+        saveNow();
+      });
+      del.addEventListener("click", function(){
+        state.content.captionTemplates.splice(i, 1);
+        markDirty();
+        renderCaptionTemplates();
+      });
+    });
+  }
+
+  document.getElementById("captionTemplateAdd").addEventListener("click", function(){
+    if (!state.content.captionTemplates) state.content.captionTemplates = [];
+    state.content.captionTemplates.push({ name:"", text:"" });
+    markDirty();
+    renderCaptionTemplates();
+  });
+
+  // ── Video stats tracking ───────────────────────────────────────────────────
+  // A running list, not tied to any month — add one whenever a video
+  // breaks out. Engagement rate is a display calc, not stored.
+  var outlierTableBuiltForCount = -1;
+
+  function outlierEngagement(v){
+    return v.views > 0 ? ((v.likes + v.comments + (v.shares||0) + (v.saves||0)) / v.views * 100) : null;
+  }
+
+  // The date column isn't its own field on the video — it's pulled live
+  // from whichever calendar idea shares this title, so moving a video's
+  // date on the calendar always keeps this in sync, no separate copy to
+  // fall out of date.
+  function scheduledDateForTitle(title){
+    if (!title) return "";
+    var ideas = state.content.ideas || [];
+    var match = ideas.filter(function(idea){ return idea.title === title && idea.date; });
+    if (!match.length) return "";
+    return match[0].date;
+  }
+
+  function formatCalDate(iso){
+    if (!iso) return "—";
+    var d = new Date(iso+"T00:00:00");
+    return d.toLocaleDateString("en-GB", { day:"numeric", month:"short" });
+  }
+
+  function buildOutlierRow(v, i){
+    var tr = document.createElement("tr");
+    tr.dataset.orow = i;
+    tr.innerHTML =
+      '<td style="text-align:center;"><button class="vidsavebtn'+(v.saved?' is-saved':'')+'" data-osave="'+i+'" title="'+(v.saved?'Saved — showing on the leaderboard. Click to unsave.':'Not saved — won’t show on the leaderboard until you save it.')+'">'+(v.saved?'✓ Saved':'Save')+'</button></td>' +
+      '<td><input type="text" data-oi="'+i+'" data-ofield="title" value="'+String(v.title||"").replace(/"/g,"&quot;")+'" placeholder="Video title"></td>' +
+      '<td class="calc" data-odatecalc></td>' +
+      '<td><input type="month" data-oi="'+i+'" data-ofield="month" value="'+(v.month||"")+'"></td>' +
+      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="views" value="'+v.views+'"></td>' +
+      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="likes" value="'+v.likes+'"></td>' +
+      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="comments" value="'+v.comments+'"></td>' +
+      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="shares" value="'+(v.shares||0)+'"></td>' +
+      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="saves" value="'+(v.saves||0)+'"></td>' +
+      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="communityComments" value="'+(v.communityComments||0)+'"></td>' +
+      '<td class="calc" data-oecalc></td>' +
+      '<td class="rowdel"><button data-odel="'+i+'" title="Remove video">✕</button></td>';
+    updateOutlierCalc(tr, v);
+    return tr;
+  }
+
+  function updateOutlierCalc(tr, v){
+    var eng = outlierEngagement(v);
+    var cell = tr.querySelector('[data-oecalc]');
+    if (cell) cell.textContent = eng!=null ? eng.toFixed(1)+"%" : "—";
+    var dateCell = tr.querySelector('[data-odatecalc]');
+    if (dateCell) dateCell.textContent = formatCalDate(scheduledDateForTitle(v.title));
+    var saveBtn = tr.querySelector('[data-osave]');
+    if (saveBtn){
+      saveBtn.classList.toggle("is-saved", !!v.saved);
+      saveBtn.textContent = v.saved ? "✓ Saved" : "Save";
+      saveBtn.title = v.saved
+        ? "Saved — showing on the leaderboard. Click to unsave."
+        : "Not saved — won’t show on the leaderboard until you save it.";
+    }
+  }
+
+  // Same incremental-update pattern as the funnel table — only tear down
+  // and rebuild the rows when one is added or removed; a value change just
+  // updates that row's own engagement-rate cell, so typing never loses
+  // keyboard focus by rebuilding inputs mid-edit.
+  function renderOutliers(){
+    var list = (state.content && state.content.outliers) ? state.content.outliers : [];
+    var tbody = document.getElementById("outlierTbody");
+    if (list.length !== outlierTableBuiltForCount){
+      tbody.innerHTML = "";
+      list.forEach(function(v, i){ tbody.appendChild(buildOutlierRow(v, i)); });
+      wireOutlierEvents(tbody);
+      outlierTableBuiltForCount = list.length;
+    } else {
+      list.forEach(function(v, i){
+        var tr = tbody.querySelector('tr[data-orow="'+i+'"]');
+        if (tr) updateOutlierCalc(tr, v);
+      });
+    }
+    renderLeaderboard();
+  }
+
+  function wireOutlierEvents(tbody){
+    tbody.querySelectorAll("input").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        var i = Number(inp.dataset.oi), f = inp.dataset.ofield;
+        state.content.outliers[i][f] = (f === "title" || f === "month") ? inp.value : (Number(inp.value) || 0);
+        markDirty();
+        renderOutliers();
+      });
+    });
+    tbody.querySelectorAll("[data-odel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.odel);
+        state.content.outliers.splice(i,1);
+        outlierTableBuiltForCount = -1;
+        markDirty(); renderOutliers();
+      });
+    });
+    tbody.querySelectorAll("[data-osave]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.osave);
+        var v = state.content.outliers[i];
+        v.saved = !v.saved;
+        markDirty();
+        renderOutliers();
+      });
+    });
+  }
+
+  document.getElementById("outlierAdd").addEventListener("click", function(){
+    if (!state.content) state.content = { rows: [] };
+    if (!state.content.outliers) state.content.outliers = [];
+    state.content.outliers.push({ title:"", month:"", views:0, likes:0, comments:0, shares:0, saves:0, communityComments:0, saved:false });
+    markDirty(); renderOutliers();
+  });
+
+  // ── Leaderboard — ranks the same outlier videos, read-only ─────────────
+  var leaderSortBy = "priority";
+
+  // Priority Score — biased toward Community comments, since that's the
+  // metric that actually shows a video drove someone to want to join,
+  // while still crediting genuine reach so a huge-reach video with a
+  // couple of community comments doesn't vanish entirely. Each metric is
+  // normalized against the best video in the list for that metric (0–1),
+  // then blended with fixed weights, so raw scale differences between
+  // e.g. views (thousands) and community comments (single digits) can't
+  // just drown the thing this score exists to surface. Score is 0–100.
+  var PRIORITY_WEIGHTS = {
+    communityComments: 0.55,
+    views: 0.15,
+    likes: 0.10,
+    comments: 0.08,
+    shares: 0.06,
+    saves: 0.06
+  };
+
+  function computePriorityScores(list){
+    var max = {};
+    Object.keys(PRIORITY_WEIGHTS).forEach(function(k){ max[k] = 0; });
+    list.forEach(function(v){
+      Object.keys(PRIORITY_WEIGHTS).forEach(function(k){
+        max[k] = Math.max(max[k], Number(v[k]) || 0);
+      });
+    });
+    // Keyed by object reference, not written onto the video objects
+    // themselves — the earlier "_engagement" bug came from mutating the
+    // real saved data just to sort it.
+    var scores = new Map();
+    list.forEach(function(v){
+      var score = 0;
+      Object.keys(PRIORITY_WEIGHTS).forEach(function(k){
+        var m = max[k];
+        var val = Number(v[k]) || 0;
+        score += PRIORITY_WEIGHTS[k] * (m > 0 ? val / m : 0);
+      });
+      scores.set(v, score * 100);
+    });
+    return scores;
+  }
+
+  function leaderMetricValue(v, scores){
+    if (leaderSortBy === "priority") return scores.get(v) || 0;
+    if (leaderSortBy === "engagement") return outlierEngagement(v) || 0;
+    return Number(v[leaderSortBy]) || 0;
+  }
+
+  function renderLeaderboard(){
+    document.querySelectorAll("th.sortable").forEach(function(th){
+      var active = th.dataset.sortkey === leaderSortBy;
+      th.classList.toggle("active", active);
+      th.innerHTML = th.textContent.replace(/\s*▼$/,"") + (active ? ' <span class="arrow">▼</span>' : '');
+    });
+
+    var fullList = (state.content && state.content.outliers) ? state.content.outliers : [];
+    // Only videos marked Saved in Video stats tracking make it onto the
+    // board — that's the "stats are actually in" signal. Every saved
+    // video is ranked, not just a top 10.
+    var savedList = fullList.filter(function(v){ return v.saved; });
+    var scores = computePriorityScores(savedList);
+
+    // Sort a shallow copy of the array without ever writing back onto the
+    // real video objects.
+    var list = savedList.slice();
+    list.sort(function(a,b){ return leaderMetricValue(b, scores) - leaderMetricValue(a, scores); });
+
+    var tbody = document.getElementById("leaderboardTbody");
+    tbody.innerHTML = "";
+    if (!list.length){
+      var tr = document.createElement("tr");
+      tr.innerHTML = '<td colspan="11" style="color:var(--text-muted);">Nothing saved yet — click Save on a video in Video stats tracking once its numbers are in.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+    list.forEach(function(v, i){
+      var tr = document.createElement("tr");
+      if (i < 3) tr.classList.add("rank"+(i+1));
+      var eng = outlierEngagement(v);
+      tr.innerHTML =
+        '<td class="rankcell">'+(i+1)+'</td>' +
+        '<td>'+(v.title ? String(v.title).replace(/</g,"&lt;") : '<span style="color:var(--text-muted);">Untitled</span>')+'</td>' +
+        '<td>'+(v.month ? monthLabel(v.month) : "—")+'</td>' +
+        '<td class="calc">'+(scores.get(v)||0).toFixed(0)+'</td>' +
+        '<td>'+fmtInt(v.views)+'</td>' +
+        '<td>'+fmtInt(v.likes)+'</td>' +
+        '<td>'+fmtInt(v.comments)+'</td>' +
+        '<td>'+fmtInt(v.shares||0)+'</td>' +
+        '<td>'+fmtInt(v.saves||0)+'</td>' +
+        '<td>'+fmtInt(v.communityComments||0)+'</td>' +
+        '<td class="calc">'+(eng!=null ? eng.toFixed(1)+"%" : "—")+'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.querySelectorAll("th.sortable").forEach(function(th){
+    th.addEventListener("click", function(){
+      leaderSortBy = th.dataset.sortkey;
+      renderLeaderboard();
+    });
+  });
+
+  // ── Delivery tab — Projects + Eisenhower priority board ─────────────────
+  // Same free-standing list pattern as Video stats tracking, no cadence. The
+  // priority board is a pure display, sorting live off each project's own
+  // Urgent/Important flags — nothing is stored there separately.
+  var projectTableBuiltForCount = -1;
+
+  function renderDelivery(){
+    if (!state.delivery) state.delivery = { projects: [] };
+    renderProjects();
+    renderQuadrants();
+  }
+
+  function buildProjectRow(p, i){
+    var tr = document.createElement("tr");
+    tr.dataset.prow = i;
+    if (p.done) tr.classList.add("projectdone");
+    tr.innerHTML =
+      '<td><input type="text" data-pi="'+i+'" data-pfield="title" value="'+String(p.title||"").replace(/"/g,"&quot;")+'" placeholder="Project name"></td>' +
+      '<td style="text-align:center;"><input type="checkbox" data-pi="'+i+'" data-pfield="urgent"'+(p.urgent?' checked':'')+'></td>' +
+      '<td style="text-align:center;"><input type="checkbox" data-pi="'+i+'" data-pfield="important"'+(p.important?' checked':'')+'></td>' +
+      '<td style="text-align:center;"><input type="checkbox" data-pi="'+i+'" data-pfield="done"'+(p.done?' checked':'')+'></td>' +
+      '<td class="rowdel"><button data-pdel="'+i+'" title="Remove project">✕</button></td>';
+    return tr;
+  }
+
+  function renderProjects(){
+    var list = state.delivery.projects;
+    var tbody = document.getElementById("projectTbody");
+    if (list.length !== projectTableBuiltForCount){
+      tbody.innerHTML = "";
+      list.forEach(function(p, i){ tbody.appendChild(buildProjectRow(p, i)); });
+      wireProjectEvents(tbody);
+      projectTableBuiltForCount = list.length;
+    }
+    // Checkbox state and the done strikethrough are cheap to just resync
+    // every render, without a full rebuild (keeps the title input's focus
+    // intact while typing).
+    var trs = tbody.querySelectorAll("tr");
+    trs.forEach(function(tr){
+      var i = Number(tr.dataset.prow);
+      var p = list[i];
+      if (!p) return;
+      tr.classList.toggle("projectdone", !!p.done);
+      tr.querySelectorAll("input[type=checkbox]").forEach(function(cb){
+        cb.checked = !!p[cb.dataset.pfield];
+      });
+    });
+  }
+
+  function wireProjectEvents(tbody){
+    tbody.querySelectorAll("input[type=text]").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        var i = Number(inp.dataset.pi);
+        state.delivery.projects[i].title = inp.value;
+        markDirty();
+        renderQuadrants();
+      });
+    });
+    tbody.querySelectorAll("input[type=checkbox]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var i = Number(cb.dataset.pi), f = cb.dataset.pfield;
+        state.delivery.projects[i][f] = cb.checked;
+        markDirty();
+        renderDelivery();
+      });
+    });
+    tbody.querySelectorAll("[data-pdel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.pdel);
+        state.delivery.projects.splice(i,1);
+        projectTableBuiltForCount = -1;
+        markDirty();
+        renderDelivery();
+      });
+    });
+  }
+
+  function renderQuadrants(){
+    var list = state.delivery.projects.filter(function(p){ return !p.done && p.title; });
+    var quads = {
+      quadDoFirst:  list.filter(function(p){ return p.urgent && p.important; }),
+      quadSchedule: list.filter(function(p){ return !p.urgent && p.important; }),
+      quadDelegate: list.filter(function(p){ return p.urgent && !p.important; }),
+      quadEliminate:list.filter(function(p){ return !p.urgent && !p.important; })
+    };
+    Object.keys(quads).forEach(function(id){
+      var ul = document.getElementById(id);
+      ul.innerHTML = "";
+      if (!quads[id].length){
+        var li = document.createElement("li");
+        li.className = "quadempty";
+        li.textContent = "Nothing here right now.";
+        ul.appendChild(li);
+        return;
+      }
+      quads[id].forEach(function(p){
+        var li = document.createElement("li");
+        li.textContent = p.title;
+        ul.appendChild(li);
+      });
+    });
+  }
+
+  document.getElementById("projectAdd").addEventListener("click", function(){
+    if (!state.delivery) state.delivery = { projects: [] };
+    state.delivery.projects.push({ title:"", urgent:false, important:false, done:false });
+    projectTableBuiltForCount = -1;
+    markDirty();
+    renderDelivery();
+  });
+
+  // ── Wire up ────────────────────────────────────────────────────────────
+  document.querySelectorAll(".tabbtn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".tabbtn").forEach(function(b){
+        b.classList.remove("active"); b.setAttribute("aria-selected","false");
+      });
+      btn.classList.add("active"); btn.setAttribute("aria-selected","true");
+      document.querySelectorAll(".tabpanel").forEach(function(p){ p.hidden = true; });
+      document.getElementById("tab-"+btn.dataset.tab).hidden = false;
+    });
+  });
+  document.getElementById("targetInput").addEventListener("input", function(e){
+    state.mrrTarget = Number(e.target.value) || 0;
+    markDirty();
+    renderGoal(computeRows(state));
+  });
+  document.getElementById("viewMode").addEventListener("change", function(e){
+    viewMode = e.target.value;
+    render();
+  });
+  document.getElementById("periodSel").addEventListener("change", function(e){
+    selectedPeriod = e.target.value;
+    render();
+  });
+  document.getElementById("addMonth").addEventListener("click", function(){
+    var last = state.rows[state.rows.length-1];
+    var nm = last ? nextMonth(last.month) : "2026-01";
+    var carryPrice = last ? Number(last.price)||0 : 30;
+    state.rows.push({ month:nm, emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:carryPrice, locked:false });
+    markDirty(); render();
+  });
+  document.getElementById("saveBtn").addEventListener("click", saveNow);
+  window.addEventListener("resize", function(){ render(); });
+  window.addEventListener("beforeunload", function(e){
+    var label = document.getElementById("saveLabel");
+    if (label && label.textContent === "unsaved changes"){
+      e.preventDefault();
+      e.returnValue = "";
+    }
+  });
+
+  // ── Boot ───────────────────────────────────────────────────────────────
+  function boot(){
+    state = readEmbeddedState() || localLoad() || DEFAULT_STATE;
+    if (!state.content) state.content = { rows: [] };
+    if (!state.content.outliers) state.content.outliers = [];
+    // Migration: videos that already had real stats logged before the
+    // Saved column existed count as saved, so nothing already on the
+    // leaderboard silently disappears. Anything with no stats yet starts
+    // unsaved, waiting on a click.
+    state.content.outliers.forEach(function(v){
+      if (v.saved === undefined) v.saved = (Number(v.views) || 0) > 0;
+    });
+    if (!state.content.ideas) state.content.ideas = [];
+    if (!state.content.captionTemplates) state.content.captionTemplates = [];
+    // Repair pass: only ideas already ticked posted should be in Video
+    // stats tracking. Covers anything posted under an earlier version of
+    // this logic that never made the jump — dedupe-safe, so a no-op for
+    // anything already linked correctly.
+    state.content.ideas.forEach(function(idea){
+      if (idea.posted && idea.title) syncIdeaToOutliers(idea);
+    });
+    if (!state.delivery) state.delivery = { projects: [] };
+    render();
+    renderContentTab();
+    renderIdeasAndWeek();
+    renderDelivery();
+    renderCaptionTemplates();
+    setSaveState("saved");
+
+    if (window.claude && typeof window.claude.use === "function"){
+      window.claude.use("artifact").then(function(ns){
+        artifact = ns;
+      }).catch(function(){ artifact = null; });
+    }
+  }
+  boot();
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
