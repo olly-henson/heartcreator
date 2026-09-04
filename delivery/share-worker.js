@@ -24,13 +24,20 @@ export default {
                        type === 'results' ? 'Share client results' :
                        type === 'final'   ? 'Share Your Results' :
                        type === 'started' ? 'Let us know you\'ve started!' :
+                       type === 'checkin' ? 'How did your last 10 days go?' :
                                             'Share your win';
     const buttonText = type === 'coach'   ? 'Respond in Community' :
                        type === 'help'    ? 'Get help in the community' :
                        type === 'results' ? 'Share results' :
                        type === 'final'   ? 'Share with the community' :
                        type === 'started' ? 'Let us know in the community' :
+                       type === 'checkin' ? 'Share in the community' :
                                             'Share in Community';
+    // checkin is the one type where there's nothing pre-written to
+    // share — it's a fresh 10-day reflection, so the box is editable
+    // and starts empty (with a prompt as placeholder) instead of
+    // read-only pre-filled text that auto-copies.
+    const isCheckin = type === 'checkin';
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -118,26 +125,30 @@ export default {
   <div class="card">
     <p class="label">The Attraction Formula Community</p>
     <h1>${heading}</h1>
-    <textarea id="win" rows="4" readonly>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+    <textarea id="win" rows="4"${isCheckin ? ' placeholder="How did the last 10 days go? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${isCheckin ? '' : text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
     <div class="actions">
       <button class="btn btn-primary" onclick="copyText()">Copy to clipboard</button>
-      <a class="btn btn-secondary" href="https://www.skool.com/the-healing-code-8609" target="_blank">${buttonText}</a>
+      <a class="btn btn-secondary" href="https://www.skool.com/heartcreator" target="_blank">${buttonText}</a>
     </div>
     <p class="status" id="status"></p>
   </div>
   <script>
     const winText = ${JSON.stringify(text)};
+    const isCheckin = ${JSON.stringify(isCheckin)};
 
     function copyText() {
-      navigator.clipboard.writeText(winText).then(function() {
+      // checkin reads live from the box (the visitor typed into it);
+      // every other type copies the fixed pre-written text.
+      const toCopy = isCheckin ? document.getElementById('win').value : winText;
+      navigator.clipboard.writeText(toCopy).then(function() {
         document.getElementById('status').textContent = 'Copied — head to the community and paste.';
       }).catch(function() {
         document.getElementById('status').textContent = 'Select the text above and copy manually.';
       });
     }
 
-    // Auto-copy on load
-    if (winText) {
+    // Auto-copy on load — skipped for checkin, there's nothing written yet.
+    if (winText && !isCheckin) {
       navigator.clipboard.writeText(winText).then(function() {
         document.getElementById('status').textContent = 'Copied to clipboard — head to the community and paste.';
       }).catch(function() {

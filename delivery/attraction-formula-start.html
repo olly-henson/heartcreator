@@ -1,0 +1,285 @@
+<!-- ============================================================
+     Heart Attractor — Start The Attraction Formula Program
+     Built 2026-09-03 per Olly — captures Name/Email/Start Date and kicks
+     off the 30-day / 10-day check-in email cadence (separate system from
+     build-your-meditation.html's belief-builder tool; this page owns
+     the START/CHECK-IN flow, not the meditation-belief flow).
+
+     On submit, POSTs { name, email, startDate } to the Attraction Formula
+     Check-In Worker (see delivery/attraction-formula-checkin-worker.js),
+     which sends the client their start-date confirmation email and
+     schedules all 3 check-in emails (day 10/20/30) via Resend's
+     scheduled send — fully stateless, no Google Sheet, no Apps Script,
+     no ongoing trigger (confirmed with Olly 2026-09-03).
+
+     GHL page path: TBC (set in Sites > Website Builder), suggested:
+     /start-attraction-formula
+     Paste as ONE Custom HTML block. Section width: Full Width. Margin/padding: 0.
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  html, body{ background:#0A0510 !important; margin:0 !important; padding:0 !important; }
+
+  .afs-page{
+    --bg-a:#4B1466; --bg-b:#150818; --bg-c:#0A0510;
+    --accent:#B84FE8; --accent-2:#E1A6FF;
+    --body-text:#EBD9E2;
+    width:100vw !important;
+    position:relative !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    background:radial-gradient(120% 100% at 20% 0%, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+    font-family:'Poppins', sans-serif;
+    color:#fff;
+    min-height:100vh;
+    padding:56px 20px;
+    box-sizing:border-box;
+    overflow-x:hidden;
+  }
+  .afs-page *{ box-sizing:border-box; }
+  .afs-wrap{ max-width:640px; margin:0 auto; }
+
+  .afs-eyebrow{
+    display:inline-block; font-size:13px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--accent); border:1px solid rgba(184,79,232,.4); padding:7px 15px; border-radius:50px; margin-bottom:14px;
+  }
+  .afs-h1{ font-size:clamp(28px,4.6vw,44px); font-weight:800; line-height:1.18; margin-bottom:16px; text-align:left; text-wrap:balance; }
+  .afs-h1 .afs-grad{
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .afs-lede{ font-size:clamp(16px,1.5vw,19px); line-height:1.55; color:var(--body-text); max-width:56ch; margin-bottom:8px; }
+
+  .afs-why{
+    display:flex; gap:12px; align-items:flex-start;
+    background:rgba(184,79,232,.08); border:1px solid rgba(184,79,232,.25);
+    border-radius:12px; padding:16px 18px; margin-top:24px;
+  }
+  .afs-why-icon{ font-size:16px; line-height:1.4; flex-shrink:0; }
+  .afs-why-text{ font-size:14.5px; line-height:1.55; color:var(--body-text); }
+  .afs-why-text strong{ color:#fff; }
+
+  .afs-field{
+    margin-top:20px; background:rgba(255,255,255,.05); border:2px solid rgba(255,255,255,.14);
+    border-radius:12px; padding:16px 18px;
+  }
+  .afs-field-label{ font-size:13px; font-weight:700; color:rgba(255,255,255,.6); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px; }
+  .afs-input{
+    width:100%; height:48px; padding:0 14px; font-size:16px; font-weight:600; font-family:'Poppins', sans-serif;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18);
+    border-radius:10px; color:#fff; outline:none;
+  }
+  .afs-input::placeholder{ color:rgba(255,255,255,.35); font-weight:500; }
+  .afs-input:focus{ border-color:var(--accent); }
+  .afs-date-input-wrap{ position:relative; }
+  .afs-date-input{
+    color:transparent; color-scheme:dark; text-align:center; -webkit-appearance:none; appearance:none;
+  }
+  .afs-date-input::-webkit-datetime-edit{ color:transparent; }
+  .afs-date-display{
+    position:absolute; left:0; top:0; width:100%; height:48px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:600; color:#fff; cursor:pointer;
+  }
+  .afs-date-hint{ font-size:12.5px; color:rgba(255,255,255,.45); margin-top:8px; }
+
+  .afs-cta{
+    margin-top:28px; display:flex; flex-direction:column; align-items:flex-start; gap:12px;
+  }
+  .afs-start-btn{
+    padding:17px 32px; font-family:'Poppins', sans-serif; font-size:17px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg, var(--accent), #7A2AA8);
+    border:none; border-radius:50px; cursor:pointer;
+    box-shadow:0 10px 30px rgba(184,79,232,.35);
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .afs-start-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 36px rgba(184,79,232,.45); }
+  .afs-start-btn:disabled{ opacity:.55; cursor:default; transform:none; box-shadow:none; }
+  .afs-status{ font-size:14px; color:rgba(255,255,255,.6); }
+  .afs-status.error{ color:#E88FA6; }
+  .afs-status.success{ color:#8fd0a8; }
+
+  .afs-confirm{ display:none; }
+  .afs-confirm.active{ display:block; animation:afsFade .35s ease; }
+  @keyframes afsFade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* Community CTA — same button design/colours as build-your-meditation.html's
+     bym-action-btn--community, just under the afs- naming convention. */
+  .afs-confirm-actions{ margin-top:28px; }
+  .afs-community-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:20px 36px; font-family:'Poppins', sans-serif; font-size:18px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg, #2EC4B6, #1B8A80);
+    border:none; border-radius:50px; cursor:pointer; text-decoration:none;
+    box-shadow:0 10px 26px rgba(46,196,182,.3);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .afs-community-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 32px rgba(46,196,182,.4); }
+
+  @media (max-width:480px){
+    .afs-page{ padding:40px 16px; }
+    .afs-community-btn{ width:100%; padding:18px 24px; }
+  }
+</style>
+
+<div class="afs-page">
+  <div class="afs-wrap">
+
+    <div id="afs-form-screen">
+      <div class="afs-eyebrow">👉 Begin Your Journey</div>
+      <h1 class="afs-h1">Start <span class="afs-grad">The Attraction Formula Program</span></h1>
+      <p class="afs-lede">Choose the date you're starting, add your details, and I'll make sure to check in with you throughout the program.</p>
+
+      <div class="afs-why">
+        <span class="afs-why-icon">💌</span>
+        <span class="afs-why-text"><strong>What happens next.</strong> You'll get an email confirming your start date. The program runs for 30 days, and I'll make sure to check in with you.</span>
+      </div>
+
+      <div class="afs-field">
+        <div class="afs-field-label">Your start date</div>
+        <div class="afs-date-input-wrap">
+          <input type="date" class="afs-input afs-date-input" id="afs-date-input">
+          <div class="afs-date-display" id="afs-date-display">Select a date</div>
+        </div>
+        <div class="afs-date-hint">This is the date your 30-day program — and your first check-in, 10 days later — counts from.</div>
+      </div>
+
+      <div class="afs-field">
+        <div class="afs-field-label">Your name</div>
+        <input type="text" class="afs-input" id="afs-name-input" placeholder="Your first name">
+      </div>
+
+      <div class="afs-field">
+        <div class="afs-field-label">Your email</div>
+        <input type="email" class="afs-input" id="afs-email-input" placeholder="you@email.com">
+      </div>
+
+      <div class="afs-cta">
+        <button type="button" class="afs-start-btn" id="afs-start-btn" disabled>Start Attraction Formula Program →</button>
+        <div class="afs-status" id="afs-status"></div>
+      </div>
+    </div>
+
+    <div id="afs-confirm-screen" class="afs-confirm">
+      <div class="afs-eyebrow">👉 You're In</div>
+      <h1 class="afs-h1">Your Program Is <span class="afs-grad">Now Live</span></h1>
+      <p class="afs-lede">Check your inbox — we've sent this to you too, so you've always got it.</p>
+      <div class="afs-confirm-actions">
+        <a class="afs-community-btn" id="afs-community-btn" href="#" target="_blank" rel="noopener">Let us know in the community →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  // Cloudflare Worker that sends the start-date confirmation and
+  // schedules all 3 check-in emails (day 10/20/30) via Resend — fully
+  // stateless, no sheet, no Apps Script. See
+  // delivery/attraction-formula-checkin-worker.js for the worker
+  // source. Deployed 2026-09-03 on the workers.dev subdomain — swap for
+  // a custom domain (e.g. attraction-formula-checkin.ollyhenson.com)
+  // later if wanted, not required for it to work.
+  var CHECKIN_WORKER_URL = 'https://attraction-formula-check.olly-6af.workers.dev';
+
+  // Same share-worker.js used everywhere else in this delivery system —
+  // already deployed at share.ollyhenson.com. type=started matches the
+  // heading/button text already built for exactly this moment.
+  var SHARE_BASE_URL = 'https://share.ollyhenson.com';
+
+  var nameInput = document.getElementById('afs-name-input');
+  var emailInput = document.getElementById('afs-email-input');
+  var dateInput = document.getElementById('afs-date-input');
+  var dateDisplay = document.getElementById('afs-date-display');
+
+  // The display div sits on top of the real date input (which is
+  // colour-transparent) so the styled text is what's visible — clicking
+  // it needs to open the native date picker explicitly, since sitting
+  // on top of the input doesn't reliably forward the click in every
+  // browser.
+  dateDisplay.addEventListener('click', function() {
+    dateInput.focus();
+    try {
+      if (typeof dateInput.showPicker === 'function') dateInput.showPicker();
+    } catch (e) {
+      // Some embedded/sandboxed contexts (e.g. a cross-origin preview
+      // iframe) block showPicker() with a SecurityError even though the
+      // call itself is valid — focus() above still lets the field be
+      // opened with the keyboard (Space/Down arrow) as a fallback, and
+      // this never breaks the page once it's live on its own domain.
+    }
+  });
+  var startBtn = document.getElementById('afs-start-btn');
+  var statusEl = document.getElementById('afs-status');
+
+  // Default the date field to today, formatted for display the same way
+  // build-your-meditation.html's date field does.
+  function todayISO() {
+    var d = new Date();
+    var y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+  function formatDateForDisplay(iso) {
+    if (!iso) return 'Select a date';
+    var d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  dateInput.value = todayISO();
+  dateDisplay.textContent = formatDateForDisplay(dateInput.value);
+  dateInput.addEventListener('input', function() {
+    dateDisplay.textContent = formatDateForDisplay(dateInput.value);
+    checkFieldsFilled();
+  });
+
+  function checkFieldsFilled() {
+    startBtn.disabled = !(nameInput.value.trim() && emailInput.value.trim() && dateInput.value);
+  }
+  nameInput.addEventListener('input', checkFieldsFilled);
+  emailInput.addEventListener('input', checkFieldsFilled);
+
+  startBtn.addEventListener('click', function() {
+    var name = nameInput.value.trim();
+    var email = emailInput.value.trim();
+    var startDate = dateInput.value;
+
+    if (!name || !email || !startDate) {
+      statusEl.textContent = 'Please fill in every field to continue.';
+      statusEl.className = 'afs-status error';
+      return;
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      statusEl.textContent = 'That doesn\'t look like a valid email — check it and try again.';
+      statusEl.className = 'afs-status error';
+      return;
+    }
+
+    startBtn.disabled = true;
+    statusEl.textContent = 'Starting your program...';
+    statusEl.className = 'afs-status';
+
+    fetch(CHECKIN_WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, startDate: startDate })
+    }).then(function(r) {
+      if (!r.ok) throw new Error('failed');
+      showConfirmation(startDate);
+    }).catch(function() {
+      statusEl.textContent = 'Something went wrong sending that — try again, or email olly@ollyhenson.com and I\'ll get you set up.';
+      statusEl.className = 'afs-status error';
+      startBtn.disabled = false;
+    });
+  });
+
+  function showConfirmation(startDate) {
+    var shareText = "I've just started The Attraction Formula Program — excited to get going!";
+    var communityBtn = document.getElementById('afs-community-btn');
+    communityBtn.href = SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent(shareText);
+
+    document.getElementById('afs-form-screen').style.display = 'none';
+    document.getElementById('afs-confirm-screen').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+})();
+</script>

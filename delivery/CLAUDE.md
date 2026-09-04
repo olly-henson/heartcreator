@@ -198,6 +198,32 @@ Will mirror the Regulate & Restore setup with its own sheet, script, and Notion 
 
 ---
 
+### The Attraction Formula — 30-Day Check-Ins — BUILT, NOT YET DEPLOYED (2026-09-03)
+
+A fixed 30-day check-in cadence for anyone starting The Attraction Formula Program — separate system from `attraction-formula-tracker.gs` (the belief-builder intake tracker), which explicitly says in its own header comment not to extend it with check-ins. This is that new program, but unlike every other program in this repo, **it is fully stateless — no Google Sheet, no Apps Script, no daily trigger.** Confirmed with Olly 2026-09-03: check-ins are just scheduled emails with a link to share in the community, nothing more. If a record of who's started or where someone is in the program is ever wanted, that's a real feature to add, not something to assume.
+
+**The program is 30 days long, with 3 check-ins, 10 days apart** (day 10, day 20, day 30) — corrects an earlier indefinite-weekly design. Never reintroduce an open-ended cadence, and never add sheet-based tracking back in, without Olly explicitly asking; `CHECKIN_INTERVAL_DAYS`/`TOTAL_CHECKINS` at the top of the worker are the two values that define the cadence.
+
+**Flow:** Client fills in name/email/start date on a custom-styled page → POSTs straight to a Cloudflare Worker → in one request, the worker sends the start-date confirmation email + a notification to Olly, and schedules all 3 check-in emails via Resend's `scheduled_at` (day 10/20/30, each with a link to share how it's gone in the community) → done. Resend holds and delivers each scheduled email on its own; nothing else needs to run.
+
+| File | Path | Purpose |
+|---|---|---|
+| Start page | `delivery/attraction-formula-start.html` | Name/email/start-date form, styled like `build-your-meditation.html`. Not a Google Form — a custom webhook POST. Moved from `website/sections/` 2026-09-04 so the whole system lives in `delivery/`. |
+| Cloudflare Worker | `delivery/attraction-formula-checkin-worker.js` | The entire system — sends the confirmation + notification immediately, then schedules all 3 check-in emails up front via Resend's scheduled send. No Apps Script, no sheet. |
+| Share worker addition | `delivery/share-worker.js` | New `type=checkin` — unlike every other type, the textarea is editable and starts empty (a fresh 10-day reflection, not pre-written text to copy) |
+
+**⚠️ Verify before relying on this in production:** Resend's `scheduled_at` support needs confirming against Resend's current API docs/dashboard — accepted formats, how far ahead a send can be scheduled, and whether a scheduled send can be cancelled/edited afterwards. Send a real test signup with a short interval and confirm all 4 emails actually arrive on schedule before pointing this at real clients.
+
+**Still to do before this goes live:**
+- ✅ Deployed 2026-09-03 — `attraction-formula-checkin-worker.js` is live at `https://attraction-formula-check.olly-6af.workers.dev` (workers.dev subdomain — fine to leave as-is, a custom domain like `attraction-formula-checkin.ollyhenson.com` is a cosmetic swap, not required)
+- ✅ `attraction-formula-start.html`'s `CHECKIN_WORKER_URL` constant already points at the live worker URL above
+- ✅ Page added to GHL Website Builder (Custom HTML block) — 2026-09-04
+- ✅ Community URL aligned to `skool.com/heartcreator` in both `attraction-formula-checkin-worker.js` and `share-worker.js` — 2026-09-04
+- Redeploy `share-worker.js` in Cloudflare (already deployed at `share.ollyhenson.com` — the `type=checkin` addition + community URL change need a redeploy to go live)
+- Run the Resend scheduled-send test above before sending it to a real client — not yet confirmed as of 2026-09-04
+
+---
+
 ## Tracking System — Google Sheets
 
 **Sheet:** Regulate & Restore Tracking Sheet (Active)
@@ -354,6 +380,21 @@ git push
 ---
 
 ## Changelog
+
+### 2026-09-04 — Session: Attraction Formula check-ins finished
+- Start page added to GHL Website Builder (Custom HTML block) by Olly
+- Community URL aligned to `skool.com/heartcreator` in both `attraction-formula-checkin-worker.js` and `share-worker.js` (old `the-healing-code-8609` link — Skool redirects it anyway, but now consistent)
+- `share-worker.js` redeployed in Cloudflare (`share.ollyhenson.com`) — `type=checkin` + community URL fix now live
+- Still outstanding: Resend `scheduled_at` live test (Olly declined to run it this session) — verify before a real client signs up
+
+### 2026-09-03 — Session: Attraction Formula 30-Day Check-Ins built
+- Built as a new, separate system from `attraction-formula-tracker.gs` (belief-builder intake) — that file's own comment says explicitly not to extend it with check-ins
+- New start page `website/sections/attraction-formula-start.html` — custom-styled (matches `build-your-meditation.html`), name/email/start-date form, submits via webhook not a Google Form
+- Corrected mid-session (twice): first built as an indefinite weekly cadence, then a sheet+Apps Script-tracked 30-day/3-check-in design (Master + Completed Program tabs, daily trigger) — Olly then clarified there's no sheet involved at all, check-ins are just scheduled emails, nothing more
+- Final design: `attraction-formula-checkin-worker.js` is now the entire system — one Cloudflare Worker, fully stateless. On signup it sends the confirmation + notification immediately and schedules all 3 check-in emails (day 10/20/30) up front via Resend's `scheduled_at`. No Google Sheet, no Apps Script, no daily trigger — `attraction-formula-checkin-tracker.gs` was deleted, it's no longer part of this system
+- `share-worker.js` — added `type=checkin`: the one share type where the box is editable and starts empty (a fresh 10-day reflection), not read-only pre-written text
+- Not yet deployed, and Resend's `scheduled_at` behaviour hasn't been verified against real sends yet — see the ⚠️ note in the program's own section above before pointing this at a real client
+- **Lesson for next time:** two corrections in one session on the same design question (sheet or no sheet, fixed-length or indefinite) — should have asked both up front rather than building the fuller version first. Ask about persistence/state requirements explicitly before building anything with a recurring schedule.
 
 ### 2026-07-08 — Session: Heart Activation renamed to 28 Day Heart-Opening Program
 - Renamed program from "Heart Activation" (6-week) to "28 Day Heart-Opening Program" (4-week / 28-day)
