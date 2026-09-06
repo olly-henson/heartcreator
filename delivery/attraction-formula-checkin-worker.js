@@ -85,13 +85,16 @@ function formatDateLong(date) {
   return date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 }
 
-function confirmationEmailHtml(name, startDateText) {
+function confirmationEmailHtml(name, startDateText, endDateText) {
   return wrapHtml(`
     <p>Hi ${firstName(name)},</p>
     <p>You've officially started The Attraction Formula Program.</p>
-    <p><strong style="font-size:19px;">Your start date:</strong> ${startDateText}</p>
-    <p>The program runs for 30 days. I'll check in with you 3 times along the way — every 10 days — to see how it's going, with the option to share how the last 10 days have gone in the community. No forms, no pressure — just reply to the email whenever suits, or post in the community when you're ready.</p>
-    <p>${link(COMMUNITY_URL, 'Say hello in the community →')}</p>
+    <p><strong style="font-size:19px;">Your start date:</strong> ${startDateText}<br>
+    <strong style="font-size:19px;">Your end date:</strong> ${endDateText}</p>
+    <p>I'll check in with you every 10 days or so, to see how you're doing.</p>
+    <p>Remember, stick with this.</p>
+    <p>It might take a couple of attempts to get used to the meditation but it's extremely powerful for overriding long-term beliefs that have been holding you back.</p>
+    <p>And if you ever have a question you need an answer to or want to reach out for support, please post in the community feed ${link(COMMUNITY_URL, 'here')}.</p>
     <p>Olly</p>
   `);
 }
@@ -105,19 +108,26 @@ function coachNotificationHtml(name, email, startDateText, firstCheckinText) {
   `);
 }
 
+// Check-in 1 (day 10) — short. Check-in 2 (day 20) — adds a
+// "20 days in" line. Check-in 3 (day 30, isFinal) — completion message.
+// "here" links straight to the community in all three.
 function checkinEmailHtml(name, checkinNumber, isFinal) {
-  const dayNumber = checkinNumber * CHECKIN_INTERVAL_DAYS;
-  const shareUrl = SHARE_BASE_URL + '?type=checkin';
-  const closingLine = isFinal
-    ? `<p>That's the full 30 days — you've made it through the whole program. However you're feeling about it, I'd love to hear.</p>`
-    : `<p>I'll check in again in another ${CHECKIN_INTERVAL_DAYS} days.</p>`;
-
+  if (isFinal) {
+    return wrapHtml(`
+      <p>Hey ${firstName(name)},</p>
+      <p>So well done on completing The Attraction Formula Program.</p>
+      <p>Let us know inside the community how it went ${link(COMMUNITY_URL, 'here')} - interested to hear how it's gone for you</p>
+      <p>Olly</p>
+    `);
+  }
+  const dayLine = checkinNumber === 2
+    ? `<p>You're now 20 days in to the Attraction Formula Program.</p>`
+    : '';
   return wrapHtml(`
     <p>Hi ${firstName(name)},</p>
-    <p>${isFinal ? `It's day ${dayNumber} — the last check-in of The Attraction Formula Program.` : `It's been ${CHECKIN_INTERVAL_DAYS} days since your last check-in on The Attraction Formula Program (day ${dayNumber} of 30).`}</p>
-    <p>How have the last ${CHECKIN_INTERVAL_DAYS} days gone? What's shifted, what's felt hard, what have you noticed?</p>
-    <p>${link(shareUrl, `Share how your last ${CHECKIN_INTERVAL_DAYS} days went in the community →`)}</p>
-    ${closingLine}
+    ${dayLine}
+    <p>How's it been going?</p>
+    <p>Let us know in the community ${link(COMMUNITY_URL, 'here')}</p>
     <p>Olly</p>
   `);
 }
@@ -177,14 +187,15 @@ export default {
     const SEND_HOUR_UTC = 9;
     const startDateObj = dateAtDaysOffset(startDate, 0, SEND_HOUR_UTC);
     const startDateText = formatDateLong(startDateObj);
+    const endDateText = formatDateLong(dateAtDaysOffset(startDate, TOTAL_CHECKINS * CHECKIN_INTERVAL_DAYS, SEND_HOUR_UTC));
     const firstCheckin = dateAtDaysOffset(startDate, CHECKIN_INTERVAL_DAYS, SEND_HOUR_UTC);
 
     try {
       await sendEmail(env, {
         to: email,
         subject: `You've started The Attraction Formula Program`,
-        html: confirmationEmailHtml(name, startDateText),
-        text: `You've officially started The Attraction Formula Program. Start date: ${startDateText}.`,
+        html: confirmationEmailHtml(name, startDateText, endDateText),
+        text: `You've officially started The Attraction Formula Program. Start date: ${startDateText}. End date: ${endDateText}. I'll check in with you every 10 days or so, to see how you're doing. Remember, stick with this. It might take a couple of attempts to get used to the meditation but it's extremely powerful for overriding long-term beliefs that have been holding you back. If you ever have a question or want support, post in the community feed: ${COMMUNITY_URL}`,
       });
 
       await sendEmail(env, {
@@ -198,14 +209,15 @@ export default {
       for (let i = 1; i <= TOTAL_CHECKINS; i++) {
         const isFinal = i === TOTAL_CHECKINS;
         const sendAt = dateAtDaysOffset(startDate, i * CHECKIN_INTERVAL_DAYS, SEND_HOUR_UTC);
-        const dayNumber = i * CHECKIN_INTERVAL_DAYS;
         await sendEmail(env, {
           to: email,
           subject: isFinal
-            ? `${firstName(name)}, you've completed The Attraction Formula Program`
-            : `${firstName(name)}, how have your last ${CHECKIN_INTERVAL_DAYS} days gone?`,
+            ? `Well done on completing The Attraction Formula Program! 🎉`
+            : `How's it going?`,
           html: checkinEmailHtml(name, i, isFinal),
-          text: `How have your last ${CHECKIN_INTERVAL_DAYS} days gone on The Attraction Formula Program? (Day ${dayNumber})`,
+          text: isFinal
+            ? `So well done on completing The Attraction Formula Program. Let us know inside the community how it went: ${COMMUNITY_URL}`
+            : `How's it been going? Let us know in the community: ${COMMUNITY_URL}`,
           scheduledAt: sendAt.toISOString(),
         });
       }

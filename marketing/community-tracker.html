@@ -639,6 +639,22 @@
   .daymodal-head h3{
     margin:0; font-size:16px; font-weight:700; color: var(--text);
   }
+  .daymodal-headactions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .daymodal-savebtn{
+    background: var(--accent-grad);
+    color:#1a0524;
+    border:none;
+    padding:7px 14px;
+    border-radius:8px;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+    white-space:nowrap;
+  }
+  .daymodal-savebtn:hover{ filter:brightness(1.06); }
+  .daymodal-savebtn:disabled{ opacity:.7; cursor:default; filter:none; }
+  .daymodal-savestatus{ font-size:12px; color: var(--text-muted); white-space:nowrap; }
   .daymodal-x{
     background:none; border:none; color: var(--text-muted);
     cursor:pointer; font-size:16px; padding:2px 8px; border-radius:6px; line-height:1;
@@ -653,7 +669,7 @@
     line-height:1.4;
   }
   .dayitem:last-child{ border-bottom:none; }
-  .dayitem-top{ display:flex; }
+  .dayitem-top{ display:flex; align-items:center; gap:6px; }
   .dayitem-titlein{
     flex:1; min-width:0;
     background:none;
@@ -976,9 +992,11 @@
   </header>
 
   <nav class="tabbar" role="tablist">
-    <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false">MRR Tracker</button>
-    <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Content</button>
-    <button class="tabbtn" data-tab="delivery" role="tab" aria-selected="false">Delivery</button>
+    <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false">MRR</button>
+    <button class="tabbtn" data-tab="content" role="tab" aria-selected="false">Content</button>
+    <button class="tabbtn" data-tab="instagram" role="tab" aria-selected="false">Instagram</button>
+    <button class="tabbtn" data-tab="email" role="tab" aria-selected="false">Email</button>
+    <button class="tabbtn active" data-tab="delivery" role="tab" aria-selected="true">Delivery</button>
   </nav>
 
   <div id="tab-mrr" class="tabpanel" hidden="">
@@ -1016,7 +1034,7 @@
   </div>
 
   <p class="section-label" id="glanceLabel">This month at a glance</p>
-  <div class="kpigrid" id="kpiGrid"><div class="kpi"><div class="label">Email leads (quiz)</div><div class="value">59</div></div><div class="kpi"><div class="label">About Page visits</div><div class="value">250</div></div><div class="kpi"><div class="label">Free trials started</div><div class="value">9</div></div><div class="kpi accent"><div class="label">Trial conversion</div><div class="value">3.6%</div></div><div class="kpi"><div class="label">New paying members</div><div class="value">1</div></div><div class="kpi accent"><div class="label">Trial → paid conversion</div><div class="value">11.1%</div></div><div class="kpi"><div class="label">Active members</div><div class="value">1</div></div><div class="kpi"><div class="label">Retention rate</div><div class="value">100.0%</div></div><div class="kpi"><div class="label">MRR</div><div class="value">$30</div></div><div class="kpi"><div class="label">Avg. revenue / member</div><div class="value">$30</div></div><div class="kpi"><div class="label">LTV / member</div><div class="value">—</div></div></div>
+  <div class="kpigrid" id="kpiGrid"><div class="kpi"><div class="label">About Page visits</div><div class="value">51</div></div><div class="kpi accent"><div class="label">Visits growth vs. prev. month</div><div class="value">-199</div></div><div class="kpi"><div class="label">Free trials started</div><div class="value">0</div></div><div class="kpi accent"><div class="label">Trials growth vs. prev. month</div><div class="value">-9</div></div><div class="kpi accent"><div class="label">Trial conversion</div><div class="value">0.0%</div></div><div class="kpi"><div class="label">New paying members</div><div class="value">0</div></div><div class="kpi accent"><div class="label">New members growth vs. prev. month</div><div class="value">-1</div></div><div class="kpi accent"><div class="label">Trial → paid conversion</div><div class="value">0.0%</div></div><div class="kpi"><div class="label">Active members</div><div class="value">1</div></div><div class="kpi accent"><div class="label">Active members growth vs. prev. month</div><div class="value">+0</div></div><div class="kpi"><div class="label">Retention rate</div><div class="value">100.0%</div></div><div class="kpi"><div class="label">MRR</div><div class="value">$30</div></div><div class="kpi accent"><div class="label">MRR growth vs. prev. month</div><div class="value">+$0</div></div><div class="kpi"><div class="label">Avg. revenue / member</div><div class="value">$30</div></div><div class="kpi"><div class="label">LTV / member</div><div class="value">—</div></div></div>
 
   <p class="section-label">Trends</p>
   <div class="chartsgrid">
@@ -1048,7 +1066,6 @@
         <tr>
           <th></th>
           <th>Month</th>
-          <th>Email leads (quiz)</th>
           <th>About Page visits</th>
           <th>Free trials started</th>
           <th>New paying members</th>
@@ -1065,7 +1082,7 @@
           <th class="rowdel"></th>
         </tr>
       </thead>
-      <tbody id="tbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="emailLeads" value="59" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="visits" value="250" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="trials" value="9" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="newMembers" value="1" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="0" data-field="price" value="30" disabled=""></td><td class="calc" data-calc="0">3.6%</td><td class="calc" data-calc="1">11.1%</td><td class="calc" data-calc="2">0.4%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="emailLeads" value="1" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="visits" value="36" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="trials" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="newMembers" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="1" data-field="price" value="99" disabled=""></td><td class="calc" data-calc="0">0.0%</td><td class="calc" data-calc="1">0.0%</td><td class="calc" data-calc="2">0.0%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr></tbody>
+      <tbody id="tbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="visits" value="250" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="trials" value="9" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="newMembers" value="1" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="0" data-field="price" value="30" disabled=""></td><td class="calc" data-calc="0">3.6%</td><td class="calc" data-calc="1">11.1%</td><td class="calc" data-calc="2">0.4%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="visits" value="51" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="trials" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="newMembers" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="1" data-field="price" value="99" disabled=""></td><td class="calc" data-calc="0">0.0%</td><td class="calc" data-calc="1">0.0%</td><td class="calc" data-calc="2">0.0%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr></tbody>
     </table>
     <div class="tablefoot">
       <span class="hint">Every field here is typed in by hand for that month only — including Active members. Nothing is calculated from another row. Click 🔓 on a finished month to lock it and stop accidental edits.</span>
@@ -1076,7 +1093,6 @@
   <div class="glossary">
     <h2>How each figure is worked out</h2>
     <dl>
-      <div><dt>Email leads (quiz)</dt><dd>Leads captured through the free quiz funnel — a separate entry point from the About Page, tracked alongside it rather than folded in.</dd></div>
       <div><dt>Active members (month end)</dt><dd>Typed in by hand each month — the total paying member count as of that month's end. Not calculated from the previous month, so a mistake in one month never throws off another.</dd></div>
       <div><dt>Trial conversion rate</dt><dd>Free trials started ÷ About Page visits. How well the page turns browsers into trialists.</dd></div>
       <div><dt>Trial → paid conversion</dt><dd>New paying members ÷ free trials started that month. How well the trial itself sells the community.</dd></div>
@@ -1089,77 +1105,16 @@
       <div><dt>LTV</dt><dd>Avg. revenue per member ÷ churn rate. What an average member is worth over their full membership, based on what they're actually paying rather than the sticker price.</dd></div>
       <div><dt>Lock 🔓 / 🔒</dt><dd>Marks a month finished and greys out its row so you can't accidentally overwrite it while filling in the next one. Click 🔒 again to unlock and correct something. Locking doesn't save on its own — click Save when you're ready.</dd></div>
       <div><dt>Save</dt><dd>Nothing publishes until you click Save, top right. The dot turns amber with "unsaved changes" the moment you edit anything, and back to green once it's saved. Your edits stay safe in this browser even before you save — but click Save to make them visible next time you (or anyone else) open this link.</dd></div>
-      <div><dt>Monthly / Yearly / All time view</dt><dd>The glance cards at the top total up whichever months you're viewing — visits, leads, trials and new members are added together; active members, price and MRR use the most recent month with a real Active members count, so live current MRR stays correct even if a later month's Active members field just hasn't been filled in yet.</dd></div>
+      <div><dt>Monthly / Yearly / All time view</dt><dd>The glance cards at the top total up whichever months you're viewing — visits, trials and new members are added together; active members, price and MRR use the most recent month with a real Active members count, so live current MRR stays correct even if a later month's Active members field just hasn't been filled in yet.</dd></div>
       <div><dt>MRR goal</dt><dd>Always shows your true current MRR against the target you set, regardless of which view is selected above. Set the target once — it's saved with everything else.</dd></div>
     </dl>
   </div>
 
   </div><!-- /tab-mrr -->
 
-  <div id="tab-content" class="tabpanel">
+  <div id="tab-content" class="tabpanel" hidden="">
 
-    <div class="settingsbar">
-      <div class="field-inline">
-        <label for="contentPeriodSel">Viewing</label>
-        <select id="contentPeriodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
-      </div>
-      <div class="divider"></div>
-      <span class="hint">Every month is entered by hand, same as MRR Tracker — Instagram followers and email list size are whatever they stood at by the end of that month.</span>
-    </div>
-
-    <p class="section-label">This month at a glance</p>
-    <div class="kpigrid" id="contentKpiGrid"><div class="kpi"><div class="label">Instagram followers</div><div class="value">378</div></div><div class="kpi accent"><div class="label">IG growth vs. prev. month</div><div class="value">—</div></div><div class="kpi"><div class="label">Email list</div><div class="value">59</div></div><div class="kpi accent"><div class="label">Email growth vs. prev. month</div><div class="value">—</div></div></div>
-
-    <p class="section-label">Trends</p>
-    <div class="chartsgrid">
-      <div class="chartcard">
-        <h3>Instagram followers</h3>
-        <div class="chartsub">Total followers at month end</div>
-        <div class="chartwrap"><svg class="chart" id="chartIG"><line x1="4" x2="508" y1="10" y2="10" class="gridline"></line><line x1="4" x2="508" y1="69" y2="69" class="gridline"></line><line x1="4" x2="508" y1="128" y2="128" class="gridline"></line><path d="M4,21.799999999999997 L508,10" class="noline" stroke="#B84FE8" stroke-width="2"></path><circle cx="4" cy="21.799999999999997" r="3" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><circle cx="508" cy="10" r="4.5" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="508" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttIG"></div></div>
-      </div>
-      <div class="chartcard">
-        <h3>Email list</h3>
-        <div class="chartsub">Total subscribers at month end</div>
-        <div class="chartwrap"><svg class="chart" id="chartEmail"><line x1="4" x2="508" y1="10" y2="10" class="gridline"></line><line x1="4" x2="508" y1="69" y2="69" class="gridline"></line><line x1="4" x2="508" y1="128" y2="128" class="gridline"></line><path d="M4,11.966666666666669 L508,10" class="noline" stroke="#E1A6FF" stroke-width="2"></path><circle cx="4" cy="11.966666666666669" r="3" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><circle cx="508" cy="10" r="4.5" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="508" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttEmail"></div></div>
-      </div>
-    </div>
-
-    <p class="section-label">Monthly log</p>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Month</th>
-            <th>Instagram followers</th>
-            <th>Email list</th>
-            <th class="calc">IG growth</th>
-            <th class="calc">Email growth</th>
-            <th class="rowdel"></th>
-          </tr>
-        </thead>
-        <tbody id="contentTbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="igFollowers" value="378" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="emailList" value="59" disabled=""></td><td class="calc" data-ccalc="0">—</td><td class="calc" data-ccalc="1">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="igFollowers" value="420" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="emailList" value="60" disabled=""></td><td class="calc" data-ccalc="0">+42</td><td class="calc" data-ccalc="1">+1</td><td class="rowdel"></td></tr></tbody>
-      </table>
-      <div class="tablefoot">
-        <span class="hint">Growth compares to the previous row in this table — it's just a display, not something you enter.</span>
-        <button class="addbtn" id="contentAddMonth">+ Add next month</button>
-      </div>
-    </div>
-
-    <p class="section-label" style="margin-top:40px;">Caption templates</p>
-    <span class="hint" style="display:block; margin:-6px 0 12px;">Save a few go-to captions here — on the calendar, tap one to drop it straight into a video's caption box, then tweak it for that specific post if needed.</span>
-    <div id="captionTemplates" class="captiontemplates"><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="0"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
-
-#manifestlove #lawofattraction" data-ctpli="0"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="1"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
-
-#manifestlove #lawofattraction" data-ctpli="1"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="2"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
-
-#manifestlove #lawofattraction" data-ctpli="2"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="3"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
-
-#manifestlove #lawofattraction" data-ctpli="3"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div></div>
-    <button class="addbtn" id="captionTemplateAdd" style="margin-top:10px;">+ Add caption template</button>
-
-    <p class="section-label" style="margin-top:32px;">Video ideas</p>
+    <p class="section-label" style="margin-top:20px;">Video ideas</p>
     <span class="hint" style="display:block; margin:-6px 0 20px;">Type an idea, then choose whether it fills the next open slot or a specific date. Once it has both a title and a date it drops off this list and lives on the calendar below instead — aiming for at least 3 a day.</span>
     <div class="tablewrap">
       <table>
@@ -1171,7 +1126,7 @@
             <th class="rowdel"></th>
           </tr>
         </thead>
-        <tbody id="ideaTbody"><tr data-idrow="11"><td><input type="text" data-idi="11" data-idfield="title" value="" placeholder="Video idea"></td><td class="slotmode"><label class="slotopt"><input type="checkbox" data-idi="11" data-slotmode="auto" checked=""> Add to next available slot</label><label class="slotopt"><input type="checkbox" data-idi="11" data-slotmode="specific"> Add to specific date</label></td><td><input type="date" data-idi="11" data-idfield="date" value="2026-09-06" disabled=""></td><td class="rowdel"><button data-iddel="11" title="Remove idea">✕</button></td></tr></tbody>
+        <tbody id="ideaTbody"></tbody>
       </table>
       <div class="tablefoot">
         <span class="hint">Click a calendar date and mark a video Published to pull it into Video stats tracking below — no retyping once it's live. Draft videos stay on the calendar only.</span>
@@ -1189,7 +1144,7 @@
       </div>
     </div>
     <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
-    <div class="calendar" id="calendar"><div class="caldow">Mon</div><div class="caldow">Tue</div><div class="caldow">Wed</div><div class="caldow">Thu</div><div class="caldow">Fri</div><div class="caldow">Sat</div><div class="caldow">Sun</div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">31</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">1</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">2</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">3</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem draft" title="Why you can't stop doubting if you're going to manifest love ♥️ — Draft"><span class="calitem-dot"></span><span class="calitem-label">Why you can't stop doubting if you're going to manifest love ♥️</span></div><div class="calitem draft" title="How long should you wait before giving up on manifesting love? ♥️ — Draft"><span class="calitem-dot"></span><span class="calitem-label">How long should you wait before giving up on manifesting love? ♥️</span></div><div class="calitem draft" title="If you're still doubting that you can manifest love - you MUST change this today ♥️ — Draft"><span class="calitem-dot"></span><span class="calitem-label">If you're still doubting that you can manifest love - you MUST change this today ♥️</span></div></div></div><div class="calcell today"><div class="caldatehead"><span class="caldatenum">4</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="If you are worried time is running out to manifest love - do this today ❤️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you are worried time is running out to manifest love - do this today ❤️</span></div><div class="calitem published" title="How to manifest love into your life - scientifically 🧪  — Published"><span class="calitem-dot"></span><span class="calitem-label">How to manifest love into your life - scientifically 🧪 </span></div><div class="calitem published" title="6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔 — Published"><span class="calitem-dot"></span><span class="calitem-label">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</span></div><div class="calitem published" title="How to attract a really great partner ♥️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">How to attract a really great partner ♥️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">5</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem draft" title="How I manifested my dream partner ♥️ — Draft"><span class="calitem-dot"></span><span class="calitem-label">How I manifested my dream partner ♥️</span></div><div class="calitem draft" title="2 steps to manifest the partner of your dreams 😁♥️ — Draft"><span class="calitem-dot"></span><span class="calitem-label">2 steps to manifest the partner of your dreams 😁♥️</span></div><div class="calitem draft" title="The art and science of finding true love ♥️ — Draft"><span class="calitem-dot"></span><span class="calitem-label">The art and science of finding true love ♥️</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">6</span><span class="calcount short">2/3</span></div><div class="calitems"><div class="calitem draft" title="The real reason that you haven’t manifested love yet 💔 — Draft"><span class="calitem-dot"></span><span class="calitem-label">The real reason that you haven’t manifested love yet 💔</span></div><div class="calitem draft" title="Manifesting harder pushes love away - 👉here's why  — Draft"><span class="calitem-dot"></span><span class="calitem-label">Manifesting harder pushes love away - 👉here's why </span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">7</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">8</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">9</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">10</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">11</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">12</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">13</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">14</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">15</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">16</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">17</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">18</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">19</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">20</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">21</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">22</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">23</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">24</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">25</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">26</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">27</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">28</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">29</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">30</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">1</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">2</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">4</span></div><div class="calitems"></div></div></div>
+    <div class="calendar" id="calendar"><div class="caldow">Mon</div><div class="caldow">Tue</div><div class="caldow">Wed</div><div class="caldow">Thu</div><div class="caldow">Fri</div><div class="caldow">Sat</div><div class="caldow">Sun</div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">31</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">1</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">2</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">3</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="Why you can't stop doubting if you're going to manifest love ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">Why you can't stop doubting if you're going to manifest love ♥️</span></div><div class="calitem published" title="How long should you wait before giving up on manifesting love? ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How long should you wait before giving up on manifesting love? ♥️</span></div><div class="calitem published" title="If you're still doubting that you can manifest love - you MUST change this today ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you're still doubting that you can manifest love - you MUST change this today ♥️</span></div><div class="calitem published" title="How manifest love in your life - without the doubts ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How manifest love in your life - without the doubts ♥️</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">4</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="If you are worried time is running out to manifest love - do this today ❤️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you are worried time is running out to manifest love - do this today ❤️</span></div><div class="calitem published" title="How to manifest love into your life - scientifically 🧪  — Published"><span class="calitem-dot"></span><span class="calitem-label">How to manifest love into your life - scientifically 🧪 </span></div><div class="calitem published" title="6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔 — Published"><span class="calitem-dot"></span><span class="calitem-label">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</span></div><div class="calitem published" title="How to attract a really great partner ♥️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">How to attract a really great partner ♥️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">5</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem published" title="How I manifested my dream partner ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How I manifested my dream partner ♥️</span></div><div class="calitem published" title="Two REALLY important steps for meeting and attracting your special person ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">Two REALLY important steps for meeting and attracting your special person ❤️✅</span></div><div class="calitem published" title="This type of person always attracts the partner that they want ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">This type of person always attracts the partner that they want ❤️✅</span></div></div></div><div class="calcell today"><div class="caldatehead"><span class="caldatenum">6</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem draft" title="The real reason that you haven’t manifested love yet 💔 — Draft"><span class="calitem-dot"></span><span class="calitem-label">The real reason that you haven’t manifested love yet 💔</span></div><div class="calitem draft" title="Manifesting harder pushes love away - 👉here's why  — Draft"><span class="calitem-dot"></span><span class="calitem-label">Manifesting harder pushes love away - 👉here's why </span></div><div class="calitem draft" title="It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this — Draft"><span class="calitem-dot"></span><span class="calitem-label">It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this</span></div><div class="calitem draft" title="A guaranteed system for attracting the relationship that you want  — Draft"><span class="calitem-dot"></span><span class="calitem-label">A guaranteed system for attracting the relationship that you want </span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">7</span><span class="calcount short">1/3</span></div><div class="calitems"><div class="calitem draft" title="I can only help these people manifest a great relationship — Draft"><span class="calitem-dot"></span><span class="calitem-label">I can only help these people manifest a great relationship</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">8</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">9</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">10</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">11</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">12</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">13</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">14</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">15</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">16</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">17</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">18</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">19</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">20</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">21</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">22</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">23</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">24</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">25</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">26</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">27</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">28</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">29</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">30</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">1</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">2</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">4</span></div><div class="calitems"></div></div></div>
 
     <p class="section-label" style="margin-top:40px;">Video stats tracking</p>
     <div class="tablewrap">
@@ -1210,7 +1165,7 @@
             <th class="rowdel"></th>
           </tr>
         </thead>
-        <tbody id="outlierTbody"><tr data-orow="0"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="0" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="0" data-ofield="title" value="You don't need manifestation to attract your partner  ♥️ You need this..." placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="0" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="0" data-ofield="views" value="2423"></td><td><input type="number" min="0" data-oi="0" data-ofield="likes" value="20"></td><td><input type="number" min="0" data-oi="0" data-ofield="comments" value="8"></td><td><input type="number" min="0" data-oi="0" data-ofield="shares" value="25"></td><td><input type="number" min="0" data-oi="0" data-ofield="saves" value="61"></td><td><input type="number" min="0" data-oi="0" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">4.7%</td><td class="rowdel"><button data-odel="0" title="Remove video">✕</button></td></tr><tr data-orow="1"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="1" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="1" data-ofield="title" value="The one dangerous belief that keeps people lonely forever" placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="1" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="1" data-ofield="views" value="1924"></td><td><input type="number" min="0" data-oi="1" data-ofield="likes" value="12"></td><td><input type="number" min="0" data-oi="1" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="1" data-ofield="shares" value="16"></td><td><input type="number" min="0" data-oi="1" data-ofield="saves" value="67"></td><td><input type="number" min="0" data-oi="1" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">4.9%</td><td class="rowdel"><button data-odel="1" title="Remove video">✕</button></td></tr><tr data-orow="2"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="2" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="2" data-ofield="title" value="If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 " placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="2" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="2" data-ofield="views" value="1769"></td><td><input type="number" min="0" data-oi="2" data-ofield="likes" value="18"></td><td><input type="number" min="0" data-oi="2" data-ofield="comments" value="2"></td><td><input type="number" min="0" data-oi="2" data-ofield="shares" value="12"></td><td><input type="number" min="0" data-oi="2" data-ofield="saves" value="42"></td><td><input type="number" min="0" data-oi="2" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">4.2%</td><td class="rowdel"><button data-odel="2" title="Remove video">✕</button></td></tr><tr data-orow="3"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="3" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="3" data-ofield="title" value="Before you give up trying to manifest love - watch this video ♥️ " placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="3" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="3" data-ofield="views" value="2363"></td><td><input type="number" min="0" data-oi="3" data-ofield="likes" value="22"></td><td><input type="number" min="0" data-oi="3" data-ofield="comments" value="15"></td><td><input type="number" min="0" data-oi="3" data-ofield="shares" value="20"></td><td><input type="number" min="0" data-oi="3" data-ofield="saves" value="64"></td><td><input type="number" min="0" data-oi="3" data-ofield="communityComments" value="6"></td><td class="calc" data-oecalc="">5.1%</td><td class="rowdel"><button data-odel="3" title="Remove video">✕</button></td></tr><tr data-orow="4"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="4" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="4" data-ofield="title" value="How to stop doubting that you'll manifest your partner - quickly ♥️" placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="4" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="4" data-ofield="views" value="2011"></td><td><input type="number" min="0" data-oi="4" data-ofield="likes" value="12"></td><td><input type="number" min="0" data-oi="4" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="4" data-ofield="shares" value="23"></td><td><input type="number" min="0" data-oi="4" data-ofield="saves" value="76"></td><td><input type="number" min="0" data-oi="4" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">5.5%</td><td class="rowdel"><button data-odel="4" title="Remove video">✕</button></td></tr><tr data-orow="5"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="5" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td><input type="text" data-oi="5" data-ofield="title" value="How do you maintain the belief that you're already with your dream partner?  🤔" placeholder="Video title"></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="5" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="5" data-ofield="views" value="1689"></td><td><input type="number" min="0" data-oi="5" data-ofield="likes" value="9"></td><td><input type="number" min="0" data-oi="5" data-ofield="comments" value="5"></td><td><input type="number" min="0" data-oi="5" data-ofield="shares" value="14"></td><td><input type="number" min="0" data-oi="5" data-ofield="saves" value="43"></td><td><input type="number" min="0" data-oi="5" data-ofield="communityComments" value="2"></td><td class="calc" data-oecalc="">4.2%</td><td class="rowdel"><button data-odel="5" title="Remove video">✕</button></td></tr><tr data-orow="6"><td style="text-align:center;"><button class="vidsavebtn" data-osave="6" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td><input type="text" data-oi="6" data-ofield="title" value="If you are worried time is running out to manifest love - do this today ❤️" placeholder="Video title"></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="6" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="6" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="saves" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">—</td><td class="rowdel"><button data-odel="6" title="Remove video">✕</button></td></tr><tr data-orow="7"><td style="text-align:center;"><button class="vidsavebtn" data-osave="7" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td><input type="text" data-oi="7" data-ofield="title" value="How to manifest love into your life - scientifically 🧪 " placeholder="Video title"></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="7" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="7" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="saves" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">—</td><td class="rowdel"><button data-odel="7" title="Remove video">✕</button></td></tr><tr data-orow="8"><td style="text-align:center;"><button class="vidsavebtn" data-osave="8" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td><input type="text" data-oi="8" data-ofield="title" value="6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔" placeholder="Video title"></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="8" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="8" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="saves" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">—</td><td class="rowdel"><button data-odel="8" title="Remove video">✕</button></td></tr><tr data-orow="9"><td style="text-align:center;"><button class="vidsavebtn" data-osave="9" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td><input type="text" data-oi="9" data-ofield="title" value="How to attract a really great partner ♥️✅" placeholder="Video title"></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="9" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="9" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="saves" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="communityComments" value="0"></td><td class="calc" data-oecalc="">—</td><td class="rowdel"><button data-odel="9" title="Remove video">✕</button></td></tr></tbody>
+        <tbody id="outlierTbody"><tr data-orow="0"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="0" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.7%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="0" data-ofield="title" placeholder="Video title" style="height: 0px;">You don't need manifestation to attract your partner  ♥️ You need this...</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="0" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="0" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="0" data-ofield="views" value="2423"></td><td><input type="number" min="0" data-oi="0" data-ofield="likes" value="20"></td><td><input type="number" min="0" data-oi="0" data-ofield="comments" value="8"></td><td><input type="number" min="0" data-oi="0" data-ofield="shares" value="25"></td><td><input type="number" min="0" data-oi="0" data-ofield="saves" value="61"></td><td class="rowdel"><button data-odel="0" title="Remove video">✕</button></td></tr><tr data-orow="1"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="1" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.9%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="1" data-ofield="title" placeholder="Video title" style="height: 0px;">The one dangerous belief that keeps people lonely forever</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="1" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="1" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="1" data-ofield="views" value="1924"></td><td><input type="number" min="0" data-oi="1" data-ofield="likes" value="12"></td><td><input type="number" min="0" data-oi="1" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="1" data-ofield="shares" value="16"></td><td><input type="number" min="0" data-oi="1" data-ofield="saves" value="67"></td><td class="rowdel"><button data-odel="1" title="Remove video">✕</button></td></tr><tr data-orow="2"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="2" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.2%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="2" data-ofield="title" placeholder="Video title" style="height: 0px;">If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 </textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="2" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="2" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="2" data-ofield="views" value="1769"></td><td><input type="number" min="0" data-oi="2" data-ofield="likes" value="18"></td><td><input type="number" min="0" data-oi="2" data-ofield="comments" value="2"></td><td><input type="number" min="0" data-oi="2" data-ofield="shares" value="12"></td><td><input type="number" min="0" data-oi="2" data-ofield="saves" value="42"></td><td class="rowdel"><button data-odel="2" title="Remove video">✕</button></td></tr><tr data-orow="3"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="3" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.3%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="3" data-ofield="title" placeholder="Video title" style="height: 0px;">Before you give up trying to manifest love - watch this video ♥️ </textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="3" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="3" data-ofield="communityComments" value="8"></td><td><input type="number" min="0" data-oi="3" data-ofield="views" value="2800"></td><td><input type="number" min="0" data-oi="3" data-ofield="likes" value="22"></td><td><input type="number" min="0" data-oi="3" data-ofield="comments" value="15"></td><td><input type="number" min="0" data-oi="3" data-ofield="shares" value="20"></td><td><input type="number" min="0" data-oi="3" data-ofield="saves" value="64"></td><td class="rowdel"><button data-odel="3" title="Remove video">✕</button></td></tr><tr data-orow="4"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="4" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">3.3%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="4" data-ofield="title" placeholder="Video title" style="height: 0px;">How to stop doubting that you'll manifest your partner - quickly ♥️</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="4" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="4" data-ofield="communityComments" value="3"></td><td><input type="number" min="0" data-oi="4" data-ofield="views" value="3400"></td><td><input type="number" min="0" data-oi="4" data-ofield="likes" value="12"></td><td><input type="number" min="0" data-oi="4" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="4" data-ofield="shares" value="23"></td><td><input type="number" min="0" data-oi="4" data-ofield="saves" value="76"></td><td class="rowdel"><button data-odel="4" title="Remove video">✕</button></td></tr><tr data-orow="5"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="5" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">3.9%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="5" data-ofield="title" placeholder="Video title" style="height: 0px;">How do you maintain the belief that you're already with your dream partner?  🤔</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="5" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="5" data-ofield="communityComments" value="2"></td><td><input type="number" min="0" data-oi="5" data-ofield="views" value="1800"></td><td><input type="number" min="0" data-oi="5" data-ofield="likes" value="9"></td><td><input type="number" min="0" data-oi="5" data-ofield="comments" value="5"></td><td><input type="number" min="0" data-oi="5" data-ofield="shares" value="14"></td><td><input type="number" min="0" data-oi="5" data-ofield="saves" value="43"></td><td class="rowdel"><button data-odel="5" title="Remove video">✕</button></td></tr><tr data-orow="6"><td style="text-align:center;"><button class="vidsavebtn" data-osave="6" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="6" data-ofield="title" placeholder="Video title" style="height: 0px;">If you are worried time is running out to manifest love - do this today ❤️</textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="6" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="6" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="6" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="6" title="Remove video">✕</button></td></tr><tr data-orow="7"><td style="text-align:center;"><button class="vidsavebtn" data-osave="7" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="7" data-ofield="title" placeholder="Video title" style="height: 0px;">How to manifest love into your life - scientifically 🧪 </textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="7" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="7" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="7" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="7" title="Remove video">✕</button></td></tr><tr data-orow="8"><td style="text-align:center;"><button class="vidsavebtn" data-osave="8" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="8" data-ofield="title" placeholder="Video title" style="height: 0px;">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="8" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="8" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="8" title="Remove video">✕</button></td></tr><tr data-orow="9"><td style="text-align:center;"><button class="vidsavebtn" data-osave="9" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="9" data-ofield="title" placeholder="Video title" style="height: 0px;">How to attract a really great partner ♥️✅</textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="9" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="9" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="9" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="9" title="Remove video">✕</button></td></tr><tr data-orow="10"><td style="text-align:center;"><button class="vidsavebtn" data-osave="10" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="10" data-ofield="title" placeholder="Video title" style="height: 0px;">Why you can't stop doubting if you're going to manifest love ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="10" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="10" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="10" title="Remove video">✕</button></td></tr><tr data-orow="11"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="11" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">0.0%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="11" data-ofield="title" placeholder="Video title" style="height: 0px;">If you're still doubting that you can manifest love - you MUST change this today ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="11" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="11" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="11" data-ofield="views" value="1100"></td><td><input type="number" min="0" data-oi="11" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="11" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="11" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="11" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="11" title="Remove video">✕</button></td></tr><tr data-orow="12"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="12" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">0.0%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="12" data-ofield="title" placeholder="Video title" style="height: 0px;">How long should you wait before giving up on manifesting love? ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="12" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="12" data-ofield="communityComments" value="1"></td><td><input type="number" min="0" data-oi="12" data-ofield="views" value="1500"></td><td><input type="number" min="0" data-oi="12" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="12" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="12" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="12" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="12" title="Remove video">✕</button></td></tr><tr data-orow="13"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="13" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">0.0%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="13" data-ofield="title" placeholder="Video title" style="height: 0px;">How manifest love in your life - without the doubts ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="13" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="13" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="views" value="503"></td><td><input type="number" min="0" data-oi="13" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="13" title="Remove video">✕</button></td></tr><tr data-orow="14"><td style="text-align:center;"><button class="vidsavebtn" data-osave="14" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="14" data-ofield="title" placeholder="Video title" style="height: 0px;">This type of person always attracts the partner that they want ❤️✅</textarea></td><td class="calc" data-odatecalc="">5 Sept</td><td><input type="month" data-oi="14" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="14" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="14" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="14" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="14" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="14" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="14" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="14" title="Remove video">✕</button></td></tr><tr data-orow="15"><td style="text-align:center;"><button class="vidsavebtn" data-osave="15" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="15" data-ofield="title" placeholder="Video title" style="height: 0px;">How I manifested my dream partner ♥️</textarea></td><td class="calc" data-odatecalc="">5 Sept</td><td><input type="month" data-oi="15" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="15" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="15" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="15" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="15" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="15" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="15" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="15" title="Remove video">✕</button></td></tr><tr data-orow="16"><td style="text-align:center;"><button class="vidsavebtn" data-osave="16" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="16" data-ofield="title" placeholder="Video title" style="height: 0px;">Two REALLY important steps for meeting and attracting your special person ❤️✅</textarea></td><td class="calc" data-odatecalc="">5 Sept</td><td><input type="month" data-oi="16" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="16" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="16" title="Remove video">✕</button></td></tr></tbody>
       </table>
       <div class="tablefoot">
         <span class="hint">Click Save once a video's stats are in to add it to the leaderboard below — click it again to pull it back off. Engagement rate = (likes + comments + shares + saves) ÷ views. Community comments is a subset of Comments — just the ones asking about joining, so you can spot which posts actually drive people to the community. Date is pulled automatically from the calendar for anything scheduled there — it's blank for videos added straight here. Month is just for reference — add a video whenever it breaks out, no fixed cadence.</span>
@@ -1240,20 +1195,123 @@
             <th class="calc sortable" data-sortkey="engagement">Engagement rate</th>
           </tr>
         </thead>
-        <tbody id="leaderboardTbody"><tr class="rank1"><td class="rankcell">1</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">97</td><td>2,363</td><td>22</td><td>15</td><td>20</td><td>64</td><td>6</td><td class="calc">5.1%</td></tr><tr class="rank2"><td class="rankcell">2</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">42</td><td>1,689</td><td>9</td><td>5</td><td>14</td><td>43</td><td>2</td><td class="calc">4.2%</td></tr><tr class="rank3"><td class="rankcell">3</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">39</td><td>2,423</td><td>20</td><td>8</td><td>25</td><td>61</td><td>0</td><td class="calc">4.7%</td></tr><tr><td class="rankcell">4</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">29</td><td>2,011</td><td>12</td><td>0</td><td>23</td><td>76</td><td>0</td><td class="calc">5.5%</td></tr><tr><td class="rankcell">5</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">26</td><td>1,924</td><td>12</td><td>0</td><td>16</td><td>67</td><td>0</td><td class="calc">4.9%</td></tr><tr><td class="rankcell">6</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">26</td><td>1,769</td><td>18</td><td>2</td><td>12</td><td>42</td><td>0</td><td class="calc">4.2%</td></tr></tbody>
+        <tbody id="leaderboardTbody"><tr class="rank1"><td class="rankcell">1</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">95</td><td>2,800</td><td>22</td><td>15</td><td>20</td><td>64</td><td>8</td><td class="calc">4.3%</td></tr><tr class="rank2"><td class="rankcell">2</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">53</td><td>3,400</td><td>12</td><td>0</td><td>23</td><td>76</td><td>3</td><td class="calc">3.3%</td></tr><tr class="rank3"><td class="rankcell">3</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">35</td><td>1,800</td><td>9</td><td>5</td><td>14</td><td>43</td><td>2</td><td class="calc">3.9%</td></tr><tr><td class="rankcell">4</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">35</td><td>2,423</td><td>20</td><td>8</td><td>25</td><td>61</td><td>0</td><td class="calc">4.7%</td></tr><tr><td class="rankcell">5</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">23</td><td>1,769</td><td>18</td><td>2</td><td>12</td><td>42</td><td>0</td><td class="calc">4.2%</td></tr><tr><td class="rankcell">6</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">23</td><td>1,924</td><td>12</td><td>0</td><td>16</td><td>67</td><td>0</td><td class="calc">4.9%</td></tr><tr><td class="rankcell">7</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">3 Sept</td><td>—</td><td class="calc">13</td><td>1,500</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td class="calc">0.0%</td></tr><tr><td class="rankcell">8</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">3 Sept</td><td>—</td><td class="calc">5</td><td>1,100</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="calc">0.0%</td></tr><tr><td class="rankcell">9</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">3 Sept</td><td>—</td><td class="calc">2</td><td>503</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="calc">0.0%</td></tr></tbody>
       </table>
+    </div>
+
+    <p class="section-label" style="margin-top:40px;">Caption templates</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">Save a few go-to captions here — on the calendar, tap one to drop it straight into a video's caption box, then tweak it for that specific post if needed.</span>
+    <div id="captionTemplates" class="captiontemplates"><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="0"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
+
+#manifestlove #lawofattraction" data-ctpli="0"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="1"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
+
+#manifestlove #lawofattraction" data-ctpli="1"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="2"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
+
+#manifestlove #lawofattraction" data-ctpli="2"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div><div class="capttpl"><div class="capttpl-fields"><input type="text" class="capttpl-name" placeholder="Name — e.g. QUIZ" data-ctpli="3"><textarea placeholder="e.g. Comment HEART for the free meditation 💜
+
+#manifestlove #lawofattraction" data-ctpli="3"></textarea></div><div class="capttpl-actions"><button type="button" class="copybtn" title="Copy this caption">Copy</button><button type="button" class="vidsavebtn" title="Save this caption template">Save</button><button class="rowdel-btn" title="Remove caption template">✕</button></div></div></div>
+    <button class="addbtn" id="captionTemplateAdd" style="margin-top:10px;">+ Add caption template</button>
+
+  </div>
+
+  <div id="tab-instagram" class="tabpanel" hidden="">
+
+    <div class="settingsbar">
+      <div class="field-inline">
+        <label for="igPeriodSel">Viewing</label>
+        <select id="igPeriodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
+      </div>
+      <div class="divider"></div>
+      <span class="hint">Entered by hand, same as MRR Tracker — whatever the follower count stood at by the end of that month.</span>
+    </div>
+
+    <p class="section-label">This month at a glance</p>
+    <div class="kpigrid" id="igKpiGrid"><div class="kpi"><div class="label">Instagram followers</div><div class="value">444</div></div><div class="kpi accent"><div class="label">IG growth vs. prev. month</div><div class="value">+66</div></div></div>
+
+    <p class="section-label">Trends</p>
+    <div class="chartsgrid">
+      <div class="chartcard">
+        <h3>Instagram followers</h3>
+        <div class="chartsub">Total followers at month end</div>
+        <div class="chartwrap"><svg class="chart" id="chartIG"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,27.540540540540547 L316,10" class="noline" stroke="#B84FE8" stroke-width="2"></path><circle cx="4" cy="27.540540540540547" r="3" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="10" r="4.5" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttIG"></div></div>
+      </div>
+    </div>
+
+    <p class="section-label">Monthly log</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Month</th>
+            <th>Instagram followers</th>
+            <th class="calc">IG growth</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="igTbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="igFollowers" value="378" disabled=""></td><td class="calc" data-ccalc="0">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="igFollowers" value="444" disabled=""></td><td class="calc" data-ccalc="0">+66</td><td class="rowdel"></td></tr></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Growth compares to the previous row in this table — it's just a display, not something you enter.</span>
+        <button class="addbtn" id="igAddMonth">+ Add next month</button>
+      </div>
     </div>
 
   </div>
 
-  <div id="tab-delivery" class="tabpanel" hidden="">
+  <div id="tab-email" class="tabpanel" hidden="">
+
+    <div class="settingsbar">
+      <div class="field-inline">
+        <label for="emailPeriodSel">Viewing</label>
+        <select id="emailPeriodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
+      </div>
+      <div class="divider"></div>
+      <span class="hint">Entered by hand, same as MRR Tracker — whatever the subscriber count stood at by the end of that month.</span>
+    </div>
+
+    <p class="section-label">This month at a glance</p>
+    <div class="kpigrid" id="emailKpiGrid"><div class="kpi"><div class="label">Email list</div><div class="value">60</div></div><div class="kpi accent"><div class="label">Email growth vs. prev. month</div><div class="value">+1</div></div></div>
+
+    <p class="section-label">Trends</p>
+    <div class="chartsgrid">
+      <div class="chartcard">
+        <h3>Email list</h3>
+        <div class="chartsub">Total subscribers at month end</div>
+        <div class="chartwrap"><svg class="chart" id="chartEmail"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,11.966666666666669 L316,10" class="noline" stroke="#E1A6FF" stroke-width="2"></path><circle cx="4" cy="11.966666666666669" r="3" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="10" r="4.5" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttEmail"></div></div>
+      </div>
+    </div>
+
+    <p class="section-label">Monthly log</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Month</th>
+            <th>Email list</th>
+            <th class="calc">Email growth</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="emailTbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="emailList" value="59" disabled=""></td><td class="calc" data-ccalc="0">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-clock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="emailList" value="60" disabled=""></td><td class="calc" data-ccalc="0">+1</td><td class="rowdel"></td></tr></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Growth compares to the previous row in this table — it's just a display, not something you enter.</span>
+        <button class="addbtn" id="emailAddMonth">+ Add next month</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="tab-delivery" class="tabpanel">
 
     <p class="section-label">Priority board</p>
     <span class="hint" style="display:block; margin:-6px 0 20px;">Eisenhower Matrix — tag each project Urgent and/or Important in the list below, and it sorts itself into a quadrant here. Work top-left to bottom-right.</span>
     <div class="quadrants">
       <div class="quadrant q-dofirst">
         <div class="quadhead"><span class="quadtitle">Do first</span><span class="quadsub">Urgent &amp; important</span></div>
-        <ul class="quadlist" id="quadDoFirst"><li>Attraction Formula Program Check-Ins</li></ul>
+        <ul class="quadlist" id="quadDoFirst"><li class="quadempty">Nothing here right now.</li></ul>
       </div>
       <div class="quadrant q-schedule">
         <div class="quadhead"><span class="quadtitle">Schedule</span><span class="quadsub">Important, not urgent</span></div>
@@ -1281,7 +1339,7 @@
             <th class="rowdel"></th>
           </tr>
         </thead>
-        <tbody id="projectTbody"><tr data-prow="0"><td><input type="text" data-pi="0" data-pfield="title" value="1-2-1 call with Chloe" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="urgent"></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="done"></td><td class="rowdel"><button data-pdel="0" title="Remove project">✕</button></td></tr><tr data-prow="1" class="projectdone"><td><input type="text" data-pi="1" data-pfield="title" value="Attraction Formula Meditation Recording" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="done" checked=""></td><td class="rowdel"><button data-pdel="1" title="Remove project">✕</button></td></tr><tr data-prow="2"><td><input type="text" data-pi="2" data-pfield="title" value="Attraction Formula Program Check-Ins" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="done"></td><td class="rowdel"><button data-pdel="2" title="Remove project">✕</button></td></tr><tr data-prow="3" class="projectdone"><td><input type="text" data-pi="3" data-pfield="title" value="New cover photo good for FB ads" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="3" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="3" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="3" data-pfield="done" checked=""></td><td class="rowdel"><button data-pdel="3" title="Remove project">✕</button></td></tr><tr data-prow="4"><td><input type="text" data-pi="4" data-pfield="title" value="Heart Attractor Program" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="4" data-pfield="urgent"></td><td style="text-align:center;"><input type="checkbox" data-pi="4" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="4" data-pfield="done"></td><td class="rowdel"><button data-pdel="4" title="Remove project">✕</button></td></tr></tbody>
+        <tbody id="projectTbody"><tr data-prow="0"><td><input type="text" data-pi="0" data-pfield="title" value="1-2-1 call with Chloe" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="urgent"></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="0" data-pfield="done"></td><td class="rowdel"><button data-pdel="0" title="Remove project">✕</button></td></tr><tr data-prow="1" class="projectdone"><td><input type="text" data-pi="1" data-pfield="title" value="Attraction Formula Meditation Recording" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="1" data-pfield="done" checked=""></td><td class="rowdel"><button data-pdel="1" title="Remove project">✕</button></td></tr><tr data-prow="2" class="projectdone"><td><input type="text" data-pi="2" data-pfield="title" value="Attraction Formula Program Check-Ins" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="2" data-pfield="done"></td><td class="rowdel"><button data-pdel="2" title="Remove project">✕</button></td></tr><tr data-prow="3" class="projectdone"><td><input type="text" data-pi="3" data-pfield="title" value="New cover photo good for FB ads" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="3" data-pfield="urgent" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="3" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="3" data-pfield="done" checked=""></td><td class="rowdel"><button data-pdel="3" title="Remove project">✕</button></td></tr><tr data-prow="4"><td><input type="text" data-pi="4" data-pfield="title" value="Heart Attractor Program" placeholder="Project name"></td><td style="text-align:center;"><input type="checkbox" data-pi="4" data-pfield="urgent"></td><td style="text-align:center;"><input type="checkbox" data-pi="4" data-pfield="important" checked=""></td><td style="text-align:center;"><input type="checkbox" data-pi="4" data-pfield="done"></td><td class="rowdel"><button data-pdel="4" title="Remove project">✕</button></td></tr></tbody>
       </table>
       <div class="tablefoot">
         <span class="hint">Tick Urgent and/or Important to place it on the priority board above. Tick Done to clear it off the board.</span>
@@ -1296,10 +1354,14 @@
 <div class="daymodal-overlay" id="dayModalOverlay" hidden="">
   <div class="daymodal">
     <div class="daymodal-head">
-      <h3 id="dayModalTitle">Friday 4 September</h3>
-      <button class="daymodal-x" id="dayModalClose" title="Close">✕</button>
+      <h3 id="dayModalTitle">Monday 7 September</h3>
+      <div class="daymodal-headactions">
+        <span class="daymodal-savestatus" id="dayModalSaveStatus"></span>
+        <button class="daymodal-savebtn" id="dayModalSave" title="Save changes made in this day">Save</button>
+        <button class="daymodal-x" id="dayModalClose" title="Close">✕</button>
+      </div>
     </div>
-    <div id="dayModalBody"><div class="dayitem posted"><div class="dayitem-top"><input type="text" class="dayitem-titlein"></div><div class="dayitem-statusrow"><div class="statustoggle"><button type="button" class="statusbtn draft">Draft</button><button type="button" class="statusbtn published active">Published</button></div><input type="date" class="dayitem-move" title="Move to another date" data-movei="3"></div><div class="dayitem-caption"><div class="captionchips"><button type="button" class="captionchip" title="➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.
+    <div id="dayModalBody"><div class="dayitem"><div class="dayitem-top"><input type="text" class="dayitem-titlein"><button type="button" class="rowdel-btn" title="Remove this idea">✕</button></div><div class="dayitem-statusrow"><div class="statustoggle"><button type="button" class="statusbtn draft active">Draft</button><button type="button" class="statusbtn published">Published</button></div><input type="date" class="dayitem-move" title="Move to another date" data-movei="13"></div><div class="dayitem-caption"><div class="captionchips"><button type="button" class="captionchip" title="➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.
 
 #manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">QUIZ</button><button type="button" class="captionchip" title="➡️&nbsp;If you want to rewrite the beliefs blocking love in your life so you can attract your dream partner without the doubts…
 
@@ -1317,65 +1379,11 @@ But right now you’re worried that it might not ever happen…
 
 Comment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.
 
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (TIME PAIN)</button></div><textarea placeholder="Caption for this reel (optional)…" data-captioni="3"></textarea><div class="dayitem-copyrow"><button class="copybtn" type="button">Copy title</button><button class="copybtn" type="button">Copy caption</button></div></div></div><div class="dayitem posted"><div class="dayitem-top"><input type="text" class="dayitem-titlein"></div><div class="dayitem-statusrow"><div class="statustoggle"><button type="button" class="statusbtn draft">Draft</button><button type="button" class="statusbtn published active">Published</button></div><input type="date" class="dayitem-move" title="Move to another date" data-movei="4"></div><div class="dayitem-caption"><div class="captionchips"><button type="button" class="captionchip" title="➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">QUIZ</button><button type="button" class="captionchip" title="➡️&nbsp;If you want to rewrite the beliefs blocking love in your life so you can attract your dream partner without the doubts…
-
-The Attraction Formula Meditation in my private community will help you do that.
-
-Comment ‘COMMUNITY’ below to find out more
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (AFM BIAS)</button><button type="button" class="captionchip" title="➡️ If you want to manifest love in your life without the constant doubts…
-
-Comment ‘COMMUNITY’ below to find out more about how you can do this inside my private community
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY</button><button type="button" class="captionchip" title="➡️ If you want to manifest love in your life without the constant doubts…
-
-But right now you’re worried that it might not ever happen…
-
-Comment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (TIME PAIN)</button></div><textarea placeholder="Caption for this reel (optional)…" data-captioni="4"></textarea><div class="dayitem-copyrow"><button class="copybtn" type="button">Copy title</button><button class="copybtn" type="button">Copy caption</button></div></div></div><div class="dayitem posted"><div class="dayitem-top"><input type="text" class="dayitem-titlein"></div><div class="dayitem-statusrow"><div class="statustoggle"><button type="button" class="statusbtn draft">Draft</button><button type="button" class="statusbtn published active">Published</button></div><input type="date" class="dayitem-move" title="Move to another date" data-movei="5"></div><div class="dayitem-caption"><div class="captionchips"><button type="button" class="captionchip" title="➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">QUIZ</button><button type="button" class="captionchip" title="➡️&nbsp;If you want to rewrite the beliefs blocking love in your life so you can attract your dream partner without the doubts…
-
-The Attraction Formula Meditation in my private community will help you do that.
-
-Comment ‘COMMUNITY’ below to find out more
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (AFM BIAS)</button><button type="button" class="captionchip" title="➡️ If you want to manifest love in your life without the constant doubts…
-
-Comment ‘COMMUNITY’ below to find out more about how you can do this inside my private community
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY</button><button type="button" class="captionchip" title="➡️ If you want to manifest love in your life without the constant doubts…
-
-But right now you’re worried that it might not ever happen…
-
-Comment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (TIME PAIN)</button></div><textarea placeholder="Caption for this reel (optional)…" data-captioni="5"></textarea><div class="dayitem-copyrow"><button class="copybtn" type="button">Copy title</button><button class="copybtn" type="button">Copy caption</button></div></div></div><div class="dayitem posted"><div class="dayitem-top"><input type="text" class="dayitem-titlein"></div><div class="dayitem-statusrow"><div class="statustoggle"><button type="button" class="statusbtn draft">Draft</button><button type="button" class="statusbtn published active">Published</button></div><input type="date" class="dayitem-move" title="Move to another date" data-movei="9"></div><div class="dayitem-caption"><div class="captionchips"><button type="button" class="captionchip" title="➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">QUIZ</button><button type="button" class="captionchip" title="➡️&nbsp;If you want to rewrite the beliefs blocking love in your life so you can attract your dream partner without the doubts…
-
-The Attraction Formula Meditation in my private community will help you do that.
-
-Comment ‘COMMUNITY’ below to find out more
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (AFM BIAS)</button><button type="button" class="captionchip" title="➡️ If you want to manifest love in your life without the constant doubts…
-
-Comment ‘COMMUNITY’ below to find out more about how you can do this inside my private community
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY</button><button type="button" class="captionchip" title="➡️ If you want to manifest love in your life without the constant doubts…
-
-But right now you’re worried that it might not ever happen…
-
-Comment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.
-
-#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (TIME PAIN)</button></div><textarea placeholder="Caption for this reel (optional)…" data-captioni="9"></textarea><div class="dayitem-copyrow"><button class="copybtn" type="button">Copy title</button><button class="copybtn" type="button">Copy caption</button></div></div></div></div>
+#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice">COMMUNITY (TIME PAIN)</button></div><textarea placeholder="Caption for this reel (optional)…" data-captioni="13"></textarea><div class="dayitem-copyrow"><button class="copybtn" type="button">Copy title</button><button class="copybtn" type="button">Copy caption</button></div></div></div></div>
   </div>
 </div>
 
-<script type="application/json" id="state-data">{"rows":[{"month":"2026-08","emailLeads":59,"visits":250,"trials":9,"newMembers":1,"lost":0,"activeMembers":1,"price":30,"locked":true},{"month":"2026-09","emailLeads":1,"visits":36,"trials":0,"newMembers":0,"lost":0,"activeMembers":1,"price":99,"locked":true}],"mrrTarget":40000,"content":{"rows":[{"month":"2026-08","igFollowers":378,"emailList":59,"locked":true},{"month":"2026-09","igFollowers":420,"emailList":60,"locked":true}],"outliers":[{"title":"You don't need manifestation to attract your partner  ♥️ You need this...","month":"2026-08","views":2423,"likes":20,"comments":8,"shares":25,"saves":61,"saved":true},{"title":"The one dangerous belief that keeps people lonely forever","month":"2026-08","views":1924,"likes":12,"comments":0,"shares":16,"saves":67,"saved":true},{"title":"If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 ","month":"2026-08","views":1769,"likes":18,"comments":2,"shares":12,"saves":42,"saved":true},{"title":"Before you give up trying to manifest love - watch this video ♥️ ","month":"2026-09","views":2363,"likes":22,"comments":15,"shares":20,"saves":64,"communityComments":6,"saved":true},{"title":"How to stop doubting that you'll manifest your partner - quickly ♥️","month":"2026-09","views":2011,"likes":12,"comments":0,"shares":23,"saves":76,"saved":true},{"title":"How do you maintain the belief that you're already with your dream partner?  🤔","month":"2026-09","views":1689,"likes":9,"comments":5,"shares":14,"saves":43,"communityComments":2,"saved":true},{"title":"If you are worried time is running out to manifest love - do this today ❤️","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"How to manifest love into your life - scientifically 🧪 ","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"How to attract a really great partner ♥️✅","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false}],"ideas":[{"title":"Why you can't stop doubting if you're going to manifest love ♥️","date":"2026-09-03","mode":"auto","synced":false,"posted":false},{"title":"How long should you wait before giving up on manifesting love? ♥️","date":"2026-09-03","mode":"auto","synced":true},{"title":"If you're still doubting that you can manifest love - you MUST change this today ♥️","date":"2026-09-03","mode":"auto","synced":true},{"title":"If you are worried time is running out to manifest love - do this today ❤️","date":"2026-09-04","mode":"auto","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"How to manifest love into your life - scientifically 🧪 ","date":"2026-09-04","mode":"auto","synced":true,"posted":true},{"title":"6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔","date":"2026-09-04","mode":"auto","synced":true,"posted":true},{"title":"How I manifested my dream partner ♥️","date":"2026-09-05","mode":"auto","synced":false},{"title":"2 steps to manifest the partner of your dreams 😁♥️","date":"2026-09-05","mode":"auto","synced":false},{"title":"The art and science of finding true love ♥️","date":"2026-09-05","mode":"auto","synced":false},{"title":"How to attract a really great partner ♥️✅","date":"2026-09-04","mode":"specific","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"The real reason that you haven’t manifested love yet 💔","date":"2026-09-06","mode":"auto","synced":false},{"title":"Manifesting harder pushes love away - 👉here's why ","date":"2026-09-06","mode":"auto","synced":false},{"title":"","date":"2026-09-06","mode":"auto","synced":false}],"captionTemplates":[{"name":"QUIZ","text":"➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"name":"COMMUNITY (AFM BIAS)","text":"➡️ If you want to rewrite the beliefs blocking love in your life so you can attract your dream partner without the doubts…\n\nThe Attraction Formula Meditation in my private community will help you do that.\n\nComment ‘COMMUNITY’ below to find out more\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"name":"COMMUNITY","text":"➡️ If you want to manifest love in your life without the constant doubts…\n\nComment ‘COMMUNITY’ below to find out more about how you can do this inside my private community\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"name":"COMMUNITY (TIME PAIN)","text":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"}]},"delivery":{"projects":[{"title":"1-2-1 call with Chloe","urgent":false,"important":true,"done":false},{"title":"Attraction Formula Meditation Recording","urgent":true,"important":true,"done":true},{"title":"Attraction Formula Program Check-Ins","urgent":true,"important":true,"done":false},{"title":"New cover photo good for FB ads","urgent":true,"important":true,"done":true},{"title":"Heart Attractor Program","urgent":false,"important":true,"done":false}]}}</script>
+<script type="application/json" id="state-data">{"rows":[{"month":"2026-08","emailLeads":59,"visits":250,"trials":9,"newMembers":1,"lost":0,"activeMembers":1,"price":30,"locked":true},{"month":"2026-09","emailLeads":1,"visits":51,"trials":0,"newMembers":0,"lost":0,"activeMembers":1,"price":99,"locked":true}],"mrrTarget":40000,"content":{"rows":[{"month":"2026-08","igFollowers":378,"emailList":59,"locked":true},{"month":"2026-09","igFollowers":444,"emailList":60,"locked":true}],"outliers":[{"title":"You don't need manifestation to attract your partner  ♥️ You need this...","month":"2026-08","views":2423,"likes":20,"comments":8,"shares":25,"saves":61,"saved":true},{"title":"The one dangerous belief that keeps people lonely forever","month":"2026-08","views":1924,"likes":12,"comments":0,"shares":16,"saves":67,"saved":true},{"title":"If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 ","month":"2026-08","views":1769,"likes":18,"comments":2,"shares":12,"saves":42,"saved":true},{"title":"Before you give up trying to manifest love - watch this video ♥️ ","month":"2026-09","views":2800,"likes":22,"comments":15,"shares":20,"saves":64,"communityComments":8,"saved":true},{"title":"How to stop doubting that you'll manifest your partner - quickly ♥️","month":"2026-09","views":3400,"likes":12,"comments":0,"shares":23,"saves":76,"saved":true,"communityComments":3},{"title":"How do you maintain the belief that you're already with your dream partner?  🤔","month":"2026-09","views":1800,"likes":9,"comments":5,"shares":14,"saves":43,"communityComments":2,"saved":true},{"title":"If you are worried time is running out to manifest love - do this today ❤️","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"How to manifest love into your life - scientifically 🧪 ","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"How to attract a really great partner ♥️✅","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"Why you can't stop doubting if you're going to manifest love ♥️","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"If you're still doubting that you can manifest love - you MUST change this today ♥️","month":"","views":1100,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":true},{"title":"How long should you wait before giving up on manifesting love? ♥️","month":"","views":1500,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":1,"saved":true},{"title":"How manifest love in your life - without the doubts ♥️","month":"","views":503,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":true},{"title":"This type of person always attracts the partner that they want ❤️✅","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"How I manifested my dream partner ♥️","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false},{"title":"Two REALLY important steps for meeting and attracting your special person ❤️✅","month":"","views":0,"likes":0,"comments":0,"shares":0,"saves":0,"communityComments":0,"saved":false}],"ideas":[{"title":"Why you can't stop doubting if you're going to manifest love ♥️","date":"2026-09-03","mode":"auto","synced":true,"posted":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nComment ‘COMMUNITY’ below to find out more about how you can do this inside my private community\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"title":"How long should you wait before giving up on manifesting love? ♥️","date":"2026-09-03","mode":"auto","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nComment ‘COMMUNITY’ below to find out more about how you can do this inside my private community\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"If you're still doubting that you can manifest love - you MUST change this today ♥️","date":"2026-09-03","mode":"auto","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nComment ‘COMMUNITY’ below to find out more about how you can do this inside my private community\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"If you are worried time is running out to manifest love - do this today ❤️","date":"2026-09-04","mode":"auto","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"How to manifest love into your life - scientifically 🧪 ","date":"2026-09-04","mode":"auto","synced":true,"posted":true},{"title":"6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔","date":"2026-09-04","mode":"auto","synced":true,"posted":true},{"title":"How I manifested my dream partner ♥️","date":"2026-09-05","mode":"auto","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"Two REALLY important steps for meeting and attracting your special person ❤️✅","date":"2026-09-05","mode":"auto","synced":true,"posted":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"title":"How to attract a really great partner ♥️✅","date":"2026-09-04","mode":"specific","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"The real reason that you haven’t manifested love yet 💔","date":"2026-09-06","mode":"auto","synced":false},{"title":"Manifesting harder pushes love away - 👉here's why ","date":"2026-09-06","mode":"auto","synced":false},{"title":"How manifest love in your life - without the doubts ♥️","date":"2026-09-03","mode":"specific","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nComment ‘COMMUNITY’ below to find out more about how you can do this inside my private community\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this","date":"2026-09-06","mode":"auto","synced":false},{"title":"I can only help these people manifest a great relationship","date":"2026-09-07","mode":"auto","synced":false},{"title":"This type of person always attracts the partner that they want ❤️✅","date":"2026-09-05","mode":"specific","synced":true,"caption":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice","posted":true},{"title":"A guaranteed system for attracting the relationship that you want ","date":"2026-09-06","mode":"specific","synced":false}],"captionTemplates":[{"name":"QUIZ","text":"➡️ Comment ‘QUIZ’ below if you’d like to find out which deep subconscious belief keeps blocking love in your life.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"name":"COMMUNITY (AFM BIAS)","text":"➡️ If you want to rewrite the beliefs blocking love in your life so you can attract your dream partner without the doubts…\n\nThe Attraction Formula Meditation in my private community will help you do that.\n\nComment ‘COMMUNITY’ below to find out more\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"name":"COMMUNITY","text":"➡️ If you want to manifest love in your life without the constant doubts…\n\nComment ‘COMMUNITY’ below to find out more about how you can do this inside my private community\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"},{"name":"COMMUNITY (TIME PAIN)","text":"➡️ If you want to manifest love in your life without the constant doubts…\n\nBut right now you’re worried that it might not ever happen…\n\nComment ‘COMMUNITY’ below to find out more about how you can realistically attract your dream partner inside my exclusive community.\n\n#manifestation #nevillegoddard #drjoedispenza #subconsciousmind #relationshipadvice"}]},"delivery":{"projects":[{"title":"1-2-1 call with Chloe","urgent":false,"important":true,"done":false},{"title":"Attraction Formula Meditation Recording","urgent":true,"important":true,"done":true},{"title":"Attraction Formula Program Check-Ins","urgent":true,"important":true,"done":true},{"title":"New cover photo good for FB ads","urgent":true,"important":true,"done":true},{"title":"Heart Attractor Program","urgent":false,"important":true,"done":false}]}}</script>
 
 <script>
 (function(){
@@ -1384,9 +1392,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var DEFAULT_STATE = {
     mrrTarget: 0,
     rows: [
-      { month:"2026-07", emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:30 },
-      { month:"2026-08", emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:30 },
-      { month:"2026-09", emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:99 }
+      { month:"2026-07", visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:30 },
+      { month:"2026-08", visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:30 },
+      { month:"2026-09", visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:99 }
     ],
     content: {
       rows: [
@@ -1443,7 +1451,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var churn = safeDiv(lost, active) * 100;
     var retention = 100 - churn;
     return Object.assign({}, r, {
-      emailLeads: Number(r.emailLeads) || 0, visits: visits, trials: trials,
+      visits: visits, trials: trials,
       newMembers: newM, lost: lost, activeMembers: active, price: price,
       trialConv: trialConv, trialToPaid: trialToPaid, visitToPaid: visitToPaid,
       churn: churn, retention: retention
@@ -1494,9 +1502,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // MRR as $0 even with real paying members recorded the month before.
     var withMembers = sorted.filter(function(r){ return r.activeMembers > 0; });
     var latest = withMembers.length ? withMembers[withMembers.length-1] : sorted[sorted.length-1];
-    var sum = { emailLeads:0, visits:0, trials:0, newMembers:0, lost:0 };
+    var sum = { visits:0, trials:0, newMembers:0, lost:0 };
     sorted.forEach(function(r){
-      sum.emailLeads += r.emailLeads; sum.visits += r.visits; sum.trials += r.trials;
+      sum.visits += r.visits; sum.trials += r.trials;
       sum.newMembers += r.newMembers; sum.lost += r.lost;
     });
     var trialConv = safeDiv(sum.trials, sum.visits) * 100;
@@ -1522,6 +1530,28 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function localLoad(){
     try {
       var raw = localStorage.getItem("heart-attractor-community-tracker");
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+
+  // Per-viewer UI convenience only (which tab, which calendar month) —
+  // deliberately separate from the business-data save above. This is what
+  // makes the PWA feel "seamless" when Olly jumps out to Instagram to
+  // paste a caption and comes straight back in: without it, every trip
+  // out reset the app to Tab 1 / the current month, undoing whatever he'd
+  // navigated to. Never publish this — it's meaningless to anyone else
+  // opening the link, and wrapped in try/catch since a private-browsing
+  // tab or blocked site data can make localStorage throw on read/write.
+  function uiSave(patch){
+    try {
+      var cur = uiLoad() || {};
+      Object.assign(cur, patch);
+      localStorage.setItem("heart-attractor-community-tracker-ui", JSON.stringify(cur));
+    } catch(e){}
+  }
+  function uiLoad(){
+    try {
+      var raw = localStorage.getItem("heart-attractor-community-tracker-ui");
       return raw ? JSON.parse(raw) : null;
     } catch(e){ return null; }
   }
@@ -1559,17 +1589,23 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     setSaveState("unsaved");
   }
 
-  function saveNow(){
+  // `onDone(ok)` is optional — used by the day modal's own Save button so
+  // it can reflect the real outcome (saved vs. error) instead of guessing
+  // with a timeout. The header Save button doesn't need it; setSaveState
+  // already drives its own label/dot.
+  function saveNow(onDone){
     localSave(state);
-    if (!artifact){ setSaveState("saved"); return; }
+    if (!artifact){ setSaveState("saved"); if (onDone) onDone(true); return; }
     setSaveState("saving");
     artifact.publish(buildDoc(state)).then(function(){
       setSaveState("saved");
+      if (onDone) onDone(true);
     }).catch(function(){
       // Someone else saved in between — our copy may now be behind theirs.
       // Don't silently overwrite it: tell the user and let them retry once
       // they've confirmed which version they want to keep.
       setSaveState("error");
+      if (onDone) onDone(false);
     });
   }
 
@@ -1628,9 +1664,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     }
     wrap.style.display = "";
 
+    // Both branches key off `selectedPeriod` (the tracked session choice),
+    // never off sel.value, to decide whether a default is needed — the
+    // raw saved HTML's pre-selected <option> has no "selected" attribute,
+    // so reading sel.value on first load was just picking up whichever
+    // period happened to be first in the saved markup, silently
+    // overriding the real-current-period default below every time.
     if (viewMode === "month"){
       label.textContent = "Month";
-      var current = sel.value;
       sel.innerHTML = "";
       rows.forEach(function(r){
         var opt = document.createElement("option");
@@ -1638,22 +1679,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         opt.textContent = monthLabel(r.month);
         sel.appendChild(opt);
       });
-      selectedPeriod = (current && rows.some(function(r){return r.month===current;})) ? current
-        : (rows.some(function(r){return r.month===selectedPeriod;}) ? selectedPeriod : rows[rows.length-1].month);
+      if (!selectedPeriod || !rows.some(function(r){return r.month===selectedPeriod;})){
+        var todayYM = todayISO().slice(0, 7);
+        selectedPeriod = rows.some(function(r){return r.month===todayYM;}) ? todayYM : rows[rows.length-1].month;
+      }
       sel.value = selectedPeriod;
       glanceLabel.textContent = "This month at a glance";
     } else {
       label.textContent = "Year";
       var years = Array.from(new Set(rows.map(function(r){ return yearOf(r.month); }))).sort();
-      var currentY = sel.value;
       sel.innerHTML = "";
       years.forEach(function(y){
         var opt = document.createElement("option");
         opt.value = y; opt.textContent = y;
         sel.appendChild(opt);
       });
-      selectedPeriod = (currentY && years.indexOf(currentY) !== -1) ? currentY
-        : (years.indexOf(selectedPeriod) !== -1 ? selectedPeriod : years[years.length-1]);
+      if (years.indexOf(selectedPeriod) === -1){
+        var todayY = todayISO().slice(0, 4);
+        selectedPeriod = years.indexOf(todayY) !== -1 ? todayY : years[years.length-1];
+      }
       sel.value = selectedPeriod;
       glanceLabel.textContent = "This year at a glance";
     }
@@ -1664,6 +1708,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     div.className = "kpi" + (cls ? " " + cls : "");
     div.innerHTML = '<div class="label">'+label+'</div><div class="value">'+value+'</div>';
     return div;
+  }
+
+  // Same shape as contentGrowth() — reads two consecutive rows in the
+  // full (chronological) rows array, not the filtered/aggregated period.
+  // Only meaningful in Month view: Year/All time already span several
+  // months, so "vs. previous month" doesn't map onto a single prior row.
+  function mrrGrowth(rows, idx, field){
+    if (idx <= 0) return null;
+    return rows[idx][field] - rows[idx-1][field];
   }
 
   function renderKPIs(rows){
@@ -1678,16 +1731,30 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!periodRows.length) return;
 
     var sel = aggregatePeriod(periodRows);
+    var showGrowth = viewMode === "month";
+    var idx = showGrowth ? rows.findIndex(function(r){ return r.month === selectedPeriod; }) : -1;
+    function growthCard(field, label){
+      if (!showGrowth || idx <= 0) return null;
+      var g = mrrGrowth(rows, idx, field);
+      return kpiCard(label, (g>=0?"+":"")+fmtInt(g), "accent");
+    }
 
-    grid.appendChild(kpiCard("Email leads (quiz)", fmtInt(sel.emailLeads)));
     grid.appendChild(kpiCard("About Page visits", fmtInt(sel.visits)));
+    var c2 = growthCard("visits", "Visits growth vs. prev. month"); if (c2) grid.appendChild(c2);
     grid.appendChild(kpiCard("Free trials started", fmtInt(sel.trials)));
+    var c3 = growthCard("trials", "Trials growth vs. prev. month"); if (c3) grid.appendChild(c3);
     grid.appendChild(kpiCard("Trial conversion", fmtPct(sel.trialConv), "accent"));
     grid.appendChild(kpiCard("New paying members", fmtInt(sel.newMembers)));
+    var c4 = growthCard("newMembers", "New members growth vs. prev. month"); if (c4) grid.appendChild(c4);
     grid.appendChild(kpiCard("Trial → paid conversion", fmtPct(sel.trialToPaid), "accent"));
     grid.appendChild(kpiCard("Active members" + (sel.monthCount>1 ? " (latest)" : ""), fmtInt(sel.activeMembers)));
+    var c5 = growthCard("activeMembers", "Active members growth vs. prev. month"); if (c5) grid.appendChild(c5);
     grid.appendChild(kpiCard("Retention rate", fmtPct(sel.retention)));
     grid.appendChild(kpiCard("MRR" + (sel.monthCount>1 ? " (latest)" : ""), fmtMoney(sel.mrr)));
+    if (showGrowth && idx > 0){
+      var mrrG = mrrGrowth(rows, idx, "mrr");
+      grid.appendChild(kpiCard("MRR growth vs. prev. month", (mrrG>=0?"+":"")+fmtMoney(mrrG), "accent"));
+    }
     grid.appendChild(kpiCard("Avg. revenue / member", fmtMoney(sel.arpu)));
     grid.appendChild(kpiCard("LTV / member", sel.ltv != null ? fmtMoney(sel.ltv) : "—"));
   }
@@ -1715,7 +1782,6 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tr.innerHTML =
       '<td class="rowlock"><button class="lockbtn" data-lock="'+i+'" title="'+(r.locked?'Unlock this month':'Lock this month')+'">'+(r.locked?'🔒':'🔓')+'</button></td>' +
       '<td class="month">'+monthLabel(r.month)+'</td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="emailLeads" value="'+r.emailLeads+'"'+dis+'></td>' +
       '<td><input type="number" min="0" data-i="'+i+'" data-field="visits" value="'+r.visits+'"'+dis+'></td>' +
       '<td><input type="number" min="0" data-i="'+i+'" data-field="trials" value="'+r.trials+'"'+dis+'></td>' +
       '<td><input type="number" min="0" data-i="'+i+'" data-field="newMembers" value="'+r.newMembers+'"'+dis+'></td>' +
@@ -1889,8 +1955,27 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var rows = (state.content && state.content.rows) ? state.content.rows.slice() : [];
     rows.sort(function(a,b){ return a.month < b.month ? -1 : 1; });
 
-    var sel = document.getElementById("contentPeriodSel");
-    var current = sel.value;
+    // Instagram and Email now live on their own tabs, but both read/write
+    // the same shared state.content.rows (each row still carries both
+    // igFollowers and emailList together, logged for the same month) —
+    // that's why both period selectors below sync to one shared
+    // contentSelectedMonth, and locking/deleting a row from either tab's
+    // table has to reset both tables' built-count so they rebuild in sync.
+    syncPeriodSel("igPeriodSel", rows);
+    syncPeriodSel("emailPeriodSel", rows);
+
+    renderInstagramKPIs(rows);
+    renderEmailKPIs(rows);
+    renderInstagramTable(rows);
+    renderEmailTable(rows);
+    renderInstagramChart(rows);
+    renderEmailChart(rows);
+    renderOutliers();
+  }
+
+  function syncPeriodSel(selId, rows){
+    var sel = document.getElementById(selId);
+    if (!sel) return;
     sel.innerHTML = "";
     rows.forEach(function(r){
       var opt = document.createElement("option");
@@ -1898,15 +1983,18 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       sel.appendChild(opt);
     });
     if (rows.length){
-      contentSelectedMonth = (current && rows.some(function(r){return r.month===current;})) ? current
-        : (rows.some(function(r){return r.month===contentSelectedMonth;}) ? contentSelectedMonth : rows[rows.length-1].month);
+      // Deliberately keyed off contentSelectedMonth (the tracked session
+      // choice), not sel.value — the raw DOM's pre-save option has no
+      // "selected" attribute, so reading sel.value here on first load
+      // was just picking up whichever month happened to be first in the
+      // saved markup, silently overriding the real-current-month default
+      // below every time.
+      var todayYM = todayISO().slice(0, 7);
+      if (!contentSelectedMonth || !rows.some(function(r){return r.month===contentSelectedMonth;})){
+        contentSelectedMonth = rows.some(function(r){return r.month===todayYM;}) ? todayYM : rows[rows.length-1].month;
+      }
       sel.value = contentSelectedMonth;
     }
-
-    renderContentKPIs(rows);
-    renderContentTable(rows);
-    renderContentCharts(rows);
-    renderOutliers();
   }
 
   function contentGrowth(rows, i, field){
@@ -1914,25 +2002,34 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return rows[i][field] - rows[i-1][field];
   }
 
-  function renderContentKPIs(rows){
-    var grid = document.getElementById("contentKpiGrid");
+  function renderInstagramKPIs(rows){
+    var grid = document.getElementById("igKpiGrid");
     grid.innerHTML = "";
     if (!rows.length) return;
     var idx = rows.findIndex(function(r){ return r.month === contentSelectedMonth; });
     if (idx === -1) idx = rows.length - 1;
     var r = rows[idx];
     var igG = contentGrowth(rows, idx, "igFollowers");
-    var emG = contentGrowth(rows, idx, "emailList");
-
     grid.appendChild(kpiCard("Instagram followers", fmtInt(r.igFollowers)));
     grid.appendChild(kpiCard("IG growth vs. prev. month", igG==null ? "—" : (igG>=0?"+":"")+fmtInt(igG), "accent"));
+  }
+
+  function renderEmailKPIs(rows){
+    var grid = document.getElementById("emailKpiGrid");
+    grid.innerHTML = "";
+    if (!rows.length) return;
+    var idx = rows.findIndex(function(r){ return r.month === contentSelectedMonth; });
+    if (idx === -1) idx = rows.length - 1;
+    var r = rows[idx];
+    var emG = contentGrowth(rows, idx, "emailList");
     grid.appendChild(kpiCard("Email list", fmtInt(r.emailList)));
     grid.appendChild(kpiCard("Email growth vs. prev. month", emG==null ? "—" : (emG>=0?"+":"")+fmtInt(emG), "accent"));
   }
 
-  var contentTableBuiltForCount = -1;
+  var igTableBuiltForCount = -1;
+  var emailTableBuiltForCount = -1;
 
-  function buildContentRow(r, i, rows, rowCount){
+  function buildMetricRow(r, i, rows, rowCount, field){
     var tr = document.createElement("tr");
     tr.dataset.row = i;
     if (r.locked) tr.classList.add("locked");
@@ -1940,38 +2037,38 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tr.innerHTML =
       '<td class="rowlock"><button class="lockbtn" data-clock="'+i+'" title="'+(r.locked?'Unlock this month':'Lock this month')+'">'+(r.locked?'🔒':'🔓')+'</button></td>' +
       '<td class="month">'+monthLabel(r.month)+'</td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="igFollowers" value="'+r.igFollowers+'"'+dis+'></td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="emailList" value="'+r.emailList+'"'+dis+'></td>' +
+      '<td><input type="number" min="0" data-i="'+i+'" data-field="'+field+'" value="'+r[field]+'"'+dis+'></td>' +
       '<td class="calc" data-ccalc="0"></td>' +
-      '<td class="calc" data-ccalc="1"></td>' +
       '<td class="rowdel">'+(rowCount>1 && !r.locked ? '<button data-cdel="'+i+'" title="Remove month">✕</button>' : '')+'</td>';
-    updateContentRowCalc(tr, rows, i);
+    updateMetricRowCalc(tr, rows, i, field);
     return tr;
   }
 
-  function updateContentRowCalc(tr, rows, i){
-    var igG = contentGrowth(rows, i, "igFollowers");
-    var emG = contentGrowth(rows, i, "emailList");
-    var c0 = tr.querySelector('[data-ccalc="0"]'); if (c0) c0.textContent = igG==null?"—":(igG>=0?"+":"")+fmtInt(igG);
-    var c1 = tr.querySelector('[data-ccalc="1"]'); if (c1) c1.textContent = emG==null?"—":(emG>=0?"+":"")+fmtInt(emG);
+  function updateMetricRowCalc(tr, rows, i, field){
+    var g = contentGrowth(rows, i, field);
+    var c0 = tr.querySelector('[data-ccalc="0"]'); if (c0) c0.textContent = g==null?"—":(g>=0?"+":"")+fmtInt(g);
   }
 
-  function renderContentTable(rows){
-    var tbody = document.getElementById("contentTbody");
-    if (rows.length !== contentTableBuiltForCount){
+  function renderMetricTable(tbodyId, rows, field, isIG){
+    var tbody = document.getElementById(tbodyId);
+    var builtCount = isIG ? igTableBuiltForCount : emailTableBuiltForCount;
+    if (rows.length !== builtCount){
       tbody.innerHTML = "";
-      rows.forEach(function(r, i){ tbody.appendChild(buildContentRow(r, i, rows, rows.length)); });
-      wireContentTableEvents(tbody, rows);
-      contentTableBuiltForCount = rows.length;
+      rows.forEach(function(r, i){ tbody.appendChild(buildMetricRow(r, i, rows, rows.length, field)); });
+      wireMetricTableEvents(tbody, rows, field);
+      if (isIG) igTableBuiltForCount = rows.length; else emailTableBuiltForCount = rows.length;
     } else {
       rows.forEach(function(r, i){
         var tr = tbody.querySelector('tr[data-row="'+i+'"]');
-        if (tr) updateContentRowCalc(tr, rows, i);
+        if (tr) updateMetricRowCalc(tr, rows, i, field);
       });
     }
   }
 
-  function wireContentTableEvents(tbody, rows){
+  function renderInstagramTable(rows){ renderMetricTable("igTbody", rows, "igFollowers", true); }
+  function renderEmailTable(rows){ renderMetricTable("emailTbody", rows, "emailList", false); }
+
+  function wireMetricTableEvents(tbody, rows, field){
     tbody.querySelectorAll("input").forEach(function(inp){
       inp.addEventListener("input", function(){
         var i = Number(inp.dataset.i), f = inp.dataset.field;
@@ -1985,7 +2082,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         var i = Number(btn.dataset.clock);
         state.content.rows[i].locked = !state.content.rows[i].locked;
         markDirty();
-        contentTableBuiltForCount = -1;
+        // Both tables show this same row (just different columns) so both
+        // need to rebuild, not just the one the click happened in.
+        igTableBuiltForCount = -1;
+        emailTableBuiltForCount = -1;
         renderContentTab();
       });
     });
@@ -1994,35 +2094,47 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         var i = Number(btn.dataset.cdel);
         state.content.rows.splice(i,1);
         markDirty();
+        igTableBuiltForCount = -1;
+        emailTableBuiltForCount = -1;
         renderContentTab();
       });
     });
   }
 
-  function renderContentCharts(rows){
+  function renderInstagramChart(rows){
     var cs = getComputedStyle(document.documentElement);
     var accentVar = cs.getPropertyValue('--accent').trim() || "#B84FE8";
-    var accent2Var = cs.getPropertyValue('--accent-2').trim() || "#E1A6FF";
     drawLine("chartIG","ttIG", rows, [
       { name:"Instagram followers", color: accentVar, get:function(r){return r.igFollowers;}, fmt:fmtInt }
     ]);
+  }
+
+  function renderEmailChart(rows){
+    var cs = getComputedStyle(document.documentElement);
+    var accent2Var = cs.getPropertyValue('--accent-2').trim() || "#E1A6FF";
     drawLine("chartEmail","ttEmail", rows, [
       { name:"Email list", color: accent2Var, get:function(r){return r.emailList;}, fmt:fmtInt }
     ]);
   }
 
-  document.getElementById("contentPeriodSel").addEventListener("change", function(e){
+  document.getElementById("igPeriodSel").addEventListener("change", function(e){
     contentSelectedMonth = e.target.value;
     renderContentTab();
   });
-  document.getElementById("contentAddMonth").addEventListener("click", function(){
+  document.getElementById("emailPeriodSel").addEventListener("change", function(e){
+    contentSelectedMonth = e.target.value;
+    renderContentTab();
+  });
+  function addContentMonth(){
     if (!state.content) state.content = { rows: [] };
     var rows = state.content.rows;
     var last = rows.length ? rows[rows.length-1] : null;
     var nm = last ? nextMonth(last.month) : "2026-01";
     rows.push({ month:nm, igFollowers:0, emailList:0, locked:false });
     markDirty(); renderContentTab();
-  });
+  }
+  document.getElementById("igAddMonth").addEventListener("click", addContentMonth);
+  document.getElementById("emailAddMonth").addEventListener("click", addContentMonth);
 
   // ── Video ideas + content calendar ──────────────────────────────────
   // Type an idea, then pick a real date — it drops into that day on the
@@ -2033,12 +2145,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var DOW_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
   var DAILY_REEL_TARGET = 3;
   var ideaTableBuiltForCount = -1;
-  var calCursor = new Date(); // which month the calendar is showing — UI-only, resets on reload
+  var calCursor = new Date(); // which month the calendar is showing — restored from uiLoad() in boot()
 
   function renderIdeasAndWeek(){
     if (!state.content.ideas) state.content.ideas = [];
     renderIdeas();
     renderCalendar();
+  }
+
+  function saveCalCursor(){
+    uiSave({ calMonth: calCursor.getFullYear() + "-" + String(calCursor.getMonth()+1).padStart(2,"0") });
   }
 
   function buildIdeaRow(idea, i){
@@ -2347,7 +2463,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       titleIn.type = "text";
       titleIn.className = "dayitem-titlein";
       titleIn.value = idea.title;
+      var deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "rowdel-btn";
+      deleteBtn.title = "Remove this idea";
+      deleteBtn.textContent = "✕";
       top.appendChild(titleIn);
+      top.appendChild(deleteBtn);
       row.appendChild(top);
 
       var statusRow = document.createElement("div");
@@ -2490,6 +2612,22 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       }
       draftBtn.addEventListener("click", function(){ setStatus(false); });
       pubBtn.addEventListener("click", function(){ setStatus(true); });
+
+      // Once an idea has a title+date it disappears from the Video ideas
+      // list (it lives on the calendar instead), so this is the only
+      // place left to remove it. Only the calendar entry goes — a linked
+      // Video stats tracking row (if it's been Published) is left alone,
+      // since real stats logged against it shouldn't vanish just because
+      // the scheduling entry did.
+      deleteBtn.addEventListener("click", function(){
+        var realIndex = state.content.ideas.indexOf(idea);
+        if (realIndex === -1) return;
+        state.content.ideas.splice(realIndex, 1);
+        markDirty();
+        renderDayModal();
+        renderCalendar();
+        renderIdeasAndWeek();
+      });
     });
   }
 
@@ -2521,6 +2659,41 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   }
 
   document.getElementById("dayModalClose").addEventListener("click", closeDayModal);
+  // A Save button right inside the day panel — editing a title or caption
+  // here already updates `state` in memory (via markDirty), same as
+  // anywhere else in the app, but until now the only way to actually
+  // publish it was to close the modal and find the Save button up in the
+  // header. This calls the exact same saveNow() the header button does,
+  // just reachable without leaving the day you're working in.
+  document.getElementById("dayModalSave").addEventListener("click", function(){
+    var btn = document.getElementById("dayModalSave");
+    var status = document.getElementById("dayModalSaveStatus");
+    // Kick off the save FIRST, before touching any DOM feedback. saveNow()
+    // builds the published document from a synchronous snapshot of the
+    // live page (buildDoc() reads document.body.innerHTML the instant
+    // it's called) — so anything mutated beforehand gets baked into the
+    // saved page itself. An earlier version set this button to
+    // "Saving…"/disabled before calling saveNow(), so every save
+    // published itself frozen mid-animation — next time anyone opened the
+    // app it loaded already stuck, permanently disabled, impossible to
+    // click again. That was the "glitching" bug reported 2026-09-06.
+    //
+    // Fix has two parts: (1) feedback text lives in a separate status
+    // span, never in the Save button's own label, so the button's resting
+    // text baked into any future save is always just "Save"; (2) even
+    // that span's mutation is deferred with setTimeout(…, 0) so it only
+    // touches the DOM on the next tick, strictly after buildDoc() has
+    // already captured its snapshot for THIS save.
+    saveNow(function(ok){
+      btn.disabled = false;
+      status.textContent = ok ? "Saved ✓" : "Save failed";
+      setTimeout(function(){ status.textContent = ""; }, 1300);
+    });
+    setTimeout(function(){
+      btn.disabled = true;
+      status.textContent = "Saving…";
+    }, 0);
+  });
   document.getElementById("dayModalOverlay").addEventListener("click", function(e){
     if (e.target === this) closeDayModal();
   });
@@ -2530,14 +2703,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
   document.getElementById("calPrev").addEventListener("click", function(){
     calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()-1, 1);
+    saveCalCursor();
     renderCalendar();
   });
   document.getElementById("calNext").addEventListener("click", function(){
     calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+1, 1);
+    saveCalCursor();
     renderCalendar();
   });
   document.getElementById("calToday").addEventListener("click", function(){
     calCursor = new Date();
+    saveCalCursor();
     renderCalendar();
   });
 
@@ -2743,7 +2919,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var el = document.getElementById(key === "month" ? "outlierMonthSort" : "outlierDateSort");
       var active = outlierSortKey === key && !!outlierSortDir;
       el.classList.toggle("active", active);
-      el.innerHTML = (key === "month" ? "Month" : "Date") + (active ? ' <span class="arrow">'+(outlierSortDir==="asc"?"▲":"▼")+'</span>' : "");
+      if (key === "date"){
+        // Only two states, so spell them out rather than relying on an
+        // arrow's direction to say "newest" vs "oldest".
+        el.innerHTML = active ? "Date <span class=\"arrow\">"+(outlierSortDir==="desc"?"▼ Newest":"▲ Oldest")+"</span>" : "Date";
+      } else {
+        el.innerHTML = "Month" + (active ? ' <span class="arrow">'+(outlierSortDir==="asc"?"▲":"▼")+'</span>' : "");
+      }
     });
 
     if (list.length !== outlierTableBuiltForCount){
@@ -2798,13 +2980,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   });
 
   function outlierSortClick(key){
-    if (outlierSortKey !== key){
-      outlierSortKey = key;
-      outlierSortDir = "asc";
+    if (key === "date"){
+      // Date only ever has two states — Newest or Oldest — never a third
+      // "back to unsorted" click. Newest first is the sensible default
+      // the first time it's clicked.
+      if (outlierSortKey !== "date"){
+        outlierSortKey = "date";
+        outlierSortDir = "desc";
+      } else {
+        outlierSortDir = outlierSortDir === "desc" ? "asc" : "desc";
+      }
     } else {
-      // asc → desc → back to insertion order, cycling round
-      outlierSortDir = outlierSortDir === "asc" ? "desc" : (outlierSortDir === "desc" ? null : "asc");
-      if (!outlierSortDir) outlierSortKey = null;
+      if (outlierSortKey !== key){
+        outlierSortKey = key;
+        outlierSortDir = "asc";
+      } else {
+        // asc → desc → back to insertion order, cycling round
+        outlierSortDir = outlierSortDir === "asc" ? "desc" : (outlierSortDir === "desc" ? null : "asc");
+        if (!outlierSortDir) outlierSortKey = null;
+      }
     }
     outlierTableBuiltForCount = -1; // force a rebuild — the row count hasn't changed, but the order has
     renderOutliers();
@@ -3065,6 +3259,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       btn.classList.add("active"); btn.setAttribute("aria-selected","true");
       document.querySelectorAll(".tabpanel").forEach(function(p){ p.hidden = true; });
       document.getElementById("tab-"+btn.dataset.tab).hidden = false;
+      uiSave({ tab: btn.dataset.tab });
     });
   });
   document.getElementById("targetInput").addEventListener("input", function(e){
@@ -3084,7 +3279,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var last = state.rows[state.rows.length-1];
     var nm = last ? nextMonth(last.month) : "2026-01";
     var carryPrice = last ? Number(last.price)||0 : 30;
-    state.rows.push({ month:nm, emailLeads:0, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:carryPrice, locked:false });
+    state.rows.push({ month:nm, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:carryPrice, locked:false });
     markDirty(); render();
   });
   document.getElementById("saveBtn").addEventListener("click", saveNow);
@@ -3119,6 +3314,29 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (idea.posted && idea.title) syncIdeaToOutliers(idea);
     });
     if (!state.delivery) state.delivery = { projects: [] };
+
+    // Restore where Olly left off — which tab, which calendar month —
+    // before the first render, so reopening the PWA after a trip out to
+    // paste a caption into Instagram lands back exactly where he was
+    // instead of resetting to Tab 1 / the current month.
+    var ui = uiLoad();
+    if (ui && ui.calMonth){
+      var parts = ui.calMonth.split("-");
+      var y = Number(parts[0]), m = Number(parts[1]);
+      if (y && m) calCursor = new Date(y, m-1, 1);
+    }
+    if (ui && ui.tab && document.getElementById("tab-"+ui.tab)){
+      var targetBtn = document.querySelector('.tabbtn[data-tab="'+ui.tab+'"]');
+      if (targetBtn){
+        document.querySelectorAll(".tabbtn").forEach(function(b){
+          b.classList.remove("active"); b.setAttribute("aria-selected","false");
+        });
+        targetBtn.classList.add("active"); targetBtn.setAttribute("aria-selected","true");
+        document.querySelectorAll(".tabpanel").forEach(function(p){ p.hidden = true; });
+        document.getElementById("tab-"+ui.tab).hidden = false;
+      }
+    }
+
     render();
     renderContentTab();
     renderIdeasAndWeek();
@@ -3186,4 +3404,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
 
 
-</body></html>
+
+
+
+
+
+
+
+
+
+
