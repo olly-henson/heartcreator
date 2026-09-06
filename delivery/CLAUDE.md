@@ -198,7 +198,7 @@ Will mirror the Regulate & Restore setup with its own sheet, script, and Notion 
 
 ---
 
-### The Attraction Formula — 30-Day Check-Ins — BUILT, NOT YET DEPLOYED (2026-09-03)
+### The Attraction Formula — 30-Day Check-Ins — LIVE (2026-09-06)
 
 A fixed 30-day check-in cadence for anyone starting The Attraction Formula Program — separate system from `attraction-formula-tracker.gs` (the belief-builder intake tracker), which explicitly says in its own header comment not to extend it with check-ins. This is that new program, but unlike every other program in this repo, **it is fully stateless — no Google Sheet, no Apps Script, no daily trigger.** Confirmed with Olly 2026-09-03: check-ins are just scheduled emails with a link to share in the community, nothing more. If a record of who's started or where someone is in the program is ever wanted, that's a real feature to add, not something to assume.
 
@@ -212,15 +212,23 @@ A fixed 30-day check-in cadence for anyone starting The Attraction Formula Progr
 | Cloudflare Worker | `delivery/attraction-formula-checkin-worker.js` | The entire system — sends the confirmation + notification immediately, then schedules all 3 check-in emails up front via Resend's scheduled send. No Apps Script, no sheet. |
 | Share worker addition | `delivery/share-worker.js` | New `type=checkin` — unlike every other type, the textarea is editable and starts empty (a fresh 10-day reflection, not pre-written text to copy) |
 
-**⚠️ Verify before relying on this in production:** Resend's `scheduled_at` support needs confirming against Resend's current API docs/dashboard — accepted formats, how far ahead a send can be scheduled, and whether a scheduled send can be cancelled/edited afterwards. Send a real test signup with a short interval and confirm all 4 emails actually arrive on schedule before pointing this at real clients.
+**Resend `scheduled_at` — verified live 2026-09-06:** accepts an ISO 8601 timestamp, schedules ~30 days ahead fine, **rejects any past timestamp with HTTP 422** ("must be a future date" — so you can't preview a check-in by back-dating a signup). Scheduled sends appear in the Resend dashboard (Emails → status Scheduled) and can be deleted there. A `{"ok":true}` worker response means all immediate + scheduled sends were accepted. Not yet proven: a scheduled send actually firing on its day (first real one due ~day 10 of the first real signup).
 
-**Still to do before this goes live:**
-- ✅ Deployed 2026-09-03 — `attraction-formula-checkin-worker.js` is live at `https://attraction-formula-check.olly-6af.workers.dev` (workers.dev subdomain — fine to leave as-is, a custom domain like `attraction-formula-checkin.ollyhenson.com` is a cosmetic swap, not required)
-- ✅ `attraction-formula-start.html`'s `CHECKIN_WORKER_URL` constant already points at the live worker URL above
-- ✅ Page added to GHL Website Builder (Custom HTML block) — 2026-09-04
-- ✅ Community URL aligned to `skool.com/heartcreator` in both `attraction-formula-checkin-worker.js` and `share-worker.js` — 2026-09-04
-- Redeploy `share-worker.js` in Cloudflare (already deployed at `share.ollyhenson.com` — the `type=checkin` addition + community URL change need a redeploy to go live)
-- Run the Resend scheduled-send test above before sending it to a real client — not yet confirmed as of 2026-09-04
+**Deployed / verified 2026-09-06:**
+- `attraction-formula-checkin-worker.js` → Cloudflare Worker `attraction-formula-check`, `https://attraction-formula-check.olly-6af.workers.dev`. `RESEND_API_KEY` secret set (was once mis-named — the Key must be exactly `RESEND_API_KEY`).
+- `share-worker.js` → Cloudflare Worker on `share.ollyhenson.com` (`type=checkin` + community URL fix live). **Note:** during this session the two Workers' code got pasted into each other by mistake — always curl-verify each Worker's response after a deploy.
+- `attraction-formula-start.html` → live in GHL Website Builder; `CHECKIN_WORKER_URL` points at the worker above.
+- Community URL is `skool.com/heartcreator` in both workers.
+
+**Email copy (final, 2026-09-06):**
+- **Confirmation** (immediate, to client): start date + end date (start + 30 days); "I'll check in with you every 10 days or so…"; "Remember, stick with this."; meditation-takes-a-few-goes reassurance; "post in the community feed here" (→ community).
+- **Check-in 1** (day 10) — subject "How's it going?": "Hi NAME, / How's it been going? / Let us know in the community here".
+- **Check-in 2** (day 20) — subject "How's it going?": as #1 plus a line "You're now 20 days in to the Attraction Formula Program."
+- **Check-in 3** (day 30, `isFinal`) — subject "Well done on completing The Attraction Formula Program! 🎉": "Hey NAME, / So well done on completing The Attraction Formula Program. / Let us know inside the community how it went here - interested to hear how it's gone for you".
+- Every "here" links straight to `COMMUNITY_URL`. The `type=checkin` share page is no longer used by these emails (left in place, harmless).
+- **Preview without deploying:** render the worker's template functions locally → `delivery/attraction-formula-email-preview.html` (technique in `skills/skills_cloudflare-workers.md` Examples). Used to iterate copy ~6 rounds with zero deploys.
+
+**Housekeeping:** every test signup schedules 3 real future emails in Resend — clear the Scheduled queue between test runs and before any clean signup Olly wants to keep.
 
 ---
 
@@ -386,6 +394,16 @@ git push
 - Community URL aligned to `skool.com/heartcreator` in both `attraction-formula-checkin-worker.js` and `share-worker.js` (old `the-healing-code-8609` link — Skool redirects it anyway, but now consistent)
 - `share-worker.js` redeployed in Cloudflare (`share.ollyhenson.com`) — `type=checkin` + community URL fix now live
 - Still outstanding: Resend `scheduled_at` live test (Olly declined to run it this session) — verify before a real client signs up
+
+### 2026-09-06 — Session: Attraction Formula check-ins finished and taken live
+- Both workers deployed and curl-verified. Mid-session the two workers' code got pasted into each other (share code into the check-in worker, and vice versa) — only caught by curl-ing each endpoint. New standing rule in `skills/skills_cloudflare-workers.md`: name every deploy target three ways and verify the response body after every deploy.
+- `RESEND_API_KEY` secret had been created on the check-in worker under the wrong Key name (`attraction-formula-check-in`) — remade as `RESEND_API_KEY`. Reinforced the existing secret-name rule (field is "Key", case-sensitive, cannot be renamed).
+- Verified Resend `scheduled_at` behaviour against real sends: ISO 8601, ~30 days ahead OK, **past timestamps rejected with 422**, scheduled sends visible/deletable in the Resend dashboard, `{"ok":true}` = all sends accepted.
+- Rewrote all check-in email copy with Olly across ~6 rounds (subjects, per-check-in bodies, "here" links to community, day-20 line, 🎉 on the final subject, start+end dates in the confirmation). Final copy documented in the program section above.
+- Built a no-deploy preview technique — render the worker's template functions locally to `delivery/attraction-formula-email-preview.html`; documented in the skills file Examples section.
+- Moved `attraction-formula-start.html` from `website/sections/` into `delivery/` so the whole system lives in one folder.
+- Fixed an earlier bad commit that had swept ~1.7GB of meditation audio/video into git — soft-reset, added `delivery/attraction formula meditation/` and `delivery/*.aup3` to `.gitignore`, recommitted clean.
+- **Lesson (mine):** wrote the preview file to the Desktop for convenience — Olly flagged it. Never write outside `AI OS/` without asking. Added to the skills file Never list.
 
 ### 2026-09-03 — Session: Attraction Formula 30-Day Check-Ins built
 - Built as a new, separate system from `attraction-formula-tracker.gs` (belief-builder intake) — that file's own comment says explicitly not to extend it with check-ins

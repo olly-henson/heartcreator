@@ -57,6 +57,16 @@ Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a
 
 ## Changelog
 
+**2026-09-06 — Post-session review (Attraction Formula 30-day check-in Worker)**
+- **Wrong-Worker deploy** cost a debug cycle: instruction named the target Worker only by its custom domain, code went into a different Worker, and the signup page just showed its generic error. → New rule + Process step 6: name every deploy target three ways (name + `workers.dev` + custom domain), and curl-verify the endpoint's *response body* after every deploy. Also added the multi-Worker briefing rule (Scope + Process step 2) — Olly lost track of how many Workers exist mid-walkthrough.
+- **Secret name bit again** — the 2026-08-28 rule already covered this, but Olly still created the Resend secret as `attraction-formula-check-in`. Reinforced in Process step 4: the Cloudflare field is labelled **Key**, it's case-sensitive/all-caps, and it can't be renamed (delete + re-add). Kept the existing 401-diagnosis rule.
+- **Resend `scheduled_at` documented from real testing**: accepts ISO 8601, works ~30 days out, **rejects past timestamps with 422** (so no back-dated previews), scheduled sends are visible/deletable in the Resend dashboard, and a `{"ok":true}` return confirms every scheduled send was accepted. Added to Rules.
+- **Test signups queue real emails** — added a rule + Never item to always clear the Resend Scheduled queue between test runs.
+- **Stateless up-front-scheduling pattern** documented as valid (no sheet/trigger) with a "don't add a sheet back" guard, mirroring `../CLAUDE.md`.
+- Added an **Examples** section: the local template-render preview technique used to iterate email copy ~6 rounds with no deploys.
+- Added a **Never** list consolidating the above, including "never write outside `AI OS/`" after a Desktop write was flagged by Olly this session.
+- Added `attraction-formula-checkin-worker.js` to Scope.
+
 **2026-08-28 — Initial skill file, post-session review (meditation-summary-worker.js build + debug)**
 - Created this file — no dedicated skill previously existed for the `*-worker.js` Cloudflare Worker pattern used across `delivery/`, despite three of these files existing (`call-rsvp-worker.js`, `share-worker.js`, `meditation-summary-worker.js`).
 - Documented the real incident this session: a Cloudflare secret named `meditation_summary` instead of the code's required `env.RESEND_API_KEY`, producing a generic "API key is invalid" 401 that had nothing to do with the key's actual value — cost a full debug cycle (temporary `/debug` route added then removed) before the mismatch was found. New standing rule: always check secret-name-vs-code-reference first on any Worker auth error.
