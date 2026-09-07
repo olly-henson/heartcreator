@@ -1,75 +1,69 @@
 # Skill: Building & Editing the Business Hub
 
-Read this before making any change to the Business Hub Artifact. It covers the workflow, the data model, house conventions, and every gotcha this project has already hit once — don't rediscover them the hard way.
+Read this before making any change to the Business Hub. It covers the workflow, the data model, house conventions, and every gotcha this project has already hit once — don't rediscover them the hard way.
+
+> **2026-09-07: migrated off Claude Artifacts.** The Hub is now a self-hosted Cloudflare Pages app at `https://hub.ollyhenson.com`, behind Cloudflare Access. The code is a plain file on disk; the data lives in a Cloudflare KV store, reached through a Pages Function at `/api/state`. This killed the whole "re-read the live artifact / publish-conflict" workflow — code and data are fully separate now.
 
 ---
 
-## 1. The golden rule: always re-read before editing
+## 1. The workflow: edit → check → deploy
 
-The Business Hub is a **live, self-publishing Artifact**. Olly interacts with it directly (ticking checkboxes, typing captions, adding rows) on his phone or desktop, and it saves its own state back via `artifact.publish()` every time he clicks the in-page Save button. That means:
+Everything lives in `C:\Users\Olly\AI OS\heartattractor\business management\business hub\hub-site\`:
 
-- Your local copy of `community-tracker.html` is stale the moment anyone (including Olly) touches the live page.
-- **Never publish from memory or from an old local file.** Always re-read the live artifact first.
-- A `task-notification` of type `artifact-changed` means the live version moved — treat it as informational, no action needed until you're about to edit.
+```
+hub-site/
+  public/index.html           the whole app (was marketing\community-tracker.html)
+  public/manifest.webmanifest
+  functions/api/state.js       GET + PUT the shared data record (KV binding HUB_KV)
+  wrangler.toml                project name + KV namespace id
+  DEPLOY.md                    one-time Cloudflare setup (done)
+```
 
-### The standard workflow, every single time
+1. **Edit `public/index.html`** directly with `Edit`/`Read`. It is the source of truth — nothing remote to fetch first. Olly can be using the live app the whole time; it cannot conflict with your edit because his data is in KV, not the file.
 
-1. **Read the live artifact:**
-   ```
-   Artifact(action: "read", url: "https://claude.ai/code/artifact/3f07b448-9564-42ca-a274-530f0d982c02")
-   ```
-   This saves the full HTML to a tool-results file and tells you its path.
-
-2. **Extract it into the local working file** (the read result gives you the exact snapshot filename):
+2. **Syntax-check the IIFE** before deploying (a typo here silently breaks the whole page):
    ```bash
-   node <<'EOF'
-   const fs = require('fs');
-   const data = fs.readFileSync('<snapshot-file-from-step-1>','utf8');
-   const idx = data.indexOf('<title>Business Hub');
-   fs.writeFileSync(String.raw`C:\Users\Olly\AI OS\heartattractor\marketing\community-tracker.html`, data.slice(idx));
-   EOF
-   ```
-   The snapshot file has frame-runtime boilerplate before the real content — `<title>Business Hub` is always the start of the actual page.
-
-3. **Make your edits** with `Edit`/`Read` on the local file as normal.
-
-4. **Syntax-check the script before publishing** (catches typos that would silently break the whole page):
-   ```bash
+   cd "C:/Users/Olly/AI OS/heartattractor/business management/business hub/hub-site"
    node -e "
    const fs=require('fs');
-   const html=fs.readFileSync('community-tracker.html','utf8');
-   const start = html.indexOf('(function(){');
-   const end = html.lastIndexOf('})();');
-   fs.writeFileSync('extracted_check.js', html.slice(start, end+5));
+   const html=fs.readFileSync('public/index.html','utf8');
+   const start=html.indexOf('\n(function(){');
+   const end=html.lastIndexOf('})();');
+   fs.writeFileSync('_chk.js', html.slice(start+1, end+5));
    "
-   node --check extracted_check.js && echo OK
-   rm -f extracted_check.js
+   node --check _chk.js && echo OK ; rm -f _chk.js
    ```
+   (The IIFE opens with `\n(function(){` on its own line just after `<script>`, not `<script>(function(){`.)
 
-5. **Publish:**
+3. **Deploy:**
+   ```bash
+   npx wrangler pages deploy public --project-name hub-ollyhenson --commit-dirty=true
    ```
-   Artifact(action: "publish", file_path: "...\community-tracker.html", url: "https://claude.ai/code/artifact/3f07b448-9564-42ca-a274-530f0d982c02", note: "<what changed>")
-   ```
+   ~5 seconds. Prints a `https://<hash>.hub-ollyhenson.pages.dev` preview URL; `hub.ollyhenson.com` updates to this same build automatically.
 
-### If publish is refused with a "newer version" conflict
+4. **Tell Olly to hard-refresh** `hub.ollyhenson.com` (Ctrl/Cmd+Shift+R) — Cloudflare caches the HTML at the edge, so a plain reload can serve the old page for a bit.
 
-This happens often — Olly is frequently mid-interaction with the page. The error hands you the exact snapshot filename that's now live. **Do not force-publish.** Instead:
+**Local testing** (optional): `npx wrangler pages dev public --kv HUB_KV` serves at `127.0.0.1:8788` with a throwaway in-memory KV.
 
-1. Extract that newer snapshot into the local file (same node script as step 2 above, new filename).
-2. Re-apply your intended edits on top of it — grep first to check whether your change is already there (sometimes a previous publish attempt did land).
-3. Publish again. Repeat if it conflicts again — this can chain 3-4 times in a row during an active session.
+### The data record (KV)
+
+`functions/api/state.js` stores one KV key, `record`, shaped `{ rev, updatedAt, state }` where `state` is the app's state object (§3). `GET /api/state` returns it; `PUT /api/state` with `{ rev, state }` writes it, bumping `rev`. If the sent `rev` is stale it returns **409** with the current record — the client (`putState()` in the page) then asks Olly whether to overwrite or reload. `force:true` skips the check. **Never** add an endpoint that writes `state` without the rev guard.
+
+### Auth
+
+The whole `hub.ollyhenson.com` zone (and `hub-ollyhenson.pages.dev`) sits behind a Cloudflare Access self-hosted app — allow policy for `olly@ollyhenson.com`, 1-month global session. `curl` gets a 302 to `*.cloudflareaccess.com`; that's expected, not a bug. If Access is ever removed, add an auth check to `state.js`.
 
 ---
 
 ## 2. File structure
 
-`community-tracker.html` has **no `<!doctype>/<html>/<head>/<body>`** — the Artifact tool wraps it automatically. The file is:
+`public/index.html` is a **normal standalone page** (it has its own `<!doctype>/<html>/<head>/<body>` — added during the migration). The file is:
 
-1. `<title>Business Hub</title>` + a few `<meta>` tags (PWA/Add-to-Home-Screen support) + Google Fonts `<link>`s
-2. One big `<style>` block (all CSS, custom-property design tokens in `:root`)
+1. `<head>`: charset + viewport, `<title>Business Hub</title>`, PWA `<meta>` tags, `<link rel="manifest">`, Google Fonts `<link>`s, then `<style>` opening with a **small reset** — `[hidden]{display:none!important}`, `body{margin:0}`, `img{max-width:100%}`. **Keep that reset.** The Claude Artifact frame used to inject `[hidden]{display:none!important}` for free; without it, any element with a `display:flex`/`grid` class ignores the `hidden` attribute (this is exactly what left the day-detail modal stuck open on first deploy — see §5).
+2. The rest of the big `<style>` block (design tokens in `:root`).
 3. All HTML markup for the five tabs (`#tab-mrr` "MRR", `#tab-content` "Content", `#tab-instagram` "Instagram", `#tab-email` "Email", `#tab-delivery` "Delivery"), plus the day-detail modal markup near the end. Instagram/Email are a display-only split off Content's shared `state.content.rows` — see §3.
-4. A `<script type="application/json" id="state-data">` block — this is the actual saved data, embedded so the page boots with it
-5. One large `<script>(function(){ ... })();` IIFE — all state, render, and event-handling logic
+4. A `<script type="application/json" id="state-data">` block — a **seed** copy of the data, used only as a fallback on a brand-new device before the first `GET /api/state` lands. The real data is in KV. It's fine to let this seed drift stale; don't rely on it.
+5. One large `<script>` + `(function(){ ... })();` IIFE — all state, render, and event-handling logic.
 
 ---
 
@@ -122,7 +116,7 @@ Notes on fields that aren't obvious:
 - Never physically re-sort a `state` array to change display order — sort a computed array of indices instead (see `outlierSortedIndices()`), so every index-based or title-matched reference elsewhere keeps working.
 - Never assume a field exists on previously-saved data — guard every new field in `boot()`.
 - Never model a real two-way workflow state (e.g. draft vs published, the thing that gates whether a row appears somewhere else) as a bare checkbox once it means something to the user — see "Design principles" below.
-- Never mutate an element's own text/`disabled` state as "in-progress" feedback (e.g. a Save button showing "Saving…") *before* calling `saveNow()`/`buildDoc()` in the same synchronous tick — `buildDoc()` snapshots `document.body.innerHTML` synchronously, so whatever the DOM looks like at that instant gets published as the page's own resting HTML. Defer any such feedback with `setTimeout(fn, 0)` so it lands strictly after that snapshot, and put transient text in a separate sibling element rather than the button's own label — see the day-modal Save button fix, 2026-09-06.
+- Put "in-progress" feedback (a Save button's "Saving…", a `disabled` toggle) in a **separate sibling element**, never the button's own label, and prefer deferring it with `setTimeout(fn, 0)`. Originally a hard rule because the artifact's `buildDoc()` snapshotted `document.body.innerHTML` synchronously and baked any mid-tick DOM change into the published page (day-modal Save bug, 2026-09-06). `buildDoc()` is gone now (saves are a JSON `PUT`, not an HTML snapshot), so it can't recur — but the pattern is still in the code and still the right shape, so keep following it.
 - Never delete a real logged data field wholesale just because Olly asked to remove it from a *view*. "Remove X from the MRR Tracker page" means strip it from every render path (KPI cards, table columns, glossary) — it does not mean touch the saved `state-data` JSON. Historic numbers already logged stay in storage, untouched, even though nothing displays them any more.
 
 ### Design principles from past corrections
@@ -131,7 +125,7 @@ Notes on fields that aren't obvious:
 - **A free-text field holding reusable content needs a name/identifier as soon as there's more than one instance.** Caption templates were first built as a single "default caption" textarea; once Olly wanted several (QUIZ, COMMUNITY, etc.) each needed its own `name` field so they could be told apart in the quick-pick chips. When building any list of reusable snippets/presets, add the identifier field from the start rather than waiting for "I need more than one of these."
 - **New tables/lists should assume they'll outgrow the screen.** Delete-button reachability (sticky column) and mobile input font-size weren't designed in up front — both were fixed reactively after Olly hit them. Any new editable table should get `position:sticky` on its action column and 16px mobile input font-size at build time, not as a follow-up fix.
 - **A toggle/sort control with only two real-world meaningful states shouldn't grow a third "neutral" state by default.** Video stats tracking's Date column originally cycled asc → desc → unsorted, copying the generic 3-state pattern used for Month. But a date only ever means "newest first" or "oldest first" to Olly — there's no meaningful "unsorted by date" — so he asked for the third state removed entirely (2026-09-06). When adding a sort/toggle, check what the control actually represents before defaulting to the codebase's generic cycling pattern; a genuinely binary concept (newest/oldest, on/off, draft/published) should be a strict two-state toggle, not a 3-state cycle borrowed from somewhere else in the file.
-- **Per-viewer UI convenience state (which tab, which calendar month, scroll position) is never part of the published business data.** It goes in its own separate `localStorage` key (`uiSave()`/`uiLoad()`, key `heart-attractor-community-tracker-ui`), never mixed into `state`/`localSave()`/`buildDoc()`. The two must stay structurally separate: one gets published and shared with every viewer, the other is local-only and meaningless to anyone else who opens the link.
+- **Per-viewer UI convenience state (which tab, which calendar month, scroll position) is never part of the published business data.** It goes in its own separate `localStorage` key (`uiSave()`/`uiLoad()`, key `heart-attractor-community-tracker-ui`), never mixed into `state`/`localSave()`/the `/api/state` payload. The two must stay structurally separate: one gets published and shared with every viewer, the other is local-only and meaningless to anyone else who opens the link.
 
 - **No autosave, ever.** Every input handler calls `markDirty()` (just flips a local "unsaved" indicator) — nothing publishes until the user clicks the in-page Save button, which calls `saveNow()`. This was a deliberate fix for a real data-loss bug (concurrent publishes silently overwriting each other). Don't add auto-publish-on-change anywhere.
 - **Incremental table rendering, not full rebuild-on-every-keystroke.** Tables track a `xTableBuiltForCount` variable; the render function only tears down and rebuilds `<tbody>` rows when the row *count* changes, otherwise it just patches specific calculated cells (`querySelector('[data-xcalc]')`). This exists because a full rebuild on every input event was yanking keyboard focus out from under the user mid-type. Follow this pattern for any new editable table.
@@ -149,7 +143,8 @@ Notes on fields that aren't obvious:
 - **Sticky columns need `min-width:0`.** A flex/grid item containing unbreakable text (e.g. a long video title in a calendar cell) will force its container wider than its grid track unless the item and its ancestors have `min-width:0`. Grid tracks should use `minmax(0,1fr)`, not bare `1fr`, wherever cell content might overflow.
 - **Wide tables bury the delete button off-screen.** Any table that can grow past viewport width needs its delete/action column pinned with `position:sticky; right:0` (see `.rowdel` in this file) — otherwise the affordance exists but nobody can reach it without knowing to scroll right.
 - **`colspan` on empty-state rows must be kept in sync** with the real column count — it silently breaks alignment (not a crash) whenever a column is added or removed. Grep for `colspan="N"` after any column change.
-- **True native app packaging isn't possible from an Artifact.** The closest equivalent is PWA-style `<meta name="apple-mobile-web-app-capable">` etc. plus telling the user to "Add to Home Screen" from their mobile browser — set expectations accordingly if asked for "an app."
+- **The `<head>` reset carries load-bearing rules — don't drop them.** After migrating off Artifacts (2026-09-07) the day-detail modal shipped **stuck open** on the first deploy. Cause: the Claude Artifact frame used to inject `[hidden]{display:none!important}`, and the code relies on it — `#dayModalOverlay` has a `.daymodal-overlay{display:flex}` class, so the plain `hidden` attribute (weak UA `display:none`) loses to it. Fix was re-adding `[hidden]{display:none!important}` (plus `body{margin:0}`, `img{max-width:100%}`) at the top of the `<style>` block. Any element in this app toggled via `.hidden` and also given a `display:` class depends on that one rule. `boot()` also now calls `closeDayModal()` as a belt-and-braces guard.
+- **It's a real PWA now** — `manifest.webmanifest` + the apple-mobile-web-app meta tags, Add to Home Screen works properly, Cloudflare Access holds the login for a month. Not store-packaged native, and no reason to want that.
 - **Hiding a row on `blur` is not safe on mobile.** The Video ideas list hid a row (moved it to "lives on the calendar only") as soon as its title input lost focus and a date was already set. On mobile a longer title makes an accidental blur far more likely — autocorrect suggestion tap, keyboard "next", a stray scroll — so the row would vanish mid-type and read as data loss. Fix: only re-filter/hide rows at a deliberate transition point (adding another row, an explicit date/mode change) — never on blur of the field the user is actively typing into.
 - **Any input/textarea inside a table inherits the table's font-size — check it's ≥16px on mobile.** Table body text in this app is 13.5px for density; iOS Safari auto-zooms the whole page when an input under 16px gets focus, which makes typing into a table cell feel broken/fiddly on a phone. Fixed with `input, textarea, select{ font-size:16px !important; }` inside the `@media (max-width:640px)` block — keep that rule if the table styling changes.
 - **"I need to see the whole title" means immediately, not on click.** The first attempt at fixing Video stats tracking's truncated titles made the `<input>` expand-on-focus (overlay the row when clicked). Olly's actual ask was to see every title at a glance without interacting with anything — a single-line `<input>` can never do that (inputs don't wrap), so the real fix was switching to an auto-height wrapping `<textarea>`. When "I can't see X" comes up for text truncated inside a fixed-width single-line field, check whether the ask is "let me reveal it on demand" or "show it by default" before picking a fix — they need different elements (input+interaction vs. textarea+auto-height).
@@ -170,7 +165,7 @@ Notes on fields that aren't obvious:
 | Priority Score / Leaderboard | `PRIORITY_WEIGHTS`, `computePriorityScores()`, `renderLeaderboard()` |
 | Caption templates | `renderCaptionTemplates()` |
 | Eisenhower priority board | `renderDelivery()` (computed live from `delivery.projects`, not separately stored) |
-| Save/publish cycle | `markDirty()`, `saveNow()`, `setSaveState()`, `boot()` |
+| Save / sync cycle | `markDirty()` → `saveNow()` → `putState(force,onDone)` (`PUT /api/state`, handles 409); `pullServerState()` (`GET` on boot); `migrateState()` + `rerenderAll()` split out of `boot()` so the server pull can re-run them; `serverRev` holds the KV record version |
 | Video stats tracking sort (Month/Date) | `outlierSortKey`, `outlierSortDir`, `outlierSortedIndices()`, `outlierSortClick()` |
 | Leaderboard sort (incl. Date) | `leaderSortBy`, `leaderMetricValue()`, `renderLeaderboard()` — scoped to `th.sortable[data-sortkey]`, don't widen that selector |
 | Video stats tracking title (always fully visible) + Engagement column | Title is a wrapping, auto-height `<textarea class="outliertitlein">`, not an `<input>` — `autosizeTitleTextarea()` sets its height from `scrollHeight` on build and on every keystroke, so the whole title shows immediately, no click/focus needed. **One** Engagement column (`.outliereng`, bold pink via `--accent-2`) sits immediately left of Title — `data-oecalc` on that cell, updated in `updateOutlierCalc()`. There is no second engagement value anywhere else in this table; don't reintroduce one — an earlier version had it both as a badge inside the title cell and as a trailing column, which pushed the Title header out of visual alignment with the actual title text. |
@@ -195,3 +190,7 @@ Notes on fields that aren't obvious:
   1. The day-modal Save button DOM-snapshot bug → added to `### Never` in §4, worded generally so it catches any future "in-progress" UI feedback, not just this one button.
   2. Video stats tracking's Date sort being cut from three states to two (Olly: "just newest and oldest") → added as a new "Design principles" bullet in §4: a genuinely two-state real-world concept shouldn't inherit a generic 3-state cycling pattern just because that's what's used elsewhere in the file.
   Also caught two places this file had gone stale from feature work landing without a docs pass: §2's file-structure description still said "three tabs" (now five — MRR/Content/Instagram/Email/Delivery), and §3's data-model snippet still listed `emailLeads` as a live field on `rows[]` after it was removed from every render path — both corrected, with a note on `emailLeads` explaining it's legacy-only now. Added one more design principle codifying the UI-state-vs-business-data separation (`uiSave`/`uiLoad` vs `state`/`saveNow`) since it's a distinction worth stating explicitly rather than only being discoverable from the Changelog. No existing rule was removed — nothing this session contradicted an earlier one; everything remains additive.
+- **2026-09-07 — migrated off Claude Artifacts to self-hosting.** The Artifact login gate made the Hub unusable as a phone home-screen app (re-login on every reopen). Moved it to a Cloudflare Pages app at `hub.ollyhenson.com` behind Cloudflare Access (1-month session), with data in a Cloudflare KV store behind a Pages Function (`functions/api/state.js`, `/api/state`). Everything now lives under `business hub\hub-site\` (`public/index.html` is the app, was `marketing\community-tracker.html`). Code changes:
+  - Removed `artifact` / `buildDoc()` / `window.claude.use("artifact")`. `saveNow()` → `putState(force,onDone)` doing `PUT /api/state` with a `rev` guard (409 → `window.confirm` overwrite-or-reload). `boot()` renders the local copy first, then `pullServerState()` (`GET`) reconciles — server wins unless this device has unsaved edits. `migrateState()` + `rerenderAll()` split out of `boot()` so the pull can re-run them. `localStorage` kept as offline cache.
+  - Added `<!doctype>/<html>/<head>/<body>` and a small `<head>` reset. **Pitfall hit:** the day modal shipped stuck-open because the Artifact frame's injected `[hidden]{display:none!important}` was gone — re-added to the `<style>` block, see §5.
+  - New files: `functions/api/state.js`, `wrangler.toml` (KV id `f6ae5047d04c492d9409f74cdb3bb920`, binding `HUB_KV`), `public/manifest.webmanifest`, `DEPLOY.md`, `.gitignore`. Rewrote §1 (workflow is now edit → syntax-check → `wrangler pages deploy` → hard-refresh) and §2 (file structure). Old artifact URL kept in CLAUDE.md as a short-term backup, deletable ~2026-09-14.

@@ -1,0 +1,11 @@
+{
+  "name": "Business Hub",
+  "short_name": "Business Hub",
+  "description": "Heart Attractor MRR, content and delivery dashboard",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#150818",
+  "theme_color": "#150818"
+}
