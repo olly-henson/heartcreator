@@ -2,10 +2,20 @@
 
 ## What this is
 
-A single self-contained HTML tool — `cover-photo-generator.html` — that Olly
-opens in Chrome to produce **cover images for the Heart Attractor / The
-Attraction Formula Skool community**. The same output doubles as a **mobile
-Facebook ad creative**.
+This folder holds **two** self-contained HTML tools Olly opens in Chrome:
+
+1. **`cover-photo-generator.html`** — the **community cover** (hero image for the
+   Skool group; doubles as a mobile Facebook ad creative). Output **1920 × 1020**.
+2. **`program-cover-generator.html`** — the **classroom module covers** for
+   *The Attraction Formula* (one per module inside Skool). Output **1460 × 752**
+   (Skool's exact classroom thumbnail spec). See the dedicated section below.
+
+Everything from here down to that section is about tool 1.
+
+### Tool 1 — `cover-photo-generator.html`
+
+Produces **cover images for the Heart Attractor / The Attraction Formula Skool
+community**. The same output doubles as a **mobile Facebook ad creative**.
 
 It renders everything to a `<canvas>` (photo + shading + text) so the
 **Download PNG** button saves a pixel-perfect file with no screenshotting,
@@ -96,3 +106,65 @@ photo, resize to ≤1400 px wide with PIL, base64-encode, and replace the
 `EMBEDDED_PHOTO` string (see skills file for the exact snippet).
 
 After changes, tell Olly to **reload the file in Chrome**.
+
+---
+
+## Tool 2 — `program-cover-generator.html`
+
+Built 2026-09-09. Makes the **classroom module covers** for *The Attraction
+Formula* inside Skool. Output **1460 × 752** (Skool's exact classroom thumbnail
+spec — any other ratio crops and the Skool menu button overlaps the art).
+
+### What it produces
+
+Four covers, chosen with the **01 / 02 / 03 / Start** buttons:
+
+| Button | Eyebrow (default) | Keyword (default) |
+|---|---|---|
+| 01 | STEP 01 | REGULATE |
+| 02 | STEP 02 | REWRITE |
+| 03 | STEP 03 | REHEARSE |
+| Start | START HERE | GET STARTED |
+
+The three R's — **Regulate → Rewrite → Rehearse** — are the module steps Olly
+teaches. NB this is a **three**-R sequence with *Rehearse*, which differs from
+the "Four R's (Regulate/Rewrite/Remember/Relive)" in
+`memory/brand-guidelines-heart-attractor.md` and the argument sheet. Olly is
+aware; treat the classroom module naming as its own thing until the wider
+positioning docs are reconciled.
+
+### Design (locked with Olly, 2026-09-09)
+
+- **Only** an eyebrow + the big keyword. Ghost background number and the body /
+  description line were both explicitly removed — the keyword is the whole focus.
+- Cosmic gradient bg `#4B1466 → #150818 → #0A0510`, single magenta accent
+  `#B84FE8`, light accent `#E1A6FF`, brand mark "THE ATTRACTION FORMULA"
+  bottom-left. Poppins only. Follows `memory/brand-guidelines-heart-attractor.md`.
+- Each cover can carry **its own photo** of a person doing that step's work,
+  full-bleed behind a magenta **veil** (kept heavy on the left so the keyword
+  keeps contrast). Step 1 ships with an embedded default
+  (`../assets/step-regulate-source.png`); the rest start photo-less.
+- Keyword auto-shrinks if it would run past the safe area.
+
+### Structure
+
+- `STEPS` array — one object per cover: `{ eb, n, img, ix, iy, iz, scrim }`
+  (eyebrow, keyword, Image obj, x %, y %, zoom %, veil %). Per-cover photo +
+  framing are held here, in memory only — nothing is persisted, so slider
+  positions reset on reload. To make a framing permanent, bake the `ix/iy/iz/
+  scrim` numbers into the `STEPS` default for that cover.
+- One `render()`, redraws on every control change. `EMBEDDED_REGULATE` near the
+  top holds the Step-1 photo as a base64 data URI (injected via a python
+  `str.replace` on a `__REGULATE_B64__` placeholder — don't hand-edit the blob).
+- Controls: cover selector · Eyebrow · Keyword · Choose image / Remove ·
+  Image X / Y / zoom · Veil strength · Keyword size · Glow strength · Stardust ·
+  Gradient on keyword · Download this PNG · Download all 4 · Reset text.
+
+### Swapping / adding a photo
+
+Same pattern as tool 1: resize ≤1600 px wide with PIL, `quality≈82`,
+base64-encode, replace the placeholder/constant via python (not the Edit tool —
+the blob is ~270 KB). Or just hand Olly the tool and let him use **Choose
+image…** at runtime.
+
+After any change, tell Olly to **reload the file in Chrome**.

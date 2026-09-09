@@ -1,11 +1,16 @@
 # Skill — Cover Photo Generator
 
-How to **use** the tool to make a cover, and how to **improve** the tool.
+How to **use** the tools to make a cover, and how to **improve** them.
 Read this and the folder `CLAUDE.md` before either.
 
-Tool: `cover photo generator/cover-photo-generator.html`
-Output: 1920 × 1020 PNG (Skool cover ratio 1084 × 576). Doubles as a mobile
-Facebook ad creative.
+Two tools in this folder:
+
+- **`cover-photo-generator.html`** — the **community / hero cover**.
+  Output 1920 × 1020 PNG (Skool cover ratio 1084 × 576). Doubles as a mobile
+  Facebook ad creative. Sections A–C below.
+- **`program-cover-generator.html`** — the **classroom module covers** for
+  *The Attraction Formula* (Regulate / Rewrite / Rehearse / Get Started).
+  Output 1460 × 752 PNG (Skool classroom thumbnail spec). Section D below.
 
 ---
 
@@ -139,3 +144,99 @@ thenounproject, alvarotrigo); FB ad creative best practice
 - Live "thumbnail preview" pane at ~300 px so the small-size check is built
   in.
 - Snap-to-centre / edge guides on the drag.
+
+---
+
+## D. `program-cover-generator.html` — classroom module covers
+
+Built 2026-09-09. Read the **Tool 2** section of `CLAUDE.md` first.
+
+### What it is
+
+Four Skool classroom module covers at **1460 × 752** (exact spec — other ratios
+crop and Skool's menu button overlaps the art). Selector buttons
+**01 / 02 / 03 / Start** → keywords **REGULATE / REWRITE / REHEARSE / GET
+STARTED**, eyebrows **STEP 01/02/03 / START HERE**. Both eyebrow and keyword are
+editable text fields.
+
+The three steps (Olly's own wording, 2026-09-09):
+- **Regulate** — calm the nervous system out of survival-based, needy, attached
+  energy.
+- **Rewrite** — rewrite the core beliefs from the past that block love and drive
+  self-sabotage.
+- **Rehearse** — mentally and emotionally rehearse being with the partner until
+  it already feels real.
+
+(These body lines are **not** shown on the cover — Olly had them removed. Keep
+them here as reference only.)
+
+### Design rules (locked with Olly)
+
+1. **Keyword + eyebrow only.** No ghost background number, no description line —
+   both were explicitly cut. The keyword is the entire focus.
+2. Person doing the work sits **full-bleed behind a magenta veil**, heavy on the
+   left so the keyword keeps contrast. Not every cover needs a photo — "Get
+   Started" ships photo-less on pure gradient.
+3. Brand system from `memory/brand-guidelines-heart-attractor.md`: Poppins only,
+   cosmic gradient `#4B1466 → #150818 → #0A0510`, single accent `#B84FE8` /
+   `#E1A6FF`, "THE ATTRACTION FORMULA" mark bottom-left, glow + stardust, no
+   bordered pills / rings.
+4. Same thumbnail test as the hero cover — shrink to ~300 px, the keyword must
+   still read.
+
+### Adding a photo to a step
+
+- If Olly names a path outside `C:\Users\Olly\AI OS\` he's authorising that one
+  file — otherwise ask him to drop it in `../assets/`.
+- Resize ≤ 1600 px wide, `quality≈82`, base64-encode, and replace the constant
+  (Step 1 = `EMBEDDED_REGULATE`) via a **python `str.replace`**, not the Edit
+  tool — the blob is ~270 KB. Pattern:
+
+  ```bash
+  cd "…/marketing/cover photo generator"
+  python - <<'EOF'
+  from PIL import Image
+  import base64
+  im = Image.open(r'C:\path\to\photo.png').convert('RGB')
+  w = 1600
+  im = im.resize((w, round(im.height*w/im.width)), Image.LANCZOS)
+  im.save('_tmp.jpg', quality=82, optimize=True)
+  b64 = 'data:image/jpeg;base64,' + base64.b64encode(open('_tmp.jpg','rb').read()).decode()
+  open('_b64.txt','w').write(b64)
+  EOF
+  # then python-replace the constant / placeholder with _b64.txt contents,
+  # delete _tmp.jpg / _b64.txt
+  ```
+
+- Or don't embed at all — hand Olly the tool and let him use **Choose image…**
+  at runtime (loads into that cover's slot, in memory).
+
+### Locking a framing
+
+Slider state (`ix/iy/iz/scrim` and the runtime photo) lives only in the browser
+— it resets on reload. When Olly says he likes a framing, get the four numbers
+(**Image X, Image Y, Image zoom, Veil strength**) and bake them into that
+cover's object in the `STEPS` array as the new default.
+
+### Previewing without a browser
+
+Headless Chrome screenshots the whole page:
+
+```bash
+"/c/Program Files/Google/Chrome/Application/chrome.exe" --headless --disable-gpu \
+  --hide-scrollbars --window-size=1900,1150 --screenshot="$TEMP/pcg.png" \
+  "file:///C:/Users/Olly/AI%20OS/heartattractor/marketing/cover%20photo%20generator/program-cover-generator.html"
+```
+
+To preview a non-default cover, copy to a temp file and inject a
+`.steps button[n].click()` into `boot()` before screenshotting; add
+`--virtual-time-budget=2500`.
+
+### Improving it
+
+- Same self-contained rules as tool 1: one `render()`, one Google Fonts
+  `<link>`, no build step, data-URI photos (no `file://` `<img>` — canvas taint).
+- Changing a default: update the `<input value="…">` **and** its `<span id="…-v">`
+  readout.
+- The `STEPS` array is the single source of per-cover state — add a 5th cover by
+  adding an object + a selector button with the next `data-step` index.
