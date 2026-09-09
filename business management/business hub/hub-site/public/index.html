@@ -392,6 +392,28 @@
     overflow-x:auto;
     backdrop-filter: blur(6px);
   }
+  /* Long tables you fill in row by row (Video stats tracking) — cap the
+     height and scroll inside the box so the sticky header below actually
+     has something to stick to. Without a bounded scroll container the
+     header just scrolls away with the page. */
+  .tablewrap.sticky-scroll{
+    max-height: 88vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  /* On desktop this table carries a lot of columns and rows — let it
+     break out past the 1180px content column and use most of the
+     viewport, both directions, so the scrollbars aren't hard up against
+     the data. Mobile keeps the normal in-column width. */
+  @media (min-width: 1200px){
+    .tablewrap.sticky-scroll{
+      width: 94vw;
+      max-width: 94vw;
+      margin-left: calc(50% - 47vw);
+      margin-right: calc(50% - 47vw);
+      max-height: 94vh;
+    }
+  }
   table{
     border-collapse:collapse;
     width:100%;
@@ -402,7 +424,7 @@
     position:sticky;
     top:0;
     background:#1c0d28;
-    text-align:left;
+    text-align:center;
     font-size:11px;
     text-transform:uppercase;
     letter-spacing:.05em;
@@ -411,6 +433,7 @@
     padding:11px 12px;
     border-bottom:1px solid var(--border-soft);
     white-space:nowrap;
+    z-index:4;
   }
   thead th.calc{ color: var(--accent-2); }
   tbody td{
@@ -419,7 +442,9 @@
     font-variant-numeric:tabular-nums;
     white-space:nowrap;
     color: var(--text-body);
+    text-align:center;
   }
+  tbody td input, tbody td textarea, tbody td select{ text-align:center; }
   tbody tr:last-child td{border-bottom:none;}
   tbody tr:hover{ background: var(--surface-2); }
   td.calc{ color: var(--accent-2); font-weight:600; }
@@ -928,6 +953,32 @@
   /* The one Engagement column, sitting just left of Title — bold pink,
      easy to scan down the whole table at a glance. */
   .outliereng{ font-weight:800; color: var(--accent-2); text-align:center; font-size:13.5px; }
+  /* Editable Date cell (only rendered when there's no matching calendar entry) */
+  .outlierdatein{ width:150px; font-size:13px; }
+  /* Video stats tracking — title search */
+  .outliersearchbar{ display:flex; align-items:center; gap:10px; margin:12px 0; flex-wrap:wrap; }
+  #outlierSearch{
+    flex:0 1 320px; max-width:100%;
+    padding:8px 12px; border-radius:9px;
+    border:1px solid var(--border-soft); background: var(--surface);
+    color: var(--text); font-family:'Poppins',sans-serif; font-size:14px;
+  }
+  #outlierSearch:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .outliersearchcount{ font-size:12px; color: var(--text-muted); }
+
+  /* Drag-to-reorder handle for Video stats tracking rows */
+  th.rowdrag, td.rowdrag{ width:26px; padding-left:2px; padding-right:2px; }
+  .draghandle{
+    display:inline-block; cursor:grab; color: var(--text-muted);
+    font-size:15px; line-height:1; padding:2px 5px; border-radius:6px;
+    user-select:none; touch-action:none; letter-spacing:-2px;
+  }
+  .draghandle:hover{ color: var(--text); background: var(--surface-2); }
+  .draghandle:active{ cursor:grabbing; }
+  .draghandle.is-disabled{ opacity:.22; cursor:default; }
+  tr.dragging{ opacity:.4; }
+  tr.drop-above td{ box-shadow: inset 0 2px 0 0 var(--accent); }
+  tr.drop-below td{ box-shadow: inset 0 -2px 0 0 var(--accent); }
   .hint{font-size:12px;color: var(--text-muted);}
   .slotmode{display:flex; flex-direction:column; gap:4px;}
   .slotopt{display:flex; align-items:center; gap:6px; font-size:12px; color: var(--text-muted); cursor:pointer; white-space:nowrap;}
@@ -1160,28 +1211,33 @@
     <div class="calendar" id="calendar"><div class="caldow">Mon</div><div class="caldow">Tue</div><div class="caldow">Wed</div><div class="caldow">Thu</div><div class="caldow">Fri</div><div class="caldow">Sat</div><div class="caldow">Sun</div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">31</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">1</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">2</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">3</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="Why you can't stop doubting if you're going to manifest love ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">Why you can't stop doubting if you're going to manifest love ♥️</span></div><div class="calitem published" title="How long should you wait before giving up on manifesting love? ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How long should you wait before giving up on manifesting love? ♥️</span></div><div class="calitem published" title="If you're still doubting that you can manifest love - you MUST change this today ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you're still doubting that you can manifest love - you MUST change this today ♥️</span></div><div class="calitem published" title="How manifest love in your life - without the doubts ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How manifest love in your life - without the doubts ♥️</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">4</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="If you are worried time is running out to manifest love - do this today ❤️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you are worried time is running out to manifest love - do this today ❤️</span></div><div class="calitem published" title="How to manifest love into your life - scientifically 🧪  — Published"><span class="calitem-dot"></span><span class="calitem-label">How to manifest love into your life - scientifically 🧪 </span></div><div class="calitem published" title="6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔 — Published"><span class="calitem-dot"></span><span class="calitem-label">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</span></div><div class="calitem published" title="How to attract a really great partner ♥️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">How to attract a really great partner ♥️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">5</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem published" title="How I manifested my dream partner ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How I manifested my dream partner ♥️</span></div><div class="calitem published" title="Two REALLY important steps for meeting and attracting your special person ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">Two REALLY important steps for meeting and attracting your special person ❤️✅</span></div><div class="calitem published" title="This type of person always attracts the partner that they want ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">This type of person always attracts the partner that they want ❤️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">6</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="The real reason that you haven’t manifested love yet 💔 — Published"><span class="calitem-dot"></span><span class="calitem-label">The real reason that you haven’t manifested love yet 💔</span></div><div class="calitem published" title="Manifesting harder pushes love away - 👉here's why  — Published"><span class="calitem-dot"></span><span class="calitem-label">Manifesting harder pushes love away - 👉here's why </span></div><div class="calitem published" title="It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this — Published"><span class="calitem-dot"></span><span class="calitem-label">It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this</span></div><div class="calitem published" title="A guaranteed system for attracting the relationship that you want  — Published"><span class="calitem-dot"></span><span class="calitem-label">A guaranteed system for attracting the relationship that you want </span></div></div></div><div class="calcell today"><div class="caldatehead"><span class="caldatenum">7</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem draft" title="I can only help these people manifest a great relationship — Draft"><span class="calitem-dot"></span><span class="calitem-label">I can only help these people manifest a great relationship</span></div><div class="calitem draft" title="You don’t need a manifestation technique to attract someone you love - you need this — Draft"><span class="calitem-dot"></span><span class="calitem-label">You don’t need a manifestation technique to attract someone you love - you need this</span></div><div class="calitem draft" title="How to use your nervous system to attract your dream partner ♥️✅ — Draft"><span class="calitem-dot"></span><span class="calitem-label">How to use your nervous system to attract your dream partner ♥️✅</span></div><div class="calitem draft" title="The 3-Step System That Will Attract Your Dream Partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">The 3-Step System That Will Attract Your Dream Partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">8</span><span class="calcount short">1/3</span></div><div class="calitems"><div class="calitem draft" title="Why you need to regulate your nervous system to attract your partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">Why you need to regulate your nervous system to attract your partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">9</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">10</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">11</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">12</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">13</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">14</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">15</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">16</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">17</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">18</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">19</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">20</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">21</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">22</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">23</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">24</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">25</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">26</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">27</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">28</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">29</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">30</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">1</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">2</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">4</span></div><div class="calitems"></div></div></div>
 
     <p class="section-label" style="margin-top:40px;">Video stats tracking</p>
-    <div class="tablewrap">
+    <div class="outliersearchbar">
+      <input type="search" id="outlierSearch" placeholder="Search titles…" autocomplete="off">
+      <span class="outliersearchcount" id="outlierSearchCount"></span>
+    </div>
+    <div class="tablewrap sticky-scroll">
       <table>
         <thead>
           <tr>
+            <th class="rowdrag" title="Drag rows to set a custom order"></th>
             <th style="width:70px; text-align:center;">Saved</th>
-            <th class="calc" style="width:90px; text-align:center;">Engagement</th>
+            <th class="calc sortable" data-osort="engagement" style="width:90px; text-align:center;">Engagement</th>
             <th style="min-width:220px;">Title</th>
-            <th class="calc sortable" id="outlierDateSort">Date</th>
-            <th class="sortable" id="outlierMonthSort">Month</th>
-            <th>Community comments</th>
-            <th>Views</th>
-            <th>Likes</th>
-            <th>Comments</th>
-            <th>Shares</th>
-            <th>Saves</th>
+            <th class="calc sortable" data-osort="date">Date</th>
+            <th class="sortable" data-osort="month">Month</th>
+            <th class="sortable" data-osort="views">Views</th>
+            <th class="sortable" data-osort="likes">Likes</th>
+            <th class="sortable" data-osort="communityComments">Community comments</th>
+            <th class="sortable" data-osort="comments">Comments</th>
+            <th class="sortable" data-osort="shares">Shares</th>
+            <th class="sortable" data-osort="saves">Saves</th>
             <th class="rowdel"></th>
           </tr>
         </thead>
         <tbody id="outlierTbody"><tr data-orow="0"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="0" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.7%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="0" data-ofield="title" placeholder="Video title" style="height: 85px;">You don't need manifestation to attract your partner  ♥️ You need this...</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="0" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="0" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="0" data-ofield="views" value="2423"></td><td><input type="number" min="0" data-oi="0" data-ofield="likes" value="20"></td><td><input type="number" min="0" data-oi="0" data-ofield="comments" value="8"></td><td><input type="number" min="0" data-oi="0" data-ofield="shares" value="25"></td><td><input type="number" min="0" data-oi="0" data-ofield="saves" value="61"></td><td class="rowdel"><button data-odel="0" title="Remove video">✕</button></td></tr><tr data-orow="1"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="1" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.9%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="1" data-ofield="title" placeholder="Video title" style="height: 67px;">The one dangerous belief that keeps people lonely forever</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="1" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="1" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="1" data-ofield="views" value="1924"></td><td><input type="number" min="0" data-oi="1" data-ofield="likes" value="12"></td><td><input type="number" min="0" data-oi="1" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="1" data-ofield="shares" value="16"></td><td><input type="number" min="0" data-oi="1" data-ofield="saves" value="67"></td><td class="rowdel"><button data-odel="1" title="Remove video">✕</button></td></tr><tr data-orow="2"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="2" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.2%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="2" data-ofield="title" placeholder="Video title" style="height: 85px;">If you're visualizing being with your partner but can't maintain the feeling - here's why 🤔 </textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="2" data-ofield="month" value="2026-08"></td><td><input type="number" min="0" data-oi="2" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="2" data-ofield="views" value="1769"></td><td><input type="number" min="0" data-oi="2" data-ofield="likes" value="18"></td><td><input type="number" min="0" data-oi="2" data-ofield="comments" value="2"></td><td><input type="number" min="0" data-oi="2" data-ofield="shares" value="12"></td><td><input type="number" min="0" data-oi="2" data-ofield="saves" value="42"></td><td class="rowdel"><button data-odel="2" title="Remove video">✕</button></td></tr><tr data-orow="3"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="3" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">6.0%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="3" data-ofield="title" placeholder="Video title" style="height: 67px;">Before you give up trying to manifest love - watch this video ♥️ </textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="3" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="3" data-ofield="communityComments" value="9"></td><td><input type="number" min="0" data-oi="3" data-ofield="views" value="2948"></td><td><input type="number" min="0" data-oi="3" data-ofield="likes" value="31"></td><td><input type="number" min="0" data-oi="3" data-ofield="comments" value="21"></td><td><input type="number" min="0" data-oi="3" data-ofield="shares" value="31"></td><td><input type="number" min="0" data-oi="3" data-ofield="saves" value="94"></td><td class="rowdel"><button data-odel="3" title="Remove video">✕</button></td></tr><tr data-orow="4"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="4" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">7.2%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="4" data-ofield="title" placeholder="Video title" style="height: 67px;">How to stop doubting that you'll manifest your partner - quickly ♥️</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="4" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="4" data-ofield="communityComments" value="6"></td><td><input type="number" min="0" data-oi="4" data-ofield="views" value="4775"></td><td><input type="number" min="0" data-oi="4" data-ofield="likes" value="59"></td><td><input type="number" min="0" data-oi="4" data-ofield="comments" value="13"></td><td><input type="number" min="0" data-oi="4" data-ofield="shares" value="54"></td><td><input type="number" min="0" data-oi="4" data-ofield="saves" value="220"></td><td class="rowdel"><button data-odel="4" title="Remove video">✕</button></td></tr><tr data-orow="5"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="5" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">3.9%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="5" data-ofield="title" placeholder="Video title" style="height: 85px;">How do you maintain the belief that you're already with your dream partner?  🤔</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="5" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="5" data-ofield="communityComments" value="2"></td><td><input type="number" min="0" data-oi="5" data-ofield="views" value="1800"></td><td><input type="number" min="0" data-oi="5" data-ofield="likes" value="9"></td><td><input type="number" min="0" data-oi="5" data-ofield="comments" value="5"></td><td><input type="number" min="0" data-oi="5" data-ofield="shares" value="14"></td><td><input type="number" min="0" data-oi="5" data-ofield="saves" value="43"></td><td class="rowdel"><button data-odel="5" title="Remove video">✕</button></td></tr><tr data-orow="6"><td style="text-align:center;"><button class="vidsavebtn" data-osave="6" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">5.1%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="6" data-ofield="title" placeholder="Video title" style="height: 67px;">If you are worried time is running out to manifest love - do this today ❤️</textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="6" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="6" data-ofield="communityComments" value="1"></td><td><input type="number" min="0" data-oi="6" data-ofield="views" value="589"></td><td><input type="number" min="0" data-oi="6" data-ofield="likes" value="3"></td><td><input type="number" min="0" data-oi="6" data-ofield="comments" value="2"></td><td><input type="number" min="0" data-oi="6" data-ofield="shares" value="5"></td><td><input type="number" min="0" data-oi="6" data-ofield="saves" value="20"></td><td class="rowdel"><button data-odel="6" title="Remove video">✕</button></td></tr><tr data-orow="7"><td style="text-align:center;"><button class="vidsavebtn" data-osave="7" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">8.3%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="7" data-ofield="title" placeholder="Video title" style="height: 48px;">How to manifest love into your life - scientifically 🧪 </textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="7" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="7" data-ofield="communityComments" value="3"></td><td><input type="number" min="0" data-oi="7" data-ofield="views" value="2555"></td><td><input type="number" min="0" data-oi="7" data-ofield="likes" value="34"></td><td><input type="number" min="0" data-oi="7" data-ofield="comments" value="6"></td><td><input type="number" min="0" data-oi="7" data-ofield="shares" value="41"></td><td><input type="number" min="0" data-oi="7" data-ofield="saves" value="131"></td><td class="rowdel"><button data-odel="7" title="Remove video">✕</button></td></tr><tr data-orow="8"><td style="text-align:center;"><button class="vidsavebtn" data-osave="8" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">1.4%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="8" data-ofield="title" placeholder="Video title" style="height: 85px;">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="8" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="8" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="views" value="287"></td><td><input type="number" min="0" data-oi="8" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="8" data-ofield="saves" value="4"></td><td class="rowdel"><button data-odel="8" title="Remove video">✕</button></td></tr><tr data-orow="9"><td style="text-align:center;"><button class="vidsavebtn" data-osave="9" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">5.8%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="9" data-ofield="title" placeholder="Video title" style="height: 48px;">How to attract a really great partner ♥️✅</textarea></td><td class="calc" data-odatecalc="">4 Sept</td><td><input type="month" data-oi="9" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="9" data-ofield="communityComments" value="1"></td><td><input type="number" min="0" data-oi="9" data-ofield="views" value="1619"></td><td><input type="number" min="0" data-oi="9" data-ofield="likes" value="22"></td><td><input type="number" min="0" data-oi="9" data-ofield="comments" value="5"></td><td><input type="number" min="0" data-oi="9" data-ofield="shares" value="10"></td><td><input type="number" min="0" data-oi="9" data-ofield="saves" value="57"></td><td class="rowdel"><button data-odel="9" title="Remove video">✕</button></td></tr><tr data-orow="10"><td style="text-align:center;"><button class="vidsavebtn" data-osave="10" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">1.7%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="10" data-ofield="title" placeholder="Video title" style="height: 67px;">Why you can't stop doubting if you're going to manifest love ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="10" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="10" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="views" value="231"></td><td><input type="number" min="0" data-oi="10" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="10" data-ofield="shares" value="1"></td><td><input type="number" min="0" data-oi="10" data-ofield="saves" value="3"></td><td class="rowdel"><button data-odel="10" title="Remove video">✕</button></td></tr><tr data-orow="11"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="11" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">5.5%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="11" data-ofield="title" placeholder="Video title" style="height: 85px;">If you're still doubting that you can manifest love - you MUST change this today ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="11" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="11" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="11" data-ofield="views" value="1388"></td><td><input type="number" min="0" data-oi="11" data-ofield="likes" value="11"></td><td><input type="number" min="0" data-oi="11" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="11" data-ofield="shares" value="11"></td><td><input type="number" min="0" data-oi="11" data-ofield="saves" value="54"></td><td class="rowdel"><button data-odel="11" title="Remove video">✕</button></td></tr><tr data-orow="12"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="12" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">5.0%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="12" data-ofield="title" placeholder="Video title" style="height: 67px;">How long should you wait before giving up on manifesting love? ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="12" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="12" data-ofield="communityComments" value="1"></td><td><input type="number" min="0" data-oi="12" data-ofield="views" value="1760"></td><td><input type="number" min="0" data-oi="12" data-ofield="likes" value="15"></td><td><input type="number" min="0" data-oi="12" data-ofield="comments" value="2"></td><td><input type="number" min="0" data-oi="12" data-ofield="shares" value="15"></td><td><input type="number" min="0" data-oi="12" data-ofield="saves" value="56"></td><td class="rowdel"><button data-odel="12" title="Remove video">✕</button></td></tr><tr data-orow="13"><td style="text-align:center;"><button class="vidsavebtn is-saved" data-osave="13" title="Saved — showing on the leaderboard. Click to unsave.">✓ Saved</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">0.0%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="13" data-ofield="title" placeholder="Video title" style="height: 67px;">How to manifest love in your life - without the doubts ♥️</textarea></td><td class="calc" data-odatecalc="">—</td><td><input type="month" data-oi="13" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="13" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="views" value="503"></td><td><input type="number" min="0" data-oi="13" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="13" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="13" title="Remove video">✕</button></td></tr><tr data-orow="14"><td style="text-align:center;"><button class="vidsavebtn" data-osave="14" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">3.2%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="14" data-ofield="title" placeholder="Video title" style="height: 67px;">This type of person always attracts the partner that they want ❤️✅</textarea></td><td class="calc" data-odatecalc="">5 Sept</td><td><input type="month" data-oi="14" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="14" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="14" data-ofield="views" value="1484"></td><td><input type="number" min="0" data-oi="14" data-ofield="likes" value="6"></td><td><input type="number" min="0" data-oi="14" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="14" data-ofield="shares" value="10"></td><td><input type="number" min="0" data-oi="14" data-ofield="saves" value="32"></td><td class="rowdel"><button data-odel="14" title="Remove video">✕</button></td></tr><tr data-orow="15"><td style="text-align:center;"><button class="vidsavebtn" data-osave="15" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.7%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="15" data-ofield="title" placeholder="Video title" style="height: 48px;">How I manifested my dream partner ♥️</textarea></td><td class="calc" data-odatecalc="">5 Sept</td><td><input type="month" data-oi="15" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="15" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="15" data-ofield="views" value="1750"></td><td><input type="number" min="0" data-oi="15" data-ofield="likes" value="22"></td><td><input type="number" min="0" data-oi="15" data-ofield="comments" value="1"></td><td><input type="number" min="0" data-oi="15" data-ofield="shares" value="10"></td><td><input type="number" min="0" data-oi="15" data-ofield="saves" value="50"></td><td class="rowdel"><button data-odel="15" title="Remove video">✕</button></td></tr><tr data-orow="16"><td style="text-align:center;"><button class="vidsavebtn" data-osave="16" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="16" data-ofield="title" placeholder="Video title" style="height: 67px;">Two REALLY important steps for meeting and attracting your special person ❤️✅</textarea></td><td class="calc" data-odatecalc="">5 Sept</td><td><input type="month" data-oi="16" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="16" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="16" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="16" title="Remove video">✕</button></td></tr><tr data-orow="17"><td style="text-align:center;"><button class="vidsavebtn" data-osave="17" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="17" data-ofield="title" placeholder="Video title" style="height: 67px;">The real reason that you haven’t manifested love yet 💔</textarea></td><td class="calc" data-odatecalc="">6 Sept</td><td><input type="month" data-oi="17" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="17" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="17" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="17" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="17" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="17" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="17" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="17" title="Remove video">✕</button></td></tr><tr data-orow="18"><td style="text-align:center;"><button class="vidsavebtn" data-osave="18" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="18" data-ofield="title" placeholder="Video title" style="height: 48px;">Manifesting harder pushes love away - 👉here's why </textarea></td><td class="calc" data-odatecalc="">6 Sept</td><td><input type="month" data-oi="18" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="18" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="18" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="18" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="18" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="18" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="18" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="18" title="Remove video">✕</button></td></tr><tr data-orow="19"><td style="text-align:center;"><button class="vidsavebtn" data-osave="19" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="19" data-ofield="title" placeholder="Video title" style="height: 85px;">It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this</textarea></td><td class="calc" data-odatecalc="">6 Sept</td><td><input type="month" data-oi="19" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="19" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="19" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="19" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="19" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="19" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="19" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="19" title="Remove video">✕</button></td></tr><tr data-orow="20"><td style="text-align:center;"><button class="vidsavebtn" data-osave="20" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">—</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="20" data-ofield="title" placeholder="Video title" style="height: 67px;">A guaranteed system for attracting the relationship that you want </textarea></td><td class="calc" data-odatecalc="">6 Sept</td><td><input type="month" data-oi="20" data-ofield="month" value=""></td><td><input type="number" min="0" data-oi="20" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="20" data-ofield="views" value="0"></td><td><input type="number" min="0" data-oi="20" data-ofield="likes" value="0"></td><td><input type="number" min="0" data-oi="20" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="20" data-ofield="shares" value="0"></td><td><input type="number" min="0" data-oi="20" data-ofield="saves" value="0"></td><td class="rowdel"><button data-odel="20" title="Remove video">✕</button></td></tr><tr data-orow="21"><td style="text-align:center;"><button class="vidsavebtn" data-osave="21" title="Not saved — won’t show on the leaderboard until you save it.">Save</button></td><td class="calc outliereng" data-oecalc="" title="Engagement rate">4.9%</td><td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="21" data-ofield="title" placeholder="Video title" style="height: 48px;">How manifest love in your life - without the doubts ♥️</textarea></td><td class="calc" data-odatecalc="">3 Sept</td><td><input type="month" data-oi="21" data-ofield="month" value="2026-09"></td><td><input type="number" min="0" data-oi="21" data-ofield="communityComments" value="0"></td><td><input type="number" min="0" data-oi="21" data-ofield="views" value="568"></td><td><input type="number" min="0" data-oi="21" data-ofield="likes" value="4"></td><td><input type="number" min="0" data-oi="21" data-ofield="comments" value="0"></td><td><input type="number" min="0" data-oi="21" data-ofield="shares" value="7"></td><td><input type="number" min="0" data-oi="21" data-ofield="saves" value="17"></td><td class="rowdel"><button data-odel="21" title="Remove video">✕</button></td></tr></tbody>
       </table>
       <div class="tablefoot">
-        <span class="hint">Click Save once a video's stats are in to add it to the leaderboard below — click it again to pull it back off. Engagement rate = (likes + comments + shares + saves) ÷ views. Community comments is a subset of Comments — just the ones asking about joining, so you can spot which posts actually drive people to the community. Date is pulled automatically from the calendar for anything scheduled there — it's blank for videos added straight here. Month is just for reference — add a video whenever it breaks out, no fixed cadence.</span>
+        <span class="hint">Click Save once a video's stats are in to add it to the leaderboard below — click it again to pull it back off. Engagement rate = (likes + comments + shares + saves) ÷ views. Community comments is a subset of Comments — just the ones asking about joining, so you can spot which posts actually drive people to the community. Date comes from the Content calendar for anything scheduled there (shown as plain text, change it on the calendar). For a video with no calendar entry the Date cell is a date picker you can set by hand. Month auto-fills from that same calendar date once a video is on the calendar — override it by hand if you need to. Click any column header to sort by it (click again to flip; Month has a third click for no sort). Drag the ⠿ handle on the left of a row to set a custom order — works while sorted by Date too, so you can put same-day videos in the exact order they went out.</span>
         <button class="addbtn" id="outlierAdd">+ Add video</button>
       </div>
     </div>
@@ -1190,22 +1246,22 @@
       <p class="section-label" style="margin:40px 0 0;">Leaderboard — all videos</p>
       <span class="hint" style="margin-top:24px;">Every video marked Saved in Video stats tracking above, ranked from 1 down. Ranked by Priority Score by default — weighted mostly toward Community comments, so it surfaces videos that actually drive people to join, not just the biggest reach. Click any column to rank by that instead.</span>
     </div>
-    <div class="tablewrap">
+    <div class="tablewrap sticky-scroll">
       <table>
         <thead>
           <tr>
             <th style="width:44px;">#</th>
+            <th class="calc sortable outliereng" data-sortkey="engagement" style="width:90px; text-align:center;">Engagement</th>
             <th style="min-width:220px;">Title</th>
             <th class="calc sortable" data-sortkey="date">Date</th>
             <th>Month</th>
             <th class="sortable active" data-sortkey="priority">Priority <span class="arrow">▼</span></th>
             <th class="sortable" data-sortkey="views">Views</th>
             <th class="sortable" data-sortkey="likes">Likes</th>
+            <th class="sortable" data-sortkey="communityComments">Community comments</th>
             <th class="sortable" data-sortkey="comments">Comments</th>
             <th class="sortable" data-sortkey="shares">Shares</th>
             <th class="sortable" data-sortkey="saves">Saves</th>
-            <th class="sortable" data-sortkey="communityComments">Community comments</th>
-            <th class="calc sortable" data-sortkey="engagement">Engagement rate</th>
           </tr>
         </thead>
         <tbody id="leaderboardTbody"><tr class="rank1"><td class="rankcell">1</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">84</td><td>2,948</td><td>31</td><td>21</td><td>31</td><td>94</td><td>9</td><td class="calc">6.0%</td></tr><tr class="rank2"><td class="rankcell">2</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">79</td><td>4,775</td><td>59</td><td>13</td><td>54</td><td>220</td><td>6</td><td class="calc">7.2%</td></tr><tr class="rank3"><td class="rankcell">3</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">24</td><td>1,800</td><td>9</td><td>5</td><td>14</td><td>43</td><td>2</td><td class="calc">3.9%</td></tr><tr><td class="rankcell">4</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">18</td><td>2,423</td><td>20</td><td>8</td><td>25</td><td>61</td><td>0</td><td class="calc">4.7%</td></tr><tr><td class="rankcell">5</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">3 Sept</td><td>—</td><td class="calc">18</td><td>1,760</td><td>15</td><td>2</td><td>15</td><td>56</td><td>1</td><td class="calc">5.0%</td></tr><tr><td class="rankcell">6</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">12</td><td>1,769</td><td>18</td><td>2</td><td>12</td><td>42</td><td>0</td><td class="calc">4.2%</td></tr><tr><td class="rankcell">7</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">12</td><td>1,924</td><td>12</td><td>0</td><td>16</td><td>67</td><td>0</td><td class="calc">4.9%</td></tr><tr><td class="rankcell">8</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">3 Sept</td><td>—</td><td class="calc">9</td><td>1,388</td><td>11</td><td>0</td><td>11</td><td>54</td><td>0</td><td class="calc">5.5%</td></tr><tr><td class="rankcell">9</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>—</td><td class="calc">2</td><td>503</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="calc">0.0%</td></tr></tbody>
@@ -2329,7 +2385,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     idea.synced = true;
     if (already) return;
     state.content.outliers.push({
-      title: idea.title, month:"", views:0, likes:0, comments:0,
+      title: idea.title,
+      // Month follows the calendar date it was scheduled/posted on, so
+      // it doesn't have to be picked by hand. renderOutliers() keeps this
+      // in step for older rows and if the date later moves.
+      month: idea.date ? String(idea.date).slice(0,7) : "",
+      views:0, likes:0, comments:0,
       shares:0, saves:0, communityComments:0, saved:false
     });
     outlierTableBuiltForCount = -1;
@@ -2852,15 +2913,24 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // A running list, not tied to any month — add one whenever a video
   // breaks out. Engagement rate is a display calc, not stored.
   var outlierTableBuiltForCount = -1;
-  var outlierSortKey = null; // null | "month" | "date"
-  var outlierSortDir = null; // null = insertion order, "asc" = old→new, "desc" = new→old
+  var outlierSortKey = null; // null | "month" | "date" | "engagement"
+  var outlierSortDir = null; // null = insertion order, "asc" = old→new / low→high, "desc" = new→old / high→low
+  var outlierSearch = "";    // title filter text; "" = show all
+  var OUTLIER_SORT_LABELS = {
+    engagement:"Engagement", date:"Date", month:"Month", views:"Views",
+    communityComments:"Community comments", likes:"Likes", comments:"Comments",
+    shares:"Shares", saves:"Saves"
+  };
 
   // The Date column isn't stored on the video — it's pulled live from
   // the calendar (see scheduledDateForTitle below), so sorting by it
   // reads the same live value rather than a separate stored copy.
+  // Engagement is likewise a live calc, not a stored field.
   function outlierSortValue(v){
-    if (outlierSortKey === "date") return scheduledDateForTitle(v.title);
+    if (outlierSortKey === "date") return effectiveOutlierDate(v);
     if (outlierSortKey === "month") return v.month;
+    if (outlierSortKey === "engagement") return outlierEngagement(v); // number, or null for no-views rows
+    if (outlierSortKey) return Number(v[outlierSortKey]) || 0; // views / likes / comments / shares / saves / communityComments
     return "";
   }
 
@@ -2872,10 +2942,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var idxs = list.map(function(_, i){ return i; });
     if (!outlierSortDir || !outlierSortKey) return idxs;
     idxs.sort(function(a, b){
-      var va = outlierSortValue(list[a]) || "", vb = outlierSortValue(list[b]) || "";
-      if (!va && !vb) return 0;
-      if (!va) return 1;  // blank values always sort last, either direction
-      if (!vb) return -1;
+      var va = outlierSortValue(list[a]), vb = outlierSortValue(list[b]);
+      // Blank / no-value rows always sort last, either direction. Checked
+      // explicitly (not via falsiness) so a real 0 — e.g. 0% engagement —
+      // still sorts as a number rather than being treated as "no value".
+      var aBlank = (va === "" || va === null || va === undefined);
+      var bBlank = (vb === "" || vb === null || vb === undefined);
+      if (aBlank && bBlank) return 0;
+      if (aBlank) return 1;
+      if (bBlank) return -1;
       if (va === vb) return 0;
       var cmp = va < vb ? -1 : 1;
       return outlierSortDir === "asc" ? cmp : -cmp;
@@ -2899,6 +2974,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return match[0].date;
   }
 
+  // The date a Video stats tracking row actually shows / sorts / takes its
+  // Month from: the calendar wins when there's a matching idea with a
+  // date, otherwise the manually-typed v.date entered in the row itself.
+  function effectiveOutlierDate(v){
+    return scheduledDateForTitle(v.title) || v.date || "";
+  }
+
   function formatCalDate(iso){
     if (!iso) return "—";
     var d = new Date(iso+"T00:00:00");
@@ -2918,15 +3000,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function buildOutlierRow(v, i){
     var tr = document.createElement("tr");
     tr.dataset.orow = i;
+    var calDate = scheduledDateForTitle(v.title); // calendar match, if any — it wins over a typed date
+    var dateCellHtml = calDate
+      ? '<td class="calc" data-odatecalc title="From the Content calendar — change it there">'+formatCalDate(calDate)+'</td>'
+      : '<td class="outlierdatecell"><input type="date" class="outlierdatein" data-oi="'+i+'" data-ofield="date" value="'+(v.date||"")+'" title="No calendar entry for this title — set the date here"></td>';
     tr.innerHTML =
+      '<td class="rowdrag"><span class="draghandle" title="Drag to reorder">⠿</span></td>' +
       '<td style="text-align:center;"><button class="vidsavebtn'+(v.saved?' is-saved':'')+'" data-osave="'+i+'" title="'+(v.saved?'Saved — showing on the leaderboard. Click to unsave.':'Not saved — won’t show on the leaderboard until you save it.')+'">'+(v.saved?'✓ Saved':'Save')+'</button></td>' +
       '<td class="calc outliereng" data-oecalc title="Engagement rate"></td>' +
       '<td class="outliertitlecell"><textarea rows="1" class="outliertitlein" data-oi="'+i+'" data-ofield="title" placeholder="Video title">'+String(v.title||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</textarea></td>' +
-      '<td class="calc" data-odatecalc></td>' +
+      dateCellHtml +
       '<td><input type="month" data-oi="'+i+'" data-ofield="month" value="'+(v.month||"")+'"></td>' +
-      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="communityComments" value="'+(v.communityComments||0)+'"></td>' +
       '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="views" value="'+v.views+'"></td>' +
       '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="likes" value="'+v.likes+'"></td>' +
+      '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="communityComments" value="'+(v.communityComments||0)+'"></td>' +
       '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="comments" value="'+v.comments+'"></td>' +
       '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="shares" value="'+(v.shares||0)+'"></td>' +
       '<td><input type="number" min="0" data-oi="'+i+'" data-ofield="saves" value="'+(v.saves||0)+'"></td>' +
@@ -2941,7 +3028,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var cell = tr.querySelector('[data-oecalc]');
     if (cell) cell.textContent = engText;
     var dateCell = tr.querySelector('[data-odatecalc]');
-    if (dateCell) dateCell.textContent = formatCalDate(scheduledDateForTitle(v.title));
+    if (dateCell) dateCell.textContent = formatCalDate(effectiveOutlierDate(v));
     var saveBtn = tr.querySelector('[data-osave]');
     if (saveBtn){
       saveBtn.classList.toggle("is-saved", !!v.saved);
@@ -2959,22 +3046,52 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function renderOutliers(){
     var list = (state.content && state.content.outliers) ? state.content.outliers : [];
     var tbody = document.getElementById("outlierTbody");
-    ["month", "date"].forEach(function(key){
-      var el = document.getElementById(key === "month" ? "outlierMonthSort" : "outlierDateSort");
-      var active = outlierSortKey === key && !!outlierSortDir;
-      el.classList.toggle("active", active);
-      if (key === "date"){
-        // Only two states, so spell them out rather than relying on an
-        // arrow's direction to say "newest" vs "oldest".
-        el.innerHTML = active ? "Date <span class=\"arrow\">"+(outlierSortDir==="desc"?"▼ Newest":"▲ Oldest")+"</span>" : "Date";
-      } else {
-        el.innerHTML = "Month" + (active ? ' <span class="arrow">'+(outlierSortDir==="asc"?"▲":"▼")+'</span>' : "");
+
+    // Keep each video's Month in step with the calendar date of the idea
+    // it matches by title — only ever fills a blank one, so a month set
+    // by hand is left alone.
+    list.forEach(function(v){
+      if (!v.month){
+        var sd = effectiveOutlierDate(v);
+        if (sd) v.month = String(sd).slice(0,7);
       }
     });
 
+    // Every Video stats tracking column header carries data-osort and is
+    // click-to-sort. Month keeps its 3-state cycle (asc → desc → off);
+    // Date and every numeric column (engagement + the raw metrics) are a
+    // two-state Highest/Lowest (or Newest/Oldest) toggle.
+    document.querySelectorAll("th[data-osort]").forEach(function(el){
+      var key = el.dataset.osort;
+      var base = OUTLIER_SORT_LABELS[key] || el.textContent.replace(/\s*[▲▼].*$/, "");
+      var active = outlierSortKey === key && !!outlierSortDir;
+      el.classList.toggle("active", active);
+      if (!active){ el.innerHTML = base; return; }
+      var arrow;
+      if (key === "date") arrow = outlierSortDir === "desc" ? "▼ Newest" : "▲ Oldest";
+      else if (key === "month") arrow = outlierSortDir === "asc" ? "▲" : "▼";
+      else arrow = outlierSortDir === "desc" ? "▼ Highest" : "▲ Lowest"; // engagement + raw metrics
+      el.innerHTML = base + ' <span class="arrow">' + arrow + '</span>';
+    });
+
+    // Title search — filters which rows show. data-orow / data-oi on each
+    // built row stay the real state.content.outliers index, so editing,
+    // dragging and deleting a filtered view still hit the right object.
+    var q = (outlierSearch || "").trim().toLowerCase();
+    var shownIdx = outlierSortedIndices(list).filter(function(i){
+      return !q || String(list[i].title || "").toLowerCase().indexOf(q) !== -1;
+    });
+    var countEl = document.getElementById("outlierSearchCount");
+    if (countEl) countEl.textContent = q ? (shownIdx.length + " of " + list.length + " shown") : "";
+
     if (list.length !== outlierTableBuiltForCount){
       tbody.innerHTML = "";
-      outlierSortedIndices(list).forEach(function(i){ tbody.appendChild(buildOutlierRow(list[i], i)); });
+      shownIdx.forEach(function(i){ tbody.appendChild(buildOutlierRow(list[i], i)); });
+      if (q && !shownIdx.length){
+        var er = document.createElement("tr");
+        er.innerHTML = '<td colspan="13" style="color:var(--text-muted); text-align:center;">No titles match your search.</td>';
+        tbody.appendChild(er);
+      }
       wireOutlierEvents(tbody);
       outlierTableBuiltForCount = list.length;
     } else {
@@ -2990,7 +3107,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tbody.querySelectorAll("input, textarea").forEach(function(inp){
       inp.addEventListener("input", function(){
         var i = Number(inp.dataset.oi), f = inp.dataset.ofield;
-        state.content.outliers[i][f] = (f === "title" || f === "month") ? inp.value : (Number(inp.value) || 0);
+        state.content.outliers[i][f] = (f === "title" || f === "month" || f === "date") ? inp.value : (Number(inp.value) || 0);
         if (inp.tagName === "TEXTAREA") autosizeTitleTextarea(inp);
         markDirty();
         renderOutliers();
@@ -3016,39 +3133,132 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     });
   }
 
+  // Drag rows to set an explicit custom order — e.g. the real sequence
+  // videos went out in on a given day, which no single sortable column
+  // captures. This physically reorders state.content.outliers (safe here:
+  // the idea↔outlier link is by title, the leaderboard sorts its own
+  // copy, and Date/Engagement are computed — nothing keys off array
+  // position), and a full rebuild reassigns every data-oi / data-orow.
+  //
+  // Built on Pointer Events (native HTML5 DnD silently refused to start
+  // here and is flaky on touch). ONE delegated listener on the tbody,
+  // wired a single time at init — the tbody element itself survives every
+  // `tbody.innerHTML = ""` rebuild, so there is no "handlers weren't
+  // re-attached after a re-render / after sorting" failure mode.
+  //
+  // Works with a column sort active. The move is by real array index
+  // (data-orow, correct even when outlierSortedIndices() has reordered
+  // the DOM), and a stable sort keeps equal-key rows (two videos on the
+  // same date) in the new array order — exactly the same-day ordering
+  // Olly wants. Dropping across two different sort-key values just snaps
+  // back on re-render, which is expected while a sort is on.
+  (function initOutlierDrag(){
+    var tbody = document.getElementById('outlierTbody');
+    if (!tbody) return;
+    var drag = null;
+    function liveRows(){ return Array.prototype.slice.call(tbody.querySelectorAll('tr[data-orow]')); }
+    function clearMarkers(){ liveRows().forEach(function(r){ r.classList.remove('drop-above','drop-below'); }); }
+
+    function onMove(ev){
+      if (!drag) return;
+      var y = ev.clientY, target = null, after = false;
+      liveRows().forEach(function(r){
+        var rect = r.getBoundingClientRect();
+        if (y >= rect.top && y <= rect.bottom){ target = r; after = (y - rect.top) > rect.height / 2; }
+      });
+      clearMarkers();
+      if (target && target !== drag.tr){
+        target.classList.add(after ? 'drop-below' : 'drop-above');
+        drag.overTr = target; drag.after = after;
+      } else {
+        drag.overTr = null;
+      }
+    }
+    function onUp(){
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+      document.removeEventListener('pointercancel', onUp);
+      document.body.style.userSelect = '';
+      clearMarkers();
+      if (drag && drag.tr) drag.tr.classList.remove('dragging');
+      var st = drag; drag = null;
+      if (st && st.overTr) moveOutlier(st.from, Number(st.overTr.dataset.orow), st.after);
+    }
+
+    tbody.addEventListener('pointerdown', function(e){
+      var handle = e.target && e.target.closest ? e.target.closest('.draghandle') : null;
+      if (!handle) return;
+      var tr = handle.closest('tr[data-orow]');
+      if (!tr) return;
+      e.preventDefault();
+      drag = { from: Number(tr.dataset.orow), tr: tr, overTr: null, after: false };
+      tr.classList.add('dragging');
+      document.body.style.userSelect = 'none';
+      try{ handle.setPointerCapture(e.pointerId); }catch(_){}
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
+    });
+  })();
+
+  function moveOutlier(from, to, after){
+    var list = state.content.outliers;
+    if (!list || from === to || from == null || to == null) return;
+    var item = list[from];
+    if (!item) return;
+    list.splice(from, 1);
+    var target = to > from ? to - 1 : to;
+    if (after) target += 1;
+    target = Math.max(0, Math.min(list.length, target));
+    if (target === from){ list.splice(from, 0, item); return; } // no-op landing spot
+    list.splice(target, 0, item);
+    outlierTableBuiltForCount = -1;
+    markDirty();
+    renderOutliers();
+  }
+
   document.getElementById("outlierAdd").addEventListener("click", function(){
     if (!state.content) state.content = { rows: [] };
     if (!state.content.outliers) state.content.outliers = [];
+    // Clear any active title search so the new blank row is actually visible.
+    var sb = document.getElementById("outlierSearch");
+    if (sb && outlierSearch){ outlierSearch = ""; sb.value = ""; }
     state.content.outliers.push({ title:"", month:"", views:0, likes:0, comments:0, shares:0, saves:0, communityComments:0, saved:false });
     markDirty(); renderOutliers();
   });
 
+  document.getElementById("outlierSearch").addEventListener("input", function(){
+    outlierSearch = this.value;
+    outlierTableBuiltForCount = -1; // term changed — force a rebuild even though the row count hasn't
+    renderOutliers();
+  });
+
   function outlierSortClick(key){
-    if (key === "date"){
-      // Date only ever has two states — Newest or Oldest — never a third
-      // "back to unsorted" click. Newest first is the sensible default
-      // the first time it's clicked.
-      if (outlierSortKey !== "date"){
-        outlierSortKey = "date";
-        outlierSortDir = "desc";
-      } else {
-        outlierSortDir = outlierSortDir === "desc" ? "asc" : "desc";
-      }
-    } else {
+    if (key === "month"){
+      // Month keeps a 3-state cycle: asc → desc → back to insertion order.
       if (outlierSortKey !== key){
         outlierSortKey = key;
         outlierSortDir = "asc";
       } else {
-        // asc → desc → back to insertion order, cycling round
         outlierSortDir = outlierSortDir === "asc" ? "desc" : (outlierSortDir === "desc" ? null : "asc");
         if (!outlierSortDir) outlierSortKey = null;
+      }
+    } else {
+      // Date, Engagement and every raw metric column — two states only,
+      // Newest/Highest first on the first click, flips on the next.
+      if (outlierSortKey !== key){
+        outlierSortKey = key;
+        outlierSortDir = "desc";
+      } else {
+        outlierSortDir = outlierSortDir === "desc" ? "asc" : "desc";
       }
     }
     outlierTableBuiltForCount = -1; // force a rebuild — the row count hasn't changed, but the order has
     renderOutliers();
   }
-  document.getElementById("outlierMonthSort").addEventListener("click", function(){ outlierSortClick("month"); });
-  document.getElementById("outlierDateSort").addEventListener("click", function(){ outlierSortClick("date"); });
+  document.querySelectorAll("th[data-osort]").forEach(function(el){
+    el.addEventListener("click", function(){ outlierSortClick(el.dataset.osort); });
+  });
 
   // ── Leaderboard — ranks the same outlier videos, read-only ─────────────
   var leaderSortBy = "priority";
@@ -3098,12 +3308,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (leaderSortBy === "priority") return scores.get(v) || 0;
     if (leaderSortBy === "engagement") return outlierEngagement(v) || 0;
     if (leaderSortBy === "date"){
-      // Same live calendar lookup as Video stats tracking's Date column
-      // — no separate stored copy to fall out of sync. No date (no
-      // matching calendar idea, e.g. historic videos added before the
-      // calendar existed) sorts as 0, which sinks to the bottom of the
-      // default newest-first order.
-      var iso = scheduledDateForTitle(v.title);
+      // Same effective date as Video stats tracking's Date column —
+      // calendar match if there is one, else the row's typed date. No
+      // date at all sorts as 0, sinking to the bottom of newest-first.
+      var iso = effectiveOutlierDate(v);
       return iso ? new Date(iso+"T00:00:00").getTime() : 0;
     }
     return Number(v[leaderSortBy]) || 0;
@@ -3142,17 +3350,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var eng = outlierEngagement(v);
       tr.innerHTML =
         '<td class="rankcell">'+(i+1)+'</td>' +
+        '<td class="calc outliereng">'+(eng!=null ? eng.toFixed(1)+"%" : "—")+'</td>' +
         '<td class="leadertitle"></td>' +
-        '<td class="calc">'+formatCalDate(scheduledDateForTitle(v.title))+'</td>' +
+        '<td class="calc">'+formatCalDate(effectiveOutlierDate(v))+'</td>' +
         '<td>'+(v.month ? monthLabel(v.month) : "—")+'</td>' +
         '<td class="calc">'+(scores.get(v)||0).toFixed(0)+'</td>' +
         '<td>'+fmtInt(v.views)+'</td>' +
         '<td>'+fmtInt(v.likes)+'</td>' +
+        '<td>'+fmtInt(v.communityComments||0)+'</td>' +
         '<td>'+fmtInt(v.comments)+'</td>' +
         '<td>'+fmtInt(v.shares||0)+'</td>' +
-        '<td>'+fmtInt(v.saves||0)+'</td>' +
-        '<td>'+fmtInt(v.communityComments||0)+'</td>' +
-        '<td class="calc">'+(eng!=null ? eng.toFixed(1)+"%" : "—")+'</td>';
+        '<td>'+fmtInt(v.saves||0)+'</td>';
 
       // Editable so a typo caught after the fact (or a title that never
       // quite matched what actually got posted) can be fixed right here
@@ -3326,7 +3534,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     state.rows.push({ month:nm, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:carryPrice, locked:false });
     markDirty(); render();
   });
-  document.getElementById("saveBtn").addEventListener("click", saveNow);
+  // Wrapped, not passed directly — otherwise the click event object is
+  // handed to saveNow() as its onDone callback and gets called on success,
+  // which throws and flips the state to "save failed".
+  document.getElementById("saveBtn").addEventListener("click", function(){ saveNow(); });
   window.addEventListener("resize", function(){ render(); });
   window.addEventListener("beforeunload", function(e){
     var label = document.getElementById("saveLabel");
@@ -3349,6 +3560,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // unsaved, waiting on a click.
     state.content.outliers.forEach(function(v){
       if (v.saved === undefined) v.saved = (Number(v.views) || 0) > 0;
+      if (v.date === undefined) v.date = ""; // manual date fallback for rows with no calendar match
     });
     if (!state.content.ideas) state.content.ideas = [];
     if (!state.content.captionTemplates) state.content.captionTemplates = [];
