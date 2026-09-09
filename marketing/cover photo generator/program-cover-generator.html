@@ -1,0 +1,363 @@
+<!--
+  Program Cover Generator — Heart Attractor / The Attraction Formula
+  ------------------------------------------------------------------
+  Makes the Skool CLASSROOM course cover images for the three steps:
+
+        STEP 01  REGULATE
+        STEP 02  REWRITE
+        STEP 03  REHEARSE
+
+  Output: 1460 x 752 px PNG — Skool's exact classroom thumbnail spec.
+  Self-contained: one <canvas>, one Google Fonts <link>, no build, no server.
+  Download PNG saves a pixel-perfect file (nothing taints the canvas).
+
+  Design follows brand-guidelines-heart-attractor.md:
+    - Poppins only, no serif
+    - cosmic gradient bg (#4B1466 -> #150818 -> #0A0510), single magenta accent
+    - accent #B84FE8, light accent #E1A6FF, body #EBD9E2, headline #fff
+    - asymmetry + glow + stardust, no corporate chrome (no bordered pills / rings)
+-->
+<meta charset="utf-8">
+<title>Program Cover Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b0410; --panel:#160a1f; --edge:#2a1636;
+    --ink:#f4ecf6; --muted:#b9a6c6; --accent:#B84FE8; --accent2:#E1A6FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:14px/1.5 Poppins,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{display:flex;gap:22px;padding:22px;align-items:flex-start;flex-wrap:wrap}
+  .panel{width:320px;flex:0 0 320px;background:var(--panel);border:1px solid var(--edge);
+         border-radius:14px;padding:18px}
+  .panel h1{font-size:15px;font-weight:700;margin:0 0 4px}
+  .panel p.sub{margin:0 0 16px;color:var(--muted);font-size:12px}
+  .grouphd{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+           color:var(--accent2);margin:18px 0 8px}
+  .ctl{margin:12px 0}
+  .ctl label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);
+             text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  input[type=text],textarea{width:100%;background:#0e0616;border:1px solid var(--edge);
+    border-radius:8px;color:var(--ink);font:13px/1.45 Poppins,sans-serif;padding:8px 10px}
+  textarea{resize:vertical;min-height:60px}
+  .steps{display:flex;gap:6px}
+  .steps button{flex:1;background:#0e0616;border:1px solid var(--edge);color:var(--muted);
+    border-radius:8px;padding:9px 0;font:600 12px Poppins,sans-serif;cursor:pointer;
+    letter-spacing:.05em;text-transform:uppercase}
+  .steps button.on{background:linear-gradient(135deg,var(--accent),#7d2bb0);color:#fff;
+    border-color:transparent}
+  .chk{display:flex;align-items:center;gap:8px;margin:12px 0}
+  .chk input{accent-color:var(--accent);width:16px;height:16px}
+  .chk label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .row{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  button.act{background:linear-gradient(135deg,var(--accent),#7d2bb0);color:#fff;border:0;
+    border-radius:9px;padding:11px 16px;font:600 13px Poppins,sans-serif;cursor:pointer}
+  button.ghost{background:#0e0616;border:1px solid var(--edge);color:var(--ink);
+    border-radius:9px;padding:11px 16px;font:600 13px Poppins,sans-serif;cursor:pointer}
+  .hint{color:var(--muted);font-size:11px;margin-top:8px}
+  .stage{flex:1;min-width:520px}
+  .stage canvas{width:100%;height:auto;border-radius:12px;border:1px solid var(--edge);
+    box-shadow:0 20px 60px rgba(0,0,0,.5);background:#0A0510}
+  .mini{margin-top:12px;display:flex;gap:10px;align-items:center;color:var(--muted);font-size:12px}
+  .mini canvas{width:300px;height:auto;border-radius:6px;border:1px solid var(--edge)}
+</style>
+
+<div class="wrap">
+  <div class="panel">
+    <h1>Program Cover Generator</h1>
+    <p class="sub">The Attraction Formula — Skool classroom covers · 1460&nbsp;&times;&nbsp;752</p>
+
+    <div class="grouphd">Step</div>
+    <div class="steps">
+      <button data-step="0" class="on">01</button>
+      <button data-step="1">02</button>
+      <button data-step="2">03</button>
+    </div>
+
+    <div class="grouphd">Copy</div>
+    <div class="ctl">
+      <label>Step name</label>
+      <input type="text" id="name">
+    </div>
+    <div class="ctl">
+      <label>One-line description</label>
+      <textarea id="desc"></textarea>
+    </div>
+
+    <div class="grouphd">Look</div>
+    <div class="ctl">
+      <label>Step name size <span id="hl-v">100%</span></label>
+      <input id="hl" type="range" min="60" max="130" value="100">
+    </div>
+    <div class="ctl">
+      <label>Ghost number <span id="ghost-v">55</span></label>
+      <input id="ghost" type="range" min="0" max="100" value="55">
+    </div>
+    <div class="ctl">
+      <label>Glow strength <span id="glow-v">100</span></label>
+      <input id="glow" type="range" min="0" max="160" value="100">
+    </div>
+    <div class="chk">
+      <input type="checkbox" id="dust" checked>
+      <label for="dust">Stardust</label>
+    </div>
+    <div class="chk">
+      <input type="checkbox" id="gradtext" checked>
+      <label for="gradtext">Gradient on step name</label>
+    </div>
+
+    <div class="row">
+      <button class="act" id="dl">Download this PNG</button>
+      <button class="ghost" id="dlall">Download all 3</button>
+    </div>
+    <div class="row">
+      <button class="ghost" id="reset">Reset copy</button>
+    </div>
+    <p class="hint">1460&times;752 is Skool's exact classroom thumbnail spec — anything
+       else gets cropped and the Skool menu button overlaps the art.</p>
+  </div>
+
+  <div class="stage">
+    <canvas id="c" width="1460" height="752"></canvas>
+    <div class="mini">
+      <canvas id="mini" width="1460" height="752"></canvas>
+      <span>Thumbnail check — the step name must still read at this size.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var W = 1460, H = 752;
+  var c = document.getElementById('c'), ctx = c.getContext('2d');
+  var mini = document.getElementById('mini'), mctx = mini.getContext('2d');
+
+  var STEPS = [
+    { n:'REGULATE', d:'Calm your nervous system out of survival-based, needy, attached energy.' },
+    { n:'REWRITE',  d:'Rewrite the core beliefs from your past that block love and drive self-sabotage.' },
+    { n:'REHEARSE', d:'Mentally and emotionally rehearse being with your partner until it already feels real.' }
+  ];
+  var DEFAULTS = JSON.parse(JSON.stringify(STEPS));
+
+  var cur = 0;
+  var els = {
+    name:document.getElementById('name'), desc:document.getElementById('desc'),
+    hl:document.getElementById('hl'), ghost:document.getElementById('ghost'),
+    glow:document.getElementById('glow'), dust:document.getElementById('dust'),
+    gradtext:document.getElementById('gradtext')
+  };
+
+  // ---- seeded stardust so it doesn't flicker on every re-render ----
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var DUST = (function(){var r=mulberry32(20260819),a=[];for(var i=0;i<110;i++){
+    a.push({x:r()*W,y:r()*H,rad:0.4+r()*1.9,al:0.04+r()*0.22});}return a;})();
+
+  function roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+  }
+
+  function wrap(text, font, maxW){
+    ctx.font = font;
+    var words = text.split(/\s+/), lines = [], line = '';
+    for(var i=0;i<words.length;i++){
+      var t = line ? line + ' ' + words[i] : words[i];
+      if(ctx.measureText(t).width > maxW && line){ lines.push(line); line = words[i]; }
+      else line = t;
+    }
+    if(line) lines.push(line);
+    return lines;
+  }
+
+  function render(target, twoCtx){
+    var g = twoCtx || ctx;
+    var step = STEPS[cur];
+
+    // -------- background gradient (cosmic, diagonal) --------
+    var bg = g.createLinearGradient(0,0,W,H);
+    bg.addColorStop(0,   '#4B1466');
+    bg.addColorStop(0.55,'#150818');
+    bg.addColorStop(1,   '#0A0510');
+    g.fillStyle = bg; g.fillRect(0,0,W,H);
+
+    // -------- corner glow blooms --------
+    var gs = (+els.glow.value/100);
+    if(gs > 0){
+      var b1 = g.createRadialGradient(W*0.80, H*0.86, 0, W*0.80, H*0.86, W*0.42);
+      b1.addColorStop(0, 'rgba(184,79,232,'+(0.30*gs).toFixed(3)+')');
+      b1.addColorStop(1, 'rgba(184,79,232,0)');
+      g.fillStyle = b1; g.fillRect(0,0,W,H);
+      var b2 = g.createRadialGradient(W*0.08, H*0.06, 0, W*0.08, H*0.06, W*0.30);
+      b2.addColorStop(0, 'rgba(225,166,255,'+(0.12*gs).toFixed(3)+')');
+      b2.addColorStop(1, 'rgba(225,166,255,0)');
+      g.fillStyle = b2; g.fillRect(0,0,W,H);
+    }
+
+    // -------- stardust --------
+    if(els.dust.checked){
+      for(var i=0;i<DUST.length;i++){
+        var d = DUST[i];
+        g.beginPath();
+        g.fillStyle = 'rgba(255,255,255,'+d.al.toFixed(3)+')';
+        g.arc(d.x, d.y, d.rad, 0, Math.PI*2);
+        g.fill();
+      }
+    }
+
+    // -------- ghost step number (right, bleeding off-edge, asymmetric) --------
+    var gn = (+els.ghost.value/100);
+    if(gn > 0){
+      g.save();
+      g.textAlign = 'right';
+      g.textBaseline = 'alphabetic';
+      g.letterSpacing = '0px';
+      g.font = '800 470px Poppins, sans-serif';
+      g.fillStyle = 'rgba(255,255,255,'+(0.07*gn).toFixed(3)+')';
+      g.fillText(String(cur+1).padStart(2,'0'), W+42, H*0.80);
+      g.lineWidth = 2;
+      g.strokeStyle = 'rgba(184,79,232,'+(0.14*gn).toFixed(3)+')';
+      g.strokeText(String(cur+1).padStart(2,'0'), W+42, H*0.80);
+      g.restore();
+    }
+
+    // -------- content block (left, vertically centred a touch high) --------
+    var LX = 96;
+    var name = (els.name.value || step.n).toUpperCase();
+    var desc = els.desc.value || step.d;
+
+    var nSize = 128 * (+els.hl.value/100);
+    var eSize = 26;
+    var dSize = 31;
+    var dFont = '400 ' + dSize + 'px Poppins, sans-serif';
+    var dLines = wrap(desc, dFont, 760);
+
+    var gapEN = 34, gapND = 40, dLead = dSize * 1.42;
+    var blockH = eSize + gapEN + nSize + gapND + dLines.length * dLead;
+    var top = H*0.47 - blockH/2;
+
+    // eyebrow: short accent rule + "STEP 0X"  (no bordered pill = no corporate chrome)
+    var eyeY = top + eSize*0.5;
+    g.save();
+    g.strokeStyle = '#B84FE8'; g.lineWidth = 3; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(LX, eyeY); g.lineTo(LX+46, eyeY); g.stroke();
+    g.font = '600 ' + eSize + 'px Poppins, sans-serif';
+    g.textBaseline = 'middle'; g.textAlign = 'left';
+    g.letterSpacing = '5px';
+    g.fillStyle = '#B84FE8';
+    g.fillText('STEP ' + String(cur+1).padStart(2,'0'), LX+66, eyeY+1);
+    g.restore();
+
+    // step name
+    var nameBase = top + eSize + gapEN + nSize*0.78;
+    g.save();
+    g.font = '800 ' + nSize + 'px Poppins, sans-serif';
+    g.textBaseline = 'alphabetic'; g.textAlign = 'left';
+    g.letterSpacing = '0px';
+    g.shadowColor = 'rgba(0,0,0,0.35)'; g.shadowBlur = 24; g.shadowOffsetY = 6;
+    if(els.gradtext.checked){
+      var nw = g.measureText(name).width;
+      var tg = g.createLinearGradient(LX, 0, LX+nw, 0);
+      tg.addColorStop(0, '#E9CBFF');
+      tg.addColorStop(0.5,'#B84FE8');
+      tg.addColorStop(1, '#E1A6FF');
+      g.fillStyle = tg;
+    } else {
+      g.fillStyle = '#ffffff';
+    }
+    g.fillText(name, LX, nameBase);
+    g.restore();
+
+    // description
+    g.save();
+    g.font = dFont;
+    g.textBaseline = 'alphabetic'; g.textAlign = 'left';
+    g.fillStyle = '#EBD9E2';
+    var dy = nameBase + gapND + dSize;
+    for(var j=0;j<dLines.length;j++){ g.fillText(dLines[j], LX, dy); dy += dLead; }
+    g.restore();
+
+    // brand mark, small, bottom-left
+    g.save();
+    g.font = '600 17px Poppins, sans-serif';
+    g.textBaseline = 'alphabetic'; g.textAlign = 'left';
+    g.letterSpacing = '4px';
+    g.fillStyle = 'rgba(235,217,226,0.45)';
+    g.fillText('THE ATTRACTION FORMULA', LX, H - 54);
+    g.restore();
+  }
+
+  function renderAll(){
+    ['hl','ghost','glow'].forEach(function(k){
+      var v = document.getElementById(k+'-v');
+      if(v) v.textContent = els[k].value + (k==='hl' ? '%' : '');
+    });
+    render();
+    // mini thumbnail
+    mctx.clearRect(0,0,W,H);
+    mctx.drawImage(c,0,0);
+  }
+
+  function loadStep(i){
+    cur = i;
+    els.name.value = STEPS[i].n;
+    els.desc.value = STEPS[i].d;
+    renderAll();
+  }
+
+  // ---- controls ----
+  document.querySelectorAll('.steps button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.steps button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      loadStep(+b.dataset.step);
+    });
+  });
+  els.name.addEventListener('input', function(){ STEPS[cur].n = els.name.value; renderAll(); });
+  els.desc.addEventListener('input', function(){ STEPS[cur].d = els.desc.value; renderAll(); });
+  ['hl','ghost','glow'].forEach(function(k){ els[k].addEventListener('input', renderAll); });
+  els.dust.addEventListener('change', renderAll);
+  els.gradtext.addEventListener('change', renderAll);
+
+  document.getElementById('reset').addEventListener('click', function(){
+    STEPS = JSON.parse(JSON.stringify(DEFAULTS));
+    loadStep(cur);
+  });
+
+  function save(name){
+    var a = document.createElement('a');
+    a.download = name;
+    a.href = c.toDataURL('image/png');
+    a.click();
+  }
+  document.getElementById('dl').addEventListener('click', function(){
+    save('attraction-formula-step-' + String(cur+1).padStart(2,'0') + '-' +
+         (els.name.value||STEPS[cur].n).toLowerCase().replace(/[^a-z0-9]+/g,'-') + '.png');
+  });
+  document.getElementById('dlall').addEventListener('click', function(){
+    var keep = cur, i = 0;
+    (function next(){
+      if(i > 2){ loadStep(keep); return; }
+      cur = i;
+      els.name.value = STEPS[i].n; els.desc.value = STEPS[i].d;
+      renderAll();
+      save('attraction-formula-step-' + String(i+1).padStart(2,'0') + '-' +
+           STEPS[i].n.toLowerCase() + '.png');
+      i++;
+      setTimeout(next, 400);
+    })();
+  });
+
+  // fonts must be ready or the first paint uses a fallback face
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ loadStep(0); });
+  }
+  loadStep(0);
+})();
+</script>
