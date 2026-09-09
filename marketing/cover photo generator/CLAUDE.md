@@ -199,6 +199,7 @@ Same brand system, `STEPS` array (`{ eb, n, d, img, ix, iy, iz, scrim }` — not
 the extra `d` for sub text), `EMBEDDED_REGULATE` base64 (encoded at 1500 px wide
 here), veil-kept-heavy-on-the-left, headless-preview trick, and
 "lock a framing by baking ix/iy/iz/scrim into `STEPS`" rule as Tool 2. Extra
-control: **Sub text size**. Filenames: `attraction-formula-about-tile-step-0X-<name>.png`.
+controls: **Eyebrow size** and **Sub text size**.
+Filenames: `attraction-formula-about-tile-step-0X-<name>.png`.
 
 After any change, tell Olly to **reload the file in Chrome**.

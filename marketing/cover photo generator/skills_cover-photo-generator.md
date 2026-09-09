@@ -255,6 +255,8 @@ differences are listed here.
 - **Sub text is shown** under the keyword — this is the whole reason it's a
   separate tool. The three defaults are Olly's step descriptions (see
   `CLAUDE.md` Tool 3). Wrapped, left-aligned, its own **Sub text size** slider.
+- **Eyebrow has its own size slider** (**Eyebrow size**, 70–180%); the accent
+  rule's gap to the text scales with it.
 - **Three tiles only** (01 / 02 / 03 → REGULATE / REWRITE / REHEARSE). No
   "Start" tile.
 - `STEPS` objects carry an extra `d` (sub text): `{ eb, n, d, img, ix, iy, iz,

@@ -119,6 +119,10 @@
 
     <div class="grouphd">Look</div>
     <div class="ctl">
+      <label>Eyebrow size <span id="eb_hl-v">100%</span></label>
+      <input id="eb_hl" type="range" min="70" max="180" value="100">
+    </div>
+    <div class="ctl">
       <label>Keyword size <span id="hl-v">100%</span></label>
       <input id="hl" type="range" min="60" max="130" value="100">
     </div>
@@ -184,7 +188,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
 
   var cur = 0;
   var els = {};
-  ['eyebrow','name','sub','hl','sub_hl','glow','dust','gradtext','file','pick','pclear',
+  ['eyebrow','name','sub','eb_hl','hl','sub_hl','glow','dust','gradtext','file','pick','pclear',
    'ix','iy','iz','scrim'].forEach(function(k){ els[k] = document.getElementById(k); });
 
   // ---- seeded stardust so it doesn't flicker on every re-render ----
@@ -292,7 +296,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     var measured = g.measureText(name).width;
     if(measured > maxNameW) nSize *= maxNameW / measured;
 
-    var eSize = 25;
+    var eSize = 25 * (+els.eb_hl.value/100);
     var sSize = 29 * (+els.sub_hl.value/100);
     var sFont = '400 ' + sSize + 'px Poppins, sans-serif';
     var sLines = wrap(sub, sFont, 640);
@@ -311,7 +315,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     g.textBaseline = 'middle'; g.textAlign = 'left'; g.letterSpacing = '5px';
     g.shadowColor = 'rgba(0,0,0,0.5)'; g.shadowBlur = hasImg ? 14 : 0;
     g.fillStyle = '#D89BFF';
-    g.fillText(eyebrow, LX+62, eyeY+1);
+    g.fillText(eyebrow, LX + 44 + eSize*0.8, eyeY+1);
     g.restore();
 
     // keyword
@@ -356,6 +360,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
 
   function syncReadouts(){
     document.getElementById('hl-v').textContent     = els.hl.value + '%';
+    document.getElementById('eb_hl-v').textContent  = els.eb_hl.value + '%';
     document.getElementById('sub_hl-v').textContent = els.sub_hl.value + '%';
     document.getElementById('glow-v').textContent   = els.glow.value;
     document.getElementById('ix-v').textContent     = els.ix.value;
@@ -408,7 +413,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   els.eyebrow.addEventListener('input', function(){ STEPS[cur].eb = els.eyebrow.value; renderAll(); });
   els.name.addEventListener('input',    function(){ STEPS[cur].n  = els.name.value;    renderAll(); });
   els.sub.addEventListener('input',     function(){ STEPS[cur].d  = els.sub.value;     renderAll(); });
-  ['hl','sub_hl','glow'].forEach(function(k){ els[k].addEventListener('input', renderAll); });
+  ['eb_hl','hl','sub_hl','glow'].forEach(function(k){ els[k].addEventListener('input', renderAll); });
   ['ix','iy','iz','scrim'].forEach(function(k){
     els[k].addEventListener('input', function(){ STEPS[cur][k] = +els[k].value; renderAll(); });
   });
