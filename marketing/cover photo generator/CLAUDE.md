@@ -2,15 +2,18 @@
 
 ## What this is
 
-This folder holds **two** self-contained HTML tools Olly opens in Chrome:
+This folder holds **three** self-contained HTML tools Olly opens in Chrome:
 
 1. **`cover-photo-generator.html`** — the **community cover** (hero image for the
    Skool group; doubles as a mobile Facebook ad creative). Output **1920 × 1020**.
 2. **`program-cover-generator.html`** — the **classroom module covers** for
    *The Attraction Formula* (one per module inside Skool). Output **1460 × 752**
    (Skool's exact classroom thumbnail spec). See the dedicated section below.
+3. **`about-page-tile-generator.html`** — the **Skool About Page tiles** for the
+   three steps. Output **1400 × 790**. Same look as tool 2 but keeps the section
+   **sub text**. See the dedicated section below.
 
-Everything from here down to that section is about tool 1.
+Everything from here down to the Tool 2 section is about tool 1.
 
 ### Tool 1 — `cover-photo-generator.html`
 
@@ -166,5 +169,36 @@ Same pattern as tool 1: resize ≤1600 px wide with PIL, `quality≈82`,
 base64-encode, replace the placeholder/constant via python (not the Edit tool —
 the blob is ~270 KB). Or just hand Olly the tool and let him use **Choose
 image…** at runtime.
+
+After any change, tell Olly to **reload the file in Chrome**.
+
+---
+
+## Tool 3 — `about-page-tile-generator.html`
+
+Built 2026-09-09. Makes the **Skool About Page tiles** for the three steps.
+Output **1400 × 790** (the About Page tile size Olly specified).
+
+Structurally a fork of Tool 2 with two deliberate differences:
+
+- **1400 × 790**, not 1460 × 752.
+- **Sub text is shown.** Tool 2 (classroom covers) drops the description line;
+  the About Page tiles keep it under the keyword. Each tile renders
+  eyebrow + keyword + wrapped sub text, block vertically centred (Skool crops
+  the top of About Page uploads — see `feedback_skool_about_page_images` memory —
+  so nothing critical goes near an edge).
+
+Three tiles only (**01 / 02 / 03** → REGULATE / REWRITE / REHEARSE); no "Start"
+tile. Default sub text = Olly's step descriptions:
+
+- Regulate — "Calm your nervous system out of survival-based, needy, attached energy."
+- Rewrite — "Rewrite the core beliefs from your past that block love and drive self-sabotage."
+- Rehearse — "Mentally and emotionally rehearse being with your partner until it already feels real."
+
+Same brand system, `STEPS` array (`{ eb, n, d, img, ix, iy, iz, scrim }` — note
+the extra `d` for sub text), `EMBEDDED_REGULATE` base64 (encoded at 1500 px wide
+here), veil-kept-heavy-on-the-left, headless-preview trick, and
+"lock a framing by baking ix/iy/iz/scrim into `STEPS`" rule as Tool 2. Extra
+control: **Sub text size**. Filenames: `attraction-formula-about-tile-step-0X-<name>.png`.
 
 After any change, tell Olly to **reload the file in Chrome**.

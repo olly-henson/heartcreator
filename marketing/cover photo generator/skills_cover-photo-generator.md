@@ -3,7 +3,7 @@
 How to **use** the tools to make a cover, and how to **improve** them.
 Read this and the folder `CLAUDE.md` before either.
 
-Two tools in this folder:
+Three tools in this folder:
 
 - **`cover-photo-generator.html`** — the **community / hero cover**.
   Output 1920 × 1020 PNG (Skool cover ratio 1084 × 576). Doubles as a mobile
@@ -11,6 +11,9 @@ Two tools in this folder:
 - **`program-cover-generator.html`** — the **classroom module covers** for
   *The Attraction Formula* (Regulate / Rewrite / Rehearse / Get Started).
   Output 1460 × 752 PNG (Skool classroom thumbnail spec). Section D below.
+- **`about-page-tile-generator.html`** — the **Skool About Page tiles** for the
+  three steps. Output 1400 × 790 PNG. Same look as the classroom covers but
+  keeps the section **sub text**. Section E below.
 
 ---
 
@@ -240,3 +243,25 @@ To preview a non-default cover, copy to a temp file and inject a
   readout.
 - The `STEPS` array is the single source of per-cover state — add a 5th cover by
   adding an object + a selector button with the next `data-step` index.
+
+---
+
+## E. `about-page-tile-generator.html` — Skool About Page tiles
+
+Built 2026-09-09. A fork of tool D (Section D) — read that first; only the
+differences are listed here.
+
+- **Output 1400 × 790** (the About Page tile size Olly specified), not 1460 × 752.
+- **Sub text is shown** under the keyword — this is the whole reason it's a
+  separate tool. The three defaults are Olly's step descriptions (see
+  `CLAUDE.md` Tool 3). Wrapped, left-aligned, its own **Sub text size** slider.
+- **Three tiles only** (01 / 02 / 03 → REGULATE / REWRITE / REHEARSE). No
+  "Start" tile.
+- `STEPS` objects carry an extra `d` (sub text): `{ eb, n, d, img, ix, iy, iz,
+  scrim }`. `EMBEDDED_REGULATE` is encoded at 1500 px wide here.
+- Skool **crops the top** of About Page uploads (see
+  `feedback_skool_about_page_images`) — the content block is vertically centred
+  and every element stays well clear of all four edges. Keep it that way.
+- Everything else — brand system, veil kept heavy on the left, headless-preview
+  trick, "lock a framing by baking `ix/iy/iz/scrim` into `STEPS`" — is identical
+  to tool D. Filenames: `attraction-formula-about-tile-step-0X-<name>.png`.
