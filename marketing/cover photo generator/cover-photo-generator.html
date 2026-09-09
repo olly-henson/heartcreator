@@ -11,7 +11,7 @@
        - the photo's emotion (the laugh / embrace) does the stopping
 
      Text (all of it):
-        manifest  LOVE  [ no doubts ]        <- one line, the hook
+        Attract a healthy long-term [ relationship ]  <- one line, spans the bar
 
      Open in Chrome:
        1. Choose photo.
@@ -89,8 +89,8 @@
 
     <div class="grouphd">Bottom bar</div>
     <div class="ctl">
-      <label>Bar height <span id="barh-v">28</span></label>
-      <input id="barh" type="range" min="16" max="55" value="28">
+      <label>Bar height <span id="barh-v">22</span></label>
+      <input id="barh" type="range" min="16" max="55" value="22">
     </div>
     <div class="ctl">
       <label>Bar darkness <span id="bard-v">92</span></label>
@@ -100,7 +100,7 @@
     <div class="grouphd">Text</div>
     <div class="ctl">
       <label>Headline size <span id="hl-v">100%</span></label>
-      <input id="hl" type="range" min="50" max="140" value="100">
+      <input id="hl" type="range" min="70" max="108" value="100">
     </div>
 
     <div class="row">
@@ -127,7 +127,7 @@
   var off = { x:0, y:0 };
   var hitBox = null;
 
-  var TXT = { a:'manifest', b:'LOVE', c:'no doubts' };
+  // Headline is now a fixed two-line layout: "Attract a healthy / long-term [relationship]"
 
   function drawPhoto(){
     if(!img) return;
@@ -175,70 +175,74 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, barTop, W, H - barTop);
 
-    // ---- text ----
-    var barH = H - barTop;
-    var hz  = 104 * (+els.hl.value/100);
+    // ---- text (one line, auto-fitted to span the bar) ----
+    // "Attract a healthy long-term [relationship]" — sized so the whole
+    // line fills the bar width edge to edge, minus a side margin.
+    var sideMargin = W * 0.055;                 // ~106px each side (Skool-crop safe)
+    var targetW = W - sideMargin*2;
 
-    var cx = W/2 + off.x;
-    // The "no doubts" box is the tallest element and defines the visual
-    // block; its vertical centre is (baseline - 0.34*hz). Put THAT on the
-    // exact middle of the bar rectangle so there's equal air above and
-    // below, regardless of bar height or headline size.
-    var barMid = (barTop + H) / 2;
-    var baseY = barMid + hz * 0.34 + off.y;
+    // segments
+    var sA = 'Attract a ', sB = 'healthy ', sC = 'long-term ', sD = 'relationship';
 
-    // measure the three parts
+    // measure everything at a reference size, then scale to hit targetW
+    var ref = 100;
     ctx.textBaseline = 'alphabetic';
     ctx.textAlign = 'left';
+    ctx.letterSpacing = '0px';
+    ctx.font = '800 ' + ref + 'px Poppins, sans-serif';
+    var rA = ctx.measureText(sA).width;
+    var rB = ctx.measureText(sB).width;
+    var rC = ctx.measureText(sC).width;
+    var boxTextRef = ref * 0.92;
+    ctx.font = '800 ' + boxTextRef + 'px Poppins, sans-serif';
+    var rDtext = ctx.measureText(sD).width;
+    var boxPadXRef = ref * 0.30;
+    var rD = rDtext + boxPadXRef*2;
+    var refTotal = rA + rB + rC + rD;
 
+    var fit = targetW / refTotal;
+    var hz = ref * fit * (+els.hl.value/100);   // slider fine-tunes around the fit
+
+    var cx = W/2 + off.x;
+    var barMid = (barTop + H) / 2;
+    var baseY = barMid + hz*0.34 + off.y;
+
+    // recompute widths at final size
     ctx.font = '800 ' + hz + 'px Poppins, sans-serif';
-    ctx.letterSpacing = '0px';
-    var wA = ctx.measureText(TXT.a).width;
-
-    var lsB = hz*0.015;
-    ctx.font = '900 ' + (hz*1.05) + 'px Poppins, sans-serif';
-    ctx.letterSpacing = lsB + 'px';
-    var wB = ctx.measureText(TXT.b).width + lsB;
-
-    var boxTextSize = hz*0.72;
+    var wA = ctx.measureText(sA).width;
+    var wB = ctx.measureText(sB).width;
+    var wC = ctx.measureText(sC).width;
+    var boxTextSize = hz * 0.92;
     ctx.font = '800 ' + boxTextSize + 'px Poppins, sans-serif';
-    ctx.letterSpacing = '0px';
-    var wCtext = ctx.measureText(TXT.c).width;
-    var boxPadX = hz*0.32, boxPadY = hz*0.19;
+    var wDtext = ctx.measureText(sD).width;
+    var boxPadX = hz*0.30, boxPadY = hz*0.17;
     var boxH = boxTextSize + boxPadY*2;
-    var wC = wCtext + boxPadX*2;
+    var wD = wDtext + boxPadX*2;
 
-    var gapAB = hz*0.30, gapBC = hz*0.32;
-    var totalW = wA + gapAB + wB + gapBC + wC;
+    var totalW = wA + wB + wC + wD;
     var x = cx - totalW/2;
 
-    // A — manifest (magenta)
+    // A — "Attract a " (lilac)
     ctx.save();
     ctx.font = '800 ' + hz + 'px Poppins, sans-serif';
     ctx.letterSpacing = '0px';
     ctx.shadowColor='rgba(0,0,0,0.35)'; ctx.shadowBlur=16; ctx.shadowOffsetY=3;
     ctx.fillStyle = '#E1A6FF';
-    ctx.fillText(TXT.a, x, baseY);
-    ctx.restore();
-    x += wA + gapAB;
-
-    // B — LOVE (white caps)
-    ctx.save();
-    ctx.font = '900 ' + (hz*1.05) + 'px Poppins, sans-serif';
-    ctx.letterSpacing = lsB + 'px';
-    ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=16; ctx.shadowOffsetY=3;
+    ctx.fillText(sA, x, baseY);
+    x += wA;
+    // B + C — "healthy long-term " (off-white)
     ctx.fillStyle = '#f8f4ff';
-    ctx.fillText(TXT.b, x, baseY);
+    ctx.fillText(sB + sC, x, baseY);
+    x += wB + wC;
     ctx.restore();
-    x += wB + gapBC;
 
-    // C — [ no doubts ] box
+    // D — [ relationship ] box
     var capMid = baseY - hz*0.34;
     var boxY = capMid - boxH/2;
     ctx.save();
     ctx.shadowColor='rgba(217,70,239,0.5)'; ctx.shadowBlur=30; ctx.shadowOffsetY=8;
     ctx.fillStyle = '#d946ef';
-    roundRect(x, boxY, wC, boxH, boxH*0.24);
+    roundRect(x, boxY, wD, boxH, boxH*0.24);
     ctx.fill();
     ctx.restore();
     ctx.save();
@@ -246,7 +250,7 @@
     ctx.letterSpacing = '0px';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(TXT.c, x + boxPadX, capMid + boxTextSize*0.02);
+    ctx.fillText(sD, x + boxPadX, capMid + boxTextSize*0.02);
     ctx.restore();
 
     hitBox = {
