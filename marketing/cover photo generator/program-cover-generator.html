@@ -77,16 +77,21 @@
     <h1>Program Cover Generator</h1>
     <p class="sub">The Attraction Formula — Skool classroom covers · 1460&nbsp;&times;&nbsp;752</p>
 
-    <div class="grouphd">Step</div>
+    <div class="grouphd">Cover</div>
     <div class="steps">
       <button data-step="0" class="on">01</button>
       <button data-step="1">02</button>
       <button data-step="2">03</button>
+      <button data-step="3">Start</button>
     </div>
 
-    <div class="grouphd">Keyword</div>
+    <div class="grouphd">Text</div>
     <div class="ctl">
-      <label>Step name</label>
+      <label>Eyebrow (small label)</label>
+      <input type="text" id="eyebrow">
+    </div>
+    <div class="ctl">
+      <label>Keyword (big headline)</label>
       <input type="text" id="name">
     </div>
 
@@ -107,7 +112,7 @@
 
     <div class="grouphd">Look</div>
     <div class="ctl">
-      <label>Step name size <span id="hl-v">100%</span></label>
+      <label>Keyword size <span id="hl-v">100%</span></label>
       <input id="hl" type="range" min="60" max="130" value="100">
     </div>
     <div class="ctl">
@@ -125,10 +130,10 @@
 
     <div class="row">
       <button class="act" id="dl">Download this PNG</button>
-      <button class="ghost" id="dlall">Download all 3</button>
+      <button class="ghost" id="dlall">Download all 4</button>
     </div>
     <div class="row">
-      <button class="ghost" id="reset">Reset names</button>
+      <button class="ghost" id="reset">Reset text</button>
     </div>
     <p class="hint">1460&times;752 is Skool's exact classroom thumbnail spec — anything
        else gets cropped and the Skool menu button overlaps the art.</p>
@@ -154,15 +159,16 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   var mini = document.getElementById('mini'), mctx = mini.getContext('2d');
 
   var STEPS = [
-    { n:'REGULATE', img:null, ix:58, iy:30, iz:112, scrim:100 },
-    { n:'REWRITE',  img:null, ix:50, iy:45, iz:112, scrim:100 },
-    { n:'REHEARSE', img:null, ix:50, iy:45, iz:112, scrim:100 }
+    { eb:'STEP 01',   n:'REGULATE',    img:null, ix:58, iy:30, iz:112, scrim:100 },
+    { eb:'STEP 02',   n:'REWRITE',     img:null, ix:50, iy:45, iz:112, scrim:100 },
+    { eb:'STEP 03',   n:'REHEARSE',    img:null, ix:50, iy:45, iz:112, scrim:100 },
+    { eb:'START HERE', n:'GET STARTED', img:null, ix:50, iy:45, iz:112, scrim:100 }
   ];
-  var DEFAULT_NAMES = STEPS.map(function(s){ return s.n; });
+  var DEFAULT_TEXT = STEPS.map(function(s){ return { eb:s.eb, n:s.n }; });
 
   var cur = 0;
   var els = {};
-  ['name','hl','glow','dust','gradtext','file','pick','pclear',
+  ['eyebrow','name','hl','glow','dust','gradtext','file','pick','pclear',
    'ix','iy','iz','scrim'].forEach(function(k){ els[k] = document.getElementById(k); });
 
   // ---- seeded stardust so it doesn't flicker on every re-render ----
@@ -246,18 +252,24 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
       }
     }
 
-    // -------- content block: STEP 0X eyebrow + big keyword, vertically centred --------
+    // -------- content block: eyebrow + big keyword, vertically centred --------
     var LX = 96;
-    var name = (els.name.value || s.n).toUpperCase();
+    var name    = (els.name.value    || s.n ).toUpperCase();
+    var eyebrow = (els.eyebrow.value || s.eb).toUpperCase();
 
     var nSize = 140 * (+els.hl.value/100);
+    // auto-shrink the keyword if it would run off the safe area
+    var maxNameW = W - LX - 80;
+    g.font = '800 ' + nSize + 'px Poppins, sans-serif';
+    var measured = g.measureText(name).width;
+    if(measured > maxNameW) nSize *= maxNameW / measured;
     var eSize = 27;
 
     var gapEN = 32;
     var blockH = eSize + gapEN + nSize;
     var top = H*0.485 - blockH/2;
 
-    // eyebrow: short accent rule + "STEP 0X"  (no bordered pill = no corporate chrome)
+    // eyebrow: short accent rule + label  (no bordered pill = no corporate chrome)
     var eyeY = top + eSize*0.5;
     g.save();
     g.strokeStyle = '#B84FE8'; g.lineWidth = 3; g.lineCap = 'round';
@@ -266,7 +278,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     g.textBaseline = 'middle'; g.textAlign = 'left'; g.letterSpacing = '5px';
     g.shadowColor = 'rgba(0,0,0,0.5)'; g.shadowBlur = hasImg ? 14 : 0;
     g.fillStyle = '#D89BFF';
-    g.fillText('STEP ' + String(cur+1).padStart(2,'0'), LX+66, eyeY+1);
+    g.fillText(eyebrow, LX+66, eyeY+1);
     g.restore();
 
     // step name
@@ -327,9 +339,16 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   function loadStep(i){
     cur = i;
     var s = STEPS[i];
+    els.eyebrow.value = s.eb;
     els.name.value = s.n;
     els.ix.value = s.ix; els.iy.value = s.iy; els.iz.value = s.iz; els.scrim.value = s.scrim;
     renderAll();
+  }
+
+  function slug(t){ return (t||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+  function fileFor(i){
+    return 'attraction-formula-' + (i < 3 ? 'step-0'+(i+1)+'-' : '') +
+           slug(STEPS[i].n || els.name.value) + '.png';
   }
 
   // ---- controls ----
@@ -341,6 +360,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     });
   });
 
+  els.eyebrow.addEventListener('input', function(){ STEPS[cur].eb = els.eyebrow.value; renderAll(); });
   els.name.addEventListener('input', function(){ STEPS[cur].n = els.name.value; renderAll(); });
   ['hl','glow'].forEach(function(k){ els[k].addEventListener('input', renderAll); });
   ['ix','iy','iz','scrim'].forEach(function(k){
@@ -362,7 +382,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   els.pclear.addEventListener('click', function(){ STEPS[cur].img = null; renderAll(); });
 
   document.getElementById('reset').addEventListener('click', function(){
-    DEFAULT_NAMES.forEach(function(nm,i){ STEPS[i].n = nm; });
+    DEFAULT_TEXT.forEach(function(t,i){ STEPS[i].eb = t.eb; STEPS[i].n = t.n; });
     loadStep(cur);
   });
 
@@ -372,17 +392,13 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     a.href = c.toDataURL('image/png');
     a.click();
   }
-  document.getElementById('dl').addEventListener('click', function(){
-    save('attraction-formula-step-' + String(cur+1).padStart(2,'0') + '-' +
-         (els.name.value||STEPS[cur].n).toLowerCase().replace(/[^a-z0-9]+/g,'-') + '.png');
-  });
+  document.getElementById('dl').addEventListener('click', function(){ save(fileFor(cur)); });
   document.getElementById('dlall').addEventListener('click', function(){
     var keep = cur, i = 0;
     (function next(){
-      if(i > 2){ loadStep(keep); return; }
+      if(i >= STEPS.length){ loadStep(keep); return; }
       loadStep(i);
-      save('attraction-formula-step-' + String(i+1).padStart(2,'0') + '-' +
-           STEPS[i].n.toLowerCase() + '.png');
+      save(fileFor(i));
       i++;
       setTimeout(next, 450);
     })();
