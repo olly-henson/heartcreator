@@ -1,10 +1,13 @@
 // ============================================================
-// Attraction Formula — 30-Day Check-In Worker (fully stateless)
+// Regulate — 30-Day Check-In Worker (fully stateless)
 // ============================================================
 //
 // This is a SEPARATE system from attraction-formula-tracker.gs (the
 // belief-builder intake tracker) — that file's own comment says
 // explicitly not to extend it with check-ins.
+//
+// Rebranded 2026-09-10 from "The Attraction Formula" to "The Regulate
+// Program" — same 30-day / 3-check-in cadence, same stateless design.
 //
 // SETUP (one time):
 //   1. Cloudflare dashboard > Workers & Pages > Create > Worker
@@ -13,14 +16,14 @@
 //      same Resend account/domain used by the other workers here —
 //      ollyhenson.com, DNS already verified in Cloudflare)
 //   4. Settings > Domains & Routes > Add Custom Domain, e.g.
-//      attraction-formula-checkin.ollyhenson.com
+//      regulate-checkin.ollyhenson.com
 //      (Cloudflare handles the DNS record automatically)
-//   5. Paste the deployed URL into attraction-formula-start.html at the
+//   5. Paste the deployed URL into regulate-start.html at the
 //      CHECKIN_WORKER_URL constant near the top of its <script>.
 //
 // HOW IT WORKS:
-//   attraction-formula-start.html POSTs { name, email, startDate } once
-//   someone fills in the form and clicks "Start Attraction Formula
+//   regulate-start.html POSTs { name, email, startDate } once
+//   someone fills in the form and clicks "Start The Regulate
 //   Program". This worker, in one request:
 //     1. Sends the client their start-date confirmation email immediately
 //     2. Sends Olly a notification
@@ -45,7 +48,7 @@
 
 const OLLY_EMAIL = 'olly@ollyhenson.com';
 const FROM_EMAIL = 'olly@ollyhenson.com';
-const FROM_NAME = 'The Attraction Formula';
+const FROM_NAME = 'The Regulate Program';
 const COMMUNITY_URL = 'https://www.skool.com/heartcreator';
 const SHARE_BASE_URL = 'https://share.ollyhenson.com';
 const CHECKIN_INTERVAL_DAYS = 10;
@@ -88,20 +91,19 @@ function formatDateLong(date) {
 function confirmationEmailHtml(name, startDateText, endDateText) {
   return wrapHtml(`
     <p>Hi ${firstName(name)},</p>
-    <p>You've officially started The Attraction Formula Program.</p>
+    <p>You've officially started The Regulate Program.</p>
     <p><strong style="font-size:19px;">Your start date:</strong> ${startDateText}<br>
     <strong style="font-size:19px;">Your end date:</strong> ${endDateText}</p>
     <p>I'll check in with you every 10 days or so, to see how you're doing.</p>
-    <p>Remember, stick with this.</p>
-    <p>It might take a couple of attempts to get used to the meditation but it's extremely powerful for overriding long-term beliefs that have been holding you back.</p>
-    <p>And if you ever have a question you need an answer to or want to reach out for support, please post in the community feed ${link(COMMUNITY_URL, 'here')}.</p>
+    <p>${link(COMMUNITY_URL, "Come and let us know you've started in the community here")} &rarr;</p>
+    <p>And if you ever have a question you need an answer to or want to reach out for support, ${link(COMMUNITY_URL, 'ask it here')}.</p>
     <p>Olly</p>
   `);
 }
 
 function coachNotificationHtml(name, email, startDateText, firstCheckinText) {
   return wrapHtml(`
-    <p>${name} has just started The Attraction Formula Program.</p>
+    <p>${name} has just started The Regulate Program.</p>
     <p><strong>Email:</strong> ${email}<br>
     <strong>Start date:</strong> ${startDateText}<br>
     <strong>First check-in scheduled:</strong> ${firstCheckinText}</p>
@@ -115,18 +117,23 @@ function checkinEmailHtml(name, checkinNumber, isFinal) {
   if (isFinal) {
     return wrapHtml(`
       <p>Hey ${firstName(name)},</p>
-      <p>So well done on completing The Attraction Formula Program.</p>
-      <p>Let us know inside the community how it went ${link(COMMUNITY_URL, 'here')} - interested to hear how it's gone for you</p>
+      <p>So well done on completing The Regulate Program. 🥳</p>
+      <p>Let us know inside the community how it went ${link(COMMUNITY_URL, 'here')} and we'll unlock <strong>The Rewrite Program</strong> for you 😎</p>
       <p>Olly</p>
     `);
   }
   const dayLine = checkinNumber === 2
-    ? `<p>You're now 20 days in to the Attraction Formula Program.</p>`
+    ? `<p>You're now 20 days in to The Regulate Program.</p>`
     : '';
+  // Check-in 1 names the program in the question; check-in 2 already
+  // names it in the "20 days in" line above, so keeps the shorter form.
+  const question = checkinNumber === 2
+    ? `How's it been going?`
+    : `How's The Regulate Program going?`;
   return wrapHtml(`
     <p>Hi ${firstName(name)},</p>
     ${dayLine}
-    <p>How's it been going?</p>
+    <p>${question}</p>
     <p>Let us know in the community ${link(COMMUNITY_URL, 'here')}</p>
     <p>Olly</p>
   `);
@@ -193,14 +200,14 @@ export default {
     try {
       await sendEmail(env, {
         to: email,
-        subject: `You've started The Attraction Formula Program`,
+        subject: `You've started The Regulate Program`,
         html: confirmationEmailHtml(name, startDateText, endDateText),
-        text: `You've officially started The Attraction Formula Program. Start date: ${startDateText}. End date: ${endDateText}. I'll check in with you every 10 days or so, to see how you're doing. Remember, stick with this. It might take a couple of attempts to get used to the meditation but it's extremely powerful for overriding long-term beliefs that have been holding you back. If you ever have a question or want support, post in the community feed: ${COMMUNITY_URL}`,
+        text: `You've officially started The Regulate Program. Start date: ${startDateText}. End date: ${endDateText}. I'll check in with you every 10 days or so, to see how you're doing. Come and let us know you've started in the community: ${COMMUNITY_URL}. If you ever have a question or want support, ask it here: ${COMMUNITY_URL}`,
       });
 
       await sendEmail(env, {
         to: OLLY_EMAIL,
-        subject: `${name} has started The Attraction Formula Program`,
+        subject: `${name} has started The Regulate Program`,
         html: coachNotificationHtml(name, email, startDateText, formatDateLong(firstCheckin)),
       });
 
@@ -212,12 +219,12 @@ export default {
         await sendEmail(env, {
           to: email,
           subject: isFinal
-            ? `Well done on completing The Attraction Formula Program! 🎉`
+            ? `Well done on completing The Regulate Program! 🎉`
             : `How's it going?`,
           html: checkinEmailHtml(name, i, isFinal),
           text: isFinal
-            ? `So well done on completing The Attraction Formula Program. Let us know inside the community how it went: ${COMMUNITY_URL}`
-            : `How's it been going? Let us know in the community: ${COMMUNITY_URL}`,
+            ? `So well done on completing The Regulate Program. 🥳 Let us know inside the community how it went and we'll unlock The Rewrite Program for you: ${COMMUNITY_URL}`
+            : `${i === 2 ? "How's it been going?" : "How's The Regulate Program going?"} Let us know in the community: ${COMMUNITY_URL}`,
           scheduledAt: sendAt.toISOString(),
         });
       }

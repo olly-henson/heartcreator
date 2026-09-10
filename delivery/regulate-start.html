@@ -1,19 +1,20 @@
 <!-- ============================================================
-     Heart Attractor — Start The Attraction Formula Program
-     Built 2026-09-03 per Olly — captures Name/Email/Start Date and kicks
-     off the 30-day / 10-day check-in email cadence (separate system from
-     build-your-meditation.html's belief-builder tool; this page owns
-     the START/CHECK-IN flow, not the meditation-belief flow).
+     Heart Attractor — Start The Regulate Program
+     Built 2026-09-03 per Olly, rebranded 2026-09-10 from "The Attraction
+     Formula" to "The Regulate Program" — captures Name/Email/Start Date
+     and kicks off the 30-day / 10-day check-in email cadence (separate
+     system from build-your-meditation.html's belief-builder tool; this
+     page owns the START/CHECK-IN flow, not the meditation-belief flow).
 
-     On submit, POSTs { name, email, startDate } to the Attraction Formula
-     Check-In Worker (see delivery/attraction-formula-checkin-worker.js),
+     On submit, POSTs { name, email, startDate } to the Regulate
+     Check-In Worker (see delivery/regulate-checkin-worker.js),
      which sends the client their start-date confirmation email and
      schedules all 3 check-in emails (day 10/20/30) via Resend's
      scheduled send — fully stateless, no Google Sheet, no Apps Script,
      no ongoing trigger (confirmed with Olly 2026-09-03).
 
      GHL page path: TBC (set in Sites > Website Builder), suggested:
-     /start-attraction-formula
+     /start-regulate
      Paste as ONE Custom HTML block. Section width: Full Width. Margin/padding: 0.
      ============================================================ -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
@@ -127,7 +128,7 @@
 
     <div id="afs-form-screen">
       <div class="afs-eyebrow">👉 Begin Your Journey</div>
-      <h1 class="afs-h1">Start <span class="afs-grad">The Attraction Formula Program</span></h1>
+      <h1 class="afs-h1">Start <span class="afs-grad">The Regulate Program</span></h1>
       <p class="afs-lede">Choose the date you're starting, add your details, and I'll make sure to check in with you throughout the program.</p>
 
       <div class="afs-why">
@@ -155,7 +156,7 @@
       </div>
 
       <div class="afs-cta">
-        <button type="button" class="afs-start-btn" id="afs-start-btn" disabled>Start Attraction Formula Program →</button>
+        <button type="button" class="afs-start-btn" id="afs-start-btn" disabled>Start The Regulate Program →</button>
         <div class="afs-status" id="afs-status"></div>
       </div>
     </div>
@@ -177,11 +178,12 @@
   // Cloudflare Worker that sends the start-date confirmation and
   // schedules all 3 check-in emails (day 10/20/30) via Resend — fully
   // stateless, no sheet, no Apps Script. See
-  // delivery/attraction-formula-checkin-worker.js for the worker
-  // source. Deployed 2026-09-03 on the workers.dev subdomain — swap for
-  // a custom domain (e.g. attraction-formula-checkin.ollyhenson.com)
-  // later if wanted, not required for it to work.
-  var CHECKIN_WORKER_URL = 'https://attraction-formula-check.olly-6af.workers.dev';
+  // delivery/regulate-checkin-worker.js for the worker source.
+  // 2026-09-10 rebrand: the same Worker is reused (code pasted over it) —
+  // it's still named "attraction-formula-check" in the Cloudflare
+  // dashboard, but a custom domain "regulate-checkin.ollyhenson.com" was
+  // added to it (Domains & Routes), which is the address used here.
+  var CHECKIN_WORKER_URL = 'https://regulate-checkin.ollyhenson.com';
 
   // Same share-worker.js used everywhere else in this delivery system —
   // already deployed at share.ollyhenson.com. type=started matches the
@@ -273,7 +275,7 @@
   });
 
   function showConfirmation(startDate) {
-    var shareText = "I've just started The Attraction Formula Program — excited to get going!";
+    var shareText = "I've just started The Regulate Program — excited to get going!";
     var communityBtn = document.getElementById('afs-community-btn');
     communityBtn.href = SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent(shareText);
 
