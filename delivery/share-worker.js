@@ -17,13 +17,20 @@
 export default {
   async fetch(request) {
     const url = new URL(request.url);
-    const text = url.searchParams.get('text') || '';
     const type = url.searchParams.get('type') || 'win';
+    // `intro` carries a fixed pre-written message so the link can stay
+    // short (just ?type=intro) — used by the "Unlock Your First Program"
+    // classroom lesson: the visitor copies this, posts it in the
+    // community, and that post is Olly's cue to unlock The Regulate
+    // Program. A ?text= param still overrides it if ever needed.
+    const INTRO_MSG = "Hey! I'm ready to start The Regulate Program";
+    const text = url.searchParams.get('text') || (type === 'intro' ? INTRO_MSG : '');
     const heading    = type === 'coach'   ? 'Your client needs help with' :
                        type === 'help'    ? 'Ask for help in the community' :
                        type === 'results' ? 'Share client results' :
                        type === 'final'   ? 'Share Your Results' :
                        type === 'started' ? 'Let us know you\'ve started!' :
+                       type === 'intro'   ? 'Unlock Your Program' :
                        type === 'checkin' ? 'How did your last 10 days go?' :
                                             'Share your win';
     const buttonText = type === 'coach'   ? 'Respond in Community' :
@@ -31,6 +38,7 @@ export default {
                        type === 'results' ? 'Share results' :
                        type === 'final'   ? 'Share with the community' :
                        type === 'started' ? 'Let us know in the community' :
+                       type === 'intro'   ? 'Post in the community' :
                        type === 'checkin' ? 'Share in the community' :
                                             'Share in Community';
     // checkin is the one type where there's nothing pre-written to
@@ -44,7 +52,7 @@ export default {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Share your win — The Attraction Formula Community</title>
+  <title>Share in the Heart Attractor Community</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -123,7 +131,7 @@ export default {
 </head>
 <body>
   <div class="card">
-    <p class="label">The Attraction Formula Community</p>
+    <p class="label">The Heart Attractor Community</p>
     <h1>${heading}</h1>
     <textarea id="win" rows="4"${isCheckin ? ' placeholder="How did the last 10 days go? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${isCheckin ? '' : text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
     <div class="actions">
