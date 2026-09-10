@@ -33,6 +33,9 @@ export default {
                        type === 'intro'   ? 'Unlock Your Program' :
                        type === 'checkin' ? 'How did your last 10 days go?' :
                                             'Share your win';
+    const subheading = type === 'intro'
+      ? 'Copy and paste this message into the community to unlock Your Regulate Program'
+      : '';
     const buttonText = type === 'coach'   ? 'Respond in Community' :
                        type === 'help'    ? 'Get help in the community' :
                        type === 'results' ? 'Share results' :
@@ -52,7 +55,7 @@ export default {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Share in the Heart Attractor Community</title>
+  <title>Share in the Attraction Formula Community</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -83,6 +86,12 @@ export default {
       font-size: 20px;
       color: #111;
       margin-bottom: 24px;
+    }
+    .sub {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+      margin: -14px 0 24px;
     }
     textarea {
       width: 100%;
@@ -131,8 +140,9 @@ export default {
 </head>
 <body>
   <div class="card">
-    <p class="label">The Heart Attractor Community</p>
+    <p class="label">The Attraction Formula Community</p>
     <h1>${heading}</h1>
+    ${subheading ? `<p class="sub">${subheading}</p>` : ''}
     <textarea id="win" rows="4"${isCheckin ? ' placeholder="How did the last 10 days go? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${isCheckin ? '' : text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
     <div class="actions">
       <button class="btn btn-primary" onclick="copyText()">Copy to clipboard</button>
