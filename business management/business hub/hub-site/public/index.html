@@ -532,6 +532,53 @@
   .quadlist li:last-child{ border-bottom:none; }
   .quadlist .quadempty{ color: var(--text-muted); font-size:12.5px; font-style:italic; padding:7px 0; }
 
+  /* ── Brain dump ───────────────────────────────────────── */
+  .bdadd{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:26px;
+  }
+  .bdinput{
+    width:100%;
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    color: var(--text);
+    padding:12px 14px;
+    font-size:14px;
+    font-family:'Poppins',sans-serif;
+    resize:vertical;
+    box-sizing:border-box;
+  }
+  .bdinput:focus{ outline:none; border-color: var(--accent-2); }
+  .bdlist{ display:flex; flex-direction:column; gap:12px; }
+  .bdcard{
+    background: var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding:12px 12px 12px 16px;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .bdcard-text{
+    flex:1;
+    min-width:0;
+    background:transparent;
+    border:none;
+    color: var(--text);
+    font-size:14px;
+    font-family:'Poppins',sans-serif;
+    line-height:1.5;
+    resize:none;
+    padding:2px 0;
+  }
+  .bdcard-text:focus{ outline:none; }
+  .bdcard-date{ color: var(--text-muted); font-size:11px; margin-top:6px; display:block; }
+  .bdlist-empty{ color: var(--text-muted); font-size:12.5px; font-style:italic; }
+
   /* checkboxes throughout (project urgent/important/done) */
   td input[type=checkbox]{
     width:17px; height:17px;
@@ -1056,6 +1103,7 @@
   </header>
 
   <nav class="tabbar" role="tablist">
+    <button class="tabbtn" data-tab="braindump" role="tab" aria-selected="false">Brain Dump</button>
     <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false">MRR</button>
     <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Content</button>
     <button class="tabbtn" data-tab="instagram" role="tab" aria-selected="false">Instagram</button>
@@ -1415,6 +1463,20 @@
         <button class="addbtn" id="projectAdd">+ Add project</button>
       </div>
     </div>
+
+  </div>
+
+  <div id="tab-braindump" class="tabpanel" hidden="">
+
+    <p class="section-label">Brain dump</p>
+    <span class="hint" style="display:block; margin:-6px 0 20px;">One card per thought. Add a card whenever you need to get something out of your head. Newest on top. Edit any card in place, ✕ to clear it.</span>
+
+    <div class="bdadd">
+      <textarea id="bdInput" class="bdinput" rows="3" placeholder="Type a brain dump and hit Add card…"></textarea>
+      <button class="addbtn" id="bdAdd">+ Add card</button>
+    </div>
+
+    <div id="bdList" class="bdlist"></div>
 
   </div>
 
@@ -2311,6 +2373,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         var i = Number(inp.dataset.idi);
         var idea = state.content.ideas[i];
         idea.title = inp.value;
+        // A blank auto-slot row can sit around for days before it gets a
+        // title — its date was assigned back when it was first added, so
+        // it can go stale and end up in the past by the time a title
+        // finally lands on it. Re-slot it forward the moment that happens.
+        if (idea.mode !== "specific" && idea.date && idea.date < todayISO()){
+          idea.date = findNextAvailableDate(i);
+        }
         markDirty();
         renderCalendar();
       });
@@ -2443,16 +2512,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // The date field stays a normal editable input, so this is just a
   // starting point, not a lock.
   function findNextAvailableDate(excludeIndex){
+    // Today is a valid slot, but never a date before today — hard floor
+    // enforced below regardless of where the search starts.
+    var floor = todayISO();
     var d = new Date();
     for (var i = 0; i < 365; i++){
       var iso = isoDate(d);
-      var count = state.content.ideas.filter(function(idea, idx){
-        return idea.date === iso && idea.title && idx !== excludeIndex;
-      }).length;
-      if (count < DAILY_REEL_TARGET) return iso;
+      if (iso >= floor){
+        var count = state.content.ideas.filter(function(idea, idx){
+          return idea.date === iso && idea.title && idx !== excludeIndex;
+        }).length;
+        if (count < DAILY_REEL_TARGET) return iso;
+      }
       d.setDate(d.getDate() + 1);
     }
-    return todayISO();
+    return floor;
   }
 
   function renderCalendar(){
@@ -3502,6 +3576,112 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderDelivery();
   });
 
+  // ── Brain dump ─────────────────────────────────────────────────────────
+  // One flat list of cards, newest first. Same conventions as the rest of
+  // the app: full rebuild only when the card count changes (so editing a
+  // card's textarea never loses focus mid-type), every edit just calls
+  // markDirty(), nothing publishes until the Save button.
+  var bdBuiltForCount = -1;
+
+  function bdFmtDate(ts){
+    if (!ts) return "";
+    var d = new Date(ts);
+    if (isNaN(d)) return "";
+    return d.toLocaleDateString(undefined, { day:"numeric", month:"short", year:"numeric" });
+  }
+
+  function autosizeBdCard(ta){
+    ta.style.height = "auto";
+    ta.style.height = ta.scrollHeight + "px";
+  }
+
+  function buildBdCard(card, i){
+    var wrap = document.createElement("div");
+    wrap.className = "bdcard";
+    wrap.dataset.bdrow = i;
+
+    var col = document.createElement("div");
+    col.style.flex = "1";
+    col.style.minWidth = "0";
+
+    var ta = document.createElement("textarea");
+    ta.className = "bdcard-text";
+    ta.value = card.text || "";
+    ta.rows = 1;
+    col.appendChild(ta);
+
+    var date = document.createElement("span");
+    date.className = "bdcard-date";
+    date.textContent = bdFmtDate(card.ts);
+    col.appendChild(date);
+
+    var del = document.createElement("button");
+    del.className = "rowdel-btn";
+    del.title = "Remove this card";
+    del.textContent = "✕";
+    del.dataset.bddel = i;
+
+    wrap.appendChild(col);
+    wrap.appendChild(del);
+    return wrap;
+  }
+
+  function renderBrainDump(){
+    var list = state.brainDump.cards;
+    var host = document.getElementById("bdList");
+    if (!host) return;
+
+    if (!list.length){
+      host.innerHTML = '<p class="bdlist-empty">No cards yet. Add one above.</p>';
+      bdBuiltForCount = 0;
+      return;
+    }
+
+    if (list.length !== bdBuiltForCount){
+      host.innerHTML = "";
+      list.forEach(function(card, i){ host.appendChild(buildBdCard(card, i)); });
+      wireBdEvents(host);
+      bdBuiltForCount = list.length;
+      // autosize after they're in the DOM
+      host.querySelectorAll(".bdcard-text").forEach(autosizeBdCard);
+    }
+  }
+
+  function wireBdEvents(host){
+    host.querySelectorAll(".bdcard-text").forEach(function(ta){
+      ta.addEventListener("input", function(){
+        var i = Number(ta.closest(".bdcard").dataset.bdrow);
+        if (!state.brainDump.cards[i]) return;
+        state.brainDump.cards[i].text = ta.value;
+        autosizeBdCard(ta);
+        markDirty();
+      });
+    });
+    host.querySelectorAll("[data-bddel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.bddel);
+        if (!(state.brainDump.cards[i].text || "").trim() ||
+            window.confirm("Delete this card?")){
+          state.brainDump.cards.splice(i, 1);
+          bdBuiltForCount = -1;
+          markDirty();
+          renderBrainDump();
+        }
+      });
+    });
+  }
+
+  document.getElementById("bdAdd").addEventListener("click", function(){
+    var inp = document.getElementById("bdInput");
+    var text = inp.value.trim();
+    if (!text) { inp.focus(); return; }
+    state.brainDump.cards.unshift({ text: text, ts: Date.now() });
+    inp.value = "";
+    bdBuiltForCount = -1;
+    markDirty();
+    renderBrainDump();
+  });
+
   // ── Wire up ────────────────────────────────────────────────────────────
   document.querySelectorAll(".tabbtn").forEach(function(btn){
     btn.addEventListener("click", function(){
@@ -3572,6 +3752,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (idea.posted && idea.title) syncIdeaToOutliers(idea);
     });
     if (!state.delivery) state.delivery = { projects: [] };
+    if (!state.brainDump) state.brainDump = { cards: [] };
+    if (!Array.isArray(state.brainDump.cards)) state.brainDump.cards = [];
   }
 
   function rerenderAll(){
@@ -3580,6 +3762,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderIdeasAndWeek();
     renderDelivery();
     renderCaptionTemplates();
+    renderBrainDump();
   }
 
   function boot(){

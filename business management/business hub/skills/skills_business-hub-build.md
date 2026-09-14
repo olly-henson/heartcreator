@@ -81,6 +81,9 @@ state = {
   },
   delivery: {
     projects: [ { title, urgent, important, done } ]
+  },
+  brainDump: {
+    cards: [ { text, ts } ]   // flat list, newest first (unshift on add); ts = Date.now() at creation
   }
 }
 ```
@@ -175,6 +178,9 @@ Notes on fields that aren't obvious:
 ---
 
 ## Changelog
+
+- **2026-09-14** — Bug fix: **`findNextAvailableDate()` could assign a past date** to a new auto-slot video idea, per Olly ("added an idea today, it landed on the 12th"). Root cause: a blank idea row's date is assigned once, at the moment it's first pushed into `state.content.ideas` — if the row then sits blank (no title yet) for a few days before Olly finally types the title, the date never got re-checked and could quietly go stale/past by the time it's titled. Two-part fix: (1) `findNextAvailableDate()` now has a hard floor at `todayISO()` — the search can return today or later, never before, regardless of where the walk starts (defensive, in case of any other future path into this function); (2) the idea title's `input` handler in `wireIdeaEvents()` re-calls `findNextAvailableDate()` for that row if it's in auto mode and its current `date` is before today — self-correcting, only fires once (the date immediately becomes today-or-later so the condition goes false on the next keystroke), so it doesn't fight the "never sync on every keystroke" rule in spirit even though it's wired to `input`. **Rule for this file:** any date/time value assigned once at row-creation time and left to sit before being "completed" (titled, in this case) needs a staleness re-check at the point it's completed, not just at creation — don't assume a value computed once stays valid until the user next touches that specific field.
+- **2026-09-10** — New **Brain Dump** tab, per Olly. Simplest possible feature: a flat Trello-style single list of cards. `state.brainDump.cards` = `[{ text, ts }]`, newest first (`unshift` on add). Top of the tab is a textarea + "+ Add card"; each card below is an auto-height `<textarea class="bdcard-text">` (edit in place, `input` → `markDirty()`, no re-render) + a date stamp + `✕` delete (confirms only if the card has text). Follows all house conventions: full rebuild only on card-count change (`bdBuiltForCount`), migration guard in `migrateState()`, `renderBrainDump()` added to `rerenderAll()`, no autosave. Tab button is **first in the bar, before MRR** (Olly moved it there on the second pass) — but Content is still the default active panel on a fresh device; the tab bar order and the default-open panel are independent. Panel markup sits last in the DOM (after Delivery) since panels switch by id, not position.
 
 - **2026-09-08/09** — Bug-fix + polish pass on the Content tab (Video stats tracking + Leaderboard), per Olly.
   - **Header Save button was broken everywhere** (not just in the calendar, though that's where Olly hit it). `document.getElementById("saveBtn").addEventListener("click", saveNow)` passed the click **event object** into `saveNow(onDone)` as its `onDone` callback; on a successful `PUT` the code did `if (onDone) onDone(true)`, tried to *call* the event, threw, and the `.catch` flipped the indicator to "save failed" even though the save had gone through. The calendar day-modal Save worked only because it passes a real callback. **Fix:** wrap it — `addEventListener("click", function(){ saveNow(); })`. **Rule for this file:** never pass `saveNow` (or anything with an optional trailing callback arg) straight to `addEventListener` — always wrap, or the event becomes the "callback".
