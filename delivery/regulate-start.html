@@ -1,5 +1,5 @@
 <!-- ============================================================
-     Heart Attractor — Start The Regulate Program
+     Heart Attractor — Start The Regulate Meditation
      Built 2026-09-03 per Olly, rebranded 2026-09-10 from "The Attraction
      Formula" to "The Regulate Program" — captures Name/Email/Start Date
      and kicks off the 30-day / 10-day check-in email cadence (separate
@@ -128,12 +128,12 @@
 
     <div id="afs-form-screen">
       <div class="afs-eyebrow">👉 Begin Your Journey</div>
-      <h1 class="afs-h1">Start <span class="afs-grad">The Regulate Program</span></h1>
-      <p class="afs-lede">Choose the date you're starting, add your details, and I'll make sure to check in with you throughout the program.</p>
+      <h1 class="afs-h1">Start <span class="afs-grad">The Regulate Meditation</span></h1>
+      <p class="afs-lede">To make sure that this meditation works, we need to implement this for 30 days, to give your nervous system the chance to reset to a new baseline. Add your start date and details below and I'll make sure to check-in with you as you put this into practice.</p>
 
       <div class="afs-why">
         <span class="afs-why-icon">💌</span>
-        <span class="afs-why-text"><strong>What happens next.</strong> You'll get an email confirming your start date. The program runs for 30 days, and I'll make sure to check in with you.</span>
+        <span class="afs-why-text"><strong>What happens next.</strong> You'll get an email confirming your start date. The meditation runs for 30 days, and I'll make sure to check in with you.</span>
       </div>
 
       <div class="afs-field">
@@ -142,7 +142,7 @@
           <input type="date" class="afs-input afs-date-input" id="afs-date-input">
           <div class="afs-date-display" id="afs-date-display">Select a date</div>
         </div>
-        <div class="afs-date-hint">This is the date your 30-day program — and your first check-in, 10 days later — counts from.</div>
+        <div class="afs-date-hint">This is the date your 30-day meditation — and your first check-in, 10 days later — counts from.</div>
       </div>
 
       <div class="afs-field">
@@ -156,14 +156,14 @@
       </div>
 
       <div class="afs-cta">
-        <button type="button" class="afs-start-btn" id="afs-start-btn" disabled>Start The Regulate Program →</button>
+        <button type="button" class="afs-start-btn" id="afs-start-btn" disabled>Start The Regulate Meditation →</button>
         <div class="afs-status" id="afs-status"></div>
       </div>
     </div>
 
     <div id="afs-confirm-screen" class="afs-confirm">
       <div class="afs-eyebrow">👉 You're In</div>
-      <h1 class="afs-h1">Your Program Is <span class="afs-grad">Now Live</span></h1>
+      <h1 class="afs-h1">Your Meditation Is <span class="afs-grad">Now Live</span></h1>
       <p class="afs-lede">Check your inbox — we've sent this to you too, so you've always got it.</p>
       <div class="afs-confirm-actions">
         <a class="afs-community-btn" id="afs-community-btn" href="#" target="_blank" rel="noopener">Let us know in the community →</a>
@@ -257,7 +257,7 @@
     }
 
     startBtn.disabled = true;
-    statusEl.textContent = 'Starting your program...';
+    statusEl.textContent = 'Starting your meditation...';
     statusEl.className = 'afs-status';
 
     fetch(CHECKIN_WORKER_URL, {
@@ -275,7 +275,7 @@
   });
 
   function showConfirmation(startDate) {
-    var shareText = "I've just started The Regulate Program — excited to get going!";
+    var shareText = "I've just started The Regulate Meditation — excited to get going!";
     var communityBtn = document.getElementById('afs-community-btn');
     communityBtn.href = SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent(shareText);
 

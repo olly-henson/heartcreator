@@ -83,6 +83,8 @@
       <button data-step="1">02</button>
       <button data-step="2">03</button>
       <button data-step="3">Start</button>
+      <button data-step="4">Bonus</button>
+      <button data-step="5">Creator</button>
     </div>
 
     <div class="grouphd">Text</div>
@@ -95,6 +97,16 @@
       <input type="text" id="name">
     </div>
 
+    <div class="grouphd">Copy framing &amp; panel settings</div>
+    <div class="row" style="margin-top:0">
+      <select id="copyFromSel" style="flex:1;background:#0e0616;border:1px solid var(--edge);
+        border-radius:8px;color:var(--ink);font:13px Poppins,sans-serif;padding:8px 10px"></select>
+      <button class="ghost" id="copyFromBtn">Copy to this cover</button>
+    </div>
+    <p class="hint">Copies image X/Y/zoom, shift, veil strength, panel width
+      and blend width from the chosen cover onto this one — useful for
+      keeping every cover symmetrical. Text and photo are left alone.</p>
+
     <div class="grouphd">Photo — this step</div>
     <div class="row" style="margin-top:0">
       <button class="ghost" id="pick">Choose image…</button>
@@ -103,17 +115,31 @@
     <input type="file" id="file" accept="image/*" hidden>
     <div class="ctl" id="ix-c"><label>Image X <span id="ix-v">50</span></label>
       <input id="ix" type="range" min="0" max="100" value="50"></div>
+    <div class="ctl" id="shx-c"><label>Shift right, extra (px) <span id="shx-v">0</span></label>
+      <input id="shx" type="range" min="-200" max="900" value="0"></div>
     <div class="ctl" id="iy-c"><label>Image Y <span id="iy-v">50</span></label>
       <input id="iy" type="range" min="0" max="100" value="50"></div>
     <div class="ctl" id="iz-c"><label>Image zoom <span id="iz-v">112</span></label>
-      <input id="iz" type="range" min="100" max="220" value="112"></div>
+      <input id="iz" type="range" min="60" max="220" value="112"></div>
     <div class="ctl" id="scrim-c"><label>Veil strength <span id="scrim-v">100</span></label>
       <input id="scrim" type="range" min="30" max="150" value="100"></div>
+    <div class="ctl" id="panelw-c"><label>Panel width <span id="panelw-v">50</span>%</label>
+      <input id="panelw" type="range" min="35" max="65" value="50"></div>
+    <div class="ctl" id="blendw-c"><label>Blend width <span id="blendw-v">45</span>%</label>
+      <input id="blendw" type="range" min="15" max="70" value="45"></div>
 
     <div class="grouphd">Look</div>
     <div class="ctl">
       <label>Keyword size <span id="hl-v">100%</span></label>
       <input id="hl" type="range" min="60" max="130" value="100">
+    </div>
+    <div class="ctl">
+      <label>Text vertical position <span id="txty-v">0</span></label>
+      <input id="txty" type="range" min="-150" max="150" value="0">
+    </div>
+    <div class="ctl">
+      <label>Text horizontal position <span id="txtx-v">0</span></label>
+      <input id="txtx" type="range" min="-150" max="150" value="0">
     </div>
     <div class="ctl">
       <label>Glow strength <span id="glow-v">100</span></label>
@@ -130,11 +156,15 @@
 
     <div class="row">
       <button class="act" id="dl">Download this PNG</button>
-      <button class="ghost" id="dlall">Download all 4</button>
+      <button class="ghost" id="dlall">Download all 6</button>
     </div>
     <div class="row">
       <button class="ghost" id="reset">Reset text</button>
+      <button class="act" id="saveState">Save my changes</button>
     </div>
+    <p class="hint">Text, sizes, photo framing and panel settings for all six covers —
+       saved in this browser, tied to this file. Doesn't save an uploaded photo
+       itself, just its position.</p>
     <p class="hint">1460&times;752 is Skool's exact classroom thumbnail spec — anything
        else gets cropped and the Skool menu button overlaps the art.</p>
   </div>
@@ -159,17 +189,22 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   var mini = document.getElementById('mini'), mctx = mini.getContext('2d');
 
   var STEPS = [
-    { eb:'STEP 01',   n:'REGULATE',    img:null, ix:58, iy:30, iz:112, scrim:100 },
-    { eb:'STEP 02',   n:'REWRITE',     img:null, ix:50, iy:45, iz:112, scrim:100 },
-    { eb:'STEP 03',   n:'REHEARSE',    img:null, ix:50, iy:45, iz:112, scrim:100 },
-    { eb:'START HERE', n:'GET STARTED', img:null, ix:50, iy:45, iz:112, scrim:100 }
+    { eb:'STEP 01',   n:'REGULATE',    img:null, ix:58, iy:30, iz:112, scrim:100, shx:0, panelw:50, blendw:45, txtx:0, txty:0 },
+    { eb:'STEP 02',   n:'REWRITE',     img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45, txtx:0, txty:0 },
+    { eb:'STEP 03',   n:'REHEARSE',    img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45, txtx:0, txty:0 },
+    { eb:'START HERE', n:'GET STARTED', img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45, txtx:0, txty:0 },
+    { eb:'EXTRAS',     n:'BONUS MATERIALS',   img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45, txtx:0, txty:0 },
+    { eb:'BECOME THE', n:'CONSCIOUS CREATOR', img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45, txtx:0, txty:0 }
   ];
   var DEFAULT_TEXT = STEPS.map(function(s){ return { eb:s.eb, n:s.n }; });
 
   var cur = 0;
   var els = {};
   ['eyebrow','name','hl','glow','dust','gradtext','file','pick','pclear',
-   'ix','iy','iz','scrim'].forEach(function(k){ els[k] = document.getElementById(k); });
+   'ix','iy','iz','scrim','shx','panelw','blendw','txtx','txty',
+   'copyFromSel','copyFromBtn'].forEach(function(k){ els[k] = document.getElementById(k); });
+
+  var PER_STEP_KEYS = ['ix','iy','iz','scrim','shx','panelw','blendw','txtx','txty'];
 
   // ---- seeded stardust so it doesn't flicker on every re-render ----
   function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);
@@ -183,18 +218,119 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     im.src = url;
   }
 
+  // Offscreen layer so the photo's own edge can be feathered in
+  // isolation — same fix as about-page-tile-generator.html /
+  // relationship-ad-generator.html. Without this, zooming out (now
+  // unlocked below the old 100% minimum) or shifting the photo far
+  // right leaves its hard rectangular boundary visible as a seam.
+  var photoLayer = document.createElement('canvas');
+  photoLayer.width = W; photoLayer.height = H;
+  var pctxPhoto = photoLayer.getContext('2d');
+
   function drawPhoto(g, s){
     if(!s.img) return;
     var im = s.img;
     var base = Math.max(W/im.width, H/im.height);
     var scale = base * (s.iz/100);
     var dw = im.width*scale, dh = im.height*scale;
-    var dx = (W - dw) * (s.ix/100);
+    var dx = (W - dw) * (s.ix/100) + (s.shx||0);
     var dy = (H - dh) * (s.iy/100);
-    g.save();
-    g.filter = 'saturate(1.02) contrast(1.02)';
-    g.drawImage(im, dx, dy, dw, dh);
-    g.restore();
+
+    pctxPhoto.clearRect(0,0,W,H);
+    pctxPhoto.save();
+    pctxPhoto.filter = 'saturate(1.02) contrast(1.02)';
+    pctxPhoto.drawImage(im, dx, dy, dw, dh);
+    pctxPhoto.restore();
+
+    if(dx > 1){
+      pctxPhoto.save();
+      pctxPhoto.globalCompositeOperation = 'destination-in';
+      var featherW = Math.max(W*0.14, dw*0.18);
+      var mask = pctxPhoto.createLinearGradient(dx, 0, dx+featherW, 0);
+      mask.addColorStop(0, 'rgba(0,0,0,0)');
+      mask.addColorStop(1, 'rgba(0,0,0,1)');
+      pctxPhoto.fillStyle = mask;
+      pctxPhoto.fillRect(dx, 0, W-dx, H);
+      pctxPhoto.restore();
+    }
+
+    g.drawImage(photoLayer, 0, 0);
+    return dx;
+  }
+
+  function hexToRgb(hex){
+    var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : [21,8,24];
+  }
+
+  function sampleColorAt(g, atX){
+    try {
+      var x = Math.max(0, Math.min(W-2, Math.round(atX)));
+      var d = g.getImageData(x, Math.round(H*0.15), 2, Math.round(H*0.7)).data;
+      var r=0,gg=0,b=0,n=0;
+      for(var i=0;i<d.length;i+=4){ r+=d[i]; gg+=d[i+1]; b+=d[i+2]; n++; }
+      return n ? [Math.round(r/n), Math.round(gg/n), Math.round(b/n)] : [40,20,50];
+    } catch(e){ return [40,20,50]; }
+  }
+
+  var panelLayer = document.createElement('canvas');
+  panelLayer.width = W; panelLayer.height = H;
+  var pctxPanel = panelLayer.getContext('2d');
+
+  // Solid panel with a purple glow, replacing the old translucent veil —
+  // that veil relied on the photo covering the whole canvas, so it broke
+  // the moment "Shift right" or a lower zoom moved the photo's edge
+  // inward. This panel covers whatever's on the left regardless, and its
+  // fade zone tracks the photo's real edge (dx, returned by drawPhoto).
+  function drawPanel(g, dx, s){
+    var sc = (s.scrim||100)/100;
+    var panelFrac = (s.panelw||50)/100;
+    var blendFrac = (s.blendw||45)/100;
+    var panelW = W*panelFrac;
+
+    var fadeWidth = Math.max(W*0.16, panelW*blendFrac*1.3);
+    var fadeStart = Math.max(panelW*(1-blendFrac*0.6), dx);
+    var fadeEnd = fadeStart + fadeWidth;
+    var drawW = Math.max(panelW, fadeEnd);
+    var wallC = sampleColorAt(g, fadeEnd*0.97);
+
+    pctxPanel.clearRect(0,0,W,H);
+    pctxPanel.save();
+    pctxPanel.fillStyle = '#150818';
+    pctxPanel.fillRect(0,0,drawW,H);
+
+    var glow = pctxPanel.createRadialGradient(panelW*0.12, H*0.08, 0, panelW*0.12, H*0.08, panelW*1.15);
+    glow.addColorStop(0,   'rgba(184,79,232,'+(0.55*sc).toFixed(3)+')');
+    glow.addColorStop(0.35,'rgba(140,60,190,'+(0.38*sc).toFixed(3)+')');
+    glow.addColorStop(0.7, 'rgba(90,45,120,'+(0.16*sc).toFixed(3)+')');
+    glow.addColorStop(1,   'rgba('+wallC.join(',')+',0)');
+    pctxPanel.fillStyle = glow;
+    pctxPanel.fillRect(0,0,drawW,H);
+
+    var bottomShade = pctxPanel.createLinearGradient(0,H*0.55,0,H);
+    bottomShade.addColorStop(0,'rgba(0,0,0,0)');
+    bottomShade.addColorStop(1,'rgba(0,0,0,'+(0.4*sc).toFixed(3)+')');
+    pctxPanel.fillStyle = bottomShade;
+    pctxPanel.fillRect(0,0,drawW,H);
+
+    var tint = pctxPanel.createLinearGradient(fadeStart*0.7,0,fadeEnd,0);
+    tint.addColorStop(0,   'rgba('+wallC.join(',')+',0)');
+    tint.addColorStop(0.55,'rgba('+wallC.join(',')+',0.35)');
+    tint.addColorStop(1,   'rgba('+wallC.join(',')+',0.65)');
+    pctxPanel.fillStyle = tint;
+    pctxPanel.fillRect(0,0,drawW,H);
+    pctxPanel.restore();
+
+    pctxPanel.save();
+    pctxPanel.globalCompositeOperation = 'destination-in';
+    var mask = pctxPanel.createLinearGradient(fadeStart,0,fadeEnd,0);
+    mask.addColorStop(0,'rgba(0,0,0,1)');
+    mask.addColorStop(1,'rgba(0,0,0,0)');
+    pctxPanel.fillStyle = mask;
+    pctxPanel.fillRect(0,0,W,H);
+    pctxPanel.restore();
+
+    g.drawImage(panelLayer, 0, 0);
   }
 
   function render(twoCtx){
@@ -209,22 +345,10 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     bg.addColorStop(1,   '#0A0510');
     g.fillStyle = bg; g.fillRect(0,0,W,H);
 
-    // -------- photo + brand veil --------
+    // -------- photo + solid panel with purple glow --------
     if(hasImg){
-      drawPhoto(g, s);
-      var sc = (s.scrim/100);
-      var v = g.createLinearGradient(0,0,W,0);
-      v.addColorStop(0.00,'rgba(19,7,23,'+(0.93*sc).toFixed(3)+')');
-      v.addColorStop(0.40,'rgba(19,7,23,'+(0.75*sc).toFixed(3)+')');
-      v.addColorStop(0.72,'rgba(19,7,23,'+(0.50*sc).toFixed(3)+')');
-      v.addColorStop(1.00,'rgba(19,7,23,'+(0.62*sc).toFixed(3)+')');
-      g.fillStyle = v; g.fillRect(0,0,W,H);
-      var vy = g.createLinearGradient(0,0,0,H);
-      vy.addColorStop(0.00,'rgba(10,5,16,0.20)');
-      vy.addColorStop(0.42,'rgba(10,5,16,0)');
-      vy.addColorStop(0.78,'rgba(10,5,16,0.35)');
-      vy.addColorStop(1.00,'rgba(10,5,16,0.84)');
-      g.fillStyle = vy; g.fillRect(0,0,W,H);
+      var dx = drawPhoto(g, s);
+      drawPanel(g, dx, s);
     }
 
     // -------- corner glow blooms --------
@@ -253,7 +377,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     }
 
     // -------- content block: eyebrow + big keyword, vertically centred --------
-    var LX = 96;
+    var LX = 96 + (+els.txtx.value || 0);
     var name    = (els.name.value    || s.n ).toUpperCase();
     var eyebrow = (els.eyebrow.value || s.eb).toUpperCase();
 
@@ -267,7 +391,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
 
     var gapEN = 32;
     var blockH = eSize + gapEN + nSize;
-    var top = H*0.485 - blockH/2;
+    var top = H*0.485 - blockH/2 + (+els.txty.value || 0);
 
     // eyebrow: short accent rule + label  (no bordered pill = no corporate chrome)
     var eyeY = top + eSize*0.5;
@@ -318,11 +442,16 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     document.getElementById('iy-v').textContent    = els.iy.value;
     document.getElementById('iz-v').textContent    = els.iz.value;
     document.getElementById('scrim-v').textContent = els.scrim.value;
+    document.getElementById('shx-v').textContent = els.shx.value;
+    document.getElementById('panelw-v').textContent = els.panelw.value;
+    document.getElementById('blendw-v').textContent = els.blendw.value;
+    document.getElementById('txtx-v').textContent = els.txtx.value;
+    document.getElementById('txty-v').textContent = els.txty.value;
   }
 
   function togglePhotoCtls(){
     var on = !!STEPS[cur].img;
-    ['ix-c','iy-c','iz-c','scrim-c'].forEach(function(id){
+    ['ix-c','iy-c','iz-c','scrim-c','shx-c','panelw-c','blendw-c'].forEach(function(id){
       document.getElementById(id).classList.toggle('dim', !on);
     });
     els.pclear.style.display = on ? '' : 'none';
@@ -342,8 +471,31 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     els.eyebrow.value = s.eb;
     els.name.value = s.n;
     els.ix.value = s.ix; els.iy.value = s.iy; els.iz.value = s.iz; els.scrim.value = s.scrim;
+    els.shx.value = s.shx||0; els.panelw.value = s.panelw||50; els.blendw.value = s.blendw||45;
+    els.txtx.value = s.txtx||0; els.txty.value = s.txty||0;
+    populateCopyFromSel();
     renderAll();
   }
+
+  var STEP_LABELS = ['01','02','03','Start','Bonus','Creator'];
+  function populateCopyFromSel(){
+    els.copyFromSel.innerHTML = '';
+    STEPS.forEach(function(s, i){
+      if(i === cur) return;
+      var opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = (STEP_LABELS[i] || ('Cover ' + (i+1))) + ' — ' + (s.n || s.eb || 'untitled');
+      els.copyFromSel.appendChild(opt);
+    });
+  }
+
+  els.copyFromBtn.addEventListener('click', function(){
+    if(!els.copyFromSel.options.length) return;
+    var from = +els.copyFromSel.value;
+    var src = STEPS[from], dst = STEPS[cur];
+    PER_STEP_KEYS.forEach(function(k){ dst[k] = src[k]; });
+    loadStep(cur);
+  });
 
   function slug(t){ return (t||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
   function fileFor(i){
@@ -363,7 +515,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   els.eyebrow.addEventListener('input', function(){ STEPS[cur].eb = els.eyebrow.value; renderAll(); });
   els.name.addEventListener('input', function(){ STEPS[cur].n = els.name.value; renderAll(); });
   ['hl','glow'].forEach(function(k){ els[k].addEventListener('input', renderAll); });
-  ['ix','iy','iz','scrim'].forEach(function(k){
+  ['ix','iy','iz','scrim','shx','panelw','blendw','txtx','txty'].forEach(function(k){
     els[k].addEventListener('input', function(){ STEPS[cur][k] = +els[k].value; renderAll(); });
   });
   els.dust.addEventListener('change', renderAll);
@@ -404,8 +556,57 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     })();
   });
 
+  // ---- save / load (browser local storage, tied to this file) ----
+  // No server to save to — this is a local file. Local storage is what
+  // a static HTML file can persist, scoped to this file's path in
+  // Chrome. Doesn't save an uploaded photo (too large) — just the text
+  // and the framing numbers per cover, plus the global Look sliders.
+  var SAVE_KEY = 'attraction-formula-classroom-covers-v1';
+  var GLOBAL_KEYS = ['hl','glow'];
+
+  function saveState(){
+    var data = {
+      steps: STEPS.map(function(s){
+        return { eb:s.eb, n:s.n, ix:s.ix, iy:s.iy, iz:s.iz,
+                 scrim:s.scrim, shx:s.shx, panelw:s.panelw, blendw:s.blendw,
+                 txtx:s.txtx, txty:s.txty };
+      }),
+      globals: {}
+    };
+    GLOBAL_KEYS.forEach(function(k){ data.globals[k] = els[k].value; });
+    data.globals.dust = els.dust.checked;
+    data.globals.gradtext = els.gradtext.checked;
+
+    var btn = document.getElementById('saveState');
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+      btn.textContent = 'Saved ✓';
+    } catch(e){
+      btn.textContent = 'Could not save';
+    }
+    setTimeout(function(){ btn.textContent = 'Save my changes'; }, 1600);
+  }
+
+  function loadSavedState(){
+    var raw;
+    try { raw = localStorage.getItem(SAVE_KEY); } catch(e){ return; }
+    if(!raw) return;
+    try {
+      var data = JSON.parse(raw);
+      if(data.steps) data.steps.forEach(function(sv, i){ if(STEPS[i]) Object.assign(STEPS[i], sv); });
+      if(data.globals){
+        GLOBAL_KEYS.forEach(function(k){ if(data.globals[k] != null) els[k].value = data.globals[k]; });
+        if(data.globals.dust != null) els.dust.checked = data.globals.dust;
+        if(data.globals.gradtext != null) els.gradtext.checked = data.globals.gradtext;
+      }
+    } catch(e){ /* corrupted save data — ignore, defaults stand */ }
+  }
+
+  document.getElementById('saveState').addEventListener('click', saveState);
+
   // ---- boot ----
   function boot(){
+    loadSavedState(); // restore before the first render, over the hardcoded defaults
     if(EMBEDDED_REGULATE && EMBEDDED_REGULATE.indexOf('data:image') === 0){
       imgFromURL(EMBEDDED_REGULATE, function(im){ STEPS[0].img = im; loadStep(0); });
     } else {

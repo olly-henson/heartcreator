@@ -3,7 +3,7 @@
 How to **use** the tools to make a cover, and how to **improve** them.
 Read this and the folder `CLAUDE.md` before either.
 
-Three tools in this folder:
+Four tools in this folder:
 
 - **`cover-photo-generator.html`** — the **community / hero cover**.
   Output 1920 × 1020 PNG (Skool cover ratio 1084 × 576). Doubles as a mobile
@@ -14,6 +14,10 @@ Three tools in this folder:
 - **`about-page-tile-generator.html`** — the **Skool About Page tiles** for the
   three steps. Output 1400 × 790 PNG. Same look as the classroom covers but
   keeps the section **sub text**. Section E below.
+- **`join-card-generator.html`** — a **risk-free checklist + real group-card
+  screenshot** promo graphic (checklist left, arrow pointing at an uploaded
+  screenshot right). Output 1600 × 900 PNG. Different layout family, own
+  local-storage save/load. Section F below.
 
 ---
 
@@ -243,6 +247,27 @@ To preview a non-default cover, copy to a temp file and inject a
   readout.
 - The `STEPS` array is the single source of per-cover state — add a 5th cover by
   adding an object + a selector button with the next `data-step` index.
+- **Never let one slider's alpha double as another slider's job.** Real bug this
+  session: "Veil strength" was meant to control only the *intensity/colour* of
+  the purple glow, but its value (`sc`) was also multiplied into the
+  `destination-in` mask that controls how far the panel *covers* — so turning
+  veil strength down quietly ate into the solid coverage behind the headline
+  too, and Olly couldn't get "light veil, still fully covered" no matter what
+  he set Panel width to. Fix: the mask's own alpha must stay fixed (`1`, or
+  whatever the *coverage* control sets), and only the glow/tint/shade layers
+  drawn *before* the mask should scale with the intensity slider. When adding
+  a second slider to an existing effect, trace which canvas operation each one
+  actually touches before assuming they're independent.
+- **If an effect only renders conditionally (e.g. `if (hasImg) { drawPanel… }`),
+  say so up front in the control's hint text** — not just when Olly reports the
+  control "isn't doing anything." The "Copy framing & panel settings" feature
+  looked broken twice in one session because (a) the destination cover had no
+  photo loaded yet, so the panel/veil never draws at all regardless of what
+  values it holds, and (b) most covers ship with identical default values, so
+  copying between two untouched covers is copying identical numbers onto
+  themselves. Both are correct behaviour, not bugs — but both are exactly the
+  kind of thing a user reads as "it's not working." State the precondition
+  next to the control, don't wait to be asked twice.
 
 ---
 
@@ -267,3 +292,79 @@ differences are listed here.
 - Everything else — brand system, veil kept heavy on the left, headless-preview
   trick, "lock a framing by baking `ix/iy/iz/scrim` into `STEPS`" — is identical
   to tool D. Filenames: `attraction-formula-about-tile-step-0X-<name>.png`.
+
+---
+
+## F. `join-card-generator.html` — risk-free / benefits + join card
+
+Built 2026-09-17, from a screenshot Olly shared of a competitor's Skool promo
+("Maker School"): a checklist of benefits on the left, a mocked/real group
+card on the right, a hand-drawn arrow pointing at the join button. Output
+**1600 × 900**. Not a fork of tools D/E — a different layout family (two
+columns, no full-bleed photo veil), built fresh.
+
+**Real screenshot, not an illustrated mock.** First built as a fully
+canvas-drawn card (wordmark, description, member/online/admin stats, price
+button all drawn from scratch). Olly's actual instruction: "I will take a
+screenshot and let's use that... that's what Maker Skool has done." The
+canvas mock was rebuilt to instead accept an **uploaded screenshot** of
+Olly's real Skool group card, sized/positioned to fit the frame — real member
+count, real description, real price, zero risk of the mock drifting out of
+sync with the live group. **Lesson: when a reference example is itself a
+screenshot of something real (not a designed graphic), ask early whether
+Olly wants the same — an authentic screenshot embed — rather than defaulting
+to a fully illustrated recreation.** It's both more credible and less
+ongoing-maintenance.
+
+Key structure:
+- Left column: editable headline + up to N bullet textareas (`p0`..`p3` — a
+  4th (`p0`) was added mid-session as the *first* bullet; new bullets get
+  added by adding a new textarea + including it in the `points` array, the
+  `TEXT_IDS` save/load list, and the input-listener array — **all three**,
+  easy to forget one).
+- Bullet block has its own **spacing**, **vertical position**, **text size**
+  sliders — added incrementally as Olly asked for each, one at a time. Don't
+  pre-build controls speculatively; this tool grew its whole control surface
+  from individual small requests across one session.
+- Right column: an uploaded screenshot (`state.img`), sized via **Screenshot
+  size** (width in px, height follows the image's real aspect ratio — compute
+  this from the actual uploaded image dimensions, don't hardcode a guessed
+  ratio) and **Vertical position**.
+- A hand-drawn arrow (`drawArrow()`) connects the last bullet's actual
+  rendered bottom-right corner (via `wrapText`'s returned `{width,
+  lastLineY}`, not a guessed fixed offset) to a point on the screenshot set
+  by **Arrow: point at %**. Tuned this session to a chunky, more-curved,
+  wide-barb style: stroke width **16.6px**, barb angle **0.75 rad** off the
+  shaft, perpendicular bow of **32% of the arrow's straight-line length** —
+  use these as the current "good" defaults if asked for a similar arrow
+  elsewhere, rather than re-deriving from scratch.
+- **Local save/load via `localStorage`** (not the `STEPS`-array pattern of
+  tools D/E, since this tool has no multi-cover selector) — a "Save changes"
+  button serialises every text field + slider + the screenshot (as a
+  re-encoded data URL) to `localStorage`, and reloads it automatically next
+  time the file is opened in that browser. Photo save uses
+  `canvas.toDataURL()` on a throwaway canvas the image's own size, not the
+  original upload blob — keeps it simple, no separate file-storage step.
+
+---
+
+## Changelog
+
+**2026-09-22 — Post-session review (join-card-generator.html built, program-cover-generator.html panel bug fixed)**
+- **New tool documented**: Section F, `join-card-generator.html` — built from a
+  competitor screenshot Olly shared, real-Skool-screenshot approach (not an
+  illustrated mock) per his explicit instruction, bullet block controls grown
+  incrementally, arrow tuned to specific numeric defaults worth reusing.
+- **Real bug fixed in tool D** (`program-cover-generator.html`): "Veil
+  strength" was coupled into the panel's coverage mask alpha, not just its
+  colour intensity — lowering it for a subtler look was silently eating the
+  solid coverage behind the headline too, so "light veil, still fully
+  covered" was impossible. Fixed by decoupling the mask's alpha from `sc`.
+  Added as a standing rule in Section C: trace which canvas op each slider
+  touches before assuming two sliders are independent.
+- **"Copy settings from another cover" looked broken twice** — root causes
+  were conditional rendering (`if (hasImg)`) and several covers sharing
+  identical defaults, both correct behaviour that reads as a bug from the
+  outside. Added a rule: state a control's precondition in its hint text up
+  front, don't wait for it to be reported as broken.
+- Added `join-card-generator.html` to the top-of-file tool listing.

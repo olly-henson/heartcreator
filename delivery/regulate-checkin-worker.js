@@ -48,7 +48,7 @@
 
 const OLLY_EMAIL = 'olly@ollyhenson.com';
 const FROM_EMAIL = 'olly@ollyhenson.com';
-const FROM_NAME = 'The Regulate Program';
+const FROM_NAME = 'The Regulate Meditation';
 const COMMUNITY_URL = 'https://www.skool.com/heartcreator';
 const SHARE_BASE_URL = 'https://share.ollyhenson.com';
 const CHECKIN_INTERVAL_DAYS = 10;
@@ -91,19 +91,25 @@ function formatDateLong(date) {
 function confirmationEmailHtml(name, startDateText, endDateText) {
   return wrapHtml(`
     <p>Hi ${firstName(name)},</p>
-    <p>You've officially started The Regulate Program.</p>
+    <p>Congrats! 🥳</p>
+    <p>You're officially about to start using The Regulate Meditation.</p>
+    <p>When practiced consistently, this meditation is going to help you dramatically reduce how stressed, anxious and worried you might be about things working out.</p>
+    <p>It's time to get you feeling cool, calm and confident.</p>
+    <p>So for the next 30 days I'm going to be checking in with you to make sure things are going well.</p>
+    <p>Here's the official start and end date based on what you chose:</p>
     <p><strong style="font-size:19px;">Your start date:</strong> ${startDateText}<br>
     <strong style="font-size:19px;">Your end date:</strong> ${endDateText}</p>
+    <p>There's really strong research showing the power of maintaining a practice to regulate your nervous system over 4 weeks and seeing lasting change.</p>
+    <p>So by putting in the groundwork now, we're setting things up to work out in your favour for when you meet your person.</p>
     <p>I'll check in with you every 10 days or so, to see how you're doing.</p>
-    <p>${link(COMMUNITY_URL, "Come and let us know you've started in the community here")} &rarr;</p>
-    <p>And if you ever have a question you need an answer to or want to reach out for support, ${link(COMMUNITY_URL, 'ask it here')}.</p>
+    <p>${link(`${SHARE_BASE_URL}/?type=started`, "Come and let us know you've started in the community here")} &rarr;</p>
     <p>Olly</p>
   `);
 }
 
 function coachNotificationHtml(name, email, startDateText, firstCheckinText) {
   return wrapHtml(`
-    <p>${name} has just started The Regulate Program.</p>
+    <p>${name} has just started The Regulate Meditation.</p>
     <p><strong>Email:</strong> ${email}<br>
     <strong>Start date:</strong> ${startDateText}<br>
     <strong>First check-in scheduled:</strong> ${firstCheckinText}</p>
@@ -117,21 +123,21 @@ function checkinEmailHtml(name, checkinNumber, isFinal) {
   if (isFinal) {
     return wrapHtml(`
       <p>Hey ${firstName(name)},</p>
-      <p>So well done on completing The Regulate Program. 🥳</p>
-      <p>Let us know inside the community how it went ${link(COMMUNITY_URL, 'here')} and we'll unlock <strong>The Rewrite Program</strong> for you 😎</p>
+      <p>So well done on completing The Regulate Meditation. 🥳</p>
+      <p>Let us know inside the community how it went ${link(COMMUNITY_URL, 'here')} and we'll unlock <strong>The Rewrite Meditation</strong> for you 😎</p>
       <p>Olly</p>
     `);
   }
   const dayLine = checkinNumber === 2
-    ? `<p>You're now 20 days in to The Regulate Program.</p>`
+    ? `<p>You're now 20 days in to The Regulate Meditation.</p>`
     : '';
   // Check-in 1 names the program in the question; check-in 2 already
   // names it in the "20 days in" line above, so keeps the shorter form.
   const question = checkinNumber === 2
     ? `How's it been going?`
-    : `How's The Regulate Program going?`;
+    : `How's the meditating going?`;
   return wrapHtml(`
-    <p>Hi ${firstName(name)},</p>
+    <p>Hey ${firstName(name)},</p>
     ${dayLine}
     <p>${question}</p>
     <p>Let us know in the community ${link(COMMUNITY_URL, 'here')}</p>
@@ -200,14 +206,14 @@ export default {
     try {
       await sendEmail(env, {
         to: email,
-        subject: `You've started The Regulate Program`,
+        subject: `You've started The Regulate Meditation`,
         html: confirmationEmailHtml(name, startDateText, endDateText),
-        text: `You've officially started The Regulate Program. Start date: ${startDateText}. End date: ${endDateText}. I'll check in with you every 10 days or so, to see how you're doing. Come and let us know you've started in the community: ${COMMUNITY_URL}. If you ever have a question or want support, ask it here: ${COMMUNITY_URL}`,
+        text: `Congrats! You're officially about to start using The Regulate Meditation. When practiced consistently, this meditation is going to help you dramatically reduce how stressed, anxious and worried you might be about things working out. It's time to get you feeling cool, calm and confident. So for the next 30 days I'm going to be checking in with you to make sure things are going well. Start date: ${startDateText}. End date: ${endDateText}. There's really strong research showing the power of maintaining a practice to regulate your nervous system over 4 weeks and seeing lasting change. So by putting in the groundwork now, we're setting things up to work out in your favour for when you meet your person. I'll check in with you every 10 days or so, to see how you're doing. Come and let us know you've started in the community: ${SHARE_BASE_URL}/?type=started`,
       });
 
       await sendEmail(env, {
         to: OLLY_EMAIL,
-        subject: `${name} has started The Regulate Program`,
+        subject: `${name} has started The Regulate Meditation`,
         html: coachNotificationHtml(name, email, startDateText, formatDateLong(firstCheckin)),
       });
 
@@ -219,12 +225,12 @@ export default {
         await sendEmail(env, {
           to: email,
           subject: isFinal
-            ? `Well done on completing The Regulate Program! 🎉`
+            ? `Well done on completing The Regulate Meditation! 🎉`
             : `How's it going?`,
           html: checkinEmailHtml(name, i, isFinal),
           text: isFinal
-            ? `So well done on completing The Regulate Program. 🥳 Let us know inside the community how it went and we'll unlock The Rewrite Program for you: ${COMMUNITY_URL}`
-            : `${i === 2 ? "How's it been going?" : "How's The Regulate Program going?"} Let us know in the community: ${COMMUNITY_URL}`,
+            ? `So well done on completing The Regulate Meditation. 🥳 Let us know inside the community how it went and we'll unlock The Rewrite Meditation for you: ${COMMUNITY_URL}`
+            : `${i === 2 ? "How's it been going?" : "How's the meditating going?"} Let us know in the community: ${COMMUNITY_URL}`,
           scheduledAt: sendAt.toISOString(),
         });
       }

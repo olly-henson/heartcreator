@@ -23,18 +23,24 @@ export default {
     // classroom lesson: the visitor copies this, posts it in the
     // community, and that post is Olly's cue to unlock The Regulate
     // Program. A ?text= param still overrides it if ever needed.
-    const INTRO_MSG = "Hey! I'm ready to start The Regulate Program";
-    const text = url.searchParams.get('text') || (type === 'intro' ? INTRO_MSG : '');
+    const INTRO_MSG = "Hey! I'm ready to start The Regulate Meditation";
+    // Same wording as regulate-start.html's own post-signup share text —
+    // was missing entirely before, so the `started` page had a heading
+    // but nothing pre-written to copy.
+    const STARTED_MSG = "I've just started The Regulate Meditation — excited to get going!";
+    const text = url.searchParams.get('text') ||
+      (type === 'intro' ? INTRO_MSG :
+       type === 'started' ? STARTED_MSG : '');
     const heading    = type === 'coach'   ? 'Your client needs help with' :
                        type === 'help'    ? 'Ask for help in the community' :
                        type === 'results' ? 'Share client results' :
                        type === 'final'   ? 'Share Your Results' :
                        type === 'started' ? 'Let us know you\'ve started!' :
-                       type === 'intro'   ? 'Unlock Your Program' :
+                       type === 'intro'   ? 'Unlock Your Meditation' :
                        type === 'checkin' ? 'How did your last 10 days go?' :
                                             'Share your win';
     const subheading = type === 'intro'
-      ? 'Copy and paste this message into the community to unlock Your Regulate Program'
+      ? 'Copy and paste this message into the community to unlock your Regulate Meditation'
       : '';
     const buttonText = type === 'coach'   ? 'Respond in Community' :
                        type === 'help'    ? 'Get help in the community' :
