@@ -1,0 +1,358 @@
+<title>The Attraction Formula Program</title>
+
+<!-- APPLICATION PAGE | The Attraction Formula Program — Heart Attractor -->
+<!-- GHL: One Custom HTML block. Section + row + column padding/margin = 0. Full Width. -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; background: #080010 !important; }
+  .ohc-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-family: 'Inter', sans-serif;
+    background: #080010;
+    color: #f8f4ff;
+  }
+
+  /* ── HEADER ── */
+  .ohc-header {
+    position: relative; overflow: hidden;
+    background: radial-gradient(120% 100% at 20% 0%, #4B1466 0%, #150818 55%, #080010 100%);
+    padding: 64px 40px 56px;
+    text-align: center;
+  }
+  .ohc-eyebrow {
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    color: #B84FE8;
+    border: 1px solid rgba(184,79,232,0.4);
+    padding: 6px 15px; border-radius: 50px;
+    margin-bottom: 22px; position: relative; z-index: 2;
+  }
+  .ohc-h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(29px, 5.25vw, 61px);
+    font-weight: 800; line-height: 1.15;
+    color: #ffffff; margin: 0 auto; max-width: 900px;
+    position: relative; z-index: 2;
+    overflow-wrap: normal; word-break: normal; hyphens: none;
+  }
+  .ohc-h1 .ohc-grad {
+    background: linear-gradient(135deg, #B84FE8, #E1A6FF);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  /* ── FORM ── */
+  .ohc-form-wrap {
+    background: linear-gradient(180deg, #080010 0%, #050008 100%);
+    padding: 48px 24px 96px;
+    display: flex; justify-content: center;
+  }
+  .ohc-form-card {
+    background: #f5f3ff;
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 28px;
+    padding: 56px 60px;
+    width: 100%; max-width: 860px;
+    box-shadow:
+      0 8px 48px rgba(0,0,0,0.5),
+      0 0 80px rgba(76,29,149,0.25);
+  }
+
+  .ohc-field { margin-bottom: 32px; }
+  .ohc-label {
+    display: block;
+    font-size: 18px; font-weight: 600; color: #1e0a40;
+    margin-bottom: 10px; letter-spacing: 0.2px; line-height: 1.4;
+  }
+  .ohc-label span { color: #7c3aed; margin-left: 2px; }
+
+  .ohc-input,
+  .ohc-textarea {
+    width: 100%; box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid rgba(109,40,217,0.25);
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 17px; color: #1e0a40;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .ohc-input::placeholder,
+  .ohc-textarea::placeholder { color: #9d94b0; }
+  .ohc-input:focus,
+  .ohc-textarea:focus {
+    border-color: rgba(124,58,237,0.7);
+    box-shadow: 0 0 0 4px rgba(109,40,217,0.1);
+    background: #fdfcff;
+  }
+  .ohc-textarea { resize: vertical; min-height: 130px; line-height: 1.65; }
+
+  .ohc-radio-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .ohc-radio {
+    display: flex; align-items: center; gap: 10px;
+    background: #ffffff;
+    border: 1px solid rgba(109,40,217,0.25);
+    border-radius: 14px;
+    padding: 14px 24px;
+    font-size: 17px; color: #1e0a40; font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .ohc-radio:has(input:checked) {
+    border-color: rgba(124,58,237,0.7);
+    box-shadow: 0 0 0 4px rgba(109,40,217,0.1);
+    background: #fdfcff;
+  }
+  .ohc-radio input { accent-color: #7c3aed; width: 18px; height: 18px; cursor: pointer; }
+
+  .ohc-divider {
+    border: none; border-top: 1px solid rgba(109,40,217,0.15);
+    margin: 40px 0;
+  }
+
+  /* ── SUBMIT BUTTON ── */
+  .ohc-btn {
+    width: 100%; padding: 22px;
+    background: linear-gradient(135deg, #7c3aed, #6d28d9, #4c1d95);
+    border: none; border-radius: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 19px; font-weight: 700; color: white;
+    cursor: pointer; letter-spacing: 0.5px;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 32px rgba(109,40,217,0.6), 0 0 0 1px rgba(167,139,250,0.2) inset;
+    margin-top: 12px;
+  }
+  .ohc-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 48px rgba(109,40,217,0.8), 0 0 0 1px rgba(196,181,253,0.25) inset;
+  }
+  .ohc-btn:active { transform: translateY(0); }
+  .ohc-btn::after {
+    content: ''; position: absolute;
+    top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.5s ease;
+  }
+  .ohc-btn:hover::after { left: 150%; }
+  .ohc-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* ── SUCCESS / ERROR ── */
+  .ohc-error-msg {
+    display: none; background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3); border-radius: 12px;
+    padding: 14px 18px; font-size: 15px; color: #b91c1c;
+    margin-top: 16px; text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  .ohc-footer {
+    background: #03000a; border-top: 1px solid rgba(168,85,247,0.15);
+    padding: 28px 40px; text-align: center;
+  }
+  .ohc-footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 10px; flex-wrap: wrap; }
+  .ohc-footer-links a {
+    font-size: 13px; color: rgba(196,181,253,0.45); text-decoration: none; transition: color 0.2s;
+  }
+  .ohc-footer-links a:hover { color: #a855f7; }
+  .ohc-footer-copy { font-size: 12px; color: rgba(196,181,253,0.25); }
+
+  @media (max-width: 600px) {
+    .ohc-header { padding: 52px 20px 40px; }
+    .ohc-form-wrap { padding: 32px 16px 72px; }
+    .ohc-form-card { padding: 32px 24px; }
+    .ohc-name-row { flex-direction: column; gap: 0 !important; }
+    .ohc-footer { padding: 24px 20px; }
+  }
+</style>
+
+<div class="ohc-page">
+
+  <!-- HEADER -->
+  <div class="ohc-header">
+    <div class="ohc-eyebrow">👉 The Attraction Formula Program</div>
+    <h1 class="ohc-h1">Attract A Healthy Long-Term<br><span class="ohc-grad">Relationship In 12&nbsp;Weeks</span></h1>
+  </div>
+
+  <!-- FORM -->
+  <div class="ohc-form-wrap">
+    <div class="ohc-form-card">
+
+      <div id="ohcAppForm">
+
+        <div class="ohc-name-row" style="display:flex; gap:20px;">
+          <div class="ohc-field" style="flex:1;">
+            <label class="ohc-label" for="ohc_fname">First Name <span>*</span></label>
+            <input class="ohc-input" type="text" id="ohc_fname" name="ohc_fname" autocomplete="given-name" placeholder="" required>
+          </div>
+          <div class="ohc-field" style="flex:1;">
+            <label class="ohc-label" for="ohc_lname">Last Name <span>*</span></label>
+            <input class="ohc-input" type="text" id="ohc_lname" name="ohc_lname" autocomplete="family-name" placeholder="" required>
+          </div>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="ohc_email">Best Email Address <span>*</span></label>
+          <input class="ohc-input" type="text" id="ohc_email" name="ohc_email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="whatsapp">WhatsApp Number <span>*</span></label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="whatsapp_code" style="padding:14px 10px;background:#1e0a40;border:1.5px solid #7c3aed;border-radius:10px;color:#f8f4ff;font-size:15px;min-width:110px;outline:none;cursor:pointer">
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+1-CA">🇨🇦 +1</option>
+              <option value="+44" selected>🇬🇧 +44</option>
+              <option value="+61">🇦🇺 +61</option>
+              <option value="+64">🇳🇿 +64</option>
+              <option value="+353">🇮🇪 +353</option>
+              <option value="+27">🇿🇦 +27</option>
+              <option value="+31">🇳🇱 +31</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+39">🇮🇹 +39</option>
+              <option value="+46">🇸🇪 +46</option>
+              <option value="+47">🇳🇴 +47</option>
+              <option value="+45">🇩🇰 +45</option>
+              <option value="+41">🇨🇭 +41</option>
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+65">🇸🇬 +65</option>
+              <option value="+971">🇦🇪 +971</option>
+            </select>
+            <input class="ohc-input" type="tel" id="whatsapp" name="whatsapp" placeholder="7911 123456" required style="flex:1;margin:0">
+          </div>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="profession">Profession <span>*</span></label>
+          <input class="ohc-input" type="text" id="profession" name="profession" autocomplete="organization-title" placeholder="" required>
+        </div>
+
+        <hr class="ohc-divider">
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="situation">Where are things at right now? What's most frustrating about where you're at now? <span>*</span></label>
+          <textarea class="ohc-textarea" id="situation" name="situation" placeholder="" required></textarea>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="goal_12wk">Where would you want to be in 12 weeks? <span>*</span></label>
+          <textarea class="ohc-textarea" id="goal_12wk" name="goal_12wk" placeholder="" required></textarea>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="goal_12mo">Where would you want to be in 12 months? <span>*</span></label>
+          <textarea class="ohc-textarea" id="goal_12mo" name="goal_12mo" placeholder="" required></textarea>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="tried">What have you tried so far to attract a healthy long-term relationship? <span>*</span></label>
+          <textarea class="ohc-textarea" id="tried" name="tried" placeholder="" required></textarea>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="stuck">What do you think is keeping you stuck where you are? <span>*</span></label>
+          <textarea class="ohc-textarea" id="stuck" name="stuck" placeholder="" required></textarea>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label">Have you worked with a coach before? <span>*</span></label>
+          <div class="ohc-radio-row">
+            <label class="ohc-radio"><input type="radio" name="coached_before" value="Yes" required> Yes</label>
+            <label class="ohc-radio"><input type="radio" name="coached_before" value="No"> No</label>
+          </div>
+        </div>
+
+        <div class="ohc-field">
+          <label class="ohc-label" for="questions_for_me">Is there anything you want to know about me and what I do specifically?</label>
+          <textarea class="ohc-textarea" id="questions_for_me" name="questions_for_me" placeholder="Optional"></textarea>
+        </div>
+
+        <button type="button" class="ohc-btn" id="ohcSubmitBtn">Submit My Application →</button>
+        <div class="ohc-error-msg" id="ohcError">Something went wrong. Please try again or email olly@ollyhenson.com</div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="ohc-footer">
+    <nav class="ohc-footer-links">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </nav>
+    <p class="ohc-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('ohcSubmitBtn').addEventListener('click', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('ohcSubmitBtn');
+    const errorEl = document.getElementById('ohcError');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    errorEl.style.display = 'none';
+
+    const utmParams = getUtmParams();
+
+    const data = {
+      first_name:   document.getElementById('ohc_fname').value.trim(),
+      last_name:    document.getElementById('ohc_lname').value.trim(),
+      email:        document.getElementById('ohc_email').value.trim(),
+      whatsapp:     document.getElementById('whatsapp_code').value.replace('-CA','') + ' ' + document.getElementById('whatsapp').value.trim(),
+      profession:   document.getElementById('profession').value.trim(),
+      situation:        document.getElementById('situation').value.trim(),
+      goal_12wk:        document.getElementById('goal_12wk').value.trim(),
+      goal_12mo:        document.getElementById('goal_12mo').value.trim(),
+      tried:            document.getElementById('tried').value.trim(),
+      stuck:            document.getElementById('stuck').value.trim(),
+      coached_before:   (document.querySelector('input[name="coached_before"]:checked') || {}).value || '',
+      questions_for_me: document.getElementById('questions_for_me').value.trim(),
+      utm_source:   utmParams.utm_source,
+      utm_medium:   utmParams.utm_medium,
+      utm_campaign: utmParams.utm_campaign,
+      utm_content:  utmParams.utm_content,
+      upgrade_path: new URLSearchParams(window.location.search).get('ref') || ''
+    };
+
+    try {
+      // ⚠️ Create a new "Applications" workflow in GHL with an Inbound Webhook trigger,
+      // then paste its URL here (replaces the placeholder below).
+      await fetch('PASTE_YOUR_GHL_WEBHOOK_URL_HERE', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      window.location.href = 'https://ollyhenson.com/attraction-formula-thank-you';
+    } catch(err) {
+      btn.disabled = false;
+      btn.textContent = 'Submit My Application →';
+      errorEl.style.display = 'block';
+    }
+  });
+
+  function getUtmParams() {
+    var params = new URLSearchParams(window.location.search);
+    var stored = {};
+    try { stored = JSON.parse(sessionStorage.getItem('ohc_utm') || '{}'); } catch(e) {}
+    var utm = {
+      utm_source:   params.get('utm_source')   || stored.utm_source   || '',
+      utm_medium:   params.get('utm_medium')   || stored.utm_medium   || '',
+      utm_campaign: params.get('utm_campaign') || stored.utm_campaign || '',
+      utm_content:  params.get('utm_content')  || stored.utm_content  || ''
+    };
+    try { sessionStorage.setItem('ohc_utm', JSON.stringify(utm)); } catch(e) {}
+    return utm;
+  }
+
+  getUtmParams();
+</script>

@@ -86,6 +86,7 @@
       <button data-step="0" class="on">01</button>
       <button data-step="1">02</button>
       <button data-step="2">03</button>
+      <button data-step="3">04</button>
     </div>
 
     <div class="grouphd">Text</div>
@@ -110,12 +111,18 @@
     <input type="file" id="file" accept="image/*" hidden>
     <div class="ctl" id="ix-c"><label>Image X <span id="ix-v">50</span></label>
       <input id="ix" type="range" min="0" max="100" value="50"></div>
+    <div class="ctl" id="shx-c"><label>Shift right, extra (px) <span id="shx-v">0</span></label>
+      <input id="shx" type="range" min="-200" max="900" value="0"></div>
     <div class="ctl" id="iy-c"><label>Image Y <span id="iy-v">50</span></label>
       <input id="iy" type="range" min="0" max="100" value="50"></div>
     <div class="ctl" id="iz-c"><label>Image zoom <span id="iz-v">112</span></label>
-      <input id="iz" type="range" min="100" max="220" value="112"></div>
+      <input id="iz" type="range" min="60" max="220" value="112"></div>
     <div class="ctl" id="scrim-c"><label>Veil strength <span id="scrim-v">100</span></label>
       <input id="scrim" type="range" min="30" max="150" value="100"></div>
+    <div class="ctl" id="panelw-c"><label>Panel width <span id="panelw-v">50</span>%</label>
+      <input id="panelw" type="range" min="35" max="65" value="50"></div>
+    <div class="ctl" id="blendw-c"><label>Blend width <span id="blendw-v">45</span>%</label>
+      <input id="blendw" type="range" min="15" max="70" value="45"></div>
 
     <div class="grouphd">Look</div>
     <div class="ctl">
@@ -129,6 +136,10 @@
     <div class="ctl">
       <label>Sub text size <span id="sub_hl-v">100%</span></label>
       <input id="sub_hl" type="range" min="70" max="135" value="100">
+    </div>
+    <div class="ctl">
+      <label>Sub text stagger <span id="stagger-v">10</span>px</label>
+      <input id="stagger" type="range" min="0" max="60" value="10">
     </div>
     <div class="ctl">
       <label>Glow strength <span id="glow-v">100</span></label>
@@ -145,11 +156,15 @@
 
     <div class="row">
       <button class="act" id="dl">Download this PNG</button>
-      <button class="ghost" id="dlall">Download all 3</button>
+      <button class="ghost" id="dlall">Download all 4</button>
     </div>
     <div class="row">
       <button class="ghost" id="reset">Reset text</button>
+      <button class="act" id="saveState">Save my changes</button>
     </div>
+    <p class="hint" id="saveHint">Text, sizes, photo framing and panel settings for
+       all four tiles — saved in this browser, tied to this file. Doesn't save an
+       uploaded photo itself, just its position.</p>
     <p class="hint">1400&times;790 is the About Page tile size. Skool crops the
        top of uploaded images — the block is centred and clear of all edges.</p>
   </div>
@@ -176,20 +191,23 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   var STEPS = [
     { eb:'STEP 01', n:'REGULATE',
       d:'Calm your nervous system out of survival-based, needy, attached energy.',
-      img:null, ix:58, iy:30, iz:112, scrim:100 },
+      img:null, ix:58, iy:30, iz:112, scrim:100, shx:0, panelw:50, blendw:45 },
     { eb:'STEP 02', n:'REWRITE',
       d:'Rewrite the core beliefs from your past that block love and drive self-sabotage.',
-      img:null, ix:50, iy:45, iz:112, scrim:100 },
+      img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45 },
     { eb:'STEP 03', n:'REHEARSE',
       d:'Mentally and emotionally rehearse being with your partner until it already feels real.',
-      img:null, ix:50, iy:45, iz:112, scrim:100 }
+      img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45 },
+    { eb:'YOUR JOURNEY', n:'STEP-BY-STEP',
+      d:'Follow a step-by-step process to feeling confident and actually attracting someone that you can build your life with.',
+      img:null, ix:50, iy:45, iz:112, scrim:100, shx:0, panelw:50, blendw:45 }
   ];
   var DEFAULT_TEXT = STEPS.map(function(s){ return { eb:s.eb, n:s.n, d:s.d }; });
 
   var cur = 0;
   var els = {};
-  ['eyebrow','name','sub','eb_hl','hl','sub_hl','glow','dust','gradtext','file','pick','pclear',
-   'ix','iy','iz','scrim'].forEach(function(k){ els[k] = document.getElementById(k); });
+  ['eyebrow','name','sub','eb_hl','hl','sub_hl','stagger','glow','dust','gradtext','file','pick','pclear',
+   'ix','iy','iz','scrim','shx','panelw','blendw'].forEach(function(k){ els[k] = document.getElementById(k); });
 
   // ---- seeded stardust so it doesn't flicker on every re-render ----
   function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);
@@ -209,11 +227,51 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     return lines;
   }
 
+  // First pass: capping the ALLOWED width per line (e.g. maxW, maxW-step,
+  // maxW-2*step...) does NOT guarantee the ACTUAL rendered width comes
+  // out smaller line to line — greedy wrap can still pack a "smaller
+  // cap" line fuller than a "bigger cap" one above it if the words
+  // happen to fit differently. That's exactly what you saw: line 2
+  // wider than line 1 in pixels despite line 2's cap being smaller.
+  //
+  // Fix: each line's cap is derived from the PREVIOUS line's actual
+  // measured width (minus step), not from a precomputed formula — so a
+  // strictly-decreasing shape is guaranteed by construction, not luck.
+  function wrapStagger(text, font, maxW, step){
+    ctx.font = font;
+    var words = text.split(/\s+/);
+    var lines = [];
+    var line = '';
+    var cap = maxW;
+    var i = 0;
+    while(i < words.length){
+      var t = line ? line + ' ' + words[i] : words[i];
+      if(ctx.measureText(t).width > cap && line){
+        lines.push(line);
+        cap = Math.max(maxW*0.32, ctx.measureText(line).width - step);
+        line = '';
+        continue; // retry this same word against the new, smaller cap
+      }
+      line = t;
+      i++;
+    }
+    if(line) lines.push(line);
+    return lines;
+  }
+
   function imgFromURL(url, cb){
     var im = new Image();
     im.onload = function(){ cb(im); };
     im.src = url;
   }
+
+  // Offscreen layer so the photo's own edge can be feathered in
+  // isolation (destination-in there only affects the photo, never
+  // whatever's already on the real canvas — same technique used in
+  // relationship-ad-generator.html to fix its hard-seam bug).
+  var photoLayer = document.createElement('canvas');
+  photoLayer.width = W; photoLayer.height = H;
+  var pctx2 = photoLayer.getContext('2d');
 
   function drawPhoto(g, s){
     if(!s.img) return;
@@ -221,12 +279,111 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     var base = Math.max(W/im.width, H/im.height);
     var scale = base * (s.iz/100);
     var dw = im.width*scale, dh = im.height*scale;
-    var dx = (W - dw) * (s.ix/100);
+    var dx = (W - dw) * (s.ix/100) + (s.shx||0);
     var dy = (H - dh) * (s.iy/100);
-    g.save();
-    g.filter = 'saturate(1.02) contrast(1.02)';
-    g.drawImage(im, dx, dy, dw, dh);
-    g.restore();
+
+    pctx2.clearRect(0,0,W,H);
+    pctx2.save();
+    pctx2.filter = 'saturate(1.02) contrast(1.02)';
+    pctx2.drawImage(im, dx, dy, dw, dh);
+    pctx2.restore();
+
+    // Feather the photo's own LEFT edge whenever it doesn't reach the
+    // canvas edge — this only happens once "Image zoom" goes low enough
+    // to zoom out past the old cover-fit minimum (now unlocked, min 60
+    // instead of 100). Without this the photo's hard rectangular
+    // boundary shows straight through the veil as a visible seam.
+    if(dx > 1){
+      pctx2.save();
+      pctx2.globalCompositeOperation = 'destination-in';
+      var featherW = Math.max(W*0.14, dw*0.18);
+      var mask = pctx2.createLinearGradient(dx, 0, dx+featherW, 0);
+      mask.addColorStop(0, 'rgba(0,0,0,0)');
+      mask.addColorStop(1, 'rgba(0,0,0,1)');
+      pctx2.fillStyle = mask;
+      pctx2.fillRect(dx, 0, W-dx, H);
+      pctx2.restore();
+    }
+
+    g.drawImage(photoLayer, 0, 0);
+    return dx;
+  }
+
+  function hexToRgb(hex){
+    var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : [21,8,24];
+  }
+
+  // Samples the photo's own colour right where the panel is about to
+  // fade out, so the panel's last bit of colour matches the photo
+  // instead of jumping straight from purple panel to whatever's there.
+  function sampleColorAt(g, atX){
+    try {
+      var x = Math.max(0, Math.min(W-2, Math.round(atX)));
+      var d = g.getImageData(x, Math.round(H*0.15), 2, Math.round(H*0.7)).data;
+      var r=0,gg=0,b=0,n=0;
+      for(var i=0;i<d.length;i+=4){ r+=d[i]; gg+=d[i+1]; b+=d[i+2]; n++; }
+      return n ? [Math.round(r/n), Math.round(gg/n), Math.round(b/n)] : [40,20,50];
+    } catch(e){ return [40,20,50]; }
+  }
+
+  var panelLayer2 = document.createElement('canvas');
+  panelLayer2.width = W; panelLayer2.height = H;
+  var pctx3 = panelLayer2.getContext('2d');
+
+  // Solid panel with a purple glow, upper-left — same technique as
+  // relationship-ad-generator.html: opaque up to (at least) the photo's
+  // own left edge (dx), so that edge is always fully hidden, then fades
+  // out over the photo. veil strength (s.scrim) scales its darkness.
+  function drawPanel(g, dx, s){
+    var sc = (s.scrim||100)/100;
+    var panelFrac = (s.panelw||50)/100;
+    var blendFrac = (s.blendw||45)/100;
+    var panelW = W*panelFrac;
+
+    var fadeWidth = Math.max(W*0.16, panelW*blendFrac*1.3);
+    var fadeStart = Math.max(panelW*(1-blendFrac*0.6), dx);
+    var fadeEnd = fadeStart + fadeWidth;
+    var drawW = Math.max(panelW, fadeEnd);
+    var wallC = sampleColorAt(g, fadeEnd*0.97);
+
+    pctx3.clearRect(0,0,W,H);
+    pctx3.save();
+    pctx3.fillStyle = '#150818';
+    pctx3.fillRect(0,0,drawW,H);
+
+    var glow = pctx3.createRadialGradient(panelW*0.12, H*0.08, 0, panelW*0.12, H*0.08, panelW*1.15);
+    glow.addColorStop(0,   'rgba(184,79,232,'+(0.55*sc).toFixed(3)+')');
+    glow.addColorStop(0.35,'rgba(140,60,190,'+(0.38*sc).toFixed(3)+')');
+    glow.addColorStop(0.7, 'rgba(90,45,120,'+(0.16*sc).toFixed(3)+')');
+    glow.addColorStop(1,   'rgba('+wallC.join(',')+',0)');
+    pctx3.fillStyle = glow;
+    pctx3.fillRect(0,0,drawW,H);
+
+    var bottomShade = pctx3.createLinearGradient(0,H*0.55,0,H);
+    bottomShade.addColorStop(0,'rgba(0,0,0,0)');
+    bottomShade.addColorStop(1,'rgba(0,0,0,'+(0.4*sc).toFixed(3)+')');
+    pctx3.fillStyle = bottomShade;
+    pctx3.fillRect(0,0,drawW,H);
+
+    var tint = pctx3.createLinearGradient(fadeStart*0.7,0,fadeEnd,0);
+    tint.addColorStop(0,   'rgba('+wallC.join(',')+',0)');
+    tint.addColorStop(0.55,'rgba('+wallC.join(',')+',0.35)');
+    tint.addColorStop(1,   'rgba('+wallC.join(',')+',0.65)');
+    pctx3.fillStyle = tint;
+    pctx3.fillRect(0,0,drawW,H);
+    pctx3.restore();
+
+    pctx3.save();
+    pctx3.globalCompositeOperation = 'destination-in';
+    var mask = pctx3.createLinearGradient(fadeStart,0,fadeEnd,0);
+    mask.addColorStop(0,'rgba(0,0,0,'+Math.min(1,sc).toFixed(3)+')');
+    mask.addColorStop(1,'rgba(0,0,0,0)');
+    pctx3.fillStyle = mask;
+    pctx3.fillRect(0,0,W,H);
+    pctx3.restore();
+
+    g.drawImage(panelLayer2, 0, 0);
   }
 
   function render(twoCtx){
@@ -241,22 +398,17 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     bg.addColorStop(1,   '#0A0510');
     g.fillStyle = bg; g.fillRect(0,0,W,H);
 
-    // -------- photo + brand veil --------
+    // -------- photo + solid panel with purple glow --------
+    // Replaced the old full-width translucent veil (2026-09-11, per
+    // Olly) — that could never let the photo shift far right because it
+    // relied on the photo itself covering the canvas. A proper opaque
+    // panel decouples the two: it covers whatever's on the left
+    // regardless of where the photo sits, and its fade zone tracks the
+    // photo's actual edge (dx, returned by drawPhoto), so "Shift right"
+    // now has real, unlimited-feeling range.
     if(hasImg){
-      drawPhoto(g, s);
-      var sc = (s.scrim/100);
-      var v = g.createLinearGradient(0,0,W,0);
-      v.addColorStop(0.00,'rgba(19,7,23,'+(0.93*sc).toFixed(3)+')');
-      v.addColorStop(0.40,'rgba(19,7,23,'+(0.75*sc).toFixed(3)+')');
-      v.addColorStop(0.72,'rgba(19,7,23,'+(0.50*sc).toFixed(3)+')');
-      v.addColorStop(1.00,'rgba(19,7,23,'+(0.62*sc).toFixed(3)+')');
-      g.fillStyle = v; g.fillRect(0,0,W,H);
-      var vy = g.createLinearGradient(0,0,0,H);
-      vy.addColorStop(0.00,'rgba(10,5,16,0.20)');
-      vy.addColorStop(0.42,'rgba(10,5,16,0)');
-      vy.addColorStop(0.78,'rgba(10,5,16,0.35)');
-      vy.addColorStop(1.00,'rgba(10,5,16,0.84)');
-      g.fillStyle = vy; g.fillRect(0,0,W,H);
+      var dx = drawPhoto(g, s);
+      drawPanel(g, dx, s);
     }
 
     // -------- corner glow blooms --------
@@ -295,11 +447,17 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     g.font = '800 ' + nSize + 'px Poppins, sans-serif';
     var measured = g.measureText(name).width;
     if(measured > maxNameW) nSize *= maxNameW / measured;
+    // final keyword width at its actual rendered size — the sub text's
+    // first line is capped to just inside this, whatever size the
+    // keyword ends up being (locked to it, not a fixed 640px)
+    g.font = '800 ' + nSize + 'px Poppins, sans-serif';
+    var nameW = g.measureText(name).width;
 
     var eSize = 25 * (+els.eb_hl.value/100);
     var sSize = 29 * (+els.sub_hl.value/100);
     var sFont = '400 ' + sSize + 'px Poppins, sans-serif';
-    var sLines = wrap(sub, sFont, 640);
+    var subMaxW = Math.max(220, nameW - 8); // "slightly inside" the keyword
+    var sLines = wrapStagger(sub, sFont, subMaxW, +els.stagger.value);
     var sLead = sSize * 1.4;
 
     var gapEN = 26, gapNS = 30;
@@ -362,16 +520,20 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     document.getElementById('hl-v').textContent     = els.hl.value + '%';
     document.getElementById('eb_hl-v').textContent  = els.eb_hl.value + '%';
     document.getElementById('sub_hl-v').textContent = els.sub_hl.value + '%';
+    document.getElementById('stagger-v').textContent = els.stagger.value;
     document.getElementById('glow-v').textContent   = els.glow.value;
     document.getElementById('ix-v').textContent     = els.ix.value;
     document.getElementById('iy-v').textContent     = els.iy.value;
     document.getElementById('iz-v').textContent     = els.iz.value;
     document.getElementById('scrim-v').textContent  = els.scrim.value;
+    document.getElementById('shx-v').textContent    = els.shx.value;
+    document.getElementById('panelw-v').textContent = els.panelw.value;
+    document.getElementById('blendw-v').textContent = els.blendw.value;
   }
 
   function togglePhotoCtls(){
     var on = !!STEPS[cur].img;
-    ['ix-c','iy-c','iz-c','scrim-c'].forEach(function(id){
+    ['ix-c','iy-c','iz-c','scrim-c','shx-c','panelw-c','blendw-c'].forEach(function(id){
       document.getElementById(id).classList.toggle('dim', !on);
     });
     els.pclear.style.display = on ? '' : 'none';
@@ -392,6 +554,7 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     els.name.value = s.n;
     els.sub.value = s.d;
     els.ix.value = s.ix; els.iy.value = s.iy; els.iz.value = s.iz; els.scrim.value = s.scrim;
+    els.shx.value = s.shx||0; els.panelw.value = s.panelw||50; els.blendw.value = s.blendw||45;
     renderAll();
   }
 
@@ -413,8 +576,8 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   els.eyebrow.addEventListener('input', function(){ STEPS[cur].eb = els.eyebrow.value; renderAll(); });
   els.name.addEventListener('input',    function(){ STEPS[cur].n  = els.name.value;    renderAll(); });
   els.sub.addEventListener('input',     function(){ STEPS[cur].d  = els.sub.value;     renderAll(); });
-  ['eb_hl','hl','sub_hl','glow'].forEach(function(k){ els[k].addEventListener('input', renderAll); });
-  ['ix','iy','iz','scrim'].forEach(function(k){
+  ['eb_hl','hl','sub_hl','stagger','glow'].forEach(function(k){ els[k].addEventListener('input', renderAll); });
+  ['ix','iy','iz','scrim','shx','panelw','blendw'].forEach(function(k){
     els[k].addEventListener('input', function(){ STEPS[cur][k] = +els[k].value; renderAll(); });
   });
   els.dust.addEventListener('change', renderAll);
@@ -455,8 +618,58 @@ var EMBEDDED_REGULATE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     })();
   });
 
+  // ---- save / load (browser local storage, tied to this file) ----
+  // There's no server here to save to — this is a local file. Local
+  // storage is the only place a static HTML file can persist anything,
+  // and it's scoped to this exact file path in Chrome. It does NOT save
+  // an uploaded photo (too large / not worth the complexity) — only the
+  // text and the framing numbers (position/zoom/panel/blend) per tile,
+  // plus the global Look sliders.
+  var SAVE_KEY = 'attraction-formula-about-tiles-v1';
+  var GLOBAL_KEYS = ['hl','eb_hl','sub_hl','stagger','glow'];
+
+  function saveState(){
+    var data = {
+      steps: STEPS.map(function(s){
+        return { eb:s.eb, n:s.n, d:s.d, ix:s.ix, iy:s.iy, iz:s.iz,
+                 scrim:s.scrim, shx:s.shx, panelw:s.panelw, blendw:s.blendw };
+      }),
+      globals: {}
+    };
+    GLOBAL_KEYS.forEach(function(k){ data.globals[k] = els[k].value; });
+    data.globals.dust = els.dust.checked;
+    data.globals.gradtext = els.gradtext.checked;
+
+    var btn = document.getElementById('saveState');
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+      btn.textContent = 'Saved ✓';
+    } catch(e){
+      btn.textContent = 'Could not save';
+    }
+    setTimeout(function(){ btn.textContent = 'Save my changes'; }, 1600);
+  }
+
+  function loadSavedState(){
+    var raw;
+    try { raw = localStorage.getItem(SAVE_KEY); } catch(e){ return; }
+    if(!raw) return;
+    try {
+      var data = JSON.parse(raw);
+      if(data.steps) data.steps.forEach(function(sv, i){ if(STEPS[i]) Object.assign(STEPS[i], sv); });
+      if(data.globals){
+        GLOBAL_KEYS.forEach(function(k){ if(data.globals[k] != null) els[k].value = data.globals[k]; });
+        if(data.globals.dust != null) els.dust.checked = data.globals.dust;
+        if(data.globals.gradtext != null) els.gradtext.checked = data.globals.gradtext;
+      }
+    } catch(e){ /* corrupted save data — ignore, defaults stand */ }
+  }
+
+  document.getElementById('saveState').addEventListener('click', saveState);
+
   // ---- boot ----
   function boot(){
+    loadSavedState(); // restore before the first render, over the hardcoded defaults
     if(EMBEDDED_REGULATE && EMBEDDED_REGULATE.indexOf('data:image') === 0){
       imgFromURL(EMBEDDED_REGULATE, function(im){ STEPS[0].img = im; loadStep(0); });
     } else {
