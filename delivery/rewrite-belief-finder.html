@@ -1,0 +1,387 @@
+<!-- ============================================================
+     Heart Attractor — Rewrite Belief Finder
+     Built 2026-09-24 per Olly: a simplified version of the belief quiz for
+     the Rewrite process, replacing the "Build Your Meditation" flow. It ONLY
+     identifies the old belief and the new belief — nothing else.
+
+     Flow: intro -> 8 yes/no statements -> (if more than one "yes", or none)
+     "Which one feels most true?" -> result: old belief -> new belief.
+     Always ends on exactly ONE belief. No CTA card, no community post.
+
+     BELIEFS (quote / statement / becomes / looksLike) are copied VERBATIM from
+     funnel/sections/belief-quiz.html, which matches website/sections/
+     build-your-meditation.html — the source of truth per
+     website/skills/skills_interactive-tools.md. Never retype or paraphrase
+     them; re-copy if either source changes.
+     KNOWN STALE COPIES (older "becomes" wording, no looksLike): delivery/
+     belief-quiz-clients.html and training/rewrite.html (2026-09-24).
+
+     GHL page path: TBC (set in Sites > Website Builder), suggested: /rewrite-belief-finder
+     Paste as ONE Custom HTML block. Section width: Full Width. Margin/padding: 0.
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  /* Defensive fallback — fills any residual gap from GHL's outer section/row/column
+     padding with the matching dark background instead of default white.
+     The real fix is on the GHL section/row/column itself: Full Width + all margin/padding = 0. */
+  html, body{ background:#0A0510 !important; margin:0 !important; padding:0 !important; }
+
+  .hbq-page{
+    --bg-a:#4B1466; --bg-b:#150818; --bg-c:#0A0510;
+    --accent:#B84FE8; --accent-2:#E1A6FF;
+    --body-text:#EBD9E2;
+    width:100vw !important;
+    position:relative !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    background:radial-gradient(120% 100% at 20% 0%, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+    font-family:'Poppins', sans-serif;
+    color:#fff;
+    min-height:100vh;
+    padding:56px 20px;
+    box-sizing:border-box;
+    overflow-x:hidden;
+  }
+  .hbq-page *{ box-sizing:border-box; }
+  .hbq-wrap{ max-width:900px; margin:0 auto; }
+
+  .hbq-progress-track{
+    width:100%; height:6px; border-radius:3px;
+    background:rgba(255,255,255,.12); overflow:hidden; margin-bottom:40px;
+  }
+  .hbq-progress-fill{
+    height:100%; border-radius:3px;
+    background:linear-gradient(90deg, var(--accent), var(--accent-2));
+    width:0%; transition:width .35s ease;
+  }
+
+  .hbq-screen{ display:none; }
+  .hbq-screen.active{ display:block; animation:hbqFade .35s ease; }
+  @keyframes hbqFade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion:reduce){ .hbq-screen.active{ animation:none; } .hbq-progress-fill{ transition:none; } }
+
+  /* Intro */
+  .hbq-eyebrow{
+    display:inline-block; font-size:14px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--accent); border:1px solid rgba(184,79,232,.4); padding:8px 16px; border-radius:50px; margin-bottom:20px;
+  }
+  .hbq-h1{ font-size:clamp(32px,4.6vw,58px); font-weight:800; line-height:1.15; margin:0 0 20px; }
+  .hbq-h1 .hbq-grad{
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hbq-lede{ font-size:clamp(18px,1.6vw,21px); line-height:1.55; color:var(--body-text); max-width:56ch; margin:0 0 36px; }
+
+  /* Question card */
+  .hbq-qlabel{
+    font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,.5); margin-bottom:18px;
+  }
+  .hbq-statement{
+    font-size:clamp(24px,2.8vw,36px); font-weight:700; line-height:1.4; margin-bottom:28px; max-width:26ch;
+  }
+  .hbq-choices{ display:flex; gap:18px; flex-wrap:wrap; }
+  .hbq-choice{
+    flex:1; min-width:200px;
+    padding:22px 24px; font-family:'Poppins', sans-serif; font-size:19px; font-weight:700;
+    background:rgba(255,255,255,.05); border:2px solid rgba(255,255,255,.16); border-radius:14px;
+    color:#fff; cursor:pointer; transition:border-color .15s ease, background .15s ease, transform .1s ease;
+    text-align:center;
+  }
+  .hbq-choice:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .hbq-choice:focus-visible, .hbq-back:focus-visible, .hbq-pick:focus-visible{ outline:3px solid var(--accent-2); outline-offset:3px; }
+  .hbq-choice--yes.hbq-selected{ border-color:var(--accent); background:rgba(184,79,232,.18); }
+  .hbq-choice--no.hbq-selected{ border-color:rgba(255,255,255,.4); background:rgba(255,255,255,.1); }
+
+  .hbq-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:36px; }
+  .hbq-back{
+    background:none; border:none; color:rgba(255,255,255,.5); font-family:'Poppins', sans-serif;
+    font-size:14px; cursor:pointer; padding:8px;
+  }
+  .hbq-back:hover{ color:#fff; }
+  .hbq-back:disabled{ visibility:hidden; }
+
+  /* Real-life examples under each statement / result */
+  .hbq-eg-label{
+    font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,.5); margin:0 0 12px;
+  }
+  .hbq-eg-text{
+    font-size:clamp(17px,1.5vw,19px); line-height:1.6; color:var(--accent-2);
+    max-width:52ch; margin:0 0 40px;
+  }
+  .hbq-eg-text--result{ margin:0; }
+
+  /* "Which one feels most true?" choices */
+  .hbq-picks{ display:flex; flex-direction:column; gap:14px; }
+  .hbq-pick{
+    width:100%; text-align:left; font-family:'Poppins', sans-serif; color:#fff; cursor:pointer;
+    background:rgba(255,255,255,.05); border:2px solid rgba(255,255,255,.16); border-radius:14px;
+    padding:20px 24px; transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .hbq-pick:hover{ border-color:var(--accent); background:rgba(184,79,232,.12); transform:translateY(-2px); }
+  .hbq-pick-quote{ display:block; font-size:clamp(19px,1.8vw,22px); font-weight:700; line-height:1.35; margin-bottom:6px; }
+  .hbq-pick-detail{ display:block; font-size:15px; line-height:1.5; color:var(--body-text); }
+
+  /* Result */
+  .hbq-result-card{
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.14); border-radius:20px;
+    padding:36px 34px; margin-bottom:22px;
+  }
+  .hbq-result-label{
+    font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,.5); margin-bottom:10px;
+  }
+  .hbq-result-belief{ font-size:clamp(24px,2.2vw,30px); font-weight:800; color:#fff; margin-bottom:18px; line-height:1.3; }
+  .hbq-result-arrow{ color:var(--accent-2); font-size:30px; line-height:1; text-align:center; margin:14px 0; }
+
+  /* The new belief: the one thing they must take away, so it gets its own big highlighted panel */
+  .hbq-new-card{
+    text-align:center; padding:52px 34px 44px; border-radius:24px; margin-bottom:22px;
+    background:linear-gradient(135deg, rgba(184,79,232,.36), rgba(184,79,232,.08));
+    border:2px solid var(--accent);
+    box-shadow:0 0 0 6px rgba(184,79,232,.12), 0 18px 60px rgba(184,79,232,.35);
+  }
+  .hbq-new-label{
+    font-size:14px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent-2); margin-bottom:18px;
+  }
+  .hbq-new-belief{
+    font-size:clamp(36px,5.6vw,68px); font-weight:800; line-height:1.15; color:#fff;
+    text-wrap:balance; margin:0 0 30px;
+  }
+  .hbq-new-note{
+    font-size:clamp(16px,1.4vw,19px); line-height:1.6; color:var(--body-text);
+    max-width:44ch; margin:0 auto; padding-top:24px; border-top:1px solid rgba(255,255,255,.2);
+  }
+  .hbq-new-note strong{ color:#fff; }
+
+  @media (max-width:480px){
+    .hbq-page{ padding:40px 16px; }
+    .hbq-choices{ flex-direction:column; }
+    .hbq-result-card{ padding:22px 18px; }
+    .hbq-new-card{ padding:36px 20px 30px; }
+    .hbq-pick{ padding:16px 18px; }
+  }
+</style>
+
+<div class="hbq-page">
+  <div class="hbq-wrap">
+
+    <div class="hbq-progress-track"><div class="hbq-progress-fill" id="hbq-progress"></div></div>
+
+    <!-- INTRO -->
+    <div class="hbq-screen active" data-screen="intro">
+      <div class="hbq-eyebrow">👉 Find Your Core Belief</div>
+      <h1 class="hbq-h1">Find The Belief <span class="hbq-grad">You're Here To Rewrite</span></h1>
+      <p class="hbq-lede">You'll read 8 short statements. If one sounds like you, tap Yes. At the end you'll choose the one that feels most true right now, and see the belief that replaces it.</p>
+      <div class="hbq-nav" style="justify-content:flex-end;">
+        <button type="button" class="hbq-choice" style="flex:none; padding:16px 32px;" id="hbq-start-btn">Start →</button>
+      </div>
+    </div>
+
+    <!-- QUESTIONS 1-8 (populated by JS from BELIEFS array below) -->
+    <div class="hbq-screen" data-screen="question"></div>
+
+    <!-- WHICH ONE FEELS MOST TRUE (only shown when more than one, or none, landed) -->
+    <div class="hbq-screen" data-screen="pick">
+      <div class="hbq-eyebrow">👉 One Last Step</div>
+      <h1 class="hbq-h1">Which One Feels <span class="hbq-grad">Most True?</span></h1>
+      <p class="hbq-lede" id="hbq-pick-intro"></p>
+      <div class="hbq-picks" id="hbq-picks"></div>
+      <div class="hbq-nav">
+        <button type="button" class="hbq-back" id="hbq-pick-back">← Back</button>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="hbq-screen" data-screen="results">
+      <div class="hbq-eyebrow">👉 Your Core Belief</div>
+      <h1 class="hbq-h1">This Is The Belief <span class="hbq-grad">You're Rewriting</span></h1>
+      <div id="hbq-result"></div>
+      <div class="hbq-nav">
+        <button type="button" class="hbq-back" id="hbq-result-back">← Choose a different one</button>
+        <button type="button" class="hbq-back" id="hbq-restart">Start again</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  // The 8 Internal Working Models — same content as belief-quiz.html and the Rewrite training
+  var BELIEFS = [
+    {
+      quote: "I'm not worthy / not enough",
+      statement: "I sometimes reject genuine love, or find myself drawn to partners who confirm this belief by undervaluing me.",
+      becomes: "I am worthy of love",
+      looksLike: "You downplay compliments, chase achievements to feel okay, or hold back from someone you like because part of you doesn't believe they'd choose you."
+    },
+    {
+      quote: "I have to earn love",
+      statement: "I give too much and try too hard in relationships, performing to be kept rather than trusting I'm loved as I am.",
+      becomes: "I am loved for who I am",
+      looksLike: "You overgive, overperform, or keep proving yourself in relationships — worried that if you stopped, the love would stop too."
+    },
+    {
+      quote: "If I need too much, I'll be too much",
+      statement: "I tend to suppress my needs, which quietly builds resentment and distance over time.",
+      becomes: "I am deserving of a love that meets my needs",
+      looksLike: "You shrink your needs, apologize for asking, or go quiet rather than risk being 'a lot' for someone."
+    },
+    {
+      quote: "Others can't be trusted, people leave",
+      statement: "I get guarded, test people, or push them away before they can leave first.",
+      becomes: "I am safe to trust in love",
+      looksLike: "You stay guarded even when someone's shown up consistently, or you brace for the exit before things have even really started."
+    },
+    {
+      quote: "Closeness is dangerous",
+      statement: "I crave closeness, but once it's within reach, part of me fears it and pulls away right when things get real.",
+      becomes: "I am safe being close to someone",
+      looksLike: "You pull back right when things get good, pick fights to create distance, or feel unsafe the moment someone gets emotionally close."
+    },
+    {
+      quote: "I will be abandoned",
+      statement: "I constantly monitor for signs someone's pulling away, or push people out before they can leave first.",
+      becomes: "I am secure in love",
+      looksLike: "You read neutral moments as rejection, need constant reassurance, or leave first so you're never the one left."
+    },
+    {
+      quote: "I have to manage everyone's emotions to be safe",
+      statement: "I regulate other people's moods, smooth over tension, and walk on eggshells to keep the relationship calm.",
+      becomes: "I am free to be loved as I am",
+      looksLike: "You're always reading the room, walking on eggshells, or taking responsibility for how your partner feels before your own."
+    },
+    {
+      quote: "Closeness is fragile and temporary",
+      statement: "Even when I do get closeness, part of me braces for it to disappear rather than fully relaxing into it.",
+      becomes: "I am built for lasting love",
+      looksLike: "You brace for things to fall apart, hold back from fully investing, or treat every good patch as the calm before it ends."
+    }
+  ];
+
+  var answers = new Array(BELIEFS.length).fill(null); // null | true (yes) | false (no)
+  var chosen = null;      // index into BELIEFS once they land on one
+  var usedPickScreen = false;
+
+  var questionScreen = document.querySelector('[data-screen="question"]');
+  var progressFill = document.getElementById('hbq-progress');
+
+  function show(name) {
+    document.querySelectorAll('.hbq-screen').forEach(function(s) { s.classList.remove('active'); });
+    var el = name === 'question' ? questionScreen : document.querySelector('[data-screen="' + name + '"]');
+    el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setProgress(fraction) {
+    progressFill.style.width = Math.max(0, Math.min(100, fraction * 100)) + '%';
+  }
+
+  // Olly's own "what this looks like" text for each belief (looksLike, copied verbatim
+  // from build-your-meditation.html / belief-quiz.html). Statement stays the hook; this
+  // makes it recognisable in real life. Inserted as trusted static text.
+  function examplesHTML(b, isResult) {
+    return '<div class="hbq-eg-label">' + (isResult ? 'How it can show up in your life' : 'What this can look like') + '</div>' +
+      '<p class="hbq-eg-text' + (isResult ? ' hbq-eg-text--result' : '') + '">' + b.looksLike + '</p>';
+  }
+
+  function goToQuestion(i) {
+    if (i < 0) { setProgress(0); show('intro'); return; }
+    if (i >= BELIEFS.length) { afterQuestions(); return; }
+    var b = BELIEFS[i];
+    var selected = answers[i];
+    setProgress(i / (BELIEFS.length + 1));
+    questionScreen.innerHTML =
+      '<div class="hbq-qlabel">Question ' + (i + 1) + ' of ' + BELIEFS.length + '</div>' +
+      '<div class="hbq-statement">' + b.statement + '</div>' +
+      examplesHTML(b, false) +
+      '<div class="hbq-choices">' +
+        '<button type="button" class="hbq-choice hbq-choice--yes' + (selected === true ? ' hbq-selected' : '') + '" data-answer="yes">Yes, that\'s me</button>' +
+        '<button type="button" class="hbq-choice hbq-choice--no' + (selected === false ? ' hbq-selected' : '') + '" data-answer="no">Not really</button>' +
+      '</div>' +
+      '<div class="hbq-nav">' +
+        '<button type="button" class="hbq-back" id="hbq-back-btn"' + (i === 0 ? ' disabled' : '') + '>← Back</button>' +
+        '<div></div>' +
+      '</div>';
+    questionScreen.querySelectorAll('.hbq-choice').forEach(function(el) {
+      el.addEventListener('click', function() {
+        answers[i] = el.getAttribute('data-answer') === 'yes';
+        goToQuestion(i + 1);
+      });
+    });
+    document.getElementById('hbq-back-btn').addEventListener('click', function() { goToQuestion(i - 1); });
+    show('question');
+  }
+
+  // Exactly one "yes" -> straight to the result. Otherwise ask which feels most true.
+  function afterQuestions() {
+    var yes = [];
+    BELIEFS.forEach(function(b, i) { if (answers[i] === true) yes.push(i); });
+    if (yes.length === 1) {
+      usedPickScreen = false;
+      showResult(yes[0]);
+    } else {
+      showPick(yes);
+    }
+  }
+
+  function showPick(yesIndexes) {
+    usedPickScreen = true;
+    var none = yesIndexes.length === 0;
+    var candidates = none ? BELIEFS.map(function(b, i) { return i; }) : yesIndexes;
+    document.getElementById('hbq-pick-intro').textContent = none
+      ? "Nothing stood out strongly, which is fine. Choose the one that feels closest to you right now."
+      : "More than one landed. Choose the one that feels most true for you right now.";
+    var picksEl = document.getElementById('hbq-picks');
+    picksEl.innerHTML = '';
+    candidates.forEach(function(i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hbq-pick';
+      btn.innerHTML = '<span class="hbq-pick-quote">&ldquo;' + BELIEFS[i].quote + '&rdquo;</span>' +
+                      '<span class="hbq-pick-detail">' + BELIEFS[i].statement + '</span>';
+      btn.addEventListener('click', function() { showResult(i); });
+      picksEl.appendChild(btn);
+    });
+    setProgress(BELIEFS.length / (BELIEFS.length + 1));
+    show('pick');
+  }
+
+  function showResult(i) {
+    chosen = i;
+    var b = BELIEFS[i];
+    document.getElementById('hbq-result').innerHTML =
+      '<div class="hbq-result-card">' +
+        '<div class="hbq-result-label">Your old belief</div>' +
+        '<div class="hbq-result-belief">&ldquo;' + b.quote + '&rdquo;</div>' +
+        examplesHTML(b, true) +
+      '</div>' +
+      '<div class="hbq-result-arrow" aria-hidden="true">&#8595;</div>' +
+      '<div class="hbq-new-card">' +
+        '<div class="hbq-new-label">Your new belief</div>' +
+        '<div class="hbq-new-belief">&ldquo;' + b.becomes + '&rdquo;</div>' +
+        '<div class="hbq-new-note"><strong>Write this down</strong> somewhere you can easily get to it, like your notes app or a piece of paper, so you always have it to hand.</div>' +
+      '</div>';
+    // If they only had one "yes" there is no pick screen to go back to.
+    document.getElementById('hbq-result-back').textContent = usedPickScreen ? '← Choose a different one' : '← Back';
+    setProgress(1);
+    show('results');
+  }
+
+  document.getElementById('hbq-start-btn').addEventListener('click', function() { goToQuestion(0); });
+  document.getElementById('hbq-pick-back').addEventListener('click', function() { goToQuestion(BELIEFS.length - 1); });
+  document.getElementById('hbq-result-back').addEventListener('click', function() {
+    if (usedPickScreen) { afterQuestions(); } else { goToQuestion(BELIEFS.length - 1); }
+  });
+  document.getElementById('hbq-restart').addEventListener('click', function() {
+    answers = new Array(BELIEFS.length).fill(null);
+    chosen = null;
+    usedPickScreen = false;
+    goToQuestion(-1);
+  });
+})();
+</script>

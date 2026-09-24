@@ -15,6 +15,8 @@ Workers, share links and previews are documented in `CLAUDE.md` (Rewrite section
 - [ ] Olly to finish editing check-ins 1–6 in the Rewrite viewer (only email 1 edited so far) → read the artifact db (`emails` collection) and apply to `rewrite-checkin-worker.js`, restoring merge fields → Olly redeploys
 - [ ] Olly to review the Regulate viewer copy (nothing edited yet)
 - [ ] Rewrite start page: confirm it is live in GHL at the intended path (`/start-rewrite` suggested) and the intro line ("give your mind the chance to install your new beliefs") is what Olly wants
+- [ ] **Rewrite Belief Finder** (`rewrite-belief-finder.html`, preview https://claude.ai/artifact/MC9pEuxZ48PWaxQfcr79Y8): Olly to decide where it sits in the Rewrite process (GHL page / Rewrite training link / start page) and what they do with the two beliefs next; then paste into GHL and wire the link
+- [ ] Decide whether to sync the stale belief wording in `belief-quiz-clients.html` and `training/rewrite.html` to the canonical wording (funnel quiz / build-your-meditation) — Olly's call; the Rewrite video wording may already be recorded
 - [ ] Build the Rehearse check-in the same way (Rewrite day 60 promises to unlock it) — copy the Rewrite pattern, run the builder for its preview
 - [ ] `../CLAUDE.md`-adjacent: the Attraction Formula section in this folder's `CLAUDE.md` still uses the old filenames — tidy when Olly next touches it
 

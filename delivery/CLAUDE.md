@@ -73,6 +73,8 @@ delivery/
   rewrite-checkin-worker.js            ← Rewrite 60-day / 6 check-in Worker (dashboard name: rewrite-check-in; domain rewrite-checkin.ollyhenson.com)
   rewrite-start.html                   ← Rewrite start page (GHL Custom HTML block)
   email-preview-artifact/              ← editable email-preview viewer: template + builder + the two built artifacts (see skills_email-preview-artifact.md)
+  rewrite-belief-finder.html           ← simplified belief tool for the Rewrite process (identify old + new belief only); GHL paste-format; see "Rewrite Belief Finder" below
+  belief-quiz-clients.html             ← older client quiz — STALE "becomes" wording / no looksLike (see Rewrite Belief Finder note)
   regulate-restore-delivery-system.md  ← full delivery system documentation
   release-and-let-go-delivery-system.md   ← Release & Let Go documentation
   heart-creator-delivery-system.md     ← Heart Creator Program structure and journey
@@ -255,6 +257,15 @@ Same stateless design as the Regulate check-ins above (no sheet, no Apps Script,
 
 **Regulate mirror (2026-09-24):** `regulate-checkin-worker.js` was updated with the same link/share mechanics (own wording and 30-day/3-check-in cadence unchanged); redeployed by Olly.
 
+### Rewrite Belief Finder — BUILT 2026-09-24 (preview approved by Olly; not yet placed anywhere)
+
+`delivery/rewrite-belief-finder.html` — a simplified version of the "Which Belief Is Blocking You?" quiz for the Rewrite process, **replacing the "Build Your Meditation" flow** there. It only identifies the **old belief and the new belief**: intro → 8 yes/no statements → (if several or none said yes) "Which one feels most true?" → result. Always ends on exactly one belief.
+- **Result page:** old belief + Olly's own "how it can show up" text in a quiet card, then a large highlighted panel for the **new belief** with "Write this down somewhere you can easily get to it…".
+- **Content is copied verbatim** from `funnel/sections/belief-quiz.html` (= `website/sections/build-your-meditation.html`, the source of truth). Never retype it. `belief-quiz-clients.html` and `training/rewrite.html` still have older `becomes` wording (e.g. "I am loved unconditionally" vs canonical "I am loved for who I am") — flagged for Olly, not changed.
+- **Preview Artifact:** `https://claude.ai/artifact/MC9pEuxZ48PWaxQfcr79Y8` (private). GHL paste format; suggested path `/rewrite-belief-finder`. No Worker, no state, no community post.
+- **Open:** where it sits in the Rewrite process (GHL page, link in the Rewrite training, or the start page) and what they do next with the two beliefs — asked, not yet answered.
+- Skill: `../website/skills/skills_interactive-tools.md` (belief-content and results-page rules).
+
 ---
 
 ## Tracking System — Google Sheets
@@ -423,6 +434,7 @@ git push
 - Built the editable email-preview Artifact system (`email-preview-artifact/`): generic template + builder + published viewers for Rewrite and Regulate; new skill `skills/skills_email-preview-artifact.md`; `skills_cloudflare-workers.md` reviewed and updated with this session's corrections
 - Olly's edits shaped the copy: bare share messages (two drafted additions deleted), program name in check-in starters, confirmation body rewritten in his own wording, "here"-only hyperlink
 - **Lessons (mine):** the shared share Worker's defaults said Regulate on a Rewrite link (fixed with `?text=`, no new Worker); a viewer bug made saved edits look lost (data was intact — fixed the HTML comparison); a text-mode Python edit flipped line endings; I wrote scratch files to `%TEMP%` outside `AI OS/` (deleted). All captured in the skills files
+- Later in the session: built `rewrite-belief-finder.html` (see the Rewrite Belief Finder section) — first pass used stale belief wording and my own drafted examples; corrected to Olly's canonical `becomes`/`looksLike` copied from the funnel quiz. Lesson logged in `../website/skills/skills_interactive-tools.md`
 - Approval note: Olly asked for this session to be saved, including the skills files — treated as approval to update this CLAUDE.md
 
 ### 2026-09-04 — Session: Attraction Formula check-ins finished

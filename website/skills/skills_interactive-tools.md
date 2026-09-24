@@ -1,12 +1,12 @@
 ---
 name: interactive-tools
-description: Building interactive multi-step tools and long-form pages (build-your-meditation.html, belief-quiz.html) — wizard/step-gating patterns, canvas text-packing bugs, non-blocking API calls
+description: Building interactive multi-step tools and long-form pages (build-your-meditation.html, belief-quiz.html, rewrite-belief-finder.html) — wizard/step-gating patterns, canonical belief content and how to copy it, results-page hierarchy, canvas text-packing bugs, non-blocking API calls
 ---
 
 # Interactive Tools & Long-Form Page Skill
 
 ## Scope
-Custom-built interactive HTML tools and quiz/wizard-style pages that live in `website/sections/` or `funnel/sections/` — distinct from `training/`'s scroll-through training pages. Covers `build-your-meditation.html` (7-step wizard), `belief-quiz.html`/`belief-quiz-optin.html` (quiz + results page). Read this before building or editing any multi-step interactive tool in either folder.
+Custom-built interactive HTML tools and quiz/wizard-style pages that live in `website/sections/` or `funnel/sections/` — distinct from `training/`'s scroll-through training pages. Covers `build-your-meditation.html` (7-step wizard), `belief-quiz.html`/`belief-quiz-optin.html` (quiz + results page), and `delivery/rewrite-belief-finder.html` (simplified Rewrite-process belief finder, built 2026-09-24 — lives in `delivery/` because it belongs to the Rewrite program, but follows this file's rules). **Read this file at the START of any tool that touches the 8 beliefs — before drafting any belief, "becomes" or "what this looks like" wording — not at the end.**
 
 ## Rules and Constraints
 
@@ -32,7 +32,21 @@ Custom-built interactive HTML tools and quiz/wizard-style pages that live in `we
 
 **Making an entire card/item clickable (not just one button inside it) needs `stopPropagation()` on every nested interactive element, not just an `item.addEventListener('click', ...)` on the container.** Adding a container-level click handler to `.bym-belief-item` for "select on click anywhere" would otherwise double-fire selection logic when the inner quote button was clicked (bubling to the container), and would also incorrectly trigger selection when the "What this looks like" toggle was clicked. Fix: keep each nested button's own listener but call `e.stopPropagation()` first, so the container handler only fires for clicks that aren't on a more specific nested control.
 
+**Never draft belief content — copy it. The canonical set is `quote` / `statement` / `becomes` / `looksLike`, and it already exists.** Real miss (2026-09-24): building `rewrite-belief-finder.html`, I took the beliefs from `delivery/belief-quiz-clients.html` (last edited 2026-08-25, *before* the 2026-08-30 sync) and then wrote 24 "what this looks like" bullets of my own when Olly asked for life examples — while `build-your-meditation.html` and `funnel/sections/belief-quiz.html` already held his own `looksLike` text and newer `becomes` wording (e.g. "I am loved for who I am", not "I am loved unconditionally"). Caught only when I opened this skill file at the end. Standing procedure: (1) grep `looksLike|becomes:` across `website/`, `funnel/`, `delivery/`, `training/` **before writing anything**; (2) copy programmatically from `funnel/sections/belief-quiz.html` (a short Node script that `eval`s the source `BELIEFS` array and writes it into the target with `JSON.stringify` — never retype, never paste through a shell heredoc); (3) verify with a script that the target array is byte-identical to the source (`JSON.stringify(a) === JSON.stringify(b)`) and that each field appears verbatim in `build-your-meditation.html`; (4) list any field that changed so nothing is silent. When Olly asks for "examples of what this looks like", the answer is his `looksLike`, not new copy.
+
+**Where the 8 beliefs live, and which are stale (as of 2026-09-24):** canonical — `website/sections/build-your-meditation.html` and `funnel/sections/belief-quiz.html` (identical, include `looksLike`); the new `delivery/rewrite-belief-finder.html` (copied from the quiz). **Stale (older `becomes` wording, no `looksLike`):** `delivery/belief-quiz-clients.html` and `training/rewrite.html`. Don't silently "fix" the stale ones when building something else — flag them to Olly (the Rewrite training's on-video wording is his to change) and note them in the new file's header.
+
+**A results page has one takeaway — give it visual dominance and tell the user to keep it.** Olly's ask for the finder: the *new belief* much bigger and highlighted, plus "write this down somewhere you can easily get to it." Pattern that worked: the old belief and its real-life text sit in a quiet card; an arrow; then a separate panel for the new belief (accent border, glow, `clamp(36px,5.6vw,68px)` white text, `text-wrap:balance`) with the write-it-down prompt inside it under a thin rule. Don't put the takeaway inside the same card and size as the supporting content, and don't rely on the user remembering it — end the tool on an instruction to record it.
+
+**A tool that "helps them identify X" must end on exactly one X.** For the belief finder the rule is: one "yes" → straight to the result; several → a "which feels most true right now?" screen listing only those; none → the same screen listing all 8 ("Nothing stood out strongly, which is fine"). The Rewrite process works on one belief at a time, so never end on a list. If unsure whether a simplified tool should end on one or many, recommend one and ask.
+
+**Generate JS data from source, not by string-pasting text into a script.** A drafting script of mine put straight `"` quotes inside double-quoted JS strings (`"You say "I'm fine" when…"`) — caught before running only by re-reading it. Use `JSON.stringify` (as in the sync script) or curly quotes, and use the Write tool, not a shell heredoc, for any script containing quotes or backslashes.
+
+**Match the existing colour convention for `looksLike` text.** The standing default (see the 2026-08-30 entry) is the pink accent (`var(--accent-2)`) for the "what this looks like" text; the finder follows it.
+
 ## Process / Steps
+
+**Previewing a GHL tool as an Artifact before it goes anywhere near GHL:** keep the repo file in GHL paste format (starts with the header comment, no `<title>`); build a scratchpad copy with `<title>Belief Finder</title>` prepended and publish *that* as a private Artifact (no capabilities needed for a tool with no saved state). Republish to the same URL after every edit (Olly's standing preference) and give him the link. Verify before publishing: the `<script>` parses (`new Function(js)`), every `getElementById` id exists in the markup, and no removed CSS classes are still referenced.
 
 **Canvas-based reverse-pyramid text packing (headline or body copy, mobile or desktop) — the reliable pattern, and its two recurring bugs:**
 1. Cache the original text once via `el.dataset.originalText` on first run, and always pack *from that cached string*, never from `el.textContent` directly on a second pass. Symptom if skipped: words silently merge together ("helpyou", "programsblocking") — caused by the script re-running (once immediately, once on `window.load`) and the second run reading text that already has `<br>` tags in place of spaces from the first run's mutation.
@@ -58,6 +72,15 @@ fetch(MEDITATION_SUMMARY_WORKER_URL, { method: 'POST', body: JSON.stringify(payl
 ---
 
 ## Changelog
+
+**2026-09-24 — Post-session review (Rewrite Belief Finder)**
+- **Olly asked for "examples of what this looks like in their life" and I drafted 24 bullets — his own `looksLike` text already existed** in `build-your-meditation.html` and `funnel/sections/belief-quiz.html`, and I had also used stale `becomes` wording (7 of 8 differed) copied from the older client quiz. → New rule + procedure: never draft belief content; grep first, copy by script, verify identical to the source, list diffs. Read this skill *before* building, not after. Replaced the drafted bullets with his verbatim `looksLike` (shown as one paragraph in the pink accent per the standing default) and the canonical `becomes`.
+- **Where the beliefs live** documented, with the two stale copies (`delivery/belief-quiz-clients.html`, `training/rewrite.html`) flagged for Olly rather than silently changed.
+- **Olly asked for the new belief "much bigger and highlighted" plus "write this down somewhere so they have it to hand"** → results-page hierarchy rule (quiet card for old belief, dominant highlighted panel for the takeaway, an explicit keep-it instruction).
+- **Simplified tool ends on exactly one belief** (one yes → result; several/none → "which feels most true?") — recorded as the pattern; Olly accepted it when built.
+- Tooling lesson: generate JS data with `JSON.stringify`/sync script; straight quotes inside JS strings and shell heredocs are traps (cross-reference `../../delivery/skills/skills_cloudflare-workers.md`).
+- Added the Artifact-preview step for GHL tools (repo file stays paste-format; scratchpad copy gets a `<title>`).
+- No rules removed. The 2026-08-30 "build-your-meditation is the source of truth" rule still stands; the finder is now the Rewrite-process replacement for that wizard, but the source-of-truth status is unchanged until Olly says otherwise.
 
 **2026-09-01 — Post-session feedback review (Date + Emotion step removal, video/poster cache confusion, whole-card-click on build-your-meditation.html)**
 - Rules and Constraints: added the wizard-step-removal checklist (10 items: screen HTML, all subsequent step labels/comments renumbered, `screens` array, dispatcher, every back/next target, state fields, Worker payload, Worker email templates, reset handler, orphaned CSS) — both the Date step and the Emotion step removals this session needed all of these touched, and grepping the field/screen name across both the tool file and the paired Worker file is what caught them all.
