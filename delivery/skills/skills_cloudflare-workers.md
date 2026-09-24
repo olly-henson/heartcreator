@@ -6,7 +6,7 @@ description: Building and deploying Cloudflare Workers for this project (email/n
 # Cloudflare Worker Skill
 
 ## Scope
-Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a form/tool submission server-side (sending email via Resend, notifying Olly, etc.) — `meditation-summary-worker.js`, `call-rsvp-worker.js`, `share-worker.js`, `attraction-formula-checkin-worker.js`. Read before building or debugging any of these.
+Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a form/tool submission server-side (sending email via Resend, notifying Olly, etc.) — `meditation-summary-worker.js`, `call-rsvp-worker.js`, `share-worker.js`, `regulate-checkin-worker.js`, `rewrite-checkin-worker.js`. Read before building or debugging any of these. For the email-preview Artifact used to review a check-in Worker's copy, also read `skills_email-preview-artifact.md`.
 
 **This project runs several Workers at once.** Before any deploy walkthrough, tell Olly how many Workers the change touches and what each one does — he has lost track mid-session before ("I thought there was only one?"). Name each Worker three ways so the wrong one can't be opened: its Cloudflare **name**, its `*.workers.dev` URL, and its custom domain/route.
 
@@ -26,9 +26,9 @@ Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a
 - Scheduled sends show in the Resend dashboard (Emails → status **Scheduled**) and can be deleted there. Use this to confirm a signup scheduled the right *number* of emails, and to clear test runs.
 - The Worker throws on any non-OK Resend response, so a `{"ok":true}` return means every immediate **and** scheduled send was accepted — a missing/misnamed secret surfaces here as a thrown Resend auth error, not a silent failure.
 
-**Every test signup schedules real future emails.** Each run of a signup against a scheduling Worker queues the full set of future sends (the check-in Worker: 3 per signup). After ~4 test signups Olly had ~12 real emails queued to himself. Always clear the Resend Scheduled queue between test runs, and before any "clean" signup Olly wants to keep.
+**Every test signup schedules real future emails.** Each run of a signup against a scheduling Worker queues the full set of future sends (Regulate: 3 per signup, Rewrite: 6 per signup). After ~4 test signups Olly had ~12 real emails queued to himself. Always clear the Resend Scheduled queue between test runs, and before any "clean" signup Olly wants to keep.
 
-**A stateless up-front-scheduling Worker is a valid pattern — don't add a sheet back.** `attraction-formula-checkin-worker.js` has no Google Sheet, no Apps Script, no daily trigger: on signup it sends the immediate emails and schedules *all* future check-ins in one request via `scheduled_at`. This was a deliberate, twice-corrected decision (see `../CLAUDE.md` Attraction Formula section). Never reintroduce sheet-based tracking or a polling trigger to a Worker built this way without Olly explicitly asking.
+**A stateless up-front-scheduling Worker is a valid pattern — don't add a sheet back.** `regulate-checkin-worker.js` and `rewrite-checkin-worker.js` have no Google Sheet, no Apps Script, no daily trigger: on signup they send the immediate emails and schedule *all* future check-ins in one request via `scheduled_at`. This was a deliberate, twice-corrected decision (see `../CLAUDE.md` Attraction Formula / Rewrite sections). Never reintroduce sheet-based tracking or a polling trigger to a Worker built this way without Olly explicitly asking.
 
 **A Worker's Cloudflare dashboard name can permanently disagree with its local filename and purpose — restate all three identifiers every time, not just once.** Real confusion this session: `regulate-checkin-worker.js` is deployed under the dashboard name `attraction-formula-check` (never renamed after the 2026-09-10 rebrand). Having named it three ways once early in the session wasn't enough — Olly still asked "regulate-check-in worker?" later on. Repeat the full name + `workers.dev` URL + custom domain every time you point Olly at that Worker to redeploy, even the fifth time in one session.
 
@@ -40,8 +40,39 @@ Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a
 
 **When a Worker template has multiple named `type`/variant branches, a new branch is incomplete until every derived value has an entry for it, not just the one that prompted it.** `share-worker.js`'s `type=started` branch had a `heading` but no pre-written `text` (unlike `type=intro`, which has `INTRO_MSG`) — so the share page rendered with nothing in the box to copy. When adding or reviewing a `type === X ? … : …` chain, check every derived variable (`heading`, `subheading`, `buttonText`, `text`, etc.) has a considered value for every branch, not just the ones actively being edited.
 
+**`share-worker.js` is shared by every program — its built-in defaults are program-specific hidden surfaces.** Real incident (2026-09-24): the new Rewrite confirmation email's "here" link opened a page saying "I've just started The **Regulate** Meditation" because `type=started` defaults to `STARTED_MSG` (same for `INTRO_MSG` and the `subheading`). Olly's report: "the worker is showing info for the Regulate not Rewrite Meditation." **When cloning a program, grep the shared Worker's defaults as well as the copied files.** And before building another share Worker or editing the shared one, check for an override: the page already honours `?text=`, so the program's own email link can carry its wording (`?type=started&text=…`) — no new Worker, no redeploy of the shared one, Regulate untouched. Give Olly that option first, with the alternative and its risk, and let him choose.
+
+**`type=checkin` on the share page takes a starter and stays editable (changed 2026-09-24 — this replaces the old "starts empty, unused by emails" behaviour).** `?type=checkin&text=Rewrite Meditation, Day 10 Update: ` opens an editable box pre-filled with that text, cursor at the end, no auto-copy; every other type is read-only and auto-copies. Use `checkin` for check-in links (client writes in their own words) and `final` for completion links (bare fixed message). A Worker branch must not silently change another program's behaviour: verify the Regulate links after touching `share-worker.js`.
+
+**Text a client will post into the community must name the program.** Every program posts into the one Skool feed, so "Day 20 update:" alone is ambiguous. Olly corrected it to **"Rewrite Meditation, Day 20 Update: "** (program name first, capital "Update"). Applies to every share starter and pre-written message.
+
+**Pre-written share text is a bare first-person fact — nothing extra.** I drafted "…🎉 60 days of rewriting the core beliefs that were holding me back in love." and "…Ready for The Rehearse Meditation next." and Olly deleted both, leaving "I've just completed The Rewrite Meditation!". Don't add benefit claims, emoji or next-step teasers to text a client will post as their own words. If I must draft client-facing copy Olly hasn't given me, say plainly that it's a draft for his edit.
+
+**Body copy about what a program *does* comes from Olly, not from me.** My confirmation-email body ("rewrite the core beliefs… feeling safe, worthy and open to love") was replaced wholesale by his own wording (new core beliefs that attract your perfect soulmate; noticing changes from day 21; days 21–60 wire it in). When a new program's emails need mechanism/promise copy, either ask Olly one question for his positioning or mark the draft as a placeholder — don't invent claims and present them as finished.
+
+**Link only the word "here", never the whole sentence.** Olly changed "Come and let us know you've started in the community here →" (whole line linked) to "Come and let us know that you've started so we can support you → **here**" with only "here" linked. Same convention as his broadcast emails. Applies to every call-to-action link in these Workers.
+
+**When cadence or length changes, sweep for hardcoded duration text and special-cased branches.** Going 30 → 60 days at the same 10-day interval meant every "30 days"/"4 weeks" string, the `checkinNumber === 2` "20 days in" special case (→ `> 1` with `${n * CHECKIN_INTERVAL_DAYS}`), the plain-text fallbacks, the start page copy and header comments all needed changing, and one start-page line ("reset your nervous system to a new baseline") was Regulate mechanism copy that no longer fit. Grep for `30`, `20 days`, `weeks`, `=== 2`, `TOTAL_CHECKINS` after any length change (extends the days-vs-weeks rule in `skills_regulate-restore-tracker.md`).
+
+**When a change is made for one program, offer to mirror it to its sibling programs — then mirror the mechanics, not the copy.** Olly asked "take these changes into account for the Regulate Meditation too." Mirror share-link/CTA structure, keep each program's own wording, subjects, length and check-in count, and state the assumption ("assumed 'these changes' = link/share mechanics only").
+
+**Deploy order when Workers depend on each other: the shared Worker first, verify it, then the program Workers.** Share Worker → curl → program Worker → curl. Walk one at a time, restate name + URL + domain, and after each deploy `curl` the *behaviour that changed*, not just a 400/200 (e.g. the share page's `<textarea>` for a `type=checkin&text=…` URL, plus a Regulate `type=started` URL to prove nothing regressed). A `400 Missing or invalid fields` from a check-in Worker proves it is alive, **not** which code version is deployed — only a real test signup proves the links.
+
+**Lead with a recommendation when Olly asks which option is better.** He asked "which would be better and more personal for clients?" — answer with the pick and the reason, then the tradeoff. Options-then-question was too slow; he wants judgement.
+
+**If Olly pastes only a command, run it yourself.** He pasted the `curl` line instead of its output; running it directly (with `-i` and a grep on status/error) was faster than asking again. Run read-only checks against his own endpoints without being asked to re-paste.
+
+**Editing tools: keep line endings and escapes intact.** Two self-caused problems: (1) a Python `open(...,'w')` rewrite on Windows turned an LF file into CRLF, so the whole file showed as changed in a diff — use the Edit tool, or read/write bytes, and compare against a copy before trusting a diff; (2) shell heredocs mangled backslashes (`’`, `\\`) twice — write files with the Write/Edit tools, not heredocs. Also never put scratch files in `%TEMP%` (outside `AI OS/`) — use the session scratchpad or a `data:` URL import.
+
 ## Never
 
+- **Never** create a new share Worker, or edit the shared one, before checking whether `?text=` (or `type=checkin&text=`) already does the job.
+- **Never** leave a shared Worker's program-specific defaults unswept when cloning a program.
+- **Never** hyperlink a whole sentence when Olly's convention is a single "here".
+- **Never** add emoji, benefit claims or teasers to pre-written client share text, or post-able text without the program name.
+- **Never** present invented program-promise copy as final — mark it as a draft for Olly.
+- **Never** rewrite a Worker file with a text-mode Python write or shell heredoc (line endings / escapes) — use Edit/Write.
+- **Never** tell Olly a Worker is verified because it returned 400/200 — say what that proves and what only a test signup proves.
 - **Never** tell Olly to deploy without naming the target Worker by name + `workers.dev` URL + custom domain — restate this every time you reference that Worker in the session, not just the first time.
 - **Never** let Olly test a Worker's live behaviour right after a local edit without first stating plainly that the edit isn't live yet and needs redeploying.
 - **Never** consider a rename/rebrand request finished after fixing only the quoted instances — grep the whole folder (HTML, plain-text fallbacks, preview files included) for the old term first.
@@ -62,14 +93,35 @@ Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a
 8. If a call fails with an auth-looking error (401/invalid key) despite a correct-looking key value, check the secret name match (see Rules above) before regenerating the key.
 9. CORS: include the appropriate `Access-Control-Allow-Origin` headers for any Worker called via cross-origin `fetch()` from a `website/sections/` or `funnel/sections/` page — both are on different origins from the Worker's own domain. A cross-origin `fetch()` to a Worker that returns no CORS headers fails in the browser and surfaces as the calling page's generic catch-all error — check the Worker actually has CORS headers before assuming the page JS is broken.
 10. Before calling any Worker edit finished, check every `type`/variant branch in it has a considered value for every derived output (heading, subheading, button text, pre-written share text, etc.) — not just the branch that prompted the change.
+11. **Preview before deploying:** for any check-in Worker, build the editable preview Artifact (`skills_email-preview-artifact.md`) so Olly reviews subjects, bodies and the real link addresses before anything is redeployed. Apply his saved edits to the Worker exactly, restoring the merge fields.
+12. **Verify share links end to end after deploy:** `curl` the share page for each new link shape and grep the `<textarea>` (e.g. `curl -s "https://share.ollyhenson.com/?type=checkin&text=Rewrite%20Meditation%2C%20Day%2020%20Update%3A%20" | grep "<textarea"`) and one existing Regulate link to prove nothing regressed; then a real test signup, click each link from the inbox, and clear the Resend Scheduled queue.
 
 ## Examples
 
-**Previewing Worker-generated emails without deploying.** Because `scheduled_at` rejects past dates, you can't fire a scheduled email early to see it. Instead, render the Worker's own template functions locally: write a short `.mjs` in the scratchpad that copies the Worker's *pure* functions (`wrapHtml`, `link`, `firstName`, the date helpers, every `*EmailHtml()`), calls each with sample data + realistic dates, and writes one standalone HTML file showing every email with its subject line and a "when this sends" caption. Send that file to Olly for copy approval before he redeploys. Used this session to iterate the Attraction Formula check-in copy across ~6 rounds with zero deploys per round.
+**Previewing Worker-generated emails without deploying.** Because `scheduled_at` rejects past dates, you can't fire a scheduled email early to see it. Instead, render the Worker's own template functions locally: write a short `.mjs` in the scratchpad that copies the Worker's *pure* functions (`wrapHtml`, `link`, `firstName`, the date helpers, every `*EmailHtml()`), calls each with sample data + realistic dates, and writes one standalone HTML file showing every email with its subject line and a "when this sends" caption. Send that file to Olly for copy approval before he redeploys. Used this session to iterate the Attraction Formula check-in copy across ~6 rounds with zero deploys per round. **Superseded for check-in Workers (2026-09-24) by the editable Artifact viewer** — `email-preview-artifact/build-email-preview.mjs` does the same render-from-the-Worker's-own-functions trick but publishes a viewer Olly can edit and save in; the static file technique remains fine for a one-off.
+
+**The share links a check-in Worker builds (Rewrite, 2026-09-24):**
+- Started: `…/?type=started&text=I've just started The Rewrite Meditation — excited to get going!` (read-only, auto-copies)
+- Check-in N: `…/?type=checkin&text=Rewrite Meditation, Day N Update: ` (editable, pre-filled, cursor at end)
+- Completed: `…/?type=final&text=I've just completed The Rewrite Meditation!` (read-only, auto-copies)
+All built with `encodeURIComponent` in named constants/helpers at the top of the Worker (`STARTED_SHARE_URL`, `COMPLETED_SHARE_URL`, `checkinShareUrl(day)`).
 
 ---
 
 ## Changelog
+
+**2026-09-24 — Post-session review (Rewrite 60-day check-in Worker + Regulate mirror)**
+- **"The worker is showing info for the Regulate not Rewrite"** — the shared `share-worker.js` defaults `type=started` to Regulate wording. → New rule: shared-Worker defaults are hidden program-specific surfaces; grep them when cloning a program; use the `?text=` override instead of a new/edited share Worker.
+- **Olly asked "do we need another share worker, or is there a workaround?" then "which is better and more personal?"** → Rules: offer the no-new-Worker option first with tradeoffs; lead with a recommendation when asked which is better.
+- **Olly deleted two drafted additions from the completion share text, and corrected the check-in starter to include the program name + "Update"** → Rules: share text is a bare first-person fact and names the program; no emoji/teasers.
+- **Olly rewrote the confirmation body wholesale and cut "Come and let us know…" down to a single hyperlinked "here"** → Rules: body/promise copy comes from Olly (mark drafts); link only "here".
+- **Olly asked for cadence 60 days at the same 10-day interval** → Rule: sweep hardcoded durations and `=== 2` special cases; one stale Regulate mechanism line on the start page was caught this way.
+- **Olly asked to take the changes into Regulate too** → Rule: offer to mirror to siblings; mirror mechanics, not copy; state the assumption.
+- **`type=checkin` behaviour changed** (now honours `?text=`, editable, cursor at end) — this **overrides** the old "starts empty, not used by emails" note; `../CLAUDE.md` updated to match.
+- **Deploy-order and verification rules** (shared Worker first; curl the changed *behaviour*; 400 ≠ proof of version) and Process steps 11–12 (preview first; verify share links end to end).
+- **Self-caught tooling errors** (Python text-mode write flipped LF→CRLF; heredocs mangled backslashes; scratch files in `%TEMP%` outside `AI OS/`) → Rule + Never items; deleted the stray temp files.
+- **Scope updated**: `attraction-formula-checkin-worker.js` no longer exists → `regulate-checkin-worker.js` and `rewrite-checkin-worker.js`; scheduled-email counts updated (3 / 6).
+- **New companion skill:** `skills_email-preview-artifact.md`.
 
 **2026-09-22 — Post-session review (Regulate Meditation rename across both Workers)**
 - **Repeated "which Worker?" confusion** despite naming it three ways earlier in the session — added a rule + Process reminder that the three-way identification must be *restated every time*, not stated once and assumed to stick, since the dashboard name (`attraction-formula-check`) permanently disagrees with the local filename (`regulate-checkin-worker.js`) and the plain-English purpose ("Regulate Meditation").

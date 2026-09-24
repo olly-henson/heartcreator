@@ -1,0 +1,101 @@
+<title>Regulate Email Preview</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f6f4f8;--surface:#fff;--ink:#1d1726;--muted:#6b6478;--line:#e2dde9;--accent:#7a2aa8;--accent-ink:#fff;--paper:#fff;--paper-ink:#000;--paper-line:#e5e5e5;--warn:#9a6a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14101a;--surface:#1e1827;--ink:#efeaf5;--muted:#a79fb5;--line:#352d42;--accent:#c07ae8;--accent-ink:#14101a;--warn:#e0b04a}}
+:root[data-theme="dark"]{--bg:#14101a;--surface:#1e1827;--ink:#efeaf5;--muted:#a79fb5;--line:#352d42;--accent:#c07ae8;--accent-ink:#14101a;--warn:#e0b04a}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 'Instrument Sans',system-ui,sans-serif;padding-inline:16px;padding-block:28px}
+.wrap{max-width:860px;margin:0 auto}
+h1{font:600 clamp(24px,4vw,32px)/1.15 'Fraunces',Georgia,serif;margin:0 0 6px;text-wrap:balance}
+.lede{color:var(--muted);margin:0 0 22px;max-width:60ch}
+.rail{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:14px}
+.rail button{flex:none;font:inherit;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 14px;cursor:pointer;min-width:92px}
+.rail button b{display:block;font-weight:600;font-variant-numeric:tabular-nums}
+.rail button span{display:block;font-size:12px;color:var(--muted)}
+.rail button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.rail button[aria-selected="true"] span{color:inherit;opacity:.85}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mail{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.meta{padding:16px 20px;border-bottom:1px solid var(--line)}
+.when{color:var(--warn);font-weight:600;font-size:13px;margin-bottom:8px}
+.row{color:var(--muted);font-size:13px}
+.subj-in{width:100%;font-family:inherit;font-size:18px;font-weight:600;line-height:1.3;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:8px}
+.subj-in:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.body{padding:20px}
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--paper-line);border-radius:8px;padding:8px 22px;max-width:640px;margin:0 auto}
+.paper p{margin:1em 0}
+.paper[contenteditable="true"]{outline:2px dashed var(--line);outline-offset:4px;cursor:text}
+.paper[contenteditable="true"]:focus{outline:2px solid var(--accent)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
+.bar button,.nav button{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 16px;cursor:pointer}
+.bar .save{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.bar button:disabled,.nav button:disabled{opacity:.4;cursor:default}
+.status{font-size:13px;color:var(--muted)}
+.status.err{color:var(--warn)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-left:6px;vertical-align:middle}
+.note{font-size:13px;color:var(--muted);margin:14px 0 0;max-width:70ch}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+.links{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 20px}
+.links h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 8px}
+.links ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.links li .lt{font-weight:600}
+.links li .lu{display:block;font-size:13px;color:var(--muted);word-break:break-all;margin-top:2px}
+.links li .lm{display:block;font-size:13px;color:var(--ink);margin-top:4px}
+.links li .lm i{font-style:normal;color:var(--muted)}
+.links .none{color:var(--muted);font-size:13px}
+</style>
+<div class="wrap">
+  <h1>The Regulate Meditation emails</h1>
+  <p class="lede">All 5 emails a client's sign-up triggers, for a 24 Sept 2026 start. 30 days, a check-in every 10 days. Edit any email and save it.</p>
+  <div class="rail" id="rail" role="tablist"></div>
+  <div class="mail">
+    <div class="meta"><div class="when" id="when"></div><div class="row" id="row"></div><input class="subj-in" id="subj" aria-label="Subject line"></div>
+    <div class="body"><div class="paper" id="paper"></div></div>
+  </div>
+  <div class="bar"><button class="save" id="save" disabled>Save changes</button><button id="revert" disabled>Discard edits</button><button id="reset" disabled>Reset to original</button><span class="status" id="status"></span></div>
+  <section class="links" aria-label="Links in this email"><h2>Links in this email</h2><ul id="links"></ul></section>
+  <p class="note">Click into any email to edit the text. Leave the name (Olly) and the dates as they appear, because the worker fills those in for each client. Saved edits are kept for anyone who opens this page.</p>
+  <div class="nav"><button id="prev">← Previous</button><button id="next">Next →</button></div>
+</div>
+<script>
+var E=[{"tab":"Signup","sub":"To client","when":"Sent immediately on signup","to":"Client","subj":"You've started The Regulate Meditation","html":"\u003cdiv style=\"font-family:Arial,sans-serif;font-size:17px;line-height:1.7;color:#000000;\">\n    \u003cp>Hi Olly,\u003c/p>\n    \u003cp>Congrats! 🥳\u003c/p>\n    \u003cp>You're officially about to start using The Regulate Meditation.\u003c/p>\n    \u003cp>When practiced consistently, this meditation is going to help you dramatically reduce how stressed, anxious and worried you might be about things working out.\u003c/p>\n    \u003cp>It's time to get you feeling cool, calm and confident.\u003c/p>\n    \u003cp>So for the next 30 days I'm going to be checking in with you to make sure things are going well.\u003c/p>\n    \u003cp>Here's the official start and end date based on what you chose:\u003c/p>\n    \u003cp>\u003cstrong style=\"font-size:19px;\">Your start date:\u003c/strong> Thursday, 24 September 2026\u003cbr>\n    \u003cstrong style=\"font-size:19px;\">Your end date:\u003c/strong> Saturday, 24 October 2026\u003c/p>\n    \u003cp>There's really strong research showing the power of maintaining a practice to regulate your nervous system over 4 weeks and seeing lasting change.\u003c/p>\n    \u003cp>So by putting in the groundwork now, we're setting things up to work out in your favour for when you meet your person.\u003c/p>\n    \u003cp>I'll check in with you every 10 days or so, to see how you're doing.\u003c/p>\n    \u003cp>Come and let us know that you've started so we can support you &rarr; \u003ca href=\"https://share.ollyhenson.com/?type=started&text=I've%20just%20started%20The%20Regulate%20Meditation%20%E2%80%94%20excited%20to%20get%20going!\" style=\"color:#0066cc;\">here\u003c/a>\u003c/p>\n    \u003cp>Olly\u003c/p>\n  \u003c/div>"},{"tab":"Signup","sub":"To Olly","when":"Sent immediately on signup","to":"Olly","subj":"Olly Henson has started The Regulate Meditation","html":"\u003cdiv style=\"font-family:Arial,sans-serif;font-size:17px;line-height:1.7;color:#000000;\">\n    \u003cp>Olly Henson has just started The Regulate Meditation.\u003c/p>\n    \u003cp>\u003cstrong>Email:\u003c/strong> olly@ollyhenson.com\u003cbr>\n    \u003cstrong>Start date:\u003c/strong> Thursday, 24 September 2026\u003cbr>\n    \u003cstrong>First check-in scheduled:\u003c/strong> Sunday, 4 October 2026\u003c/p>\n  \u003c/div>"},{"tab":"Day 10","sub":"Check-in 1","when":"Scheduled for Sunday, 4 October 2026","to":"Client","subj":"How's it going?","html":"\u003cdiv style=\"font-family:Arial,sans-serif;font-size:17px;line-height:1.7;color:#000000;\">\n    \u003cp>Hey Olly,\u003c/p>\n    \n    \u003cp>How's the meditating going?\u003c/p>\n    \u003cp>Let us know in the community \u003ca href=\"https://share.ollyhenson.com/?type=checkin&text=Regulate%20Meditation%2C%20Day%2010%20Update%3A%20\" style=\"color:#0066cc;\">here\u003c/a>\u003c/p>\n    \u003cp>Olly\u003c/p>\n  \u003c/div>"},{"tab":"Day 20","sub":"Check-in 2","when":"Scheduled for Wednesday, 14 October 2026","to":"Client","subj":"How's it going?","html":"\u003cdiv style=\"font-family:Arial,sans-serif;font-size:17px;line-height:1.7;color:#000000;\">\n    \u003cp>Hey Olly,\u003c/p>\n    \u003cp>You're now 20 days in to The Regulate Meditation.\u003c/p>\n    \u003cp>How's it been going?\u003c/p>\n    \u003cp>Let us know in the community \u003ca href=\"https://share.ollyhenson.com/?type=checkin&text=Regulate%20Meditation%2C%20Day%2020%20Update%3A%20\" style=\"color:#0066cc;\">here\u003c/a>\u003c/p>\n    \u003cp>Olly\u003c/p>\n  \u003c/div>"},{"tab":"Day 30","sub":"Check-in 3","when":"Scheduled for Saturday, 24 October 2026","to":"Client","subj":"Well done on completing The Regulate Meditation! 🎉","html":"\u003cdiv style=\"font-family:Arial,sans-serif;font-size:17px;line-height:1.7;color:#000000;\">\n      \u003cp>Hey Olly,\u003c/p>\n      \u003cp>So well done on completing The Regulate Meditation. 🥳\u003c/p>\n      \u003cp>Let us know inside the community how it went \u003ca href=\"https://share.ollyhenson.com/?type=final&text=I've%20just%20completed%20The%20Regulate%20Meditation!\" style=\"color:#0066cc;\">here\u003c/a> and we'll unlock \u003cstrong>The Rewrite Meditation\u003c/strong> for you 😎\u003c/p>\n      \u003cp>Olly\u003c/p>\n    \u003c/div>"}],cur=0,rail=document.getElementById('rail'),paper=document.getElementById('paper'),subj=document.getElementById('subj'),statusEl=document.getElementById('status'),saveBtn=document.getElementById('save'),revertBtn=document.getElementById('revert'),resetBtn=document.getElementById('reset');
+var SAVED={},DRAFT={},col=null;
+function say(t,err){statusEl.textContent=t;statusEl.className='status'+(err?' err':'')}
+var tmp=document.createElement('div'),NC={};
+function norm(h){tmp.innerHTML=h;return tmp.innerHTML}
+function base(i){var s=SAVED[i]||{subj:E[i].subj,html:E[i].html};var k=i+'|'+s.html;if(!NC[k])NC[k]=norm(s.html);return{subj:s.subj,html:NC[k]}}
+function isDirty(i){var d=DRAFT[i];if(!d)return false;var b=base(i);return d.subj!==b.subj||d.html!==b.html}
+function grab(){var b=base(cur),h=paper.innerHTML,s=subj.value;if(h!==b.html||s!==b.subj)DRAFT[cur]={subj:s,html:h};else delete DRAFT[cur]}
+function drawRail(){rail.innerHTML='';E.forEach(function(e,i){var b=document.createElement('button');b.setAttribute('role','tab');var t=document.createElement('b');t.textContent=e.tab;if(isDirty(i)){var d=document.createElement('i');d.className='dot';t.appendChild(d)}var s=document.createElement('span');s.textContent=e.sub+(SAVED[i]?' · edited':'');b.appendChild(t);b.appendChild(s);b.setAttribute('aria-selected',i===cur);b.onclick=function(){grab();show(i)};rail.appendChild(b)})}
+function drawLinks(){var ul=document.getElementById('links');ul.innerHTML='';var as=paper.querySelectorAll('a[href]');
+ if(!as.length){var n=document.createElement('li');n.className='none';n.textContent='No links in this email.';ul.appendChild(n);return}
+ [].forEach.call(as,function(a){var li=document.createElement('li'),t=document.createElement('span'),u=document.createElement('span');
+  t.className='lt';t.textContent='“'+a.textContent.trim()+'”';u.className='lu';u.textContent=a.getAttribute('href');li.appendChild(t);li.appendChild(u);
+  try{var x=new URL(a.getAttribute('href')),tx=x.searchParams.get('text');if(tx){var m=document.createElement('span');m.className='lm';var l=document.createElement('i');l.textContent='Message shown on the share page: ';m.appendChild(l);m.appendChild(document.createTextNode(tx));li.appendChild(m)}}catch(e){}
+  ul.appendChild(li)})}
+function refreshBtns(){drawLinks();grab();var dirty=isDirty(cur);saveBtn.disabled=!dirty||!col;revertBtn.disabled=!dirty;resetBtn.disabled=!SAVED[cur]||!col}
+function show(i){cur=i;var e=E[i],d=DRAFT[i]||base(i);
+ document.getElementById('when').textContent=e.when;
+ document.getElementById('row').textContent='From: The Regulate Meditation <olly@ollyhenson.com>  ·  To: '+e.to;
+ subj.value=d.subj;paper.innerHTML=d.html;paper.contentEditable='true';
+ document.getElementById('prev').disabled=i===0;document.getElementById('next').disabled=i===E.length-1;
+ refreshBtns();drawRail();rail.children[i].scrollIntoView({block:'nearest',inline:'nearest'});say('')}
+function onEdit(){refreshBtns();drawRail();say('')}
+paper.addEventListener('input',onEdit);subj.addEventListener('input',onEdit);
+paper.addEventListener('paste',function(ev){ev.preventDefault();var t=(ev.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,t)});
+saveBtn.onclick=function(){grab();var d=DRAFT[cur],i=cur;if(!d||!col)return;saveBtn.disabled=true;say('Saving...');
+ col.doc('e'+i).set({subj:d.subj,html:d.html,idx:i,savedAt:new Date().toISOString()}).then(function(){SAVED[i]={subj:d.subj,html:d.html};delete DRAFT[i];refreshBtns();drawRail();say('Saved')}).catch(function(err){refreshBtns();say(err&&err.code==='invalid_argument'?'You don’t have permission to save changes here.':'Couldn’t save. Try again.',true)})};
+revertBtn.onclick=function(){delete DRAFT[cur];show(cur)};
+resetBtn.onclick=function(){var i=cur;if(!col||!SAVED[i])return;if(!confirm('Remove saved edits to this email and go back to the original?'))return;
+ col.doc('e'+i).delete().then(function(){delete SAVED[i];delete DRAFT[i];show(i);say('Reset to original')}).catch(function(){say('Couldn’t reset. Try again.',true)})};
+document.getElementById('prev').onclick=function(){grab();show(cur-1)};
+document.getElementById('next').onclick=function(){grab();show(cur+1)};
+show(0);
+(async function(){try{var db=await window.claude.use('db');if(!db){say('Saving isn’t available in this view.',true);return}
+ col=db.collection('emails');
+ col.onSnapshot(function(snap){var S={};snap.docs.forEach(function(d){var x=d.data();if(x&&typeof x.idx==='number'&&E[x.idx])S[x.idx]={subj:x.subj,html:x.html}});
+  var changed=JSON.stringify(S)!==JSON.stringify(SAVED);SAVED=S;
+  if(changed){if(!isDirty(cur)&&document.activeElement!==paper&&document.activeElement!==subj){delete DRAFT[cur];show(cur)}else{drawRail();refreshBtns()}}else refreshBtns()},function(){say('Lost connection to saved edits.',true)});
+ refreshBtns()}catch(e){say('Saving isn’t available in this view.',true)}})();
+</script>

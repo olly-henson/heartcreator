@@ -2,7 +2,21 @@
 
 > Read this at the start of every delivery session. Update it as tasks are completed or added.
 
-**Last updated:** 2026-06-25
+**Last updated:** 2026-09-24
+
+---
+
+## REWRITE + REGULATE CHECK-INS (built 2026-09-24 — read first)
+
+Workers, share links and previews are documented in `CLAUDE.md` (Rewrite section) and `skills/skills_email-preview-artifact.md`.
+
+- [ ] **Real test signup on the Rewrite start page** — check the confirmation subject/body, click every link from the inbox (started / Day N update / completion), then **clear the Resend Scheduled queue** (6 emails per Rewrite test)
+- [ ] Same test on the Regulate start page (Worker was redeployed with the new links; 3 scheduled emails per test)
+- [ ] Olly to finish editing check-ins 1–6 in the Rewrite viewer (only email 1 edited so far) → read the artifact db (`emails` collection) and apply to `rewrite-checkin-worker.js`, restoring merge fields → Olly redeploys
+- [ ] Olly to review the Regulate viewer copy (nothing edited yet)
+- [ ] Rewrite start page: confirm it is live in GHL at the intended path (`/start-rewrite` suggested) and the intro line ("give your mind the chance to install your new beliefs") is what Olly wants
+- [ ] Build the Rehearse check-in the same way (Rewrite day 60 promises to unlock it) — copy the Rewrite pattern, run the builder for its preview
+- [ ] `../CLAUDE.md`-adjacent: the Attraction Formula section in this folder's `CLAUDE.md` still uses the old filenames — tidy when Olly next touches it
 
 ---
 

@@ -50,10 +50,10 @@ export default {
                        type === 'intro'   ? 'Post in the community' :
                        type === 'checkin' ? 'Share in the community' :
                                             'Share in Community';
-    // checkin is the one type where there's nothing pre-written to
-    // share — it's a fresh 10-day reflection, so the box is editable
-    // and starts empty (with a prompt as placeholder) instead of
-    // read-only pre-filled text that auto-copies.
+    // checkin is the one type where the box is editable and doesn't
+    // auto-copy — the visitor writes a fresh update. It starts empty (with
+    // a prompt as placeholder), or with a short starter if ?text= is given
+    // (e.g. "Day 10 update: "), instead of read-only pre-filled text.
     const isCheckin = type === 'checkin';
 
     const html = `<!DOCTYPE html>
@@ -149,7 +149,7 @@ export default {
     <p class="label">The Attraction Formula Community</p>
     <h1>${heading}</h1>
     ${subheading ? `<p class="sub">${subheading}</p>` : ''}
-    <textarea id="win" rows="4"${isCheckin ? ' placeholder="How did the last 10 days go? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${isCheckin ? '' : text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+    <textarea id="win" rows="4"${isCheckin ? ' placeholder="How did the last 10 days go? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
     <div class="actions">
       <button class="btn btn-primary" onclick="copyText()">Copy to clipboard</button>
       <a class="btn btn-secondary" href="https://www.skool.com/heartcreator" target="_blank">${buttonText}</a>
@@ -169,6 +169,14 @@ export default {
       }).catch(function() {
         document.getElementById('status').textContent = 'Select the text above and copy manually.';
       });
+    }
+
+    // checkin with a ?text= starter (e.g. "Day 10 update: ") — drop the
+    // cursor at the end so the visitor can just start typing.
+    if (isCheckin && winText) {
+      const box = document.getElementById('win');
+      box.focus();
+      box.setSelectionRange(box.value.length, box.value.length);
     }
 
     // Auto-copy on load — skipped for checkin, there's nothing written yet.

@@ -1,13 +1,14 @@
 // ============================================================
-// Regulate — 30-Day Check-In Worker (fully stateless)
+// Rewrite — 60-Day Check-In Worker (fully stateless)
 // ============================================================
 //
 // This is a SEPARATE system from attraction-formula-tracker.gs (the
 // belief-builder intake tracker) — that file's own comment says
 // explicitly not to extend it with check-ins.
 //
-// Rebranded 2026-09-10 from "The Attraction Formula" to "The Regulate
-// Program" — same 30-day / 3-check-in cadence, same stateless design.
+// Built 2026-09-24 as a copy of regulate-checkin-worker.js for The Rewrite
+// Meditation — 60 days / 6 check-ins, 10 days apart, same stateless design.
+// The final check-in unlocks The Rehearse Meditation.
 //
 // SETUP (one time):
 //   1. Cloudflare dashboard > Workers & Pages > Create > Worker
@@ -16,18 +17,18 @@
 //      same Resend account/domain used by the other workers here —
 //      ollyhenson.com, DNS already verified in Cloudflare)
 //   4. Settings > Domains & Routes > Add Custom Domain, e.g.
-//      regulate-checkin.ollyhenson.com
+//      rewrite-checkin.ollyhenson.com
 //      (Cloudflare handles the DNS record automatically)
-//   5. Paste the deployed URL into regulate-start.html at the
+//   5. Paste the deployed URL into rewrite-start.html at the
 //      CHECKIN_WORKER_URL constant near the top of its <script>.
 //
 // HOW IT WORKS:
-//   regulate-start.html POSTs { name, email, startDate } once
-//   someone fills in the form and clicks "Start The Regulate
+//   rewrite-start.html POSTs { name, email, startDate } once
+//   someone fills in the form and clicks "Start The Rewrite
 //   Program". This worker, in one request:
 //     1. Sends the client their start-date confirmation email immediately
 //     2. Sends Olly a notification
-//     3. Schedules all 3 check-in emails (day 10, day 20, day 30) via
+//     3. Schedules all 6 check-in emails (day 10, 20, 30, 40, 50, 60) via
 //        Resend's scheduled_at — no ongoing trigger, no Google Sheet,
 //        no polling. Resend holds and sends each one at the right time.
 //
@@ -48,20 +49,22 @@
 
 const OLLY_EMAIL = 'olly@ollyhenson.com';
 const FROM_EMAIL = 'olly@ollyhenson.com';
-const FROM_NAME = 'The Regulate Meditation';
+const FROM_NAME = 'The Rewrite Meditation';
 const COMMUNITY_URL = 'https://www.skool.com/heartcreator';
 const SHARE_BASE_URL = 'https://share.ollyhenson.com';
-// "here" links open the shared share page (share-worker.js) with a message
-// carried in ?text=. Started + completed are read-only messages that
-// auto-copy; type=checkin opens an editable box pre-filled with a starter
-// like "Regulate Meditation, Day 10 Update: " for the client to finish.
-const STARTED_SHARE_URL = `${SHARE_BASE_URL}/?type=started&text=${encodeURIComponent("I've just started The Regulate Meditation — excited to get going!")}`;
-const COMPLETED_SHARE_URL = `${SHARE_BASE_URL}/?type=final&text=${encodeURIComponent("I've just completed The Regulate Meditation!")}`;
+// The shared share page (share-worker.js) defaults type=started to the
+// Regulate message, so the Rewrite link overrides it with ?text=.
+const STARTED_SHARE_URL = `${SHARE_BASE_URL}/?type=started&text=${encodeURIComponent("I've just started The Rewrite Meditation — excited to get going!")}`;
+// Day-60 link: type=final gives the "Share Your Results" page, with a
+// pre-written completion message the client copies into the community.
+const COMPLETED_SHARE_URL = `${SHARE_BASE_URL}/?type=final&text=${encodeURIComponent("I've just completed The Rewrite Meditation!")}`;
+// Check-ins 1-5: type=checkin opens an editable box, pre-filled with a
+// starter like "Rewrite Meditation, Day 10 Update: " for the client to finish in their own words.
 function checkinShareUrl(day) {
-  return `${SHARE_BASE_URL}/?type=checkin&text=${encodeURIComponent(`Regulate Meditation, Day ${day} Update: `)}`;
+  return `${SHARE_BASE_URL}/?type=checkin&text=${encodeURIComponent(`Rewrite Meditation, Day ${day} Update: `)}`;
 }
 const CHECKIN_INTERVAL_DAYS = 10;
-const TOTAL_CHECKINS = 3; // 3 × 10 days = the full 30-day program
+const TOTAL_CHECKINS = 6; // 6 × 10 days = the full 60-day program
 
 function corsHeaders() {
   return {
@@ -101,16 +104,16 @@ function confirmationEmailHtml(name, startDateText, endDateText) {
   return wrapHtml(`
     <p>Hi ${firstName(name)},</p>
     <p>Congrats! 🥳</p>
-    <p>You're officially about to start using The Regulate Meditation.</p>
-    <p>When practiced consistently, this meditation is going to help you dramatically reduce how stressed, anxious and worried you might be about things working out.</p>
-    <p>It's time to get you feeling cool, calm and confident.</p>
-    <p>So for the next 30 days I'm going to be checking in with you to make sure things are going well.</p>
+    <p>You're officially about to start using The Rewrite Meditation.</p>
+    <p>When practiced consistently, this meditation is going to help install new core beliefs that will attract your perfect soulmate.</p>
+    <p>By changing your core beliefs, you're changing how you think, feel and act - automatically</p>
+    <p>For the next 60 days I'm going to be checking in with you to make sure things are going well.</p>
     <p>Here's the official start and end date based on what you chose:</p>
     <p><strong style="font-size:19px;">Your start date:</strong> ${startDateText}<br>
     <strong style="font-size:19px;">Your end date:</strong> ${endDateText}</p>
-    <p>There's really strong research showing the power of maintaining a practice to regulate your nervous system over 4 weeks and seeing lasting change.</p>
-    <p>So by putting in the groundwork now, we're setting things up to work out in your favour for when you meet your person.</p>
-    <p>I'll check in with you every 10 days or so, to see how you're doing.</p>
+    <p>You'll begin to really notice the changes in how you automatically think from day 21 and beyond.</p>
+    <p>Then days 21-60 truly wire it into who you are.</p>
+    <p>So by putting in the groundwork now, we're making attracting your perfect person - just part of WHO you are.</p>
     <p>Come and let us know that you've started so we can support you &rarr; ${link(STARTED_SHARE_URL, 'here')}</p>
     <p>Olly</p>
   `);
@@ -118,31 +121,31 @@ function confirmationEmailHtml(name, startDateText, endDateText) {
 
 function coachNotificationHtml(name, email, startDateText, firstCheckinText) {
   return wrapHtml(`
-    <p>${name} has just started The Regulate Meditation.</p>
+    <p>${name} has just started The Rewrite Meditation.</p>
     <p><strong>Email:</strong> ${email}<br>
     <strong>Start date:</strong> ${startDateText}<br>
     <strong>First check-in scheduled:</strong> ${firstCheckinText}</p>
   `);
 }
 
-// Check-in 1 (day 10) — short. Check-in 2 (day 20) — adds a
-// "20 days in" line. Check-in 3 (day 30, isFinal) — completion message.
+// Check-in 1 (day 10) — short. Check-ins 2–5 (day 20–50) — add a
+// "N days in" line. Check-in 6 (day 60, isFinal) — completion message.
 // "here" links straight to the community in all three.
 function checkinEmailHtml(name, checkinNumber, isFinal) {
   if (isFinal) {
     return wrapHtml(`
       <p>Hey ${firstName(name)},</p>
-      <p>So well done on completing The Regulate Meditation. 🥳</p>
-      <p>Let us know inside the community how it went ${link(COMPLETED_SHARE_URL, 'here')} and we'll unlock <strong>The Rewrite Meditation</strong> for you 😎</p>
+      <p>So well done on completing The Rewrite Meditation. 🥳</p>
+      <p>Let us know inside the community how it went ${link(COMPLETED_SHARE_URL, 'here')} and we'll unlock <strong>The Rehearse Meditation</strong> for you 😎</p>
       <p>Olly</p>
     `);
   }
-  const dayLine = checkinNumber === 2
-    ? `<p>You're now 20 days in to The Regulate Meditation.</p>`
+  const dayLine = checkinNumber > 1
+    ? `<p>You're now ${checkinNumber * CHECKIN_INTERVAL_DAYS} days in to The Rewrite Meditation.</p>`
     : '';
   // Check-in 1 names the program in the question; check-in 2 already
-  // names it in the "20 days in" line above, so keeps the shorter form.
-  const question = checkinNumber === 2
+  // names it in the "N days in" line above, so keeps the shorter form.
+  const question = checkinNumber > 1
     ? `How's it been going?`
     : `How's the meditating going?`;
   return wrapHtml(`
@@ -215,18 +218,18 @@ export default {
     try {
       await sendEmail(env, {
         to: email,
-        subject: `You've started The Regulate Meditation`,
+        subject: `You've started The Rewrite Meditation!`,
         html: confirmationEmailHtml(name, startDateText, endDateText),
-        text: `Congrats! You're officially about to start using The Regulate Meditation. When practiced consistently, this meditation is going to help you dramatically reduce how stressed, anxious and worried you might be about things working out. It's time to get you feeling cool, calm and confident. So for the next 30 days I'm going to be checking in with you to make sure things are going well. Start date: ${startDateText}. End date: ${endDateText}. There's really strong research showing the power of maintaining a practice to regulate your nervous system over 4 weeks and seeing lasting change. So by putting in the groundwork now, we're setting things up to work out in your favour for when you meet your person. I'll check in with you every 10 days or so, to see how you're doing. Come and let us know that you've started so we can support you: ${STARTED_SHARE_URL}`,
+        text: `Congrats! You're officially about to start using The Rewrite Meditation. When practiced consistently, this meditation is going to help install new core beliefs that will attract your perfect soulmate. By changing your core beliefs, you're changing how you think, feel and act - automatically. For the next 60 days I'm going to be checking in with you to make sure things are going well. Start date: ${startDateText}. End date: ${endDateText}. You'll begin to really notice the changes in how you automatically think from day 21 and beyond. Then days 21-60 truly wire it into who you are. So by putting in the groundwork now, we're making attracting your perfect person - just part of WHO you are. Come and let us know that you've started so we can support you: ${STARTED_SHARE_URL}`,
       });
 
       await sendEmail(env, {
         to: OLLY_EMAIL,
-        subject: `${name} has started The Regulate Meditation`,
+        subject: `${name} has started The Rewrite Meditation`,
         html: coachNotificationHtml(name, email, startDateText, formatDateLong(firstCheckin)),
       });
 
-      // Schedule all 3 check-ins up front — Resend holds each one and
+      // Schedule all 6 check-ins up front — Resend holds each one and
       // sends it at scheduled_at, no further action needed from here.
       for (let i = 1; i <= TOTAL_CHECKINS; i++) {
         const isFinal = i === TOTAL_CHECKINS;
@@ -234,12 +237,12 @@ export default {
         await sendEmail(env, {
           to: email,
           subject: isFinal
-            ? `Well done on completing The Regulate Meditation! 🎉`
+            ? `Well done on completing The Rewrite Meditation! 🎉`
             : `How's it going?`,
           html: checkinEmailHtml(name, i, isFinal),
           text: isFinal
-            ? `So well done on completing The Regulate Meditation. 🥳 Let us know inside the community how it went and we'll unlock The Rewrite Meditation for you: ${COMPLETED_SHARE_URL}`
-            : `${i === 2 ? "How's it been going?" : "How's the meditating going?"} Let us know in the community: ${checkinShareUrl(i * CHECKIN_INTERVAL_DAYS)}`,
+            ? `So well done on completing The Rewrite Meditation. 🥳 Let us know inside the community how it went and we'll unlock The Rehearse Meditation for you: ${COMPLETED_SHARE_URL}`
+            : `${i > 1 ? "How's it been going?" : "How's the meditating going?"} Let us know in the community: ${checkinShareUrl(i * CHECKIN_INTERVAL_DAYS)}`,
           scheduledAt: sendAt.toISOString(),
         });
       }

@@ -68,6 +68,11 @@ delivery/
   creative-flow-tracker.gs             ← Creative Flow tracker (monthly, no fixed end)
   master-tracker.gs                    ← Master Client Tracker (all programs combined)
   share-worker.js                      ← Cloudflare Worker — universal share page (Heart Creator Community)
+  regulate-checkin-worker.js           ← Regulate 30-day / 3 check-in Worker (dashboard name: attraction-formula-check; domain regulate-checkin.ollyhenson.com)
+  regulate-start.html                  ← Regulate start page (GHL Custom HTML block)
+  rewrite-checkin-worker.js            ← Rewrite 60-day / 6 check-in Worker (dashboard name: rewrite-check-in; domain rewrite-checkin.ollyhenson.com)
+  rewrite-start.html                   ← Rewrite start page (GHL Custom HTML block)
+  email-preview-artifact/              ← editable email-preview viewer: template + builder + the two built artifacts (see skills_email-preview-artifact.md)
   regulate-restore-delivery-system.md  ← full delivery system documentation
   release-and-let-go-delivery-system.md   ← Release & Let Go documentation
   heart-creator-delivery-system.md     ← Heart Creator Program structure and journey
@@ -225,10 +230,30 @@ A fixed 30-day check-in cadence for anyone starting The Attraction Formula Progr
 - **Check-in 1** (day 10) — subject "How's it going?": "Hi NAME, / How's it been going? / Let us know in the community here".
 - **Check-in 2** (day 20) — subject "How's it going?": as #1 plus a line "You're now 20 days in to the Attraction Formula Program."
 - **Check-in 3** (day 30, `isFinal`) — subject "Well done on completing The Attraction Formula Program! 🎉": "Hey NAME, / So well done on completing The Attraction Formula Program. / Let us know inside the community how it went here - interested to hear how it's gone for you".
-- Every "here" links straight to `COMMUNITY_URL`. The `type=checkin` share page is no longer used by these emails (left in place, harmless).
+- ~~Every "here" links straight to `COMMUNITY_URL`; `type=checkin` unused.~~ **Superseded 2026-09-24** (Regulate + Rewrite): every "here" now opens the share page with a message in `?text=` — confirmation → `type=started`, check-ins → editable `type=checkin` ("Regulate Meditation, Day 10 Update: "), final → `type=final` ("I've just completed The Regulate Meditation!"). Only the word "here" is hyperlinked. See the Rewrite section below.
 - **Preview without deploying:** render the worker's template functions locally → `delivery/attraction-formula-email-preview.html` (technique in `skills/skills_cloudflare-workers.md` Examples). Used to iterate copy ~6 rounds with zero deploys.
 
 **Housekeeping:** every test signup schedules 3 real future emails in Resend — clear the Scheduled queue between test runs and before any clean signup Olly wants to keep.
+
+---
+
+### The Rewrite Meditation — 60-Day Check-Ins — BUILT 2026-09-24 (deployed; live test signup pending)
+
+Same stateless design as the Regulate check-ins above (no sheet, no Apps Script, no trigger), for **60 days with 6 check-ins, 10 days apart** (`TOTAL_CHECKINS = 6`, `CHECKIN_INTERVAL_DAYS = 10`). The final email (day 60) unlocks **The Rehearse Meditation**. Programs run in sequence: Regulate → Rewrite → Rehearse.
+
+| File | Path | Purpose |
+|---|---|---|
+| Start page | `delivery/rewrite-start.html` | Name/email/start-date form, live in GHL Website Builder (suggested path `/start-rewrite`). |
+| Worker | `delivery/rewrite-checkin-worker.js` | Cloudflare Worker `rewrite-check-in` (`https://rewrite-check-in.olly-6af.workers.dev`), custom domain `rewrite-checkin.ollyhenson.com`. Secret `RESEND_API_KEY`. Sends confirmation + notification, schedules 6 check-ins. |
+| Preview | `delivery/email-preview-artifact/rewrite-emails-artifact.html` | Editable email viewer (Artifact `https://claude.ai/artifact/XE6ev4MY8whXzti4jETWpd`). Olly's saved edits live in the artifact db, not the file. |
+
+**Emails:** confirmation (subject "You've started The Rewrite Meditation!"; body is Olly's own wording — new core beliefs that attract your perfect soulmate, changes noticed from day 21, days 21–60 wire it in) + coach notification + check-ins 1–5 (subject "How's it going?"; check-in 1 "How's the meditating going?", 2–5 "You're now N days in…" / "How's it been going?") + day 60 completion (subject "Well done on completing The Rewrite Meditation! 🎉").
+
+**Share links** (share page `share.ollyhenson.com` is shared by every program): confirmation "here" → `type=started&text=I've just started The Rewrite Meditation — excited to get going!`; check-ins → `type=checkin&text=Rewrite Meditation, Day N Update: ` (editable); day 60 → `type=final&text=I've just completed The Rewrite Meditation!`. The `?text=` override exists because `share-worker.js` defaults `type=started` to Regulate wording. `share-worker.js` `type=checkin` now honours `?text=` as an editable starter (cursor at end, no auto-copy).
+
+**Still to do:** one real test signup on the Rewrite start page, click each link from the inbox, then clear the Resend Scheduled queue (6 emails per Rewrite test, 3 per Regulate test). Only email 1 has been edited by Olly in the viewer — check the artifact db for further saved edits before the next Worker change.
+
+**Regulate mirror (2026-09-24):** `regulate-checkin-worker.js` was updated with the same link/share mechanics (own wording and 30-day/3-check-in cadence unchanged); redeployed by Olly.
 
 ---
 
@@ -355,6 +380,8 @@ The Master tab header is only written when the tab doesn't exist. To reset: dele
 |-------|------|---------|
 | Regulate & Restore Tracker | `skills/skills_regulate-restore-tracker.md` | How to work with the script, column constants, testing process, critical rules |
 | Heart Creator Program | `skills/skills_heart-creator-program.md` | Program rules, stage names, pricing tiers, what to ask before documenting anything |
+| Cloudflare Workers | `skills/skills_cloudflare-workers.md` | Building/deploying/verifying Workers, share-link rules, secret naming |
+| Email Preview Artifact | `skills/skills_email-preview-artifact.md` | Editable email-preview viewer for any program's check-in Worker; read edits back and apply them |
 | Delivery System Reference | `regulate-restore-delivery-system.md` | Full Regulate & Restore program structure, forms, email flows, known gotchas |
 | Heart Creator Reference | `heart-creator-delivery-system.md` | Heart Creator client journey, pricing, stage structure, what still needs to be built |
 
@@ -388,6 +415,15 @@ git push
 ---
 
 ## Changelog
+
+### 2026-09-24 — Session: Rewrite Meditation 60-day check-ins + editable email previews
+- Built `rewrite-checkin-worker.js` + `rewrite-start.html` (copy of Regulate's, 60 days / 6 check-ins, unlocks Rehearse); Olly created the `rewrite-check-in` Worker, secret, and `rewrite-checkin.ollyhenson.com` domain and deployed it (curl-verified; live test signup still pending)
+- New share mechanics for both Regulate and Rewrite: only "here" hyperlinked; links carry messages via `?text=`; `share-worker.js` `type=checkin` now takes a `?text=` starter and stays editable. Share Worker redeployed first, then both program Workers
+- Regulate Worker updated with the same link mechanics (copy/cadence unchanged) and redeployed
+- Built the editable email-preview Artifact system (`email-preview-artifact/`): generic template + builder + published viewers for Rewrite and Regulate; new skill `skills/skills_email-preview-artifact.md`; `skills_cloudflare-workers.md` reviewed and updated with this session's corrections
+- Olly's edits shaped the copy: bare share messages (two drafted additions deleted), program name in check-in starters, confirmation body rewritten in his own wording, "here"-only hyperlink
+- **Lessons (mine):** the shared share Worker's defaults said Regulate on a Rewrite link (fixed with `?text=`, no new Worker); a viewer bug made saved edits look lost (data was intact — fixed the HTML comparison); a text-mode Python edit flipped line endings; I wrote scratch files to `%TEMP%` outside `AI OS/` (deleted). All captured in the skills files
+- Approval note: Olly asked for this session to be saved, including the skills files — treated as approval to update this CLAUDE.md
 
 ### 2026-09-04 — Session: Attraction Formula check-ins finished
 - Start page added to GHL Website Builder (Custom HTML block) by Olly
