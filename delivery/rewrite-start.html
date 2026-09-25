@@ -1,14 +1,14 @@
 <!-- ============================================================
      Heart Attractor — Start The Rewrite Meditation
      Built 2026-09-24 as a copy of regulate-start.html — captures Name/Email/Start Date
-     and kicks off the 60-day / 10-day check-in email cadence (separate
+     and kicks off the 30-day check-in email cadence (day 10 + day 20, completion day 30; was 60-day / every 10 days) (separate
      system from build-your-meditation.html's belief-builder tool; this
      page owns the START/CHECK-IN flow, not the meditation-belief flow).
 
      On submit, POSTs { name, email, startDate } to the Rewrite
      Check-In Worker (see delivery/rewrite-checkin-worker.js),
      which sends the client their start-date confirmation email and
-     schedules all 6 check-in emails (day 10/20/30/40/50/60) via Resend's
+     schedules all 3 check-in emails (day 10/20/30) via Resend's
      scheduled send — fully stateless, no Google Sheet, no Apps Script,
      no ongoing trigger (confirmed with Olly 2026-09-03).
 
@@ -100,6 +100,14 @@
   .afs-status.success{ color:#8fd0a8; }
 
   .afs-confirm{ display:none; }
+  /* Start/end dates on the confirmation screen — clients no longer pick a
+     date, so this is where they first see it. Same box style as .afs-why. */
+  .afs-dates{
+    background:rgba(184,79,232,.08); border:1px solid rgba(184,79,232,.25);
+    border-radius:12px; padding:18px 20px; margin-bottom:18px;
+    display:grid; gap:14px;
+  }
+  .afs-date-val{ font-size:clamp(18px,2.2vw,22px); font-weight:700; color:#fff; line-height:1.3; }
   .afs-confirm.active{ display:block; animation:afsFade .35s ease; }
   @keyframes afsFade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
 
@@ -128,20 +136,23 @@
     <div id="afs-form-screen">
       <div class="afs-eyebrow">👉 Begin Your Journey</div>
       <h1 class="afs-h1">Start <span class="afs-grad">The Rewrite Meditation</span></h1>
-      <p class="afs-lede">To make sure that this meditation works, we need to implement this for 60 days, to give your mind the chance to install your new beliefs. Add your start date and details below and I'll make sure to check-in with you as you put this into practice.</p>
+      <p class="afs-lede" style="margin-bottom:14px;">To make sure that this meditation works, we need to implement this for 30 days, to give your mind the chance to install your new belief.</p>
+      <p class="afs-lede">Add your details below and I'll make sure to check-in with you as you put this into practice.</p>
 
       <div class="afs-why">
         <span class="afs-why-icon">💌</span>
-        <span class="afs-why-text"><strong>What happens next.</strong> You'll get an email confirming your start date. The meditation runs for 60 days, and I'll make sure to check in with you.</span>
+        <span class="afs-why-text"><strong>What happens next.</strong> You'll get an email confirming your start date. The meditation runs for 30 days, and I'll make sure to check in with you.</span>
       </div>
 
-      <div class="afs-field">
+      <!-- Start date is always today (Olly, 2026-09-25): the date field is
+           hidden and the script fills it with today's date. -->
+      <div class="afs-field" style="display:none;">
         <div class="afs-field-label">Your start date</div>
         <div class="afs-date-input-wrap">
           <input type="date" class="afs-input afs-date-input" id="afs-date-input">
           <div class="afs-date-display" id="afs-date-display">Select a date</div>
         </div>
-        <div class="afs-date-hint">This is the date your 60-day meditation — and your first check-in, 10 days later — counts from.</div>
+        <div class="afs-date-hint">This is the date your 30-day meditation — and your first check-in, 10 days later — counts from.</div>
       </div>
 
       <div class="afs-field">
@@ -163,6 +174,10 @@
     <div id="afs-confirm-screen" class="afs-confirm">
       <div class="afs-eyebrow">👉 You're In</div>
       <h1 class="afs-h1">Your Meditation Is <span class="afs-grad">Now Live</span></h1>
+      <div class="afs-dates">
+        <div><div class="afs-field-label">Your start date</div><div class="afs-date-val" id="afs-start-val"></div></div>
+        <div><div class="afs-field-label">Your end date</div><div class="afs-date-val" id="afs-end-val"></div></div>
+      </div>
       <p class="afs-lede">Check your inbox — we've sent this to you too, so you've always got it.</p>
       <div class="afs-confirm-actions">
         <a class="afs-community-btn" id="afs-community-btn" href="#" target="_blank" rel="noopener">Let us know in the community →</a>
@@ -175,7 +190,7 @@
 <script>
 (function() {
   // Cloudflare Worker that sends the start-date confirmation and
-  // schedules all 6 check-in emails (day 10/20/30/40/50/60) via Resend — fully
+  // schedules all 3 check-in emails (day 10/20/30) via Resend — fully
   // stateless, no sheet, no Apps Script. See
   // delivery/rewrite-checkin-worker.js for the worker source.
   // NEW Worker needed: deploy rewrite-checkin-worker.js as its own Worker and
@@ -271,7 +286,13 @@
     });
   });
 
+  // Must match the Worker: the end date is PROGRAM_DAYS (30) after the start.
+  var PROGRAM_DAYS = 30;
   function showConfirmation(startDate) {
+    var end = new Date(startDate + 'T00:00:00');
+    end.setDate(end.getDate() + PROGRAM_DAYS);
+    document.getElementById('afs-start-val').textContent = formatDateForDisplay(startDate);
+    document.getElementById('afs-end-val').textContent = end.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     var shareText = "I've just started The Rewrite Meditation — excited to get going!";
     var communityBtn = document.getElementById('afs-community-btn');
     communityBtn.href = SHARE_BASE_URL + '?type=started&text=' + encodeURIComponent(shareText);

@@ -13,6 +13,15 @@ This folder holds **three** self-contained HTML tools Olly opens in Chrome:
    three steps. Output **1400 × 790**. Same look as tool 2 but keeps the section
    **sub text**. See the dedicated section below.
 
+Also in the folder, not yet documented here in full: `join-card-generator.html`
+(see skills file Section F), `ad-template-generator.html`, and
+**`relationship-ad-generator.html`**, the tool that made the **live Skool cover /
+Facebook ad** (dark left panel, headline + "FIND OUT MORE" pill, couple photo
+right, 1920 × 1080). See skills file Section G. ⚠️ When Olly says "the cover
+photo tool", **match his reference image to a tool before editing anything.**
+On 2026-09-25 I opened and changed `cover-photo-generator.html`, but his
+finished cover came from `relationship-ad-generator.html`.
+
 Everything from here down to the Tool 2 section is about tool 1.
 
 ### Tool 1 — `cover-photo-generator.html`
@@ -70,6 +79,7 @@ expressed as `manifest LOVE / no doubts`.
 | Bottom bar | Bar height · Bar darkness |
 | Text | Headline size · (drag the text on the preview to nudge) · Reset text position |
 | Output | Download PNG |
+| Save (2026-09-25) | **Save changes** (sliders, B&W, alignment, text position → `localStorage` key `ohtools:cover-photo-generator`; chosen photo → IndexedDB `ohtools`/`photos`, same key) · **Back to defaults** (clears both, reloads). Per Chrome profile only; file:// pages share one storage area, so namespace keys per tool. |
 
 `Shift left/right (px)` exists because a **portrait** source photo in this
 wide frame has *no* horizontal overflow, so `Horizontal position` does

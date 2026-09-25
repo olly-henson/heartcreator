@@ -25,7 +25,7 @@
 </style>
 <div class="wrap">
   <h1 class="page">Relationship ad generator</h1>
-  <p class="page">Warm brown/gold ad template — radial glow panel, flowing line art, 5-line headline, CTA pill, outline heart+hands mark. Drag the headline on the preview to nudge it.</p>
+  <p class="page">Warm brown/gold ad template — radial glow panel, 3-line headline, CTA pill, outline heart+hands mark. Drag the headline on the preview to nudge it.</p>
 
   <canvas id="view" width="1920" height="1080"></canvas>
 
@@ -77,16 +77,10 @@
       <input id="zoom" type="range" min="65" max="220" value="76">
     </div>
 
-    <div class="grouphd">Headline (5 lines)</div>
-    <div class="ctl full"><label>Line 1 — bold gold, largest</label><input type="text" id="ln1" value="ATTRACT"></div>
-    <div class="ctl full"><label>Line 2 — regular, same size</label><input type="text" id="ln2" value="SOMEONE"></div>
-    <div class="ctl full"><label>Line 3 — regular, smaller</label><input type="text" id="ln3" value="That You Can"></div>
-    <div class="ctl full">
-      <label>Line 4 — first word bold gold, rest regular</label>
-      <input type="text" id="ln4a" value="BUILD">
-      <input type="text" id="ln4b" value="YOUR" style="margin-top:6px;">
-    </div>
-    <div class="ctl full"><label>Line 5 — regular, large</label><input type="text" id="ln5" value="LIFE WITH"></div>
+    <div class="grouphd">Headline (3 lines)</div>
+    <div class="ctl full"><label>Line 1 — bold lilac</label><input type="text" id="ln1" value="ATTRACT"></div>
+    <div class="ctl full"><label>Line 2 — regular, off-white</label><input type="text" id="ln2" value="YOUR"></div>
+    <div class="ctl full"><label>Line 3 — bold lilac</label><input type="text" id="ln3" value="SOULMATE"></div>
     <div class="ctl"><label>Headline size <span id="hl-v">100%</span></label><input id="hl" type="range" min="70" max="120" value="100"></div>
 
     <div class="grouphd">Call to action</div>
@@ -120,7 +114,7 @@
   els.photoname = document.getElementById('photoname');
   els.panelBase = document.getElementById('panelBase');
   els.panelGlow = document.getElementById('panelGlow');
-  ['ln1','ln2','ln3','ln4a','ln4b','ln5','btntext'].forEach(function(k){
+  ['ln1','ln2','ln3','btntext'].forEach(function(k){
     els[k] = document.getElementById(k);
   });
 
@@ -363,56 +357,50 @@
     var sideMargin = W*0.055;
     var targetW = panelW - sideMargin*1.5;
     var zoneLeft = sideMargin + off.x;
-    var zoneTop = H*0.12 + off.y;
-    var bottomMargin = H*0.06;
-    var availH = H - zoneTop - bottomMargin;
 
+    // 2026-09-25 (Olly): headline cut from 5 lines ("Attract someone that you
+    // can build your life with") to 3 — ATTRACT / YOUR / SOULMATE, one word per
+    // line, all the same size, button underneath. Fewer words = much bigger
+    // text, so it reads as a Skool Discovery card / Facebook feed thumbnail.
+    // The block (3 lines + button) is centred vertically; drag still nudges it.
     var l1=els.ln1.value, l2=els.ln2.value, l3=els.ln3.value;
-    var l4a=els.ln4a.value, l4b=els.ln4b.value, l5=els.ln5.value;
     var hlPct = +els.hl.value/100;
 
     ctx.textBaseline='alphabetic'; ctx.textAlign='left'; ctx.letterSpacing='0px';
     var ref=100;
     function w(text,weight){ ctx.font=weight+' '+ref+'px Poppins, sans-serif'; return ctx.measureText(text).width; }
-    var bigCandidates=[w(l1,800),w(l2,600),w(l4a,800)+w(' '+l4b,600),w(l5,600)];
+    var bigCandidates=[w(l1,800),w(l2,600),w(l3,800),1];
     var hzWidthCap = ref*(targetW/Math.max.apply(null,bigCandidates));
-    // 5.5 (not the old 6.5) now that subtitle + button are gone — the
-    // headline alone needs less vertical budget, so it can run bigger.
-    var hzHeightCap = availH/6.2;
+    // Vertical budget: 3 lines + gap + button ≈ 4.1 × the line size.
+    var hzHeightCap = (H*0.80)/4.1;
     var hzBig = Math.min(hzWidthCap, hzHeightCap) * hlPct;
-    var hzSmall = Math.min(hzBig*0.5, ref*targetW/Math.max(1,w(l3,600))*hlPct);
 
-    var lineGap = hzBig*0.98;
-    var y1 = zoneTop + hzBig*0.80;
-    var y2 = y1 + lineGap;
-    var y3 = y2 + hzBig*0.30 + hzSmall*0.85;
-    var y4 = y3 + hzSmall*0.35 + hzBig*0.85;
-    var y5 = y4 + lineGap;
-
-    function lw(text,weight,size){ ctx.font=weight+' '+size+'px Poppins, sans-serif'; return ctx.measureText(text).width; }
-    var w1=lw(l1,800,hzBig), w2=lw(l2,600,hzBig), w3=lw(l3,600,hzSmall);
-    var w4a=lw(l4a,800,hzBig), w4sp=lw(' ',600,hzBig), w4b=lw(l4b,600,hzBig), w4=w4a+w4sp+w4b;
-    var w5=lw(l5,600,hzBig);
-
-    ctx.save();
-    ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=16; ctx.shadowOffsetY=3;
-    ctx.font='800 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l1, zoneLeft, y1);
-    ctx.font='600 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#FAF3E6'; ctx.fillText(l2, zoneLeft, y2);
-    ctx.font='600 '+hzSmall+'px Poppins, sans-serif'; ctx.fillStyle='#E8DCC8'; ctx.fillText(l3, zoneLeft, y3);
-    ctx.font='800 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l4a, zoneLeft, y4);
-    ctx.font='600 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#FAF3E6'; ctx.fillText(l4b, zoneLeft+w4a+w4sp, y4);
-    ctx.fillText(l5, zoneLeft, y5);
-    ctx.restore();
-
-    // ---- CTA button (re-added, sits directly under the headline now
-    // that there's no subtitle in between) ----
-    var btnTextSize = hzSmall*0.75;
+    var btnTextSize = Math.min(hzBig*0.30, H*0.055);
     ctx.font='800 '+btnTextSize+'px Poppins, sans-serif';
     var btnLabel = els.btntext.value;
     var btnTextW = ctx.measureText(btnLabel).width;
     var btnPadX = btnTextSize*0.9, btnPadY = btnTextSize*0.62 + 5;
     var btnW = btnTextW+btnPadX*2, btnH = btnTextSize+btnPadY*2;
-    var btnY = y5 + hzBig*0.55;
+
+    var lineGap = hzBig*0.98;
+    var blockH = hzBig*0.80 + lineGap*2 + hzBig*0.55 + btnH;
+    var zoneTop = (H - blockH)/2 + off.y;
+    var y1 = zoneTop + hzBig*0.80;
+    var y2 = y1 + lineGap;
+    var y3 = y2 + lineGap;
+
+    function lw(text,weight,size){ ctx.font=weight+' '+size+'px Poppins, sans-serif'; return ctx.measureText(text).width; }
+    var w1=lw(l1,800,hzBig), w2=lw(l2,600,hzBig), w3=lw(l3,800,hzBig);
+
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=16; ctx.shadowOffsetY=3;
+    ctx.font='800 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l1, zoneLeft, y1);
+    ctx.font='600 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#FAF3E6'; ctx.fillText(l2, zoneLeft, y2);
+    ctx.font='800 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l3, zoneLeft, y3);
+    ctx.restore();
+
+    // ---- CTA button, directly under the headline ----
+    var btnY = y3 + hzBig*0.55;
     ctx.save();
     ctx.shadowColor='rgba(217,70,239,0.5)'; ctx.shadowBlur=26; ctx.shadowOffsetY=7;
     var btnGrad = ctx.createLinearGradient(zoneLeft,0,zoneLeft+btnW,0);
@@ -428,7 +416,7 @@
     ctx.fillText(btnLabel, zoneLeft+btnPadX, btnY+btnH/2+btnTextSize*0.02);
     ctx.restore();
 
-    hitBox = { x: zoneLeft-40, y: zoneTop-hzBig*0.7, w: Math.max(w1,w2,w3,w4,w5,btnW)+80, h:(btnY+btnH)-(zoneTop-hzBig*0.7) };
+    hitBox = { x: zoneLeft-40, y: zoneTop-hzBig*0.7, w: Math.max(w1,w2,w3,btnW)+80, h:(btnY+btnH)-(zoneTop-hzBig*0.7) };
 
     // Corner wordmark removed per Olly (2026-09-11) — heartHandsGlyph()
     // is left defined above in case a corner mark is wanted again later.
@@ -454,7 +442,7 @@
   ids.forEach(function(k){ els[k].addEventListener('input', render); });
   els.panelBase.addEventListener('input', render);
   els.panelGlow.addEventListener('input', render);
-  ['ln1','ln2','ln3','ln4a','ln4b','ln5','btntext'].forEach(function(k){
+  ['ln1','ln2','ln3','btntext'].forEach(function(k){
     els[k].addEventListener('input', render);
   });
 
@@ -484,8 +472,12 @@
   // a static HTML file can persist, scoped to this file's path in
   // Chrome. Doesn't save an uploaded photo (too large) — just the
   // sliders, colours, text and headline drag position.
-  var SAVE_KEY = 'attraction-formula-relationship-ad-v1';
-  var TEXT_KEYS = ['ln1','ln2','ln3','ln4a','ln4b','ln5','btntext'];
+  // v2 (2026-09-25): 3-line headline. A v1 save (5-line headline) still
+  // restores its sliders + colours, but NOT its text or drag position — the
+  // old words/offset belong to the old layout and would override the new one.
+  var SAVE_KEY = 'attraction-formula-relationship-ad-v2';
+  var OLD_SAVE_KEY = 'attraction-formula-relationship-ad-v1';
+  var TEXT_KEYS = ['ln1','ln2','ln3','btntext'];
 
   function saveState(){
     var data = { ranges:{}, texts:{}, colors:{}, off:{x:off.x,y:off.y} };
@@ -506,10 +498,15 @@
 
   function loadSavedState(){
     var raw;
-    try { raw = localStorage.getItem(SAVE_KEY); } catch(e){ return; }
+    var fromOld = false;
+    try {
+      raw = localStorage.getItem(SAVE_KEY);
+      if(!raw){ raw = localStorage.getItem(OLD_SAVE_KEY); fromOld = !!raw; }
+    } catch(e){ return; }
     if(!raw) return;
     try {
       var data = JSON.parse(raw);
+      if(fromOld){ delete data.texts; delete data.off; }
       if(data.ranges) ids.forEach(function(k){ if(data.ranges[k] != null) els[k].value = data.ranges[k]; });
       if(data.texts) TEXT_KEYS.forEach(function(k){ if(data.texts[k] != null) els[k].value = data.texts[k]; });
       if(data.colors){

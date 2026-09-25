@@ -2,7 +2,7 @@
 
 > Read this at the start of every delivery session. Update it as tasks are completed or added.
 
-**Last updated:** 2026-09-24
+**Last updated:** 2026-09-25
 
 ---
 
@@ -10,14 +10,20 @@
 
 Workers, share links and previews are documented in `CLAUDE.md` (Rewrite section) and `skills/skills_email-preview-artifact.md`.
 
-- [ ] **Real test signup on the Rewrite start page** — check the confirmation subject/body, click every link from the inbox (started / Day N update / completion), then **clear the Resend Scheduled queue** (6 emails per Rewrite test)
-- [ ] Same test on the Regulate start page (Worker was redeployed with the new links; 3 scheduled emails per test)
-- [ ] Olly to finish editing check-ins 1–6 in the Rewrite viewer (only email 1 edited so far) → read the artifact db (`emails` collection) and apply to `rewrite-checkin-worker.js`, restoring merge fields → Olly redeploys
+- [x] **Regulate 7-day version DEPLOYED** (confirmed 2026-09-25: live Worker matches local file, share.ollyhenson.com serves the updated page, a real client has started on the day-3 schedule)
+- [ ] Regulate: confirm the GHL start page shows the 7-day / "3 days later" wording; review the 4 emails in the Regulate viewer (https://claude.ai/artifact/UudKANQGDEdboN6rbNUguM); any test signup — clear ONLY the test's scheduled emails from Resend, a real client's day 3/7 emails are in the queue
+- [ ] Retry the GitHub push (local commit `ad37781` failed twice with Internal Server Error) and commit the Regulate 7-day changes
+- [ ] Delete or archive the stale `regulate-email-preview.html` (old static preview, superseded by the viewer)
+- [x] **Rewrite shortened to 30 days (2026-09-25)** — check-ins day 10 + 20, completion day 30 ("ready to start the Rehearse Meditation" share link). Worker + start page + viewer updated; old saved viewer edits cleared (already applied / for removed emails)
+- [x] Resend 30-day cap fix (2026-09-25): `capToResendLimit()` in the Rewrite Worker, date picker removed (start = today), start/end dates on both confirmation screens
+- [ ] Olly: redeploy the LATEST `rewrite-checkin-worker.js` (30-day cap + shorter confirmation), re-paste `rewrite-start.html` AND `regulate-start.html` in GHL, then a Rewrite test signup: click every link from the inbox, check the confirmation screen dates, then cancel ONLY that test's 3 scheduled emails in Resend
+- [ ] Review the 5 emails in the Rewrite viewer (https://claude.ai/artifact/XE6ev4MY8whXzti4jETWpd)
+- [ ] Optional: the confirmation email still says "install new core beliefs"; asked whether to make it singular like the start page, no answer yet
 - [ ] Olly to review the Regulate viewer copy (nothing edited yet)
-- [ ] Rewrite start page: confirm it is live in GHL at the intended path (`/start-rewrite` suggested) and the intro line ("give your mind the chance to install your new beliefs") is what Olly wants
+- [ ] Rewrite start page: confirm it is live in GHL at the intended path (`/start-rewrite` suggested) (intro now "install your new belief", 2026-09-25)
 - [ ] **Rewrite Belief Finder** (`rewrite-belief-finder.html`, preview https://claude.ai/artifact/MC9pEuxZ48PWaxQfcr79Y8): Olly to decide where it sits in the Rewrite process (GHL page / Rewrite training link / start page) and what they do with the two beliefs next; then paste into GHL and wire the link
 - [ ] Decide whether to sync the stale belief wording in `belief-quiz-clients.html` and `training/rewrite.html` to the canonical wording (funnel quiz / build-your-meditation) — Olly's call; the Rewrite video wording may already be recorded
-- [ ] Build the Rehearse check-in the same way (Rewrite day 60 promises to unlock it) — copy the Rewrite pattern, run the builder for its preview
+- [ ] Build the Rehearse check-in the same way (Rewrite day 30 promises to unlock it) — copy the Rewrite pattern, run the builder for its preview
 - [ ] `../CLAUDE.md`-adjacent: the Attraction Formula section in this folder's `CLAUDE.md` still uses the old filenames — tidy when Olly next touches it
 
 ---

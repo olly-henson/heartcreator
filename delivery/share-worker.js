@@ -23,7 +23,7 @@ export default {
     // classroom lesson: the visitor copies this, posts it in the
     // community, and that post is Olly's cue to unlock The Regulate
     // Program. A ?text= param still overrides it if ever needed.
-    const INTRO_MSG = "Hey! I'm ready to start The Regulate Meditation";
+    const INTRO_MSG = "Hey! I'm ready to start The Seven Day Regulate Meditation!";
     // Same wording as regulate-start.html's own post-signup share text —
     // was missing entirely before, so the `started` page had a heading
     // but nothing pre-written to copy.
@@ -37,7 +37,7 @@ export default {
                        type === 'final'   ? 'Share Your Results' :
                        type === 'started' ? 'Let us know you\'ve started!' :
                        type === 'intro'   ? 'Unlock Your Meditation' :
-                       type === 'checkin' ? 'How did your last 10 days go?' :
+                       type === 'checkin' ? 'Share your update' :
                                             'Share your win';
     const subheading = type === 'intro'
       ? 'Copy and paste this message into the community to unlock your Regulate Meditation'
@@ -149,7 +149,7 @@ export default {
     <p class="label">The Attraction Formula Community</p>
     <h1>${heading}</h1>
     ${subheading ? `<p class="sub">${subheading}</p>` : ''}
-    <textarea id="win" rows="4"${isCheckin ? ' placeholder="How did the last 10 days go? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+    <textarea id="win" rows="4"${isCheckin ? ' placeholder="How is it going? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
     <div class="actions">
       <button class="btn btn-primary" onclick="copyText()">Copy to clipboard</button>
       <a class="btn btn-secondary" href="https://www.skool.com/heartcreator" target="_blank">${buttonText}</a>

@@ -44,7 +44,8 @@
     text-transform:uppercase; color:#6f6480; margin-top:10px; border-top:1px solid #241d2e; padding-top:14px; }
   .row{ grid-column:1 / -1; display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-top:4px; }
   button, .filebtn{ font:inherit; font-weight:700; font-size:14px; border:0; border-radius:9px; padding:12px 22px; cursor:pointer; }
-  .filebtn, #reset{ background:#2a1b3d; color:#f8f4ff; }
+  .filebtn, #reset, #save, #defaults{ background:#2a1b3d; color:#f8f4ff; }
+  #save.dirty{ background:#d946ef; color:#fff; }
   #dl{ background:linear-gradient(180deg,#E1A6FF,#d946ef); color:#fff; box-shadow:0 12px 34px rgba(217,70,239,.4); }
   #dl:disabled{ opacity:.4; cursor:not-allowed; box-shadow:none; }
   input[type=file]{ display:none; }
@@ -118,6 +119,11 @@
       <button id="dl" disabled>Download PNG</button>
       <button id="reset" type="button">Reset text position</button>
       <span class="hint">1920 &times; 1020 &nbsp;·&nbsp; drag the text on the preview</span>
+    </div>
+    <div class="row">
+      <button id="save" type="button">Save changes</button>
+      <button id="defaults" type="button">Back to defaults</button>
+      <span id="savestate" class="hint"></span>
     </div>
   </div>
 </div>
@@ -354,13 +360,96 @@
   cv.addEventListener('pointerup', endDrag);
   cv.addEventListener('pointercancel', endDrag);
 
-  els.reset.addEventListener('click', function(){ off = {x:0,y:0}; render(); });
-  els.bw.addEventListener('change', render);
-  ids.forEach(function(k){ els[k].addEventListener('input', render); });
+  els.reset.addEventListener('click', function(){ off = {x:0,y:0}; render(); markDirty(); });
+  els.bw.addEventListener('change', function(){ render(); markDirty(); });
+  ids.forEach(function(k){ els[k].addEventListener('input', function(){ render(); markDirty(); }); });
+  document.querySelectorAll('.alignbtn').forEach(function(b){ b.addEventListener('click', markDirty); });
+  cv.addEventListener('pointerup', function(){ if(dragMoved) markDirty(); dragMoved = false; });
+  cv.addEventListener('pointermove', function(){ if(drag) dragMoved = true; });
+
+  // ---- Save changes (added 2026-09-25) ------------------------------------
+  // Sliders, B&W, alignment and text position go in localStorage; the chosen
+  // photo (a File/Blob, too big for localStorage) goes in IndexedDB. Both live
+  // in this Chrome profile only. Every file:// page shares one storage area,
+  // so keys are namespaced per tool. Reopening the file restores the saved
+  // state; "Back to defaults" wipes it.
+  var STORE_KEY = 'ohtools:cover-photo-generator';
+  var dragMoved = false;
+  var curFile = null;       // the photo chosen with "Choose a different photo"
+  var customPhoto = false;  // true once a chosen/saved photo replaces the built-in one
+  var saveBtn = document.getElementById('save');
+  var saveState = document.getElementById('savestate');
+  function markDirty(){ saveBtn.classList.add('dirty'); saveState.textContent = 'Unsaved changes'; }
+  function markSaved(msg){ saveBtn.classList.remove('dirty'); saveState.textContent = msg; }
+
+  function openDB(){
+    return new Promise(function(res, rej){
+      var rq = indexedDB.open('ohtools', 1);
+      rq.onupgradeneeded = function(){ rq.result.createObjectStore('photos'); };
+      rq.onsuccess = function(){ res(rq.result); };
+      rq.onerror = function(){ rej(rq.error); };
+    });
+  }
+  function photoStore(mode, fn){
+    return openDB().then(function(db){
+      return new Promise(function(res, rej){
+        var tx = db.transaction('photos', mode);
+        var out = fn(tx.objectStore('photos'));
+        tx.oncomplete = function(){ res(out && out.result); };
+        tx.onerror = function(){ rej(tx.error); };
+      });
+    });
+  }
+
+  saveBtn.addEventListener('click', function(){
+    var state = { v:{}, bw:els.bw.checked, align:textAlign, off:off,
+                  photoName: customPhoto ? els.fname.textContent : null };
+    ids.forEach(function(k){ state.v[k] = els[k].value; });
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+    catch(e){ saveState.textContent = 'Couldn’t save in this browser.'; return; }
+    var photoJob = curFile
+      ? photoStore('readwrite', function(s){ return s.put(curFile, STORE_KEY); })
+      : (customPhoto ? Promise.resolve() : photoStore('readwrite', function(s){ return s.delete(STORE_KEY); }));
+    photoJob.then(function(){ markSaved('Saved ✓ — reopens like this'); },
+                  function(){ markSaved('Settings saved, but the photo couldn’t be — choose it again next time.'); });
+  });
+
+  document.getElementById('defaults').addEventListener('click', function(){
+    if(!confirm('Clear your saved changes and go back to the built-in defaults?')) return;
+    try { localStorage.removeItem(STORE_KEY); } catch(e){}
+    photoStore('readwrite', function(s){ return s.delete(STORE_KEY); })
+      .then(function(){ location.reload(); }, function(){ location.reload(); });
+  });
+
+  function restoreSaved(){
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch(e){}
+    if(!state) return;
+    ids.forEach(function(k){ if(state.v && state.v[k] != null) els[k].value = state.v[k]; });
+    els.bw.checked = !!state.bw;
+    if(state.align){
+      textAlign = state.align;
+      document.querySelectorAll('.alignbtn').forEach(function(x){ x.classList.toggle('on', x.dataset.align === textAlign); });
+    }
+    if(state.off) off = { x:+state.off.x || 0, y:+state.off.y || 0 };
+    render();
+    markSaved('Saved changes loaded');
+    if(state.photoName){
+      photoStore('readonly', function(s){ return s.get(STORE_KEY); }).then(function(blob){
+        if(!blob) return;
+        var url = URL.createObjectURL(blob), im = new Image();
+        im.onload = function(){ img = im; customPhoto = true; els.dl.disabled = false;
+          els.fname.textContent = state.photoName; render(); URL.revokeObjectURL(url); };
+        im.src = url;
+      }, function(){ saveState.textContent = 'Saved settings loaded (photo couldn’t be restored)'; });
+    }
+  }
+  // -------------------------------------------------------------------------
 
   els.file.addEventListener('change', function(e){
     var f = e.target.files && e.target.files[0];
     if(!f) return;
+    curFile = f; customPhoto = true; markDirty();
     els.fname.textContent = f.name;
     var url = URL.createObjectURL(f);
     var im = new Image();
@@ -382,9 +471,10 @@
   // don't taint the canvas, so Download PNG still works)
   if (typeof EMBEDDED_PHOTO === 'string' && EMBEDDED_PHOTO) {
     var im0 = new Image();
-    im0.onload = function(){ img = im0; els.dl.disabled = false; render(); };
+    im0.onload = function(){ if(customPhoto) return; img = im0; els.dl.disabled = false; render(); };
     im0.src = EMBEDDED_PHOTO;
   }
+  restoreSaved();
 
   if(document.fonts && document.fonts.load){
     Promise.all([

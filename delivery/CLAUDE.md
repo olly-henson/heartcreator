@@ -68,9 +68,9 @@ delivery/
   creative-flow-tracker.gs             ← Creative Flow tracker (monthly, no fixed end)
   master-tracker.gs                    ← Master Client Tracker (all programs combined)
   share-worker.js                      ← Cloudflare Worker — universal share page (Heart Creator Community)
-  regulate-checkin-worker.js           ← Regulate 30-day / 3 check-in Worker (dashboard name: attraction-formula-check; domain regulate-checkin.ollyhenson.com)
+  regulate-checkin-worker.js           ← Regulate 7-day Worker: check-in day 3 + completion day 7 (was 30 days / 3 check-ins until 2026-09-24) (dashboard name: attraction-formula-check; domain regulate-checkin.ollyhenson.com)
   regulate-start.html                  ← Regulate start page (GHL Custom HTML block)
-  rewrite-checkin-worker.js            ← Rewrite 60-day / 6 check-in Worker (dashboard name: rewrite-check-in; domain rewrite-checkin.ollyhenson.com)
+  rewrite-checkin-worker.js            ← Rewrite 30-day Worker (check-ins day 10 + 20, completion day 30) (dashboard name: rewrite-check-in; domain rewrite-checkin.ollyhenson.com)
   rewrite-start.html                   ← Rewrite start page (GHL Custom HTML block)
   email-preview-artifact/              ← editable email-preview viewer: template + builder + the two built artifacts (see skills_email-preview-artifact.md)
   rewrite-belief-finder.html           ← simplified belief tool for the Rewrite process (identify old + new belief only); GHL paste-format; see "Rewrite Belief Finder" below
@@ -209,7 +209,9 @@ Will mirror the Regulate & Restore setup with its own sheet, script, and Notion 
 
 A fixed 30-day check-in cadence for anyone starting The Attraction Formula Program — separate system from `attraction-formula-tracker.gs` (the belief-builder intake tracker), which explicitly says in its own header comment not to extend it with check-ins. This is that new program, but unlike every other program in this repo, **it is fully stateless — no Google Sheet, no Apps Script, no daily trigger.** Confirmed with Olly 2026-09-03: check-ins are just scheduled emails with a link to share in the community, nothing more. If a record of who's started or where someone is in the program is ever wanted, that's a real feature to add, not something to assume.
 
-**The program is 30 days long, with 3 check-ins, 10 days apart** (day 10, day 20, day 30) — corrects an earlier indefinite-weekly design. Never reintroduce an open-ended cadence, and never add sheet-based tracking back in, without Olly explicitly asking; `CHECKIN_INTERVAL_DAYS`/`TOTAL_CHECKINS` at the top of the worker are the two values that define the cadence.
+> **⚠️ SUPERSEDED 2026-09-24 for Regulate — this section describes the original 30-day version.** Regulate is now a **7-day** program: one check-in on **day 3** and the completion email on **day 7** (too long for people who've just joined). See "Regulate 7-day change (2026-09-24)" below. The rules about never adding sheet tracking still apply.
+
+**The program was 30 days long, with 3 check-ins, 10 days apart** (day 10, day 20, day 30) — corrects an earlier indefinite-weekly design. Never reintroduce an open-ended cadence, and never add sheet-based tracking back in, without Olly explicitly asking. The cadence is defined at the top of the worker: for Regulate now `PROGRAM_DAYS = 7` + `CHECKIN_DAYS = [3, 7]` (irregular days, so no interval constant); Rewrite (since 2026-09-25) `PROGRAM_DAYS = 30` + `CHECKIN_DAYS = [10, 20, 30]`.
 
 **Flow:** Client fills in name/email/start date on a custom-styled page → POSTs straight to a Cloudflare Worker → in one request, the worker sends the start-date confirmation email + a notification to Olly, and schedules all 3 check-in emails via Resend's `scheduled_at` (day 10/20/30, each with a link to share how it's gone in the community) → done. Resend holds and delivers each scheduled email on its own; nothing else needs to run.
 
@@ -219,7 +221,7 @@ A fixed 30-day check-in cadence for anyone starting The Attraction Formula Progr
 | Cloudflare Worker | `delivery/attraction-formula-checkin-worker.js` | The entire system — sends the confirmation + notification immediately, then schedules all 3 check-in emails up front via Resend's scheduled send. No Apps Script, no sheet. |
 | Share worker addition | `delivery/share-worker.js` | New `type=checkin` — unlike every other type, the textarea is editable and starts empty (a fresh 10-day reflection, not pre-written text to copy) |
 
-**Resend `scheduled_at` — verified live 2026-09-06:** accepts an ISO 8601 timestamp, schedules ~30 days ahead fine, **rejects any past timestamp with HTTP 422** ("must be a future date" — so you can't preview a check-in by back-dating a signup). Scheduled sends appear in the Resend dashboard (Emails → status Scheduled) and can be deleted there. A `{"ok":true}` worker response means all immediate + scheduled sends were accepted. Not yet proven: a scheduled send actually firing on its day (first real one due ~day 10 of the first real signup).
+**Resend `scheduled_at` — verified live 2026-09-06:** accepts an ISO 8601 timestamp, schedules ~30 days ahead fine, **rejects any past timestamp with HTTP 422** ("must be a future date" — so you can't preview a check-in by back-dating a signup). Scheduled sends appear in the Resend dashboard (Emails → status Scheduled) and can be deleted there. A `{"ok":true}` worker response means all immediate + scheduled sends were accepted. **HARD LIMIT: Resend only schedules up to 30 days ahead** (docs: "Emails can be scheduled up to 30 days in advance") — the 2026-09-06 test passed only because it ran after 9am UTC. A 7am UK Rewrite signup on 2026-09-25 failed (day-30 email = 30d 3h ahead → whole signup errored after the earlier emails had already sent). Fix: Rewrite Worker caps every send with `capToResendLimit()` (30 days minus 15 min from now) and the start page hides the date field (start date = always today, Olly's call 2026-09-25). Old Sheet trackers never hit this — they used a daily 9am trigger that sends on the day. Anything longer than 30 days needs a daily Cron Trigger, not scheduled_at. Not yet proven: a scheduled send actually firing on its day (first real one due ~day 10 of the first real signup).
 
 **Deployed / verified 2026-09-06:**
 - `attraction-formula-checkin-worker.js` → Cloudflare Worker `attraction-formula-check`, `https://attraction-formula-check.olly-6af.workers.dev`. `RESEND_API_KEY` secret set (was once mis-named — the Key must be exactly `RESEND_API_KEY`).
@@ -241,21 +243,34 @@ A fixed 30-day check-in cadence for anyone starting The Attraction Formula Progr
 
 ### The Rewrite Meditation — 60-Day Check-Ins — BUILT 2026-09-24 (deployed; live test signup pending)
 
-Same stateless design as the Regulate check-ins above (no sheet, no Apps Script, no trigger), for **60 days with 6 check-ins, 10 days apart** (`TOTAL_CHECKINS = 6`, `CHECKIN_INTERVAL_DAYS = 10`). The final email (day 60) unlocks **The Rehearse Meditation**. Programs run in sequence: Regulate → Rewrite → Rehearse.
+Same stateless design as the Regulate check-ins above (no sheet, no Apps Script, no trigger), for **30 days: check-ins on day 10 and 20, completion email on day 30** (`PROGRAM_DAYS = 30`, `CHECKIN_DAYS = [10, 20, 30]`; was 60 days / 6 check-ins until 2026-09-25 — Olly shortened it as a natural step up from Regulate's 7 days). The final email (day 30) unlocks **The Rehearse Meditation**. Programs run in sequence: Regulate → Rewrite → Rehearse.
 
 | File | Path | Purpose |
 |---|---|---|
-| Start page | `delivery/rewrite-start.html` | Name/email/start-date form, live in GHL Website Builder (suggested path `/start-rewrite`). |
-| Worker | `delivery/rewrite-checkin-worker.js` | Cloudflare Worker `rewrite-check-in` (`https://rewrite-check-in.olly-6af.workers.dev`), custom domain `rewrite-checkin.ollyhenson.com`. Secret `RESEND_API_KEY`. Sends confirmation + notification, schedules 6 check-ins. |
+| Start page | `delivery/rewrite-start.html` | Name/email form, live in GHL Website Builder (suggested path `/start-rewrite`). **No date picker since 2026-09-25**: the field is hidden and start = today (Resend 30-day cap). The confirmation screen shows start + end date (end = start + `PROGRAM_DAYS`, kept in the page JS; keep it in sync with the Worker). |
+| Worker | `delivery/rewrite-checkin-worker.js` | Cloudflare Worker `rewrite-check-in` (`https://rewrite-check-in.olly-6af.workers.dev`), custom domain `rewrite-checkin.ollyhenson.com`. Secret `RESEND_API_KEY`. Sends confirmation + notification, schedules 3 check-ins (day 10/20/30). |
 | Preview | `delivery/email-preview-artifact/rewrite-emails-artifact.html` | Editable email viewer (Artifact `https://claude.ai/artifact/XE6ev4MY8whXzti4jETWpd`). Olly's saved edits live in the artifact db, not the file. |
 
-**Emails:** confirmation (subject "You've started The Rewrite Meditation!"; body is Olly's own wording — new core beliefs that attract your perfect soulmate, changes noticed from day 21, days 21–60 wire it in) + coach notification + check-ins 1–5 (subject "How's it going?"; check-in 1 "How's the meditating going?", 2–5 "You're now N days in…" / "How's it been going?") + day 60 completion (subject "Well done on completing The Rewrite Meditation! 🎉").
+**Emails:** confirmation (subject "You've started The Rewrite Meditation!"; body is Olly's own wording — new core beliefs that attract your perfect soulmate, changes noticed from day 21; the "days 21–N wire it in" + "groundwork" lines removed by Olly 2026-09-25) + coach notification + day 10 check-in (subject "How's it going?", "How's the meditating going?") + day 20 check-in ("You're now 20 days in to The Rewrite Meditation - just 10 days left 😎" / "How's it been going?" — the "days left" line is Olly's own wording from his day-50 viewer edit) + day 30 completion (subject "Well done on completing The Rewrite Meditation! 🎉").
 
-**Share links** (share page `share.ollyhenson.com` is shared by every program): confirmation "here" → `type=started&text=I've just started The Rewrite Meditation — excited to get going!`; check-ins → `type=checkin&text=Rewrite Meditation, Day N Update: ` (editable); day 60 → `type=final&text=I've just completed The Rewrite Meditation!`. The `?text=` override exists because `share-worker.js` defaults `type=started` to Regulate wording. `share-worker.js` `type=checkin` now honours `?text=` as an editable starter (cursor at end, no auto-copy).
+**Share links** (share page `share.ollyhenson.com` is shared by every program): confirmation "here" → `type=started&text=I've just started The Rewrite Meditation — excited to get going!`; check-ins → `type=checkin&text=Rewrite Meditation, Day N Update: ` (editable); day 30 → `type=checkin&text=Just completed the Rewrite Meditation and ready to start the Rehearse Meditation!` (editable, same as Regulate's day 7 — Olly's wording 2026-09-25; `type=final` now unused by both). The `?text=` override exists because `share-worker.js` defaults `type=started` to Regulate wording. `share-worker.js` `type=checkin` now honours `?text=` as an editable starter (cursor at end, no auto-copy).
 
-**Still to do:** one real test signup on the Rewrite start page, click each link from the inbox, then clear the Resend Scheduled queue (6 emails per Rewrite test, 3 per Regulate test). Only email 1 has been edited by Olly in the viewer — check the artifact db for further saved edits before the next Worker change.
+**Still to do:** redeploy the latest Worker (cap + shorter confirmation), re-paste the start page, then one real test signup; click each link from the inbox, then cancel only that test's scheduled emails in Resend (3 per Rewrite test, 2 per Regulate test). The viewer db is empty since 2026-09-25; check it for new saved edits before the next Worker change.
 
-**Regulate mirror (2026-09-24):** `regulate-checkin-worker.js` was updated with the same link/share mechanics (own wording and 30-day/3-check-in cadence unchanged); redeployed by Olly.
+**Regulate start page (2026-09-25):** the confirmation screen also shows start + end date (end = start + 7, `PROGRAM_DAYS` in the page JS). Regulate keeps its date picker (7 days is well inside Resend's cap).
+
+**Regulate mirror (2026-09-24):** `regulate-checkin-worker.js` was updated with the same link/share mechanics (own wording unchanged at that point); redeployed by Olly.
+
+### Regulate 7-day change (2026-09-24) — edited locally, NOT yet redeployed
+
+Olly shortened Regulate from 30 days to **7 days** ("too long for people who've just joined"). Schedule (his choice): **check-in on day 3**, then **day 7 = completion**, where they share via the share page how it went **and that they're ready for The Rewrite Meditation**.
+- **Worker** `regulate-checkin-worker.js`: `PROGRAM_DAYS = 7`, `CHECKIN_DAYS = [3, 7]` (last must equal `PROGRAM_DAYS`); end date = start + 7 (1 Oct for a 24 Sep start); coach notification's "first check-in" = day 3; loop is driven by `CHECKIN_DAYS`. Day-3 link → `type=checkin&text=Regulate Meditation, Day 3 Update: `. Day-7 link → `type=checkin&text=Regulate Meditation, Day 7 Update: I'm ready for the Rewrite Meditation! How it went: ` (editable, cursor at end; replaces the old read-only `type=final` message). Day-7 email: "Let us know inside the community how it went and that you're ready for **The Rewrite Meditation** here and we'll unlock it for you 😎".
+- **Copy changes made (drafts — Olly to review in the viewer):** "next 30 days" → "next 7 days"; "every 10 days or so" → "on day 3"; **deleted** the "really strong research … over 4 weeks and seeing lasting change" paragraph (a 4-week claim that no longer fits — Olly to supply replacement wording if wanted); removed the "20 days in" line and the check-in-2 variant.
+- **`share-worker.js`** (shared by all programs): `type=checkin` heading is now "Share your update" (was "How did your last 10 days go?") and the placeholder generic — the old wording was wrong for a 3- or 7-day update. **Redeploy the share worker first**, then the Regulate worker.
+- **`regulate-start.html`:** "30 days" → "7 days" (intro + what-happens-next), date hint "your 7-day meditation — and your first check-in, 3 days later". Intro still says "give your nervous system the chance to reset to a new baseline" (Olly's mechanism wording — only the number changed; confirm it still fits 7 days).
+- **Previews:** Regulate viewer now 4 emails (2 signup + day 3 + day 7); `build-email-preview.mjs` gained `--checkin-days`. `regulate-email-preview.html` (the old static preview) is now **stale** — superseded by the viewer.
+- **Scheduled emails per test signup:** Regulate now **2**, Rewrite 6.
+- **Open:** Olly to redeploy (share worker → Regulate worker), re-paste the start page in GHL, run a test signup, clear the Resend Scheduled queue; anyone who signed up under the 30-day version keeps their already-scheduled day 10/20/30 emails.
 
 ### Rewrite Belief Finder — BUILT 2026-09-24 (preview approved by Olly; not yet placed anywhere)
 
@@ -426,6 +441,19 @@ git push
 ---
 
 ## Changelog
+
+### 2026-09-25 — Rewrite 30 days, Resend 30-day cap, start-page dates
+- Confirmed the Regulate 7-day Worker is live (Olly pasted it; matched local); a real client is on it.
+- Rewrite: 60 -> **30 days** (check-ins day 10/20, completion day 30 -> "Just completed the Rewrite Meditation and ready to start the Rehearse Meditation!"). Worker uses `PROGRAM_DAYS`/`CHECKIN_DAYS`. Viewer rebuilt and old saved edits cleared. Confirmation email lost the "days 21-30 wire it in" and "groundwork" lines.
+- **Resend caps `scheduled_at` at 30 days**: a 7am signup failed. Worker now caps every send (`capToResendLimit`); the Rewrite start page has no date picker (start = today). See the Resend note in the Attraction Formula section.
+- Both start pages show start + end date on the confirmation screen. Rewrite intro split into two paragraphs and "new beliefs" -> "new belief".
+- Short share-page paths were added for a one-off client link, then reverted (not needed).
+
+### 2026-09-24 (later) — Regulate shortened to 7 days; Rewrite belief finder on hold
+- Regulate: 30 days / 3 check-ins → **7 days, check-in day 3 + completion day 7** (share via worker URL how it went + ready for Rewrite). Worker, share worker heading/placeholder, start page, viewer and builder updated locally; **not yet redeployed** — see "Regulate 7-day change" above
+- Olly put the Rewrite Belief Finder on hold (file + preview kept)
+- Lessons: an irregular cadence needs an explicit day list, not an interval constant; a *shared* Worker can hardcode a program's duration ("last 10 days") in a heading/placeholder; deleting invented-or-old mechanism claims beats rewording them. Logged in `skills/skills_cloudflare-workers.md` and `skills/skills_email-preview-artifact.md`
+- Commit `ad37781` (belief finder + skills notes) was made locally but the GitHub push failed twice with an Internal Server Error — still to retry
 
 ### 2026-09-24 — Session: Rewrite Meditation 60-day check-ins + editable email previews
 - Built `rewrite-checkin-worker.js` + `rewrite-start.html` (copy of Regulate's, 60 days / 6 check-ins, unlocks Rehearse); Olly created the `rewrite-check-in` Worker, secret, and `rewrite-checkin.ollyhenson.com` domain and deployed it (curl-verified; live test signup still pending)

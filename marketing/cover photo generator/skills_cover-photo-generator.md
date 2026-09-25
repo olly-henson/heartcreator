@@ -18,6 +18,9 @@ Four tools in this folder:
   screenshot** promo graphic (checklist left, arrow pointing at an uploaded
   screenshot right). Output 1600 × 900 PNG. Different layout family, own
   local-storage save/load. Section F below.
+- **`relationship-ad-generator.html`** — the tool behind the **live Skool
+  cover / Facebook ad**: dark left panel with headline + CTA pill, photo right.
+  Output 1920 × 1080 PNG. Section G below.
 
 ---
 
@@ -348,7 +351,55 @@ Key structure:
 
 ---
 
+## G. `relationship-ad-generator.html` — live Skool cover / Facebook ad
+
+The tool that made the cover currently on Skool ("ATTRACT / SOMEONE / That You
+Can / BUILD YOUR / LIFE WITH" + "FIND OUT MORE"). Canvas **1920 × 1080**.
+Skool's cover is 1.88 : 1, so it trims a thin strip top and bottom: keep text
+off those edges.
+
+- **Layout:** photo right-anchored; dark left panel (`panelw`, base/glow
+  colours, brightness, blend width); headline block top-left inside the panel,
+  draggable; gradient CTA pill (`#E1A6FF → #d946ef`) directly under it.
+- **Headline, since 2026-09-25: 3 lines**, `ln1`/`ln2`/`ln3` = **ATTRACT / YOUR /
+  SOULMATE** (lilac 800 / off-white 600 / lilac 800), all one size, button
+  underneath. Block (lines + button) is **vertically centred**; `hl` scales it.
+  Size = min(width cap from the widest line, height cap `H*0.80/4.1`).
+  Olly's brief: the cover must work as a **Facebook ad** and **stand out in
+  Skool Discovery**, so fewer words, bigger. He wants to "set that first and
+  then play around with it", so styling is not locked.
+- **Save:** built-in "Save my changes" → localStorage key
+  `attraction-formula-relationship-ad-v2` (sliders, colours, texts, drag
+  offset; not the photo itself). A v1 save (old 5-line layout) still loads
+  its sliders and colours, but its texts and drag offset are ignored.
+- Headless check: `chrome --headless=new --screenshot` into the session
+  scratchpad with `--virtual-time-budget=6000` renders the canvas with the
+  embedded photo. First render (defaults): SOULMATE runs to the panel's
+  fade edge; suggest Headline size ~90% or a wider panel if Olly's export
+  shows the same.
+
+---
+
 ## Changelog
+
+**2026-09-25 — relationship-ad-generator.html → 3-line "Attract your soulmate"; Save added to tool 1**
+- Olly asked for "the cover photo tool" with "Attract someone to build your
+  life with". I opened `cover-photo-generator.html` (it has similar wording)
+  and added Save changes to it. His screenshot showed the finished cover came
+  from `relationship-ad-generator.html` (which already had a save).
+  **Lesson: match his reference image to a tool (grep each tool for its
+  distinctive text, e.g. "FIND OUT MORE") before opening or editing.**
+- Tool 1 (`cover-photo-generator.html`) gained **Save changes / Back to
+  defaults**: localStorage `ohtools:cover-photo-generator` for settings,
+  IndexedDB `ohtools`/`photos` for the chosen photo. Not tested in Olly's
+  browser yet. Olly also asked for Save in "the tools you've built"; which
+  others still need it is open (join card and the ad generator already have
+  one).
+- Section G added. Headline cut from 5 lines to ATTRACT / YOUR / SOULMATE +
+  FIND OUT MORE, on Olly's instruction; he'll adjust the styling next.
+- Olly interrupted a 3-option layout question to say "just set it first, then
+  we can play around". **With Olly, build the plain version he described
+  first, then iterate; don't lead with options.**
 
 **2026-09-22 — Post-session review (join-card-generator.html built, program-cover-generator.html panel bug fixed)**
 - **New tool documented**: Section F, `join-card-generator.html` — built from a
