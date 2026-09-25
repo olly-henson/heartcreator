@@ -12,7 +12,7 @@ Workers, share links and previews are documented in `CLAUDE.md` (Rewrite section
 
 - [x] **Regulate 7-day version DEPLOYED** (confirmed 2026-09-25: live Worker matches local file, share.ollyhenson.com serves the updated page, a real client has started on the day-3 schedule)
 - [ ] Regulate: confirm the GHL start page shows the 7-day / "3 days later" wording; review the 4 emails in the Regulate viewer (https://claude.ai/artifact/UudKANQGDEdboN6rbNUguM); any test signup — clear ONLY the test's scheduled emails from Resend, a real client's day 3/7 emails are in the queue
-- [ ] Retry the GitHub push (local commit `ad37781` failed twice with Internal Server Error) and commit the Regulate 7-day changes
+- [x] GitHub push done 2026-09-25 (`ad37781` + Regulate 7-day + Rewrite 30-day, commit `9f14f62`)
 - [ ] Delete or archive the stale `regulate-email-preview.html` (old static preview, superseded by the viewer)
 - [x] **Rewrite shortened to 30 days (2026-09-25)** — check-ins day 10 + 20, completion day 30 ("ready to start the Rehearse Meditation" share link). Worker + start page + viewer updated; old saved viewer edits cleared (already applied / for removed emails)
 - [x] Resend 30-day cap fix (2026-09-25): `capToResendLimit()` in the Rewrite Worker, date picker removed (start = today), start/end dates on both confirmation screens
