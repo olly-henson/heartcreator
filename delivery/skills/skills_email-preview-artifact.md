@@ -36,6 +36,8 @@ Any program or tool that sends a fixed set of emails (signup confirmation, coach
 
 **Give the builder the real check-in days.** `--checkins N` assumes even 10-day spacing; for any other schedule use `--checkin-days 3,7` (the last day is the completion email, labelled "Completion" in the tab). The header line ("7 days, check-ins on days 3 and 7") and email count are generated from the flags, so a wrong flag shows straight away — read it back after building. Regulate: `--days 7 --checkin-days 3,7`.
 
+**Saved docs are keyed by position (`e0`, `e1`, ...), not by which email they are.** When a program's schedule changes the number or order of emails, a saved doc can land on a different email: Rewrite's old "halfway, day 30" edit in `e4` would have covered the new Day 30 *completion* tab (2026-09-25). After any change in email count/order: list the db, read every doc, reuse any wording that still applies (Olly's day-50 line "just 10 days left" went into the new day-20 email), then delete or re-set each doc whose slot now points at a different email, and tell Olly what was in each.
+
 **Leave the merge fields alone when editing.** The preview shows sample values ("Olly", 24 Sep dates). Olly's saved HTML therefore contains the *sample* name and dates. When applying his edit to the Worker, turn them back into `${firstName(name)}`, `${startDateText}`, `${endDateText}` — and check the *plain-text fallback* in `fetch()` and the subject line too, not just the HTML function. The viewer's note tells him to leave them as they appear.
 
 **Apply saved edits with exact string edits, then rebuild.** Read the saved docs (`ArtifactData` `list`, optionally with `out_dir` to a scratchpad folder), edit the Worker with the Edit tool, re-run the builder, republish the same artifact URL. Republish automatically after edits once a preview URL exists (Olly's standing preference) — but a Worker edit is still **not live until he redeploys it**; say so every time.
@@ -48,8 +50,8 @@ Any program or tool that sends a fixed set of emails (signup confirmation, coach
 - **Never** republish a viewer that drops the "Links in this email" panel.
 - **Never** clear, reset or overwrite a saved `emails/*` document without reading it and telling Olly.
 - **Never** compare `contenteditable` HTML to a raw string without normalising both sides.
-- **Never** write temp files to the general Windows temp folder or anywhere outside `AI OS/` — use the session scratchpad, or (as the builder does) a `data:` URL import so no temp file exists. This session I dropped helper `.mjs` files in `%TEMP%` (outside `AI OS/`), then had to tell Olly and delete them.
-- **Never** run shell heredocs that contain backslashes or escapes to write files (`’`, `\\`, regexes) — this shell mangled them twice. Use the Write/Edit tools for file content.
+- **Never** write temp files to the general Windows temp folder or anywhere outside `AI OS/`. **Repeated on 2026-09-25 despite this rule** (dry-run scripts + a Worker backup in `%TEMP%`): for a dry run, use `node --input-type=module -e` with a `data:` import of the Worker and a stubbed `fetch`; nothing touches disk. Screenshots and helper scripts go in the session scratchpad only. — use the session scratchpad, or (as the builder does) a `data:` URL import so no temp file exists. This session I dropped helper `.mjs` files in `%TEMP%` (outside `AI OS/`), then had to tell Olly and delete them.
+- **Never** run shell heredocs that contain backslashes, escapes or mixed quotes to write files (repeated 2026-09-25: two heredoc Python scripts failed on quoting). Write the script with the Write tool into the scratchpad and run it (`’`, `\\`, regexes) — this shell mangled them twice. Use the Write/Edit tools for file content.
 - **Never** treat the preview as proof the live emails are right — it renders the local file. A real test signup after redeploying is the check.
 
 ## Process / Steps
@@ -59,7 +61,8 @@ Any program or tool that sends a fixed set of emails (signup confirmation, coach
 3. Publish: first time = new artifact with `capabilities {"db":{}}` + `icon`; afterwards republish to the stored URL. Give Olly the link.
 4. Olly edits and saves in the viewer. When he says he's done, `ArtifactData` `list` `emails` for the artifact URL and read every doc.
 5. Apply his edits to the Worker (HTML function, plain-text fallback, subject), restoring merge fields. `node --check` the Worker.
-6. Rebuild + republish the viewer. State the Worker file path, and that it is **not live until redeployed**.
+6. Rebuild + republish the viewer. State the Worker file path, and that it is **not live until redeployed**. If the number/order of emails changed, remap or clear the saved docs first (see the position-keyed rule).
+6a. If a republish is refused because the live version hasn't been viewed, `Artifact read` it, confirm it holds no one's edits (they live in the db, not the page), then republish the rebuilt file.
 7. After Olly redeploys, `curl` the Worker (see `skills_cloudflare-workers.md`), then do one real test signup and check the links from the inbox.
 
 ## Examples
@@ -71,6 +74,10 @@ Any program or tool that sends a fixed set of emails (signup confirmation, coach
 ---
 
 ## Changelog
+
+**2026-09-28 — Skills review of the 2026-09-25 session**
+- Promoted the "saved docs are keyed by position" lesson from the changelog to Rules, and added a matching Process step (6) plus 6a for a refused republish. Why: it nearly hid Olly's new Day 30 email behind his old day-30 edit.
+- Strengthened two Never rules I broke again this session (temp files outside `AI OS/`, heredoc scripts) with the exact alternative to use.
 
 **2026-09-25 — Rewrite viewer rebuilt for 30 days**
 - Rebuilt with `--days 30 --checkin-days 10,20,30` (5 tabs). Olly's 3 saved docs were read, then deleted: e0 was already in the Worker; e4 ("halfway 30 in") would have **overridden the new Day 30 completion tab** because saved docs are keyed by position, not by day; e6 (day 50) no longer exists. His e6 line "just 10 days left" was reused for the new day-20 email. **Rule: after any change to the number/order of emails, list the db and clear or remap every saved doc whose index now points at a different email.**

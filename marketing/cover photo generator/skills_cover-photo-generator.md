@@ -24,6 +24,18 @@ Four tools in this folder:
 
 ---
 
+## 0. Find the right tool first
+
+Olly names tools by what they make ("the cover photo tool", "the risk-free
+tile"), not by file name, and several tools share wording. **Before opening or
+editing anything, match his reference image or wording to a tool**: grep each
+`.html` for its distinctive text (e.g. `FIND OUT MORE` → relationship ad,
+risk-free checklist → join card) and check the output size. On 2026-09-25 I
+opened `cover-photo-generator.html` (similar "Attract someone... Build Your Life
+With" copy) and added a Save feature to it; his live cover actually came from
+`relationship-ad-generator.html`. Open the tool for him with
+`Start-Process "<full path>"` and give the `file:///` link too.
+
 ## A. Making a cover photo
 
 ### 1. Get the photo in
@@ -146,13 +158,43 @@ thenounproject, alvarotrigo); FB ad creative best practice
 - Preserve the **data-URI embed** pattern for the photo (canvas taint).
 - After any change, tell Olly to **reload in Chrome**.
 
+- **Build the plain version Olly describes first, then iterate.** He cut off
+  a three-layout question with "just set that first and then we can play
+  around with it". Make exactly the change he stated, render it, show it; offer
+  refinements after. Add controls one per request (as with the join card).
+- **Per-element size sliders multiply the auto-fitted size** (relationship ad:
+  `s1`/`s2`/`s3`/`btnsz`), so each slider changes only its own element; let
+  line spacing follow each line's size; add new sliders to the saved-ids list.
+- **Pinned preview**: wrap the canvas in a `position:sticky; top:0` container
+  capped at ~45vh so slider changes stay visible while scrolling (Olly asked
+  for "a preview option to see the changes"; the canvas already live-updated,
+  it just scrolled away). Done in the relationship ad; offer it for the others.
+- **Changing a layout that has a save**: bump the storage key, and when an old
+  save loads, keep its sliders/colours but ignore texts and drag offsets that
+  belong to the old layout (they'd overwrite the new defaults).
+- **Checking a render without Olly**: `chrome --headless=new --screenshot`
+  with `--virtual-time-budget=6000` into the session scratchpad works for the
+  top of the page. Screenshots of a *scrolled* page come out blank (even for an
+  unchanged old version), so it can't prove sticky/scroll behaviour; say so.
+
+### Never
+
+- **Never** edit a tool before confirming it's the one that made Olly's
+  reference image.
+- **Never** lead with a menu of design options when Olly has described what
+  he wants; build that first.
+- **Never** change a layout without handling the existing saved state (it can
+  silently restore the old text over the new layout).
+
 ### Backlog / ideas (do only if asked)
 
 - A style toggle: "bottom bar" vs "right-third block" vs "top strip".
 - Per-word colour pickers pinned to the brand tokens.
 - A 4:5 output mode for a dedicated FB feed ad.
 - Live "thumbnail preview" pane at ~300 px so the small-size check is built
-  in.
+  in (offered to Olly 2026-09-25 alongside the pinned preview; not requested yet).
+- Save changes on the remaining tools (Olly asked for Save "on the tools";
+  cover builder, join card and relationship ad have one now).
 - Snap-to-centre / edge guides on the drag.
 
 ---
@@ -365,6 +407,9 @@ off those edges.
   SOULMATE** (lilac 800 / off-white 600 / lilac 800), all one size, button
   underneath. Block (lines + button) is **vertically centred**; `hl` scales it.
   Size = min(width cap from the widest line, height cap `H*0.80/4.1`).
+  Per-line sliders `s1`/`s2`/`s3` and button `btnsz` (Olly, 2026-09-25) multiply
+  that auto-fitted size, so each changes only its own line; line spacing follows
+  each line's size; they are in `ids`, so Save stores them.
   Olly's brief: the cover must work as a **Facebook ad** and **stand out in
   Skool Discovery**, so fewer words, bigger. He wants to "set that first and
   then play around with it", so styling is not locked.
@@ -381,6 +426,15 @@ off those edges.
 ---
 
 ## Changelog
+
+**2026-09-28 — Skills review of the 2026-09-25 session**
+- New Section 0 "Find the right tool first". Why: I edited the wrong tool
+  because two tools share headline wording.
+- Section C: rules for building the plain version first (Olly interrupted an
+  options question), per-element size sliders, the pinned preview pattern,
+  save-key migration on layout changes, and the headless-screenshot limit;
+  plus a Never list. Why: each came from a request or correction this session.
+- Backlog: thumbnail pane marked as offered; Save on remaining tools logged.
 
 **2026-09-25 — relationship-ad-generator.html → 3-line "Attract your soulmate"; Save added to tool 1**
 - Olly asked for "the cover photo tool" with "Attract someone to build your

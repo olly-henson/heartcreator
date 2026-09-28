@@ -8,6 +8,12 @@
   h1.page{font-size:20px;margin:0 0 4px;}
   p.page{font-size:13px;color:#c9bdd6;margin:0 0 20px;}
   canvas{width:100%;height:auto;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5);background:#000;touch-action:none;}
+  /* Pinned preview (2026-09-25, Olly): the canvas stays at the top of the
+     window while scrolling through the controls, so every slider change is
+     visible. Capped at 45% of the window height so controls stay usable. */
+  .preview{position:sticky;top:0;z-index:5;background:#0A0510;padding:10px 0 12px;
+    border-bottom:1px solid #2a1b3d;text-align:center;}
+  .preview canvas{width:auto;max-width:100%;max-height:45vh;display:inline-block;vertical-align:top;}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-top:22px;}
   .ctl{display:flex;flex-direction:column;gap:6px;}
   .ctl.full{grid-column:1 / -1;}
@@ -27,7 +33,7 @@
   <h1 class="page">Relationship ad generator</h1>
   <p class="page">Warm brown/gold ad template — radial glow panel, 3-line headline, CTA pill, outline heart+hands mark. Drag the headline on the preview to nudge it.</p>
 
-  <canvas id="view" width="1920" height="1080"></canvas>
+  <div class="preview"><canvas id="view" width="1920" height="1080"></canvas></div>
 
   <div class="grid">
     <div class="ctl">
@@ -81,10 +87,14 @@
     <div class="ctl full"><label>Line 1 — bold lilac</label><input type="text" id="ln1" value="ATTRACT"></div>
     <div class="ctl full"><label>Line 2 — regular, off-white</label><input type="text" id="ln2" value="YOUR"></div>
     <div class="ctl full"><label>Line 3 — bold lilac</label><input type="text" id="ln3" value="SOULMATE"></div>
-    <div class="ctl"><label>Headline size <span id="hl-v">100%</span></label><input id="hl" type="range" min="70" max="120" value="100"></div>
+    <div class="ctl"><label>Headline size (all lines) <span id="hl-v">100%</span></label><input id="hl" type="range" min="70" max="120" value="100"></div>
+    <div class="ctl"><label>Line 1 size <span id="s1-v">100%</span></label><input id="s1" type="range" min="40" max="160" value="100"></div>
+    <div class="ctl"><label>Line 2 size <span id="s2-v">100%</span></label><input id="s2" type="range" min="40" max="160" value="100"></div>
+    <div class="ctl"><label>Line 3 size <span id="s3-v">100%</span></label><input id="s3" type="range" min="40" max="160" value="100"></div>
 
     <div class="grouphd">Call to action</div>
     <div class="ctl full"><label>Button text</label><input type="text" id="btntext" value="FIND OUT MORE"></div>
+    <div class="ctl"><label>Button size <span id="btnsz-v">100%</span></label><input id="btnsz" type="range" min="50" max="200" value="100"></div>
 
     <div class="row">
       <button id="dl" disabled>Download PNG</button>
@@ -105,7 +115,8 @@
   var W = cv.width, H = cv.height;
   var img = null;
 
-  var ids = ['posx','posy','zoom','panelw','hl','shx','panelBright','blendw'];
+  // s1/s2/s3/btnsz (2026-09-25): per-line and button size, % of the auto-fitted size.
+  var ids = ['posx','posy','zoom','panelw','hl','shx','panelBright','blendw','s1','s2','s3','btnsz'];
   var els = {};
   ids.forEach(function(k){ els[k] = document.getElementById(k); });
   els.pick = document.getElementById('pick');
@@ -336,7 +347,7 @@
 
   function render(){
     ids.forEach(function(k){
-      var suffix = (k==='hl'||k==='panelw'||k==='panelBright'||k==='blendw') ? '%' : '';
+      var suffix = (k==='hl'||k==='panelw'||k==='panelBright'||k==='blendw'||k==='s1'||k==='s2'||k==='s3'||k==='btnsz') ? '%' : '';
       var el = document.getElementById(k+'-v');
       if(el) el.textContent = els[k].value + suffix;
     });
@@ -375,32 +386,39 @@
     var hzHeightCap = (H*0.80)/4.1;
     var hzBig = Math.min(hzWidthCap, hzHeightCap) * hlPct;
 
-    var btnTextSize = Math.min(hzBig*0.30, H*0.055);
+    // Per-line sizes: each line is the auto-fitted size × its own slider, so
+    // moving one slider changes only that line (it can overflow the panel if
+    // pushed far — that's the user's call). Line spacing follows each line's size.
+    var sz1 = hzBig*(+els.s1.value/100), sz2 = hzBig*(+els.s2.value/100), sz3 = hzBig*(+els.s3.value/100);
+
+    var btnTextSize = Math.min(hzBig*0.30, H*0.055) * (+els.btnsz.value/100);
     ctx.font='800 '+btnTextSize+'px Poppins, sans-serif';
     var btnLabel = els.btntext.value;
     var btnTextW = ctx.measureText(btnLabel).width;
     var btnPadX = btnTextSize*0.9, btnPadY = btnTextSize*0.62 + 5;
     var btnW = btnTextW+btnPadX*2, btnH = btnTextSize+btnPadY*2;
 
-    var lineGap = hzBig*0.98;
-    var blockH = hzBig*0.80 + lineGap*2 + hzBig*0.55 + btnH;
+    // Gap between baselines = 0.18 × the line above + 0.80 × the line below
+    // (= the old 0.98 × size when all lines are equal).
+    var d12 = sz1*0.18 + sz2*0.80, d23 = sz2*0.18 + sz3*0.80;
+    var blockH = sz1*0.80 + d12 + d23 + sz3*0.55 + btnH;
     var zoneTop = (H - blockH)/2 + off.y;
-    var y1 = zoneTop + hzBig*0.80;
-    var y2 = y1 + lineGap;
-    var y3 = y2 + lineGap;
+    var y1 = zoneTop + sz1*0.80;
+    var y2 = y1 + d12;
+    var y3 = y2 + d23;
 
     function lw(text,weight,size){ ctx.font=weight+' '+size+'px Poppins, sans-serif'; return ctx.measureText(text).width; }
-    var w1=lw(l1,800,hzBig), w2=lw(l2,600,hzBig), w3=lw(l3,800,hzBig);
+    var w1=lw(l1,800,sz1), w2=lw(l2,600,sz2), w3=lw(l3,800,sz3);
 
     ctx.save();
     ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=16; ctx.shadowOffsetY=3;
-    ctx.font='800 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l1, zoneLeft, y1);
-    ctx.font='600 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#FAF3E6'; ctx.fillText(l2, zoneLeft, y2);
-    ctx.font='800 '+hzBig+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l3, zoneLeft, y3);
+    ctx.font='800 '+sz1+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l1, zoneLeft, y1);
+    ctx.font='600 '+sz2+'px Poppins, sans-serif'; ctx.fillStyle='#FAF3E6'; ctx.fillText(l2, zoneLeft, y2);
+    ctx.font='800 '+sz3+'px Poppins, sans-serif'; ctx.fillStyle='#E1A6FF'; ctx.fillText(l3, zoneLeft, y3);
     ctx.restore();
 
     // ---- CTA button, directly under the headline ----
-    var btnY = y3 + hzBig*0.55;
+    var btnY = y3 + sz3*0.55;
     ctx.save();
     ctx.shadowColor='rgba(217,70,239,0.5)'; ctx.shadowBlur=26; ctx.shadowOffsetY=7;
     var btnGrad = ctx.createLinearGradient(zoneLeft,0,zoneLeft+btnW,0);
