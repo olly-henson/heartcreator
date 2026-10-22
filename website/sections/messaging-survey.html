@@ -1,0 +1,352 @@
+<!-- ============================================================
+     Heart Attractor — Messaging Survey (for prospects and clients)
+     GHL page path: TBC (e.g. ollyhenson.com/messaging-survey), Website Builder
+     Paste as ONE Custom HTML block. Section width: Full Width. Margin/padding: 0.
+     Responses POST to a Google Apps Script web app (messaging-survey.gs) → Google Sheet.
+     Then paste the Sheet's Responses tab into Belief Bridge ("Import survey answers").
+     Add ?src=instagram (or similar) to the link to log where people came from.
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body{ background:#0A0510 !important; margin:0 !important; padding:0 !important; }
+
+  .hms-page{
+    --bg-a:#4B1466; --bg-b:#150818; --bg-c:#0A0510;
+    --accent:#d946ef; --accent-2:#E1A6FF;
+    --body-text:#E6DCF2;
+    width:100vw !important;
+    position:relative !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    min-height:100vh;
+    background:radial-gradient(120% 100% at 20% 0%, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+    font-family:'Poppins', sans-serif;
+    color:#fff;
+    padding:34px 25px 48px;
+    box-sizing:border-box;
+  }
+  .hms-page *{ box-sizing:border-box; }
+  .hms-wrap{ max-width:680px; margin:0 auto; }
+
+  .hms-eyebrow{
+    display:inline-block;
+    font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent-2);
+    margin-bottom:18px;
+  }
+  .hms-grad{
+    background:linear-gradient(135deg, var(--accent-2), var(--accent));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* Intro + thank-you screens */
+  .hms-hero{ text-align:center; padding-top:20px; }
+  .hms-headline{
+    font-size:clamp(32px,5.6vw,52px); font-weight:800; line-height:1.15;
+    margin:0 0 17px; text-wrap:balance;
+  }
+  .hms-sub{
+    font-size:clamp(15px,1.9vw,18px); line-height:1.6; color:var(--body-text);
+    max-width:52ch; margin:0 auto 28px;
+  }
+  .hms-meta{ font-size:13px; color:rgba(255,255,255,.55); margin-top:16px; }
+
+  /* Progress */
+  .hms-progress{ display:flex; align-items:center; gap:14px; margin-bottom:26px; }
+  .hms-bar{ flex:1; height:6px; background:rgba(255,255,255,.1); border-radius:6px; overflow:hidden; }
+  .hms-bar-fill{
+    height:100%; width:0;
+    background:linear-gradient(90deg, var(--accent-2), var(--accent));
+    border-radius:6px; transition:width .3s ease;
+  }
+  .hms-count{ font-size:13px; font-weight:600; color:rgba(255,255,255,.6); white-space:nowrap; }
+
+  /* Question */
+  .hms-q-title{
+    font-size:clamp(22px,3.6vw,30px); font-weight:700; line-height:1.3;
+    margin:0 0 8px; text-wrap:balance;
+  }
+  .hms-q-hint{ font-size:14px; color:var(--accent-2); font-weight:600; letter-spacing:.04em; margin:0 0 22px; }
+  .hms-options{ display:flex; flex-direction:column; gap:10px; }
+  .hms-opt{
+    display:flex; align-items:center; gap:14px;
+    width:100%; text-align:left;
+    padding:14px 18px;
+    font-family:'Poppins', sans-serif; font-size:16px; font-weight:500; color:#fff;
+    background:rgba(255,255,255,.05);
+    border:1.5px solid rgba(255,255,255,.14);
+    border-radius:14px; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .hms-opt:hover{ border-color:rgba(217,70,239,.6); }
+  .hms-opt[aria-pressed="true"]{
+    border-color:var(--accent);
+    background:rgba(217,70,239,.18);
+  }
+  .hms-opt:disabled{ opacity:.4; cursor:default; }
+  .hms-tick{
+    flex:none; width:22px; height:22px;
+    border:2px solid rgba(255,255,255,.35); border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; color:transparent;
+  }
+  .hms-single .hms-tick{ border-radius:50%; }
+  .hms-opt[aria-pressed="true"] .hms-tick{ background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  .hms-text, .hms-other{
+    width:100%; padding:14px 16px;
+    font-family:'Poppins', sans-serif; font-size:16px; color:#fff;
+    background:rgba(255,255,255,.06);
+    border:1.5px solid rgba(255,255,255,.18);
+    border-radius:14px; outline:none; resize:vertical;
+  }
+  .hms-text{ min-height:140px; line-height:1.5; }
+  .hms-other{ margin-top:4px; display:none; }
+  .hms-text::placeholder, .hms-other::placeholder{ color:rgba(255,255,255,.35); }
+  .hms-text:focus, .hms-other:focus{ border-color:var(--accent); }
+  .hms-input{ min-height:0; resize:none; }
+
+  /* Nav */
+  .hms-nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:28px; }
+  .hms-back{
+    background:none; border:none; padding:10px 4px; cursor:pointer;
+    font-family:'Poppins', sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,.6);
+  }
+  .hms-back:hover{ color:#fff; }
+  .hms-back[hidden]{ display:block; visibility:hidden; }
+  .hms-btn{
+    padding:14px 34px;
+    font-family:'Poppins', sans-serif; font-size:17px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg, var(--accent), #7A2AA8);
+    border:none; border-radius:50px; cursor:pointer;
+    box-shadow:0 10px 30px rgba(217,70,239,.35);
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .hms-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 36px rgba(217,70,239,.45); }
+  .hms-btn:disabled{ opacity:.45; cursor:default; transform:none; box-shadow:none; }
+
+  .hms-screen{ display:none; }
+  .hms-screen.is-active{ display:block; animation:hms-in .3s ease; }
+  @keyframes hms-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+
+  @media (max-width:480px){
+    .hms-page{ padding:24px 16px 36px; }
+    .hms-opt{ padding:13px 15px; font-size:15px; }
+    .hms-btn{ padding:14px 28px; font-size:16px; }
+  }
+</style>
+
+<style>
+  .hms-hero{ text-align:center; padding-top:20px; }
+  .hms-opt-wrap{ display:flex; flex-direction:column; gap:10px; }
+  @media (prefers-reduced-motion: reduce){ .hms-screen.is-active{ animation:none; } }
+</style>
+
+<div class="hms-page">
+  <div class="hms-wrap">
+
+    <!-- Intro -->
+    <section class="hms-screen hms-hero is-active" id="hms-intro">
+      <div class="hms-eyebrow">👉 4 Minute Survey</div>
+      <h1 class="hms-headline">Where Are You <span class="hms-grad">In Love</span> Right Now?</h1>
+      <p class="hms-sub">I'm asking a few honest questions about dating and relationships so I can create things that actually help. There are no right or wrong answers, and it's anonymous unless you choose to share your name.</p>
+      <button type="button" class="hms-btn" id="hms-start">Let's Go →</button>
+      <div class="hms-meta" id="hms-meta"></div>
+    </section>
+
+    <!-- Questions (rendered by JS) -->
+    <section class="hms-screen" id="hms-question">
+      <div class="hms-progress">
+        <div class="hms-bar"><div class="hms-bar-fill" id="hms-bar-fill"></div></div>
+        <div class="hms-count" id="hms-count"></div>
+      </div>
+      <h2 class="hms-q-title" id="hms-q-title"></h2>
+      <p class="hms-q-hint" id="hms-q-hint"></p>
+      <div id="hms-q-body"></div>
+      <div class="hms-nav">
+        <button type="button" class="hms-back" id="hms-back">← Back</button>
+        <button type="button" class="hms-btn" id="hms-next">Next →</button>
+      </div>
+    </section>
+
+    <!-- Thank you -->
+    <section class="hms-screen hms-hero" id="hms-thanks">
+      <div class="hms-eyebrow">✓ Sent</div>
+      <h1 class="hms-headline">Thank <span class="hms-grad">You</span></h1>
+      <p class="hms-sub">I read every single answer. What you've shared helps me create things that actually make a difference.</p>
+      <a class="hms-btn" href="https://www.instagram.com/attractwitholly/" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;">See What's New On Instagram</a>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  // Paste the Apps Script web app URL here (see messaging-survey.gs). Until then, answers are only logged to the console.
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyk5IU4fKBrxD2WFCBI3TC1L2_a3wBn_FswtXzRMUfm-xXFotOn_QwfVVBofZUAD7AlIQ/exec';
+
+  // Each question feeds one part of the messaging (noted in "feeds").
+  var QUESTIONS = [
+    // 1. WHO
+    { key:'situation', type:'single', feeds:'Who',
+      title:'Where are you in your love life right now?',
+      options:['Single and actively dating','Dating on and off','Single and taking a break from dating','Recently out of a relationship','I haven\'t dated in a long time'] },
+    { key:'how_long', type:'single', feeds:'Who and pain',
+      title:'How long have you been looking for the right person?',
+      options:['Less than a year','1 to 3 years','3 to 5 years','More than 5 years'] },
+    // WHAT THEY'RE ALREADY DOING (the opening mirror)
+    { key:'effort', type:'multi', feeds:'What they\'re already doing',
+      title:'What are you putting time and energy into right now, to meet someone or to get ready for love?',
+      hint:'Pick as many as you like',
+      options:['Dating apps','Going out more to meet people','Therapy','Reading self-help books','Online courses','Attachment style work','Inner child or healing work','Journaling','Manifestation or visualizing','Meditation','Breathwork','Working on my looks or fitness','Dating or relationship coaching','Something else'], other:'Something else' },
+    { key:'most_effort', type:'single', feeds:'Cracks (the exaggeration crack)',
+      show:function(a){ return (a.effort || []).length > 1; },
+      options:function(a){ return (a.effort || []).map(function(o){ return o === 'Something else' ? 'Something else: ' + (others.effort || '') : o; }); },
+      title:'Which of those have you put the most into?' },
+    // PROMISED LAND
+    { key:'promised_land', type:'text', feeds:'Promised land',
+      title:'Imagine you\'re with the right person a year from now. What does a normal Sunday together look like?',
+      hint:'Describe it however it comes to you' },
+    // PAIN
+    { key:'pain', type:'text', feeds:'Pain',
+      title:'After everything you\'ve put in, what still isn\'t happening?' },
+    { key:'why_now', type:'single', feeds:'What\'s changed in the world',
+      title:'What makes finding someone feel harder today?',
+      options:['Dating apps make people feel disposable','There\'s so much advice it\'s confusing','There are fewer natural ways to meet people','Everyone seems to want something different','It doesn\'t feel harder to me','Something else'], other:'Something else' },
+    // BLEEDING NECK PAIN
+    { key:'worst', type:'multi', feeds:'Bleeding neck pain',
+      title:'Which of these hit you the hardest?',
+      hint:'Pick as many as you like',
+      options:['Watching friends settle down','Dates that go nowhere','Overthinking every message and date','Feeling like I\'m too much or not enough','Being asked "are you seeing anyone?"','Quiet weekends on my own','Worrying it might never happen','Something else'], other:'Something else' },
+    // CURRENT BELIEF + REAL CAUSE
+    { key:'finish_sentence', type:'input', feeds:'Current belief',
+      title:'Finish this sentence: "I\'ll meet the right person once I…"' },
+    { key:'why_not_yet', type:'text', feeds:'Real cause',
+      title:'Why do you think it hasn\'t happened yet?',
+      hint:'Be as honest as you like. It\'s anonymous' },
+    // WHERE THE BELIEF COMES FROM + THE VILLAIN
+    { key:'advice_sources', type:'multi', feeds:'Where they get their beliefs',
+      title:'Where do you get most of your dating and relationship advice?',
+      hint:'Pick as many as you like',
+      options:['Instagram','TikTok','YouTube','Podcasts','Books','Friends and family','A therapist or coach','Somewhere else'], other:'Somewhere else' },
+    { key:'frustrating_advice', type:'text', feeds:'The villain', optional:true,
+      title:'What\'s the dating or self-help advice that annoys you the most?',
+      hint:'Optional. Leave it blank if nothing comes to mind' },
+    // CRACKS + WHO ALREADY HAS IT
+    { key:'friends_compare', type:'single', feeds:'Cracks',
+      title:'Think of the friends and family you know who\'ve found their person. Have they done as much work on themselves as you have?',
+      options:['No, much less than me','A bit less than me','About the same','More than me','I\'m not sure'] },
+    // OFFER: DOUBTS AND RISK
+    { key:'doubts', type:'text', feeds:'Risk reversal and stress test',
+      title:'What would make you hesitate to try something new to help you meet the right person?' },
+    { key:'age', type:'single', feeds:'Who',
+      title:'And finally, how old are you?',
+      options:['Under 25','25 to 34','35 to 44','45 to 54','55 or over','I\'d rather not say'] }
+  ];
+
+  var answers = {}, others = {}, idx = 0;
+  var $ = function(id){ return document.getElementById(id); };
+  var visible = function(){ return QUESTIONS.filter(function(q){ return !q.show || q.show(answers); }); };
+
+  $('hms-meta').textContent = 'About 4 minutes';
+
+  function show(id){
+    ['hms-intro','hms-question','hms-thanks'].forEach(function(s){ $(s).classList.toggle('is-active', s === id); });
+    window.scrollTo(0, 0);
+  }
+
+  function answered(q){
+    var v = answers[q.key];
+    if (q.optional) return true;
+    if (q.type === 'multi') {
+      if (!v || !v.length) return false;
+      if (q.other && v.indexOf(q.other) > -1 && !(others[q.key] || '').trim()) return false;
+      return true;
+    }
+    return typeof v === 'string' && v.trim().length > 1;
+  }
+
+  function render(){
+    var qs = visible(), q = qs[idx];
+    $('hms-bar-fill').style.width = Math.round(idx / qs.length * 100) + '%';
+    $('hms-count').textContent = (idx + 1) + ' of ' + qs.length;
+    $('hms-q-title').textContent = q.title;
+    $('hms-q-hint').textContent = q.hint || (q.type === 'single' ? 'Pick one' : '');
+    $('hms-back').hidden = idx === 0;
+    $('hms-next').textContent = idx === qs.length - 1 ? 'Send →' : 'Next →';
+    var body = $('hms-q-body'); body.textContent = '';
+
+    if (q.type === 'single' || q.type === 'multi') {
+      var wrap = document.createElement('div'); wrap.className = 'hms-options' + (q.type === 'single' ? ' hms-single' : '');
+      var otherBox = null;
+      (typeof q.options === 'function' ? q.options(answers) : q.options).forEach(function(opt){
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'hms-opt';
+        var on = q.type === 'single' ? answers[q.key] === opt : (answers[q.key] || []).indexOf(opt) > -1;
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        var tick = document.createElement('span'); tick.className = 'hms-tick'; tick.textContent = '✓';
+        b.appendChild(tick); b.appendChild(document.createTextNode(opt));
+        b.onclick = function(){
+          if (q.type === 'single') { answers[q.key] = opt; render(); return; }
+          var list = answers[q.key] = answers[q.key] || [], i = list.indexOf(opt);
+          if (i > -1) list.splice(i, 1); else list.push(opt);
+          render();
+        };
+        wrap.appendChild(b);
+      });
+      body.appendChild(wrap);
+      if (q.other) {
+        otherBox = document.createElement('input'); otherBox.type = 'text'; otherBox.className = 'hms-other'; otherBox.id = 'hms-other-' + q.key;
+        otherBox.placeholder = 'Tell me what';
+        otherBox.value = others[q.key] || '';
+        otherBox.style.display = (answers[q.key] || []).indexOf(q.other) > -1 ? 'block' : 'none';
+        otherBox.oninput = function(){ others[q.key] = otherBox.value; sync(); };
+        body.appendChild(otherBox);
+      }
+    } else {
+      var el = document.createElement(q.type === 'input' ? 'input' : 'textarea');
+      el.className = 'hms-text' + (q.type === 'input' ? ' hms-input' : ''); el.id = 'hms-a-' + q.key;
+      if (q.type === 'input') el.type = 'text';
+      el.placeholder = 'Type your answer here';
+      el.value = answers[q.key] || '';
+      el.oninput = function(){ answers[q.key] = el.value; sync(); };
+      body.appendChild(el);
+      setTimeout(function(){ el.focus(); }, 50);
+    }
+    sync();
+  }
+  function sync(){ var q = visible()[idx]; $('hms-next').disabled = !answered(q); }
+
+  function next(){
+    var qs = visible();
+    if (!answered(qs[idx])) return;
+    if (idx < qs.length - 1) { idx++; render(); return; }
+    send();
+  }
+  $('hms-next').onclick = next;
+  $('hms-back').onclick = function(){ if (idx > 0) { idx--; render(); } };
+  $('hms-start').onclick = function(){ show('hms-question'); render(); };
+
+  // Plain text only: emojis garble in the Sheet.
+  function clean(s){ return String(s || '').replace(/[^\x09\x0A\x0D\x20-\x7E -ɏ‘-”…]/g, '').trim(); }
+
+  function send(){
+    var payload = {};
+    visible().forEach(function(q){
+      var v = answers[q.key];
+      if (q.type === 'multi') {
+        v = (v || []).map(function(o){ return o === q.other ? q.other + ': ' + (others[q.key] || '') : o; }).join(' | ');
+      }
+      payload[q.key] = clean(v);
+    });
+    try { payload.source = clean(new URLSearchParams(location.search).get('src') || ''); } catch (e) { payload.source = ''; }
+    $('hms-next').disabled = true;
+    if (SHEET_URL.indexOf('http') === 0) {
+      fetch(SHEET_URL, { method:'POST', mode:'no-cors', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+        .catch(function(){});
+    } else {
+      console.warn('[Heart Attractor] SHEET_URL not set. Payload:', payload);
+    }
+    show('hms-thanks');
+  }
+})();
+</script>

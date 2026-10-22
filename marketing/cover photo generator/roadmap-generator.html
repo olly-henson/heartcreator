@@ -1,0 +1,545 @@
+<!doctype html>
+<!-- ============================================================
+     Heart Attractor — Skool ROADMAP image builder
+     Built 2026-09-28 for Olly: one image for Skool showing the steps
+     to follow, in order, with a reason for each.
+
+     v2 (same day): restyled after Olly's reference ("Business Timetable"
+     infographic) — a thick road snaking across the image in two rows,
+     big two-tone ring nodes with an icon inside, bold labels underneath,
+     small dash/dot accents.
+       Row 1 (left -> right): START -> 1 REGULATE -> 2 REWRITE
+       curve down the right-hand side
+       Row 2 (right -> left): 3 REHEARSE -> heart (destination)
+     Portrait 1080 x 1350 (kept portrait so reasons read on a phone).
+     Brand: deep bg #150818 / #0A0510, lilac #E1A6FF, violet #B84FE8,
+     magenta #d946ef, off-white #f8f4ff, Poppins only.
+
+     Default reasons = Olly's own step wording (About Page tiles).
+     Every word is editable. Save -> localStorage 'ohtools:roadmap-generator-v2'
+     (v1 = the first vertical layout; its saved text is not reused).
+     ============================================================ -->
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roadmap Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{font-family:'Poppins',sans-serif;background:#0A0510;color:#f8f4ff;margin:0;padding:28px 20px 60px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  h1.page{font-size:20px;margin:0 0 4px;}
+  p.page{font-size:13px;color:#c9bdd6;margin:0 0 16px;}
+  /* Pinned preview: stays at the top while scrolling the controls. */
+  .preview{position:sticky;top:0;z-index:5;background:#0A0510;padding:10px 0 12px;
+    border-bottom:1px solid #2a1b3d;text-align:center;}
+  canvas{max-width:100%;max-height:55vh;width:auto;height:auto;border-radius:10px;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);background:#000;display:inline-block;vertical-align:top;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-top:22px;}
+  .ctl{display:flex;flex-direction:column;gap:6px;}
+  .ctl.full{grid-column:1 / -1;}
+  label{font-size:12.5px;font-weight:600;color:#c9bdd6;display:flex;justify-content:space-between;}
+  input[type=range]{width:100%;accent-color:#d946ef;}
+  input[type=text],textarea{width:100%;padding:9px 11px;font:inherit;font-size:14px;border:1px solid #3a2650;
+    background:#180b28;color:#f8f4ff;border-radius:8px;}
+  textarea{resize:vertical;min-height:58px;}
+  .grouphd{grid-column:1 / -1;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:#8a6bb0;margin-top:14px;border-top:1px solid #2a1b3d;padding-top:14px;}
+  .row{grid-column:1 / -1;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+  button{font:inherit;font-weight:700;font-size:14px;border:0;border-radius:9px;padding:12px 22px;cursor:pointer;
+    background:#2a1b3d;color:#f8f4ff;}
+  #dl{background:linear-gradient(180deg,#E1A6FF,#d946ef);color:#fff;box-shadow:0 12px 34px rgba(217,70,239,.4);}
+  #save.dirty{background:#d946ef;color:#fff;}
+  .hint{font-size:12px;color:#9a86c4;}
+</style></head><body>
+<div class="wrap">
+  <h1 class="page">Roadmap Generator</h1>
+  <p class="page">Skool roadmap image: the steps in order, with a reason and what you'll do for each. Landscape: 1920 wide, 1080+ tall (grows with the text).</p>
+
+  <div class="preview"><canvas id="view" width="1920" height="1080"></canvas></div>
+
+  <div class="grid">
+    <div class="grouphd">Heading</div>
+    <div class="ctl"><label>Title</label><input type="text" id="title" value="YOUR ROADMAP"></div>
+    <div class="ctl"><label>"START HERE" label (blank to hide)</label><input type="text" id="start" value="START HERE"></div>
+    <div class="ctl full"><label>Subtitle (blank to hide)</label><input type="text" id="sub" value="Your step-by-step roadmap to meeting your soulmate, in the right order."></div>
+
+    <div class="grouphd">Ask for help (first section on the road)</div>
+    <div class="ctl"><label>Name</label><input type="text" id="k0" value="ASK FOR HELP"></div>
+    <div class="ctl"><label>Tag (blank to hide)</label><input type="text" id="d0" value="ALWAYS"></div>
+    <div class="ctl full"><label>Reason</label><textarea id="r0">Stuck or unsure? Post in the community, or DM me if it's private.</textarea></div>
+    <div class="ctl full"><label>What you'll do (blank to hide)</label><textarea id="w0"></textarea></div>
+
+    <div class="grouphd">Optional banner under the title (off by default)</div>
+    <div class="ctl full"><label>Banner heading (blank to hide the banner)</label><input type="text" id="helpt" value=""></div>
+    <div class="ctl full"><label>Banner text</label><textarea id="helpx"></textarea></div>
+
+    <div class="grouphd">Step 1</div>
+    <div class="ctl"><label>Name</label><input type="text" id="k1" value="REGULATE"></div>
+    <div class="ctl"><label>Length (blank to hide)</label><input type="text" id="d1" value="7 DAYS · 7 MIN A DAY"></div>
+    <div class="ctl full"><label>Reason</label><textarea id="r1">Calm your nervous system so you feel like your true self again.</textarea></div>
+    <div class="ctl full"><label>What you'll do (blank to hide)</label><textarea id="w1"></textarea></div>
+
+    <div class="grouphd">Step 2</div>
+    <div class="ctl"><label>Name</label><input type="text" id="k2" value="REWRITE"></div>
+    <div class="ctl"><label>Length (blank to hide)</label><input type="text" id="d2" value="30 DAYS"></div>
+    <div class="ctl full"><label>Reason</label><textarea id="r2">Find the belief keeping you stuck and imprint a new one.</textarea></div>
+    <div class="ctl full"><label>What you'll do (blank to hide)</label><textarea id="w2"></textarea></div>
+
+    <div class="grouphd">Step 3</div>
+    <div class="ctl"><label>Name</label><input type="text" id="k3" value="REHEARSE"></div>
+    <div class="ctl"><label>Length (blank to hide)</label><input type="text" id="d3" value=""></div>
+    <div class="ctl full"><label>Reason</label><textarea id="r3">Teach your subconscious you're already with this person.</textarea></div>
+    <div class="ctl full"><label>What you'll do (blank to hide)</label><textarea id="w3"></textarea></div>
+
+    <div class="grouphd">Destination (the heart)</div>
+    <div class="ctl"><label>Name</label><input type="text" id="dest" value="ATTRACT YOUR SOULMATE"></div>
+    <div class="ctl"><label>Line underneath (blank to hide)</label><input type="text" id="destsub" value="Then watch it unfold."></div>
+
+    <div class="grouphd">Why this order (note at the bottom)</div>
+    <div class="ctl full"><label>Heading (blank to hide the note)</label><input type="text" id="whyt" value="WHY THIS ORDER?"></div>
+    <div class="ctl full"><label>Text</label><textarea id="whyx">Most people jump straight to step 3 while still in survival mode and carrying old beliefs. That's why nothing works.</textarea></div>
+
+    <div class="grouphd">Sizes</div>
+    <div class="ctl"><label>Title size <span id="tsz-v">100%</span></label><input id="tsz" type="range" min="60" max="140" value="100"></div>
+    <div class="ctl"><label>Step name size <span id="ksz-v">100%</span></label><input id="ksz" type="range" min="60" max="140" value="100"></div>
+    <div class="ctl"><label>Reason text size <span id="rsz-v">100%</span></label><input id="rsz" type="range" min="60" max="140" value="100"></div>
+    <div class="ctl"><label>Circle size <span id="nsz-v">100%</span></label><input id="nsz" type="range" min="75" max="120" value="100"></div>
+
+    <div class="row">
+      <button id="dl" type="button">Download PNG</button>
+      <button id="save" type="button">Save changes</button>
+      <button id="defaults" type="button">Back to defaults</button>
+      <span id="savestate" class="hint"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var cv = document.getElementById('view'), ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height, BASE_H = 1080;
+  var TEXT_IDS = ['title','start','sub','helpt','helpx','whyt','whyx','k0','d0','r0','w0','k1','d1','r1','w1','k2','d2','r2','w2','k3','d3','r3','w3','dest','destsub'];
+  var RANGE_IDS = ['tsz','ksz','rsz','nsz'];
+  var ALL_IDS = TEXT_IDS.concat(RANGE_IDS);
+  function el(id){ return document.getElementById(id); }
+  function val(id){ return el(id).value.trim(); }
+  function pct(id){ return +el(id).value/100; }
+  function font(weight, size){ return weight + ' ' + size + 'px Poppins, sans-serif'; }
+
+  // One colour pair per stop along the road: [light half, dark half].
+  var C = {
+    help: ['#f5d0fe', '#d8a4f5'],   // Ask for help — palest lilac
+    s1:   ['#E1A6FF', '#b77fe0'],   // Regulate — lilac
+    s2:   ['#B84FE8', '#8a2fc0'],   // Rewrite  — violet
+    s3:   ['#d946ef', '#a82bbf'],   // Rehearse — magenta
+    dest: ['#f0abfc', '#d946ef']    // heart    — pink-lilac to magenta
+  };
+
+  function wrap(text, maxW){
+    var words = text.split(/\s+/).filter(Boolean), lines = [], cur = '';
+    words.forEach(function(w){
+      var t = cur ? cur + ' ' + w : w;
+      if(ctx.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else { cur = t; }
+    });
+    if(cur) lines.push(cur);
+    return lines;
+  }
+
+  function roundRect(x, y, w, h, rr){
+    ctx.beginPath();
+    ctx.moveTo(x+rr, y); ctx.arcTo(x+w, y, x+w, y+h, rr); ctx.arcTo(x+w, y+h, x, y+h, rr);
+    ctx.arcTo(x, y+h, x, y, rr); ctx.arcTo(x, y, x+w, y, rr); ctx.closePath();
+  }
+
+  function heartPath(cx, cy, s){
+    ctx.beginPath();
+    ctx.moveTo(cx, cy + s*0.95);
+    ctx.bezierCurveTo(cx - s*1.25, cy + s*0.05, cx - s*0.95, cy - s*1.0, cx, cy - s*0.35);
+    ctx.bezierCurveTo(cx + s*0.95, cy - s*1.0, cx + s*1.25, cy + s*0.05, cx, cy + s*0.95);
+    ctx.closePath();
+  }
+
+  // ---- icons (drawn inside the dark centre of each ring) ----
+  function iconBubble(cx, cy, s, col){      // Ask for help: speech bubble
+    ctx.save(); ctx.fillStyle = col;
+    var bw = s*1.5, bh = s*1.05, x0 = cx - bw/2, y0 = cy - bh/2 - s*0.1, rr = s*0.3;
+    ctx.beginPath();
+    ctx.moveTo(x0 + rr, y0); ctx.arcTo(x0 + bw, y0, x0 + bw, y0 + bh, rr); ctx.arcTo(x0 + bw, y0 + bh, x0, y0 + bh, rr);
+    ctx.lineTo(cx - s*0.05, y0 + bh); ctx.lineTo(cx - s*0.42, y0 + bh + s*0.38); ctx.lineTo(cx - s*0.38, y0 + bh);
+    ctx.arcTo(x0, y0 + bh, x0, y0, rr); ctx.arcTo(x0, y0, x0 + bw, y0, rr); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#1f0d2e';
+    [-0.38, 0, 0.38].forEach(function(dx){ ctx.beginPath(); ctx.arc(cx + dx*s, y0 + bh/2, s*0.12, 0, Math.PI*2); ctx.fill(); });
+    ctx.restore();
+  }
+
+  function iconWaves(cx, cy, s, col){       // Regulate: calm breath / nervous system
+    ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = s*0.13; ctx.lineCap = 'round';
+    [-0.42, 0, 0.42].forEach(function(dy, i){
+      var amp = s*(0.16 - i*0.03), y = cy + dy*s;
+      ctx.beginPath();
+      for(var x = -0.7; x <= 0.7001; x += 0.05){
+        var px = cx + x*s, py = y + Math.sin((x + 0.7)/1.4*Math.PI*2) * amp;
+        if(x === -0.7) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+  function iconPencil(cx, cy, s, col){      // Rewrite
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-Math.PI/4);
+    var L = s*1.5, T = s*0.36;
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.rect(-L/2 + T*0.55, -T/2, L - T*1.4, T); ctx.fill();          // body
+    ctx.fillStyle = '#f8f4ff';
+    ctx.beginPath(); ctx.rect(-L/2, -T/2, T*0.5, T); ctx.fill();                      // eraser
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.moveTo(L/2 - T*0.85, -T/2); ctx.lineTo(L/2, 0); ctx.lineTo(L/2 - T*0.85, T/2); ctx.closePath(); ctx.fill(); // tip
+    ctx.fillStyle = '#150818';
+    ctx.beginPath(); ctx.moveTo(L/2 - T*0.3, -T*0.17); ctx.lineTo(L/2, 0); ctx.lineTo(L/2 - T*0.3, T*0.17); ctx.closePath(); ctx.fill(); // lead
+    ctx.restore();
+    // writing line under the pencil
+    ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = s*0.09; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(cx - s*0.55, cy + s*0.72); ctx.lineTo(cx + s*0.2, cy + s*0.72); ctx.stroke();
+    ctx.restore();
+  }
+  function iconEye(cx, cy, s, col){         // Rehearse: see it / visualise it
+    ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = s*0.12; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - s*0.8, cy);
+    ctx.quadraticCurveTo(cx, cy - s*0.78, cx + s*0.8, cy);
+    ctx.quadraticCurveTo(cx, cy + s*0.78, cx - s*0.8, cy);
+    ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, s*0.27, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#150818'; ctx.beginPath(); ctx.arc(cx + s*0.08, cy - s*0.08, s*0.09, 0, Math.PI*2); ctx.fill();
+    // sparkle (it already feels real)
+    ctx.fillStyle = '#f8f4ff';
+    var sx = cx + s*0.62, sy = cy - s*0.62, k = s*0.2;
+    ctx.beginPath(); ctx.moveTo(sx, sy - k); ctx.quadraticCurveTo(sx, sy, sx + k, sy); ctx.quadraticCurveTo(sx, sy, sx, sy + k);
+    ctx.quadraticCurveTo(sx, sy, sx - k, sy); ctx.quadraticCurveTo(sx, sy, sx, sy - k); ctx.fill();
+    ctx.restore();
+  }
+  function iconHeart(cx, cy, s, col){
+    ctx.save();
+    var g = ctx.createLinearGradient(cx - s, cy - s, cx + s, cy + s);
+    g.addColorStop(0, '#f0abfc'); g.addColorStop(1, '#d946ef');
+    ctx.fillStyle = g; ctx.shadowColor = 'rgba(217,70,239,0.8)'; ctx.shadowBlur = s*0.5;
+    heartPath(cx, cy + s*0.08, s*0.82); ctx.fill();
+    ctx.restore();
+  }
+
+  // Two-tone ring node like the reference: left half light, right half dark,
+  // thin gaps top and bottom, dark centre holding the icon.
+  function ringNode(cx, cy, R, pair, icon, num){
+    var ringW = R*0.2;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 6;
+    ctx.fillStyle = '#150818';
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+    var gap = 0.07;
+    ctx.save(); ctx.lineWidth = ringW; ctx.lineCap = 'butt';
+    ctx.strokeStyle = pair[0];
+    ctx.beginPath(); ctx.arc(cx, cy, R - ringW/2, Math.PI/2 + gap, Math.PI*1.5 - gap); ctx.stroke();
+    ctx.strokeStyle = pair[1];
+    ctx.beginPath(); ctx.arc(cx, cy, R - ringW/2, -Math.PI/2 + gap, Math.PI/2 - gap); ctx.stroke();
+    ctx.restore();
+    // inner disc
+    ctx.save();
+    ctx.fillStyle = '#1f0d2e';
+    ctx.beginPath(); ctx.arc(cx, cy, R - ringW - R*0.07, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+    icon(cx, cy, R*0.52, pair[0]);
+    // step number badge (order matters, so it's always visible)
+    if(num){
+      var bx = cx - R*0.74, by = cy - R*0.74, br = R*0.27;
+      ctx.save();
+      ctx.fillStyle = pair[0]; ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#150818'; ctx.font = font(800, br*1.25); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(num), bx, by + br*0.06);
+      ctx.restore();
+    }
+  }
+
+  function chevron(x, y, dir, size, col){   // dir: 'right' | 'left' | 'down'
+    ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = size*0.32; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    if(dir === 'right'){ ctx.moveTo(x - size*0.4, y - size*0.6); ctx.lineTo(x + size*0.4, y); ctx.lineTo(x - size*0.4, y + size*0.6); }
+    if(dir === 'left'){  ctx.moveTo(x + size*0.4, y - size*0.6); ctx.lineTo(x - size*0.4, y); ctx.lineTo(x + size*0.4, y + size*0.6); }
+    if(dir === 'down'){  ctx.moveTo(x - size*0.6, y - size*0.4); ctx.lineTo(x, y + size*0.4); ctx.lineTo(x + size*0.6, y - size*0.4); }
+    ctx.stroke(); ctx.restore();
+  }
+
+  function dashes(x, y, col){               // small decorative dot + dashes (reference style)
+    ctx.save(); ctx.fillStyle = col; ctx.globalAlpha = 0.85;
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2); ctx.fill();
+    ctx.fillRect(x + 20, y - 3, 44, 6);
+    ctx.fillRect(x + 28, y + 11, 30, 6);
+    ctx.restore();
+  }
+
+  // Label block centred under a node: name, length, reason. Returns bottom y.
+  // draw=false only measures (used to place row 2 below row 1's labels).
+  function label(cx, top, name, len, reason, nameCol, maxW, draw, what){
+    var kSize = 42 * pct('ksz'), rSize = 29 * pct('rsz');
+    var y = top;
+    function put(t, x, yy){ if(draw !== false) ctx.fillText(t, x, yy); }
+    ctx.save(); ctx.textAlign = 'center';
+    ctx.font = font(800, kSize); ctx.fillStyle = nameCol;
+    ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
+    wrap(name, maxW).forEach(function(line){ y += kSize; put(line, cx, y); y += kSize*0.12; });
+    ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+    if(len){
+      ctx.font = font(700, 21); ctx.letterSpacing = '4px'; ctx.fillStyle = '#E1A6FF';
+      y += 34; put(len, cx + 2, y); ctx.letterSpacing = '0px';
+    }
+    if(reason){
+      ctx.font = font(500, rSize); ctx.fillStyle = 'rgba(248,244,255,0.84)';
+      y += rSize*0.5;
+      wrap(reason, maxW).forEach(function(line){ y += rSize*1.38; put(line, cx, y); });
+    }
+    // "What you'll do" (added 2026-09-28): the specific actions, in a tinted
+    // box so it reads as separate from the reason.
+    if(what){
+      var wSize = 21 * pct('rsz'), pad = 16, bw = maxW + 24;
+      ctx.font = font(500, wSize);
+      var wl = wrap(what, bw - pad*2);
+      var bh = pad + 24 + wl.length*wSize*1.36 + pad*0.7;
+      var by = y + 18;
+      if(draw !== false){
+        ctx.fillStyle = 'rgba(184,79,232,0.16)'; ctx.strokeStyle = 'rgba(225,166,255,0.45)'; ctx.lineWidth = 2;
+        roundRect(cx - bw/2, by, bw, bh, 14); ctx.fill(); ctx.stroke();
+        ctx.font = font(700, 15); ctx.letterSpacing = '3px'; ctx.fillStyle = '#E1A6FF';
+        ctx.fillText("WHAT YOU'LL DO", cx + 1.5, by + pad + 12);
+        ctx.letterSpacing = '0px';
+        ctx.font = font(500, wSize); ctx.fillStyle = '#f8f4ff';
+        wl.forEach(function(line, i){ ctx.fillText(line, cx, by + pad + 24 + (i + 1)*wSize*1.36 - wSize*0.25); });
+      }
+      y = by + bh;
+    }
+    ctx.restore();
+    return y;
+  }
+
+  function render(){
+    RANGE_IDS.forEach(function(k){ el(k+'-v').textContent = el(k).value + '%'; });
+    ctx.clearRect(0,0,W,H);
+    ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left'; ctx.letterSpacing = '0px';
+
+    // ---- background: deep brand purple, soft glow ----
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#2a0f3d'); g.addColorStop(1, '#0f0617');
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    var rg = ctx.createRadialGradient(W*0.5, H*0.42, 0, W*0.5, H*0.42, W*0.8);
+    rg.addColorStop(0, 'rgba(184,79,232,0.16)'); rg.addColorStop(1, 'rgba(184,79,232,0)');
+    ctx.fillStyle = rg; ctx.fillRect(0,0,W,H);
+
+    // ---- title with lines either side (reference style) ----
+    var tSize = 58 * pct('tsz');
+    var ty = 118;
+    ctx.save();
+    ctx.font = font(800, tSize); ctx.letterSpacing = '3px'; ctx.textAlign = 'center';
+    var title = val('title').toUpperCase();
+    var tw = ctx.measureText(title).width;
+    ctx.fillStyle = '#f8f4ff';
+    ctx.fillText(title, W/2, ty);
+    ctx.restore();
+    var lineY = ty - tSize*0.36, pad = 34;
+    ctx.save(); ctx.strokeStyle = '#E1A6FF'; ctx.fillStyle = '#E1A6FF'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+    var lx2 = W/2 - tw/2 - pad, rx1 = W/2 + tw/2 + pad;
+    if(lx2 > 110){
+      ctx.beginPath(); ctx.moveTo(80, lineY); ctx.lineTo(lx2, lineY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(rx1, lineY); ctx.lineTo(W - 80, lineY); ctx.stroke();
+      [80, lx2, rx1, W - 80].forEach(function(x){ ctx.beginPath(); ctx.arc(x, lineY, 9, 0, Math.PI*2); ctx.fill(); });
+    }
+    ctx.restore();
+    var y = ty;
+    if(val('sub')){
+      ctx.save(); ctx.font = font(500, 28); ctx.fillStyle = 'rgba(248,244,255,0.8)'; ctx.textAlign = 'center';
+      wrap(val('sub'), W - 200).forEach(function(line){ y += 46; ctx.fillText(line, W/2, y); });
+      ctx.restore();
+    }
+
+    // ---- "Ask for help" banner (Olly's post: the most important point) ----
+    if(val('helpt')){
+      var bw = Math.min(W - 160, 1360), bx = (W - bw)/2, bpad = 26, hSize = 23;
+      ctx.save();
+      ctx.font = font(800, 25); ctx.letterSpacing = '2px';
+      var htl = wrap(val('helpt').toUpperCase(), bw - bpad*2);
+      ctx.letterSpacing = '0px';
+      ctx.font = font(500, hSize);
+      var hxl = val('helpx') ? wrap(val('helpx'), bw - bpad*2) : [];
+      var bh = bpad + htl.length*34 + (hxl.length ? 10 + hxl.length*hSize*1.42 : 0) + bpad*0.8;
+      var by = y + 34;
+      var bg = ctx.createLinearGradient(bx, 0, bx + bw, 0);
+      bg.addColorStop(0, 'rgba(217,70,239,0.22)'); bg.addColorStop(1, 'rgba(184,79,232,0.12)');
+      ctx.fillStyle = bg; ctx.strokeStyle = '#d946ef'; ctx.lineWidth = 3;
+      ctx.shadowColor = 'rgba(217,70,239,0.35)'; ctx.shadowBlur = 22;
+      roundRect(bx, by, bw, bh, 18); ctx.fill(); ctx.shadowBlur = 0; ctx.stroke();
+      ctx.textAlign = 'center';
+      var hy = by + bpad;
+      ctx.font = font(800, 25); ctx.letterSpacing = '2px'; ctx.fillStyle = '#f0abfc';
+      htl.forEach(function(line){ hy += 28; ctx.fillText(line, W/2, hy); hy += 6; });
+      ctx.letterSpacing = '0px';
+      ctx.font = font(500, hSize); ctx.fillStyle = '#f8f4ff';
+      hy += 10;
+      hxl.forEach(function(line){ hy += hSize*1.42; ctx.fillText(line, W/2, hy - hSize*0.3); });
+      ctx.restore();
+      y = by + bh;
+    }
+
+    // ---- road geometry: ONE row, left to right (landscape, 2026-09-29) ----
+    // Olly asked for landscape. START -> 1 -> 2 -> 3 -> heart on one row, the
+    // road waving gently between circles; labels under each circle in four
+    // equal columns. Height is measured from the tallest label, and the image
+    // grows taller than 1080 only if the text needs it.
+    var R = 96 * pct('nsz');
+    var roadW = 24;
+    var startX = 90;
+    var colL = 160, colR = W - 70;                   // columns sit between these
+    var colW = (colR - colL) / 5;
+    var maxW = colW - 18;
+    var xs = [0,1,2,3,4].map(function(i){ return colL + colW*(i + 0.5); });
+    var x0 = xs[0], x1 = xs[1], x2 = xs[2], x3 = xs[3], x4 = xs[4];
+    var LG = 18;                                     // node -> label gap
+    var hRow = Math.max.apply(null, [
+      [val('k0').toUpperCase(), val('d0').toUpperCase(), val('r0'), val('w0')],
+      [val('k1').toUpperCase(), val('d1').toUpperCase(), val('r1'), val('w1')],
+      [val('k2').toUpperCase(), val('d2').toUpperCase(), val('r2'), val('w2')],
+      [val('k3').toUpperCase(), val('d3').toUpperCase(), val('r3'), val('w3')],
+      [val('dest').toUpperCase(), '', val('destsub')]
+    ].map(function(t){ return label(0, 0, t[0], t[1], t[2], '#fff', maxW, false, t[3]); }));
+    var areaTop = y + R + 96;                        // first possible row centre (room for START HERE)
+    var span = R + LG + hRow;                        // row centre -> bottom of the labels
+    // "Why this order?" note under the road: measure it first
+    var whyLines = [], whyH = 0, whySize = 27;
+    if(val('whyt')){
+      ctx.save(); ctx.font = font(500, whySize);
+      whyLines = val('whyx') ? wrap(val('whyx'), Math.min(W - 220, 1500)) : [];
+      // balance the lines so the last one isn't a single orphan word
+      if(whyLines.length > 1){
+        var whyTotal = ctx.measureText(val('whyx')).width;
+        whyLines = wrap(val('whyx'), Math.ceil(whyTotal / whyLines.length) + 60);
+      }
+      ctx.restore();
+      whyH = 84 + 30 + whyLines.length*whySize*1.42;
+    }
+    var needH = Math.max(BASE_H, Math.ceil(areaTop + span + whyH + 90));
+    if(needH !== H){ cv.height = needH; H = needH; return render(); }
+    var free = (H - 90) - (areaTop + span + whyH);
+    var r1 = areaTop + Math.max(0, free/2);          // the row's centre line
+    var wave = 46;                                   // how far the road dips between circles
+
+    // road: start -> 1 straight, then a gentle wave between each pair
+    function waveSeg(xa, xb, dir, col){
+      ctx.strokeStyle = col;
+      ctx.beginPath(); ctx.moveTo(xa, r1);
+      ctx.bezierCurveTo(xa + (xb - xa)*0.35, r1 + dir*wave*1.35, xa + (xb - xa)*0.65, r1 + dir*wave*1.35, xb, r1);
+      ctx.stroke();
+    }
+    ctx.save(); ctx.lineWidth = roadW; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 12;
+    ctx.strokeStyle = C.help[0];
+    ctx.beginPath(); ctx.moveTo(startX, r1); ctx.lineTo(x0, r1); ctx.stroke();
+    waveSeg(x0, x1,  1, C.s1[0]);
+    waveSeg(x1, x2, -1, C.s2[0]);
+    waveSeg(x2, x3,  1, C.s3[0]);
+    waveSeg(x3, x4, -1, C.dest[0]);
+    ctx.restore();
+
+    // start dot + label
+    ctx.save();
+    ctx.fillStyle = '#f8f4ff'; ctx.strokeStyle = C.help[0]; ctx.lineWidth = 7;
+    ctx.beginPath(); ctx.arc(startX, r1, 17, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    if(val('start')){
+      ctx.save(); ctx.font = font(700, 20); ctx.letterSpacing = '3px'; ctx.fillStyle = '#E1A6FF'; ctx.textAlign = 'center';
+      ctx.fillText(val('start').toUpperCase(), startX + 2, r1 - 78);
+      ctx.restore();
+      chevron(startX, r1 - 46, 'down', 22, '#E1A6FF');
+    }
+
+    // direction chevrons at the middle of each wave (bezier midpoint = 0.75 x dip)
+    chevron((x0 + x1)/2, r1 + wave*1.35*0.75, 'right', 26, '#f8f4ff');
+    chevron((x1 + x2)/2, r1 - wave*1.35*0.75, 'right', 26, '#f8f4ff');
+    chevron((x2 + x3)/2, r1 + wave*1.35*0.75, 'right', 26, '#f8f4ff');
+    chevron((x3 + x4)/2, r1 - wave*1.35*0.75, 'right', 26, '#f8f4ff');
+
+    // decorative dash accents (reference style), above the downward waves
+    dashes((x0 + x1)/2 - 40, r1 - 60, C.s1[0]);
+    dashes((x2 + x3)/2 - 40, r1 - 60, C.s3[0]);
+
+    // nodes
+    ringNode(x0, r1, R, C.help, iconBubble, 0);
+    ringNode(x1, r1, R, C.s1, iconWaves, 1);
+    ringNode(x2, r1, R, C.s2, iconPencil, 2);
+    ringNode(x3, r1, R, C.s3, iconEye, 3);
+    ringNode(x4, r1, R, C.dest, iconHeart, 0);
+
+    // labels
+    label(x0, r1 + R + LG, val('k0').toUpperCase(), val('d0').toUpperCase(), val('r0'), '#f8f4ff', maxW, true, val('w0'));
+    label(x1, r1 + R + LG, val('k1').toUpperCase(), val('d1').toUpperCase(), val('r1'), '#f8f4ff', maxW, true, val('w1'));
+    label(x2, r1 + R + LG, val('k2').toUpperCase(), val('d2').toUpperCase(), val('r2'), '#f8f4ff', maxW, true, val('w2'));
+    label(x3, r1 + R + LG, val('k3').toUpperCase(), val('d3').toUpperCase(), val('r3'), '#f8f4ff', maxW, true, val('w3'));
+    label(x4, r1 + R + LG, val('dest').toUpperCase(), '', val('destsub'), '#f0abfc', maxW);
+
+    if(val('whyt')){
+      var fy = r1 + R + LG + hRow + 84;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(225,166,255,0.35)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(W/2 - 160, fy - 26); ctx.lineTo(W/2 + 160, fy - 26); ctx.stroke();
+      ctx.textAlign = 'center';
+      ctx.font = font(700, 21); ctx.letterSpacing = '4px'; ctx.fillStyle = '#E1A6FF';
+      ctx.fillText(val('whyt').toUpperCase(), W/2 + 2, fy + 10);
+      ctx.letterSpacing = '0px';
+      ctx.font = font(500, whySize); ctx.fillStyle = 'rgba(248,244,255,0.86)';
+      whyLines.forEach(function(line, i){ ctx.fillText(line, W/2, fy + 30 + (i + 1)*whySize*1.42 - whySize*0.3); });
+      ctx.restore();
+    }
+  }
+
+  // ---- save / load (this browser only) ----
+  var STORE_KEY = 'ohtools:roadmap-generator-v4';
+  var saveBtn = el('save'), saveState = el('savestate');
+  function markDirty(){ saveBtn.classList.add('dirty'); saveState.textContent = 'Unsaved changes'; }
+  saveBtn.addEventListener('click', function(){
+    var data = {};
+    ALL_IDS.forEach(function(k){ data[k] = el(k).value; });
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); saveBtn.classList.remove('dirty'); saveState.textContent = 'Saved ✓ — reopens like this'; }
+    catch(e){ saveState.textContent = 'Couldn’t save in this browser.'; }
+  });
+  el('defaults').addEventListener('click', function(){
+    if(!confirm('Clear your saved changes and go back to the built-in defaults?')) return;
+    try { localStorage.removeItem(STORE_KEY); } catch(e){}
+    location.reload();
+  });
+  (function restore(){
+    var data = null;
+    try { data = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch(e){}
+    if(!data) return;
+    ALL_IDS.forEach(function(k){ if(data[k] != null) el(k).value = data[k]; });
+    saveState.textContent = 'Saved changes loaded';
+  })();
+
+  ALL_IDS.forEach(function(k){ el(k).addEventListener('input', function(){ render(); markDirty(); }); });
+
+  el('dl').addEventListener('click', function(){
+    cv.toBlob(function(blob){
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'attraction-formula-roadmap.png';
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+    }, 'image/png');
+  });
+
+  if(document.fonts && document.fonts.load){
+    Promise.all([
+      document.fonts.load('800 58px Poppins'), document.fonts.load('800 40px Poppins'),
+      document.fonts.load('700 21px Poppins'), document.fonts.load('500 25px Poppins')
+    ]).then(render, render);
+  }
+  render();
+})();
+</script>
+</body></html>

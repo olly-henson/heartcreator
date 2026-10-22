@@ -6,11 +6,11 @@ This folder holds **three** self-contained HTML tools Olly opens in Chrome:
 
 1. **`cover-photo-generator.html`** — the **community cover** (hero image for the
    Skool group; doubles as a mobile Facebook ad creative). Output **1920 × 1020**.
-2. **`program-cover-generator.html`** — the **classroom module covers** for
-   *The Attraction Formula* (one per module inside Skool). Output **1460 × 752**
+2. **`program-cover-generator.html`** — the **classroom course covers**
+   (text only on flat purple since 2026-10-22). Output **1460 × 752**
    (Skool's exact classroom thumbnail spec). See the dedicated section below.
 3. **`about-page-tile-generator.html`** — the **Skool About Page tiles** for the
-   three steps. Output **1400 × 790**. Same look as tool 2 but keeps the section
+   three steps. Output **1400 × 790**. Same look as the old photo version of tool 2, but keeps the section
    **sub text**. See the dedicated section below.
 
 Also in the folder, not yet documented here in full: `join-card-generator.html`
@@ -124,63 +124,30 @@ After changes, tell Olly to **reload the file in Chrome**.
 
 ## Tool 2 — `program-cover-generator.html`
 
-Built 2026-09-09. Makes the **classroom module covers** for *The Attraction
-Formula* inside Skool. Output **1460 × 752** (Skool's exact classroom thumbnail
-spec — any other ratio crops and the Skool menu button overlaps the art).
+Makes the **classroom course covers** for *The Attraction Formula* inside Skool.
+Output **1460 × 752** (Skool's exact classroom thumbnail spec).
 
-### What it produces
+### Current design (Olly, 2026-10-22): text only
 
-Four covers, chosen with the **01 / 02 / 03 / Start** buttons:
+- **No photos.** A flat brand-purple background (default `#4B1466`; swatches
+  `#3A0F52`, `#5E1A80`, `#150818`) with the course name in **big, bold, white
+  capitals, centred** (Poppins 800). Nothing else: no eyebrow, no brand mark,
+  no glow or stardust. Olly's reference: plain block-colour course tiles that
+  "just say exactly what it is", e.g. GET STARTED.
+- Text wraps on its own with **balanced line lengths**, and shrinks to fit a
+  safe area of 80% width × 66% height. `|` forces a line break.
+- Editable cover list (add / rename / remove). Defaults: GET STARTED,
+  THE ATTRACTION FORMULA, BONUS MATERIALS, THE CONSCIOUS CREATOR PROGRAM.
+- Download this PNG / Download all / Save my changes (localStorage key
+  `attraction-formula-classroom-covers-v2`). Filenames
+  `attraction-formula-<slug>.png`.
+- The canvas must load Poppins 800 explicitly (`document.fonts.load('800 100px
+  Poppins')`) before the first render, or it draws in a system font.
+- The old photo + eyebrow version (Regulate / Rewrite / Rehearse) is kept as
+  `program-cover-generator.photo-version-backup.html`.
 
-| Button | Eyebrow (default) | Keyword (default) |
-|---|---|---|
-| 01 | STEP 01 | REGULATE |
-| 02 | STEP 02 | REWRITE |
-| 03 | STEP 03 | REHEARSE |
-| Start | START HERE | GET STARTED |
-
-The three R's — **Regulate → Rewrite → Rehearse** — are the module steps Olly
-teaches. NB this is a **three**-R sequence with *Rehearse*, which differs from
-the "Four R's (Regulate/Rewrite/Remember/Relive)" in
-`memory/brand-guidelines-heart-attractor.md` and the argument sheet. Olly is
-aware; treat the classroom module naming as its own thing until the wider
-positioning docs are reconciled.
-
-### Design (locked with Olly, 2026-09-09)
-
-- **Only** an eyebrow + the big keyword. Ghost background number and the body /
-  description line were both explicitly removed — the keyword is the whole focus.
-- Cosmic gradient bg `#4B1466 → #150818 → #0A0510`, single magenta accent
-  `#B84FE8`, light accent `#E1A6FF`, brand mark "THE ATTRACTION FORMULA"
-  bottom-left. Poppins only. Follows `memory/brand-guidelines-heart-attractor.md`.
-- Each cover can carry **its own photo** of a person doing that step's work,
-  full-bleed behind a magenta **veil** (kept heavy on the left so the keyword
-  keeps contrast). Step 1 ships with an embedded default
-  (`../assets/step-regulate-source.png`); the rest start photo-less.
-- Keyword auto-shrinks if it would run past the safe area.
-
-### Structure
-
-- `STEPS` array — one object per cover: `{ eb, n, img, ix, iy, iz, scrim }`
-  (eyebrow, keyword, Image obj, x %, y %, zoom %, veil %). Per-cover photo +
-  framing are held here, in memory only — nothing is persisted, so slider
-  positions reset on reload. To make a framing permanent, bake the `ix/iy/iz/
-  scrim` numbers into the `STEPS` default for that cover.
-- One `render()`, redraws on every control change. `EMBEDDED_REGULATE` near the
-  top holds the Step-1 photo as a base64 data URI (injected via a python
-  `str.replace` on a `__REGULATE_B64__` placeholder — don't hand-edit the blob).
-- Controls: cover selector · Eyebrow · Keyword · Choose image / Remove ·
-  Image X / Y / zoom · Veil strength · Keyword size · Glow strength · Stardust ·
-  Gradient on keyword · Download this PNG · Download all 4 · Reset text.
-
-### Swapping / adding a photo
-
-Same pattern as tool 1: resize ≤1600 px wide with PIL, `quality≈82`,
-base64-encode, replace the placeholder/constant via python (not the Edit tool —
-the blob is ~270 KB). Or just hand Olly the tool and let him use **Choose
-image…** at runtime.
-
-After any change, tell Olly to **reload the file in Chrome**.
+After any change, render it in headless Edge and look at it, then tell Olly to
+**reload the file in Chrome**.
 
 ---
 
@@ -189,7 +156,7 @@ After any change, tell Olly to **reload the file in Chrome**.
 Built 2026-09-09. Makes the **Skool About Page tiles** for the three steps.
 Output **1400 × 790** (the About Page tile size Olly specified).
 
-Structurally a fork of Tool 2 with two deliberate differences:
+Structurally a fork of the old photo version of Tool 2 (now `program-cover-generator.photo-version-backup.html`) with two deliberate differences:
 
 - **1400 × 790**, not 1460 × 752.
 - **Sub text is shown.** Tool 2 (classroom covers) drops the description line;

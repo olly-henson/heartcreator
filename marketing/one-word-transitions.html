@@ -1,0 +1,995 @@
+<title>One-Word Transitions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a single reading column of example posts; the transition lines are marked in the margin so the pattern jumps out while you scroll. */
+:root{
+  --paper:#F3F4F6; --surface:#FFFFFF; --ink:#1C2230; --muted:#5B6274; --line:#D9DCE3;
+  --word:#1E6A5A; --word-soft:#DCEFE9; --old:#8C6328; --old-soft:#F4EBDB;
+  --f-display:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151B; --surface:#1A1E26; --ink:#E7E9EF; --muted:#A1A8B7; --line:#2E3440;
+  --word:#62C7AC; --word-soft:#153029; --old:#DDAE66; --old-soft:#2E2619; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151B; --surface:#1A1E26; --ink:#E7E9EF; --muted:#A1A8B7; --line:#2E3440;
+  --word:#62C7AC; --word-soft:#153029; --old:#DDAE66; --old-soft:#2E2619; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--f-body);padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0}
+h1{font-size:46px;line-height:1.05}
+h2{font-size:32px;line-height:1.15}
+h3{font-size:22px;line-height:1.2}
+p{margin:0}
+.label{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hint{color:var(--muted);max-width:62ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--paper);padding-block:10px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+nav a{font:600 13px/1 var(--f-body);color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:9px 13px;background:var(--surface)}
+nav a:hover,nav a:focus-visible{border-color:var(--word);outline:none}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs button{white-space:nowrap;flex:none}
+.tabs button{font:600 15px/1 var(--f-body);background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:12px 14px;cursor:pointer;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--word)}
+.tabs button:focus-visible{outline:2px solid var(--word);outline-offset:2px}
+.pattern{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.pattern ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.word{color:var(--word);font-weight:700}
+article{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px 26px 30px;display:flex;flex-direction:column;gap:18px;scroll-margin-top:70px}
+.ahead{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:16px}
+.swap{display:flex;align-items:center;gap:10px;font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.swap .w{background:var(--word-soft);color:var(--word);padding:6px 9px;border-radius:5px}
+.swap .arrow{color:var(--muted)}
+.post{display:flex;flex-direction:column;gap:12px;max-width:62ch}
+.post p.list{padding-left:2px}
+.post .tr{position:relative;background:var(--word-soft);border-radius:6px;padding:8px 12px;font-weight:600}
+.post .tr::before{content:"Transition";position:absolute;left:-2px;top:-9px;font:500 9.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--word);background:var(--surface);padding:2px 5px;border-radius:3px}
+.post .old{color:var(--old);font-weight:600}
+.post .ph{color:var(--muted);font-style:italic;border:1px dashed var(--line);border-radius:6px;padding:8px 12px}
+.post h4{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 0}
+.copy{align-self:flex-start;font:600 13px/1 var(--f-body);padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.copy:hover{border-color:var(--word)}
+.copy:focus-visible{outline:2px solid var(--word);outline-offset:2px}
+blockquote{margin:0;border-left:3px solid var(--word);padding:6px 0 6px 16px;display:flex;flex-direction:column;gap:8px}
+@media (max-width:520px){h1{font-size:38px}article{padding:20px 18px 24px}}
+</style>
+
+<div class="wrap">
+  <header class="stack" style="display:flex;flex-direction:column;gap:10px">
+    <span class="label">Belief-shifting post examples · dating</span>
+    <h1>One-Word Transitions</h1>
+    <p class="hint">Example posts built the same way as the Authority Matrix post. Each one reveals a single missing word, keeps repeating it, then turns it into the name of the solution. The green boxes are the transition lines.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Examples">
+    <button role="tab" id="tab-original" aria-controls="panel-original" aria-selected="true">Original (FitPro)</button>
+    <button role="tab" id="tab-dating" aria-controls="panel-dating" aria-selected="false" tabindex="-1">Dating</button>
+    <button role="tab" id="tab-ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1">AI in business</button>
+    <button role="tab" id="tab-weight" aria-controls="panel-weight" aria-selected="false" tabindex="-1">Weight loss</button>
+    <button role="tab" id="tab-trending" aria-controls="panel-trending" aria-selected="false" tabindex="-1">Trending</button>
+    <button role="tab" id="tab-focus" aria-controls="panel-focus" aria-selected="false" tabindex="-1">Current focus</button>
+  </div>
+  <div id="panel-original" role="tabpanel" aria-labelledby="tab-original" style="display:flex;flex-direction:column;gap:28px">
+    <section class="pattern">
+      <span class="label">The original</span>
+      <h2>The Authority Matrix post</h2>
+      <p>The FitPro post every example here is modelled on, word for word as it was written. The same marks are used so you can compare: green boxes are the transition lines, amber is the old beliefs.</p>
+      <p class="hint">This is someone else's post, kept here as a reference. Keep the page private, or remove this tab before sharing it.</p>
+    </section>
+    <div id="postsOriginal" style="display:flex;flex-direction:column;gap:28px"></div>
+  </div>
+
+  <div id="panel-dating" role="tabpanel" aria-labelledby="tab-dating" hidden style="flex-direction:column;gap:28px">
+
+  <nav aria-label="Jump to">
+    <a href="#pattern">The pattern</a>
+    <a href="#security">Security</a>
+    <a href="#presence">Presence</a>
+    <a href="#clarity">Clarity</a>
+    <a href="#yours">Your version</a>
+  </nav>
+
+  <section class="pattern" id="pattern" style="scroll-margin-top:70px">
+    <h2>Why the transition feels easy</h2>
+    <p>The one word does all the work. Once it's revealed, it gets reused to name the pain, then the result, so by the time the solution is named after it, the name feels like the obvious next step.</p>
+    <ol>
+      <li><b>Reveal the word</b> in capitals: <span class="word">"IT'S SECURITY."</span></li>
+      <li><b>Show who already has it</b> and why it works: "It's simple psychology…"</li>
+      <li><b>Name the pain after the word:</b> "symptoms of low <span class="word">security</span>… that's just what happens when you don't feel <span class="word">secure</span>."</li>
+      <li><b>Picture the result with the word:</b> "With real <span class="word">security</span>, how much easier…"</li>
+      <li><b>Turn the word into the solution:</b> "That's why I built <span class="word">The Security Blueprint</span>", then one sentence on what it does.</li>
+      <li><b>Repeat the word in what's inside:</b> "<span class="word">Security</span> Step #1…"</li>
+    </ol>
+    <p class="hint">The solution name is just the word plus a simple container: Blueprint, Method, Map, Matrix, Formula or Code. Proof is left as placeholders in these examples, because the coaches aren't real.</p>
+  </section>
+
+  <div id="posts" style="display:flex;flex-direction:column;gap:28px"></div>
+
+  <section class="pattern" id="yours" style="scroll-margin-top:70px">
+    <span class="label">Your version</span>
+    <h2>Attraction → The Attraction Formula</h2>
+    <p>Your word could be <span class="word">ATTRACTION</span>, because your audience's old beliefs are all about fixing. It keeps your product name and gives you the same clean transition.</p>
+    <blockquote>
+      <p>Can you guess what it is?</p>
+      <p><b>IT'S ATTRACTION.</b></p>
+      <p>You've been trying to <i>fix</i> your way to love. But love isn't fixed. It's attracted…</p>
+      <p>…and you can't attract someone while you believe something's wrong with you.</p>
+      <p class="word">That's why I built The Attraction Formula.</p>
+    </blockquote>
+  </section>
+  </div>
+
+  <div id="panel-ai" role="tabpanel" aria-labelledby="tab-ai" hidden style="flex-direction:column;gap:28px">
+    <section class="pattern">
+      <span class="label">AI in business</span>
+      <h2>Same pattern, different industry</h2>
+      <p>The pain: coaches and online business owners using AI, but everything it writes sounds generic. The one word: <span class="word">CONTEXT</span>. It gets revealed, used to name the symptoms ("symptoms of no context"), used to picture the result ("With real context…"), then becomes <span class="word">The Context Engine</span>.</p>
+    </section>
+    <div id="postsAi" style="display:flex;flex-direction:column;gap:28px"></div>
+  </div>
+
+  <div id="panel-weight" role="tabpanel" aria-labelledby="tab-weight" hidden style="flex-direction:column;gap:28px">
+    <section class="pattern">
+      <span class="label">Weight loss</span>
+      <h2>Three people, three missing words</h2>
+      <p>The same industry can have a different one word for each audience. Pick the word that answers <i>their</i> old belief.</p>
+      <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+        <li><b>Women over 40 who diet and regain:</b> <span class="word">MUSCLE</span> → The Muscle Method</li>
+        <li><b>Busy men who start every Monday and stop by Thursday:</b> <span class="word">ROUTINE</span> → The Routine Reset</li>
+        <li><b>Emotional eaters:</b> <span class="word">CALM</span> → The Calm Code</li>
+      </ul>
+    </section>
+    <nav aria-label="Jump to" style="position:static">
+      <a href="#muscle">Muscle</a>
+      <a href="#routine">Routine</a>
+      <a href="#calm">Calm</a>
+    </nav>
+    <div id="postsWl" style="display:flex;flex-direction:column;gap:28px"></div>
+  </div>
+
+  <div id="panel-trending" role="tabpanel" aria-labelledby="tab-trending" hidden style="flex-direction:column;gap:28px">
+    <section class="pattern">
+      <span class="label">Trending</span>
+      <h2>Four big problems people are talking about</h2>
+      <p>Picked from what I know of the biggest conversations online up to mid-2026, not live trend data, so check they're still hot before you build on one.</p>
+      <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+        <li><b>Coming off weight-loss jabs and fearing the regain:</b> <span class="word">HABITS</span> → The Habit Bridge</li>
+        <li><b>Phone addiction and doomscrolling:</b> <span class="word">ATTENTION</span> → The Attention Reset</li>
+        <li><b>Adult loneliness and struggling to make friends:</b> <span class="word">REGULAR</span> → The Regulars Method</li>
+        <li><b>Burnout:</b> <span class="word">RECOVERY</span> → The Recovery Rhythm</li>
+      </ul>
+    </section>
+    <nav aria-label="Jump to" style="position:static">
+      <a href="#habits">Habits</a>
+      <a href="#attention">Attention</a>
+      <a href="#regular">Regular</a>
+      <a href="#recovery">Recovery</a>
+    </nav>
+    <div id="postsTr" style="display:flex;flex-direction:column;gap:28px"></div>
+  </div>
+
+  <div id="panel-focus" role="tabpanel" aria-labelledby="tab-focus" hidden style="flex-direction:column;gap:28px">
+    <section class="pattern">
+      <span class="label">Current focus</span>
+      <h2>The right emotional state</h2>
+      <p>Built from the final core message in the Messaging Center. The pain is being in the wrong emotional state: anxious, worried, irritated or impatient, so you keep attracting people who match it. What they need is the right emotional state. The Attraction Formula Meditation puts them in it, so they attract the right person.</p>
+      <p>The one thing: <span class="word">THE RIGHT EMOTIONAL STATE</span> → <span class="word">The Attraction Formula Meditation</span>.</p>
+      <p class="hint">Uses your real story as proof. Check the price line ($30 a month after the trial) is still right, and what HeartMath allows when you name their research.</p>
+    </section>
+    <div id="postsFocus" style="display:flex;flex-direction:column;gap:28px"></div>
+  </div>
+</div>
+
+<script>
+const AI_POSTS = [
+  { id:"context", word:"Context", mech:"The Context Engine", who:"An AI consultant for coaches and online business owners whose AI content sounds generic",
+    lines:[
+      "If you're a coach who's gone all in on AI…",
+      "Paying for ChatGPT, Claude and three other tools…",
+      "Saving every prompt pack that lands in your feed…",
+      "Watching YouTube tutorials at 11pm to keep up...",
+      "But everything AI writes for you still sounds like everyone else, I bet I know why…",
+      "Because now that everyone has the same tools, your audience can spot AI content in about two seconds…",
+      "And when smart business owners still aren't getting results from AI…",
+      "5 things run through their mind:",
+      "?1. \"I NEED BETTER PROMPTS\"", "?2. \"I NEED THE NEWEST TOOL\"", "?3. \"I NEED TO DO AN AI COURSE\"", "?4. \"I NEED TO AUTOMATE EVERYTHING\"", "?5. \"I NEED TO POST MORE CONTENT\"",
+      "Or the latest \"10 ChatGPT hacks\" the AI gurus are pushing this week…",
+      "But the truth is...",
+      "You've hired the smartest assistant in the world and given them no brief.",
+      "That's why everything they hand back feels generic...",
+      "Here's what I mean:",
+      "🙃 You could buy 1,000 prompts…\n🙃 Subscribe to every new AI tool…\n🙃 And post 5 times a day…",
+      "But without this one thing... it'll still sound like a robot wrote it.",
+      "Can you guess what it is?",
+      "!IT'S CONTEXT.",
+      "AI doesn't know your voice, your clients or your offer. Unless you tell it.",
+      "Think about the business owners you've seen getting amazing results from AI…",
+      "They're not using secret prompts. They've taught it who they are, who they help and how they talk…",
+      "It's simple. AI can only be as good as what you give it. Give it nothing, and you get the average of the internet…",
+      "Some people stumble into this by accident... others build it on purpose…",
+      "~[Client story here: a real client whose AI content started sounding like them, and what it changed]",
+      "But a lot of AI gurus keep it complicated… so they can sell you the next prompt pack 🤣",
+      "!Instead, you're living with the symptoms of no context:",
+      "- Your posts sound like everyone else's\n- You spend longer editing AI drafts than writing them yourself\n- You keep seeing words you'd never use\n- And your content gets likes but no clients",
+      "!That's just what happens when AI has no context…",
+      "Yet when your AI HAS context... man, things get easy…",
+      "It writes in your voice. It knows your clients' biggest worries. It suggests ideas you'd actually post. And your first draft is 90% done.",
+      "That's why so many business owners give up on AI…",
+      "Not because they're bad with tech, but because nobody showed them how to give it context…",
+      "But not you.",
+      "So answer me this:",
+      "!With real context...",
+      "🤩 How much time would you get back every week?\n🤩 How much easier would it be to show up consistently?\n🤩 And how much more would your content actually sound like you?",
+      "!That's why I built The Context Engine.",
+      "!The Context Engine is a simple 3-part setup that teaches your AI who you are, who you help and how you talk, so everything it writes sounds like you on your best day…",
+      "Without learning to code\nWithout buying more tools\nWithout spending hours on prompts",
+      "That's why I've got a pretty sweet deal for you...",
+      "❌ I'm not asking for $3,000 for a done-for-you setup\n❌ I'm not asking for $1,000\n❌ I'm not even asking for $300…",
+      "You can get The Context Engine for $67.",
+      "And if your AI doesn't sound more like you within 7 days, I'll refund every penny.",
+      "So why just $67? Two reasons:",
+      "1) I KNOW this works for anyone who sets it up, and having some skin in the game means you'll actually do it.",
+      "2) My not-so-sinister secret… I'm hoping it saves you so much time you'll want me to build the rest of your AI system.",
+      "#What's inside The Context Engine",
+      "!Context Layer #1: Voice. Turn your best posts into a voice guide your AI follows every time.",
+      "!Context Layer #2: Clients. Feed it your clients' real words, so it knows exactly what they're worried about.",
+      "!Context Layer #3: Offer. Give it your offer and your argument, so every piece of content leads somewhere.",
+      "If AI is costing you more time than it saves, don't you owe it to yourself to give it the one thing it's missing?",
+      "Drop a \"CONTEXT\" below 👇 and I'll send you the link."
+    ]}
+];
+
+const WL_POSTS = [
+  { id:"muscle", word:"Muscle", mech:"The Muscle Method", who:"A strength coach for women over 40 who keep losing and regaining the same weight",
+    lines:[
+      "If you're a woman over 40 who's been trying to lose weight for years…",
+      "Counting every calorie in an app…",
+      "Doing hour-long cardio classes 4 times a week…",
+      "Cutting out carbs, then sugar, then wine...",
+      "But the same 10 pounds keep coming back, I bet I know why…",
+      "Because your body at 45 doesn't respond the way it did at 25, and most diet advice was never written for you…",
+      "And when hard-working women still can't keep the weight off…",
+      "5 things run through their mind:",
+      "?1. \"I NEED TO EAT LESS\"", "?2. \"I NEED TO DO MORE CARDIO\"", "?3. \"I NEED TO CUT OUT CARBS\"", "?4. \"I NEED MORE WILLPOWER\"", "?5. \"I NEED TO FIND THE RIGHT DIET\"",
+      "Or whatever the latest diet trend on your feed says this month…",
+      "But the truth is...",
+      "You're trying to fill a bath with the plug out.",
+      "That's why the weight keeps draining back on...",
+      "Here's what I mean:",
+      "🙃 You could eat 1,200 calories a day…\n🙃 Run every single morning…\n🙃 And give up every food you love…",
+      "But without this one thing... the weight will still come back.",
+      "Can you guess what it is?",
+      "!IT'S MUSCLE.",
+      "Think about the women you know in their 50s and 60s who look strong and seem to eat whatever they like…",
+      "They're not living on salads. Most of them lift weights…",
+      "It's simple. We tend to lose muscle as we get older, and less muscle makes it harder to keep weight off. Eating less and doing more cardio can make that worse…",
+      "Some women built muscle by accident through sport... others build it on purpose…",
+      "~[Client story here: a real client who started lifting and finally kept the weight off]",
+      "But a lot of the diet industry keeps you dieting… because they make money every time you start again 🤣",
+      "!Instead, you're living with the symptoms of too little muscle:",
+      "- You're hungry and tired most of the time\n- The scales go back up the moment you relax\n- You feel soft even when you're \"good\"\n- And you dread holidays and meals out",
+      "!That's just what happens when you don't have enough muscle…",
+      "Yet when you BUILD muscle... everything gets easier…",
+      "You eat proper meals and still keep the weight off. Your clothes fit better. You feel strong carrying the shopping up the stairs. And food stops being the thing you think about all day.",
+      "That's why so many women give up…",
+      "Not because they lack willpower, but because nobody told them to build muscle…",
+      "But not you.",
+      "So answer me this:",
+      "!With more muscle...",
+      "🤩 How much easier would it be to keep the weight off?\n🤩 How much more could you enjoy your food?\n🤩 And how much more confident would you feel in your clothes?",
+      "!That's why I built The Muscle Method.",
+      "!The Muscle Method is a simple 3-sessions-a-week plan that builds strength and muscle, so your body helps you keep the weight off…",
+      "Without living at the gym\nWithout cutting out the food you love\nWithout another diet",
+      "❌ Not $200 a month for a personal trainer\n❌ Not $100\n❌ Not even $50…",
+      "The Muscle Method is $29 a month, and the first 14 days are free.",
+      "Why so low? I know it works for women who stick with it, and I'm hoping you love it so much you stay for good.",
+      "#What's inside The Muscle Method",
+      "!Muscle Session #1: Lift. Three 30-minute strength sessions a week you can do at home or the gym.",
+      "!Muscle Session #2: Fuel. Simple meals with enough protein so the muscle actually builds.",
+      "!Muscle Session #3: Progress. Small weekly steps you can keep up for good.",
+      "If you're tired of losing the same 10 pounds every year, don't you owe it to yourself to build the one thing that keeps it off?",
+      "Drop a \"STRONG\" below 👇 and I'll send you the link."
+    ]},
+  { id:"routine", word:"Routine", mech:"The Routine Reset", who:"A coach for busy men who start a new plan every Monday and stop by Thursday",
+    lines:[
+      "If you're a busy guy who's tried to get back in shape more times than you can count…",
+      "Downloading the new workout app every January…",
+      "Going hard at the gym 6 days a week…",
+      "Meal-prepping on Sunday like your life depends on it...",
+      "But by Thursday it's all fallen apart, I bet I know why…",
+      "Because your life is busier than ever, and every plan out there assumes you've got 2 hours a day spare…",
+      "And when driven, capable men still can't stick to anything…",
+      "5 things run through their mind:",
+      "?1. \"I NEED MORE MOTIVATION\"", "?2. \"I NEED A STRICTER DIET\"", "?3. \"I NEED TO TRAIN HARDER\"", "?4. \"I NEED MORE DISCIPLINE\"", "?5. \"I NEED TO WAIT TILL WORK CALMS DOWN\"",
+      "Or whatever the shredded influencer on your feed says you're doing wrong…",
+      "But the truth is...",
+      "You're sprinting the first mile of a marathon.",
+      "That's why you're out of breath by Thursday...",
+      "Here's what I mean:",
+      "🙃 You could train 6 days a week…\n🙃 Cut out every takeaway…\n🙃 And start again every single Monday…",
+      "But without this one thing... you'll be back to square one by the weekend.",
+      "Can you guess what it is?",
+      "!IT'S ROUTINE.",
+      "Think about the guys you know who stay in shape year round…",
+      "They're not more motivated than you. They just have a routine so simple it runs on autopilot…",
+      "It's simple psychology. Motivation runs out by Wednesday. A routine doesn't need it…",
+      "Some guys fall into a routine by accident... others build it on purpose…",
+      "~[Client story here: a real client who stopped restarting and stayed consistent for months]",
+      "But a lot of fitness gurus keep it extreme… because extreme sells 🤣",
+      "!Instead, you're living with the symptoms of no routine:",
+      "- You're either all in or completely off\n- One busy week wipes out a month of progress\n- Your gym membership costs more than you use it\n- And you feel like you've let yourself down again",
+      "!That's just what happens when you don't have a routine…",
+      "Yet when you HAVE a routine... it gets easy…",
+      "You train 3 times a week without thinking about it. Busy weeks don't knock you off track. The weight comes off steadily. And you stop starting again.",
+      "That's why so many busy men stay stuck…",
+      "Not because they're lazy, but because they keep trying plans built for people with no job, no kids and no life…",
+      "But not you.",
+      "So answer me this:",
+      "!With a simple routine...",
+      "🤩 How much easier would it be to stay on track during a busy week?\n🤩 How much better would you feel by the summer?\n🤩 And how good would it feel to stop starting again?",
+      "!That's why I built The Routine Reset.",
+      "!The Routine Reset is a simple 3-workouts-a-week plan that fits around your job and your family, so getting in shape becomes automatic…",
+      "Without 2-hour gym sessions\nWithout giving up the food you love\nWithout relying on motivation",
+      "❌ Not $300 a month for coaching\n❌ Not $150\n❌ Not even $75…",
+      "The Routine Reset is $39, and if you haven't stuck to it for 30 days, you get your money back.",
+      "#What's inside The Routine Reset",
+      "!Routine Rule #1: Anchor it. Tie your workouts to something you already do every day.",
+      "!Routine Rule #2: Shrink it. 30-minute sessions you can do even on your worst week.",
+      "!Routine Rule #3: Never miss twice. The one rule that stops a bad day becoming a bad month.",
+      "If you're tired of starting again every Monday, don't you owe it to yourself to build a routine that actually sticks?",
+      "Comment \"ROUTINE\" 👇 and I'll send it over."
+    ]},
+  { id:"calm", word:"Calm", mech:"The Calm Code", who:"A coach for emotional eaters who know what to eat but can't stop eating when they're stressed",
+    lines:[
+      "If you're someone who knows exactly what you should be eating…",
+      "Following the meal plan perfectly all day…",
+      "Keeping the cupboards free of biscuits…",
+      "Promising yourself \"tomorrow I'll be good\"...",
+      "But every evening you end up eating when you're not even hungry, I bet I know why…",
+      "Because life is more stressful than ever, and food is the fastest comfort there is…",
+      "And when smart people who know all the nutrition facts still can't stop…",
+      "5 things run through their mind:",
+      "?1. \"I NEED MORE WILLPOWER\"", "?2. \"I NEED A STRICTER PLAN\"", "?3. \"I NEED TO STOP BUYING SNACKS\"", "?4. \"I NEED TO TRACK EVERYTHING\"", "?5. \"I NEED TO FIND THE PERFECT DIET\"",
+      "Or whatever new rule the diet world is pushing this week…",
+      "But the truth is...",
+      "You're mopping the floor with the tap still running.",
+      "That's why it never stays dry...",
+      "Here's what I mean:",
+      "🙃 You could follow the strictest diet in the world…\n🙃 Lock every cupboard…\n🙃 And track every bite for a year…",
+      "But without this one thing... the stress will still send you to the fridge.",
+      "Can you guess what it is?",
+      "!IT'S CALM.",
+      "Think about people who seem to have a relaxed relationship with food…",
+      "They don't have more willpower. They just have other ways to calm down after a hard day…",
+      "It's simple. When you're stressed, your body wants comfort fast. Food is the quickest comfort most of us know. Give your body another way to calm down, and the pull of the fridge gets weaker…",
+      "Some people learned to calm themselves as kids... the rest of us learn it on purpose…",
+      "~[Client story here: a real client whose evening eating stopped once they had another way to unwind]",
+      "But a lot of the diet industry keeps blaming your willpower… so you keep buying the next plan 🤣",
+      "!Instead, you're living with the symptoms of no calm:",
+      "- You're \"good\" all day, then lose it at 9pm\n- You eat standing up at the kitchen counter\n- You feel guilty straight after\n- And you wonder what's wrong with you",
+      "!That's just what happens when you don't have a way to feel calm…",
+      "Yet when you CAN calm yourself... food gets quiet…",
+      "Evenings feel peaceful. You eat when you're hungry and stop when you're full. The guilt goes. And the weight starts coming off without a fight.",
+      "That's why so many people stay stuck…",
+      "Not because they're weak, but because nobody showed them that the problem was never the food…",
+      "But not you.",
+      "So answer me this:",
+      "!With real calm...",
+      "🤩 How much easier would evenings feel?\n🤩 How much lighter would you feel without the guilt?\n🤩 And how much easier would it be to stick to the plan you already know?",
+      "!That's why I built The Calm Code.",
+      "!The Calm Code is a simple 10-minute daily practice that gives your body another way to calm down, so stress stops sending you to the fridge…",
+      "Without another diet\nWithout banning foods\nWithout relying on willpower",
+      "❌ Not $1,000 for a 12-week program\n❌ Not $300\n❌ Not even $100…",
+      "The Calm Code is $19 a month, with 7 days free to try it.",
+      "#What's inside The Calm Code",
+      "!Calm Step #1: Pause. A 2-minute reset for the moment you head to the kitchen.",
+      "!Calm Step #2: Unwind. A 10-minute evening practice that takes the place of the snack.",
+      "!Calm Step #3: Notice. How to spot your stress before it turns into eating.",
+      "If you're tired of being \"good\" all day and losing it every night, don't you owe it to yourself to try the one thing that isn't another diet?",
+      "Drop a \"CALM\" below 👇 and I'll send you the link."
+    ]}
+];
+
+const TR_POSTS = [
+  { id:"habits", word:"Habits", mech:"The Habit Bridge", who:"A nutrition coach for people coming off weight-loss injections who are scared the weight will come back",
+    lines:[
+      "If you've lost weight on a weight-loss jab…",
+      "Finally fitting into clothes you'd given up on…",
+      "Hearing \"you look amazing\" for the first time in years…",
+      "Barely thinking about food for months...",
+      "But you're terrified of what happens when you stop, I bet I know why…",
+      "Because millions of people are now on these injections, and everyone's heard the stories about the weight piling back on…",
+      "And when people who've done so well still feel scared…",
+      "5 things run through their mind:",
+      "?1. \"I NEED TO STAY ON IT FOREVER\"", "?2. \"I NEED TO EAT EVEN LESS\"", "?3. \"I NEED A STRICT DIET FOR WHEN I STOP\"", "?4. \"I NEED MORE WILLPOWER\"", "?5. \"I NEED TO WEIGH MYSELF EVERY DAY\"",
+      "Or the scary headlines your feed keeps showing you…",
+      "But the truth is...",
+      "The jab built you a bridge. Nobody taught you to walk across it.",
+      "That's why stopping feels like stepping off a cliff...",
+      "Here's what I mean:",
+      "🙃 You could eat 800 calories a day…\n🙃 Weigh yourself every morning…\n🙃 And ban every food you love…",
+      "But without this one thing... the old patterns will come back when the appetite does.",
+      "Can you guess what it is?",
+      "!IT'S HABITS.",
+      "The injection quietened your appetite. It didn't change what you do at 9pm on a Tuesday…",
+      "Think about the people you know who've kept weight off for years without any help…",
+      "They're not hungry all the time. They've just got habits that do the work for them…",
+      "~[Client story here: a real client who built their habits while losing weight and kept it off]",
+      "But a lot of the industry only sells the next prescription… nobody sells what comes after 🤣",
+      "!Instead, you're living with the symptoms of no new habits:",
+      "- You don't know what \"normal eating\" looks like any more\n- You're scared of your own appetite\n- You panic at every pound on the scales\n- And part of you is waiting for it all to go wrong",
+      "!That's just what happens when nobody helps you build the habits…",
+      "Yet when you HAVE the habits... the fear goes…",
+      "You know what to eat without thinking. Your appetite feels manageable. And the weight stays where it is because your days are set up for it.",
+      "Not because you're weak, but because the jab was only ever half the plan…",
+      "But not you.",
+      "So answer me this:",
+      "!With the right habits...",
+      "🤩 How much calmer would you feel about the future?\n🤩 How much easier would it be to enjoy food again?\n🤩 And how good would it feel to keep what you've worked for?",
+      "!That's why I built The Habit Bridge.",
+      "!The Habit Bridge is a simple 12-week program that builds the eating habits to keep your weight off, so the results stay with you…",
+      "Without extreme diets\nWithout counting every calorie\nWithout living in fear of the scales",
+      "~Always make decisions about your medication with your doctor. The Habit Bridge works alongside that.",
+      "❌ Not $2,000 for a private dietitian\n❌ Not $500\n❌ Not even $200…",
+      "The Habit Bridge is $49 a month, and you can cancel any time.",
+      "#What's inside The Habit Bridge",
+      "!Habit #1: Plates. What a normal meal looks like now, so you're never guessing.",
+      "!Habit #2: Evenings. How to handle the time of day the old patterns come back.",
+      "!Habit #3: Check-ins. A weekly 5-minute review that catches drift before it becomes a regain.",
+      "If you're scared of losing what you've worked so hard for, don't you owe it to yourself to build the habits that keep it?",
+      "Drop a \"BRIDGE\" below 👇 and I'll send you the link."
+    ]},
+  { id:"attention", word:"Attention", mech:"The Attention Reset", who:"A coach for people who feel addicted to their phone and can't focus any more",
+    lines:[
+      "If you've been trying to get off your phone for months…",
+      "Setting screen time limits you ignore by lunchtime…",
+      "Deleting TikTok, then downloading it again…",
+      "Watching videos about \"dopamine detoxes\" on… your phone...",
+      "But you still can't read a page of a book without reaching for it, I bet I know why…",
+      "Because apps are now built by some of the smartest people in the world to keep you scrolling, and it's you versus all of them…",
+      "And when switched-on people still can't focus on anything…",
+      "5 things run through their mind:",
+      "?1. \"I NEED MORE DISCIPLINE\"", "?2. \"I NEED TO DELETE ALL MY APPS\"", "?3. \"I NEED A DUMB PHONE\"", "?4. \"I NEED A DOPAMINE DETOX\"", "?5. \"I NEED STRICTER SCREEN LIMITS\"",
+      "Or the latest productivity hack from someone with a million followers…",
+      "But the truth is...",
+      "You're trying to diet in a sweet shop.",
+      "Your willpower was never going to win...",
+      "Here's what I mean:",
+      "🙃 You could delete every app…\n🙃 Lock your phone in a box…\n🙃 And do a 30-day detox…",
+      "But without this one thing... you'll be back to 6 hours a day within a week.",
+      "Can you guess what it is?",
+      "!IT'S ATTENTION.",
+      "Your phone isn't the problem. Your attention has been trained to jump every few seconds, and it can be trained back…",
+      "Think about the people you know who can sit and read for an hour…",
+      "They don't have more willpower. They just practise paying attention to one thing at a time…",
+      "It's simple. Attention is like a muscle. Scrolling trains it to jump. A little daily practice trains it to stay…",
+      "~[Client story here: a real client who went from 6 hours of screen time to reading again]",
+      "But a lot of the advice out there just tells you to throw your phone away… which lasts about three days 🤣",
+      "!Instead, you're living with the symptoms of scattered attention:",
+      "- You pick up your phone without even deciding to\n- You can't watch a film without checking it\n- Your work takes twice as long as it should\n- And you feel tired but wired every night",
+      "!That's just what happens when your attention gets trained to scroll…",
+      "Yet when you RETRAIN your attention... life slows down…",
+      "You read again. You get your work done by lunch. You're actually there with the people you love. And your phone goes back to being a tool.",
+      "Not because you're weak, but because nobody taught you how to train your attention…",
+      "But not you.",
+      "So answer me this:",
+      "!With your attention back...",
+      "🤩 How much more would you get done every day?\n🤩 How much more present would you be with your family?\n🤩 And how much calmer would your evenings feel?",
+      "!That's why I built The Attention Reset.",
+      "!The Attention Reset is a simple 21-day program that retrains your attention a few minutes a day, so you can focus again and put your phone down without a fight…",
+      "Without throwing your phone away\nWithout extreme detoxes\nWithout relying on willpower",
+      "❌ Not $500 for a digital wellness retreat\n❌ Not $200\n❌ Not even $100…",
+      "The Attention Reset is $27, and if your screen time hasn't dropped in 21 days, I'll refund you.",
+      "#What's inside The Attention Reset",
+      "!Attention Drill #1: Notice. Catch the reach for your phone before it happens.",
+      "!Attention Drill #2: Stay. A 5-minute daily practice that builds your focus back up.",
+      "!Attention Drill #3: Replace. What to do instead, so the urge has somewhere to go.",
+      "If you're tired of losing hours to your phone, don't you owe it to yourself to get your attention back?",
+      "Comment \"FOCUS\" 👇 and I'll send it over."
+    ]},
+  { id:"regular", word:"Regular", mech:"The Regulars Method", who:"A coach for adults who feel lonely and find it hard to make new friends",
+    lines:[
+      "If you're an adult who's been trying to make new friends…",
+      "Downloading friend-finding apps…",
+      "Going to one-off meetups and networking events…",
+      "Saying \"we should grab a coffee sometime\" to everyone...",
+      "But you still don't have anyone to call on a Saturday, I bet I know why…",
+      "Because more of us work from home, live away from where we grew up and spend evenings on screens than ever before…",
+      "And when warm, friendly people still feel lonely…",
+      "5 things run through their mind:",
+      "?1. \"I NEED TO BE MORE OUTGOING\"", "?2. \"I NEED TO GO TO MORE EVENTS\"", "?3. \"I NEED TO BE MORE INTERESTING\"", "?4. \"I NEED TO PUT MYSELF OUT THERE MORE\"", "?5. \"I NEED TO FIX MY SOCIAL ANXIETY\"",
+      "Or whatever the latest \"how to make friends\" video says…",
+      "But the truth is...",
+      "You're planting seeds and never coming back to water them.",
+      "That's why nothing ever grows...",
+      "Here's what I mean:",
+      "🙃 You could go to 50 different events…\n🙃 Meet 200 new people…\n🙃 And swap numbers with all of them…",
+      "But without this one thing... you'll still be on your own on Saturday.",
+      "Can you guess what it is?",
+      "!IT'S BEING A REGULAR.",
+      "Think about how you made friends at school, at uni or at your first job…",
+      "You didn't network. You just saw the same people, in the same place, again and again…",
+      "It's simple psychology. Friendships grow from time spent together, over and over. One-off events skip the bit that actually makes friends…",
+      "Some people stay regulars by accident through school or work... adults have to do it on purpose…",
+      "~[Client story here: a real client who joined one weekly thing and made a real friend]",
+      "But a lot of the advice tells you to be more confident… as if that's what was missing 🤣",
+      "!Instead, you're living with the symptoms of never being a regular:",
+      "- You meet people but it never goes past small talk\n- You've got hundreds of contacts and no one to call\n- Every event feels like starting from zero\n- And you wonder if something's wrong with you",
+      "!That's just what happens when you're never a regular anywhere…",
+      "Yet when you BECOME a regular... friendships grow by themselves…",
+      "People know your name. Chats get deeper each week. Someone invites you for a drink after. And one day you realise you've got friends again.",
+      "Not because you're boring or awkward, but because adult life took away the places where you used to be a regular…",
+      "But not you.",
+      "So answer me this:",
+      "!As a regular...",
+      "🤩 How much easier would it be to make friends without forcing it?\n🤩 How much lighter would your weekends feel?\n🤩 And how good would it feel to have people who really know you?",
+      "!That's why I built The Regulars Method.",
+      "!The Regulars Method is a simple 8-week plan to find your weekly places and become a regular, so real friendships can grow naturally…",
+      "Without becoming an extrovert\nWithout endless networking\nWithout awkward one-off events",
+      "❌ Not $1,000 for a coach\n❌ Not $300\n❌ Not even $100…",
+      "The Regulars Method is $29. If you haven't found your first regular spot in 30 days, I'll refund you.",
+      "#What's inside The Regulars Method",
+      "!Regular Step #1: Pick. How to choose one weekly thing you'll actually keep going to.",
+      "!Regular Step #2: Show up. What to do in weeks 1 to 4, when it still feels awkward.",
+      "!Regular Step #3: Invite. The simple way to turn a familiar face into a friend.",
+      "If you're tired of having no one to call on a Saturday, don't you owe it to yourself to become someone's regular?",
+      "Drop a \"REGULAR\" below 👇 and I'll send you the link."
+    ]},
+  { id:"recovery", word:"Recovery", mech:"The Recovery Rhythm", who:"A coach for burnt-out professionals who are exhausted even after time off",
+    lines:[
+      "If you're someone who's running on empty…",
+      "Answering emails at 10pm…",
+      "Living for the weekend, then spending it recovering…",
+      "Booking holidays you're too tired to enjoy...",
+      "But you come back from time off just as exhausted, I bet I know why…",
+      "Because work now follows you home on your phone, and there's no clear end to the day any more…",
+      "And when capable, hard-working people still feel burnt out…",
+      "5 things run through their mind:",
+      "?1. \"I NEED A LONGER HOLIDAY\"", "?2. \"I NEED BETTER TIME MANAGEMENT\"", "?3. \"I NEED MORE SELF-CARE\"", "?4. \"I NEED TO PUSH THROUGH THIS BUSY PATCH\"", "?5. \"I NEED TO QUIT MY JOB\"",
+      "Or the next \"5am morning routine\" from someone who doesn't have kids…",
+      "But the truth is...",
+      "You're trying to charge your phone once a year.",
+      "That's why the battery's always at 2%...",
+      "Here's what I mean:",
+      "🙃 You could take 3 weeks off…\n🙃 Book a spa weekend every month…\n🙃 And buy every productivity app going…",
+      "But without this one thing... you'll be exhausted again by Wednesday.",
+      "Can you guess what it is?",
+      "!IT'S RECOVERY.",
+      "Not once a year. Every day.",
+      "Think about the people you know who work hard and still seem to have energy…",
+      "They're not working less. They just switch off properly, a little, every single day…",
+      "It's simple. Stress is fine when your body gets to recover from it. Burnout is what happens when it never does…",
+      "~[Client story here: a real client who stopped dreading Mondays without changing jobs]",
+      "But a lot of the wellness world sells you a retreat… when what you need is 10 minutes on a Tuesday 🤣",
+      "!Instead, you're living with the symptoms of no recovery:",
+      "- You wake up tired even after 8 hours\n- Small things make you snap\n- You can't switch off, even on holiday\n- And you've stopped enjoying things you used to love",
+      "!That's just what happens when you never truly recover…",
+      "Yet when you BUILD IN recovery... energy comes back…",
+      "You finish work and actually stop. Weekends feel like weekends. You're patient with the people you love. And work stops feeling like a weight.",
+      "Not because you're weak, but because nobody ever taught you how to recover every day…",
+      "But not you.",
+      "So answer me this:",
+      "!With daily recovery...",
+      "🤩 How much more energy would you have by Friday?\n🤩 How much more patient would you be at home?\n🤩 And how much better would you be at your job?",
+      "!That's why I built The Recovery Rhythm.",
+      "!The Recovery Rhythm is a simple daily routine of short recovery breaks that lets your body switch off properly, so you get your energy back without quitting your job…",
+      "Without a 3-week holiday\nWithout changing careers\nWithout a 5am morning routine",
+      "❌ Not $3,000 for a wellness retreat\n❌ Not $500\n❌ Not even $150…",
+      "The Recovery Rhythm is $19 a month, and the first 7 days are free.",
+      "#What's inside The Recovery Rhythm",
+      "!Recovery Break #1: Morning. A 5-minute start that sets your energy for the day.",
+      "!Recovery Break #2: Midday. A 3-minute reset between meetings.",
+      "!Recovery Break #3: Switch-off. The 10-minute ritual that ends the working day.",
+      "If you're tired of being tired, don't you owe it to yourself to recover every day, not once a year?",
+      "Drop a \"RECOVER\" below 👇 and I'll send you the link."
+    ]}
+];
+
+const FOCUS_POSTS = [
+  { id:"state", word:"The right emotional state", mech:"The Attraction Formula Meditation", who:"For driven, growth-minded singles who've done years of inner work and tried every method",
+    lines:[
+      "If you're someone who's driven in every other part of your life…",
+      "You've read the books, listened to the podcasts and done the courses…",
+      "You've done the therapy, the journaling and the breathwork…",
+      "You know your attachment style better than your star sign...",
+      "But love is the one area that won't move, however much work you do, I bet I know why…",
+      "Because there's never been more self-help telling you what's wrong with you, and every week there's a new thing to fix…",
+      "And when driven, self-aware people watch friends who never did any inner work settle down…",
+      "5 things run through their mind:",
+      "?1. \"I NEED TO HEAL MY ATTACHMENT STYLE\"", "?2. \"I NEED TO LOVE MYSELF FIRST\"", "?3. \"I NEED TO READ ONE MORE BOOK\"", "?4. \"I NEED TO LEARN HOW TO TEXT\"", "?5. \"I NEED TO FIX WHAT'S WRONG WITH ME\"",
+      "Or, as most people put it: \"Once I've learned what's wrong with me and fixed it, I'll meet my person.\"",
+      "But the truth is...",
+      "You're chasing a cat rather than letting it come to you.",
+      "And the harder you chase, the faster it runs...",
+      "Here's what I mean:",
+      "🙃 You could read 50 more books…\n🙃 Listen to every relationship podcast going…\n🙃 And learn every texting rule there is…",
+      "But without this one thing... you'll keep attracting the wrong people.",
+      "Can you guess what it is?",
+      "!IT'S THE RIGHT EMOTIONAL STATE.",
+      "Who you attract isn't about what you know. It's about how you feel every time you think about love.",
+      "You might feel free at work and full of joy with your friends. But the moment you think about dating, what comes up? Worry? Frustration? Anxiety?",
+      "Because people pick up on it. And you attract people who match it.",
+      "Think about your friends who settled down…",
+      "They weren't even trying. Most of them have never opened a self-help book 🤣 They were just happy, relaxed and getting on with life…",
+      "It's simple psychology. When you're anxious, you overlook calm, kind people and put up with the ones who keep you guessing. When you feel good, you notice and choose completely differently…",
+      "And you can't learn your way into the right emotional state from a book, a course or a podcast…",
+      "I know because I tried. I met my wife when I focused on how I was feeling every day, improving it and shifting my state, rather than learning more about what I should be doing.",
+      "~[Optional: a member's real words, with their permission]",
+      "But the self-help world keeps you in your head… because there's always another book, podcast or course to sell 🤣",
+      "!Instead, you're living with the symptoms of the wrong emotional state:",
+      "- You keep attracting time wasters\n- The people you like won't commit\n- Dates feel awkward and forced\n- The right people walk straight past you\n- And part of you doubts it'll ever happen",
+      "!That's just what happens when you're stuck in the wrong emotional state…",
+      "You can know everything about attachment styles and how to text someone. But if every time you think about being with someone you feel fear, frustration, impatience or worry, that's the state you bring to every date and every text. So you keep attracting people who keep you feeling that way. It's a loop.",
+      "Yet when you're in the RIGHT emotional state... everything changes…",
+      "You're better able to spot high-quality partners. You naturally repel the time wasters and the people who aren't right for you. The right people start showing up in your world, and things unfold in a natural and exciting way.",
+      "That's why so many lovely, driven people stay stuck…",
+      "Not because something's wrong with them, but because they've been working on what they know instead of how they feel…",
+      "But not you.",
+      "So answer me this:",
+      "!In the right emotional state...",
+      "🤩 How much easier would it be to attract someone who's actually ready?\n🤩 How much time would you save on the wrong ones?\n🤩 And how good would it feel to let love come to you?",
+      "!That's why I built The Attraction Formula Meditation.",
+      "!The Attraction Formula Meditation is a simple 10-minute daily meditation that puts you in the right emotional state, so you attract the right person…",
+      "It shifts you from guilt, shame, fear and worry to joy, freedom, appreciation and excitement.",
+      "And it's not positive thinking. Positive thinking happens in your head and fades the moment life gets stressful. This changes how you actually feel.",
+      "Researchers at the HeartMath Institute found that when you focus on your heart, breathe slowly and feel something like appreciation, your heart rhythm becomes smooth and steady. They call it heart coherence. It's measurable, and it's linked to feeling calm, safe and connected.",
+      "I trained as a heart coherence practitioner because of how much better it made me feel.",
+      "Without another book to read\nWithout fixing what's wrong with you\nWithout forcing it",
+      "That's why I've got a pretty sweet deal for you...",
+      "❌ I'm not asking for $3,000 for a year of coaching\n❌ I'm not asking for $500 for a retreat\n❌ I'm not even asking for $150 for another course…",
+      "You can try The Attraction Formula Meditation free for 7 days.",
+      "You'll pop your card in to start, but if it's not for you, cancel before day 7 and you won't pay a penny. If you stay, it's $30 a month.",
+      "So why free, Olly? Two reasons:",
+      "1) I KNOW this works for people who actually practise it, and 7 days is enough to feel the difference.",
+      "2) My not-so-sinister secret… I'm hoping you love it so much you stay.",
+      "#So what's inside The Attraction Formula Meditation?",
+      "3 simple steps, 10 minutes a day:",
+      "!Attraction Step #1: Drop In. Bring your attention out of your head and into your heart.",
+      "!Attraction Step #2: Open Up. Begin to slow your breathing, so your body relaxes and opens up.",
+      "!Attraction Step #3: Feel It. Generate a new emotional state, aligned with the future you want with your partner.",
+      "No rules. No homework. No forcing.",
+      "Plus:",
+      "🎁 Belief-Building Trainings & Materials\n💬 Daily Personal Support From Olly",
+      "If you've learned everything there is to learn and love still hasn't moved, don't you owe it to yourself to stop working on what you know and start changing how you feel?",
+      "Drop a \"STATE\" below 👇 and I'll send you the link."
+    ]}
+];
+
+const ORIGINAL_POSTS = [
+  { id:"authority", label:"The original post", word:"Authority", mech:"The Authority Matrix", who:"The original post: an online business coach selling to fitness professionals",
+    lines:[
+      "If you're a Fitpro spending hours on social media per day…",
+      "Posting 🔥pics with all the perfect angles…",
+      "Writing posts authentic AF with your 💖baked right in...",
+      "Sharing stories from your darkest times...",
+      "But your DMs aren't leading to new clients, I bet I know why…",
+      "Because unlike 2017, the online fitness space is packed with trainers just like you…",
+      "And when average coaches aren't making the 💰they deserve…",
+      "5 things run through their mind:",
+      "?1. \"I NEED MORE CONTENT\"", "?2. \"I NEED MORE TRAFFIC\"", "?3. \"I NEED TO RUN ADS\"", "?4. \"I NEED TO DM MORE PEOPLE\"", "?5. \"I NEED TO LEARN TO SELL BETTER\"",
+      "Or a bunch of other things the gurus are telling you that just aren't working…",
+      "But the truth is...",
+      "You're baking a cake without the flour.",
+      "That's why everything seems like it's falling apart...",
+      "Because without one stupid simple ingredient all that effort will go to waste…",
+      "Here's what I mean:",
+      "🙃You could post 10x per day…\n🙃Send 100s of DMs…\n🙃And pay $1000s for ads…",
+      "But without this one thing...you won't get sales.",
+      "Can you guess what it is?",
+      "!IT'S AUTHORITY.",
+      "Just like Lululemon...or Beats....or Yeezys…",
+      "You need to STAND OUT in a crowded market…",
+      "Your tribe needs to see you as THE expert…",
+      "Not just \"some fitness trainer\"...",
+      "The person that'll make them look sexy, get lean, or build the body of their dreams...",
+      "It's simple psychology…",
+      "A few influencers have done it on accident…",
+      "Others on purpose…",
+      "Like one of my clients Brian Decosta:",
+      "\"I nearly tripled my revenue in just the first month I worked with Ben. I was blown away that it was even possible to have that kind of growth. I would recommend Ben to any of my friends that are ready to take their (fitness) businesses to the next level!\"",
+      "But a lot of the gurus can really make business complicated…",
+      "So they can sell some high-ticket course…",
+      "Or their \"exclusive\" mastermind 🤣",
+      "!Instead, you're over here experiencing the symptoms of \"low status\":",
+      "- People don't take you seriously\n- People say you're \"too expensive\"\n- People ignore your DMs\n- People are repelled by your offer posts\n- And closing feels impossible no matter the price",
+      "!That's just what happens when you don't have authority…",
+      "Yet when you become the \"go-to\" in your niche...man things get easy…",
+      "DMs from 🔥leads will pop into your inbox like magic.",
+      "Like your freakin' Dumbeldore 🧙‍♂️",
+      "And when you hop on a sales call...",
+      "They're relieved when you reveal the price...",
+      "Because they know your worth every penny…",
+      "That's why so many fitpros can't close on the phone…",
+      "Not because they're bad at sales, but because they have 0 respect…",
+      "They have 0 authority…",
+      "But not you.",
+      "Because you're the ONLY solution to their problems…",
+      "In their minds, you're better than clen, tren, and Giambi juice...",
+      "It's like mind control…",
+      "All the celebs use it...why not you?",
+      "You'll be like Oprah to a 40 year old mom in 1997…",
+      "Every word you say is gospel…",
+      "Your the priest, the president, the boss, the doctor…",
+      "Authority makes everything else easy AF...",
+      "That's why I doubled down on helping my clients like Brian...",
+      "Build their authority online…\nFind their message…\nAnd broadcast it around the world…",
+      "Even clients with less than 1000 followers…",
+      "So answer me this:",
+      "!With authority...",
+      "🤩How much easier would it be to attract your dream client?\n🤩How much easier to book your calendar solid with hot leads?\n🤩How much easier would it be to enroll those prospects?\n🤩And how much easier would it be to close clients at much higher prices?",
+      "That's why fitpros have paid me more than $8,000 for my programs…",
+      "Because with this one hack…",
+      "They went from:\n$100/mo > $2500 packages (without a single objection)\nPosting 4 times a day without a single call booked > Going on vaca and getting 7 calls that week!",
+      "Because they have authority…",
+      "And after working in the trenches with my people, I've simplified it so a 5th grader could do it…",
+      "227 fitpros and counting...",
+      "!I call it the Authority Matrix.",
+      "!The Authority Matrix is a stupid simple blueprint to build your Authority Message that attracts converts your ideal clients profitably…",
+      "Without spending all day on social media\nWithout spending a dime on ads",
+      "Yet because I've simplified it one easy to follow formula…",
+      "I can teach it to you in just 60min…",
+      "That's why I have a pretty sweet deal for you today...",
+      "Unlike my $8,000 package, you can get it for just a fraction...",
+      "❌I'm not asking for $1,000\n❌I'm not asking for $500\n❌I'm not even asking for $200…",
+      "For a limited time, I'm offering access to my Authority Matrix Masterclass for less than a month at LifeTime Fitness at only $97…",
+      "But you're going to risk nothing today…",
+      "Because I'm so confident this will get you hot leads, book more calls, and help you enroll at higher prices I'm offering you...",
+      "𝟏𝟎𝟎% 𝐍𝐎 𝐐𝐔𝐄𝐒𝐓𝐈𝐎𝐍𝐒 𝐀𝐒𝐊𝐄𝐃 𝐆𝐔𝐀𝐑𝐀𝐍𝐓𝐄𝐄!",
+      "I swear on Trump's name...If that means anything 🤣",
+      "So after the training, if you feel it wasn't worth 100X what you invested I'll send every dime back to your bank account...",
+      "So if you have any shred of belief in yourself, get in now BEFORE your competitors beat you to the punch…",
+      "Because this ad is going out to every fitness professional around the world.",
+      "So why just $97, Ben?",
+      "Two reasons:",
+      "1) I KNOW this will help the right person who takes action on it.",
+      "I could give this away for free, but people don't value free stuff and thus don't take action.",
+      "Having some skin in the game will get you motivated to put this in place…",
+      "2) I have a sinister secret…",
+      "I'm secretly hoping that you'll get such great results from this that you'll want to work more closely with me to take your fitness business to the next level.",
+      "I ain't making any money on this...Facebook is. You know that.",
+      "So there's my secret…",
+      "I'm making the barrier of entry to the Authority Matrix as low as I possibly can…",
+      "In hopes that you'll put it in place, get more clients (and a LOT more PROFIT) and then use some of that profit to hire me to 2x, 3x or 5x that profit further…",
+      "Because at the end of the day, this is my secret sauce…",
+      "#So what's inside the training?",
+      "After you invest in the Authority Matrix Masterclass for only $47, here's what you'll get:",
+      "!Authority Framework #1: How to position yourself and offer in a way that makes it unique and different from all of your competitors... This is how you can attract people who are willing to pay you what you're worth.",
+      "!Authority Framework #2: How to have one big-central-idea in your brand that will do all the heavy lifting in client attraction for you… Instead of making all the same claims and having all the same \"challenges\" at the same price as all of your competitors… Once you master this, you'll be able to put premium pricing on your programs and keep them constantly filled!",
+      "!Authority Framework #3: How to show your ideal client a simple path to get what they want from taking action on your offer… So you can easily convert every lead that qualifies as your ideal customer and keep them around paying you much longer!",
+      "!Authority Framework #4: How to use the \"Inception Method\" to create a message that speaks to the conversation INSIDE your prospect's head. This allows you to create instant trust and rapport so that your prospects will buy at better than 80% conversion!",
+      "If your personal training is not bringing in the revenue you want, don't you owe it to yourself to do everything you can to fix it?",
+      "The Authority Matrix Masterclass will help you do this!",
+      "You can grab your copy here, while this sale is still going, drop a \"GIVE IT TO ME\" or a funny gif below👇",
+      "𝟏𝟎𝟎% 𝐍𝐎 𝐐𝐔𝐄𝐒𝐓𝐈𝐎𝐍𝐒 𝐀𝐒𝐊𝐄𝐃 𝐆𝐔𝐀𝐑𝐀𝐍𝐓𝐄𝐄!",
+      "Remember, if it's not worth 100x what you invested I'll send you every single penny back...",
+      "I'm putting my money on the line so you don't have to risk a cent…",
+      "Attract and enroll more clients with my authority matrix, you know what to do, you're welcome to message me about it too 🙂"
+    ]}
+];
+
+/* Line markers: "!" transition, "?" old belief, "~" placeholder, "#" sub-heading. */
+const POSTS = [
+  { id:"security", word:"Security", mech:"The Security Blueprint", who:"A dating coach for women who keep losing good men around date three", cta:"SECURE",
+    lines:[
+      "If you're a woman who's been dating for years…",
+      "Swiping every evening with your best photos…",
+      "Planning the perfect \"casual\" reply to every text…",
+      "Reading every book on attachment styles...",
+      "But the good ones still drift away after date three, I bet I know why…",
+      "Because unlike 10 years ago, dating apps make everyone feel replaceable…",
+      "And when smart, lovely women still can't find someone who sticks around…",
+      "5 things run through their mind:",
+      "?1. \"I NEED TO PLAY IT COOLER\"", "?2. \"I NEED TO TEXT LESS\"", "?3. \"I NEED BETTER PHOTOS\"", "?4. \"I NEED TO BE LESS 'TOO MUCH'\"", "?5. \"I NEED TO FIND A MAN WHO'S READY\"",
+      "Or a bunch of other rules the dating gurus keep handing you…",
+      "But the truth is...",
+      "You're building a beautiful house on sand.",
+      "That's why it keeps falling down around date three...",
+      "Here's what I mean:",
+      "🙃 You could wait 3 hours to text back…\n🙃 Get professional photos taken…\n🙃 And follow every rule in the book…",
+      "But without this one thing... he'll still drift.",
+      "Can you guess what it is?",
+      "!IT'S SECURITY.",
+      "Not his. Yours.",
+      "Think about the women you know who met someone great without the drama…",
+      "They weren't following rules. They just felt secure in themselves, so they didn't chase, panic or perform…",
+      "It's simple psychology. Secure feels relaxed, and relaxed is attractive. Insecure turns every unanswered text into an emergency…",
+      "Some women have it by accident... others build it on purpose…",
+      "~[Client story here: a real client who stopped chasing and met someone who stayed]",
+      "But a lot of dating coaches make it complicated… so they can sell you 50 texting scripts 🤣",
+      "!Instead, you're living with the symptoms of low security:",
+      "- You check your phone every few minutes waiting for a reply\n- You go quiet to seem \"cool\", then hate yourself for it\n- You shrink yourself so you're not \"too much\"\n- You keep ending up with men who leave you guessing",
+      "!That's just what happens when you don't feel secure…",
+      "Yet when you DO feel secure... man, dating gets easy…",
+      "You text when you feel like it. You say what you want on date one. The men who play games just fall away. And the ones who stay feel calm, not confusing.",
+      "That's why so many women stay stuck…",
+      "Not because they're too much, but because nobody ever showed them how to feel secure…",
+      "But not you.",
+      "So answer me this:",
+      "!With real security...",
+      "🤩 How much easier would it be to be yourself on a date?\n🤩 How much easier would it be to spot the ones who aren't serious?\n🤩 And how much calmer would you feel waiting for a reply?",
+      "!That's why I built The Security Blueprint.",
+      "!The Security Blueprint is a simple 30-day program that builds security from the inside, so you stop chasing and start attracting men who stay…",
+      "Without rules\nWithout playing games\nWithout pretending to be someone you're not",
+      "That's why I've got a pretty sweet deal for you...",
+      "❌ I'm not asking for $2,000 for 1-to-1 coaching\n❌ I'm not asking for $500\n❌ I'm not even asking for $200…",
+      "You can join The Security Blueprint for $47.",
+      "And if it doesn't help you feel calmer in 30 days, I'll refund every penny.",
+      "So why just $47? Two reasons:",
+      "1) I KNOW this works for women who actually do it, and having some skin in the game means you will.",
+      "2) My not-so-sinister secret… I'm hoping you love it so much you'll want to work with me one day.",
+      "#What's inside The Security Blueprint",
+      "!Security Step #1: Calm. How to stop the panic when he goes quiet, so you don't send that text.",
+      "!Security Step #2: Voice. How to say what you want early without feeling \"too much\".",
+      "!Security Step #3: Standards. How to spot the men who'll stay before you're invested.",
+      "If you're tired of losing good men at date three, don't you owe it to yourself to build the one thing that makes them stay?",
+      "Drop a \"SECURE\" below 👇 and I'll send you the link."
+    ]},
+  { id:"presence", word:"Presence", mech:"The Presence Method", who:"A dating coach for men whose dates keep fizzling out",
+    lines:[
+      "If you're a guy who's been putting in the work…",
+      "Hitting the gym 5 days a week…",
+      "Learning the best openers and the \"right\" things to say…",
+      "Upgrading your clothes, your car and your photos...",
+      "But your dates keep fizzling out after the first drink, I bet I know why…",
+      "Because these days women have endless options in their pocket, and they can feel it when you're not really there…",
+      "And when decent guys still can't get a second date…",
+      "5 things run through their mind:",
+      "?1. \"I NEED BETTER LINES\"", "?2. \"I NEED TO GET IN BETTER SHAPE\"", "?3. \"I NEED TO MAKE MORE MONEY\"", "?4. \"I NEED MORE CONFIDENCE\"", "?5. \"I NEED TO BE MORE ALPHA\"",
+      "Or whatever the latest dating podcast is shouting about…",
+      "But the truth is...",
+      "You're polishing a car with no engine in it.",
+      "It looks great on the drive. It just doesn't go anywhere...",
+      "Here's what I mean:",
+      "🙃 You could memorise 100 openers…\n🙃 Bench double your bodyweight…\n🙃 And take her to the best restaurant in town…",
+      "But without this one thing... she still won't feel it.",
+      "Can you guess what it is?",
+      "!IT'S PRESENCE.",
+      "Think about that friend who isn't the best-looking or the richest… but somehow always has someone great…",
+      "He's not saying anything clever. He's just fully THERE. Relaxed, listening, in the moment…",
+      "It's simple psychology. People feel attraction when they feel seen. You can't see someone while you're stuck in your head planning your next line…",
+      "Some guys have it naturally... the rest of us learn it on purpose…",
+      "~[Client story here: a real client who stopped performing and got the second date]",
+      "But a lot of dating gurus keep it complicated… so they can sell you another \"seduction system\" 🤣",
+      "!Instead, you're living with the symptoms of low presence:",
+      "- You're planning what to say while she's still talking\n- Silences feel awful, so you fill them\n- You replay the whole date in your head on the drive home\n- And you get the \"you're a really nice guy, but…\" text",
+      "!That's just what happens when you're not present…",
+      "Yet when you ARE present... dates get easy…",
+      "The conversation flows. Silences feel comfortable. She leans in. And asking for date two feels natural, not nerve-racking.",
+      "That's why so many good guys stay single…",
+      "Not because they're boring, but because they're nervous and stuck in their heads…",
+      "But not you.",
+      "So answer me this:",
+      "!With real presence...",
+      "🤩 How much easier would first dates feel?\n🤩 How much easier would it be to get the second date?\n🤩 And how much more fun would dating actually be?",
+      "!That's why I created The Presence Method.",
+      "!The Presence Method is a simple 3-step system that gets you out of your head and into the moment, so the women you're with actually feel the connection…",
+      "Without lines\nWithout pretending to be someone else\nWithout overthinking every word",
+      "❌ Not $1,500 for coaching\n❌ Not $300\n❌ Not even $100…",
+      "You can start The Presence Method today for $37, and if it doesn't change how your next date feels, you get every penny back.",
+      "Why so cheap? I know it works for guys who use it, and I'm hoping you'll love it enough to come back for more.",
+      "#What's inside The Presence Method",
+      "!Presence Pillar #1: Breathe. A 60-second reset before any date so nerves don't run the show.",
+      "!Presence Pillar #2: Listen. How to really hear her, so the conversation builds itself.",
+      "!Presence Pillar #3: Lead. How to ask for the next date simply and confidently.",
+      "If your dates keep fizzling out, don't you owe it to yourself to fix the one thing she's actually feeling?",
+      "Comment \"PRESENT\" 👇 and I'll send it over."
+    ]},
+  { id:"clarity", word:"Clarity", mech:"The Clarity Map", who:"A dating coach for women dating again after divorce",
+    lines:[
+      "If you're a woman back in the dating world after divorce…",
+      "Trying three different apps…",
+      "Saying yes to every date \"just in case\"…",
+      "Getting a new wardrobe and a new hairstyle...",
+      "But you're not meeting anyone you'd actually want to build a life with, I bet I know why…",
+      "Because dating has completely changed since you last did it, and nobody gave you the new rules…",
+      "And when amazing women in their 40s and 50s keep ending up disappointed…",
+      "5 things run through their mind:",
+      "?1. \"I NEED TO LOSE THE WEIGHT FIRST\"", "?2. \"I NEED TO BE FULLY OVER MY EX\"", "?3. \"I NEED TO WAIT TILL THE KIDS ARE OLDER\"", "?4. \"I NEED TO TRY MORE APPS\"", "?5. \"I NEED TO LOWER MY STANDARDS\"",
+      "Or the advice your well-meaning friends keep giving you…",
+      "But the truth is...",
+      "You're driving round and round with no satnav.",
+      "Lots of petrol. Lots of miles. No destination...",
+      "Here's what I mean:",
+      "🙃 You could go on 50 first dates…\n🙃 Join every app going…\n🙃 And lower your standards to the floor…",
+      "But without this one thing... you'll keep meeting the wrong men.",
+      "Can you guess what it is?",
+      "!IT'S CLARITY.",
+      "Think about the women you know who met someone wonderful the second time around…",
+      "Most of them knew exactly what they wanted this time, and exactly what they'd never accept again…",
+      "It's simple psychology. When you know what you're looking for, you notice it. And you stop wasting evenings on men who were never right…",
+      "Some women get there by accident, after years of bad dates... others get there on purpose…",
+      "~[Client story here: a real client who got clear and met the right man]",
+      "But a lot of the dating industry keeps it vague… so you keep swiping and paying 🤣",
+      "!Instead, you're living with the symptoms of no clarity:",
+      "- You keep going on dates with \"the same man in a different shirt\"\n- You come home feeling flat and wondering why you bothered\n- You're not even sure what you want anymore\n- And part of you wonders if you're better off alone",
+      "!That's just what happens when you don't have clarity…",
+      "Yet when you DO have clarity... everything gets simpler…",
+      "You know within ten minutes if he's worth a second date. Your evenings go back to being yours. And when the right man shows up, you recognise him.",
+      "That's why so many women give up on dating…",
+      "Not because they're too old or too picky, but because nobody helped them get clear…",
+      "But not you.",
+      "So answer me this:",
+      "!With real clarity...",
+      "🤩 How much time would you get back?\n🤩 How much easier would it be to say no to the wrong men?\n🤩 And how much easier would it be to say yes to the right one?",
+      "!That's why I created The Clarity Map.",
+      "!The Clarity Map is a simple 2-week program that gets you crystal clear on who you want and who you don't, so you stop wasting time and start meeting men worth meeting…",
+      "Without more apps\nWithout settling\nWithout waiting until you're \"ready\"",
+      "❌ Not $1,000 for a matchmaker\n❌ Not $300\n❌ Not even $100…",
+      "The Clarity Map is $27. Try it, and if you're not clearer in 14 days, I'll refund you.",
+      "#What's inside The Clarity Map",
+      "!Clarity Step #1: Look back. What your marriage taught you about what you really need.",
+      "!Clarity Step #2: Write it down. Your non-negotiables and your deal-breakers.",
+      "!Clarity Step #3: Filter fast. How to tell by the first message who's worth your time.",
+      "If you're tired of dating the same man in a different shirt, don't you owe it to yourself to get clear?",
+      "Drop a \"CLEAR\" below 👇 and I'll send you the link."
+    ]}
+];
+
+function renderPosts(list, hostId){
+const host = document.getElementById(hostId);
+list.forEach((p, i) => {
+  const a = document.createElement("article"); a.id = p.id;
+  const head = document.createElement("div"); head.className = "ahead";
+  const left = document.createElement("div"); left.style.display = "flex"; left.style.flexDirection = "column"; left.style.gap = "6px";
+  const lab = document.createElement("span"); lab.className = "label"; lab.textContent = p.label || ("Example " + (i + 1));
+  const h = document.createElement("h2"); h.textContent = p.word + " → " + p.mech;
+  const who = document.createElement("p"); who.className = "hint"; who.textContent = p.who;
+  left.append(lab, h, who);
+  const sw = document.createElement("div"); sw.className = "swap";
+  const w1 = document.createElement("span"); w1.className = "w"; w1.textContent = p.word.toUpperCase();
+  const ar = document.createElement("span"); ar.className = "arrow"; ar.textContent = "→";
+  const w2 = document.createElement("span"); w2.className = "w"; w2.textContent = p.mech;
+  sw.append(w1, ar, w2);
+  head.append(left, sw);
+  const post = document.createElement("div"); post.className = "post";
+  p.lines.forEach(line => {
+    const k = line[0];
+    if (k === "#") { const h4 = document.createElement("h4"); h4.textContent = line.slice(1); post.appendChild(h4); return; }
+    const el = document.createElement("p");
+    const text = "!?~".includes(k) ? line.slice(1) : line;
+    if (k === "!") el.className = "tr"; else if (k === "?") el.className = "old"; else if (k === "~") el.className = "ph";
+    el.style.whiteSpace = "pre-line"; el.textContent = text;
+    post.appendChild(el);
+  });
+  const btn = document.createElement("button"); btn.className = "copy"; btn.textContent = "Copy this post";
+  const plain = p.lines.map(l => l[0] === "#" ? l.slice(1) + ":" : ("!?~".includes(l[0]) ? l.slice(1) : l)).join("\n\n");
+  btn.onclick = async () => {
+    try { await navigator.clipboard.writeText(plain); btn.textContent = "Copied"; }
+    catch { btn.textContent = "Couldn't copy. Select the text instead."; }
+    setTimeout(() => { btn.textContent = "Copy this post"; }, 1600);
+  };
+  a.append(head, post, btn);
+  host.appendChild(a);
+});
+}
+renderPosts(ORIGINAL_POSTS, "postsOriginal");
+renderPosts(POSTS, "posts");
+renderPosts(AI_POSTS, "postsAi");
+renderPosts(WL_POSTS, "postsWl");
+renderPosts(TR_POSTS, "postsTr");
+renderPosts(FOCUS_POSTS, "postsFocus");
+
+/* tabs */
+const TABS = ["original", "dating", "ai", "weight", "trending", "focus"];
+function showTab(name, focus){
+  TABS.forEach(t => {
+    const on = t === name, b = document.getElementById("tab-" + t), panel = document.getElementById("panel-" + t);
+    b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1;
+    panel.hidden = !on; panel.style.display = on ? "flex" : "";
+  });
+  if (focus) document.getElementById("tab-" + name).focus();
+}
+TABS.forEach(t => { document.getElementById("tab-" + t).onclick = () => showTab(t); });
+document.querySelector(".tabs").onkeydown = e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const cur = TABS.findIndex(t => document.getElementById("tab-" + t).getAttribute("aria-selected") === "true");
+  showTab(TABS[(cur + (e.key === "ArrowRight" ? 1 : -1) + TABS.length) % TABS.length], true);
+};
+showTab("original");
+</script>

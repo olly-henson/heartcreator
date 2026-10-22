@@ -1,0 +1,317 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Messaging Center</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style id="mc-style">
+/* Layout: one reading column with tabs; every piece of copy is a card with a copy button, and Skool limits are counted live. */
+:root{
+  --paper:#F5F3F7; --surface:#FFFFFF; --ink:#211B2A; --muted:#625A6E; --line:#DED8E5;
+  --heart:#A3245F; --heart-soft:#F6E2EC; --calm:#1E6A5A; --calm-soft:#DCEFE9; --warn:#9B4A1E; --warn-soft:#F7E4D9;
+  --f-display:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15121A; --surface:#1E1A25; --ink:#ECE8F1; --muted:#A79FB3; --line:#332D3D;
+  --heart:#F08DB8; --heart-soft:#3A1E2C; --calm:#62C7AC; --calm-soft:#153029; --warn:#F0A073; --warn-soft:#33221A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15121A; --surface:#1E1A25; --ink:#ECE8F1; --muted:#A79FB3; --line:#332D3D;
+  --heart:#F08DB8; --heart-soft:#3A1E2C; --calm:#62C7AC; --calm-soft:#153029; --warn:#F0A073; --warn-soft:#33221A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--f-body);padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0}
+h1{font-size:46px;line-height:1.05}
+h2{font-size:30px;line-height:1.15}
+h3{font-size:21px;line-height:1.25}
+p{margin:0}
+.label{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hint{color:var(--muted);max-width:64ch}
+.status{display:inline-block;font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--warn-soft);color:var(--warn);padding:6px 9px;border-radius:5px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:2}
+.tabs button{font:600 14px/1 var(--f-body);background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:13px 12px;cursor:pointer;margin-bottom:-1px;white-space:nowrap;flex:none}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--heart)}
+.tabs button:focus-visible{outline:2px solid var(--heart);outline-offset:2px}
+.panel{display:flex;flex-direction:column;gap:22px}
+.intro{display:flex;flex-direction:column;gap:8px}
+section.group{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.card.key{border-color:var(--heart);background:var(--heart-soft)}
+.chead{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.text{white-space:pre-wrap;max-width:68ch}
+.text.big{font:400 26px/1.3 var(--f-display)}
+.note{font-size:14px;color:var(--muted);border-left:2px solid var(--line);padding-left:10px;max-width:68ch}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.copy{font:600 12.5px/1 var(--f-body);padding:8px 12px;border-radius:7px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.copy:hover{border-color:var(--heart)}
+.copy:focus-visible{outline:2px solid var(--heart);outline-offset:2px}
+.count{font:500 12px/1 var(--f-mono);padding:6px 8px;border-radius:5px;background:var(--calm-soft);color:var(--calm)}
+.count.over{background:var(--warn-soft);color:var(--warn)}
+.cmp{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.cmp .r{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.cmp .r:first-child{border-top:0}
+.cmp .r > div{padding:12px 14px;min-width:0}
+.cmp .r > div + div{border-left:1px solid var(--line)}
+.cmp .hd > div{font:500 11px/1.4 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--paper)}
+.cmp .k{font:500 11px/1.6 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.cmp .ours{background:var(--heart-soft)}
+.cmp .tag{display:none;font:500 10px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+@media (max-width:640px){
+  .cmp .hd{display:none}
+  .cmp .r{grid-template-columns:minmax(0,1fr)}
+  .cmp .r > div + div{border-left:0;border-top:1px dashed var(--line)}
+  .cmp .tag{display:block}
+}
+dl.glance{display:grid;grid-template-columns:170px minmax(0,1fr);gap:10px 18px;margin:0}
+dl.glance dt{font:500 11px/1.8 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+dl.glance dd{margin:0}
+@media (max-width:560px){dl.glance{grid-template-columns:minmax(0,1fr)}dl.glance dd{margin-bottom:8px}h1{font-size:38px}}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.cols{grid-template-columns:1fr}}
+ul.words{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.use b{color:var(--calm)} .avoid b{color:var(--warn)}
+.editbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.editbar.on{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 10px;box-shadow:0 8px 28px rgba(0,0,0,.18);width:max-content;max-width:calc(100% - 32px)}
+.ebtn{font:600 14px/1 var(--f-body);padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.ebtn:hover{border-color:var(--heart)}
+.ebtn.primary{background:var(--heart);border-color:var(--heart);color:var(--surface)}
+.ebtn:disabled{opacity:.5;cursor:default}
+.ebtn:focus-visible,.efield:focus-visible{outline:2px solid var(--heart);outline-offset:2px}
+.emsg{font-size:13.5px;color:var(--muted)}
+.efield{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px dashed var(--heart);border-radius:8px;padding:8px 10px;resize:vertical;field-sizing:content;min-height:2.6em}
+.efield.text{white-space:pre-wrap;max-width:none}
+.efield.big{font:400 22px/1.3 var(--f-display)}
+.efield.small{font-size:14px;color:var(--muted)}
+input.efield{font:500 11px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;min-height:0;max-width:340px}
+body.editing{padding-bottom:110px}
+</style>
+
+<div class="wrap" id="mc-wrap">
+  <header class="intro">
+    <span class="label">The Attraction Formula · Messaging Center</span>
+    <h1>Messaging Center</h1>
+    <p class="hint">One place for the message and every piece of copy that carries it: content, the Skool classroom, feed posts, the About page, group description and DMs. Everything here is built on one idea: who you attract isn't about what you know. It's about your emotional state.</p>
+    <p><span class="status">Draft · built 18 Oct 2026 · not yet live</span></p>
+    <div class="editbar" id="editbar">
+      <button type="button" class="ebtn" id="edit-btn">Edit</button>
+      <button type="button" class="ebtn primary" id="save-btn" hidden>Save changes</button>
+      <button type="button" class="ebtn" id="discard-btn" hidden>Discard</button>
+      <span class="emsg" id="edit-msg" role="status"></span>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Sections" id="tabs"></div>
+  <div id="panels"></div>
+</div>
+
+<script type="application/json" id="mc-data">{"saved": "2026-10-20T19:00:00.000Z", "tabs": [{"id": "core", "name": "Core message", "intro": "The argument everything else is built from. Start here before writing anything new.", "groups": [{"title": "The message in one line", "cards": [{"key": true, "big": true, "text": "Who you attract isn't about what you know. It's about your emotional state."}, {"label": "The one thing", "text": "THE RIGHT EMOTIONAL STATE.", "note": "The pain is being in the wrong emotional state. What they need is the right one. Reveal it (\"IT'S THE RIGHT EMOTIONAL STATE.\"), name the pain with it (\"the symptoms of the wrong emotional state\"), picture the result with it (\"in the right emotional state…\"), then: \"The Attraction Formula Meditation puts you in the right emotional state, so you attract the right person.\""}, {"label": "What we mean by your emotional state", "text": "It's how you feel every time you think about love and being with someone. Not what you think or what you know.\n\nYou might feel free at work and full of joy with your friends, and still feel worry, frustration or anxiety the moment you think about dating. That's the state that counts.\n\nWhen you picture being with your person, do you feel safe? Excited? Free? Appreciation?\n\nThat's the state you bring to every date, every text and every choice. And you attract people who match it.", "note": "Say this once, straight after the reveal. After that, just say \"the right emotional state\" and \"the wrong emotional state\", the way the FitPro post just says \"authority\"."}]}, {"title": "How it carries the post", "note": "The same chain as Authority → the Authority Matrix.", "cards": [{"text": "Can you guess what it is?\nIT'S THE RIGHT EMOTIONAL STATE.\n\nYou can know everything about attachment styles and how to text someone. But if every time you think about being with someone you feel fear, frustration, impatience or worry, you'll keep attracting people who match it. Even if the rest of your life feels great.\n\nInstead, you're living with the symptoms of the wrong emotional state: time wasters, people who won't commit, awkward dates, and the right people walking straight past you.\n\nThat's just what happens when you're in the wrong emotional state…\n\nSo answer me this: in the right emotional state, how much easier would it be to attract someone who's actually ready?\n\nThat's why I built The Attraction Formula Meditation. It puts you in the right emotional state, 10 minutes a day, so you attract the right person.\n\nAttraction Step #1: Drop In…"}]}, {"title": "The argument in one paragraph", "cards": [{"text": "Who you attract isn't about what you know. It's about your emotional state. More specifically, your emotional state around love. You might feel free at work and joyful with friends, but if every time you think about being with someone you feel fear, frustration, impatience or worry, that's the state you bring to dating, and you'll keep attracting people who match it: people who keep you anxious, worried and frustrated. That's why all the books, podcasts and courses haven't worked. You can't learn your way into the right emotional state, and positive thinking doesn't stick. The Attraction Formula Meditation is 10 minutes a day that puts you in the right emotional state, from guilt, shame, fear and worry to joy, freedom, appreciation and excitement. Practise it every day and you start attracting high-quality people who match it, repelling the time wasters, and meeting someone in a way that feels natural and exciting."}]}, {"title": "The argument at a glance", "glance": [["Who", "Driven, growth-minded singles who've done years of inner work and tried every method."], ["Promised land", "A genuine, long-lasting, committed relationship with someone they're attracted to, where they feel safe and can fully be themselves. Someone that they can settle down and build a life with."], ["Pain", "Love is the one area that won't move, while friends who did no inner work settle down."], ["Bleeding neck pain", "Part of them doubts it'll ever happen, and when someone great shows up it feels too good to be true."], ["Old belief", "\"Once I've learned what's wrong with me and fixed it, I'll meet my person.\""], ["The crack", "Your friends who settled down weren't even trying."], ["Analogy", "You're reading the radio manual instead of changing the station. However much you know about radios, you only pick up the station you're tuned to."], ["Real cause", "The wrong emotional state around love. You might feel free at work and joyful with friends, but every time you think about being with someone, you feel frustration, anxiety or worry. That's the state you bring to dating, so you keep attracting people who match it, the right ones don't come in, and you can't even see them when they're there. So you stay stuck in the loop."], ["Solution", "The Attraction Formula: a 6-minute training to find your emotional resonance (the exact emotional state that attracts your partner) and The Attraction Formula Meditation, 10 minutes a day to embody it."], ["New belief", "\"The right emotional state attracts the right person. The Attraction Formula Meditation puts me in it, every day.\""], ["Proof", "I met my wife when I focused on how I was feeling every day, improving it and shifting my state, rather than learning more about what I should be doing."], ["What to expect", "You're better able to spot high-quality partners. You naturally repel people who are time wasters and who aren't right for you. The right people start showing up in your world and things unfold in a natural and exciting way."], ["Why it's a no-brainer", "10 minutes a day. 7 days free. Nothing to fix."]]}, {"title": "Side by side with the FitPro post", "note": "His Authority Matrix argument next to yours, point by point. On a phone they stack, his first.", "compare": true}, {"title": "What the meditation does", "cards": [{"key": true, "text": "It puts you in the right emotional state.\n\nFrom: guilt, shame, fear, worry, irritation, impatience\nTo: joy, freedom, appreciation, gratitude, excitement, empowerment", "note": "This is the one job of the meditation. Everything about the steps serves this shift."}]}, {"title": "The 3 steps", "note": "Your own definitions. Use these exact descriptions everywhere the steps appear.", "cards": [{"label": "Step 1", "text": "Drop In. Bring your attention out of your head and into your heart."}, {"label": "Step 2", "text": "Open Up. Begin to slow your breathing, so your body relaxes and opens up."}, {"label": "Step 3", "text": "Feel It. Generate a new emotional state, aligned with the future you want with your partner."}]}, {"title": "Why it's not positive thinking", "note": "The one place the science belongs: it's what makes this different from \"just feel good\".", "cards": [{"text": "Positive thinking happens in your head, so it fades the moment life gets stressful. The Attraction Formula Meditation shifts your emotional state, which you feel in your body.\n\nPsychologists call it emotional contagion: people pick up on each other's emotional states through faces, voices and body language, often without realising. And when you're anxious, you tend to overlook calm, kind people and put up with the ones who keep you guessing. When you feel good, you notice and choose differently.\n\nResearchers at the HeartMath Institute found that when you focus on your heart, breathe slowly and feel something like appreciation, your heart rhythm becomes smooth and steady. They call it heart coherence. It's measurable, and it's linked to feeling calm, safe and connected.\n\nHeartMath's researchers also measured the electromagnetic field your heart gives off. It's the strongest rhythmic field your body produces, and sensitive instruments can pick it up a few feet away. In small lab studies, they found traces of one person's heartbeat in another person's brainwaves when the two sat close together or touched. It's early research, but it suggests the connection you feel with someone may be more physical than we think.\n\nPractise that every day and the right emotional state stops being something you try to feel. It becomes how you are.", "note": "Say \"people who match your state\", never \"frequency\" or \"vibration\". Keep emotional contagion to faces, voices and body language. Never claim people consciously sense your heart rhythm, or that your heart's field draws a partner in. Present the field research as HeartMath's own small lab studies, as written. Check what HeartMath allows when naming their research."}]}, {"title": "Objections, answered", "cards": [{"label": "\"But I'm happy most of the time.\"", "text": "That's the point. It's not how you feel about life. It's how you feel every time you think about love. You can love your job and your friends and still feel worry or frustration the moment you think about dating, and that's the state you bring to it."}, {"label": "\"I've tried feeling good. It doesn't stick.\"", "text": "That's because you were trying to think your way into it. This shifts how you actually feel, a little more every day, so it lasts."}, {"label": "\"Why can't I just change my state now?\"", "text": "After years of being single, being hurt and overthinking, the wrong emotional state becomes your everyday state. You can't think your way out of that. You can practise your way out of it."}, {"label": "\"Isn't this just another method?\"", "text": "Every method you've tried was about what you know. This is about how you feel. It's not another thing to learn. It's how you stop getting in your own way."}, {"label": "\"So I just sit and wait?\"", "text": "No. You still date and live your life. You just do it in the right emotional state, and that changes who you attract."}]}, {"title": "Words", "words": {"use": ["the right emotional state / the wrong emotional state", "your emotional state, not what you think or know", "people who match your state", "from fear, irritation, impatience to joy, freedom, appreciation", "practise, every day", "magnetic (to describe how it feels)", "high-quality people, the right person, your person"], "avoid": ["frequency, vibration, energy, manifest, the universe", "\"work on how you feel\" (sounds like another thing to fix)", "fix, heal or clear (as something to do before love)", "high-value", "\"you'll meet someone by…\" (say \"the right people start showing up\")", "claims that people can sense your heart rhythm", "em dashes, and Regulate / Rewrite / Rehearse (retired)"]}}]}, {"id": "content", "name": "Content", "intro": "Instagram Reels are freestyled talking heads, so these are topics and titles to riff on, not scripts. Every title names the specific topic.", "groups": [{"title": "Content pillars", "note": "Each pillar carries one part of the argument: who you attract is about your emotional state, not what you know.", "cards": [{"label": "1 · What you know vs how you feel", "text": "Cracks in the old belief. Why knowing your attachment style, texting rules and dating strategy hasn't got you a partner. Why your friends who settled down weren't even trying."}, {"label": "2 · Your state decides who you attract", "text": "Your emotional state around love, not life in general. Happy at work and with friends, but worried, frustrated or anxious the moment you think about dating, so you keep attracting time wasters and can't see the right people. What changes when you're in the right state."}, {"label": "3 · Shifting your state", "text": "Practical, quick ways to shift into the right emotional state: before a date, after a disappointing one, when doubt creeps in. The meditation, the State Shifting Ladder, small daily shifts."}, {"label": "4 · What's normal", "text": "What to expect when you start changing your emotional state: days the old state pulls you back, feeling disconnected, wanting to jump to the next thing. A real member said nobody else makes this content."}, {"label": "5 · Real stories", "text": "Your story (you stopped learning and started shifting your state, then met your wife), how-we-met stories and member wins with permission."}]}, {"title": "Reel titles", "note": "Grouped by pillar. \"The scientific way to attract your soulmate\" is already a proven winner.", "cards": [{"label": "What you know vs how you feel", "text": "Why knowing your attachment style hasn't got you a partner\nYou can't learn your way into a relationship\nYour friends who settled down weren't even trying\nWhy the next dating book won't be the one"}, {"label": "Your state decides who you attract", "text": "Your emotional state is deciding who you attract\nHappy in life but anxious about love? Watch this\nWhy you keep attracting time wasters\nWhy you can't see the right person when they're right in front of you\nThe scientific way to attract your soulmate\nWhy calm feels boring when you're used to chaos"}, {"label": "Shifting your state", "text": "A 2-minute reset before a first date\nWhat to do after a date that went nowhere\nThe emotional state that attracts people who commit\nHow to tell which emotional state you're in"}, {"label": "What's normal", "text": "What's normal when your old state pulls you back\nWhy it feels harder on day 6\nWhy you keep jumping to the next method\nThe first sign it's working (it's not meeting someone)"}, {"label": "Real stories", "text": "I stopped learning and started shifting my state. Then I met my wife.\nHow we met: neither of us was trying\nWhat changed when I focused on how I felt, not what I knew"}]}, {"title": "Reel caption", "note": "The standard caption under every Reel. The keyword ATTRACTION leads to the 7-day free trial.", "cards": [{"label": "Caption", "text": "👉 Attract a genuine, committed relationship without more books, courses or dating rules.\n\nFor people who want to meet someone special and build a life together.\n\nWho you attract isn't about what you know. It's about your emotional state around love.\n\nIn the right emotional state, you repel the time wasters, the right people show up and things unfold in a natural, exciting way with someone who's right for you.\n\nThe Attraction Formula helps you:\n\n✅ Find your emotional resonance. The exact feeling of your perfect relationship.\n\n✅ Embody it with The Attraction Formula Meditation, so you attract a partner who matches it.\n\n♥️ This helped me meet my wife.\n\n⏰ 6 minutes to find it. 10 minutes a day to feel it.\n\n👇 Comment 'ATTRACTION' below to try The Attraction Formula free for 7 days\n\n(DM me 'ATTRACTION' if you'd rather keep it private)\n\n#Soulmate #AttractLove #LifePartner #DatingAdvice #HealthyRelationships", "note": "Updated 20 Oct 2026 to sell The Attraction Formula (find it, then embody it), matching the Reel pitch and About page. No hyphen separators in Instagram captions."}]}, {"title": "Calls to action", "cards": [{"label": "Reel pitch (say this at the end)", "text": "If you want access to The Attraction Formula, a 6-minute training to find your emotional resonance and a 10-minute daily meditation to embody it, so you attract your perfect partner, comment ATTRACTION below.", "note": "Same words as the caption, ManyChat and About page, so it all feels like one thing. On short Reels, \"the emotional state that attracts your partner\" can replace \"your emotional resonance\"."}, {"label": "Free meditation (Reels and Stories)", "text": "Comment HEART and I'll send you the free meditation."}, {"label": "Free trial (Reels, bio, posts)", "text": "Learn to shift into the right emotional state with me. 7 days free. Link in bio."}]}]}, {"id": "classroom", "name": "Skool classroom", "intro": "The community is built around one idea: helping you shift into the right emotional state and stay there. The meditation is one part of that, alongside the tools, trainings and daily support.", "groups": [{"title": "How the classroom fits together", "cards": [{"label": "Structure", "text": "The Attraction Formula (main course):\n1. Why This Works: why your emotional state around love decides who you attract\n2. Find Your Emotional Resonance: the 6-minute training\n3. How To Do The Meditation: the steps\n4. The Attraction Formula Meditation: 10 minutes a day\n5. How To 'Anchor' The Feeling: bring it back any time\n\nPlus bonus tools and trainings (like the State Shifting Ladder) and daily support from Olly in the community."}]}, {"title": "Start Here", "cards": [{"label": "Module title", "text": "Start Here"}, {"label": "Welcome lesson", "text": "Welcome to The Attraction Formula ❤️\n\nThis community is built on one idea: who you attract isn't about what you know. It's about your emotional state.\n\nYou can know everything about attachment styles and how to text someone. But if every time you think about being with someone you feel anxious, worried, irritated or impatient, you'll keep attracting people who match that, even if the rest of your life feels great. Shift into joy, freedom and appreciation, and you start attracting people who match that instead.\n\nEverything here helps you shift into the right emotional state and stay there:\n\n• The Attraction Formula Meditation, 10 minutes a day\n• The State Shifting Ladder, for whenever you slip\n• Short trainings on how your state shapes who you attract\n• Daily support from me\n\nStart with today's meditation, then introduce yourself in the community.\n\nOlly"}]}, {"title": "The Attraction Formula Meditation", "cards": [{"label": "Module title", "text": "The Attraction Formula Meditation"}, {"label": "Module description", "text": "Your daily practice for shifting into the right emotional state. 10 minutes a day: attention on your heart, slow breathing, then a new emotional state aligned with the future you want."}, {"label": "Before you start (lesson intro)", "text": "This is the heart of your daily practice.\n\nIt's not positive thinking. Positive thinking happens in your head and fades when life gets stressful. This changes how you actually feel, using heart coherence, a calm, steady heart rhythm researched by the HeartMath Institute.\n\nIt's 3 steps:\n\n1. Drop In. Bring your attention out of your head and into your heart.\n2. Open Up. Begin to slow your breathing, so your body relaxes and opens up.\n3. Feel It. Generate a new emotional state, aligned with the future you want with your partner.\n\nDo it once a day, ideally at the same time. Don't worry about doing it perfectly. Just keep showing up."}, {"label": "What to expect", "text": "Most people feel calmer, lighter and more present first. That's your emotional state starting to shift.\n\nSome days it'll feel amazing. Some days your body might resist: you can't concentrate, you feel restless or you can't connect with your heart at all. That's normal. It's your old state pulling you back because the new one isn't familiar yet.\n\nOn those days, take the pressure off. You don't need to feel anything. Just do the 10 minutes and keep going.", "note": "The resistance description comes from a real member's day 6 (restless legs, couldn't connect)."}, {"label": "Signs your state is shifting (members have shared)", "text": "• Feeling calmer and lighter day to day\n• Connecting with your heart more easily\n• Noticing more attractive people when you're out and about\n• Being more selective about who you give your time to\n• Feeling less attached to one specific person", "note": "Things a member actually reported. Present them as what people have noticed, never as guarantees."}]}, {"title": "State-shifting tools", "cards": [{"label": "The State Shifting Ladder (lesson intro)", "text": "Use this whenever you notice you've slipped into the wrong emotional state: before a date, after a disappointing one, or when doubt creeps in.\n\nYou don't have to jump straight to joy. Just move up one step at a time, from where you are to a slightly better feeling. Each step up changes who and what you notice.", "note": "The State Shifting Ladder is your existing Skool tool. Its styling is locked, so this is just the lesson text around it."}, {"label": "Quick resets (lesson titles)", "text": "A 2-minute reset before a date\nWhat to do after a date that went nowhere\nHow to come back when doubt creeps in"}]}, {"title": "Trainings", "cards": [{"label": "Find Your State (core training)", "text": "A step-by-step training that helps you find the exact emotional state that's right for you and the partner you want.\n\n1. Check where you are now. How do you feel when you think about being in a relationship? Worried? Frustrated? Anxious?\n2. Picture the relationship you want. How do you feel when you're with them? Safe? Playful? Free? Excited?\n3. Pick your 2 or 3 core feelings. That's your new state.\n4. Use the meditation to practise your state every day, and the State Shifting Ladder to get back to it when you slip.", "note": "Answers the question most people will have: \"How do I know which emotional state is right for me?\" Built from how you helped a member write her intentions (\"safe, secure, relaxed and playful\")."}, {"label": "Lesson titles", "text": "Find Your State: the exact emotional state that attracts your perfect partner\nWhy who you attract depends on your emotional state\nThe wrong emotional state loop (and how to break it)\nHow to tell which state you're in\nWhat's normal when your old state pulls you back\nHow to set your intentions (and why \"ready\" isn't the word)\nWanting it all isn't greedy"}, {"label": "Intentions lesson: the key point", "text": "Write your intentions as if you're already in it together. Not \"my partner is ready for a committed relationship\", but \"my partner and I are enjoying a loving, committed relationship together\". \"Ready\" keeps it in the future. \"Together\" lets you feel it now, which is exactly the emotional state you're building.", "note": "From your own advice in a member DM."}]}]}, {"id": "feed", "name": "Feed posts", "intro": "Posts for the Skool community feed. Keep the live call post format you already use (\"Live Today\", 5 benefits).", "groups": [{"title": "Weekly rhythm", "cards": [{"text": "Monday: state check-in. \"What emotional state do you want to live in this week?\"\nWednesday: a \"what's normal\" or quick state-shift post.\nFriday: wins thread. Small shifts count.\nLive call day: your usual Live Today post."}]}, {"title": "Example posts", "cards": [{"label": "Pinned welcome post", "text": "Welcome to The Attraction Formula ❤️\n\nIf you're here, you've probably spent a long time learning about love: the books, the podcasts, the attachment styles.\n\nHere's the thing. Who you attract isn't about what you know. It's about your emotional state.\n\nThat's what we work on here, together, every day.\n\nStart here:\n1. Watch the Start Here welcome\n2. Do The Attraction Formula Meditation today\n3. Introduce yourself below: what sort of relationship are you looking for?\n\nI'm here every day if you need me.\n\nOlly"}, {"label": "Monday state check-in", "text": "Monday check-in ☀️\n\nWhat emotional state do you want to live in this week?\n\nJoy? Freedom? Calm? Excitement?\n\nPick one word and drop it below. Then do your meditation today with that feeling in mind.\n\nWe attract what we live in. Let's choose it on purpose."}, {"label": "\"What's normal\" post", "text": "Has this week felt harder?\n\nMaybe the meditation didn't land. Maybe a date knocked you back and you felt the old worry creep in.\n\nThat's normal. When you start shifting your emotional state, the old one pulls you back a little, because it's what you're used to.\n\nSo take the pressure off. Use the State Shifting Ladder and move up one step. Do your 10 minutes. Keep going.\n\nWho else has had a week like this? Drop a ❤️ if it's you."}, {"label": "Wins thread", "text": "Friday wins 🎉\n\nWhat's shifted for you this week, even something small?\n\nFeeling calmer before a date. Noticing someone new. Saying no to a time waster. Waking up lighter.\n\nIt all counts. Share yours below."}]}]}, {"id": "skool", "name": "About page", "intro": "Skool limits: the About page is 1,000 characters (line breaks, emoji and bold letters count as 2) and the group description is 150. The counters use Skool's way of counting.", "groups": [{"title": "Group description", "cards": [{"limit": 150, "text": "Attract a genuine, committed relationship without more books, courses or dating rules. Just the right emotional state, 10 mins a day ❤️"}]}, {"title": "About page", "note": "Live from 20 Oct 2026. Matches the Reel pitch, caption and ManyChat: a 6-minute training to find your emotional resonance, then a 10-minute daily meditation to embody it.", "cards": [{"limit": 1000, "text": "👉 Attract a genuine, committed relationship without more books, courses or dating rules.\n\nFor people who want to meet someone special and build a life together.\n\nWho you attract isn't about what you know. It's about your emotional state around love.\n\nIn the right emotional state, you repel the time wasters, the right people show up and things unfold in a natural, exciting way with someone who's right for you.\n\n𝗧𝗵𝗲 𝗔𝘁𝘁𝗿𝗮𝗰𝘁𝗶𝗼𝗻 𝗙𝗼𝗿𝗺𝘂𝗹𝗮 𝗜𝗻𝘀𝗶𝗱𝗲\n\n✅ A 6-minute training to find your emotional resonance: the exact emotional state that attracts your perfect partner.\n\n✅ The Attraction Formula Meditation: a 10-minute daily practice to embody that state, so you attract a partner who matches it.\n\n✅ State-shifting tools to get back into that state anywhere, any time.\n\n💬 Daily personal support from Olly and the community\n\n♥️ This helped me meet my wife.\n\n⏰ 6 minutes to find it. 10 minutes a day to feel it.\n\n⚡ Start your 7-day free trial to get started ❤️"}]}]}, {"id": "dms", "name": "DMs", "intro": "The onboarding conversation for new trial members, based on how you've been talking to members already.", "groups": [{"title": "ManyChat (after they comment ATTRACTION)", "note": "Instagram/Facebook auto-reply. Button labels stay under 20 characters.", "cards": [{"label": "Message 1", "text": "Hey 👋 Thanks for the message!\n\nYou can now try The Attraction Formula free for 7 days inside our community.\n\nIt's a 6-minute training to find your emotional resonance and a 10-minute daily meditation to embody it, so you attract your perfect partner.\n\nWant me to send you the link?"}, {"label": "Message 1 button", "text": "Send me the link"}, {"label": "Message 2", "text": "Awesome, here it is!"}, {"label": "Message 2 button (links to Skool)", "text": "Start Free Trial"}]}, {"title": "New member flow", "cards": [{"label": "1 · Welcome", "text": "Hey [name], welcome to The Attraction Formula! 💜\n\nLet me know when you get this and I'll help you get started 😎"}, {"label": "2 · What they want", "text": "Awesome! So where are things at for you right now? What sort of relationship are you looking for?"}, {"label": "3 · What's been in the way", "text": "Love that. What do you think has been holding you back from that so far?"}, {"label": "4 · Reframe and start", "text": "That makes total sense, and you're definitely not far off. A lot of the people I work with have learned loads about love and done loads of work on themselves. The missing piece usually isn't more knowledge. It's their emotional state.\n\nWho you attract comes from how you feel every time you think about love. So that's what we work on here.\n\nStart with today's Attraction Formula Meditation (10 minutes: Drop In, Open Up & Feel It) and let me know how it goes 😊"}, {"label": "5 · Day 3 check-in", "text": "Hey [name], how's your week been? How are you finding the meditation?"}, {"label": "6 · If they say it feels harder", "text": "That's completely normal. It's your old emotional state pulling you back a little, because the new one isn't familiar yet. It usually means it's working.\n\nTake the pressure off feeling anything. Keep doing your 10 minutes, and try the State Shifting Ladder on the harder days. Let me know how the next few days go."}, {"label": "7 · End of trial", "text": "Hey [name], you're coming up to the end of your 7 days. How are you feeling compared to when you started?\n\nIf you'd like to keep going, you don't need to do anything. If it's not for you, just let me know and I'll help you cancel, no problem at all."}]}]}]}</script>
+<script>
+const SCRIPT_SRC = document.currentScript.textContent;
+const STYLE_CSS = document.getElementById("mc-style").textContent;
+const HEAD_HTML = "<title>Messaging Center</title>\n<meta name=\"claude:viewport-fit-sides\" content=\"cover\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap\">";
+const SHELL_HTML = "<div class=\"wrap\" id=\"mc-wrap\">\n  <header class=\"intro\">\n    <span class=\"label\">The Attraction Formula · Messaging Center</span>\n    <h1>Messaging Center</h1>\n    <p class=\"hint\">One place for the message and every piece of copy that carries it: content, the Skool classroom, feed posts, the About page, group description and DMs. Everything here is built on one idea: who you attract isn't about what you know. It's about your emotional state.</p>\n    <p><span class=\"status\">Draft · built 18 Oct 2026 · not yet live</span></p>\n    <div class=\"editbar\" id=\"editbar\">\n      <button type=\"button\" class=\"ebtn\" id=\"edit-btn\">Edit</button>\n      <button type=\"button\" class=\"ebtn primary\" id=\"save-btn\" hidden>Save changes</button>\n      <button type=\"button\" class=\"ebtn\" id=\"discard-btn\" hidden>Discard</button>\n      <span class=\"emsg\" id=\"edit-msg\" role=\"status\"></span>\n    </div>\n  </header>\n\n  <div class=\"tabs\" role=\"tablist\" aria-label=\"Sections\" id=\"tabs\"></div>\n  <div id=\"panels\"></div>\n</div>";
+const RESET_CSS = ":root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}";
+let EDIT = false, CUR = "core";
+/* Skool counts every character, every line break as 2, and emoji and bold letters as 2 (JS string length already counts those as 2). */
+const skoolCount = t => t.trim().length + (t.match(/\n/g) || []).length;
+
+const DATA = JSON.parse(document.getElementById("mc-data").textContent);
+const T = DATA.tabs;
+
+const FITPRO = {
+  "Who": "Fitness pros spending hours a day on social media: perfect-angle photos, authentic posts, sharing their darkest stories.",
+  "Promised land": "A steady flow of dream clients who pay premium prices without objections.",
+  "Pain": "Hours of posting and DMing aren't turning into clients, in a market packed with trainers just like them.",
+  "Bleeding neck pain": "People don't take them seriously, ignore their DMs, call them \"too expensive\", and closing feels impossible at any price.",
+  "Old belief": "\"I need more content, more traffic, more ads, more DMs or better sales skills.\"",
+  "The crack": "You could post 10x a day, send 100s of DMs and pay $1000s for ads, and still not get sales.",
+  "Analogy": "You're baking a cake without the flour.",
+  "Real cause": "No authority. They're seen as \"just some fitness trainer\", not THE expert. And the gurus make business complicated to sell their courses.",
+  "Solution": "The Authority Matrix: a 60-minute masterclass.",
+  "New belief": "\"Authority makes everything else easy, and the Authority Matrix builds it.\"",
+  "Proof": "Brian's testimonial (\"nearly tripled my revenue in the first month\"), $100/mo to $2,500 packages, 227 fitpros and counting.",
+  "What to expect": "Hot leads in your inbox \"like magic\", prospects relieved when you reveal the price, a booked calendar.",
+  "Why it's a no-brainer": "$97 instead of $8,000, a 100% no-questions-asked guarantee, and two honest reasons for the low price.",
+  "What's inside": "4 Authority Frameworks: positioning, one big central idea, a simple path, and the \"Inception Method\"."
+};
+const OURS_INSIDE = "3 steps: Drop In, Open Up & Feel It.";
+function compareTable(glance){
+  const wrap = document.createElement("div"); wrap.className = "cmp";
+  const row = (cells, cls) => { const r = document.createElement("div"); r.className = "r" + (cls ? " " + cls : ""); cells.forEach(c => r.appendChild(c)); wrap.appendChild(r); };
+  const cell = (text, cls, tag) => { const d = document.createElement("div"); if (cls) d.className = cls; if (tag) { const t = document.createElement("span"); t.className = "tag"; t.textContent = tag; d.appendChild(t); } d.appendChild(document.createTextNode(text)); return d; };
+  row([cell("Point"), cell("FitPro: Authority Matrix"), cell("Yours: The Attraction Formula")], "hd");
+  const rows = glance.concat([["What's inside", OURS_INSIDE]]);
+  rows.forEach(([k, v]) => row([cell(k, "k"), cell(FITPRO[k] || "", "", "FitPro"), cell(v, "ours", "Yours")]));
+  return wrap;
+}
+
+const tabsEl = document.getElementById("tabs"), panelsEl = document.getElementById("panels");
+function copyBtn(text){
+  const b = document.createElement("button"); b.className = "copy"; b.textContent = "Copy";
+  b.onclick = async () => {
+    try { await navigator.clipboard.writeText(typeof text === "function" ? text() : text); b.textContent = "Copied"; }
+    catch { b.textContent = "Select and copy"; }
+    setTimeout(() => { b.textContent = "Copy"; }, 1500);
+  };
+  return b;
+}
+function field(obj, key, cls, single){
+  const f = document.createElement(single ? "input" : "textarea");
+  f.className = "efield " + (cls || ""); f.value = obj[key] || "";
+  if (single) f.type = "text"; else f.rows = Math.min(14, Math.max(2, String(obj[key] || "").split("\n").length + 1));
+  f.oninput = () => { obj[key] = f.value; markDirty(); if (f.onchanged) f.onchanged(); };
+  return f;
+}
+function card(c){
+  const el = document.createElement("div"); el.className = "card" + (c.key ? " key" : "");
+  const head = document.createElement("div"); head.className = "chead";
+  const lab = EDIT && c.label !== undefined ? field(c, "label", "", true) : document.createElement("span");
+  if (!(EDIT && c.label !== undefined)) { lab.className = "label"; lab.textContent = c.label || ""; }
+  const right = document.createElement("div"); right.className = "row";
+  let ct = null;
+  const recount = () => { if (!ct) return; const n = skoolCount(c.text); ct.className = "count" + (n > c.limit ? " over" : ""); ct.textContent = n + " / " + c.limit; };
+  if (c.limit) {
+    ct = document.createElement("span"); ct.title = "Counted the way Skool counts";
+    recount(); right.appendChild(ct);
+  }
+  right.appendChild(copyBtn(() => c.text));
+  head.append(lab, right);
+  let t;
+  if (EDIT) { t = field(c, "text", "text" + (c.big ? " big" : "")); t.onchanged = recount; t.setAttribute("aria-label", (c.label || "Card") + " text"); }
+  else { t = document.createElement("p"); t.className = "text" + (c.big ? " big" : ""); t.textContent = c.text; }
+  el.append(head, t);
+  if (EDIT && c.note !== undefined) { const n = field(c, "note", "small"); n.setAttribute("aria-label", "Note"); el.appendChild(n); }
+  else if (c.note) { const n = document.createElement("p"); n.className = "note"; n.textContent = c.note; el.appendChild(n); }
+  return el;
+}
+function render(){
+tabsEl.textContent = ""; panelsEl.textContent = "";
+T.forEach((tab, i) => {
+  const b = document.createElement("button"); b.setAttribute("role", "tab"); b.id = "tab-" + tab.id;
+  b.setAttribute("aria-controls", "panel-" + tab.id); b.textContent = tab.name;
+  b.onclick = () => show(tab.id); tabsEl.appendChild(b);
+  const panel = document.createElement("div"); panel.className = "panel"; panel.id = "panel-" + tab.id;
+  panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", b.id);
+  const intro = document.createElement("div"); intro.className = "intro";
+  const h = document.createElement("h2"); h.textContent = tab.name;
+  const p = document.createElement("p"); p.className = "hint"; p.textContent = tab.intro;
+  intro.append(h, p); panel.appendChild(intro);
+  tab.groups.forEach(g => {
+    const sec = document.createElement("section"); sec.className = "group";
+    const gh = document.createElement("h3"); gh.textContent = g.title; sec.appendChild(gh);
+    if (g.note) { const n = document.createElement("p"); n.className = "hint"; n.textContent = g.note; sec.appendChild(n); }
+    if (g.glance) {
+      const c = document.createElement("div"); c.className = "card";
+      const head = document.createElement("div"); head.className = "chead";
+      const l = document.createElement("span"); l.className = "label"; l.textContent = "13 points";
+      head.append(l, copyBtn(g.glance.map(([k, v]) => k + ": " + v).join("\n")));
+      const dl = document.createElement("dl"); dl.className = "glance";
+      g.glance.forEach((row, i) => {
+        const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = row[0];
+        if (EDIT) { const f = field(row, 1, "small"); f.setAttribute("aria-label", row[0]); dd.appendChild(f); } else dd.textContent = row[1];
+        dl.append(dt, dd);
+      });
+      c.append(head, dl); sec.appendChild(c);
+    }
+    if (g.compare) {
+      const glance = tab.groups.find(x => x.glance).glance;
+      sec.appendChild(compareTable(glance));
+    }
+    if (g.words) {
+      const cols = document.createElement("div"); cols.className = "cols";
+      [["use", "Use"], ["avoid", "Avoid"]].forEach(([k, l]) => {
+        const c = document.createElement("div"); c.className = "card " + k;
+        const t = document.createElement("span"); t.className = "label"; t.textContent = l;
+        const ul = document.createElement("ul"); ul.className = "words";
+        if (EDIT) {
+          const f = document.createElement("textarea"); f.className = "efield small"; f.rows = g.words[k].length + 1;
+          f.value = g.words[k].join("\n"); f.setAttribute("aria-label", l + " words, one per line");
+          f.oninput = () => { g.words[k] = f.value.split("\n").map(x => x.trim()).filter(Boolean); markDirty(); };
+          c.append(t, f);
+        } else {
+          g.words[k].forEach(w => { const li = document.createElement("li"); li.textContent = w; ul.appendChild(li); });
+          c.append(t, ul);
+        }
+        cols.appendChild(c);
+      });
+      sec.appendChild(cols);
+    }
+    (g.cards || []).forEach(c => sec.appendChild(card(c)));
+    panel.appendChild(sec);
+  });
+  panelsEl.appendChild(panel);
+});
+}
+const IDS = T.map(t => t.id);
+function show(id, focus){
+  IDS.forEach(x => {
+    const on = x === id, b = document.getElementById("tab-" + x);
+    b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1;
+    document.getElementById("panel-" + x).hidden = !on;
+  });
+  if (focus) document.getElementById("tab-" + id).focus();
+  CUR = id;
+  try { localStorage.setItem("mc-tab", id); } catch {}
+}
+tabsEl.onkeydown = e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const cur = IDS.findIndex(x => document.getElementById("tab-" + x).getAttribute("aria-selected") === "true");
+  show(IDS[(cur + (e.key === "ArrowRight" ? 1 : -1) + IDS.length) % IDS.length], true);
+};
+let start = "core";
+try { start = localStorage.getItem("mc-tab") || "core"; } catch {}
+render();
+show(IDS.includes(start) ? start : "core");
+
+/* ---------- Editing and saving ----------
+   Save publishes a new version of this page (artifact capability). The page rebuilds its own source
+   from HEAD_HTML, its style, SHELL_HTML, the edited data and this script, never from the live DOM. */
+const SAVED_JSON = JSON.stringify(T);
+const editBtn = document.getElementById("edit-btn"), saveBtn = document.getElementById("save-btn"),
+      discardBtn = document.getElementById("discard-btn"), editMsg = document.getElementById("edit-msg"),
+      editBar = document.getElementById("editbar");
+let dirty = false, artP = null, readOnly = false;
+function markDirty(){ if (!dirty) { dirty = true; saveBtn.disabled = false; editMsg.textContent = "Unsaved changes"; } }
+function setEdit(on){
+  EDIT = on; render(); show(CUR);
+  editBtn.hidden = on; saveBtn.hidden = !on; discardBtn.hidden = !on;
+  saveBtn.disabled = !dirty; editBar.classList.toggle("on", on); document.body.classList.toggle("editing", on);
+  if (!on) editMsg.textContent = DATA.saved ? "Last saved " + new Date(DATA.saved).toLocaleString() : "";
+}
+editBtn.onclick = () => { if (readOnly) return; setEdit(true); editMsg.textContent = dirty ? "Unsaved changes" : "Editing. Changes aren't saved until you press Save."; };
+discardBtn.onclick = () => {
+  if (dirty && !confirm("Throw away your unsaved changes?")) return;
+  T.splice(0, T.length, ...JSON.parse(SAVED_JSON)); dirty = false; setEdit(false);
+};
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+function buildDoc(){
+  const json = JSON.stringify({ saved: new Date().toISOString(), tabs: T }).replace(/</g, "\\u003c");
+  const close = "</scr" + "ipt>";
+  return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>' + RESET_CSS + '</style></head><body>'
+    + HEAD_HTML + '\n<style id="mc-style">' + STYLE_CSS + "</style>\n\n" + SHELL_HTML
+    + '\n\n<script type="application/json" id="mc-data">' + json + close
+    + "\n<script>" + SCRIPT_SRC + close + "\n</body></html>";
+}
+saveBtn.onclick = async () => {
+  const art = await artP;
+  if (!art) { editMsg.textContent = "Saving only works when this page is open in Claude."; return; }
+  saveBtn.disabled = true; editMsg.textContent = "Saving…";
+  const wasDirty = dirty; dirty = false;
+  try { await art.publish(buildDoc()); editMsg.textContent = "Saved. Reloading…"; }
+  catch (e) {
+    const c = e && e.code;
+    if (c === "conflict") { editMsg.textContent = "A newer version was saved first, so the page is reloading to it. These edits weren't saved."; return; }
+    dirty = wasDirty; saveBtn.disabled = false;
+    if (["not_writer", "not_granted", "not_declared", "consent_required", "capability_disabled", "capability_removed"].includes(c)) {
+      readOnly = true; dirty = false; setEdit(false); editBtn.hidden = true; editMsg.textContent = "This view is read-only, so changes can't be saved here.";
+    } else if (c === "rate_limited") editMsg.textContent = "Saving too often. Wait a minute, then press Save again.";
+    else editMsg.textContent = "Couldn't save. Press Save to try again.";
+  }
+};
+artP = (window.claude && window.claude.use) ? window.claude.use("artifact").catch(() => null) : Promise.resolve(null);
+setEdit(false);
+</script>
+
+</body></html>

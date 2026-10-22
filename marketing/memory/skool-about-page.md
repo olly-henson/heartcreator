@@ -1,5 +1,37 @@
 # Skool About Page — Heart Attractor
 
+## ⚠️ Current live copy (2026-10-16, built on argument v5)
+
+```
+👉 Attract your soulmate using The Attraction Formula Meditation
+
+For people who want to meet someone special, settle down and build a life together.
+
+You don't need to fix yourself first. This 10-minute daily meditation builds the belief you're enough in 3 steps:
+
+✅ Step 1 - REGULATE - calms your nervous system and moves you out of the survival-based energy that keeps you believing you need to fix yourself.
+
+✅ Step 2 - REWRITE - rebuilds the inner confidence you've lost while looking for a way to fix yourself and make it happen.
+
+✅ Step 3 - REHEARSE - gets you clear on exactly who you want to be with, to put your mind at ease and let things unfold naturally, the way they're supposed to.
+
+♥️ I used this meditation to meet my wife.
+
+𝗪𝗵𝗮𝘁'𝘀 𝗜𝗻𝘀𝗶𝗱𝗲
+
+✅ The Attraction Formula Meditation
+🎁 Belief-Building Trainings & Materials
+💬 Daily Personal Support From Olly To Help
+
+⚡ Start your 7-day free trial of The Attraction Formula Meditation ❤️
+```
+
+Written with Olly on 2026-10-16 around argument v5 ("Fix myself, then it'll happen" → "you're already enough"). Skool caps the About Page at 1000 characters, and this measures about 957 (about 977 by the strict count). If Skool shows it over the limit, swap the transition line for: "You don't need to fix yourself first. Just build the belief you're enough, 10 minutes a day:"
+
+**Everything below is older and kept for reference only. Don't reuse it.**
+
+---
+
 > Updated 2026-08-19. Written for the Amy / Heart Attractor audience — supersedes the Rachel/Heart Creator version below the divider (kept for reference only, do not reuse).
 > Pricing: $30/month or $300/year, 7-Day Free Trial.
 > URL: `skool.com/heartcreator` (slug unchanged, brand renamed to Heart Attractor)

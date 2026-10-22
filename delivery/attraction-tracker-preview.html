@@ -1,0 +1,192 @@
+<title>Attraction Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: phone-width member app in one column, with a slim preview toolbar above it (Olly only). Single dark brand theme by choice. */
+:root{
+  --bg:#0C0610;
+  --glow-1:#4B1466;
+  --glow-2:#3D1252;
+  --surface:#170D1E;
+  --surface-2:#22142C;
+  --line:rgba(235,217,226,.12);
+  --fg:#FFFFFF;
+  --body:#EBD9E2;
+  --muted:#A893A3;
+  --accent:#B84FE8;
+  --accent-soft:#E1A6FF;
+  --accent-wash:rgba(184,79,232,.14);
+  --good:#86E0B8;
+  --note:#F3D99B;
+  --font:'Poppins',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(60rem 40rem at 110% -10%, color-mix(in srgb,var(--glow-1) 55%,transparent), transparent 60%),
+    radial-gradient(40rem 30rem at -20% 40%, color-mix(in srgb,var(--glow-2) 40%,transparent), transparent 65%);
+  background-attachment:fixed;
+  color:var(--body);font-family:var(--font);font-size:15px;line-height:1.55;
+  padding-inline:16px;padding-block:0 64px;
+}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent-soft);outline-offset:2px;border-radius:6px}
+h1,h2,h3{color:var(--fg);margin:0;text-wrap:balance;line-height:1.2}
+p{margin:0}
+
+/* Preview toolbar (not part of the member app) */
+.pv{max-width:560px;margin:0 auto;padding-block:14px 10px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.pv-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pv-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pv-days{display:flex;flex-wrap:wrap;gap:6px}
+.pv-day{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 11px;font-size:13px;color:var(--body)}
+.pv-day[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.pv-toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-left:auto}
+.pv-toggle input{accent-color:var(--accent)}
+
+/* App */
+.app{max-width:560px;margin:0 auto;padding-top:22px;display:flex;flex-direction:column;gap:18px}
+.hello{display:flex;flex-direction:column;gap:6px;padding-inline:4px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-soft)}
+.hello h1{font-size:28px;font-weight:800}
+.hello p{color:var(--muted)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.card h2{font-size:19px;font-weight:700}
+.card .sub{color:var(--muted);font-size:14px}
+.card.hero{background:linear-gradient(160deg,color-mix(in srgb,var(--glow-1) 70%,var(--surface)),var(--surface) 70%);border-color:rgba(184,79,232,.35)}
+
+/* Sliders */
+.q{display:flex;flex-direction:column;gap:8px}
+.q label{font-weight:500;color:var(--fg);font-size:15px}
+.q-row{display:flex;align-items:center;gap:12px}
+.q-row input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:28px}
+.q-val{min-width:2.2ch;text-align:right;font-size:22px;font-weight:800;color:var(--accent-soft);font-variant-numeric:tabular-nums}
+.q-desc{padding:10px 12px;border-radius:12px;background:var(--accent-wash);color:var(--fg);font-size:14px;line-height:1.45;min-height:3.4em}
+.q-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding-right:calc(2.2ch + 12px)}
+
+.btn{border:0;border-radius:14px;padding:14px 18px;background:var(--accent);color:#fff;font-weight:600;font-size:15px;box-shadow:0 8px 24px rgba(184,79,232,.35)}
+.btn:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--body)}
+.done-line{display:flex;align-items:center;gap:10px;color:var(--good);font-weight:600}
+.done-line svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.5}
+
+/* Olly's notes */
+.why{font-size:13px;color:var(--note);display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+.why svg{flex:none;width:16px;height:16px;margin-top:2px;fill:none;stroke:currentColor;stroke-width:2}
+.why b{font-weight:600}
+body.hide-notes .why{display:none}
+
+@media (prefers-reduced-motion:no-preference){
+  .card{animation:rise .35s ease both}
+  @keyframes rise{from{transform:translateY(6px)}to{transform:none}}
+}
+</style>
+
+<div class="pv" aria-label="Preview controls">
+  <div class="pv-row">
+    <span class="pv-label">Preview</span>
+    <button class="pv-day" data-act="restart">Start again</button>
+    <label class="pv-toggle"><input type="checkbox" id="notes-toggle" checked> Show my notes</label>
+  </div>
+</div>
+
+<main class="app" id="app"></main>
+
+<script>
+(function(){
+  // Draft check-in questions (Olly to rewrite)
+  var METRICS = [
+    {key:'a', short:'Calm', q:'How calm do you feel about meeting your person?', lo:'Not at all', hi:'Completely calm', better:'up', steps:[
+      "Thinking about it makes my chest tight. I'd rather not think about it at all.",
+      "I feel a knot of dread. Part of me thinks it's never going to happen.",
+      "I'm anxious most of the time I think about it. I overthink every date and every text.",
+      "I'm on edge. I feel hopeful for a moment then the worry comes straight back.",
+      "Some days I'm okay with it. Other days the worry takes over.",
+      "I'm calmer than I used to be. I still catch myself looking for signs it's going wrong.",
+      "Mostly relaxed. A few old worries pop up but they pass quickly.",
+      "I feel settled. I'm not chasing it or trying to force it.",
+      "I feel at ease. I trust it's on its way to me.",
+      "Completely calm. I feel safe and open, like it's already done."
+    ]},
+    {key:'o', short:'Belief', q:'How much do you believe that you can meet your soulmate?', lo:'Not at all', hi:'Completely', better:'up', steps:[
+      "I don't think it's going to happen for me.",
+      "It happens for other people. I just can't see it happening for me.",
+      "I want to believe it but I keep expecting to be let down.",
+      "Maybe. Most days I doubt it.",
+      "I go back and forth. I can see it's possible but I can't feel it yet.",
+      "I'm starting to believe it could really happen.",
+      "I believe it's possible for me. The doubt is quieter now.",
+      "I believe it. I can picture it without my mind arguing back.",
+      "I'm sure it's going to happen. It's only a matter of when.",
+      "I know it. It feels as real as something that's already happened."
+    ]},
+    {key:'p', short:'Clarity', q:'How clear are you on exactly who you want to be with?', lo:'No idea', hi:'Crystal clear', better:'up', steps:[
+      "I have no idea what I actually want. I just don't want to be alone.",
+      "I mostly know what I don't want, from past relationships.",
+      "I have a vague picture. It changes depending on my mood.",
+      "I know a few things I want but I couldn't describe the person.",
+      "I know some of the qualities I want. The picture is still blurry.",
+      "I know how I want to feel with them. Some of the details are still fuzzy.",
+      "I'm clear on who they are at their core and how they treat me.",
+      "I can picture them and our life together in detail.",
+      "I know exactly who they are and how I feel with them. I could write it down right now.",
+      "Crystal clear. I know who they are, how they love me and how I feel with them."
+    ]}
+  ];
+
+  var MEMBER = 'Amy';
+  var S;
+  function fresh(){ S = {saved:false, vals:{a:5,o:5,p:5}}; }
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  var TICK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var BULB = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
+  function why(t){return '<p class="why">'+BULB+'<span><b>Why this is here:</b> '+t+'</span></p>'}
+
+  function slider(m,val){
+    var id='base-'+m.key;
+    return '<div class="q"><label for="'+id+'">'+esc(m.q)+'</label>'+
+      '<div class="q-row"><input type="range" min="1" max="10" step="1" id="'+id+'" data-k="'+m.key+'" value="'+val+'"><output class="q-val" id="'+id+'-out">'+val+'</output></div>'+
+      '<div class="q-ends"><span>1 · '+esc(m.lo)+'</span><span>10 · '+esc(m.hi)+'</span></div>'+
+      '<p class="q-desc" id="'+id+'-desc">&ldquo;'+esc(m.steps[val-1])+'&rdquo;</p></div>';
+  }
+
+  function render(){
+    var h='<header class="hello"><span class="eyebrow">Before you begin</span><h1>Welcome, '+esc(MEMBER)+'</h1>'+
+      '<p>Let's take a 2-minute snapshot of where you are now, so you can see exactly what changes.</p></header>';
+    if(S.saved){
+      h+='<section class="card hero"><div class="done-line">'+TICK+'Snapshot saved</div><h2>Regulate Day 1 starts tomorrow</h2>'+
+        '<p class="sub">Do your first Regulate meditation, then come back here for your check-in.</p></section>';
+    } else {
+      h+='<section class="card hero"><h2>Your starting snapshot</h2><p class="sub">Be honest. Nobody else sees this. It's the "before" picture you'll compare against.</p>';
+      METRICS.forEach(function(m){h+=slider(m,S.vals[m.key])});
+      h+='<button class="btn" data-act="save">Save my snapshot</button>';
+      h+=why('Amy is analytical. Most people quit manifestation work because they "don't feel anything yet". A baseline turns a vague feeling into a number she can watch move.');
+      h+='</section>';
+    }
+    document.getElementById('app').innerHTML=h;
+  }
+
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-act]'); if(!t) return;
+    if(t.dataset.act==='save') S.saved=true;
+    else if(t.dataset.act==='restart') fresh();
+    else return;
+    render(); window.scrollTo(0,0);
+  });
+  document.addEventListener('input',function(e){
+    var t=e.target; if(t.type!=='range') return;
+    var v=+t.value, m=METRICS.filter(function(x){return x.key===t.dataset.k})[0];
+    S.vals[m.key]=v;
+    document.getElementById(t.id+'-out').textContent=v;
+    document.getElementById(t.id+'-desc').textContent='“'+m.steps[v-1]+'”';
+  });
+  document.getElementById('notes-toggle').addEventListener('change',function(e){document.body.classList.toggle('hide-notes',!e.target.checked)});
+
+  fresh(); render();
+})();
+</script>

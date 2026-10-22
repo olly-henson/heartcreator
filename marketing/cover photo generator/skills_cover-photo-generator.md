@@ -8,11 +8,11 @@ Four tools in this folder:
 - **`cover-photo-generator.html`** — the **community / hero cover**.
   Output 1920 × 1020 PNG (Skool cover ratio 1084 × 576). Doubles as a mobile
   Facebook ad creative. Sections A–C below.
-- **`program-cover-generator.html`** — the **classroom module covers** for
-  *The Attraction Formula* (Regulate / Rewrite / Rehearse / Get Started).
+- **`program-cover-generator.html`** — the **classroom course covers**: text
+  only, big bold white capitals on flat purple (since 2026-10-22).
   Output 1460 × 752 PNG (Skool classroom thumbnail spec). Section D below.
 - **`about-page-tile-generator.html`** — the **Skool About Page tiles** for the
-  three steps. Output 1400 × 790 PNG. Same look as the classroom covers but
+  three steps. Output 1400 × 790 PNG. Same look as the old photo classroom covers but
   keeps the section **sub text**. Section E below.
 - **`join-card-generator.html`** — a **risk-free checklist + real group-card
   screenshot** promo graphic (checklist left, arrow pointing at an uploaded
@@ -185,6 +185,11 @@ thenounproject, alvarotrigo); FB ad creative best practice
   he wants; build that first.
 - **Never** change a layout without handling the existing saved state (it can
   silently restore the old text over the new layout).
+- **Never** start building when Olly says he's getting reference images. Back
+  up, stop and wait, then match the reference (2026-10-22: the classroom
+  covers were rebuilt from his screenshot, not from my guess).
+- **Never** add photos, eyebrows, brand marks or effects to the classroom
+  covers. They are text only on flat purple.
 
 ### Backlog / ideas (do only if asked)
 
@@ -199,120 +204,49 @@ thenounproject, alvarotrigo); FB ad creative best practice
 
 ---
 
-## D. `program-cover-generator.html` — classroom module covers
+## D. `program-cover-generator.html` — classroom course covers (text only)
 
-Built 2026-09-09. Read the **Tool 2** section of `CLAUDE.md` first.
+Rebuilt 2026-10-22. Read the **Tool 2** section of `CLAUDE.md` first.
 
 ### What it is
 
-Four Skool classroom module covers at **1460 × 752** (exact spec — other ratios
-crop and Skool's menu button overlaps the art). Selector buttons
-**01 / 02 / 03 / Start** → keywords **REGULATE / REWRITE / REHEARSE / GET
-STARTED**, eyebrows **STEP 01/02/03 / START HERE**. Both eyebrow and keyword are
-editable text fields.
+Skool classroom course covers at **1460 × 752** (exact spec). An editable list
+of covers (add / rename / remove). Defaults: GET STARTED, THE ATTRACTION
+FORMULA, BONUS MATERIALS, THE CONSCIOUS CREATOR PROGRAM.
 
-The three steps (Olly's own wording, 2026-09-09):
-- **Regulate** — calm the nervous system out of survival-based, needy, attached
-  energy.
-- **Rewrite** — rewrite the core beliefs from the past that block love and drive
-  self-sabotage.
-- **Rehearse** — mentally and emotionally rehearse being with the partner until
-  it already feels real.
+### Design rules (locked with Olly, 2026-10-22)
 
-(These body lines are **not** shown on the cover — Olly had them removed. Keep
-them here as reference only.)
-
-### Design rules (locked with Olly)
-
-1. **Keyword + eyebrow only.** No ghost background number, no description line —
-   both were explicitly cut. The keyword is the entire focus.
-2. Person doing the work sits **full-bleed behind a magenta veil**, heavy on the
-   left so the keyword keeps contrast. Not every cover needs a photo — "Get
-   Started" ships photo-less on pure gradient.
-3. Brand system from `memory/brand-guidelines-heart-attractor.md`: Poppins only,
-   cosmic gradient `#4B1466 → #150818 → #0A0510`, single accent `#B84FE8` /
-   `#E1A6FF`, "THE ATTRACTION FORMULA" mark bottom-left, glow + stardust, no
-   bordered pills / rings.
-4. Same thumbnail test as the hero cover — shrink to ~300 px, the keyword must
-   still read.
-
-### Adding a photo to a step
-
-- If Olly names a path outside `C:\Users\Olly\AI OS\` he's authorising that one
-  file — otherwise ask him to drop it in `../assets/`.
-- Resize ≤ 1600 px wide, `quality≈82`, base64-encode, and replace the constant
-  (Step 1 = `EMBEDDED_REGULATE`) via a **python `str.replace`**, not the Edit
-  tool — the blob is ~270 KB. Pattern:
-
-  ```bash
-  cd "…/marketing/cover photo generator"
-  python - <<'EOF'
-  from PIL import Image
-  import base64
-  im = Image.open(r'C:\path\to\photo.png').convert('RGB')
-  w = 1600
-  im = im.resize((w, round(im.height*w/im.width)), Image.LANCZOS)
-  im.save('_tmp.jpg', quality=82, optimize=True)
-  b64 = 'data:image/jpeg;base64,' + base64.b64encode(open('_tmp.jpg','rb').read()).decode()
-  open('_b64.txt','w').write(b64)
-  EOF
-  # then python-replace the constant / placeholder with _b64.txt contents,
-  # delete _tmp.jpg / _b64.txt
-  ```
-
-- Or don't embed at all — hand Olly the tool and let him use **Choose image…**
-  at runtime (loads into that cover's slot, in memory).
-
-### Locking a framing
-
-Slider state (`ix/iy/iz/scrim` and the runtime photo) lives only in the browser
-— it resets on reload. When Olly says he likes a framing, get the four numbers
-(**Image X, Image Y, Image zoom, Veil strength**) and bake them into that
-cover's object in the `STEPS` array as the new default.
-
-### Previewing without a browser
-
-Headless Chrome screenshots the whole page:
-
-```bash
-"/c/Program Files/Google/Chrome/Application/chrome.exe" --headless --disable-gpu \
-  --hide-scrollbars --window-size=1900,1150 --screenshot="$TEMP/pcg.png" \
-  "file:///C:/Users/Olly/AI%20OS/heartattractor/marketing/cover%20photo%20generator/program-cover-generator.html"
-```
-
-To preview a non-default cover, copy to a temp file and inject a
-`.steps button[n].click()` into `boot()` before screenshotting; add
-`--virtual-time-budget=2500`.
+1. **Text only.** Flat brand-purple background (default `#4B1466`; swatches
+   `#3A0F52`, `#5E1A80`, `#150818`), the course name in big, bold, white
+   capitals, centred, Poppins 800. Olly: "just going to say exactly what it is",
+   e.g. GET STARTED in big bold letters.
+2. Nothing else on the cover: no photo, no eyebrow ("STEP 01"), no brand mark,
+   no glow, no stardust, no gradient text.
+3. Reference look: plain block-colour course tiles (dark red tiles with white
+   bold caps, two or three balanced lines, generous margins), restyled in our
+   font and colours.
+4. Lines are **balanced** (no lone word on the first line) and the text
+   shrinks to fit 80% width × 66% height. `|` forces a break.
+5. Thumbnail test: the mini preview at ~300 px must still read.
 
 ### Improving it
 
-- Same self-contained rules as tool 1: one `render()`, one Google Fonts
-  `<link>`, no build step, data-URI photos (no `file://` `<img>` — canvas taint).
-- Changing a default: update the `<input value="…">` **and** its `<span id="…-v">`
-  readout.
-- The `STEPS` array is the single source of per-cover state — add a 5th cover by
-  adding an object + a selector button with the next `data-step` index.
-- **Never let one slider's alpha double as another slider's job.** Real bug this
-  session: "Veil strength" was meant to control only the *intensity/colour* of
-  the purple glow, but its value (`sc`) was also multiplied into the
-  `destination-in` mask that controls how far the panel *covers* — so turning
-  veil strength down quietly ate into the solid coverage behind the headline
-  too, and Olly couldn't get "light veil, still fully covered" no matter what
-  he set Panel width to. Fix: the mask's own alpha must stay fixed (`1`, or
-  whatever the *coverage* control sets), and only the glow/tint/shade layers
-  drawn *before* the mask should scale with the intensity slider. When adding
-  a second slider to an existing effect, trace which canvas operation each one
-  actually touches before assuming they're independent.
-- **If an effect only renders conditionally (e.g. `if (hasImg) { drawPanel… }`),
-  say so up front in the control's hint text** — not just when Olly reports the
-  control "isn't doing anything." The "Copy framing & panel settings" feature
-  looked broken twice in one session because (a) the destination cover had no
-  photo loaded yet, so the panel/veil never draws at all regardless of what
-  values it holds, and (b) most covers ship with identical default values, so
-  copying between two untouched covers is copying identical numbers onto
-  themselves. Both are correct behaviour, not bugs — but both are exactly the
-  kind of thing a user reads as "it's not working." State the precondition
-  next to the control, don't wait to be asked twice.
+- Self-contained: one `render(i)`, one Google Fonts `<link>`, no build.
+- **Load the font before drawing:** `document.fonts.load('800 100px Poppins')`
+  then boot. `document.fonts.ready` alone let the canvas draw in a system font,
+  because the panel UI never used weight 800.
+- Saved state is in localStorage key `attraction-formula-classroom-covers-v2`.
+  A saved cover list overrides the defaults, so when you add a default cover,
+  tell Olly to use **+ Add cover** if he'd already saved.
+- Preview with headless **Edge** (Chrome isn't installed here), via PowerShell:
+  `& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --window-size=1500,1000 --virtual-time-budget=10000 "--screenshot=<scratchpad>\pcg.png" "file:///<scratchpad>/pcg.html"`.
+  To show another cover, copy the file to the scratchpad and change
+  `select(0)` in `boot()` to `select(n)`. Test a short, a medium and a long name.
+- The old photo + eyebrow version (Regulate / Rewrite / Rehearse, veil, panel,
+  stardust) is kept as `program-cover-generator.photo-version-backup.html`.
+  Its lessons that still apply to any canvas tool: never let one slider's value
+  also drive another effect's mask, and if a control only works under a
+  condition (e.g. a photo is loaded), say so next to the control.
 
 ---
 
@@ -425,6 +359,61 @@ off those edges.
 
 ---
 
+## H. `roadmap-generator.html` — Skool roadmap image
+
+Built 2026-09-28. Olly's brief: an image for Skool that "clearly shows the
+direction and steps someone needs to take (with a reason for each one)" to
+attract their soulmate. Portrait **1080 x 1350** so reasons read on a phone.
+
+- **v2 (same day), styled after Olly's reference** (a "Business Timetable"
+  infographic): a thick road snaking in two rows. Row 1 left to right: START
+  dot, 1 REGULATE, 2 REWRITE; U-turn down the right; row 2 right to left:
+  3 REHEARSE, heart. Big two-tone ring nodes (light left half, dark right half,
+  dark centre) with drawn icons: waves / pencil / eye+sparkle / heart; number
+  badges 1-3; white chevrons on the road; small dot+dash accents; title
+  centred between two dotted lines. One colour per road segment: lilac,
+  violet, magenta, pink-lilac.
+- v1 (a single vertical path) was replaced. Its save key
+  (`ohtools:roadmap-generator`) is ignored; v2 uses `ohtools:roadmap-generator-v2`.
+- **Layout is measured, not fixed**: row 2 sits below row 1's tallest label
+  block (`label(..., draw=false)` measures), the road is centred in the space
+  under the heading, and the U-turn is clamped 80px inside the right edge.
+  First render with fixed rows put row-1 reasons over the Rehearse circle.
+- Defaults: title YOUR ROADMAP, subtitle "Follow these steps in order to
+  attract your soulmate.", REGULATE 7 DAYS / REWRITE 30 DAYS / REHEARSE (no
+  length), reasons = Olly's About Page tile wording, heart = ATTRACT YOUR
+  SOULMATE + "Someone you can build your life with.". All editable.
+- **"What you'll do" box** under each reason (`w1`-`w3`, Olly 2026-09-28: "what
+  they will actually be doing specifically"): a tinted box headed WHAT YOU'LL
+  DO. Defaults are MY drafts from known facts (daily use is a guess; Rehearse
+  is vague), flagged to Olly for his wording. The canvas grows taller than
+  1350 when the text needs it (`BASE_H`, re-render on height change).
+- **2026-09-29: rebuilt from Olly's Skool roadmap post** (his words, condensed;
+  the post is the source of truth for this image's copy). Added an **"Ask for
+  help" banner** under the title (`helpt`/`helpx`: his "most important point"
+  is ongoing, not a step, so it's a banner, not a node) and a **"Why this
+  order?" note** under the road (`whyt`/`whyx`). Save key bumped to
+  `ohtools:roadmap-generator-v3` so older saves can't hide the new defaults.
+  Rewrite = "30-day" per the post. Image is now ~1900px tall.
+- **2026-09-29 (later): LANDSCAPE, one row** (Olly: "more landscape"). Canvas
+  1920 wide x 1080+ (grows with text). Road runs left to right with gentle
+  waves: START, **ASK FOR HELP** (speech bubble, tag ALWAYS, no number badge;
+  Olly: make getting help "actually one of the sections"), 1 Regulate,
+  2 Rewrite, 3 Rehearse, heart. Five equal columns (160 to W-70, maxW colW-18).
+  Text cut to one short line each from his post; "What you'll do" boxes and
+  the banner are empty (hidden) by default. "Why this order?" note is
+  line-balanced (no orphan word). Save key `ohtools:roadmap-generator-v4`.
+  The two-row snake / right-hand turn notes below apply to the old portrait version.
+- Preview Artifact: https://claude.ai/artifact/JAh4eDJ7WBp2V9JDd1uuYV (Download
+  PNG doesn't work inside the Artifact viewer; download from the local file).
+- The right-hand turn is a rounded corner / straight drop / rounded corner,
+  fixed 80px inside the right edge; a semicircle ran off the image once the
+  rows moved apart.
+- Sliders: title, step name, reason, circle size. Save / Back to defaults /
+  pinned preview / Download `attraction-formula-roadmap.png`.
+
+---
+
 ## Changelog
 
 **2026-09-28 — Skills review of the 2026-09-25 session**
@@ -473,3 +462,21 @@ off those edges.
   outside. Added a rule: state a control's precondition in its hint text up
   front, don't wait for it to be reported as broken.
 - Added `join-card-generator.html` to the top-of-file tool listing.
+
+### 2026-10-01 — Attraction Score cover added to `program-cover-generator.html`
+- 7th cover: selector button **Score** (`data-step="6"`), eyebrow **CHECK YOUR**, keyword **ATTRACTION SCORE**, no photo. Added at the end of `STEPS` and `STEP_LABELS`. Saved state is restored by index, so the six existing covers keep their saved settings.
+- It's for a new Skool classroom "Check Your Attraction Score" (tool: `delivery/attraction-score-snapshot.html`). Headless check: the keyword fits the frame and reads at thumbnail size.
+
+### 2026-10-22 — Classroom covers changed to text only
+
+- `program-cover-generator.html` rebuilt: flat brand purple, big bold white centred capitals (Poppins 800), no photos, eyebrow, brand mark, glow or stardust. Olly's reference was plain block-colour course tiles that say exactly what the course is.
+- Balanced line wrapping, auto-shrink to fit, editable cover list, 4 purple swatches, text size slider.
+- Lesson learned: load `800 100px Poppins` with `document.fonts.load` before drawing; `document.fonts.ready` alone let the canvas fall back to a system font.
+- Old version kept as `program-cover-generator.photo-version-backup.html`. Section D above describes the old photo version.
+
+### 2026-10-22 — Skill review
+- Section D rewritten for the text-only covers. The old photo rules (veil, eyebrow, photo embedding, locking a framing, Chrome preview path) were removed because Olly overrode them; the two general canvas lessons are kept as one line.
+- Never list: wait for reference images when Olly says they're coming; no photos or extras on classroom covers.
+- Top-of-file listing and Section E wording updated to match.
+- Added the "The Conscious Creator Program" default cover (Olly asked) and the "saved list overrides defaults" note.
+

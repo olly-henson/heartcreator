@@ -1,0 +1,1236 @@
+<title>Content Idea Generator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600;700;800&family=Anton&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a form and idea cards on the left, the saved idea queue on the right. Built on the Messaging Center core message. */
+:root{
+  --paper:#F5F3F7; --surface:#FFFFFF; --ink:#211B2A; --muted:#625A6E; --line:#DED8E5;
+  --heart:#A3245F; --heart-soft:#F6E2EC; --heart-fg:#FFFFFF; --calm:#1E6A5A; --calm-soft:#DCEFE9; --warn:#9B4A1E; --warn-soft:#F7E4D9;
+  --f-display:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15121A; --surface:#1E1A25; --ink:#ECE8F1; --muted:#A79FB3; --line:#332D3D;
+  --heart:#F08DB8; --heart-soft:#3A1E2C; --heart-fg:#1E0E16; --calm:#62C7AC; --calm-soft:#153029; --warn:#F0A073; --warn-soft:#33221A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15121A; --surface:#1E1A25; --ink:#ECE8F1; --muted:#A79FB3; --line:#332D3D;
+  --heart:#F08DB8; --heart-soft:#3A1E2C; --heart-fg:#1E0E16; --calm:#62C7AC; --calm-soft:#153029; --warn:#F0A073; --warn-soft:#33221A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0}
+h1{font-size:44px;line-height:1.05}
+h3{font-size:21px;line-height:1.25}
+p{margin:0}
+.label{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hint{color:var(--muted);font-size:14px;max-width:66ch}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
+@media (max-width:920px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.core{background:var(--heart-soft);border:1px solid var(--heart);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.core p.big{font:400 22px/1.3 var(--f-display)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.form{grid-template-columns:1fr}}
+.form .full{grid-column:1/-1}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+label.f .hint{font-weight:400;font-size:13px}
+select,input[type=text]{font:15px/1.4 var(--f-body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--heart);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button.btn{font:600 14px/1 var(--f-body);padding:11px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+button.btn:hover{border-color:var(--muted)}
+button.primary{background:var(--heart);border-color:var(--heart);color:var(--heart-fg)}
+button.primary:hover{filter:brightness(1.07);border-color:var(--heart)}
+button.small{font-size:13px;padding:7px 11px}
+button:disabled{opacity:.55;cursor:wait}
+.status{font-size:13px;color:var(--muted)}
+.status.err{color:var(--warn)}
+.idea{display:flex;flex-direction:column;gap:12px}
+.idea .hook{font:400 25px/1.25 var(--f-display)}
+.idea .hook.editable{cursor:text;outline:none;border-radius:6px;transition:box-shadow .15s}
+.idea .hook.editable:hover{box-shadow:0 0 0 1px var(--line)}
+.idea .hook.editable:focus{box-shadow:0 0 0 2px var(--heart)}
+.idea .editable{cursor:text;outline:none;border-radius:6px;padding:2px 4px;margin-left:-4px;transition:box-shadow .15s}
+.idea .editable:hover{box-shadow:0 0 0 1px var(--line)}
+.idea .editable:focus{box-shadow:0 0 0 2px var(--heart)}
+.idea .hook.ighead{align-self:flex-start;max-width:min(100%,360px);background:#fff;color:#111;font:700 20px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center;padding:8px 14px;border-radius:7px;box-shadow:0 0 0 1px var(--line)}
+.idea .say{font-style:italic}
+.tag{display:inline-block;font:500 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--calm);background:var(--calm-soft);padding:5px 8px;border-radius:4px}
+.idea ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.lands{border-left:3px solid var(--heart);padding-left:12px}
+.sub{font:500 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;display:block}
+aside .item{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-top:1px solid var(--line)}
+aside .item:first-child{border-top:0}
+aside .item b{font-weight:600;font-size:14px;line-height:1.35}
+aside .meta{font:12px/1.3 var(--f-mono);color:var(--muted)}
+aside ul.cov{margin:0;padding-left:18px;font-size:13px}
+.x{background:none;border:0;color:var(--muted);font-size:13px;cursor:pointer;padding:4px}
+.x:hover{color:var(--warn)}
+ul.plain{list-style:none;margin:0;padding:0}
+#qst.saved{color:var(--calm)}
+#rejBox{border-top:1px solid var(--line);padding-top:12px}
+#rejBox summary{cursor:pointer;font-weight:600;font-size:14px}
+#rejBox .hint{margin:8px 0}
+.rejected{display:flex;flex-direction:column;gap:10px;border-style:dashed}
+.rejected input{font:14px/1.4 var(--f-body)}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs button{font:600 14px/1 var(--f-body);background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:13px 12px;cursor:pointer;margin-bottom:-1px;white-space:nowrap;flex:none}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--heart)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:520px){.seg{grid-template-columns:1fr}}
+.seg button{font:inherit;text-align:left;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.seg button b{font-size:15px}
+.seg button span{font-size:13px;color:var(--muted)}
+.seg button[aria-pressed="true"]{border-color:var(--heart);background:var(--heart-soft)}
+.ctabox{background:var(--calm-soft);border-radius:8px;padding:10px 12px;font-size:14px}
+.frames{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
+.frames li p{margin:2px 0 0}
+.frames .ot{font-weight:600}
+.memeed{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:18px;align-items:start;border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:640px){.memeed{grid-template-columns:minmax(0,1fr)}}
+.memeed img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.memeed .stack{gap:10px}
+.memeed textarea{font:15px/1.4 var(--f-body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;resize:vertical;min-height:44px}
+.idea p.post{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+</style>
+
+<div class="wrap">
+  <header class="stack" style="gap:8px">
+    <span class="label">The Attraction Formula · Content</span>
+    <h1>Content Idea Generator</h1>
+    <p class="hint">Ideas built on your core message. Instagram is freestyled, so you get the hook, the points to cover and the line to land on, not a script. Skool posts come written, ready to paste. Memes give you the text for each panel of a popular template.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Platform"><button role="tab" id="tab-instagram" aria-selected="true" aria-controls="panel-instagram">Instagram</button><button role="tab" id="tab-skool" aria-selected="false" aria-controls="panel-instagram">Skool</button><button role="tab" id="tab-memes" aria-selected="false" aria-controls="panel-instagram">Memes</button></div>
+
+  <div class="core">
+    <span class="label">Core message</span>
+    <p class="big">Who you attract isn't about what you know. It's about your emotional state around love.</p>
+    <p class="hint">From the Messaging Center. Every idea is built on it.</p>
+  </div>
+
+  <div class="grid" id="panel-instagram" role="tabpanel" aria-labelledby="tab-instagram">
+    <main class="stack" style="gap:20px">
+      <section class="card stack">
+        <div class="seg" role="group" aria-label="What are you making?">
+          <button type="button" id="ch-reels" aria-pressed="true"><b>Reels · Authority</b><span>Your argument and philosophy. Every Reel sends people to the free trial with ATTRACTION.</span></button>
+          <button type="button" id="ch-stories" aria-pressed="false"><b>Stories · Connection</b><span>Your life and your story, so people feel you understand them.</span></button>
+        </div>
+        <p class="hint" id="skoolNote" hidden>Posts for members who've already joined and get it. A good week mixes about two value posts (philosophy, teaching), a few engagement and accountability posts, and one wins or recognition post. The biggest drop-off is in the first two weeks, so lean on "What's normal" and "Welcome" posts for new members.</p>
+        <p class="hint" id="memeNote" hidden>Popular meme templates that show the old belief (learn everything first) next to the new one (get into the right emotional state). Pick a template and where it's going, and you get the text for each panel. Make it free in <a href="https://imgflip.com/memegenerator" target="_blank" rel="noopener">Imgflip</a> or Canva. The joke is on the old approach, never the person.</p>
+        <p class="hint" id="balance">Reels show you can help them. Stories show you understand them. Keep both going so people neither friend-zone you nor feel intimidated.</p>
+        <div class="form">
+          <label class="f">Content type<select id="type"></select></label>
+          <label class="f">Format<select id="format"></select></label>
+          <p class="hint full" id="typeHint"></p>
+          <label class="f full" id="hookWrap">Hook style<select id="hook"></select><span class="hint" id="hookHint"></span></label>
+          <label class="f">Part of the message<select id="part"></select></label>
+          <label class="f" id="storyCtaWrap" hidden>Call to action<select id="storyCta">
+            <option value="none">None, pure connection</option>
+            <option value="dm">Soft: DM me ATTRACTION for the free trial</option>
+          </select></label>
+          <div class="f full" id="reelCtaWrap"><span>Call to action (on every Reel)</span><p class="ctabox" id="reelCta"></p></div>
+          <label class="f full">Topic or angle <span class="hint">Optional. Something you want to talk about, a question you've been asked, or a word to build on.</span><input type="text" id="topic" placeholder="e.g. why the people you like won't commit"></label>
+          <label class="f" id="countWrap">How many ideas<select id="count"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label>
+        </div>
+        <div class="row"><button class="btn primary" id="go">Generate Reel ideas</button><button class="btn" id="memeBlank" hidden>Make a meme from scratch</button><span class="status" id="st" role="status"></span></div>
+      </section>
+      <div id="ideas" class="stack" style="gap:16px"></div>
+    </main>
+
+    <aside class="card stack" aria-labelledby="qh">
+      <h3 id="qh">Content idea queue</h3>
+      <p class="hint" id="qhint">Ideas you plan to film. Press Add to queue under an idea.</p>
+      <ul class="plain" id="qlist"></ul>
+      <p class="status" id="qst">Loading your queue…</p>
+      <details id="rejBox">
+        <summary>Not what we're after (<span id="rejN">0</span>)</summary>
+        <p class="hint">Ideas you turned down. The tool reads the latest ones for each format, with your reasons, before it writes anything new. Remove one if you change your mind.</p>
+        <ul class="plain" id="rejList"></ul>
+      </details>
+    </aside>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let qReady = false;
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+/* The core message, from the Messaging Center (Core message tab). */
+const CORE = `CORE MESSAGE (follow it exactly)
+One line: Who you attract isn't about what you know. It's about your emotional state around love.
+Community: The Attraction Formula (Skool). Never call it Heart Attractor. Its promise: attract a genuine, committed relationship without more books, courses or dating rules.
+Who: driven, growth-minded singles who've done years of inner work and tried every method.
+Promised land: a genuine, long-lasting, committed relationship with someone they're attracted to, where they feel safe and can fully be themselves. Someone they can settle down and build a life with.
+Pain: love is the one area that won't move, while friends who did no inner work settle down.
+Bleeding neck pain: part of them doubts it'll ever happen, and when someone great shows up it feels too good to be true.
+Old belief: "Once I've learned what's wrong with me and fixed it, I'll meet my person."
+The crack: your friends who settled down weren't even trying. And they aren't flawless either: the friends and family in great relationships still have their insecurities, hang-ups and baggage. They never fixed everything first. They just felt an emotional connection with the person they met. So you don't need to be "fixed" to meet your person. Lean on this often, across every type of content.
+Analogy: you're reading the radio manual instead of changing the station. However much you know about radios, you only pick up the station you're tuned to.
+Real cause: the wrong emotional state around love, not life in general. They might feel free at work and joyful with friends, but every time they think about being with someone they feel frustration, anxiety or worry. That's the state they bring to dating, so they keep attracting people who match it, the right ones don't come in, and you can't even see them when they're there. So you stay stuck in the loop. You can know everything about attachment styles and how to text someone and still be stuck.
+What they need: the right emotional state (joy, freedom, appreciation, gratitude, excitement, empowerment, feeling safe).
+Solution: The Attraction Formula Meditation, a 10-minute daily meditation that puts you in the right emotional state, so you attract the right person. The community also has a Find Your State training, state-shifting tools (the State Shifting Ladder) and daily support from Olly and the community.
+The 3 steps: Drop In (bring your attention out of your head and into your heart), Open Up (begin to slow your breathing so your body relaxes and opens up), Feel It (generate a new emotional state aligned with the future you want with your partner).
+New belief: "The right emotional state attracts the right person. The Attraction Formula Meditation puts me in it, every day."
+Why it's not positive thinking: positive thinking happens in your head and fades under stress; this changes how you actually feel. Emotional contagion: people pick up on each other's emotional states through faces, voices and body language. When you're anxious you overlook calm, kind people and put up with the ones who keep you guessing. HeartMath Institute research: heart focus, slow breathing and appreciation make the heart rhythm smooth and steady (heart coherence), linked to feeling calm, safe and connected. HeartMath also measured the heart's electromagnetic field: the strongest rhythmic field the body produces, detectable a few feet away with sensitive instruments, and in small lab studies traces of one person's heartbeat showed up in another person's brainwaves when they sat close or touched. Always present this as HeartMath's early, small studies suggesting connection may be more physical than we think. Never say the field attracts a partner.
+Objections: "But I'm happy most of the time" (it's how you feel about love, not life). "I've tried feeling good, it doesn't stick" (you were thinking your way into it; this shifts how you feel, a little more every day). "Isn't this just another method?" (every method was about what you know; this is about how you feel). "So I just sit and wait?" (no, you still date, just in the right emotional state). "I don't want to push myself out of my comfort zone or force things" (you don't have to: it's 10 gentle minutes a day, no forcing yourself to date more or harder. You date when it feels right, from a calmer state).
+Proof (Olly's real story only): after his 7-year relationship ended in 2019 he tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results. He met his wife when he focused on how he was feeling every day, improving it and shifting his state, rather than learning more about what he should be doing.
+What to expect (lead with time wasters often, it's the audience's own phrase): you're better able to spot high-quality partners, you naturally repel time wasters and people who aren't right for you, and the right people start showing up, with things unfolding in a natural and exciting way.
+
+AUDIENCE VOICE (from real survey answers; use these as angles and language wherever the content type allows)
+Angles to draw on:
+- Catastrophising about love: running the worst case before anything has even happened. That's the old emotional state, not intuition.
+- Dating apps make people feel disposable. The apps aren't the whole problem: bringing the wrong state into them makes it worse.
+- The ordinary Sunday: breakfast together, going for walks, cooking together, seeing friends and family. The promised land is calm everyday life with someone, not fireworks.
+- Self-worth isn't the missing piece. Many believe "I'll meet the right person once I see my own worth as good enough." Reframe: worth isn't a project to finish before love. The friends and family in great relationships never finished it either, they still have their doubts and insecurities. They just felt an emotional connection with the person they met.
+- "I'm attracted to the wrong people." Reframe: we're drawn to what feels familiar to our current emotional state. Change the state and who feels attractive changes.
+- The most annoying advice: "Think positive. Just change your thoughts. It's easy." Never sound like this, never say it's easy. Good angle: why "just think positive" never worked for love.
+Their phrases (use when they fit naturally, never forced): "time wasters", "consistent men", "dating apps make people feel disposable", "I catastrophise", "found faults early on", "too much or not enough", "worrying it might never happen".`;
+
+const RULES = `WRITING RULES
+- These are Instagram Reels: freestyled talking-head videos. Give the hook, the points to cover and the line to land on. Never write a script.
+- For Reels, the hook is the HEADER: one line that sits above Olly's head on the cover, that he reads out as his first sentence, and that opens the caption. It must make the right person stop scrolling, name the specific topic and pay off in the Reel. No vague hooks, no clickbait.
+- Every idea must leave the viewer thinking "this is exactly what I need": name their experience, show the crack, and point to the right emotional state.
+- Use "soulmate", "your person" or "the right person" freely. Science-based framing, not manifestation: never "frequency", "vibration", "energy", "manifest" or "the universe". Say "people who match your state".
+- Never claim people can sense your heart rhythm or that the heart's field pulls a partner in. Never promise they'll meet someone by a date.
+- Never invent statistics, studies, member results, quotes or stories. Olly's story is the only story you can tell as fact.
+- Don't knock therapy or the work they've done. The line is "it's not wrong, it's just not what attracts the right person".
+- Say "practise", never "work on how you feel" or "fix". Never mention Regulate, Rewrite or Rehearse.
+- Plain English, short sentences, UK spelling but "program" and "visualize". No em dashes. No hype words (unlock, game changer, skyrocket).`;
+
+const POST_TYPES = {
+  "Personal story": {group:"Connection", desc:"Tell a story of your own that people can relate to. People connect with human emotion.",
+    formats:["I get it...","I know what it's like...","I never thought I'd be able to...","I know it feels scary...","The moment I realised...","What I'd tell myself the week after my breakup","The day I almost gave up on finding someone","What changed when I stopped learning and started shifting my state","Me in 2019 vs me now","Something I used to believe about love","How I met my wife (the part I don't usually share)","The thing nobody told me about being single"],
+    rule:"Use only Olly's real story: his 7-year relationship ended in 2019, he tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results, and he met his wife when he focused on how he felt every day instead of learning more. Never invent details, dates, places or conversations. Where a detail is needed, write it as a prompt for Olly, like [the moment you realised]."},
+  "Lifestyle": {group:"Connection", desc:"Show you're a normal person like them, or who they want to be, and what you're up to.",
+    formats:["Date night or time with my wife","How I unwind","A favourite place to eat","A family or friends outing","Post-workout or morning routine","A day in my life","Doing my own 10-minute practice","What a calm, secure relationship actually looks like day to day","Things my wife and I do that keep it fun and playful","Little moments I didn't think I'd ever have"],
+    rule:"Suggest what to film from his normal life (he's married, so his wife and their life together can feature) and link it back to the right emotional state in a line or two. Keep it light."},
+  "Questions / entertainment": {group:"Connection", desc:"Pure engagement: ask your audience something or entertain them.",
+    formats:["How do you feel when you think about dating?","Fill in the blank: Dating is ___.","This or that: ___ or ___?","Unpopular opinion: ___. Agree or disagree?","POV: ___","Rate this dating advice out of 10","Tell me you've read every attachment book without telling me","What's the worst dating advice you've ever been given?","What people say vs what they actually mean","Meme or humour","Something that happened to me or I saw"],
+    rule:"Engagement first. Questions should get comments from the right people and quietly surface the old belief or the wrong emotional state. Humour must never mock the viewer."},
+  "Personal philosophy": {group:"Authority", desc:"Challenge and reframe a belief: everyone says X, here's the truth and why. Gets people bought into your way.",
+    formats:["It's not your fault","WARNING: BS belief ahead","Myth vs truth","Everyone says ___. Here's why that's wrong.","Stop ___. Do this instead.","The real reason ___","What nobody tells you about ___","Unpopular opinion","If I had to find my person again from scratch","A quote"],
+    rule:"Take one common belief in the dating and self-help space (learn more, fix yourself, heal first, texting rules, attachment styles), call it out and reframe it with the core message: it's your emotional state, not what you know."},
+  "Results share": {group:"Authority", desc:"Show it works for people just like them. Answers the unspoken question: will it work for me?",
+    formats:["Member transformation story","Screenshot of a member win","Before / after","Member win of the week","What a member noticed in their first week","From ___ to ___ (a member's shift)","A comment or DM someone sent me","My own result: how I met my wife"],
+    rule:"Never invent member results, quotes or screenshots. Write each idea as a structure for Olly to fill with a REAL member win, using placeholders like [member's win], and say what kind of win to look for (feeling calmer, spotting a time waster, noticing better people, a date that felt easy)."},
+  "Free value": {group:"Authority", desc:"Teach your best information so people see you really know what you're talking about.",
+    formats:["Don't make this mistake","A member asked me \"___\" and here's what I told them","# signs you're in the wrong emotional state","# things to stop doing if you want the right person","Do this, not that","How to find the emotional state that's right for you","A 2-minute state shift before a date","Signs it's working (that look like it isn't)","The science of why you attract who you attract","One step explained: Drop In, Open Up or Feel It","The mistake I see every week"],
+    rule:"Teach something genuinely useful that leads back to the core message: how your state shapes who you notice and attract, how to find your state, quick state shifts, what's normal in the first weeks. Science only from the core message. Never invent studies or statistics."}
+};
+Object.assign(POST_TYPES, {
+ "Member philosophy": {
+  "group": "Skool",
+  "desc": "Authority for people who already get it. Go one layer deeper than the Reels, softly. No convincing, just deepening.",
+  "formats": [
+   "Now that you know it's your state, here's the next layer",
+   "A reminder for the days it feels slow",
+   "The belief I still catch myself in",
+   "What I wish I'd known in my first month",
+   "Why \"trying harder\" pulls you back into the wrong state",
+   "The difference between feeling good and being in the right state",
+   "What the right emotional state isn't",
+   "A quote, and what it means for us"
+  ],
+  "rule": "They've joined and they get the core message, so don't re-sell it or explain it from scratch. Speak as a guide walking next to them: \"you already know…, here's what I've noticed…\". Warm, calm and reassuring, never preachy. Deepen one idea from the core message."
+ },
+ "Teaching": {
+  "group": "Skool",
+  "desc": "More information for members: how to apply the practice to real life, answers to their questions, one idea explained properly.",
+  "formats": [
+   "A member asked me \"___\". Here's my answer",
+   "How to use the meditation before a date",
+   "What to do after a date that went nowhere",
+   "Find your state: a 5-minute exercise",
+   "One step explained: Drop In, Open Up or Feel It",
+   "How to spot a time waster from your state, not your head",
+   "How to use the State Shifting Ladder when doubt creeps in",
+   "The science, one layer deeper",
+   "3 small ways to shift your state today"
+  ],
+  "rule": "Teach one useful, practical thing they can do this week. Tie it to the meditation, the Find Your State training or the State Shifting Ladder. Science only from the core message. Never invent studies or statistics. If it answers a member's question, write the question as a placeholder like [member's question] unless Olly gives it in the topic."
+ },
+ "Accountability": {
+  "group": "Skool",
+  "desc": "Keep people practising: check-ins, intentions, streaks and mini challenges.",
+  "formats": [
+   "Monday state check-in: what state do you want to live in this week?",
+   "Did you do your 10 minutes today?",
+   "Mid-week check-in",
+   "7-day practice challenge",
+   "Set your intention for the week",
+   "Streak check: how many days in a row?",
+   "Weekend reset",
+   "Commit in the comments"
+  ],
+  "rule": "Make it easy to reply in one line or an emoji. One clear ask. Celebrate showing up, not perfection, and never shame anyone who's missed days. Remind them it's 10 minutes."
+ },
+ "What's normal": {
+  "group": "Skool",
+  "desc": "Support for the dips: day 6 restlessness, the week 2 slump, the days the old state pulls them back. The moments people quietly cancel.",
+  "formats": [
+   "Has this week felt harder?",
+   "Why it can feel worse before it feels better",
+   "If you've missed a few days, read this",
+   "When your old state pulls you back",
+   "Feeling nothing in the meditation? That's normal",
+   "Why you want to jump to the next method",
+   "The first sign it's working (it's not meeting someone)"
+  ],
+  "rule": "Name the dip honestly, normalise it, then give one simple next step (do the 10 minutes, use the Ladder, post in the community). Warm and personal. This is where trial members decide whether to stay, so make them feel understood, not sold to. Only describe experiences from the core message or that Olly gives you."
+ },
+ "Wins & recognition": {
+  "group": "Skool",
+  "desc": "Wins threads, milestones and member spotlights. Show progress so others believe it can happen for them too.",
+  "formats": [
+   "Friday wins thread",
+   "Small shifts count: share yours",
+   "Member spotlight",
+   "Milestone: [member] hit [number] days",
+   "What's shifted since you joined?",
+   "Win of the week"
+  ],
+  "rule": "Never invent member wins, names or quotes. For spotlights and milestones, use placeholders like [member's name] and [their win], and say what kind of win to look for (feeling calmer, spotting a time waster, noticing better people, a date that felt easy, saying no to the wrong person). Only post with permission."
+ },
+ "Life & behind the scenes": {
+  "group": "Skool",
+  "desc": "Olly as a normal person: life with his wife, how he unwinds, his own practice. Builds connection inside the community.",
+  "formats": [
+   "What my morning practice actually looks like",
+   "Date night with my wife",
+   "How I unwind after a long week",
+   "What a calm relationship looks like day to day",
+   "Something that made me smile this week",
+   "Where I did my meditation today"
+  ],
+  "rule": "Relaxed and personal, like a message to friends. Suggest a photo or short video to attach. Tie it back to the right emotional state in a line or two. Never invent details of his life: leave placeholders like [where you were] for Olly to fill."
+ },
+ "Engagement": {
+  "group": "Skool",
+  "desc": "Questions, polls, this or that and fill in the blank. Easy reasons to comment.",
+  "formats": [
+   "Question of the week",
+   "Poll",
+   "This or that",
+   "Fill in the blank: The right relationship feels ___",
+   "Hot take: agree or disagree?",
+   "What's one word for how you want to feel with your person?",
+   "Introduce yourself (for new members)",
+   "What would you love more of in here?"
+  ],
+  "rule": "Open-ended questions that are easy to answer and quietly connect to the right emotional state. For polls give 2 to 4 options. Never mock anyone."
+ },
+ "Welcome & onboarding": {
+  "group": "Skool",
+  "desc": "For new members in their first days, the riskiest time for cancelling.",
+  "formats": [
+   "Welcome to this week's new members",
+   "Start here: your first 3 steps",
+   "Your first week: what to expect",
+   "Haven't done your first meditation yet? Start here",
+   "Meet the community: introduce yourself"
+  ],
+  "rule": "Make the first step tiny and obvious: do today's 10-minute meditation, then introduce yourself. Mention what's inside (the Find Your State training, the meditation, the state-shifting tools, daily support from Olly). Warm and simple, no overwhelm."
+ }
+});
+/* Memes: each template is a content type, and the format is where the meme is going. */
+const MEME_PLACES = ["Instagram Story","Reel (meme on screen while I talk)","Skool post","Instagram feed post"];
+Object.assign(POST_TYPES, {
+  "Any template (tool picks)": {group:"Meme", desc:"The tool picks the template that lands the idea best.", formats:MEME_PLACES,
+    rule:"Pick the best template for the idea from: Bell curve, Buff Doge vs Cheems, Two guys on a bus, Drake, Galaxy brain, Gru's plan, Distracted boyfriend, Two buttons, Panik Kalm Panik, Tuxedo Winnie the Pooh, Charlie's conspiracy board, They don't know. Use a different template for each idea."},
+  "Bell curve": {group:"Meme", desc:"The IQ bell curve: simple guy on the left, crying overthinker in the middle, calm wise guy on the right. Left and right say the same simple thing.", formats:MEME_PLACES,
+    rule:"Three panels: Left (simple guy), Middle (crying guy, the long list of things the old belief says to learn first), Right (calm wise guy, same words as Left). The middle is the old belief; left and right are the right emotional state."},
+  "Buff Doge vs Cheems": {group:"Meme", desc:"Strong, confident Buff Doge next to small, sad Cheems.", formats:MEME_PLACES,
+    rule:"Two panels: Buff Doge (the new way, the right emotional state and how it turns out) and Cheems (the old way, still learning and still stuck). A short label over each."},
+  "Two guys on a bus": {group:"Meme", desc:"Two people on a bus: one stares sadly at a rock wall, the other smiles at a beautiful view.", formats:MEME_PLACES,
+    rule:"Two panels: Sad side (the old way of thinking about love) and Happy side (the right emotional state)."},
+  "Drake": {group:"Meme", desc:"Drake turning away from the top option and pointing happily at the bottom one.", formats:MEME_PLACES,
+    rule:"Two panels: No (top, the old belief or habit) and Yes (bottom, the right emotional state)."},
+  "Galaxy brain": {group:"Meme", desc:"Four panels with the brain glowing brighter each time.", formats:MEME_PLACES,
+    rule:"Four panels, smallest brain to most glowing. Panels 1 to 3 climb through the old learn-and-fix approach; panel 4 is the simple shift to the right emotional state."},
+  "Gru's plan": {group:"Meme", desc:"Gru presents a plan on a flipchart and does a double take at the last step.", formats:MEME_PLACES,
+    rule:"Four panels: steps 1 and 2 are the plan (learning more), step 3 is the disappointing result, step 4 is Gru staring at the same result."},
+  "Distracted boyfriend": {group:"Meme", desc:"A man turns to look at someone walking past while his girlfriend looks on, annoyed.", formats:MEME_PLACES,
+    rule:"Three labels: Boyfriend (me, or most people), Girlfriend (the old thing they keep going back to), Passer-by (the new thing that catches their eye). Keep it light; never about cheating."},
+  "Two buttons": {group:"Meme", desc:"A sweating man can't choose between two red buttons.", formats:MEME_PLACES,
+    rule:"Three labels: Button 1, Button 2 (both versions of the old approach, or the old versus the new) and Sweating guy (me, or most of us)."},
+  "Panik Kalm Panik": {group:"Meme", desc:"Three panels: panicking, calm, panicking again.", formats:MEME_PLACES,
+    rule:"Three panels about a dating moment: Panik (the worry), Kalm (a reassuring thought), Panik (the old belief comes back). Can also flip to show the new state: Panik, Kalm, Kalm."},
+  "Tuxedo Winnie the Pooh": {group:"Meme", desc:"Plain Pooh on top, fancy Pooh in a tuxedo underneath.", formats:MEME_PLACES,
+    rule:"Two panels: Plain Pooh (the everyday or old way of saying it) and Tuxedo Pooh (the classy, new-belief version)."},
+  "Charlie's conspiracy board": {group:"Meme", desc:"Charlie from It's Always Sunny frantically explaining a wall of papers and red string.", formats:MEME_PLACES,
+    rule:"Two parts: a top line (what we're doing, e.g. me working out why they didn't text back) and the board (a few overthinking notes pinned up). This shows overanalysing, the old state."},
+  "They don't know": {group:"Meme", desc:"A man standing alone in the corner at a party, thinking a secret to himself.", formats:MEME_PLACES,
+    rule:"One panel: 'They don't know...' plus a quiet win, e.g. he's feeling calm about love now. Warm, a bit smug, never mocking anyone."}
+});
+const PARTS = [
+  ["", "Any part (pick the strongest)"],
+  ["old", "The old belief: learn and fix, then meet my person"],
+  ["crack", "The crack: friends in great relationships weren't trying and aren't flawless"],
+  ["cause", "The real cause: the wrong emotional state and the loop"],
+  ["need", "What they need: the right emotional state"],
+  ["expect", "What to expect: spot, repel, the right people show up"],
+  ["steps", "The 3 steps: Drop In, Open Up, Feel It"],
+  ["science", "Why it's not positive thinking (the science)"],
+  ["story", "Olly's story: met his wife by shifting his state"],
+  ["voice", "What the audience told us (survey angles and phrases)"]
+];
+
+/* Hook styles performing well on Reels in 2026 (patterns from creator guides, adapted to this niche). */
+const HOOKS = {
+ "reels": [
+  {
+   "name": "Named pattern",
+   "tmpl": "If you [very specific behaviour], here's what's happening.",
+   "ex": "If you reread their text five times before replying, here's what's really going on.",
+   "why": "Describes their behaviour so precisely they feel seen. Gets sent to friends."
+  },
+  {
+   "name": "Correction",
+   "tmpl": "That's not [label they blame themselves with]. That's [the real cause].",
+   "ex": "That's not bad luck in love. That's the wrong emotional state.",
+   "why": "Swaps self-blame for the real cause. Called the strongest structure in psychology-led content."
+  },
+  {
+   "name": "Permission",
+   "tmpl": "You're allowed to [thing they think they're not allowed to do].",
+   "ex": "You're allowed to stop reading dating books.",
+   "why": "Lifts guilt. People save it to come back to."
+  },
+  {
+   "name": "Contradiction",
+   "tmpl": "[Common belief] is actually [the opposite].",
+   "ex": "You don't have to fix yourself before you meet your person.",
+   "why": "Challenges what they've been told. Drives comments and saves."
+  },
+  {
+   "name": "Client pattern",
+   "tmpl": "Almost every [person I work with] does this.",
+   "ex": "Almost everyone who joins my community has done years of inner work. Here's what's still missing.",
+   "why": "Shows experience without listing credentials. Only use patterns that are true."
+  },
+  {
+   "name": "Question I get asked",
+   "tmpl": "The question I get most is [X]. The honest answer is [unexpected].",
+   "ex": "The question I get most: why do I keep attracting time wasters? The honest answer isn't what you think.",
+   "why": "A familiar question with a surprising answer. Makes people follow for more."
+  },
+  {
+   "name": "Send this to",
+   "tmpl": "Send this to the friend who [very specific situation].",
+   "ex": "Send this to the friend who's read every attachment style book.",
+   "why": "Built for DM shares, which Instagram is said to weight heavily."
+  },
+  {
+   "name": "Honest reality",
+   "tmpl": "[An unpolished truth most people don't say].",
+   "ex": "I read every dating book going. None of them is how I met my wife.",
+   "why": "Honest beats polished in a feed of curated success. Builds trust."
+  },
+  {
+   "name": "POV",
+   "tmpl": "POV: [specific relatable situation].",
+   "ex": "POV: you've done all the inner work and you're still single.",
+   "why": "Drops them into their own situation. Drives comments."
+  },
+  {
+   "name": "Unfinished opinion",
+   "tmpl": "[Popular advice] is actually...",
+   "ex": "\"Love yourself first\" is the most misunderstood dating advice, and...",
+   "why": "An open loop. They stay to hear the end, then argue in the comments."
+  },
+  {
+   "name": "Fast timeframe",
+   "tmpl": "[Big idea] in [short time].",
+   "ex": "Why you attract who you attract, in 30 seconds.",
+   "why": "They know the commitment upfront, so more watch to the end."
+  }
+ ],
+ "lifestyle": [
+  {
+   "name": "Contradiction",
+   "tmpl": "[Nice moment on screen] + the unglamorous truth behind it.",
+   "ex": "This calm took me years of getting it wrong.",
+   "why": "Lifestyle is crowded. A pretty shot plus a tension stands out."
+  },
+  {
+   "name": "Time marker",
+   "tmpl": "[Specific time or day]. [What's happening].",
+   "ex": "6:30am. The 10 minutes I never skip.",
+   "why": "Specific and real. Feels like you're there with him."
+  },
+  {
+   "name": "Number",
+   "tmpl": "[Number] [unit]. That's [the outcome].",
+   "ex": "10 minutes. That's the whole practice.",
+   "why": "Concrete and quick to read with the sound off."
+  },
+  {
+   "name": "Reveal delay",
+   "tmpl": "Show the result first, then: here's how this started.",
+   "ex": "\"2019.\" over a happy moment now, then back to how it began.",
+   "why": "The first frame raises a question the rest of the Story answers."
+  },
+  {
+   "name": "Unfinished opinion",
+   "tmpl": "Nobody's [lifestyle thing] looks like this. Including mine...",
+   "ex": "Nobody's relationship looks like Instagram. Including ours...",
+   "why": "Mildly contrarian and honest. Invites replies."
+  },
+  {
+   "name": "Behind the scenes",
+   "tmpl": "Most people don't see this part.",
+   "ex": "Most people don't see the bit before date night.",
+   "why": "Makes him a normal person, not a guru."
+  },
+  {
+   "name": "POV",
+   "tmpl": "POV: [an aspirational everyday moment].",
+   "ex": "POV: the relationship we used to think was boring.",
+   "why": "Shows the promised land as everyday life."
+  }
+ ]
+};
+/* Stories come only from Olly's connection posts sheet (POST_TYPES Connection formats), so no borrowed hook styles. */
+function hookSet(){ return null; }
+function syncHooks(keep){
+  const set = hookSet(), sel = $("hook");
+  $("hookWrap").hidden = !set;
+  if (!set) return;
+  const prev = keep !== undefined ? keep : sel.value;
+  sel.innerHTML = ""; sel.add(new Option("Let the tool pick the best fit for each idea", ""));
+  set.forEach(h => sel.add(new Option(h.name + ": " + h.tmpl, h.name)));
+  if (set.some(h => h.name === prev)) sel.value = prev;
+  hookHint();
+}
+function hookLabel(){ const l = $("hookWrap").firstChild; if (l && l.nodeType === 3) l.textContent = channel === "reels" ? "Next-line style (what you say after the header)" : "Hook style"; }
+function hookHint(){
+  hookLabel();
+  const set = hookSet(), h = set && set.find(x => x.name === $("hook").value);
+  $("hookHint").textContent = h ? "e.g. " + h.ex + " " + h.why : "Uses the hook styles working best right now and picks one per idea. Choose one to use it on every idea.";
+}
+function hookBrief(){
+  const set = hookSet(); if (!set) return "";
+  const lines = set.map(h => "- " + h.name + ": " + h.tmpl + " (e.g. " + h.ex + ") " + h.why);
+  const chosen = set.find(h => h.name === $("hook").value);
+  return chosen
+    ? "HOOK STYLE (use it for every idea, in a fresh way each time, never copying the example): " + chosen.name + ": " + chosen.tmpl + " Example: " + chosen.ex
+    : "HOOK STYLES performing well right now. Pick the best fit for each idea, use a different style per idea where you can, and never copy the examples word for word:\n" + lines.join("\n");
+}
+
+/* Instagram: Reels carry the authority posts, Stories carry the connection posts. */
+const CHANNELS = {
+  reels: {group:"Authority", noun:"Reel", button:"Generate Reel headers"},
+  stories: {group:"Connection", noun:"Story", button:"Generate a Story idea"},
+  skool: {group:"Skool", noun:"Skool post", button:"Generate Skool posts"},
+  memes: {group:"Meme", noun:"Meme", button:"Generate memes"}
+};
+const REEL_CTA = "Comment 'ATTRACTION' below and I'll send you the meditation and access to the community, free for 7 days. Or DM me 'ATTRACTION' if you'd rather keep it private.";
+const STORY_CTA = "DM me 'ATTRACTION' and I'll send you the link to try The Attraction Formula free for 7 days.";
+let channel = "reels", lastIg = "reels";
+function fillTypes(keep){
+  const sel = $("type"); sel.innerHTML = "";
+  for (const [name, t] of Object.entries(POST_TYPES)) if (t.group === CHANNELS[channel].group) sel.add(new Option(name, name));
+  if (keep && POST_TYPES[keep] && POST_TYPES[keep].group === CHANNELS[channel].group) sel.value = keep;
+}
+function setChannel(ch, keepType, keepFormat){
+  channel = CHANNELS[ch] ? ch : "reels";
+  $("ch-reels").setAttribute("aria-pressed", String(channel === "reels"));
+  $("ch-stories").setAttribute("aria-pressed", String(channel === "stories"));
+  $("reelCtaWrap").hidden = true;
+  $("storyCtaWrap").hidden = channel !== "stories";
+  $("countWrap").hidden = channel === "stories";
+  const ig = channel === "reels" || channel === "stories";
+  $("tab-instagram").setAttribute("aria-selected", String(ig));
+  $("tab-skool").setAttribute("aria-selected", String(channel === "skool"));
+  $("tab-memes").setAttribute("aria-selected", String(channel === "memes"));
+  document.querySelector(".seg").hidden = !ig; $("balance").hidden = !ig;
+  $("skoolNote").hidden = channel !== "skool"; $("memeNote").hidden = channel !== "memes"; $("memeBlank").hidden = channel !== "memes";
+  if (ig) lastIg = channel;
+  $("go").textContent = CHANNELS[channel].button;
+  fillTypes(keepType); syncFormats(keepFormat); syncHooks();
+  if (qReady) renderQueue();
+}
+(function setup(){
+  $("reelCta").textContent = REEL_CTA;
+  PARTS.forEach(([v, l]) => $("part").add(new Option(l, v)));
+  const f = store.get("cig-form", null);
+  if (f) {
+    setChannel(f.channel || (POST_TYPES[f.type] && POST_TYPES[f.type].group === "Connection" ? "stories" : "reels"), f.type, f.format);
+    ["part","storyCta","topic","count"].forEach(k => { if (f[k] !== undefined) $(k).value = f[k]; });
+    syncHooks(f.hook || "");
+  } else setChannel("reels");
+})();
+$("ch-reels").onclick = () => { setChannel("reels"); saveForm(); };
+$("tab-instagram").onclick = () => { if (channel === "skool" || channel === "memes") { setChannel(lastIg); saveForm(); } };
+$("tab-skool").onclick = () => { if (channel !== "skool") { setChannel("skool"); saveForm(); } };
+$("tab-memes").onclick = () => { if (channel !== "memes") { setChannel("memes"); saveForm(); } };
+document.querySelector(".tabs").onkeydown = e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const tabs = ["tab-instagram", "tab-skool", "tab-memes"];
+  const at = channel === "skool" ? 1 : channel === "memes" ? 2 : 0;
+  const to = tabs[(at + (e.key === "ArrowRight" ? 1 : 2)) % 3];
+  $(to).click(); $(to).focus();
+};
+$("ch-stories").onclick = () => { setChannel("stories"); saveForm(); };
+function syncFormats(keep){
+  const t = POST_TYPES[$("type").value], f = $("format");
+  f.innerHTML = ""; f.add(new Option("Any of these formats", ""));
+  t.formats.forEach(x => f.add(new Option(x, x)));
+  if (keep && t.formats.includes(keep)) f.value = keep;
+  $("typeHint").textContent = t.desc;
+}
+function saveForm(){ store.set("cig-form", {channel, hook:$("hook").value, type:$("type").value, format:$("format").value, part:$("part").value, storyCta:$("storyCta").value, topic:$("topic").value, count:$("count").value}); }
+$("type").addEventListener("change", () => { syncFormats(); syncHooks(); saveForm(); });
+$("hook").addEventListener("change", () => { hookHint(); saveForm(); });
+["format","part","storyCta","topic","count"].forEach(id => $(id).addEventListener("input", saveForm));
+
+/* ---------- generate ---------- */
+let sampleFn = null, ctl = null;
+function buildPrompt(){
+  const type = $("type").value, t = POST_TYPES[type], fmt = $("format").value, n = channel === "stories" ? 1 : (Number($("count").value) || 3);
+  const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1];
+  const topic = $("topic").value.trim();
+  if (channel === "stories") return storyPrompt(type, t, fmt, n, part, topic);
+  if (channel === "skool") return skoolPrompt(type, t, fmt, n, part, topic);
+  if (channel === "memes") return memePrompt(type, t, fmt, n, part, topic);
+  const goal = "Stop the right person scrolling so they watch the Reel. Olly freestyles the rest and adds the call to action himself, so write the header only.";
+  return `You write Instagram Reel headers for Olly Henson (The Attraction Formula community), who helps singles attract the right partner by shifting into the right emotional state.
+${CORE}
+
+${RULES}
+
+THIS REQUEST
+Content type: ${type} (${t.group}). ${t.desc}
+How to handle this type: ${t.rule}
+Format: ${fmt || "pick the best fit from: " + t.formats.join(" / ")}
+Part of the message to focus on: ${part}
+Goal: ${goal}
+${topic ? "Topic or angle: " + topic : ""}
+${hookBrief()}
+THE HEADER (the most important part)
+The header is the hook. It sits above Olly's head on the Reel cover, he reads it out as his first sentence, and it's the first line of the caption. So it must:
+- read well on its own on a cover AND sound natural said out loud (a full, simple sentence, no "POV:", no colons, no fragments)
+- be 5 to 11 words, so it fits in 2 or 3 short lines on screen
+- name the exact outcome they want (your soulmate, your person, someone who wants a long-term committed relationship, the right partner) or the pain they're stuck in (time wasters, people who won't commit, being single after all the inner work)
+- add a reason to watch: a better way, a surprise or the science (scientifically, the fastest way, without more dating rules, the real reason)
+- speak straight to the viewer: "you" and "your" ("meet your person", "why you keep attracting…"), never "most people", "they" or "their person". It should feel personal, as if Olly is talking to the one person watching
+- give permission rather than tell them they're wrong, and never knock therapy or the healing work they've done ("You don't need to heal everything first to meet your person", not "Healing yourself first isn't how most people meet their person")
+- optionally end with one emoji that fits (🧪 for science, ❤️, 🧠). No dashes; use a comma if it needs a pause.
+Proven openers to work from (vary them, never copy): "How to [outcome] scientifically" · "The scientific way to [outcome]" · "The fastest way to [outcome]" · "How to [outcome] without [thing they're tired of]" · "Why you keep [pain]" · "The real reason you [pain]" · "What actually [makes the outcome happen]" · "The one thing [people who found their person] did differently" · "Stop [old habit] if you want [outcome]".
+Examples of the standard: "You don't need to heal everything first to meet your person" · "How to attract your soulmate, scientifically 🧪" · "The fastest way to find someone who wants a long-term committed relationship" · "Why you keep attracting people who won't commit".
+Give ${n} different headers. Make each one genuinely different in angle and opener. Headers only: no next line, talking points or call to action.
+
+For each give:
+- hook: the header
+- stage: which part of the core message it points to, in a few words
+
+Reply as JSON: {"ideas":[{"hook":"","stage":""}]}`;
+}
+function skoolPrompt(type, t, fmt, n, part, topic){
+  return `You write Skool community feed posts for Olly Henson's paid community, The Attraction Formula, which helps singles attract the right partner by shifting into the right emotional state.
+${CORE}
+
+${RULES}
+
+SKOOL POSTS ARE FOR PAYING MEMBERS
+- These people have already joined (many are on the 7-day free trial or in their first weeks). They get the core message. Don't sell the community, don't use the ATTRACTION or HEART calls to action and don't re-explain everything from scratch.
+- The goal is to keep them practising, feeling supported and feeling part of something, so they stay. Every post should make it easy to reply.
+- Written posts, not videos: a short title (Skool shows it in bold) and a post body ready to paste. Short paragraphs, a blank line between them, plain English, the way Olly talks. 60 to 180 words unless the format needs more. One or two emojis at most.
+- What's inside the community: the Find Your State training, The Attraction Formula Meditation (10 minutes a day), state-shifting tools (the State Shifting Ladder and quick resets) and daily support from Olly and the community.
+- Sign off as Olly where it fits.
+
+THIS REQUEST
+Post type: ${type}. ${t.desc}
+How to handle this type: ${t.rule}
+Format: ${fmt || "pick the best fit from: " + t.formats.join(" / ")}
+Part of the message to connect to: ${part}
+${topic ? "Topic or angle: " + topic : ""}
+Give ${n} different posts. Make each one genuinely different.
+
+For each post give:
+- hook: the post title, under 10 words
+- stage: which part of the core message it connects to, in a few words
+- post: the full post body, ready to paste (use \\n for line breaks)
+- poll: 2 to 4 poll options if a poll fits, otherwise []
+- when: the best day to post it, e.g. "Monday" or "Any day"
+- why: one sentence on how it keeps members engaged
+
+Reply as JSON: {"ideas":[{"hook":"","stage":"","post":"","poll":[],"when":"","why":""}]}`;
+}
+function memePrompt(type, t, fmt, n, part, topic){
+  const place = fmt || "pick the best place for each meme from: " + MEME_PLACES.join(" / ");
+  return `You write meme ideas for Olly Henson (The Attraction Formula community), who helps singles attract the right partner by shifting into the right emotional state.
+${CORE}
+
+${RULES}
+
+MEMES ARE DIFFERENT FROM REELS
+- Each meme uses a popular meme template to show the belief change at a glance: the old belief (learn everything and fix yourself first: attachment styles, healing every wound, decoding texts, dating rules) next to the new one (get into the right emotional state around love and the right person shows up).
+- The joke is always on the old approach, never the person. The "before" character is who we all used to be, so the reader thinks "ha, that was me", not "I'm being told off". Use "me", "we" or "most of us", never "you".
+- Never knock therapy or the healing work itself. It's not wrong, it's just not what attracts the right person.
+- Panel text is short enough to read in a second: 2 to 10 words per panel. Simple, funny, specific. Name real things people do (re-reading his texts, a fifth attachment styles book, journaling about their ex).
+- Never invent stats, studies or member results. Olly's own story is fine (he met his wife once he focused on how he felt).
+- Keep it warm. Never make fun of being single or of anyone's looks or age.
+
+WHERE IT'S GOING
+- Instagram Story: the meme in the middle of a plain 1080x1920 frame, a 5 to 8 word line above it, and a poll or emoji slider underneath. Only now and then a soft call to action (DM me 'ATTRACTION').
+- Reel (meme on screen while I talk): the meme on screen while Olly freestyles for 15 to 30 seconds. Give the one line he opens with and the point he lands on. The usual Reel call to action: comment 'ATTRACTION'.
+- Skool post: for paying members who already get it. A short post that makes them laugh, then a question that invites replies. No selling, no ATTRACTION call to action.
+- Instagram feed post: a short caption, full stops instead of dashes, ending with a question.
+
+THIS REQUEST
+Template: ${type}. ${t.desc}
+How to fill it: ${t.rule}
+Where it's going: ${place}
+Part of the message: ${part}
+${topic ? "Topic or angle: " + topic : ""}
+Give ${n} different memes. Make each one genuinely different in angle (and template, if the tool is picking).
+
+For each meme give:
+- template: the template name
+- place: where it's going
+- hook: the line above the meme or the post title, 5 to 8 words
+- panels: the text for each panel in order, each with "label" (which part of the template, e.g. "Middle (crying guy)") and "text"
+- use: one or two short lines on how to post it in that place (the poll wording, what Olly says on the Reel, the Skool post and question, or the caption)
+- stage: which part of the core message it shows, in a few words
+
+Reply as JSON: {"ideas":[{"template":"","place":"","hook":"","panels":[{"label":"","text":""}],"use":"","stage":""}]}`;
+}
+function storyPrompt(type, t, fmt, n, part, topic){
+  const cta = $("storyCta").value === "dm"
+    ? "End with a soft, natural invite on the last frame: " + STORY_CTA
+    : "No call to action. Pure connection: end on a warm line or a question sticker that invites replies.";
+  return `You write Instagram Story ideas for Olly Henson (The Attraction Formula community), who helps singles attract the right partner by shifting into the right emotional state.
+${CORE}
+
+${RULES}
+
+STORIES ARE DIFFERENT FROM REELS
+- Stories are Olly's CONNECTION content. Reels carry the argument; Stories make people feel he understands them, is a normal person like them, and has been where they are. Don't lecture or teach the whole argument. Show, don't sell.
+- Mostly Olly talking to camera on his phone, or a photo or clip from his day. Freestyled, never scripted.
+- Keep it simple: one clear idea Olly can film in a minute, not a frame-by-frame plan.
+- The hook is the text over Olly's head: 5 to 8 words, built from the chosen format on Olly's connection posts sheet, and it names the specific topic. Use "we", "us" or "most people", never "you", so nobody feels called out.
+- Work ONLY from Olly's connection posts sheet: the content type and its formats below. Don't use trending hook patterns, contrarian takes or anything that isn't one of these formats.
+- Use native stickers where they help: poll, question box, quiz, emoji slider.
+- Open personal stories with something specific (a moment, a place, a year), not a vague feeling.
+
+THIS REQUEST
+Content type: ${type} (Connection). ${t.desc}
+How to handle this type: ${t.rule}
+Format from the sheet: ${fmt || "pick the one that fits best from this list, and use it as written: " + t.formats.join(" / ")}
+Part of the message it should quietly connect to: ${part}. Tie it back to how Olly feels day to day or the right emotional state around love in a natural way; never contradict the promised land (a calm, safe, genuine relationship).
+Call to action: ${cta}
+${topic ? "Topic or angle: " + topic : ""}
+Give ONE idea only.
+
+Give:
+- format: the format from the sheet you used, word for word
+- hook: the text over Olly's head, 5 to 8 words
+- idea: one or two short sentences: what to film and what to talk about
+- sticker: one sticker if it helps (poll, question box, quiz or slider, with its wording), or ""
+- cta: the call to action line, or "" if none
+
+Reply as JSON: {"ideas":[{"hook":"","idea":"","sticker":"","cta":""}]}`;
+}
+$("go").onclick = async () => {
+  const st = $("st");
+  if (!sampleFn) { st.className = "status err"; st.textContent = "This needs the page opened inside Claude."; return; }
+  if (ctl) ctl.abort();
+  const mine = ctl = new AbortController();
+  $("go").disabled = true; st.className = "status"; st.textContent = "Writing ideas…";
+  try {
+    const r = await sampleFn.json(buildPrompt() + rejectBrief() + queueBrief(), {signal: mine.signal, cache: false});
+    const ideas = (r && r.ideas) || [];
+    st.textContent = ideas.length ? "" : "No ideas came back. Try again.";
+    store.set("cig-ideas", {type:$("type").value, channel, ideas});
+    renderIdeas($("type").value, ideas, channel);
+  } catch (e) {
+    if (mine.signal.aborted) return;
+    st.className = "status err";
+    st.textContent = e && e.code === "rate_limited" ? "Too many requests just now. Wait a minute and try again." : e && e.code === "not_granted" ? "Claude access wasn't allowed for this page." : "That didn't work. Try again.";
+  } finally { if (ctl === mine) { ctl = null; $("go").disabled = false; } }
+};
+function frameLines(f, n){
+  return [(n + 1) + ". " + (f.show || ""), f.say ? "   Say: " + f.say : "", f.text ? "   Text: " + f.text : "", f.sticker ? "   Sticker: " + f.sticker : ""].filter(Boolean);
+}
+function ideaText(i){
+  if (typeof i.post === "string") return [i.hook, "", i.post, ...(Array.isArray(i.poll) && i.poll.length ? ["", "Poll:", ...i.poll.map(o => "- " + o)] : [])].join("\n");
+  if (Array.isArray(i.panels)) return [i.hook, "", (i.template || "") + (i.place ? " · " + i.place : ""), ...i.panels.map(p => (p.label ? p.label + ": " : "") + (p.text || "")), "", i.use || ""].join("\n").trim();
+  if (typeof i.idea === "string") return [i.hook, "", i.idea, i.sticker ? "Sticker: " + i.sticker : "", i.cta ? "CTA: " + i.cta : ""].filter(Boolean).join("\n");
+  if (Array.isArray(i.frames)) return [i.hook, "", "Frames:", ...i.frames.flatMap(frameLines), "", i.cta ? "CTA: " + i.cta : ""].join("\n").trim();
+  if (!i.say && !i.cover) return i.hook || "";
+  return [i.hook, "", "Next line: " + (i.say || ""), "", "Cover:", ...(i.cover || []).map(c => "- " + c), "", "Land on: " + (i.lands || ""), "", "CTA: " + (i.cta || "")].join("\n");
+}
+async function copyText(text, btn){
+  const old = btn.textContent;
+  try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; }
+  catch { btn.textContent = "Couldn't copy. Select the text instead."; }
+  setTimeout(() => { btn.textContent = old; }, 1500);
+}
+function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+function renderIdeas(type, ideas, ch){
+  const box = $("ideas"); box.textContent = "";
+  const noun = ch === "stories" ? "Story" : ch === "skool" ? "Skool" : ch === "memes" ? "Meme" : "Reel";
+  ideas.forEach(i => {
+    if (Array.isArray(i.panels)) {
+      const c = el("article", "card idea"), tpl = i.template || type;
+      c.append(el("span", "tag", ["Meme", tpl, i.place, i.stage].filter(Boolean).join(" · ")), el("p", "hook", i.hook || ""));
+      editableHook(c.querySelector(".hook"), i);
+      const pb = el("div"); pb.appendChild(el("span", "sub", "Panels"));
+      const ol = el("ol", "frames");
+      const cover = [];
+      const syncCover = () => cover.splice(0, cover.length, ...i.panels.map(p => (p.label ? p.label + ": " : "") + (p.text || "")).concat(i.use ? ["How to post: " + i.use] : []));
+      const changed = () => { syncCover(); saveMemeEdit(i); const ed = c.querySelector(".memeed"); if (ed && ed._sync) ed._sync(); };
+      const texts = i.panels.map(p => {
+        const li = el("li"), t = el("p", "ot", p.text || "");
+        editableText(t, v => { if (v === (p.text || "")) return; p.text = v; changed(); });
+        li.append(el("p", "hint", p.label || ""), t); ol.appendChild(li); return t;
+      });
+      pb.querySelector(".sub").textContent = "Panels · click any text to edit it";
+      pb.appendChild(ol); c.appendChild(pb);
+      const u = el("div"), ut = el("p", "", i.use || "");
+      editableText(ut, v => { if (v === (i.use || "")) return; i.use = v; changed(); });
+      u.append(el("span", "sub", "How to post it"), ut); c.appendChild(u);
+      syncCover();
+      const mk = el("button", "btn small primary", "Make image");
+      mk.onclick = () => {
+        const open = c.querySelector(".memeed"); if (open) { open.remove(); mk.textContent = "Make image"; return; }
+        const ed = memeEditor(i, n => { if (texts[n]) texts[n].textContent = i.panels[n].text; syncCover(); saveMemeEdit(i); });
+        c.appendChild(ed); mk.textContent = "Close image";
+      };
+      c.appendChild(mk);
+      c.appendChild(ideaButtons(c, ch, tpl, i, ["Meme", tpl, i.place].filter(Boolean).join(" · "), cover));
+      box.appendChild(c);
+      return;
+    }
+    const c = el("article", "card idea");
+    c.append(el("span", "tag", noun + " · " + type + (i.format ? " · " + i.format : "") + (i.hookStyle ? " · " + i.hookStyle + " hook" : "") + (i.when ? " · " + i.when : "") + (i.stage ? " · " + i.stage : "")), el("p", "hook", i.hook || ""));
+    editableHook(c.querySelector(".hook"), i);
+    if (typeof i.post === "string") {
+      const body = el("div"); body.append(el("span", "sub", "Post"), el("p", "post", i.post)); c.appendChild(body);
+      if (Array.isArray(i.poll) && i.poll.length) {
+        const pl = el("div"); pl.appendChild(el("span", "sub", "Poll options"));
+        const ul = el("ul"); i.poll.forEach(o => ul.appendChild(el("li", "", o))); pl.appendChild(ul); c.appendChild(pl);
+      }
+      if (i.why) c.appendChild(el("p", "hint", "Why it works: " + i.why));
+      c.appendChild(ideaButtons(c, ch, type, i, noun + " · " + type, [i.post].concat(Array.isArray(i.poll) && i.poll.length ? ["Poll: " + i.poll.join(" / ")] : [])));
+      box.appendChild(c);
+      return;
+    }
+    if (typeof i.idea === "string") {
+      c.appendChild(el("p", "", i.idea));
+      if (i.sticker) c.appendChild(el("p", "hint", "Sticker: " + i.sticker));
+      if (i.cta) c.appendChild(el("p", "hint", "Call to action: " + i.cta));
+      c.appendChild(ideaButtons(c, ch, type, i, noun + " · " + type, [i.idea].concat(i.sticker ? ["Sticker: " + i.sticker] : [], i.cta ? ["CTA: " + i.cta] : [])));
+      box.appendChild(c);
+      return;
+    }
+    if (Array.isArray(i.frames)) {
+      const fr = el("div"); fr.appendChild(el("span", "sub", "Frames"));
+      const ol = el("ol", "frames");
+      i.frames.forEach(f => {
+        const li = el("li"); li.appendChild(el("p", "", f.show || ""));
+        if (f.say) li.appendChild(el("p", "hint", "Say: " + f.say));
+        if (f.text) li.appendChild(el("p", "ot", "On screen: " + f.text));
+        if (f.sticker) li.appendChild(el("p", "hint", "Sticker: " + f.sticker));
+        ol.appendChild(li);
+      });
+      fr.appendChild(ol); c.appendChild(fr);
+      if (i.cta) { const cta = el("div"); cta.append(el("span", "sub", "Call to action"), el("p", "", i.cta)); c.appendChild(cta); }
+      if (i.why) c.appendChild(el("p", "hint", "Why it connects: " + i.why));
+      c.appendChild(ideaButtons(c, ch, type, i, noun + " · " + type, i.frames.flatMap(frameLines).concat(i.cta ? ["CTA: " + i.cta] : [])));
+      box.appendChild(c);
+      return;
+    }
+    const hk = c.querySelector(".hook"); hk.classList.add("ighead");
+    hk.before(el("span", "sub", "Header · on the cover, your first line and the caption's first line · click it to edit"));
+    c.appendChild(ideaButtons(c, ch, type, i, noun + " · " + type, []));
+    box.appendChild(c);
+  });
+}
+/* ---------- meme maker: draws the template with the text, ready to save as a PNG ----------
+   Templates are published next to the page in memes/. Boxes are in template pixels; padTop adds a white band above the image (boxes with a negative y sit in it).
+   dark = bold black text on a white area; light = classic white outlined meme text over the picture. */
+const MEME_LAYOUTS = {
+  "Bell curve": {src:"memes/templates/bell-curve.png", w:675, h:499, padTop:170, match:["bell","midwit"], boxes:[
+    {name:"Left (simple guy)", x:5, y:150, w:215, h:150, style:"dark"},
+    {name:"Middle (crying guy)", x:110, y:-160, w:455, h:150, style:"dark"},
+    {name:"Right (calm wise guy)", x:440, y:60, w:230, h:180, style:"dark"}]},
+  "Buff Doge vs Cheems": {src:"memes/templates/buff-doge-vs-cheems.png", w:937, h:720, padTop:0, match:["doge","cheems"], boxes:[
+    {name:"Buff Doge (the new way)", x:10, y:535, w:440, h:180, style:"dark"},
+    {name:"Cheems (the old way)", x:500, y:535, w:430, h:180, style:"dark"}]},
+  "Two guys on a bus": {src:"memes/templates/two-guys-on-a-bus.jpg", w:762, h:675, padTop:0, match:["bus"], boxes:[
+    {name:"Sad side", x:5, y:110, w:240, h:250, style:"light"},
+    {name:"Happy side", x:515, y:5, w:242, h:210, style:"light"}]},
+  "Drake": {src:"memes/templates/drake.jpg", w:1200, h:1200, padTop:0, match:["drake"], boxes:[
+    {name:"No (top)", x:625, y:20, w:555, h:560, style:"dark"},
+    {name:"Yes (bottom)", x:625, y:620, w:555, h:560, style:"dark"}]},
+  "Galaxy brain": {src:"memes/templates/galaxy-brain.jpg", w:857, h:1202, padTop:0, match:["galaxy","expanding","brain"], boxes:[
+    {name:"Panel 1 (small brain)", x:15, y:15, w:395, h:270, style:"dark"},
+    {name:"Panel 2", x:15, y:315, w:395, h:280, style:"dark"},
+    {name:"Panel 3", x:15, y:620, w:395, h:255, style:"dark"},
+    {name:"Panel 4 (glowing brain)", x:15, y:900, w:395, h:290, style:"dark"}]},
+  "Gru's plan": {src:"memes/templates/grus-plan.jpg", w:700, h:449, padTop:0, match:["gru"], boxes:[
+    {name:"Step 1", x:196, y:40, w:136, h:178, style:"dark"},
+    {name:"Step 2", x:549, y:44, w:138, h:174, style:"dark"},
+    {name:"Step 3", x:199, y:272, w:136, h:170, style:"dark"},
+    {name:"Step 4 (same as step 3)", x:552, y:272, w:136, h:170, style:"dark"}]},
+  "Distracted boyfriend": {src:"memes/templates/distracted-boyfriend.jpg", w:1200, h:800, padTop:0, match:["distracted","boyfriend"], boxes:[
+    {name:"Boyfriend", x:590, y:380, w:290, h:160, style:"light"},
+    {name:"Girlfriend", x:900, y:420, w:295, h:180, style:"light"},
+    {name:"Passer-by", x:140, y:520, w:400, h:200, style:"light"}]},
+  "Two buttons": {src:"memes/templates/two-buttons.jpg", w:600, h:908, padTop:0, match:["button"], boxes:[
+    {name:"Button 1", x:40, y:95, w:215, h:100, style:"light"},
+    {name:"Button 2", x:265, y:55, w:250, h:95, style:"light"},
+    {name:"Sweating guy", x:20, y:750, w:560, h:120, style:"light"}]},
+  "Panik Kalm Panik": {src:"memes/templates/panik-kalm-panik.png", w:640, h:881, padTop:0, match:["panik","kalm"], boxes:[
+    {name:"Panik", x:20, y:20, w:275, h:265, style:"dark"},
+    {name:"Kalm", x:20, y:310, w:275, h:275, style:"dark"},
+    {name:"Panik (again)", x:20, y:610, w:275, h:255, style:"dark"}]},
+  "Tuxedo Winnie the Pooh": {src:"memes/templates/tuxedo-pooh.png", w:800, h:582, padTop:0, match:["pooh","tuxedo"], boxes:[
+    {name:"Plain Pooh", x:365, y:10, w:420, h:275, style:"dark"},
+    {name:"Tuxedo Pooh", x:365, y:305, w:420, h:270, style:"dark"}]},
+  "Charlie's conspiracy board": {src:"memes/templates/charlie-conspiracy.jpg", w:1024, h:768, padTop:170, match:["charlie","conspiracy","pepe"], boxes:[
+    {name:"Top line", x:20, y:-160, w:984, h:150, style:"dark"},
+    {name:"The board", x:430, y:20, w:580, h:190, style:"light"}]},
+  "They don't know": {src:"memes/templates/they-dont-know.png", w:671, h:673, padTop:0, match:["they don"], boxes:[
+    {name:"They don't know...", x:225, y:10, w:440, h:140, style:"dark"}]}
+};
+function layoutFor(name){
+  const n = (name || "").toLowerCase();
+  return Object.keys(MEME_LAYOUTS).find(k => k.toLowerCase() === n) || Object.keys(MEME_LAYOUTS).find(k => MEME_LAYOUTS[k].match.some(m => n.includes(m))) || "Drake";
+}
+const memeImgs = {};
+function memeImage(src){
+  return memeImgs[src] || (memeImgs[src] = new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => { delete memeImgs[src]; no(new Error("image")); }; im.src = src; }));
+}
+let memeFonts = null;
+function loadMemeFonts(){
+  return memeFonts || (memeFonts = Promise.all(['700 40px "Public Sans"', '800 40px "Public Sans"', '40px "Anton"'].map(x => document.fonts.load(x).catch(() => {}))));
+}
+function wrapLines(ctx, text, maxW){
+  const out = [];
+  String(text).split("\n").forEach(para => {
+    let line = "";
+    para.split(/\s+/).filter(Boolean).forEach(w => {
+      const t = line ? line + " " + w : w;
+      if (ctx.measureText(t).width <= maxW || !line) line = t; else { out.push(line); line = w; }
+    });
+    out.push(line);
+  });
+  return out;
+}
+/* biggest size where the wrapped text fits the box, then draw it centred */
+function fitText(ctx, text, x, y, w, h, o){
+  text = (text || "").trim(); if (!text) return;
+  if (o.upper) text = text.toUpperCase();
+  let size = Math.min(o.max, h), lines;
+  for (; size > 8; size -= 1) {
+    ctx.font = o.weight + " " + size + "px " + o.family;
+    lines = wrapLines(ctx, text, w);
+    if (lines.length * size * o.lh <= h && lines.every(l => ctx.measureText(l).width <= w)) break;
+  }
+  ctx.font = o.weight + " " + size + "px " + o.family;
+  lines = wrapLines(ctx, text, w);
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  const top = y + (h - lines.length * size * o.lh) / 2 + size * o.lh / 2;
+  lines.forEach((l, n) => {
+    const ly = top + n * size * o.lh;
+    if (o.stroke) { ctx.lineJoin = "round"; ctx.lineWidth = Math.max(2, size / 7); ctx.strokeStyle = o.stroke; ctx.strokeText(l, x + w / 2, ly); }
+    ctx.fillStyle = o.fill; ctx.fillText(l, x + w / 2, ly);
+  });
+}
+/* the meme on its own, drawn at least 1080px wide so text stays sharp */
+async function drawMeme(key, texts){
+  const L = MEME_LAYOUTS[key], img = await memeImage(L.src); await loadMemeFonts();
+  const k = Math.max(1, 1080 / L.w), cv = document.createElement("canvas");
+  cv.width = Math.round(L.w * k); cv.height = Math.round((L.h + L.padTop) * k);
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(img, 0, L.padTop * k, L.w * k, L.h * k);
+  L.boxes.forEach((b, n) => {
+    const pad = 6 * k, light = b.style === "light";
+    fitText(ctx, texts[n], (b.x * k) + pad, ((b.y + L.padTop) * k) + pad, (b.w * k) - pad * 2, (b.h * k) - pad * 2,
+      light ? {family:'"Anton", Impact, sans-serif', weight:"400", max:84 * k, lh:1.1, upper:true, fill:"#fff", stroke:"#000"}
+            : {family:'"Public Sans", Arial, sans-serif', weight:"700", max:84 * k, lh:1.2, fill:"#111"});
+  });
+  return cv;
+}
+const MEME_SIZES = {story:{w:1080, h:1920, label:"Story (1080 × 1920)"}, feed:{w:1080, h:1350, label:"Feed post (1080 × 1350)"}, meme:{w:0, h:0, label:"Meme only (for Reels and Skool)"}};
+async function composeMeme(st){
+  const meme = await drawMeme(st.key, st.texts);
+  if (st.size === "meme") return meme;
+  const S = MEME_SIZES[st.size], cv = document.createElement("canvas"); cv.width = S.w; cv.height = S.h;
+  const ctx = cv.getContext("2d"), dark = st.bg === "dark";
+  ctx.fillStyle = dark ? "#151515" : "#fbf7f2"; ctx.fillRect(0, 0, S.w, S.h);
+  const story = st.size === "story", headTop = story ? 250 : 50, headH = story ? 300 : 230;
+  const top = st.hook.trim() ? headTop + headH + 30 : (story ? 300 : 60);
+  const maxH = S.h - top - (story ? 420 : 60), sc = Math.min(960 / meme.width, maxH / meme.height);
+  const mw = meme.width * sc, mh = meme.height * sc;
+  if (st.hook.trim()) fitText(ctx, st.hook, 70, headTop, 940, headH, {family:'"Public Sans", Arial, sans-serif', weight:"800", max:76, lh:1.15, fill:dark ? "#fff" : "#111"});
+  ctx.drawImage(meme, (S.w - mw) / 2, top, mw, mh);
+  return cv;
+}
+function editableText(node, onSave){
+  node.contentEditable = "true"; node.spellcheck = true; node.classList.add("editable"); node.title = "Click to edit";
+  node.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); node.blur(); } };
+  node.onpaste = e => { e.preventDefault(); document.execCommand("insertText", false, (e.clipboardData.getData("text/plain") || "").replace(/\s+/g, " ")); };
+  node.onblur = () => { const v = node.textContent.replace(/\s+/g, " ").trim(); node.textContent = v; onSave(v); };
+}
+/* keep edited panel text in the saved ideas, so it survives a reload */
+function saveMemeEdit(i){
+  const last = store.get("cig-ideas", null);
+  if (!last || !Array.isArray(last.ideas)) return;
+  const key = i.saved !== undefined ? i.saved : i.hook;
+  last.ideas = last.ideas.map(x => x.hook === key ? {...x, panels:i.panels.map(p => ({...p})), use:i.use} : x);
+  store.set("cig-ideas", last);
+  const st = $("st"); st.className = "status"; st.textContent = "✓ Edit saved.";
+}
+function memeEditor(i, onPanelEdit){
+  const st = {key:layoutFor(i && i.template), hook:(i && i.hook) || "", texts:((i && i.panels) || []).map(p => p.text || ""),
+    size:((i && i.place) || "").startsWith("Instagram feed") ? "feed" : /Reel|Skool/.test((i && i.place) || "") ? "meme" : "story", bg:"light"};
+  const key0 = st.key, box = el("div", "memeed"), prev = el("img"); prev.alt = "Meme preview"; box.appendChild(prev);
+  const side = el("div", "stack"); box.appendChild(side);
+  const sel = (label, opts, val, on) => {
+    const l = el("label", "f", label), s2 = document.createElement("select");
+    opts.forEach(([v, t]) => s2.add(new Option(t, v))); s2.value = val; s2.onchange = () => on(s2.value); l.appendChild(s2); return l;
+  };
+  const panels = el("div", "stack");
+  const hk = el("label", "f", "Line above the meme (Story and feed sizes)"), hi = el("input"); hi.type = "text"; hi.value = st.hook;
+  hi.oninput = () => { st.hook = hi.value; draw(); }; hk.appendChild(hi);
+  const msg = el("p", "status");
+  function fields(){
+    panels.textContent = "";
+    MEME_LAYOUTS[st.key].boxes.forEach((b, n) => {
+      const l = el("label", "f", b.name), ta = document.createElement("textarea"); ta.rows = 2; ta.value = st.texts[n] || "";
+      ta.oninput = () => { st.texts[n] = ta.value; draw(); };
+      ta.onchange = () => { if (onPanelEdit && st.key === key0 && i.panels[n]) { i.panels[n].text = ta.value.trim(); onPanelEdit(n); } };
+      l.appendChild(ta); panels.appendChild(l);
+    });
+  }
+  let seq = 0;
+  async function draw(){
+    const me = ++seq;
+    try { const cv = await composeMeme(st); if (me === seq) { prev.src = cv.toDataURL("image/png"); box._cv = cv; msg.textContent = ""; } }
+    catch { if (me === seq) { msg.className = "status err"; msg.textContent = "Couldn't load the template image. Try again."; } }
+  }
+  const save = el("button", "btn small primary", "Save image");
+  save.onclick = async () => {
+    const cv = box._cv; if (!cv) return;
+    const name = (st.hook || st.key).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || "meme";
+    const dl = window.claude?.use ? await claude.use("downloads").catch(() => null) : null;
+    if (!dl) { msg.className = "status"; msg.textContent = "Saving isn't available here. Right-click or long-press the preview to save it."; return; }
+    cv.toBlob(async blob => {
+      try { await dl.save({filename:name + ".png", data:blob}); msg.className = "status saved"; msg.textContent = "✓ Saved"; }
+      catch (e) { msg.className = "status"; msg.textContent = e && e.code === "declined" ? "" : "Couldn't save. Right-click or long-press the preview instead."; }
+    }, "image/png");
+  };
+  side.append(
+    sel("Template", Object.keys(MEME_LAYOUTS).map(k => [k, k]), st.key, v => { st.key = v; fields(); draw(); }),
+    hk, panels,
+    sel("Size", Object.entries(MEME_SIZES).map(([k, v]) => [k, v.label]), st.size, v => { st.size = v; draw(); }),
+    sel("Background", [["light", "Light"], ["dark", "Dark"]], st.bg, v => { st.bg = v; draw(); }),
+    el("p", "hint", "Story size leaves room at the bottom for a poll or slider sticker."),
+    (() => { const r = el("div", "row"); r.append(save, msg); return r; })());
+  // card -> editor: an edit on the card redraws the image
+  box._sync = () => { st.hook = i.hook || ""; hi.value = st.hook; if (st.key === key0) st.texts = i.panels.map(p => p.text || ""); fields(); draw(); };
+  fields(); draw();
+  return box;
+}
+$("memeBlank").onclick = () => {
+  const c = el("article", "card idea"); c.append(el("span", "tag", "Meme · from scratch"));
+  const x = el("button", "x", "Close"); x.onclick = () => c.remove();
+  c.append(memeEditor(null), x); $("ideas").prepend(c);
+};
+function editableHook(hk, i){
+  if (i.orig === undefined) i.orig = i.hook || "";
+  i.saved = i.hook;
+  hk.contentEditable = "true"; hk.spellcheck = true; hk.classList.add("editable");
+  hk.title = "Click to edit"; hk.setAttribute("aria-label", "Title, click to edit");
+  hk.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); hk.blur(); } };
+  hk.oninput = () => { i.hook = hk.textContent.replace(/\s+/g, " ").trim(); };
+  hk.onblur = () => {
+    if (i.hook === i.saved) return;
+    const last = store.get("cig-ideas", null);
+    if (last && Array.isArray(last.ideas)) {
+      const key = i.saved !== undefined ? i.saved : i.orig;
+      last.ideas = last.ideas.map(x => x.hook === key ? {...x, hook:i.hook, orig:i.orig} : x);
+      store.set("cig-ideas", last);
+    }
+    i.saved = i.hook;
+    const st = $("st"); st.className = "status"; st.textContent = "✓ Edit saved. Add it to the queue to keep it for good.";
+  };
+  hk.onpaste = e => { e.preventDefault(); document.execCommand("insertText", false, (e.clipboardData.getData("text/plain") || "").replace(/\s+/g, " ")); };
+}
+function dropIdea(i){
+  const key = i.saved !== undefined ? i.saved : i.hook;
+  const last = store.get("cig-ideas", null);
+  if (last && Array.isArray(last.ideas)) { last.ideas = last.ideas.filter(x => x.hook !== key); store.set("cig-ideas", last); }
+}
+function queueBrief(){
+  const q = (queue.items || []).filter(x => x.title && chanOf(x) === channel).slice(0, 40);
+  if (!q.length) return "";
+  const edits = q.filter(x => x.orig).slice(0, 15);
+  return "\n\nTITLES OLLY LIKED AND QUEUED (most recent first). This is the standard he wants: match their tone, length and style, but never repeat them or write near copies; find fresh angles:\n"
+    + q.map(x => "- \"" + x.title + "\"").join("\n")
+    + (edits.length ? "\n\nTITLES OLLY REWROTE before queuing. Study what he changed and write that way from the start:\n" + edits.map(x => "- \"" + x.orig + "\" became \"" + x.title + "\"").join("\n") : "");
+}
+function ideaButtons(card, ch, type, i, level, cover){
+  const row = el("div", "row");
+  const add = el("button", "btn small primary", "Add to queue");
+  add.onclick = async () => {
+    add.disabled = true;
+    add.textContent = "Saving…";
+    try { await queue.add({channel:ch, title:i.hook || "", orig:(i.orig && i.orig !== i.hook) ? i.orig : "", stage:i.stage || "", why:i.why || "", cover, level, say:i.say || "", savedAt:Date.now()}); }
+    catch { add.disabled = false; add.textContent = "Couldn't add. Try again"; return; }
+    dropIdea(i); card.remove();
+    if (!$("ideas").querySelector(".idea")) $("go").click();
+    else { const st = $("st"); st.className = "status"; st.textContent = "✓ Saved to your queue."; }
+  };
+  const cp = el("button", "btn small", "Copy"); cp.onclick = () => copyText(ideaText(i), cp);
+  const no = el("button", "x", "Not this one");
+  no.onclick = () => rejectIdea(card, ch, type, i);
+  row.append(add, cp, no);
+  return row;
+}
+
+/* ---------- rejections: ideas Olly turned down, fed back into future prompts ---------- */
+const rej = { col:null, items:[] };
+const localR = () => store.get("cig-rejected", []);
+async function rejectIdea(card, ch, type, i){
+  const item = {channel:ch, type, title:i.hook || "", say:i.say || "", reason:"", savedAt:Date.now()};
+  let id = null;
+  try {
+    if (rej.col) id = (await rej.col.add(item)).id;
+    else { id = "l" + Date.now(); const l = localR(); l.unshift({id, ...item}); store.set("cig-rejected", l); rej.items = l; renderRejected(); }
+  } catch { $("st").className = "status err"; $("st").textContent = "Couldn't save that. Try again."; return; }
+  const last = store.get("cig-ideas", null);
+  if (last && Array.isArray(last.ideas)) { last.ideas = last.ideas.filter(x => x.hook !== i.hook); store.set("cig-ideas", last); }
+  const box = el("div", "card rejected");
+  box.appendChild(el("p", "hint", "Removed: \u201c" + (i.hook || "") + "\u201d. What was wrong with it? Optional, but it helps the tool."));
+  const inp = el("input"); inp.type = "text"; inp.placeholder = "e.g. too vague, sounds like every other coach, \"their\" not \"your\""; inp.setAttribute("aria-label", "Why it wasn't right");
+  const row = el("div", "row");
+  const save = el("button", "btn small primary", "Save reason");
+  save.onclick = async () => {
+    const reason = inp.value.trim(); if (!reason) { box.remove(); return; }
+    save.disabled = true;
+    try {
+      if (rej.col) await rej.col.doc(id).update({reason});
+      else { const l = localR().map(x => x.id === id ? {...x, reason} : x); store.set("cig-rejected", l); rej.items = l; renderRejected(); }
+      box.remove();
+    } catch { save.disabled = false; save.textContent = "Couldn't save. Try again"; }
+  };
+  inp.onkeydown = e => { if (e.key === "Enter") save.click(); };
+  const undo = el("button", "btn small", "Undo");
+  undo.onclick = async () => { try { await removeRejected(id); box.replaceWith(card); } catch {} };
+  const skip = el("button", "x", "Skip"); skip.onclick = () => box.remove();
+  row.append(save, undo, skip);
+  box.append(inp, row);
+  card.replaceWith(box); inp.focus();
+}
+async function removeRejected(id){
+  if (rej.col) { await rej.col.doc(id).delete(); return; }
+  const l = localR().filter(x => x.id !== id); store.set("cig-rejected", l); rej.items = l; renderRejected();
+}
+function renderRejected(){
+  $("rejN").textContent = rej.items.length;
+  const ul = $("rejList"); ul.textContent = "";
+  const names = {reels:"Reel", stories:"Story", skool:"Skool", memes:"Meme"};
+  rej.items.forEach(r => {
+    const li = el("li", "item");
+    li.appendChild(el("b", "", r.title || ""));
+    li.appendChild(el("span", "meta", [names[r.channel] || "", r.type].filter(Boolean).join(" · ") + (r.reason ? " · why: " + r.reason : "")));
+    const del = el("button", "x", "Remove"); del.onclick = () => removeRejected(r.id).catch(() => {});
+    li.appendChild(del); ul.appendChild(li);
+  });
+}
+function rejectBrief(){
+  const mine = rej.items.filter(r => r.channel === channel).slice(0, 25);
+  if (!mine.length) return "";
+  return "\n\nOLLY TURNED THESE DOWN (most recent first). Work out what's wrong with them, especially where he says why, and don't write anything similar in wording, angle or style:\n"
+    + mine.map(r => "- \"" + r.title + "\"" + (r.reason ? " (why: " + r.reason + ")" : "")).join("\n");
+}
+function initRejected(db){
+  const useLocal = () => { rej.col = null; rej.items = localR(); renderRejected(); };
+  if (!db) { useLocal(); return; }
+  rej.col = db.collection("rejected");
+  rej.col.orderBy("savedAt", "desc").onSnapshot(snap => { rej.items = snap.docs.map(x => ({id:x.id, ...x.data()})); renderRejected(); }, useLocal);
+}
+
+/* ---------- queue (same "ideaqueue" collection as before, so saved ideas carry over) ---------- */
+const queue = { col:null, items:[] };
+const localQ = () => store.get("clc-ideaqueue", []);
+queue.add = async item => {
+  if (queue.col) { await queue.col.add(item); return; }
+  const l = localQ(); l.unshift({id:"l" + Date.now(), ...item}); store.set("clc-ideaqueue", l); queue.items = l; renderQueue();
+};
+queue.remove = async id => {
+  if (queue.col) { await queue.col.doc(id).delete(); return; }
+  const l = localQ().filter(x => x.id !== id); store.set("clc-ideaqueue", l); queue.items = l; renderQueue();
+};
+/* One queue per content type. Older items have no channel, so read it from their label ("Reel · …", "Story · …", "Skool · …"). */
+const QUEUES = {
+  reels: {name:"Reel queue", hint:"Reel headers you plan to film. Press Add to queue under an idea."},
+  stories: {name:"Story queue", hint:"Story ideas you plan to post. Press Add to queue under an idea."},
+  skool: {name:"Skool post queue", hint:"Skool posts you plan to publish. Press Add to queue under an idea."},
+  memes: {name:"Meme queue", hint:"Memes you plan to make. Press Add to queue under an idea."}
+};
+function chanOf(q){
+  if (q.channel) return q.channel;
+  const l = q.level || "";
+  return l.startsWith("Story") ? "stories" : l.startsWith("Skool") ? "skool" : l.startsWith("Meme") ? "memes" : "reels";
+}
+function renderQueue(){
+  const ul = $("qlist"); ul.textContent = "";
+  $("qh").textContent = QUEUES[channel].name;
+  $("qhint").textContent = QUEUES[channel].hint;
+  const items = queue.items.filter(q => chanOf(q) === channel);
+  const n = items.length;
+  $("qst").className = "status saved";
+  $("qst").textContent = (queue.col ? "✓ Saved to your account" : "Saved in this browser only")
+    + " · " + (n ? n + (n === 1 ? " title" : " titles") : "this queue is empty");
+  items.forEach(q => {
+    const li = el("li", "item");
+    li.appendChild(el("b", "", q.title || ""));
+    li.appendChild(el("span", "meta", [q.level, q.savedAt ? new Date(q.savedAt).toLocaleDateString(undefined, {day:"numeric", month:"short"}) : ""].filter(Boolean).join(" · ")));
+    const cov = el("ul", "cov"); cov.hidden = true;
+    (Array.isArray(q.cover) ? q.cover : []).forEach(x => cov.appendChild(el("li", "", x)));
+    const row = el("div", "row"); row.style.gap = "6px";
+    const ob = el("button", "btn small", "Outline"); ob.hidden = !cov.children.length;
+    ob.onclick = () => { cov.hidden = !cov.hidden; ob.textContent = cov.hidden ? "Outline" : "Hide outline"; };
+    const cp = el("button", "btn small", "Copy"); cp.onclick = () => copyText([q.title, ...(Array.isArray(q.cover) ? q.cover : [])].join("\n"), cp);
+    const del = el("button", "x", "Remove");
+    del.onclick = async () => {
+      if (del.dataset.sure !== "1") { del.dataset.sure = "1"; del.textContent = "Press again to remove"; setTimeout(() => { del.dataset.sure = ""; del.textContent = "Remove"; }, 3000); return; }
+      try { await queue.remove(q.id); } catch { $("qst").textContent = "Couldn't remove that. Try again."; }
+    };
+    row.append(ob, cp, del);
+    li.append(row, cov); ul.appendChild(li);
+  });
+}
+function initQueue(){
+  qReady = true;
+  const useLocal = () => { queue.col = null; queue.items = localQ(); renderQueue(); };
+  if (!window.claude?.use) { useLocal(); initRejected(null); return; }
+  claude.use("db").then(db => {
+    initRejected(db);
+    if (!db) { useLocal(); return; }
+    queue.col = db.collection("ideaqueue");
+    queue.col.orderBy("savedAt", "desc").onSnapshot(snap => { queue.items = snap.docs.map(s => ({id:s.id, ...s.data()})); renderQueue(); }, useLocal);
+  }).catch(() => { useLocal(); initRejected(null); });
+}
+
+const last = store.get("cig-ideas", null);
+if (last && Array.isArray(last.ideas)) renderIdeas(last.type, last.ideas, last.channel || (last.ideas[0] && last.ideas[0].frames ? "stories" : "reels"));
+initQueue();
+if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) { $("st").className = "status err"; $("st").textContent = "Claude isn't available in this view."; } });
+</script>

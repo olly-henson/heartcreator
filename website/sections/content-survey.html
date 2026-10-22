@@ -1,0 +1,530 @@
+<!-- ============================================================
+     Heart Attractor — Instagram Content Survey
+     GHL page path: TBC (e.g. ollyhenson.com/content-survey), Website Builder
+     Paste as ONE Custom HTML block. Section width: Full Width. Margin/padding: 0.
+     Responses POST to a Google Apps Script web app (content-survey.gs) → Google Sheet.
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body{ background:#0A0510 !important; margin:0 !important; padding:0 !important; }
+
+  .hcs-page{
+    --bg-a:#4B1466; --bg-b:#150818; --bg-c:#0A0510;
+    --accent:#d946ef; --accent-2:#E1A6FF;
+    --body-text:#E6DCF2;
+    width:100vw !important;
+    position:relative !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    min-height:100vh;
+    background:radial-gradient(120% 100% at 20% 0%, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+    font-family:'Poppins', sans-serif;
+    color:#fff;
+    padding:34px 25px 48px;
+    box-sizing:border-box;
+  }
+  .hcs-page *{ box-sizing:border-box; }
+  .hcs-wrap{ max-width:680px; margin:0 auto; }
+
+  .hcs-eyebrow{
+    display:inline-block;
+    font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent-2);
+    margin-bottom:18px;
+  }
+  .hcs-grad{
+    background:linear-gradient(135deg, var(--accent-2), var(--accent));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* Intro + thank-you screens */
+  .hcs-hero{ text-align:center; padding-top:20px; }
+  .hcs-headline{
+    font-size:clamp(32px,5.6vw,52px); font-weight:800; line-height:1.15;
+    margin:0 0 17px; text-wrap:balance;
+  }
+  .hcs-sub{
+    font-size:clamp(15px,1.9vw,18px); line-height:1.6; color:var(--body-text);
+    max-width:52ch; margin:0 auto 28px;
+  }
+  .hcs-meta{ font-size:13px; color:rgba(255,255,255,.55); margin-top:16px; }
+
+  /* Progress */
+  .hcs-progress{ display:flex; align-items:center; gap:14px; margin-bottom:26px; }
+  .hcs-bar{ flex:1; height:6px; background:rgba(255,255,255,.1); border-radius:6px; overflow:hidden; }
+  .hcs-bar-fill{
+    height:100%; width:0;
+    background:linear-gradient(90deg, var(--accent-2), var(--accent));
+    border-radius:6px; transition:width .3s ease;
+  }
+  .hcs-count{ font-size:13px; font-weight:600; color:rgba(255,255,255,.6); white-space:nowrap; }
+
+  /* Question */
+  .hcs-q-title{
+    font-size:clamp(22px,3.6vw,30px); font-weight:700; line-height:1.3;
+    margin:0 0 8px; text-wrap:balance;
+  }
+  .hcs-q-hint{ font-size:14px; color:var(--accent-2); font-weight:600; letter-spacing:.04em; margin:0 0 22px; }
+  .hcs-options{ display:flex; flex-direction:column; gap:10px; }
+  .hcs-opt{
+    display:flex; align-items:center; gap:14px;
+    width:100%; text-align:left;
+    padding:14px 18px;
+    font-family:'Poppins', sans-serif; font-size:16px; font-weight:500; color:#fff;
+    background:rgba(255,255,255,.05);
+    border:1.5px solid rgba(255,255,255,.14);
+    border-radius:14px; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .hcs-opt:hover{ border-color:rgba(217,70,239,.6); }
+  .hcs-opt[aria-pressed="true"]{
+    border-color:var(--accent);
+    background:rgba(217,70,239,.18);
+  }
+  .hcs-opt:disabled{ opacity:.4; cursor:default; }
+  .hcs-tick{
+    flex:none; width:22px; height:22px;
+    border:2px solid rgba(255,255,255,.35); border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; color:transparent;
+  }
+  .hcs-single .hcs-tick{ border-radius:50%; }
+  .hcs-opt[aria-pressed="true"] .hcs-tick{ background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  /* Rating (type:'rate'): one content type per screen, tap a rating to move on */
+  .hcs-rate-card{
+    padding:28px 22px 22px;
+    background:rgba(255,255,255,.05);
+    border:1.5px solid rgba(255,255,255,.14);
+    border-radius:18px;
+    text-align:center;
+  }
+  .hcs-rate-label{ font-size:clamp(24px,4.2vw,32px); font-weight:700; line-height:1.3; margin-bottom:24px; text-wrap:balance; }
+  .hcs-rate-btns{ display:flex; flex-direction:column; gap:10px; max-width:360px; margin:0 auto; }
+  .hcs-rate-btn{
+    padding:15px 20px;
+    font-family:'Poppins', sans-serif; font-size:17px; font-weight:600; color:#fff;
+    background:rgba(255,255,255,.06);
+    border:1.5px solid rgba(255,255,255,.18);
+    border-radius:50px; cursor:pointer;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .hcs-rate-btn:hover{ border-color:rgba(217,70,239,.6); }
+  .hcs-rate-btn[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); }
+  .hcs-rate-dots{ display:flex; justify-content:center; flex-wrap:wrap; gap:6px; margin-top:22px; }
+  .hcs-rate-dot{ width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.18); }
+  .hcs-rate-dot.is-done{ background:var(--accent-2); }
+  .hcs-rate-dot.is-current{ background:var(--accent); transform:scale(1.35); }
+
+  .hcs-text, .hcs-other{
+    width:100%; padding:14px 16px;
+    font-family:'Poppins', sans-serif; font-size:16px; color:#fff;
+    background:rgba(255,255,255,.06);
+    border:1.5px solid rgba(255,255,255,.18);
+    border-radius:14px; outline:none; resize:vertical;
+  }
+  .hcs-text{ min-height:140px; line-height:1.5; }
+  .hcs-other{ margin-top:4px; display:none; }
+  .hcs-text::placeholder, .hcs-other::placeholder{ color:rgba(255,255,255,.35); }
+  .hcs-text:focus, .hcs-other:focus{ border-color:var(--accent); }
+  .hcs-input{ min-height:0; resize:none; }
+
+  /* Nav */
+  .hcs-nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:28px; }
+  .hcs-back{
+    background:none; border:none; padding:10px 4px; cursor:pointer;
+    font-family:'Poppins', sans-serif; font-size:15px; font-weight:500; color:rgba(255,255,255,.6);
+  }
+  .hcs-back:hover{ color:#fff; }
+  .hcs-back[hidden]{ display:block; visibility:hidden; }
+  .hcs-btn{
+    padding:14px 34px;
+    font-family:'Poppins', sans-serif; font-size:17px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg, var(--accent), #7A2AA8);
+    border:none; border-radius:50px; cursor:pointer;
+    box-shadow:0 10px 30px rgba(217,70,239,.35);
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .hcs-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 36px rgba(217,70,239,.45); }
+  .hcs-btn:disabled{ opacity:.45; cursor:default; transform:none; box-shadow:none; }
+
+  .hcs-screen{ display:none; }
+  .hcs-screen.is-active{ display:block; animation:hcs-in .3s ease; }
+  @keyframes hcs-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+
+  @media (max-width:480px){
+    .hcs-page{ padding:24px 16px 36px; }
+    .hcs-opt{ padding:13px 15px; font-size:15px; }
+    .hcs-btn{ padding:14px 28px; font-size:16px; }
+  }
+</style>
+
+<div class="hcs-page">
+  <div class="hcs-wrap">
+
+    <!-- Intro -->
+    <section class="hcs-screen hcs-hero is-active" id="hcs-intro">
+      <div class="hcs-eyebrow">👉 2 Minute Survey</div>
+      <h1 class="hcs-headline">What Content <span class="hcs-grad">Interests You</span> The Most?</h1>
+      <p class="hcs-sub">I'd like to find out what sort of content you really enjoy and resonate with so I can keep making content that supports and interests you.</p>
+      <button type="button" class="hcs-btn" id="hcs-start">Let's Go →</button>
+      <div class="hcs-meta">9 quick questions</div>
+    </section>
+
+    <!-- Questions (rendered by JS) -->
+    <section class="hcs-screen" id="hcs-question">
+      <div class="hcs-progress">
+        <div class="hcs-bar"><div class="hcs-bar-fill" id="hcs-bar-fill"></div></div>
+        <div class="hcs-count" id="hcs-count"></div>
+      </div>
+      <h2 class="hcs-q-title" id="hcs-q-title"></h2>
+      <p class="hcs-q-hint" id="hcs-q-hint"></p>
+      <div id="hcs-q-body"></div>
+      <div class="hcs-nav">
+        <button type="button" class="hcs-back" id="hcs-back">← Back</button>
+        <button type="button" class="hcs-btn" id="hcs-next">Next →</button>
+      </div>
+    </section>
+
+    <!-- Thank you -->
+    <section class="hcs-screen hcs-hero" id="hcs-thanks">
+      <div class="hcs-eyebrow">✓ Sent</div>
+      <h1 class="hcs-headline" id="hcs-thanks-title">Thank <span class="hcs-grad">You</span></h1>
+      <p class="hcs-sub">I read every single answer. What you've shared will shape what I post next so it actually helps you.</p>
+      <a class="hcs-btn" href="https://www.instagram.com/attractwitholly/" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;">See What's New On Instagram</a>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  // ---- CONFIG: paste the Apps Script web app URL (Deploy > New deployment > Web app) ----
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9xTYgwq41gZgYKWb1fN_N-0T_1mztnek4o6bIw0cDPLoq_-5AGst9ze0yNCQ5YSS2/exec';
+
+  var QUESTIONS = [
+    // Each question maps to one content decision (see "How To Read The Results" in content-survey.gs)
+    { id:'content_types', type:'rate', title:'How do you feel about this type of soulmate content?', hint:'',
+      scale:['😍 Love it','🙂 It’s ok','🙅‍♀️ Not for me'],
+      options:['🔮 Tarot, astrology and love readings','🔥 Twin flames and soul connections','✨ Manifestation and law of attraction','🧘‍♀️ Meditation and energy work','🧠 Attachment styles (anxious, avoidant, secure)','🩹 Healing past wounds and inner child work','🌿 Nervous system regulation','🔬 The science and psychology of attraction','🚩 Red flags and green flags','💬 Dating strategy (texting, first dates, getting commitment)','📱 Dating app tips','👑 Feminine energy and high-value dating','💑 Real couples and how-we-met stories'] },
+    { id:'titles', type:'titles', source:'content_types', title:'Which of these Reels would you stop scrolling for?', hint:'Pick all that apply' },
+    { id:'reel_length', type:'multi', title:'How long should a Reel be?', hint:'Pick all that apply',
+      options:['Under 15 seconds','15 to 30 seconds','30 to 60 seconds','Over a minute','Doesn\u2019t matter if it\u2019s good'] },
+    { id:'fav_reel', type:'multi', other:'A different one (type it below)', otherPlaceholder:'Which Reel was it? What was it about?',
+      title:'Which Reel of mine was your favourite?', hint:'Pick all that apply',
+      options:['The scientific way to attract your soulmate','How to attract your soulmate - scientifically','A different one (type it below)','I haven\u2019t seen any yet'] },
+    { id:'turn_offs', type:'multi', title:'What makes you scroll past dating and relationship advice?', hint:'Pick all that apply',
+      options:['It overcomplicates things','There\u2019s always something else to fix','Too many rules about what to do and not do','Conflicting advice','Too \u201Cwoo\u201D or vibes-based','Too clinical','Too salesy','It makes me feel worse about being single','Takes too long to get to the point'] },
+    { id:'struggle', type:'text', title:'When it comes to attracting someone you can build a life with, what\u2019s your biggest struggle right now?', hint:'Be as honest as you like. Only I will see this',
+      placeholder:'My biggest struggle is\u2026' },
+    { id:'other_creators', type:'text', optional:true, title:'Who else do you follow for love and dating content?', hint:'Optional. Names or handles are perfect',
+      placeholder:'e.g. @someone, someone else\u2026' },
+    { id:'watch_freq', type:'single', title:'How often do you watch my Reels?', hint:'Pick one',
+      options:['Most days','A few times a week','Every now and then','I\u2019ve only just found you'] },
+    { id:'age', type:'single', title:'Which age range are you in?', hint:'Pick one',
+      options:['Under 25','25 to 34','35 to 44','45 to 54','55 or over','Prefer not to say'] }
+  ];
+
+  // Title variations per content type (same order as content_types options). s = hook style.
+  var TITLE_BANK = [
+    [{t:'Pick a card: when will you meet your soulmate?', s:'Question'}, {t:'3 signs the cards say your person is on the way', s:'List'}, {t:'Stop asking the cards when he’ll text back. Ask this instead', s:'Contrarian'}],
+    [{t:'5 signs you’ve already met your twin flame', s:'List'}, {t:'Twin flame or karmic partner? Here’s how to tell', s:'Question'}, {t:'Why chasing your twin flame keeps you single', s:'Contrarian'}],
+    [{t:'How to manifest your soulmate in 30 days', s:'How-to'}, {t:'Why manifesting your soulmate isn’t working (and what to do instead)', s:'Contrarian'}, {t:'I wrote down exactly who I wanted. Then I met my wife', s:'Story'}],
+    [{t:'A 5-minute meditation to call in your soulmate', s:'How-to'}, {t:'What happens in your heart when you picture the person you want', s:'Science'}, {t:'The meditation I did every day before I met my wife', s:'Story'}],
+    [{t:'Why anxious attachers fall for avoidant partners', s:'Science'}, {t:'Are you anxiously attached? Take this 10-second test', s:'Question'}, {t:'Your attachment style isn’t the reason you’re single', s:'Contrarian'}],
+    [{t:'How your childhood shapes who you fall for', s:'Science'}, {t:'Why do you keep dating the same person in a different body?', s:'Question'}, {t:'You don’t need to heal everything before you meet your person', s:'Contrarian'}],
+    [{t:'Why calm feels boring when you’re used to chaos', s:'Science'}, {t:'3 signs your nervous system is choosing your partners for you', s:'List'}, {t:'How to make a good, consistent man feel attractive', s:'How-to'}],
+    [{t:'The science of why you’re attracted to the wrong people', s:'Science'}, {t:'The scientific way to attract your soulmate', s:'How-to'}, {t:'What actually happens in your brain when you fall in love?', s:'Question'}],
+    [{t:'3 green flags that mean he’s ready to commit', s:'List'}, {t:'The “green flag” that’s actually a red flag', s:'Contrarian'}, {t:'Is he consistent or just love bombing? Here’s the difference', s:'Question'}],
+    [{t:'What to text after a first date if you want a relationship', s:'How-to'}, {t:'Stop playing it cool if you want commitment', s:'Contrarian'}, {t:'3 first-date questions that show if he wants a future', s:'List'}],
+    [{t:'The dating app profile mistake keeping you single', s:'Contrarian'}, {t:'3 dating app bios that attract men who want commitment', s:'List'}, {t:'Are dating apps worth it if you want something serious?', s:'Question'}],
+    [{t:'Feminine energy habits that make him want to commit', s:'List'}, {t:'Why being “high-value” is pushing good men away', s:'Contrarian'}, {t:'How to stop over-giving and let him lead', s:'How-to'}],
+    [{t:'How we met: the moment I knew he was the one', s:'Story'}, {t:'From heartbreak to married: how I met my wife', s:'Story'}, {t:'How did you know they were the one? Couples answer', s:'Question'}]
+  ];
+
+  var answers = {};
+  var otherTexts = {}; // typed-in answers for 'other' options, by question id
+  var current = 0;
+  var submitted = false;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var screens = ['hcs-intro','hcs-question','hcs-thanks'];
+
+  function show(id) {
+    screens.forEach(function(s){ $(s).classList.toggle('is-active', s === id); });
+    var top = $('hcs-intro').closest('.hcs-page').getBoundingClientRect().top + window.pageYOffset;
+    if (window.pageYOffset > top) window.scrollTo({ top: top, behavior: 'smooth' });
+  }
+
+  function isAnswered(q) {
+    var a = answers[q.id];
+    if (q.optional) return true;
+    if (q.type === 'rate') return !!a && Object.keys(a).length === q.options.length;
+    if (q.type === 'single') return !!a && !(q.other && a === q.other && !(otherTexts[q.id] || '').trim());
+    if (q.type === 'multi' || q.type === 'titles') {
+      if (!a || !a.length) return false;
+      if (q.other && a.indexOf(q.other) !== -1 && !(otherTexts[q.id] || '').trim()) return false;
+      return true;
+    }
+    return !!(a && a.trim());
+  }
+
+  function updateNext() {
+    var q = QUESTIONS[current];
+    var last = current === QUESTIONS.length - 1;
+    $('hcs-next').disabled = q.type === 'rate' ? !(answers[q.id] || {})[q.options[q._sub || 0]] : !isAnswered(q);
+    if (last) $('hcs-next').textContent = 'Send My Answers';
+    else if (q.optional && !(answers[q.id] && answers[q.id].trim())) $('hcs-next').textContent = 'Skip →';
+    else $('hcs-next').textContent = 'Next →';
+  }
+
+  function shuffle(arr) {
+    for (var j = arr.length - 1; j > 0; j--) {
+      var r = Math.floor(Math.random() * (j + 1)), tmp = arr[j]; arr[j] = arr[r]; arr[r] = tmp;
+    }
+    return arr;
+  }
+
+  // Builds the titles question from the content types they rated Love it or It's ok
+  // (see the cap rules below). If they rated everything Not for me, every type is eligible.
+  function prepareTitles(q) {
+    var src = QUESTIONS.filter(function(x){ return x.id === q.source; })[0];
+    var ratings = answers[src.id] || {};
+    var loved = [], ok = [];
+    src.options.forEach(function(opt, i) {
+      if (ratings[opt] === src.scale[0]) loved.push(i);
+      else if (ratings[opt] === src.scale[1]) ok.push(i);
+    });
+    var pool = loved.concat(ok);
+    if (!pool.length) pool = src.options.map(function(_, i){ return i; });
+    q.hint = pool.length < src.options.length ? 'Pick all that apply. These are based on the content you’re into' : 'Pick all that apply';
+
+    var key = loved.join(',') + '/' + ok.join(',');
+    if (q._key === key) return; // same ratings as last time: keep the same titles and order
+
+    // Cap the list at MAX_TITLES. Priority: the pinned type (Olly's core science content) if they
+    // rated it Love it or It's ok, then loved types, then It's ok types, each group in random order.
+    // Fewer types get more variations each (up to 3); lots of types get 1 random variation each.
+    // Every title shown is recorded, so pick rates stay fair.
+    var MAX_TITLES = 8;
+    var PINNED = src.options.indexOf('🔬 The science and psychology of attraction');
+    var ordered = loved.length || ok.length ? shuffle(loved.slice()).concat(shuffle(ok.slice())) : shuffle(pool.slice());
+    if (pool.indexOf(PINNED) !== -1) ordered = [PINNED].concat(ordered.filter(function(i){ return i !== PINNED; }));
+    var types = ordered.slice(0, MAX_TITLES);
+    var per = Math.min(3, Math.max(1, Math.floor(MAX_TITLES / types.length)));
+    var items = [];
+    types.forEach(function(i) {
+      var emoji = src.options[i].split(' ')[0];
+      var type = src.options[i].slice(emoji.length + 1);
+      shuffle(TITLE_BANK[i].slice()).slice(0, per).forEach(function(x) {
+        items.push({ label: emoji + ' ' + x.t, type: type, style: x.s });
+      });
+    });
+    shuffle(items); // so position doesn't bias picks
+    q.options = items.map(function(x){ return x.label; });
+    q._meta = {};
+    items.forEach(function(x){ q._meta[x.label] = x; });
+    q._key = key;
+    answers[q.id] = (answers[q.id] || []).filter(function(l){ return q._meta[l]; });
+  }
+
+  function render() {
+    var q = QUESTIONS[current];
+    if (q.type === 'titles') prepareTitles(q);
+    $('hcs-count').textContent = (current + 1) + ' of ' + QUESTIONS.length;
+    $('hcs-bar-fill').style.width = ((current + 1) / QUESTIONS.length * 100) + '%';
+    $('hcs-q-title').textContent = q.title;
+    $('hcs-q-hint').textContent = q.hint;
+    $('hcs-back').hidden = current === 0 && !(q.type === 'rate' && q._sub > 0);
+
+    var body = $('hcs-q-body');
+    body.innerHTML = '';
+
+    if (q.type === 'rate') {
+      answers[q.id] = answers[q.id] || {};
+      var sub = q._sub || 0;
+      var opt = q.options[sub];
+      $('hcs-q-hint').textContent = (sub + 1) + ' of ' + q.options.length + '. Tap one to move on';
+      var card = document.createElement('div');
+      card.className = 'hcs-rate-card';
+      var label = document.createElement('div');
+      label.className = 'hcs-rate-label';
+      label.textContent = opt;
+      var btns = document.createElement('div');
+      btns.className = 'hcs-rate-btns';
+      q.scale.forEach(function(level) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'hcs-rate-btn';
+        b.textContent = level;
+        b.setAttribute('aria-pressed', answers[q.id][opt] === level ? 'true' : 'false');
+        b.addEventListener('click', function() {
+          if (q._moving) return; // ignore double taps while moving on
+          answers[q.id][opt] = level;
+          Array.prototype.forEach.call(btns.children, function(x) {
+            x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+          });
+          q._moving = true;
+          setTimeout(function() {
+            q._moving = false;
+            if (sub < q.options.length - 1) { q._sub = sub + 1; render(); }
+            else next();
+          }, 250);
+        });
+        btns.appendChild(b);
+      });
+      var dots = document.createElement('div');
+      dots.className = 'hcs-rate-dots';
+      q.options.forEach(function(o, i) {
+        var d = document.createElement('span');
+        d.className = 'hcs-rate-dot' + (i === sub ? ' is-current' : (answers[q.id][o] ? ' is-done' : ''));
+        dots.appendChild(d);
+      });
+      card.appendChild(label);
+      card.appendChild(btns);
+      card.appendChild(dots);
+      body.appendChild(card);
+    } else if (q.type === 'single' || q.type === 'multi' || q.type === 'titles') {
+      var list = document.createElement('div');
+      list.className = 'hcs-options' + (q.type === 'single' ? ' hcs-single' : '');
+      q.options.forEach(function(opt) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'hcs-opt';
+        btn.innerHTML = '<span class="hcs-tick">✓</span><span></span>';
+        btn.lastChild.textContent = opt;
+        btn.addEventListener('click', function(){ choose(q, opt); });
+        btn.dataset.value = opt;
+        list.appendChild(btn);
+      });
+      body.appendChild(list);
+
+      if (q.other) {
+        var other = document.createElement('input');
+        other.type = 'text';
+        other.className = 'hcs-other';
+        other.id = 'hcs-other';
+        other.placeholder = q.otherPlaceholder || 'Tell me what it is';
+        other.value = otherTexts[q.id] || '';
+        other.addEventListener('input', function(){ otherTexts[q.id] = other.value; updateNext(); });
+        body.appendChild(other);
+      }
+      syncOptions(q);
+    } else {
+      var field = document.createElement(q.type === 'text' ? 'textarea' : 'input');
+      field.className = 'hcs-text' + (q.type === 'input' ? ' hcs-input' : '');
+      if (q.type === 'input') { field.type = 'text'; field.autocomplete = 'given-name'; }
+      field.placeholder = q.placeholder || '';
+      field.value = answers[q.id] || '';
+      field.addEventListener('input', function(){ answers[q.id] = field.value; updateNext(); });
+      field.addEventListener('keydown', function(e){
+        if (q.type === 'input' && e.key === 'Enter') { e.preventDefault(); next(); }
+      });
+      body.appendChild(field);
+      setTimeout(function(){ field.focus({ preventScroll:true }); }, 50);
+    }
+    updateNext();
+  }
+
+  function syncOptions(q) {
+    var a = answers[q.id];
+    var picked = q.type === 'single' ? (a ? [a] : []) : (a || []);
+    var full = q.max && picked.length >= q.max;
+    Array.prototype.forEach.call(document.querySelectorAll('#hcs-q-body .hcs-opt'), function(btn) {
+      var on = picked.indexOf(btn.dataset.value) !== -1;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.disabled = !!(full && !on);
+    });
+    var other = $('hcs-other');
+    if (other) {
+      var showOther = picked.indexOf(q.other) !== -1;
+      other.style.display = showOther ? 'block' : 'none';
+      if (!showOther) otherTexts[q.id] = '';
+    }
+  }
+
+  function choose(q, opt) {
+    if (q.type === 'single') {
+      answers[q.id] = opt;
+      syncOptions(q);
+      updateNext();
+      if (q.other && opt === q.other) { var t = $('hcs-other'); if (t) t.focus(); return; }
+      return;
+    }
+    var a = answers[q.id] || [];
+    var i = a.indexOf(opt);
+    if (i === -1) a.push(opt); else a.splice(i, 1);
+    answers[q.id] = a;
+    syncOptions(q);
+    if (opt === q.other && i === -1) { var o = $('hcs-other'); if (o) o.focus(); }
+    updateNext();
+  }
+
+  function next() {
+    var cq = QUESTIONS[current];
+    if (cq.type === 'rate' && (cq._sub || 0) < cq.options.length - 1) {
+      if ((answers[cq.id] || {})[cq.options[cq._sub || 0]]) { cq._sub = (cq._sub || 0) + 1; render(); }
+      return;
+    }
+    if (!isAnswered(cq)) return;
+    if (current < QUESTIONS.length - 1) { current++; render(); return; }
+    submit();
+  }
+
+  function submit() {
+    if (submitted) return;
+    submitted = true;
+    var params = new URLSearchParams(window.location.search);
+    // Labels on screen start with an emoji; the Sheet gets plain text so nothing can be garbled.
+    function plain(label) { return label.replace(/^\S+\s/, ''); }
+    function rated(id, i) {
+      var q = QUESTIONS.filter(function(x){ return x.id === id; })[0];
+      var a = answers[id] || {};
+      return Object.keys(a).filter(function(k){ return a[k] === q.scale[i]; }).map(plain).join(' | ');
+    }
+    var tq = QUESTIONS.filter(function(x){ return x.id === 'titles'; })[0];
+    var picked = answers.titles || [];
+    var shown = tq.options || [];
+    function styles(list) { return list.map(function(l){ return tq._meta[l].style; }).join(' | '); }
+    var payload = {
+      content_love: rated('content_types', 0),
+      content_ok:   rated('content_types', 1),
+      content_not:  rated('content_types', 2),
+      titles:       picked.map(plain).join(' | '),
+      titles_shown: shown.map(plain).join(' | '),
+      title_styles: styles(picked),
+      title_styles_shown: styles(shown),
+      reel_length:  (answers.reel_length || []).join(' | '),
+      fav_reel:     (answers.fav_reel || []).join(' | '),
+      fav_reel_other: (otherTexts.fav_reel || '').trim(),
+      turn_offs:    (answers.turn_offs || []).join(' | '),
+      struggle:     (answers.struggle || '').trim(),
+      other_creators: (answers.other_creators || '').trim(),
+      watch_freq:   answers.watch_freq || '',
+      age:          answers.age || '',
+      source:       params.get('src') || params.get('utm_source') || ''
+    };
+
+    // Background send. The thank-you screen shows either way, a failed send never blocks.
+    if (SHEET_URL.indexOf('http') === 0) {
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).catch(function(err){ console.error('[Heart Attractor] Survey send error:', err); });
+    } else {
+      console.warn('[Heart Attractor] SHEET_URL not set. Payload:', payload);
+    }
+    show('hcs-thanks');
+  }
+
+  $('hcs-start').addEventListener('click', function(){ show('hcs-question'); render(); });
+  $('hcs-next').addEventListener('click', next);
+  $('hcs-back').addEventListener('click', function(){
+    var q = QUESTIONS[current];
+    if (q.type === 'rate' && q._sub > 0) { q._sub--; render(); return; }
+    if (current > 0) { current--; render(); }
+  });
+})();
+</script>

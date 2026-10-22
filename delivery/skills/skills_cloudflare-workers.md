@@ -123,6 +123,7 @@ Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a
 13. **Before any test signup against a scheduling Worker, check the furthest send against the 30-day cap**: for the earliest likely signup time (early morning UK) and the latest start date the page allows, is the last `scheduled_at` under 30 days from *now*? If not, cap it (`capToResendLimit`) or restrict the start date first. A dry run with `fetch` stubbed (see step 11's loader) prints each `scheduled_at` and how many days ahead it is.
 14. **When Olly asks "is this the right / live Worker?"**, compare the code he pasted against the local file (key constants, email copy), curl the Worker's live endpoint, and say what's confirmed live, what isn't, and what only a test signup proves. On 2026-09-25 this confirmed the Regulate 7-day Worker was live and a real client was on it, which changed the advice (don't clear the whole Resend queue).
 15. **When a signup fails on the page, remember sends are sequential**: everything before the failing send has already gone out or been scheduled. Tell Olly exactly which emails to cancel in Resend, and that every retry adds another set.
+16. **For a copy-only edit to a live page Worker (e.g. `share-worker.js` wording), `curl` the live page before editing to confirm which Worker serves it and what it says now, then hand Olly the code on his clipboard** (`Get-Content -Raw <file> | Set-Clipboard`) with the one-line paste-and-deploy steps, and `curl` again after he deploys. When he asked "got the link to the code?" (2026-10-21) he wanted something to paste, not a file path. The before-curl also answered "is it the share worker?" with evidence, and the after-curl (with a cache-busting query param) confirmed the new wording was live.
 
 ## Examples
 
@@ -133,6 +134,8 @@ Any `*-worker.js` file in `delivery/` deployed to Cloudflare Workers to handle a
 - Check-in N: `…/?type=checkin&text=Rewrite Meditation, Day N Update: ` (editable, pre-filled, cursor at end)
 - Completed (day 30): `…/?type=checkin&text=Just completed the Rewrite Meditation and ready to start the Rehearse Meditation!` (editable, pre-filled; replaced the read-only `type=final` "I've just completed…" on 2026-09-25)
 All built with `encodeURIComponent` in named constants/helpers at the top of the Worker (`STARTED_SHARE_URL`, `COMPLETED_SHARE_URL`, `checkinShareUrl(day)`).
+
+**`type=intro` unlock page copy (live 2026-10-21):** heading "Unlock The Attraction Formula"; subheading "Copy and paste the text below in the community and let us know what you're looking for and you'll unlock The Attraction Formula."; pre-filled message "Hey, I'm ready to start using The Attraction Formula!" plus the three sentence starters. The offer is "The Attraction Formula" (not "…Meditation") everywhere on this page.
 
 ---
 
@@ -194,3 +197,8 @@ All built with `encodeURIComponent` in named constants/helpers at the top of the
 - Created this file — no dedicated skill previously existed for the `*-worker.js` Cloudflare Worker pattern used across `delivery/`, despite three of these files existing (`call-rsvp-worker.js`, `share-worker.js`, `meditation-summary-worker.js`).
 - Documented the real incident this session: a Cloudflare secret named `meditation_summary` instead of the code's required `env.RESEND_API_KEY`, producing a generic "API key is invalid" 401 that had nothing to do with the key's actual value — cost a full debug cycle (temporary `/debug` route added then removed) before the mismatch was found. New standing rule: always check secret-name-vs-code-reference first on any Worker auth error.
 - Documented the separate-client-and-coach-email pattern (two distinct Resend calls, two distinct template functions) as the correct shape for any future notification Worker in this folder.
+
+**2026-10-21 — Post-session review (share-worker.js `type=intro` copy change)**
+- Process: added step 16 (copy-only edit to a live page Worker: curl before to confirm which Worker serves the page, put the code on Olly's clipboard, curl after deploy with a cache-buster). Why: Olly asked for "the link to the code" meaning something to paste, and asked "is it the share worker?" which the before-curl answered with evidence.
+- Examples: added the current live `type=intro` unlock-page copy (offer renamed from "The Attraction Formula Meditation" to "The Attraction Formula").
+- Removed: nothing; no earlier rule was overridden.

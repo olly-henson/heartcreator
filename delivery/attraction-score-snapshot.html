@@ -1,0 +1,374 @@
+<title>Attraction Score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one phone-width column. Sign-up snapshot (3 sliders on one page) → report (score, 3 areas) → the 3-meditation path. Single dark brand theme by choice. */
+:root{
+  --bg:#0C0610;
+  --glow-1:#4B1466;
+  --glow-2:#3D1252;
+  --surface:#170D1E;
+  --surface-2:#22142C;
+  --line:rgba(235,217,226,.12);
+  --fg:#FFFFFF;
+  --body:#EBD9E2;
+  --muted:#A893A3;
+  --accent:#B84FE8;
+  --accent-soft:#E1A6FF;
+  --accent-wash:rgba(184,79,232,.14);
+  --focus:#FF9DB8;
+  --strong:#86E0B8;
+  --note:#F3D99B;
+  --font:'Poppins',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(60rem 40rem at 110% -10%, color-mix(in srgb,var(--glow-1) 55%,transparent), transparent 60%),
+    radial-gradient(40rem 30rem at -20% 45%, color-mix(in srgb,var(--glow-2) 40%,transparent), transparent 65%);
+  background-attachment:fixed;
+  color:var(--body);font-family:var(--font);font-size:15px;line-height:1.55;
+  padding-inline:16px;padding-block:0 64px;
+}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent-soft);outline-offset:2px;border-radius:6px}
+h1,h2,h3{color:var(--fg);margin:0;text-wrap:balance;line-height:1.2}
+p{margin:0}
+
+.pv{max-width:540px;margin:0 auto;padding-block:14px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.pv-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.pv button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 11px;font-size:13px;color:var(--body)}
+.pv-toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-left:auto}
+.pv-toggle input{accent-color:var(--accent)}
+
+.app{max-width:540px;margin:0 auto;padding-top:28px;display:flex;flex-direction:column;gap:18px}
+.eyebrow,.label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.eyebrow{color:var(--accent-soft)}
+.label{color:var(--muted);font-size:11px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.card.hero{background:linear-gradient(160deg,color-mix(in srgb,var(--glow-1) 70%,var(--surface)),var(--surface) 70%);border-color:rgba(184,79,232,.35)}
+.title{font-size:28px;font-weight:800}
+.h2{font-size:20px;font-weight:700}
+.sub{color:var(--muted)}
+
+.btn{border:0;border-radius:14px;padding:14px 18px;background:var(--accent);color:#fff;font-weight:600;font-size:15px;box-shadow:0 8px 24px rgba(184,79,232,.35)}
+
+/* Questions */
+.q{display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid var(--line)}
+.q-head{display:flex;align-items:baseline;gap:10px}
+.q-head .n{font-size:13px;font-weight:700;color:var(--accent-soft)}
+.q label{font-size:17px;font-weight:600;color:var(--fg);line-height:1.35}
+.q-row{display:flex;align-items:center;gap:14px}
+.q-row input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:30px}
+.q-val{min-width:2ch;text-align:right;font-size:32px;font-weight:800;color:var(--accent-soft);font-variant-numeric:tabular-nums;line-height:1}
+.q-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding-right:calc(2ch + 14px)}
+.q-desc{padding:12px 14px;border-radius:14px;background:var(--accent-wash);color:var(--fg);font-size:15px;line-height:1.5;min-height:4.6em}
+
+/* Send */
+.send{display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid var(--line)}
+.send .n{font-size:13px;font-weight:700;color:var(--accent-soft)}
+.fields{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:13px;font-weight:500;color:var(--fg)}
+.field input{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;color:var(--fg);width:100%}
+.small{font-size:13px}
+.err{color:var(--focus);font-size:13px;font-weight:500}
+.err:empty{display:none}
+.send-status{padding:12px 16px;border-radius:14px;background:var(--accent-wash);color:var(--body);font-size:14px}
+.send-status b{color:var(--fg)}
+@media (max-width:420px){ .fields{grid-template-columns:1fr} }
+
+/* Score */
+.score-top{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.ring{width:132px;height:auto;display:block}
+.ring .track{fill:none;stroke:var(--surface-2);stroke-width:12}
+.ring .fill{fill:none;stroke:url(#ringGrad);stroke-width:12;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.ring .num{fill:var(--fg);font-family:var(--font);font-weight:800;font-size:40px}
+.ring .of{fill:var(--muted);font-family:var(--font);font-size:12px}
+.band{font-size:22px;font-weight:800;line-height:1.2;background:linear-gradient(90deg,var(--accent),var(--accent-soft));-webkit-background-clip:text;background-clip:text;color:transparent}
+.score-top .txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.focus-line{color:var(--body)}
+.focus-line b{color:var(--fg)}
+
+/* Areas */
+.areas{display:flex;flex-direction:column;gap:12px}
+.area{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:rgba(12,6,16,.45);border:1px solid var(--line)}
+.area-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.area-head h3{font-size:17px;font-weight:700}
+.area-head .v{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;color:var(--fg)}
+.pill{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.pill.start{color:var(--focus);background:color-mix(in srgb,var(--focus) 14%,transparent)}
+.pill.building{color:var(--accent-soft);background:var(--accent-wash)}
+.pill.strong{color:var(--strong);background:color-mix(in srgb,var(--strong) 14%,transparent)}
+.meter{height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-soft))}
+.area p{font-size:14px;color:var(--body)}
+.area .builds{font-size:13px;color:var(--muted)}
+.area .builds b{color:var(--accent-soft);font-weight:600}
+
+/* Path */
+.path{display:flex;flex-direction:column}
+.step{display:grid;grid-template-columns:40px 1fr;gap:14px;position:relative;padding-bottom:22px}
+.step:last-child{padding-bottom:0}
+.step::before{content:"";position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--line)}
+.step:last-child::before{display:none}
+.step .num{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:var(--fg);background:var(--surface-2);border:1px solid var(--line)}
+.step.now .num{background:var(--accent);border-color:var(--accent);box-shadow:0 0 16px rgba(184,79,232,.55)}
+.step .body{display:flex;flex-direction:column;gap:4px;min-width:0;padding-top:2px}
+.step h3{font-size:17px;font-weight:700}
+.step .len{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-soft)}
+.step p{font-size:14px}
+.step .you{font-size:13px;color:var(--muted)}
+
+.why{font-size:13px;color:var(--note);display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+.why svg{flex:none;width:16px;height:16px;margin-top:2px;fill:none;stroke:currentColor;stroke-width:2}
+.why b{font-weight:600}
+body.hide-notes .why{display:none}
+
+@media (max-width:420px){
+  .score-top{grid-template-columns:1fr;justify-items:center;text-align:center}
+}
+@media (prefers-reduced-motion:no-preference){
+  .card{animation:rise .35s ease both}
+  @keyframes rise{from{transform:translateY(6px)}to{transform:none}}
+}
+</style>
+
+<div class="pv" aria-label="Preview controls">
+  <span class="pv-label">Preview</span>
+  <button data-act="restart">Start again</button>
+  <button data-act="example">Show example report</button>
+  <label class="pv-toggle"><input type="checkbox" id="notes-toggle" checked> Show my notes</label>
+</div>
+
+<main class="app" id="app"></main>
+
+<script>
+(function(){
+  // DRAFT COPY: Olly to review. Each area is built by one meditation.
+  // summary[0] = score 1–4, summary[1] = 5–7, summary[2] = 8–10
+  var AREAS = [
+    {key:'calm', name:'Calm', q:'How calm do you feel about meeting your person?', lo:'Not at all', hi:'Completely calm', step:'Regulate',
+     steps:[
+      "Thinking about it makes my chest tight. I'd rather not think about it at all.",
+      "I feel a knot of dread. Part of me thinks it's never going to happen.",
+      "I'm anxious most of the time I think about it. I overthink every date and every text.",
+      "I'm on edge. I feel hopeful for a moment then the worry comes straight back.",
+      "Some days I'm okay with it. Other days the worry takes over.",
+      "I'm calmer than I used to be. I still catch myself looking for signs it's going wrong.",
+      "Mostly relaxed. A few old worries pop up but they pass quickly.",
+      "I feel settled. I'm not chasing it or trying to force it.",
+      "I feel at ease. I trust it's on its way to me.",
+      "Completely calm. I feel safe and open, like it's already done."
+     ],
+     summary:[
+      "Right now meeting your person feels more stressful than exciting. Your body is on alert around love, so dates, texts and silences all feel high stakes. When your body feels unsafe it's hard to stay open to anyone.",
+      "You have calm moments but the worry still creeps back in. Your body hasn't fully settled into feeling safe around love yet. Getting this steady makes everything else easier.",
+      "You feel settled about meeting your person. That's a strong base. The work now is keeping it steady so it holds when things start to get real."
+     ]},
+    {key:'belief', name:'Belief', q:'How much do you believe that you can meet your soulmate?', lo:'Not at all', hi:'Completely', step:'Rewrite',
+     steps:[
+      "I don't think it's going to happen for me.",
+      "It happens for other people. I just can't see it happening for me.",
+      "I want to believe it but I keep expecting to be let down.",
+      "Maybe. Most days I doubt it.",
+      "I go back and forth. I can see it's possible but I can't feel it yet.",
+      "I'm starting to believe it could really happen.",
+      "I believe it's possible for me. The doubt is quieter now.",
+      "I believe it. I can picture it without my mind arguing back.",
+      "I'm sure it's going to happen. It's only a matter of when.",
+      "I know it. It feels as real as something that's already happened."
+     ],
+     summary:[
+      "Part of you doesn't believe this can happen for you. That belief usually comes from old experiences. It quietly shapes who you're drawn to and what you expect from love.",
+      "You can see that it's possible but you can't fully feel it yet. The doubt is still running in the background and it pulls you back to old patterns.",
+      "You believe it can happen for you. That's one of the biggest things you have going for you. Now it needs to feel as real as a memory."
+     ]},
+    {key:'clarity', name:'Clarity', q:'How clear are you on exactly who you want to be with?', lo:'No idea', hi:'Crystal clear', step:'Rehearse',
+     steps:[
+      "I have no idea what I actually want. I just don't want to be alone.",
+      "I mostly know what I don't want, from past relationships.",
+      "I have a vague picture. It changes depending on my mood.",
+      "I know a few things I want but I couldn't describe the person.",
+      "I know some of the qualities I want. The picture is still blurry.",
+      "I know how I want to feel with them. Some of the details are still fuzzy.",
+      "I'm clear on who they are at their core and how they treat me.",
+      "I can picture them and our life together in detail.",
+      "I know exactly who they are and how I feel with them. I could write it down right now.",
+      "Crystal clear. I know who they are, how they love me and how I feel with them."
+     ],
+     summary:[
+      "You're not clear yet on who you want. Without a clear picture it's easy to settle for whoever shows up or keep repeating the same patterns.",
+      "You know some of what you want but the picture is still blurry. The clearer it gets, the easier it is to recognize your person when they show up.",
+      "You know who you want and how you want to feel with them. That clarity is powerful. Now it's about feeling it every day as if it's already happening."
+     ]}
+  ];
+
+  // The three meditations, in order
+  var PATH = [
+    {name:'Regulate', len:'7 days', area:'calm', text:'Calm your nervous system so love stops feeling like a threat and you can stay open.'},
+    {name:'Rewrite', len:'30 days', area:'belief', text:'Install a new belief about love so your subconscious stops working against you.'},
+    {name:'Rehearse', len:'Every day until you meet your person', area:'clarity', text:'Get clear on your person and practice feeling what it\'s like to be with them.'}
+  ];
+
+  var BANDS = [
+    {min:10, name:'Protected heart'},
+    {min:30, name:'Hopeful but guarded'},
+    {min:50, name:'Opening up'},
+    {min:70, name:'Ready and open'},
+    {min:90, name:'Fully aligned'}
+  ];
+
+  var EXAMPLE = {calm:3, belief:4, clarity:6};
+  var S;
+  // Cloudflare Worker that emails the report to the member and to Olly
+  // (attraction-score-worker.js). Empty = preview mode: nothing is sent.
+  var SCORE_WORKER_URL = '';
+
+  function fresh(){ S={screen:'form', vals:{calm:5, belief:5, clarity:5}, animate:true, name:'', email:'', sent:''}; }
+
+  function sendReport(){
+    if(!SCORE_WORKER_URL){ S.sent='preview'; return; }
+    S.sent='sending';
+    fetch(SCORE_WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:S.name,email:S.email,calm:S.vals.calm,belief:S.vals.belief,clarity:S.vals.clarity})})
+      .then(function(r){ S.sent=r.ok?'sent':'failed'; })
+      .catch(function(){ S.sent='failed'; })
+      .then(updateSendStatus);
+  }
+  function sendStatusText(){
+    if(S.sent==='sending') return 'Sending your report to '+esc(S.email)+'…';
+    if(S.sent==='sent') return 'Your report is on its way to <b>'+esc(S.email)+'</b>.';
+    if(S.sent==='failed') return 'We couldn\'t email your report just now. Your results are all below. Message Olly in the community and he\'ll help.';
+    if(S.sent==='preview') return 'Preview: no email sent. Once it\'s live, this goes to <b>'+esc(S.email)+'</b> and to Olly.';
+    return '';
+  }
+  function updateSendStatus(){ var el=document.getElementById('send-status'); if(el) el.innerHTML=sendStatusText(); }
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  var BULB='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
+  function why(t){return '<p class="why">'+BULB+'<span><b>Why this is here:</b> '+t+'</span></p>'}
+
+  function total(){return S.vals.calm+S.vals.belief+S.vals.clarity}
+  function score(){return Math.round(total()/30*100)}
+  function band(sc){var b=BANDS[0];BANDS.forEach(function(x){if(sc>=x.min)b=x});return b}
+  function level(v){return v<=4?0:v<=7?1:2}
+  var LEVEL_PILL=[['start','Starting out'],['building','Building'],['strong','Strong']];
+
+  /* ---------- Snapshot form ---------- */
+  function form(){
+    var h='<section class="card hero"><span class="eyebrow">Check in any time</span>'+
+      '<h1 class="title">Your Attraction Score</h1>'+
+      '<p>Rate where you are right now in the three areas that decide how easily you attract your person. Takes about a minute.</p>'+
+      '<p class="sub">Be honest. Nobody else sees your answers. Come back whenever you like to see how far you\'ve moved.</p>';
+    AREAS.forEach(function(a,i){
+      var v=S.vals[a.key], id='q-'+a.key;
+      h+='<div class="q"><div class="q-head"><span class="n">'+(i+1)+' · '+esc(a.name)+'</span></div>'+
+        '<label for="'+id+'">'+esc(a.q)+'</label>'+
+        '<div class="q-row"><input type="range" min="1" max="10" step="1" id="'+id+'" data-k="'+a.key+'" value="'+v+'"><output class="q-val" id="'+id+'-out">'+v+'</output></div>'+
+        '<div class="q-ends"><span>1 · '+esc(a.lo)+'</span><span>10 · '+esc(a.hi)+'</span></div>'+
+        '<p class="q-desc" id="'+id+'-desc" aria-live="polite">&ldquo;'+esc(a.steps[v-1])+'&rdquo;</p></div>';
+    });
+    h+='<div class="send"><span class="n">Where should we send your report?</span>'+
+      '<div class="fields"><div class="field"><label for="f-name">First name</label><input id="f-name" type="text" autocomplete="given-name" value="'+esc(S.name)+'"></div>'+
+      '<div class="field"><label for="f-email">Email</label><input id="f-email" type="email" autocomplete="email" value="'+esc(S.email)+'"></div></div>'+
+      '<p class="sub small">We\'ll email you your full report. Olly gets a copy too so he can help you with your next step.</p>'+
+      '<p class="err" id="f-err" aria-live="polite"></p></div>';
+    h+='<button class="btn" data-act="report">Email me my report</button>';
+    h+=why('it sits in the Classroom so members can use it any time. Each question matches one of the three meditations, so the report shows her how each meditation will move her score.');
+    return h+'</section>';
+  }
+
+  /* ---------- Report ---------- */
+  function ring(sc){
+    var r=54,c=2*Math.PI*r,off=c*(1-sc/100);
+    return '<svg class="ring" viewBox="0 0 132 132" role="img" aria-label="Attraction Score '+sc+' out of 100">'+
+      '<defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B84FE8"/><stop offset="1" stop-color="#E1A6FF"/></linearGradient></defs>'+
+      '<circle class="track" cx="66" cy="66" r="'+r+'"/>'+
+      '<circle class="fill" id="ring-fill" cx="66" cy="66" r="'+r+'" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/>'+
+      '<text class="num" id="ring-num" x="66" y="74" text-anchor="middle">'+sc+'</text>'+
+      '<text class="of" x="66" y="92" text-anchor="middle">out of 100</text></svg>';
+  }
+
+  function report(){
+    var sc=score();
+    var h=(S.sent?'<p class="send-status" id="send-status" aria-live="polite">'+sendStatusText()+'</p>':'')+
+      '<section class="card hero"><span class="eyebrow">Your Attraction Report</span>'+
+      '<div class="score-top">'+ring(sc)+'<div class="txt"><span class="label">Attraction Score</span><div class="band">'+esc(band(sc).name)+'</div><p class="focus-line">This is where you\'re at right now. The three meditations build all three areas.</p></div></div>'+
+    '</section>';
+
+    h+='<section class="card"><h2 class="h2">Where you\'re at</h2><div class="areas">';
+    AREAS.forEach(function(a){
+      var v=S.vals[a.key], lv=level(v);
+      h+='<div class="area"><div class="area-head"><h3>'+esc(a.name)+'</h3><span class="pill '+LEVEL_PILL[lv][0]+'">'+LEVEL_PILL[lv][1]+'</span><span class="v">'+v+'/10</span></div>'+
+        '<div class="meter"><i style="width:'+(v*10)+'%"></i></div>'+
+        '<p>'+esc(a.summary[lv])+'</p>'+
+        '<p class="builds">Built by <b>'+esc(a.step)+'</b></p></div>';
+    });
+    h+='</div>'+why('Amy is analytical. She sees exactly where she is in each area and why, in plain words. Each area is tied to one meditation, so the path below makes sense to her.')+'</section>';
+
+    h+='<section class="card"><h2 class="h2">Your path to your person</h2><p class="sub">Three meditations, one after the other. Each one builds on the last.</p><div class="path">';
+    PATH.forEach(function(p,i){
+      var a=AREAS.filter(function(x){return x.key===p.area})[0], v=S.vals[p.area];
+      h+='<div class="step'+(i===0?' now':'')+'"><span class="num">'+(i+1)+'</span><div class="body">'+
+        '<span class="len">'+esc(p.len)+(i===0?' · Start here':'')+'</span><h3>'+esc(p.name)+'</h3><p>'+esc(p.text)+'</p>'+
+        '<p class="you">Builds your '+esc(a.name)+' · you\'re at '+v+'/10</p></div></div>';
+    });
+    h+='</div><button class="btn">Start '+esc(PATH[0].name)+'</button>'+
+      '<p class="sub">Retake this any time to see how your score has moved.</p>'+
+      why('everyone goes through all three meditations in order, so the report shows where she is in each area and always starts her at Regulate.')+'</section>';
+    return h;
+  }
+
+  function countUp(target){
+    var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce||!S.animate) return;
+    S.animate=false;
+    var num=document.getElementById('ring-num'), fill=document.getElementById('ring-fill');
+    var c=parseFloat(fill.getAttribute('stroke-dasharray')), t0=null, dur=1100;
+    function frame(ts){
+      if(!t0)t0=ts;
+      var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3), v=Math.round(target*e);
+      num.textContent=v; fill.setAttribute('stroke-dashoffset',(c*(1-v/100)).toFixed(1));
+      if(p<1) requestAnimationFrame(frame);
+    }
+    num.textContent='0'; fill.setAttribute('stroke-dashoffset',c.toFixed(1));
+    requestAnimationFrame(frame);
+  }
+
+  function render(){
+    document.getElementById('app').innerHTML = S.screen==='form' ? form() : report();
+    if(S.screen==='report') countUp(score());
+  }
+
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-act]'); if(!t) return;
+    var a=t.dataset.act;
+    if(a==='restart') fresh();
+    else if(a==='example'){ fresh(); S.vals=Object.assign({},EXAMPLE); S.name='Amy'; S.email='amy@example.com'; S.sent='preview'; S.screen='report'; }
+    else if(a==='report'){
+      S.name=document.getElementById('f-name').value.trim();
+      S.email=document.getElementById('f-email').value.trim();
+      var err=document.getElementById('f-err');
+      if(!S.name){ err.textContent='Add your first name so we know who the report is for.'; return; }
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email)){ err.textContent='Check your email address. It needs to look like name@example.com.'; return; }
+      S.screen='report'; S.animate=true; sendReport();
+    }
+    else return;
+    render(); window.scrollTo(0,0);
+  });
+  document.addEventListener('input',function(e){
+    var t=e.target; if(t.type!=='range') return;
+    var v=+t.value, a=AREAS.filter(function(x){return x.key===t.dataset.k})[0];
+    S.vals[a.key]=v;
+    document.getElementById(t.id+'-out').textContent=v;
+    document.getElementById(t.id+'-desc').textContent='“'+a.steps[v-1]+'”';
+  });
+  document.getElementById('notes-toggle').addEventListener('change',function(e){document.body.classList.toggle('hide-notes',!e.target.checked)});
+
+  fresh(); render();
+})();
+</script>

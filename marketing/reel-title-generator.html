@@ -1,0 +1,549 @@
+<title>Reel Title Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one centred working column on the survey's purple night sky. Data card → insights → generator → titles. */
+  :root{
+    --bg-a:#4B1466; --bg-b:#150818; --bg-c:#0A0510;
+    --ink:#ffffff;
+    --body:#E6DCF2;
+    --muted:rgba(230,220,242,.62);
+    --accent:#d946ef;
+    --lilac:#E1A6FF;
+    --deep:#7A2AA8;
+    --surface:rgba(255,255,255,.05);
+    --surface-2:rgba(255,255,255,.09);
+    --line:rgba(255,255,255,.13);
+    --good:#86efac;
+    --warn:#fcd34d;
+    --font:'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color-scheme:dark;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg-c);
+    background-image:radial-gradient(120% 70% at 15% 0%, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:var(--font);
+    font-size:15px;
+    line-height:1.55;
+  }
+  .wrap{ max-width:880px; margin:0 auto; padding:34px 18px 60px; display:flex; flex-direction:column; gap:22px; }
+
+  /* Header */
+  .eyebrow{ font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--lilac); }
+  h1{ font-size:clamp(30px,5vw,46px); font-weight:800; line-height:1.12; margin:8px 0 10px; text-wrap:balance; }
+  .grad{ background:linear-gradient(135deg, var(--lilac), var(--accent)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .lede{ color:var(--body); max-width:62ch; margin:0; }
+
+  /* Cards */
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:22px; }
+  .card h2{ font-size:18px; font-weight:700; margin:0 0 4px; }
+  .card .sub{ color:var(--muted); font-size:14px; margin:0 0 14px; }
+  .row{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+  .spread{ justify-content:space-between; }
+
+  .pill{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:5px 11px; border-radius:50px; border:1px solid var(--line); color:var(--body); }
+  .pill.example{ color:var(--warn); border-color:rgba(252,211,77,.45); }
+  .pill.real{ color:var(--good); border-color:rgba(134,239,172,.45); }
+
+  .btn{
+    font-family:var(--font); font-size:15px; font-weight:700; color:#fff;
+    padding:12px 24px; border:none; border-radius:50px; cursor:pointer;
+    background:linear-gradient(135deg, var(--accent), var(--deep));
+    box-shadow:0 10px 28px rgba(217,70,239,.3);
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 14px 34px rgba(217,70,239,.42); }
+  .btn:disabled{ opacity:.5; cursor:default; transform:none; box-shadow:none; }
+  .btn.ghost{ background:transparent; border:1.5px solid var(--line); box-shadow:none; color:var(--body); font-weight:600; }
+  .btn.ghost:hover{ border-color:var(--accent); color:#fff; }
+  .btn:focus-visible, .chip:focus-visible, select:focus-visible, textarea:focus-visible, .copy:focus-visible{ outline:2px solid var(--lilac); outline-offset:2px; }
+
+  textarea{
+    width:100%; min-height:150px; resize:vertical;
+    font:13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color:var(--body); background:rgba(0,0,0,.25);
+    border:1.5px solid var(--line); border-radius:12px; padding:12px;
+  }
+  .steps{ margin:0 0 12px; padding-left:20px; color:var(--body); font-size:14px; display:grid; gap:4px; }
+  .msg{ font-size:14px; min-height:1em; margin:8px 0 0; }
+  .msg.err{ color:#fca5a5; }
+  .msg.ok{ color:var(--good); }
+
+  /* Insights */
+  .grid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; }
+  @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+  .panel{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; min-width:0; }
+  .panel h3{ font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--lilac); margin:0 0 12px; }
+  .bars{ display:grid; gap:9px; }
+  .bar-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 10px; font-size:13.5px; }
+  .bar-row .name{ min-width:0; overflow-wrap:anywhere; }
+  .bar-row .val{ color:var(--muted); font-variant-numeric:tabular-nums; }
+  .track{ grid-column:1 / -1; height:6px; border-radius:6px; background:rgba(255,255,255,.08); overflow:hidden; }
+  .fill{ height:100%; border-radius:6px; background:linear-gradient(90deg, var(--lilac), var(--accent)); }
+  .fill.neg{ background:rgba(252,165,165,.7); }
+  .quotes{ display:grid; gap:8px; margin:0; padding:0; list-style:none; }
+  .quotes li{ font-size:14px; font-style:italic; color:var(--body); padding-left:12px; border-left:2px solid var(--accent); }
+  .empty{ color:var(--muted); font-size:13.5px; }
+
+  /* Generator */
+  .label{ font-size:13px; font-weight:600; color:var(--muted); margin:0 0 8px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-family:var(--font); font-size:14px; font-weight:600; color:var(--body);
+    padding:8px 16px; border-radius:50px; cursor:pointer;
+    background:var(--surface); border:1.5px solid var(--line);
+  }
+  .chip[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  select{
+    font-family:var(--font); font-size:14px; color:var(--ink);
+    background:var(--bg-b); border:1.5px solid var(--line); border-radius:12px;
+    padding:9px 12px; max-width:100%;
+  }
+  .controls{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:16px 26px; align-items:end; margin-bottom:18px; }
+  @media (max-width:640px){ .controls{ grid-template-columns:1fr; } }
+
+  /* Titles */
+  .titles{ display:grid; gap:12px; }
+  .title-card{
+    display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 14px; align-items:start;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:16px; padding:16px 18px;
+  }
+  .title-card.first{ border-color:rgba(217,70,239,.6); box-shadow:0 0 0 1px rgba(217,70,239,.25) inset; }
+  .title-text{ font-size:clamp(17px,2.3vw,20px); font-weight:700; line-height:1.35; margin:0; text-wrap:balance; min-width:0; }
+  .meta{ grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{ font-size:11.5px; font-weight:600; padding:3px 9px; border-radius:50px; background:rgba(225,166,255,.12); color:var(--lilac); }
+  .tag.star{ background:var(--accent); color:#fff; }
+  .why{ grid-column:1 / -1; font-size:13.5px; color:var(--muted); margin:0; }
+  .copy{
+    font-family:var(--font); font-size:12.5px; font-weight:600; color:var(--body);
+    background:transparent; border:1.5px solid var(--line); border-radius:50px; padding:6px 13px; cursor:pointer; white-space:nowrap;
+  }
+  .copy:hover{ border-color:var(--accent); color:#fff; }
+  .summary{ font-size:14.5px; color:var(--body); margin:0 0 14px; padding:12px 14px; border-radius:12px; background:rgba(217,70,239,.1); }
+  .thinking{ display:flex; align-items:center; gap:10px; color:var(--body); font-size:14px; }
+  .dot-pulse{ width:9px; height:9px; border-radius:50%; background:var(--accent); animation:pulse 1s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:.3; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+  @media (prefers-reduced-motion:reduce){ .dot-pulse{ animation:none; } .btn{ transition:none; } }
+  .foot{ color:var(--muted); font-size:12.5px; text-align:center; }
+</style>
+
+<main class="wrap">
+  <header>
+    <div class="eyebrow">The Attraction Formula · Content Survey</div>
+    <h1>Reel Titles From <span class="grad">Your Audience</span></h1>
+    <p class="lede">Paste your survey answers, see what your audience wants, then let Claude write Reel titles built from their own words.</p>
+  </header>
+
+  <!-- 1. Data -->
+  <section class="card" aria-labelledby="data-h">
+    <div class="row spread">
+      <h2 id="data-h">Your survey answers</h2>
+      <span class="pill example" id="data-pill">Example answers (made up)</span>
+    </div>
+    <p class="sub" id="data-sub">Showing 6 made-up responses so you can see how it works. Paste your real ones to use your data.</p>
+    <div class="row">
+      <button type="button" class="btn ghost" id="paste-toggle" aria-expanded="false" aria-controls="paste-area">Paste my responses</button>
+      <button type="button" class="btn ghost" id="reset-example" hidden>Back to example answers</button>
+    </div>
+    <div id="paste-area" hidden>
+      <ol class="steps">
+        <li>Open your <strong>Content Survey Responses</strong> Google Sheet and go to the <strong>Responses</strong> tab.</li>
+        <li>Click the empty square in the top-left corner of the grid to select everything, then press <strong>Ctrl+C</strong>.</li>
+        <li>Click in the box below and press <strong>Ctrl+V</strong>.</li>
+      </ol>
+      <label for="paste-box" class="label">Responses (including the header row)</label>
+      <textarea id="paste-box" placeholder="Timestamp&#9;Content Types They Love&#9;Content Types That Are OK…"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button type="button" class="btn" id="use-paste">Use these answers</button>
+      </div>
+      <p class="msg" id="paste-msg" role="status"></p>
+    </div>
+  </section>
+
+  <!-- 2. Insights -->
+  <section aria-labelledby="ins-h">
+    <h2 id="ins-h" class="eyebrow" style="margin:0 0 12px">What your audience wants</h2>
+    <div class="grid">
+      <div class="panel"><h3>Content types (loves minus not for me)</h3><div class="bars" id="ins-types"></div></div>
+      <div class="panel"><h3>Hook styles that get picked</h3><div class="bars" id="ins-styles"></div></div>
+      <div class="panel"><h3>Titles that won</h3><div class="bars" id="ins-titles"></div></div>
+      <div class="panel"><h3>Their biggest struggles</h3><ul class="quotes" id="ins-quotes"></ul></div>
+      <div class="panel"><h3>Turn-offs to avoid</h3><div class="bars" id="ins-turnoffs"></div></div>
+      <div class="panel"><h3>Reel length</h3><div class="bars" id="ins-length"></div></div>
+    </div>
+  </section>
+
+  <!-- 3. Generator -->
+  <section class="card" aria-labelledby="gen-h">
+    <h2 id="gen-h">Write my Reel titles</h2>
+    <p class="sub">Claude reads the answers above and writes titles you can say straight to camera.</p>
+    <div class="controls">
+      <div>
+        <p class="label" id="count-l">How many</p>
+        <div class="chips" role="group" aria-labelledby="count-l" id="count-chips">
+          <button type="button" class="chip" data-n="5" aria-pressed="false">5</button>
+          <button type="button" class="chip" data-n="10" aria-pressed="true">10</button>
+          <button type="button" class="chip" data-n="15" aria-pressed="false">15</button>
+        </div>
+      </div>
+      <div>
+        <label class="label" for="focus" style="display:block">Focus on</label>
+        <select id="focus"><option value="">The content types they love most</option></select>
+      </div>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="generate">Write my Reel titles</button>
+      <button type="button" class="btn ghost" id="stop" hidden>Stop</button>
+    </div>
+    <p class="msg" id="gen-msg" role="status"></p>
+  </section>
+
+  <!-- 4. Titles -->
+  <section aria-labelledby="out-h">
+    <div class="row spread" style="margin-bottom:12px">
+      <h2 id="out-h" class="eyebrow" style="margin:0">Your Reel titles</h2>
+      <span class="pill example" id="out-pill">Example titles</span>
+    </div>
+    <div id="out"></div>
+  </section>
+
+  <p class="foot">Titles are written by Claude from your survey answers. Check each one sounds like you before filming.</p>
+</main>
+
+<script>
+(function () {
+  // Sheet columns (labels as they appear in the Responses tab) → keys. Matches content-survey.gs.
+  var COLUMNS = {
+    'Timestamp':'timestamp','Content Types They Love':'content_love','Content Types That Are OK':'content_ok',
+    'Content Types Not For Them':'content_not',"Titles They'd Stop For":'titles','Titles They Were Shown':'titles_shown',
+    'Hook Styles Picked':'title_styles','Hook Styles Shown':'title_styles_shown','Ideal Reel Length':'reel_length',
+    'Favourite Reel':'fav_reel','Favourite Reel (Typed In)':'fav_reel_other','Scroll-Past Turn-Offs':'turn_offs',
+    'Biggest Struggle':'struggle','Other Creators They Follow':'other_creators','How Often They Watch':'watch_freq',
+    'Age Range':'age','Source':'source'
+  };
+
+  // Made-up responses so the page shows how it works before real data is pasted.
+  var EXAMPLE = [
+    { content_love:'The science and psychology of attraction | Nervous system regulation', content_ok:'Attachment styles (anxious, avoidant, secure) | Red flags and green flags', content_not:'Tarot, astrology and love readings | Dating app tips',
+      titles:'The scientific way to attract your soulmate | Why calm feels boring when you’re used to chaos', titles_shown:'The scientific way to attract your soulmate | Why calm feels boring when you’re used to chaos | 3 signs your nervous system is choosing your partners for you | Why anxious attachers fall for avoidant partners',
+      title_styles:'How-to | Science', title_styles_shown:'How-to | Science | List | Science', reel_length:'30 to 60 seconds', turn_offs:'Too salesy | Takes too long to get to the point',
+      struggle:'Consistent men feel boring to me and I don’t know how to change that', watch_freq:'Most days' },
+    { content_love:'The science and psychology of attraction | Healing past wounds and inner child work', content_ok:'Meditation and energy work', content_not:'Twin flames and soul connections | Feminine energy and high-value dating',
+      titles:'How your childhood shapes who you fall for', titles_shown:'The science of why you’re attracted to the wrong people | How your childhood shapes who you fall for | What actually happens in your brain when you fall in love? | You don’t need to heal everything before you meet your person',
+      title_styles:'Science', title_styles_shown:'Science | Science | Question | Contrarian', reel_length:'30 to 60 seconds', turn_offs:'There’s always something else to fix | It overcomplicates things',
+      struggle:'I’ve done so much work on myself but love is the one area that hasn’t changed', watch_freq:'A few times a week' },
+    { content_love:'Nervous system regulation | Meditation and energy work', content_ok:'The science and psychology of attraction', content_not:'Dating strategy (texting, first dates, getting commitment)',
+      titles:'Why calm feels boring when you’re used to chaos | The meditation I did every day before I met my wife', titles_shown:'Why calm feels boring when you’re used to chaos | How to make a good, consistent man feel attractive | The meditation I did every day before I met my wife | The scientific way to attract your soulmate',
+      title_styles:'Science | Story', title_styles_shown:'Science | How-to | Story | How-to', reel_length:'15 to 30 seconds', turn_offs:'Too clinical',
+      struggle:'I always fall for the ones who can’t commit', watch_freq:'Most days' },
+    { content_love:'The science and psychology of attraction | Attachment styles (anxious, avoidant, secure)', content_ok:'Real couples and how-we-met stories', content_not:'Tarot, astrology and love readings | Manifestation and law of attraction',
+      titles:'The scientific way to attract your soulmate | Why anxious attachers fall for avoidant partners', titles_shown:'The scientific way to attract your soulmate | Why anxious attachers fall for avoidant partners | Your attachment style isn’t the reason you’re single | What actually happens in your brain when you fall in love?',
+      title_styles:'How-to | Science', title_styles_shown:'How-to | Science | Contrarian | Question', reel_length:'30 to 60 seconds', turn_offs:'Conflicting advice | Too “woo” or vibes-based',
+      struggle:'There’s so much conflicting advice I don’t know who to trust', watch_freq:'Every now and then' },
+    { content_love:'Real couples and how-we-met stories | The science and psychology of attraction', content_ok:'Nervous system regulation', content_not:'Dating app tips',
+      titles:'From heartbreak to married: how I met my wife', titles_shown:'From heartbreak to married: how I met my wife | How we met: the moment I knew he was the one | The science of why you’re attracted to the wrong people | Why calm feels boring when you’re used to chaos',
+      title_styles:'Story', title_styles_shown:'Story | Story | Science | Science', reel_length:'Doesn’t matter if it’s good', turn_offs:'It makes me feel worse about being single',
+      struggle:'I’m scared I’ve left it too late', watch_freq:'A few times a week' },
+    { content_love:'Nervous system regulation', content_ok:'The science and psychology of attraction | Healing past wounds and inner child work', content_not:'Twin flames and soul connections',
+      titles:'3 signs your nervous system is choosing your partners for you', titles_shown:'3 signs your nervous system is choosing your partners for you | How to make a good, consistent man feel attractive | The scientific way to attract your soulmate | Why do you keep dating the same person in a different body?',
+      title_styles:'List', title_styles_shown:'List | How-to | How-to | Question', reel_length:'30 to 60 seconds', turn_offs:'Takes too long to get to the point | Too salesy',
+      struggle:'I overthink every text and it ruins things before they start', watch_freq:'Most days' }
+  ];
+
+  // Shown before the first generation, so the page is complete at rest.
+  var EXAMPLE_TITLES = {
+    summary:'Example only. Science and nervous system content win, the How-to and Science hook styles get picked most, and “consistent men feel boring” is the struggle to lean into.',
+    titles:[
+      { title:'Why the good ones feel boring (and the science of fixing it)', type:'Nervous system regulation', style:'Science', why:'Their own words: “consistent men feel boring to me”.', filmFirst:true },
+      { title:'The scientific way to stop falling for men who can’t commit', type:'The science and psychology of attraction', style:'How-to', why:'Top content type plus the top hook style, and echoes a struggle.', filmFirst:true },
+      { title:'You’ve healed everything except your love life. Here’s why', type:'Healing past wounds and inner child work', style:'Contrarian', why:'Mirrors “love is the one area that hasn’t changed”.', filmFirst:false },
+      { title:'3 signs your nervous system picked your last partner', type:'Nervous system regulation', style:'List', why:'The List version of a title that won.', filmFirst:false },
+      { title:'What happens in your brain when you overthink his text', type:'The science and psychology of attraction', style:'Question', why:'Turns “I overthink every text” into a science hook.', filmFirst:false }
+    ]
+  };
+
+  var STYLES = 'Question, List, Contrarian, How-to, Science, Story';
+  var rows = EXAMPLE, usingExample = true, count = 10, ctl = null, sample = null;
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---------- Parsing pasted Google Sheets data (tab-separated, quoted cells may hold newlines) ----------
+  function parseTSV(text) {
+    var out = [], row = [], cell = '', q = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (q) {
+        if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+        else if (c === '"') q = false;
+        else cell += c;
+      } else if (c === '"' && cell === '') q = true;
+      else if (c === '\t') { row.push(cell); cell = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        row.push(cell); out.push(row); row = []; cell = '';
+      } else cell += c;
+    }
+    if (cell !== '' || row.length) { row.push(cell); out.push(row); }
+    return out.filter(function (r) { return r.some(function (x) { return x.trim(); }); });
+  }
+
+  function rowsFromPaste(text) {
+    var grid = parseTSV(text);
+    if (grid.length < 2) throw new Error('I need the header row plus at least one response. Select the whole Responses tab and copy again.');
+    var head = grid[0].map(function (h) { return COLUMNS[h.trim()] || null; });
+    if (head.indexOf('content_love') === -1 || head.indexOf('titles') === -1)
+      throw new Error('That doesn’t look like the Responses tab. Make sure the copy starts with the header row (Timestamp, Content Types They Love…).');
+    return grid.slice(1).map(function (r) {
+      var o = {};
+      head.forEach(function (k, i) { if (k) o[k] = (r[i] || '').trim(); });
+      return o;
+    }).filter(function (o) { return o.content_love || o.content_ok || o.content_not || o.titles || o.struggle; });
+  }
+
+  // ---------- Aggregation ----------
+  function split(v) { return String(v || '').split(' | ').map(function (s) { return s.trim(); }).filter(Boolean); }
+  function tally(key) {
+    var c = {};
+    rows.forEach(function (r) { split(r[key]).forEach(function (v) { c[v] = (c[v] || 0) + 1; }); });
+    return c;
+  }
+  function byRate(key, shownKey) {
+    var p = tally(key), s = tally(shownKey);
+    return Object.keys(s).map(function (k) { return { name:k, picks:p[k] || 0, shown:s[k], rate:(p[k] || 0) / s[k] }; })
+      .sort(function (a, b) { return b.rate - a.rate || b.picks - a.picks; });
+  }
+  function ranked(c) { return Object.keys(c).map(function (k) { return { name:k, n:c[k] }; }).sort(function (a, b) { return b.n - a.n; }); }
+  function texts(key) { return rows.map(function (r) { return String(r[key] || '').trim(); }).filter(Boolean).reverse(); }
+
+  function aggregate() {
+    var love = tally('content_love'), ok = tally('content_ok'), not = tally('content_not');
+    var names = {};
+    [love, ok, not].forEach(function (c) { Object.keys(c).forEach(function (k) { names[k] = 1; }); });
+    var types = Object.keys(names).map(function (t) {
+      return { name:t, love:love[t] || 0, ok:ok[t] || 0, not:not[t] || 0, net:(love[t] || 0) - (not[t] || 0) };
+    }).sort(function (a, b) { return b.net - a.net || b.love - a.love; });
+    return {
+      total: rows.length, types: types,
+      titles: byRate('titles', 'titles_shown'), styles: byRate('title_styles', 'title_styles_shown'),
+      length: ranked(tally('reel_length')), turnOffs: ranked(tally('turn_offs')),
+      fav: ranked(tally('fav_reel')), favTyped: texts('fav_reel_other'),
+      struggles: texts('struggle'), creators: texts('other_creators'), watch: ranked(tally('watch_freq'))
+    };
+  }
+
+  // ---------- Rendering ----------
+  function pct(n, d) { return d ? Math.round(n / d * 100) + '%' : '0%'; }
+  function bar(name, val, frac, neg) {
+    var r = document.createElement('div'); r.className = 'bar-row';
+    var a = document.createElement('span'); a.className = 'name'; a.textContent = name;
+    var b = document.createElement('span'); b.className = 'val'; b.textContent = val;
+    var t = document.createElement('div'); t.className = 'track';
+    var f = document.createElement('div'); f.className = 'fill' + (neg ? ' neg' : ''); f.style.width = Math.max(4, Math.min(100, frac * 100)) + '%';
+    t.appendChild(f); r.appendChild(a); r.appendChild(b); r.appendChild(t);
+    return r;
+  }
+  function fill(id, items, make) {
+    var el = $(id); el.textContent = '';
+    if (!items.length) { var e = document.createElement('p'); e.className = 'empty'; e.textContent = 'No answers yet'; el.appendChild(e); return; }
+    items.forEach(function (x) { el.appendChild(make(x)); });
+  }
+
+  var agg;
+  function renderInsights() {
+    agg = aggregate();
+    var T = agg.total;
+    var maxNet = Math.max(1, Math.max.apply(null, agg.types.map(function (t) { return Math.abs(t.net); })));
+    fill('ins-types', agg.types.slice(0, 6), function (t) {
+      return bar(t.name, (t.net > 0 ? '+' : '') + t.net + ' · ' + t.love + ' love', Math.abs(t.net) / maxNet, t.net < 0);
+    });
+    fill('ins-styles', agg.styles, function (s) { return bar(s.name, s.picks + '/' + s.shown + ' · ' + pct(s.picks, s.shown), s.rate); });
+    fill('ins-titles', agg.titles.filter(function (t) { return t.picks; }).slice(0, 5), function (t) {
+      return bar(t.name, t.picks + '/' + t.shown, t.rate);
+    });
+    fill('ins-turnoffs', agg.turnOffs.slice(0, 5), function (x) { return bar(x.name, pct(x.n, T), x.n / T, true); });
+    fill('ins-length', agg.length, function (x) { return bar(x.name, pct(x.n, T), x.n / T); });
+    fill('ins-quotes', agg.struggles.slice(0, 5), function (q) { var li = document.createElement('li'); li.textContent = '“' + q + '”'; return li; });
+
+    var sel = $('focus'), keep = sel.value;
+    sel.length = 1;
+    agg.types.filter(function (t) { return t.net >= 0; }).forEach(function (t) {
+      var o = document.createElement('option'); o.value = t.name; o.textContent = t.name; sel.appendChild(o);
+    });
+    if ([].some.call(sel.options, function (o) { return o.value === keep; })) sel.value = keep;
+
+    $('data-pill').textContent = usingExample ? 'Example answers (made up)' : 'Your answers';
+    $('data-pill').className = 'pill ' + (usingExample ? 'example' : 'real');
+    $('data-sub').textContent = usingExample
+      ? 'Showing 6 made-up responses so you can see how it works. Paste your real ones to use your data.'
+      : T + ' response' + (T === 1 ? '' : 's') + ' loaded' + (T < 10 ? '. Early signal only, so treat the patterns as hints until you have 10 or more.' : '.');
+    $('reset-example').hidden = usingExample;
+  }
+
+  function renderTitles(res, isExample) {
+    var out = $('out'); out.textContent = '';
+    $('out-pill').hidden = !isExample;
+    if (res.summary) { var s = document.createElement('p'); s.className = 'summary'; s.textContent = res.summary; out.appendChild(s); }
+    var list = document.createElement('div'); list.className = 'titles';
+    (res.titles || []).forEach(function (t) {
+      if (!t || !t.title) return;
+      var c = document.createElement('article'); c.className = 'title-card' + (t.filmFirst ? ' first' : '');
+      var h = document.createElement('p'); h.className = 'title-text'; h.textContent = String(t.title);
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'copy'; b.textContent = 'Copy';
+      b.addEventListener('click', function () {
+        var done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1400); };
+        try {
+          navigator.clipboard.writeText(String(t.title)).then(done, function () { selectText(h); b.textContent = 'Selected'; });
+        } catch (e) { selectText(h); b.textContent = 'Selected'; }
+      });
+      var m = document.createElement('div'); m.className = 'meta';
+      if (t.filmFirst) addTag(m, 'Film first', 'star');
+      if (t.type) addTag(m, String(t.type));
+      if (t.style) addTag(m, String(t.style) + ' hook');
+      c.appendChild(h); c.appendChild(b); c.appendChild(m);
+      if (t.why) { var w = document.createElement('p'); w.className = 'why'; w.textContent = String(t.why); c.appendChild(w); }
+      list.appendChild(c);
+    });
+    out.appendChild(list);
+  }
+  function addTag(m, text, cls) { var s = document.createElement('span'); s.className = 'tag' + (cls ? ' ' + cls : ''); s.textContent = text; m.appendChild(s); }
+  function selectText(el) { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+  // ---------- Asking Claude ----------
+  function buildPrompt() {
+    var a = agg, focus = $('focus').value;
+    var lines = [];
+    lines.push('You write Instagram Reel titles for Olly Henson, who runs The Attraction Formula, a community that helps people attract a soulmate they can build a life with.');
+    lines.push('Olly films freestyle talking-head Reels. A "title" is the topic plus the exact opening line he says to camera, so it must sound natural spoken aloud and land its point in the first sentence.');
+    lines.push('');
+    lines.push('AUDIENCE: mostly women who have already done a lot of self-work (therapy, mindset, nervous system work). It worked in every area except love. They want a committed, consistent relationship that feels secure, fun and easy. They are tired of dating advice that overcomplicates things, gives conflicting rules or always finds something else to fix. Science and simplicity build their trust. Olly\'s angle is science-led (heart, nervous system, beliefs), not manifestation or tarot.');
+    lines.push('');
+    lines.push('SURVEY DATA (' + a.total + ' responses' + (usingExample ? ', example data' : '') + '):');
+    lines.push('Content types, net score = loves minus not-for-me: ' + a.types.map(function (t) { return t.name + ' (love ' + t.love + ', ok ' + t.ok + ', not ' + t.not + ')'; }).join('; '));
+    lines.push('Titles by pick rate (picked/shown): ' + a.titles.map(function (t) { return t.name + ' ' + t.picks + '/' + t.shown; }).join('; '));
+    lines.push('Hook styles by pick rate: ' + a.styles.map(function (s) { return s.name + ' ' + s.picks + '/' + s.shown; }).join('; '));
+    lines.push('Reel length: ' + a.length.map(function (x) { return x.name + ' ' + x.n; }).join('; '));
+    lines.push('Turn-offs: ' + a.turnOffs.map(function (x) { return x.name + ' ' + x.n; }).join('; '));
+    if (a.fav.length || a.favTyped.length) lines.push('Favourite Olly Reels: ' + a.fav.map(function (x) { return x.name + ' ' + x.n; }).concat(a.favTyped).join('; '));
+    lines.push('Biggest struggles in their words: ' + a.struggles.slice(0, 25).map(function (s) { return '"' + s + '"'; }).join(' '));
+    if (a.creators.length) lines.push('Other creators they follow: ' + a.creators.slice(0, 15).join('; '));
+    lines.push('');
+    lines.push('TASK: write ' + count + ' new Reel titles.' + (focus ? ' All of them about: ' + focus + '.' : ' Mostly about the 2-3 content types with the highest net score. None about types with a clearly negative net score.'));
+    lines.push('- Use the hook styles with the highest pick rate most. Each title gets one style from: ' + STYLES + '.');
+    lines.push('- Turn their struggle phrases into opening lines wherever you can, keeping their words.');
+    lines.push('- Write fresh variations of the winning angles. Do not copy a title from the data.');
+    lines.push('- Every title must name its specific topic and make sense with zero context. One idea per title.');
+    lines.push('- Check each against the turn-offs (e.g. no slow build-up, nothing salesy, nothing that adds more things to fix).');
+    lines.push('- "Soulmate" or "someone you can build a life with" are good words. No em dashes. No comma before "and" or "or". American spelling ("program", "visualize").');
+    lines.push('- Only use Olly\'s own story where true: a 7-year relationship ended in 2019, he struggled with dating, then met his now-wife.');
+    lines.push('- Mark the 3 strongest with filmFirst true.');
+    lines.push('');
+    lines.push('Reply with only JSON in this shape: {"summary": "2 short sentences on what the data says", "titles": [{"title": "...", "type": "content type name", "style": "Question", "why": "one short line naming the data behind it", "filmFirst": false}]}');
+    return lines.join('\n');
+  }
+
+  function setBusy(on) {
+    $('generate').disabled = on;
+    $('stop').hidden = !on;
+    if (on) {
+      $('gen-msg').className = 'msg';
+      $('gen-msg').textContent = '';
+      var out = $('out'); out.textContent = '';
+      var t = document.createElement('div'); t.className = 'thinking';
+      var d = document.createElement('span'); d.className = 'dot-pulse';
+      var s = document.createElement('span'); s.textContent = 'Claude is reading your answers and writing titles. This can take up to a minute.';
+      t.appendChild(d); t.appendChild(s); out.appendChild(t);
+      $('out-pill').hidden = true;
+    }
+  }
+
+  var ERR = {
+    not_granted:'Claude wasn’t allowed to run on this page. Allow it when asked, or reload and try again.',
+    sampling_disabled:'Claude isn’t available on this account right now.',
+    rate_limited:'You’ve hit a usage limit. Wait a little, then try again.',
+    session_expired:'You’ve been signed out. Sign in again, then try again.',
+    invalid_json:'Claude’s answer came back in the wrong shape. Press the button again.',
+    refused:'Claude couldn’t write titles from this data. Try a different focus.',
+    empty_completion:'Claude came back empty. Try asking for fewer titles.'
+  };
+
+  async function generate() {
+    if (!sample) return;
+    ctl = new AbortController();
+    setBusy(true);
+    try {
+      var res = await sample.json(buildPrompt(), { signal: ctl.signal, cache: false });
+      if (!res || !Array.isArray(res.titles) || !res.titles.length) throw { code:'invalid_json' };
+      renderTitles(res, false);
+      $('gen-msg').className = 'msg ok';
+      $('gen-msg').textContent = res.titles.length + ' titles written' + (usingExample ? ' from the example answers.' : ' from your answers.');
+    } catch (e) {
+      renderTitles(EXAMPLE_TITLES, true);
+      if (e && e.code !== 'cancelled') {
+        $('gen-msg').className = 'msg err';
+        $('gen-msg').textContent = ERR[e && e.code] || 'Something went wrong reaching Claude. Press the button to try again.';
+      }
+      if (e && (e.code === 'not_granted' || e.code === 'sampling_disabled')) $('generate').hidden = true;
+    } finally {
+      $('generate').disabled = false;
+      $('stop').hidden = true;
+    }
+  }
+
+  // ---------- Wiring ----------
+  $('paste-toggle').addEventListener('click', function () {
+    var a = $('paste-area'), open = a.hidden;
+    a.hidden = !open;
+    this.setAttribute('aria-expanded', String(open));
+    if (open) $('paste-box').focus();
+  });
+  $('use-paste').addEventListener('click', function () {
+    var m = $('paste-msg');
+    try {
+      var r = rowsFromPaste($('paste-box').value);
+      if (!r.length) throw new Error('I found the header row but no responses under it.');
+      rows = r; usingExample = false;
+      renderInsights();
+      m.className = 'msg ok'; m.textContent = 'Loaded ' + r.length + ' response' + (r.length === 1 ? '' : 's') + '. Now press “Write my Reel titles”.';
+      try { localStorage.setItem('reel-title-paste', $('paste-box').value); } catch (e) {}
+    } catch (e) { m.className = 'msg err'; m.textContent = e.message; }
+  });
+  $('reset-example').addEventListener('click', function () {
+    rows = EXAMPLE; usingExample = true; renderInsights(); renderTitles(EXAMPLE_TITLES, true);
+    $('paste-msg').textContent = '';
+    try { localStorage.removeItem('reel-title-paste'); } catch (e) {}
+  });
+  $('count-chips').addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    count = Number(b.dataset.n);
+    [].forEach.call(this.children, function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+  });
+  $('generate').addEventListener('click', generate);
+  $('stop').addEventListener('click', function () { if (ctl) ctl.abort(); });
+
+  // Restore the last paste on this device, if any.
+  try {
+    var saved = localStorage.getItem('reel-title-paste');
+    if (saved) { var r = rowsFromPaste(saved); if (r.length) { rows = r; usingExample = false; $('paste-box').value = saved; } }
+  } catch (e) {}
+
+  renderInsights();
+  renderTitles(EXAMPLE_TITLES, true);
+
+  // Claude is optional: without it, the insights still work and the button explains why it's off.
+  $('generate').disabled = true;
+  $('gen-msg').textContent = 'Connecting to Claude…';
+  if (window.claude && window.claude.use) {
+    window.claude.use('sample').then(function (s) {
+      sample = s;
+      $('generate').disabled = !s;
+      $('gen-msg').className = 'msg' + (s ? '' : ' err');
+      $('gen-msg').textContent = s ? '' : 'Claude isn’t available in this view, so titles can’t be written here. Open this page in Claude to use it.';
+    });
+  } else {
+    $('gen-msg').className = 'msg err';
+    $('gen-msg').textContent = 'Claude isn’t available in this view, so titles can’t be written here. Open this page in Claude to use it.';
+  }
+})();
+</script>

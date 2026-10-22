@@ -27,6 +27,11 @@ Standalone HTML pages used two ways: (1) Olly records Loom videos while scrollin
 | `rewrite.html` | Full-Screen VSL / Talking-Head Slide (same format) | **Built 2026-08-19.** Classroom module "2. Rewrite." 6 slides: intro → "Internal Working Models" → "The Core Five" (all 5 core IWMs + secure counterparts in one compact 5-row belief-breakdown — see new `.belief-breakdown--compact` CSS variant below) → "Installing, Not Fighting" → "How This Shows Up For You" → CTA into Remember. Images folder: `rewrite images/` |
 | `remember.html` | Full-Screen VSL / Talking-Head Slide (same format) | **Built 2026-08-19.** Classroom module "3. Remember." 6 slides: intro → "Not A Person, A Pattern" (imprinting qualities/dynamic, not a specific face — uses "partner" terminology per the branded-asset rule) → "What You're Imprinting" → "Why This Matters" → "How This Shows Up For You" → CTA into Relive. Images folder: `remember images/` |
 | `relive.html` | Full-Screen VSL / Talking-Head Slide (same format) | **Built 2026-08-19.** Classroom module "4. Relive" — replaces the "Being updated... Ready on 20.08.2026" Skool placeholder. 6 slides: intro → "The Felt Experience" → "Why Feeling, Not Just Believing" → "From Chasing To Already Having" → "How This Shows Up For You" → closing CTA pointing to the Meditation module and Where To Get Support (both explicitly out of scope for this build). Images folder: `relive images/` |
+| `choose-your-relationship.html` | One-step-per-screen scroll + worksheet (A4 paper) pattern, **purple Heart Attractor palette** | **Built 2026-10-05.** Relationship-only rebuild of `create-your-outcome.html` (that file left untouched as the pre-pivot original). 7 slides: intro (eyebrow "The Attraction Formula") → 1 Symbolize "Choose Your Symbol" ('R') → 2 Intention "What Is Your Intention?" → 3 Emotions "What Emotions Will You Feel?" → Example 1 / 2 / 3 (written for Analytical Amy). Fixed webcam placeholder top-right for screen recording. Preview artifact: https://claude.ai/artifact/LJDmdCqFEeVJXTGi7CX1At. See "Heart Attractor relationship worksheet" under the Worksheet variant for the approved copy |
+| `how-to-attract-a-committed-relationship.html` | Text slides, purple, reverse-pyramid h1 | **2026-10-19, classroom lesson 1 (v6).** The problem only (state around love), with no solution slide. Includes the emotional scale image (`Emotional Scale.jpg`, 9:16, spiral headed HIGH-QUALITY / LOW-QUALITY PARTNERS, replaced the Map of Consciousness 2026-10-21) and a Wife photo frame. Crack slide is "Think About Your Friends & Family". What To Expect ticks (2026-10-21): "Big improvement in how you feel mentally, emotionally and physically." / "Higher-quality people coming into your world." / "Lower-quality people not even visible." Preview TdYeFxpWjyTd8tkXKfWgRU. Its full-size images make a base64 copy ~25MB (over the 16MB limit), so edit a copy of the live artifact's HTML instead (see Gotchas) |
+| `find-your-emotional-resonance.html` | Worksheet, purple | **2026-10-19, lesson 2**, "How To Find The Emotional Resonance Of Your Perfect Relationship". Intentions have no I/me/my/we, and they circle ONE emotion. Emotion tags cut to exactly 11 on 2026-10-21 (Love, Joy, Gratitude, Appreciation, Compassion, Care, Kindness, Peace, Bliss, Awe, Wonder). Title lines set by hand with `data-lines` (the script shrinks the font to fit the 820px column). Examples 1-3 use `.step-inner--example`: title on top, worksheet centred below at `zoom:1.5`, top-aligned (not vertically centred). Preview 2mKk9Ps9a6rGEzGeGXhP5j |
+| `the-attraction-formula-meditation-steps.html` | Image+text steps, purple | **2026-10-19, lesson 3; rebuilt 2026-10-21.** Three parts: 1 Slow Down ("Turn down the overthinking mind and regather your attention."), 2 Focus ("Recall and focus on your intentions. Get into them."), 3 Feel ("Feel your emotional state to make it real right now."). 7 steps: Close Your Eyes, Relax Your Body, Sense The Space Around You / Recall Your Symbol, Your Intentions / Feel Your Emotion, Give Thanks. Images in `how to do the attraction formula meditation images/` (1024x1024; new: `Sensing Space.jpg`, `Feeling The Emotion In Your Heart.png`). Preview JXWWHoTRJwk87fjau1mQsr |
+| `how-to-anchor-your-state.html` | Image+text steps, purple | **2026-10-19, lesson 5.** 2 steps: Recall Your Symbol, then Feel Your Emotion ("Feel your intention and the emotion.", 2026-10-21). Images `anchoring your state images/Step 1.jpg`, `Step 2.jpg` (1024x1024). Preview Qh3j15gLyKaw6RLn4Coops |
 
 When asked for "another training like the others," these are the pattern to copy — don't design from a blank page.
 
@@ -34,7 +39,7 @@ When asked for "another training like the others," these are the pattern to copy
 
 ## File & Folder Conventions
 
-- New training: `heartcreator/training/<kebab-case-name>.html`
+- New training: `heartattractor/training/<kebab-case-name>.html`
 - Every training that uses photos gets its own **sibling images folder** next to the HTML file, named descriptively, e.g.:
   - `meditation steps images/`
   - `self-regulating images/`
@@ -61,6 +66,8 @@ The `onerror` swap means the page never shows a broken-image icon — it shows a
 Two font pairings are in use depending on the page's visual register:
 
 **1. Standard training pages** (step-by-step, comparisons, self-regulation) — Poppins:
+> **Pre-pivot palette.** The navy/orange tokens below are the original Heart Creator look and stay on the older pages. **Any new or rebuilt Heart Attractor training uses the purple palette (3. below)** — Olly's explicit direction 2026-10-05 ("the new purple branding… the ad generator and the other image generators").
+
 ```css
 :root{
   --navy:#6B1E4D;
@@ -88,6 +95,24 @@ Struggle/create comparison colors (used in `program-vs-alone.html` and originall
 --struggle:#B33F3F;
 --create:#3E7A5D;
 ```
+
+**3. Heart Attractor purple palette** (default for all new Heart Attractor trainings; source of truth = `heartattractor\marketing\cover photo generator\CLAUDE.md` + `relationship-ad-generator.html`). Keep the existing variable *names* so copied CSS still works, just remap the values:
+```css
+:root{
+  --navy:#4B1466;
+  --navy-deep:#150818;
+  --ink:#150818;
+  --orange:#d946ef;   /* magenta: dots, tag borders */
+  --lilac:#E1A6FF;    /* eyebrows, tag text */
+  --cream:#f8f4ff;    /* worksheet paper */
+  --line:#E1D3F0;
+}
+body{ background:#0A0510; }
+```
+- Slide background: `radial-gradient(120% 100% at 20% 0%, #4B1466 0%, var(--navy-deep) 55%, #0A0510 100%)`, mirrored (`at 80% 100%`) on odd slides.
+- Big step numbers: lilac→magenta gradient text (`background:linear-gradient(135deg, var(--lilac), var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent;`), the same gradient as the ad generator's "FIND OUT MORE" pill.
+- Body text `#E6DCF2` (cool lilac-white, not the old pinkish `#EBD9E2`). Tag pills: `color:var(--lilac); border:1px solid rgba(217,70,239,.45); background:rgba(217,70,239,.12);`.
+- No orange anywhere. Eyebrow brand label = **"The Attraction Formula"** (not "Heart Creator", not "Heart Attractor").
 
 ---
 
@@ -304,6 +329,25 @@ Key structure inside the worksheet:
 - The worksheet card must `justify-content:flex-start` (not `center`) or content floats in the vertical middle of the tall A4 card instead of pinning to the top like a real page.
 - Numbered list columns: number goes on the **left** for both columns (not mirrored/right-aligned on the second column) — was explicitly corrected.
 
+### Heart Attractor relationship worksheet (`choose-your-relationship.html`, approved 2026-10-05)
+
+Heart Attractor is **relationship-only**, so the generic "choose what you want to create" structure is gone. Rules learned from Olly's edits:
+
+- **No "Choose your creation" step and no `.ws-intention-line` ("Creation: …")**: the choice is already made, so both were deleted. Step 1 is the symbol.
+- **Default symbol = capital 'R'** (in quotes in the copy). Approved copy: *"Use the capital letter 'R' for your relationship. If you prefer another symbol, choose that."* / *"You'll use this as your reference during the meditation and day to day."*
+- **Column headings: "Intention" and "Emotions"**. Not "Elevated Emotion", and no "(Thoughts)" / "(Feelings)" sub-labels.
+- **Each column opens with a sentence starter (`.ws-prompt`), and every list item finishes that sentence in the present tense:**
+  - Intention: **"My intention is that…"** → "I am with an emotionally available partner", "I am loved exactly as I am"…
+  - Emotions: **"The emotions I would feel are…"** → Love, Joy, Gratitude, Excitement.
+  ```css
+  .ws-prompt{ margin-bottom:6px; font-style:italic; font-size:10.5px; line-height:1.3; color:#000; }
+  .ws-col-right .ws-col-heading{ margin-bottom:8px; } /* breathing room above the first emotion */
+  ```
+- **Emotions must be actual emotions.** The approved list of 24, from 2026-10-19 in `find-your-emotional-resonance.html`, is the elevated emotions HeartMath, Dispenza and Braden use (Love, Joy, Gratitude, Appreciation, Compassion, Care, Kindness, Peace, Bliss, Awe, Wonder, Inspiration, Enthusiasm, Excitement, Passion, Happiness, Contentment, Delight) plus relationship ones (Affection, Tenderness, Warmth, Adoration, Devotion, Playfulness). Never states/outcomes like Secure, Free, Empowered, Unlimited, Abundant, Relieved.
+- **Progressive reveal:** the Intention slide shows no Emotions heading. Keep an **empty** `.ws-col-right` div there so the 3-column grid holds and the symbol stays in the same spot on every slide.
+- **Approved step copy:** 2 Intention: *"Write down your intention in the left-hand column. Write out all the conditions of your intention."* 3 Emotions: *"In the column on the right-hand side, write the emotions you will feel when ALL of this happens."*
+- **Example slides:** title "Example 1 / 2 / 3", eyebrow "Example", **no subtitle paragraph**. Write every example for Analytical Amy (`marketing/memory/avatar-amy.md`), each targeting a different part of her profile. Use "partner", never "soulmate"/"the One". Approved set: Example 1 (being chosen, emotionally available: her chasing pattern), Example 2 (consistent, safe, not having to earn love: anxious attachment), Example 3 (commitment, family, supports her career: the future she wants).
+
 ---
 
 ## Variant: Tick/Cross comparison page
@@ -498,6 +542,48 @@ Used in `about-page-video.html` and `the-attraction-formula.html`. A distinct fo
 
 ---
 
+## Fixed webcam placeholder (scroll pages recorded with a webcam overlay)
+
+When Olly wants a webcam box that stays put while he scrolls between slides, put it **outside `.steps`** with `position:fixed`. Never put it inside each `<section>` (it would scroll away and sit differently per slide). Approved values from `choose-your-relationship.html`:
+```css
+.webcam{
+  position:fixed; top:24px; right:54px;
+  width:clamp(228px, 20.9vw, 361px); aspect-ratio:16/9;
+  border-radius:20px; border:2px dashed rgba(225,166,255,.55);
+  background:rgba(10,5,16,.55); color:rgba(225,166,255,.75);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  z-index:20; pointer-events:none;
+}
+```
+```html
+<div class="webcam" aria-hidden="true">Webcam</div>   <!-- just before .progress-label -->
+```
+A bigger `right` value moves it further **left**. (The old `translateX(9%)` shift on worksheet slides was removed 2026-10-21; all content now sits in the 820px centre column, see Recording Safe Area.)
+
+---
+
+## Recording Safe Area (all Heart Attractor trainings, 2026-10-21)
+
+Olly crops his screen recordings to the centre of the slide. **Every slide's content must sit inside one 820px-wide centre column**, the same as `how-to-attract-a-committed-relationship.html` (`.step-inner{ max-width:820px }`). That includes the title slide, worksheet slides, example slides and path slide. Nothing wider: no 1000/1100/1280px containers, no inline `style="max-width:..."` overrides, no `translateX` shifts.
+
+Proven overrides, added at the end of the `<style>` block and scoped to desktop so the existing mobile single-column rules still win:
+```css
+/* image+text step pages (meditation steps, anchoring) */
+@media (min-width:821px){ .step-inner{ max-width:820px; grid-template-columns:300px 1fr; gap:44px; } }
+.step-word{ white-space:normal; }   /* long titles like "Sense The Space Around You" wrap instead of overflowing */
+/* worksheet pages */
+@media (min-width:901px){ .step-inner--worksheet{ max-width:820px; grid-template-columns:280px 1fr; gap:44px; transform:none; } }
+.worksheet{ width:280px; }
+```
+Square step images are 1024x1024 and show at 300px. Tall slide images (the emotional scale) are 9:16, ideally 1080x1920.
+
+**Narrowing a column adds rows.** After narrowing, check every slide for vertical overflow too (the 24 emotion tags wrapped onto extra rows and fell off the bottom).
+
+**Prompting an image generator for a slide image** (Olly uses Gemini and attaches a reference): give the exact size and ratio, the slide palette hexes (background gradient #4B1466 -> #150818 -> #0A0510, text #FFFFFF / #E6DCF2, accents #E1A6FF -> #D946EF), a Poppins-style bold sans-serif, and "leave a margin on every side so no word touches the edge". When he uploads the previous output as the reference, the prompt only lists the changes plus "keep everything else the same". Check the result for words touching the edges before swapping it in.
+
+---
+
 ## Process Checklist for a New Training
 
 1. Confirm the **content** first (steps, wording, images available) — don't start building blind. If images aren't ready yet, use the placeholder pattern and tell Olly the expected filenames/folder.
@@ -515,6 +601,14 @@ Used in `about-page-video.html` and `the-attraction-formula.html`. A distinct fo
 13. **A JS "auto-fit" script that measures text and computes a font-size at runtime feels safer than it is — prefer a fixed, hand-computed size with the arithmetic left in a comment.** An auto-fit pass (canvas `measureText`) was built and used successfully once, then abandoned a few edits later in favour of plain fixed px values, because every subsequent wording change silently changed the computed size in ways that were hard to predict or debug. Fixed sizes with a documented budget are easier to reason about and re-verify by hand.
 14. **For "make X the same visual size as Y" between two different-length labels, scale font-size by character-count ratio, then align on a shared centre-line (`transform:translate(-50%,-50%)`), not a shared `top`.** See the new Fixed-size Screenshot Canvas variant above for the full worked example.
 15. **When a spacing/size change is negotiated across many turns as a relative delta ("5px more", "10% bigger", "knock it down 10px"), always compute the new absolute value from the value currently in the file, not from the original or from memory.** Re-read the live rule before each new delta — this was done reliably throughout the `belief-quiz-optin.html` mobile-polish session by grepping the current value immediately before every edit, the same discipline as rule 10's step-number re-grep.
+16. **"Npx padding/gap from X" and "move it Npx" are relative to where it is now, not an absolute value.** Corrected 2026-10-05: "have 10px padding from the RHS" was set as `right:10px`, which moved the webcam box *right*. Olly meant 10px *more* space (`24px → 34px`). For `position:fixed`, a bigger `right` moves the element left. If the direction is unclear, say which way it will move before editing.
+17. **Olly dictates by voice, so read garbled words against what's on screen and say how you read them.** "remove the So we're at the top of every page" = the "Creation:" line, "recognize that title" = capitalise it, "shorts in brackets" = "(Thoughts)". Make the most likely edit and name the interpretation in the reply. Only ask first when two readings produce clearly different output (e.g. "write all the answers in the present tense" = add an instruction vs rewrite the examples; asking was right there).
+18. **Do the single literal edit asked for, then flag related leftovers rather than silently changing them.** This worked well on 2026-10-05: each reply listed the stale bits still on the page (old money examples, "conditions" wording, mismatched example lists) and Olly picked them off one by one. Don't bundle unrequested copy rewrites into the edit.
+19. **Never run the file edit and the Artifact publish as parallel tool calls**, because the publish can read the file before the edit lands. Edit first, then publish in the next call. (Olly's standing rule: once a preview link exists, republish after every edit without asking.) Safe exception: a publish carrying its own `edits` on the scratchpad preview copy, sent alongside a `sed` on the real file, since they touch different files.
+20. **A layout fix requested for "the trainings" means every slide of every training, with no exceptions left for later.** On 2026-10-21 the 820px fix skipped training 2's title slide (inline `max-width:1000px`) "in case the long title broke", and Olly had to come back: "I thought you did that already." Before saying it's done, grep each file for `max-width:` values above 820, inline `style=` overrides and `translateX`. If one slide can't comply as-is, fix it a safer way (e.g. let the title script shrink the font) rather than leaving it wide.
+21. **Use Olly's dictated copy word for word.** Only tidy punctuation (a dash separator becomes a comma, add a closing full stop) and say what was tidied. "For step 1 / step 2" right after a parts list means that part's line on the Three Parts slide, not step slide 1.
+22. **When content is too tall for the slide, make it smaller; don't vertically centre it.** Centring an overflowing block clips it at the top and the bottom (Olly: "that's cut them off more", reverted). Top-aligned with less zoom is the fix.
+23. **When Olly asks for links, list every training in order (1-4) with its full title and URL.** He compares them side by side while recording.
 
 ---
 
@@ -548,6 +642,12 @@ Used in `about-page-video.html` and `the-attraction-formula.html`. A distinct fo
 - **Never export an About Page tile with a hard-coded clip height (e.g. 1400×790)** — the safe canvas is each section's own natural `boundingBox().height`; a fixed clip silently cut a card off with 6px of bottom margin left. Screenshot the element directly and measure against a proven-good section instead.
 - **"Even margins" must be verified with an actual pixel bounding-box measurement (Python/PIL near-white scan), not eyeballed from a screenshot** — a double-centered card (its own `max-width` narrower than its frame's padded content box) produced visibly uneven left/right vs top/bottom margins that looked "close enough" until measured.
 - **A card narrower than its frame's content box double-centers** — set the card to `max-width:none; width:100%;` so only the frame's own padding creates the margin, not two nested centering gaps.
+- **Title Case every slide title, even when Olly types it in lower case.** "Choose your symbol", "What is your intention?" and "What emotions will you feel?" all became "Choose Your Symbol", "What Is Your Intention?", "What Emotions Will You Feel?" (every word capitalised, including "To"/"It"). He had to ask once on 2026-10-05. Apply it automatically and update the matching `data-title` too.
+- **Rebuilding an old training for Heart Attractor: grep for every pre-pivot leftover before handing it over.** Check for the old brand name ("Heart Creator"), money/business/job/healing examples, "Creation:" lines, "Elevated Emotion" and orange colours. Each of these surfaced one at a time in the 2026-10-05 session.
+- **First-slide titles always use the reverse pyramid** (Olly, 2026-10-19: "that inverse pyramid rule that we always have"): the top line is the widest and each line below is narrower. Use the canvas-packing `buildTitlePyramid()` in `how-to-attract-a-committed-relationship.html` (it targets `h1.step-title`), and copy it verbatim into new trainings.
+- **A base64 preview copy can blow the 16MB Artifact limit.** Training 1's full-size images inlined to ~25MB. When that happens, `read` the live artifact (it already holds compressed images), copy the saved HTML, strip the service's wrapper first line (`<!doctype html><html><head><meta charset=utf8>...`) and trailing `</body></html>`, apply the edit to that copy and publish it. Make the same edit to the real file, keeping relative image paths.
+- **When Olly overwrites an image under the same file name, the preview still holds the old base64.** Rebuild the preview copy and republish. When his new file has a different name or extension (`Step 2.png` -> `Step 2.jpg`, `Sensing Space.jpg` instead of the suggested name), point the `src` and placeholder text at the real name; don't ask him to rename it.
+- **"Text is cut off" may be browser zoom.** The 2026-10-05 report turned out to be Olly zoomed in. Ask whether the page is zoomed (Ctrl+0 resets it) before changing layout for a clipping report.
 
 ---
 
@@ -640,3 +740,19 @@ Used in `about-page-video.html` and `the-attraction-formula.html`. A distinct fo
 - Process Checklist: added rule 7 (propagate shared-content changes to every file that embeds that content, not just the one being looked at) and rule 8 (overview/summary captions must match the detailed page's body text verbatim, not a paraphrase) — both written after Olly had to separately ask for the overview page's captions to be brought back in line with the training page's wording, which should have been done proactively as part of the same edit.
 - Standard image+text step layout CSS: added `text-wrap:balance` to `.step-body` by default, after a ragged one-long-line/one-short-line wrap was flagged as poorly aligned on `choose-your-creation.html`. Added to the Gotchas Log as the default fix for this instead of manual `<br>`/`max-width` tweaks.
 - No rules removed — these are additions/sharpenings of the existing Process Checklist and Gotchas Log, not overrides of prior guidance.
+
+**2026-10-05 — Post-session feedback review (choose-your-relationship.html, purple relationship rebuild of create-your-outcome.html)**
+- Existing Trainings table: added `choose-your-relationship.html`. File & Folder Conventions: fixed stale `heartcreator/training/` path to `heartattractor/training/`.
+- Palette & Fonts: added the **Heart Attractor purple palette** as the default for new/rebuilt trainings (Olly asked for the ad-generator branding). Marked navy/orange as pre-pivot (kept for the older pages, not removed).
+- Worksheet variant: added the "Heart Attractor relationship worksheet" section. It covers relationship-only scope (no Choose step, no "Creation:" line), the default 'R' symbol, "Intention"/"Emotions" headings without (Thoughts)/(Feelings), the "My intention is that…" and "The emotions I would feel are…" sentence starters with present-tense items, actual emotions only, the empty right column on the Intention slide, "Example N" titles with no subtitle, and Amy-targeted examples using "partner". Each came from a specific edit Olly made this session.
+- New section: fixed webcam placeholder pattern (`position:fixed` outside `.steps`, approved size/position).
+- Process Checklist: added rules 16–19. They cover relative px deltas (the `right:10px` vs 10px-more mistake), reading voice-dictated instructions against the page, doing the literal edit and flagging leftovers, and never publishing in parallel with an edit.
+- Gotchas Log: added auto-Title-Case for slide titles, grepping for pre-pivot leftovers when rebuilding, and checking browser zoom before fixing a "cut off" report.
+- Removed: nothing outright. The old `.ws-intention-line` guidance and navy/orange palette are now scoped to the pre-pivot pages instead of being the default, since Olly's purple, relationship-only direction overrides them for new Heart Attractor work.
+
+**2026-10-21 — Post-session feedback review (classroom trainings 1-4: recording fit, lesson 3 rebuild, image swaps)**
+- New section **Recording Safe Area**: every slide inside the 820px centre column, with the proven CSS overrides, image sizes, the narrowing-adds-rows check and an image-generator prompt pattern. Why: Olly was "massively cropping" recordings because trainings 2-4 used 1000-1280px layouts.
+- Process Checklist: added rules 20 (a layout fix covers every slide, no deferred exceptions; Olly had to re-ask about training 2's title), 21 (dictated copy verbatim; "step N" after a parts list = that part's line), 22 (shrink, don't vertically centre, overflowing content; the centring was reverted) and 23 (list all four training links in order). Clarified rule 19 with the safe parallel case.
+- Gotchas: added the 16MB base64-preview limit with the edit-the-live-copy workaround, and same-name / different-name image replacement handling.
+- Existing Trainings table: updated lessons 1-4 to their 2026-10-21 state (emotional scale image, Friends & Family, new What To Expect ticks; 11 emotion tags and enlarged examples; Slow Down / Focus / Feel rebuild; new anchoring images and copy).
+- Removed: the webcam note about worksheet content being shifted `translateX(9%)`; that shift was removed this session in favour of the centre column.

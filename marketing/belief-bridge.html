@@ -1,0 +1,818 @@
+<title>Belief Bridge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a five-step bridge from the old belief (ochre, cracked) to the new belief (green), with saved messaging in a side column. */
+:root{
+  --paper:#F3F4F6; --surface:#FFFFFF; --sunk:#E9EBEF; --ink:#1C2230; --muted:#5B6274; --line:#D9DCE3;
+  --old:#8C6328; --old-soft:#F4EBDB; --new:#1E6A5A; --new-soft:#DCEFE9; --new-fg:#FFFFFF; --warn:#9B4A1E; --warn-soft:#F7E4D9;
+  --f-display:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151B; --surface:#1A1E26; --sunk:#222732; --ink:#E7E9EF; --muted:#A1A8B7; --line:#2E3440;
+  --old:#DDAE66; --old-soft:#2E2619; --new:#62C7AC; --new-soft:#153029; --new-fg:#0D1A16; --warn:#F0A073; --warn-soft:#33221A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151B; --surface:#1A1E26; --sunk:#222732; --ink:#E7E9EF; --muted:#A1A8B7; --line:#2E3440;
+  --old:#DDAE66; --old-soft:#2E2619; --new:#62C7AC; --new-soft:#153029; --new-fg:#0D1A16; --warn:#F0A073; --warn-soft:#33221A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0}
+h1{font-size:44px;line-height:1.05}
+h2{font-size:30px;line-height:1.15}
+h3{font-size:21px;line-height:1.2}
+p{margin:0}
+.hint{color:var(--muted);font-size:14px;max-width:65ch}
+.label{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
+.span{display:flex;align-items:center;gap:10px;font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.span .o{color:var(--old)} .span .n{color:var(--new)}
+.span svg{width:120px;height:18px;flex:none}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.steps{display:flex;gap:6px;flex-wrap:wrap;list-style:none;margin:0;padding:0}
+.steps button{font:500 13px/1 var(--f-body);background:transparent;border:1px solid var(--line);color:var(--muted);padding:9px 12px;border-radius:999px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.steps button b{font:500 11px/1 var(--f-mono);color:inherit}
+.steps button[aria-current="step"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.steps button.done{color:var(--new);border-color:var(--new)}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+label.f span.hint{font-weight:400}
+input[type=text],textarea{font:15px/1.5 var(--f-body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+textarea{min-height:76px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--new);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button.btn{font:600 14px/1 var(--f-body);padding:11px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+button.btn:hover{border-color:var(--muted)}
+button.primary{background:var(--new);border-color:var(--new);color:var(--new-fg)}
+button.primary:hover{filter:brightness(1.08);border-color:var(--new)}
+button.small{font-size:13px;padding:7px 11px}
+button:disabled{opacity:.55;cursor:wait}
+.status{font-size:13px;color:var(--muted)}
+.status.err{color:var(--warn)}
+.chips{display:flex;flex-direction:column;gap:8px}
+.chip{text-align:left;font:15px/1.45 var(--f-body);background:var(--sunk);color:var(--ink);border:1px solid transparent;border-radius:8px;padding:10px 12px;cursor:pointer;white-space:pre-wrap}
+.chip:hover{border-color:var(--new)}
+.banner{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--old-soft);border:1px solid var(--old);border-radius:10px;padding:12px 16px;font-size:14px}
+.belief-old{border-left:3px solid var(--old);padding-left:12px}
+.belief-new{border-left:3px solid var(--new);padding-left:12px}
+.crack{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px 12px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+.crack.on{border-color:var(--new);background:var(--new-soft)}
+.crack input[type=checkbox]{width:18px;height:18px;margin-top:3px;accent-color:var(--new)}
+.crack .t{display:flex;flex-direction:column;gap:5px;min-width:0}
+.tag{align-self:flex-start;font:500 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--old);background:var(--old-soft);padding:4px 7px;border-radius:4px}
+.check{font-size:13px;color:var(--warn);background:var(--warn-soft);padding:6px 9px;border-radius:6px}
+.x{background:none;border:0;color:var(--muted);font-size:13px;cursor:pointer;padding:4px}
+.x:hover{color:var(--warn)}
+.navrow{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
+.kit{display:flex;flex-direction:column;gap:18px}
+.chat{display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:12px 14px;border-radius:10px;white-space:pre-wrap;line-height:1.55}
+.msg.q{align-self:flex-end;background:var(--old-soft);border:1px solid var(--old)}
+.msg.a{align-self:flex-start;background:var(--paper);border:1px solid var(--line)}
+.msg .who{display:block;font:500 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stress{border-top:1px solid var(--line);padding-top:20px}
+.oneliner{font:400 26px/1.25 var(--f-display);border-left:3px solid var(--new);padding-left:14px}
+.glance{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 16px;margin:0}
+.glance dt{font:500 11px/1.7 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.glance dd{margin:0}
+@media (max-width:520px){.glance{grid-template-columns:minmax(0,1fr)}.glance dd{margin-bottom:6px}}
+.block{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px}
+ol.hooks{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+ul.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+ul.checks li{display:flex;gap:8px;font-size:14px}
+ul.checks .ok{color:var(--new);font-weight:700} ul.checks .no{color:var(--warn);font-weight:700}
+aside .item{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-top:1px solid var(--line)}
+aside .item:first-child{border-top:0}
+aside .item b{font-weight:600;font-size:14px;line-height:1.35}
+aside .meta{font:12px/1 var(--f-mono);color:var(--muted)}
+ul.plain{list-style:none;margin:0;padding:0}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.eg{font-size:13px;color:var(--muted);border-left:2px solid var(--line);padding-left:10px;font-style:italic;max-width:70ch}
+.eg b{font-style:normal;font-weight:600;color:var(--muted)}
+.fieldset{display:flex;flex-direction:column;gap:6px}
+details.import{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--paper)}
+details.import summary{cursor:pointer;font-weight:600}
+details.import[open] summary{margin-bottom:12px}
+.fromsurvey{font:500 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--new)}
+.post{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:18px;line-height:1.6;max-width:70ch}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="stack" style="gap:8px">
+      <span class="label">Messaging builder</span>
+      <h1>Belief Bridge</h1>
+      <p class="hint">Built from a proven belief-shifting sales post. Fill in each step and it writes your own version: your argument at a glance and a full post in the same structure.</p>
+      <p class="hint"><strong>Prefer to talk?</strong> Click in any box, then press <strong>Windows key + H</strong> on a PC (or <strong>Fn</strong> twice on a Mac, or the 🎤 on your phone's keyboard) and speak your answer.</p>
+    </div>
+    <div class="span" aria-hidden="true">
+      <span class="o">Old belief</span>
+      <svg viewBox="0 0 120 18"><path d="M2 9 H40 L46 3 L52 15 L58 5 L64 13 L70 9 H118" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted)"/></svg>
+      <span class="n">New belief</span>
+    </div>
+  </header>
+
+  <div id="exampleBanner" class="banner" hidden>
+    <span><strong>This is an example</strong> (a strength coach for women over 40) so you can see how it works. Under each box, "In the original post" shows how the template post did it.</span>
+    <button class="btn small" id="startOwn">Clear it and start my own</button>
+  </div>
+
+  <div class="grid">
+    <main class="card stack" style="gap:20px">
+      <details class="import" id="importBox">
+        <summary>Import survey answers</summary>
+        <div class="stack">
+          <p class="hint">Open your Messaging Survey Sheet, select the whole Responses tab, copy it and paste it here. <strong>Build everything</strong> fills in every step from their answers, picks the strongest cracks and writes your argument at a glance, the full argument and the post in one go. Anything you've already filled in about your offer is kept. Or add suggestions to each step and choose them yourself. Best with 10 or more responses.</p>
+          <textarea id="importText" placeholder="Paste the Responses tab here" style="min-height:120px"></textarea>
+          <div class="row"><button class="btn primary" id="autoBtn">Build everything from my survey</button><button class="btn" id="importBtn">Just add suggestions to each step</button><button class="x" id="clearImport" hidden>Remove survey suggestions</button><span class="status" id="stImport" role="status"></span></div>
+        </div>
+      </details>
+      <ol class="steps" id="stepNav" aria-label="Steps"></ol>
+      <section class="stack" id="stepBody"></section>
+
+      <!-- cracks step -->
+      <section class="stack" id="crackStep" hidden>
+        <div class="row"><button class="btn primary" id="findCracks">Find cracks and analogies</button><span class="status" id="stCracks" role="status"></span></div>
+        <div class="stack" id="crackList" style="gap:8px"></div>
+        <div class="row">
+          <input type="text" id="ownCrack" placeholder="Add your own crack or analogy" style="flex:1;min-width:200px">
+          <button class="btn" id="addCrack">Add crack</button>
+          <button class="btn" id="addAnalogy">Add analogy</button>
+        </div>
+      </section>
+
+      <!-- build step -->
+      <section class="stack" id="buildStep" hidden>
+        <div class="row">
+          <button class="btn primary" id="build">Write my post</button>
+          <button class="btn" id="copyKit" hidden>Copy all</button>
+          <button class="btn" id="saveKit">Save</button>
+          <span class="status" id="stBuild" role="status"></span>
+        </div>
+        <div id="kit" class="kit"></div>
+        <div class="stress stack" id="stressBox" hidden>
+          <div class="stack" style="gap:6px">
+            <h3>Stress test it</h3>
+            <p class="hint">Push back the way a sceptical buyer, a friend or a competitor would. It defends the argument properly, and tells you straight when a question finds a real weak spot and how to fix it.</p>
+          </div>
+          <div class="row"><button class="btn small" id="toughQs">Give me tough questions</button><button class="x" id="clearChat" hidden>Clear conversation</button><span class="status" id="stTough" role="status"></span></div>
+          <div class="chips" id="chipsSurvey"></div>
+          <div class="chips" id="chipsTough"></div>
+          <div class="chat" id="chat" aria-live="polite"></div>
+          <div class="row" style="align-items:flex-end">
+            <textarea id="askBox" placeholder="e.g. Isn't this just another thing to fix?" style="flex:1;min-width:220px;min-height:60px"></textarea>
+            <button class="btn primary" id="askBtn">Ask</button>
+          </div>
+          <span class="status" id="stAsk" role="status"></span>
+        </div>
+      </section>
+
+      <div class="navrow">
+        <button class="btn" id="back">Back</button>
+        <button class="btn primary" id="next">Next</button>
+      </div>
+    </main>
+
+    <aside class="card stack" aria-labelledby="savedH">
+      <h3 id="savedH">Saved messaging</h3>
+      <p class="hint">Press Save on the last step to keep a version here. Open one to keep working on it.</p>
+      <ul class="plain" id="savedList"></ul>
+      <p class="status" id="stSaved">Loading…</p>
+    </aside>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+/* The 8 steps, reverse engineered from the template post. "orig" shows how the original did it. */
+const STEPS = [
+  { name: "Who", title: "Who and the promised land",
+    intro: "Call out who it's for and mirror everything they're already doing, so they feel seen. Then paint the result they want.",
+    fields: [
+      {k:"offer", label:"Your business or offer", hint:"What you sell, in a few words.", type:"text", orig:"Online business coaching for fitness pros"},
+      {k:"who", label:"Who", hint:"Who it's for, the way they'd describe themselves.", orig:"If you're a Fitpro…"},
+      {k:"effort", label:"What they're already doing", hint:"Everything they put effort into now. One per line. This becomes the opening mirror.", orig:"Spending hours on social media per day… posting 🔥pics with all the perfect angles… writing posts authentic AF… sharing stories from your darkest times"},
+      {k:"outcome", label:"The promised land", hint:"What life looks like when it's worked. Make it vivid.", orig:"DMs from 🔥leads pop into your inbox like magic… they're relieved when you reveal the price"}
+    ]},
+  { name: "Pain", title: "The pain",
+    intro: "Name the gap between their effort and their results, then the worst part. Say what's changed in the world so it isn't their fault.",
+    fields: [
+      {k:"pain", label:"Pain", hint:"The result that isn't happening despite all that effort.", orig:"But your DMs aren't leading to new clients, I bet I know why…"},
+      {k:"whyNow", label:"What's changed in the world", hint:"Why the old way is harder now. Blame the world, not them.", orig:"Because unlike 2017, the online fitness space is packed with trainers just like you"},
+      {k:"bleeding", label:"Bleeding neck pain", hint:"The worst part. The symptoms they live with. One per line. Later these get relabelled as symptoms of the real cause.", orig:"People don't take you seriously… say you're too expensive… ignore your DMs… closing feels impossible no matter the price"}
+    ]},
+  { name: "Current belief", title: "The current belief",
+    intro: "Say the old beliefs out loud, in their own words, so they know you understand exactly what's in their head. Then say where those beliefs come from.",
+    fields: [
+      {k:"oldBelief", label:"Current beliefs", hint:"What they think they need to do to get the result. One per line, written the way they'd say it (\"I NEED MORE…\"). 3 to 5 is ideal.", orig:"5 things run through their mind: I NEED MORE CONTENT… I NEED MORE TRAFFIC… I NEED TO RUN ADS… I NEED TO DM MORE PEOPLE… I NEED TO LEARN TO SELL BETTER"},
+      {k:"source", label:"Where they get these beliefs", hint:"Who keeps telling them this.", orig:"Or a bunch of other things the gurus are telling you that just aren't working"}
+    ]},
+  { name: "Cracks", title: "Cracks and analogies", special: "cracks",
+    intro: "A crack lets them see for themselves that the current belief doesn't hold. The strongest move in the template is exaggeration: multiply the old belief to its extreme and show it still fails. An analogy then makes the missing piece obvious in a picture.",
+    orig: [["Exaggeration crack", "You could post 10x per day… send 100s of DMs… and pay $1000s for ads… but without this one thing you won't get sales"], ["Analogy", "You're baking a cake without the flour"]] },
+  { name: "Real cause", title: "The real cause and the new belief",
+    intro: "Make them guess, then reveal the one thing that's missing. Explain the real cause, name a villain so it's not their fault, and give the new belief.",
+    fields: [
+      {k:"oneThing", label:"The one missing thing", hint:"The reveal, in a few words. It gets written in capitals: \"Can you guess what it is? IT'S…\"", type:"text", orig:"IT'S AUTHORITY."},
+      {k:"cause", label:"Real cause", hint:"Why the old way hasn't worked. Never their fault.", orig:"Not because they're bad at sales, but because they have 0 respect… 0 authority"},
+      {k:"familiar", label:"Who already has it", hint:"People or things they already accept as having the one thing. Shows it's real and learnable.", orig:"Just like Lululemon… or Beats… or Yeezys… A few influencers have done it on accident… others on purpose"},
+      {k:"villain", label:"The villain", hint:"Why nobody told them this before. Blame the system, not the reader.", orig:"A lot of the gurus can really make business complicated… so they can sell some high-ticket course"},
+      {k:"newBelief", label:"New belief (big domino)", hint:"The one thing they need to believe. Often: \"[One thing] is what makes [result] easy, and [mechanism] builds it.\"", orig:"Authority makes everything else easy AF"}
+    ]},
+  { name: "Solution", title: "Your solution and proof",
+    intro: "Name the mechanism, keep it stupid simple, and show what's inside. Then the proof.",
+    fields: [
+      {k:"mechanism", label:"Solution name", hint:"The name of your method or product.", type:"text", orig:"I call it the Authority Matrix."},
+      {k:"mechanismWhat", label:"What it is, in one sentence", hint:"A stupid simple description of what it does.", orig:"A stupid simple blueprint to build your Authority Message that attracts and converts your ideal clients profitably"},
+      {k:"without", label:"Without…", hint:"2 or 3 things they won't have to do. One per line.", orig:"Without spending all day on social media… without spending a dime on ads"},
+      {k:"steps", label:"What's inside", hint:"The parts of your solution, each with what it does for them. One per line.", orig:"Authority Framework #1: position yourself so you're unique… #2: one big central idea… #3: a simple path… #4: the Inception Method"},
+      {k:"proof", label:"Proof", hint:"Your story, client results or numbers. Only use what's real. Leave blank rather than make anything up.", noSuggest:true, orig:"Brian: \"I nearly tripled my revenue in just the first month\"… $100/mo > $2500 packages… 227 fitpros and counting"}
+    ]},
+  { name: "Offer", title: "The offer",
+    intro: "Anchor the price, make the real offer, take the risk away, explain honestly why it's so low, then the call to action.",
+    fields: [
+      {k:"anchor", label:"Price anchor", hint:"What you're NOT asking for. Your bigger offer, or typical prices for the alternatives. One per line.", orig:"Unlike my $8,000 package… I'm not asking for $1,000… not $500… not even $200"},
+      {k:"price", label:"The real offer and price", type:"text", orig:"Access to my Authority Matrix Masterclass… only $97"},
+      {k:"risk", label:"Risk reversal", hint:"How they can try it without risk. Only offer what you'll really honour.", orig:"100% no questions asked guarantee… if it's not worth 100X I'll send every dime back"},
+      {k:"reasonWhy", label:"Why so low?", hint:"Two honest reasons for the price.", orig:"1) People don't value free stuff, skin in the game gets you to act. 2) My sinister secret: I'm hoping you'll want to work more closely with me"},
+      {k:"cta", label:"Call to action", hint:"One small, easy action.", type:"text", orig:"Drop a \"GIVE IT TO ME\" or a funny gif below 👇"}
+    ]},
+  { name: "Your post", title: "Your argument and post", special: "build",
+    intro: "Writes your argument at a glance and a full post that follows the template's structure, beat by beat, in your words." }
+];
+const FIELDS = STEPS.flatMap(s => (s.fields || []).map(f => f.k));
+const FIELD = Object.fromEntries(STEPS.flatMap(s => (s.fields || []).map(f => [f.k, f])));
+
+const TEMPLATE_POST = `If you're a Fitpro spending hours on social media per day…
+Posting 🔥pics with all the perfect angles…
+Writing posts authentic AF with your 💖baked right in...
+Sharing stories from your darkest times...
+But your DMs aren't leading to new clients, I bet I know why…
+Because unlike 2017, the online fitness space is packed with trainers just like you…
+And when average coaches aren't making the 💰they deserve…
+5 things run through their mind:
+1. "I NEED MORE CONTENT"
+2. "I NEED MORE TRAFFIC"
+3. "I NEED TO RUN ADS"
+4. "I NEED TO DM MORE PEOPLE"
+5. "I NEED TO LEARN TO SELL BETTER"
+Or a bunch of other things the gurus are telling you that just aren't working…
+But the truth is...
+You're baking a cake without the flour.
+That's why everything seems like it's falling apart...
+Because without one stupid simple ingredient all that effort will go to waste…
+Here's what I mean:
+🙃You could post 10x per day…
+🙃Send 100s of DMs…
+🙃And pay $1000s for ads…
+But without this one thing...you won't get sales.
+Can you guess what it is?
+IT'S AUTHORITY.
+Just like Lululemon...or Beats....or Yeezys…
+You need to STAND OUT in a crowded market…
+Your tribe needs to see you as THE expert…
+Not just "some fitness trainer"...
+It's simple psychology…
+A few influencers have done it on accident…
+Others on purpose…
+Like one of my clients Brian: "I nearly tripled my revenue in just the first month I worked with Ben."
+But a lot of the gurus can really make business complicated…
+So they can sell some high-ticket course…
+Instead, you're over here experiencing the symptoms of "low status":
+- People don't take you seriously
+- People say you're "too expensive"
+- People ignore your DMs
+- And closing feels impossible no matter the price
+That's just what happens when you don't have authority…
+Yet when you become the "go-to" in your niche...man things get easy…
+DMs from 🔥leads will pop into your inbox like magic.
+And when you hop on a sales call... They're relieved when you reveal the price...
+That's why so many fitpros can't close on the phone…
+Not because they're bad at sales, but because they have 0 authority…
+But not you.
+So answer me this:
+With authority...
+🤩How much easier would it be to attract your dream client?
+🤩How much easier to book your calendar solid with hot leads?
+🤩And how much easier would it be to close clients at much higher prices?
+That's why fitpros have paid me more than $8,000 for my programs…
+They went from: $100/mo > $2500 packages (without a single objection)
+I've simplified it so a 5th grader could do it… 227 fitpros and counting...
+I call it the Authority Matrix.
+The Authority Matrix is a stupid simple blueprint to build your Authority Message that attracts and converts your ideal clients profitably…
+Without spending all day on social media
+Without spending a dime on ads
+That's why I have a pretty sweet deal for you today...
+❌I'm not asking for $1,000
+❌I'm not asking for $500
+❌I'm not even asking for $200…
+I'm offering access to my Authority Matrix Masterclass at only $97…
+But you're going to risk nothing today… 100% NO QUESTIONS ASKED GUARANTEE!
+So why just $97, Ben? Two reasons:
+1) I KNOW this will help the right person who takes action on it. People don't value free stuff…
+2) I have a sinister secret… I'm secretly hoping you'll get such great results that you'll want to work more closely with me.
+So what's inside the training?
+Authority Framework #1: How to position yourself and offer so it's unique and different from all of your competitors...
+Authority Framework #2: How to have one big central idea in your brand that does the heavy lifting…
+Authority Framework #3: How to show your ideal client a simple path to get what they want…
+Authority Framework #4: The "Inception Method" to create a message that speaks to the conversation INSIDE your prospect's head.
+If your personal training is not bringing in the revenue you want, don't you owe it to yourself to do everything you can to fix it?
+Drop a "GIVE IT TO ME" or a funny gif below👇`;
+
+const BEATS = `1. Mirror: "If you're a [who]…" then list everything they're already doing, one line each.
+2. Gap and open loop: "But [pain], I bet I know why…"
+3. Blame the world: what's changed that makes it harder now.
+4. Current beliefs out loud: "[Number] things run through their mind:" then each belief in capitals, numbered.
+5. Discredit the source: "Or a bunch of other things [source] keep telling you that just aren't working…"
+6. Analogy: "But the truth is... [analogy]." Then "Because without one stupid simple ingredient, all that effort…"
+7. Exaggeration crack: "Here's what I mean:" then 3 lines multiplying the old beliefs to the extreme, then "But without this one thing… [no result]."
+8. Guess and reveal: "Can you guess what it is?" then "IT'S [ONE THING]." in capitals.
+9. Familiar examples and learnable: who already has it. Some have it by accident, others build it on purpose.
+10. Proof: their proof. If none is given, write the line [Add your proof here] instead. Never invent proof.
+11. Villain: why nobody told them, so they can sell the next thing.
+12. Relabel the pain: "Instead, you're over here living with the symptoms of [not having the one thing]:" then the bleeding neck pain as a dash list. "That's just what happens when you don't have [one thing]…"
+13. Future pace: "Yet when you [have the one thing]... things get easier…" then the promised land, vivid and specific.
+14. Protect identity: "Not because [it's their fault], but because [real cause]… But not you."
+15. Self-persuasion: "So answer me this: With [one thing]..." then 3 or 4 "How much easier would it be to…" questions.
+16. Name the solution: "That's why I [built it]… I call it [mechanism]." then the one-sentence what it is, then the "Without…" lines.
+17. Price anchor: "That's why I've got a pretty sweet deal for you..." then ❌ lines of what you're not asking for, then the real offer and price.
+18. Risk reversal.
+19. Reason why: "So why [price], [name]? Two reasons:" with the two reasons. The second is the friendly "secret".
+20. What's inside: each part on its own with what it does for them.
+21. Close: "If [pain is still true], don't you owe it to yourself to [act]?" then the call to action.`;
+
+const EXAMPLE = {
+  offer: "Strength coaching for women over 40",
+  who: "Women over 40 who want to lose weight and keep it off",
+  effort: "Counting every calorie\nDoing hour-long cardio sessions\nCutting carbs, then sugar, then everything\nTrying every new diet that comes along",
+  outcome: "Feeling strong, fitting into their favourite jeans and keeping the weight off without thinking about food all day.",
+  pain: "The weight keeps coming back the moment they stop",
+  whyNow: "Every week there's a new diet trend, and the advice gets more extreme",
+  bleeding: "Feeling hungry and tired all the time\nDreading holidays and meals out\nWatching the scales go back up\nFeeling like their body is working against them",
+  oldBelief: "I NEED TO EAT LESS\nI NEED TO DO MORE CARDIO\nI NEED TO CUT OUT CARBS\nI NEED MORE WILLPOWER",
+  source: "The diet industry and fitness influencers",
+  cracks: [
+    {type:"Exaggeration", text:"You could eat 1,000 calories a day… run every morning… and cut out every carb… and the weight would still come back.", picked:true},
+    {type:"Analogy", text:"You're trying to fill a bath with the plug out.", picked:true},
+    {type:"People around them", text:"Think of the fittest woman you know over 50. Is she living on salads and the treadmill?", picked:false}
+  ],
+  oneThing: "Muscle",
+  cause: "As we get older we tend to lose muscle, and eating less with lots of cardio can make that worse. It isn't a willpower problem.",
+  familiar: "The women you see lifting at the gym in their 50s and 60s. Some built it by accident through sport, others on purpose.",
+  villain: "The diet industry makes money when you come back, so it keeps selling the next diet.",
+  newBelief: "Muscle is what keeps the weight off after 40, and The Strong Base Method builds it.",
+  mechanism: "The Strong Base Method",
+  mechanismWhat: "A simple 3-session-a-week plan that builds muscle so your body keeps the weight off for you.",
+  without: "Without living at the gym\nWithout cutting out the food you love",
+  steps: "Lift: three 30-minute strength sessions a week\nFuel: enough protein so the muscle actually builds\nProgress: small weekly steps you can keep up for good",
+  proof: "",
+  anchor: "I'm not asking for $1,500 for 1-to-1 coaching\nI'm not asking for $300 for a personal trainer every month",
+  price: "Join The Strong Base Method for $49 a month",
+  risk: "Try it for 14 days. If it's not for you, cancel and you won't pay a penny.",
+  reasonWhy: "1) I know it works for women who stick with it, and 14 days is enough to feel stronger.\n2) My secret: I'm hoping you love it so much you stay for good.",
+  cta: "Drop a 💪 below and I'll send you the link"
+};
+const fresh = () => ({ ...Object.fromEntries(FIELDS.map(k => [k, ""])), cracks: [], kit: null, chat: [], research: null, step: 1, example: false });
+let S = store.get("bb-state-v3", null) || { ...fresh(), ...JSON.parse(JSON.stringify(EXAMPLE)), example: true };
+FIELDS.forEach(k => { if (typeof S[k] !== "string") S[k] = ""; });
+if (!Array.isArray(S.cracks)) S.cracks = [];
+const save = () => store.set("bb-state-v3", S);
+const LAST = STEPS.length;
+
+/* ---------- render a step ---------- */
+function stepDone(n){
+  const st = STEPS[n - 1];
+  if (st.special === "cracks") return S.cracks.some(c => c.picked);
+  if (st.special === "build") return !!S.kit;
+  return st.fields.filter(f => !f.noSuggest).every(f => (S[f.k] || "").trim());
+}
+function renderNav(){
+  const nav = $("stepNav"); nav.textContent = "";
+  STEPS.forEach((st, i) => {
+    const n = i + 1, li = document.createElement("li"), b = document.createElement("button");
+    const num = document.createElement("b"); num.textContent = n;
+    b.append(num, document.createTextNode(st.name));
+    if (n === S.step) b.setAttribute("aria-current", "step");
+    else if (stepDone(n)) b.className = "done";
+    b.onclick = () => go(n);
+    li.appendChild(b); nav.appendChild(li);
+  });
+  $("back").style.visibility = S.step === 1 ? "hidden" : "visible";
+  $("next").hidden = S.step === LAST;
+}
+function origLine(text, lead){
+  const p = document.createElement("p"); p.className = "eg";
+  const b = document.createElement("b"); b.textContent = (lead || "In the original post") + ": ";
+  p.append(b, document.createTextNode(text)); return p;
+}
+function renderStep(){
+  const st = STEPS[S.step - 1], body = $("stepBody"); body.textContent = "";
+  const head = document.createElement("div"); head.className = "stack"; head.style.gap = "6px";
+  const h = document.createElement("h2"); h.textContent = st.title;
+  const p = document.createElement("p"); p.className = "hint"; p.textContent = st.intro;
+  head.append(h, p); body.appendChild(head);
+  if (st.orig) st.orig.forEach(([l, t]) => body.appendChild(origLine(t, "In the original post (" + l.toLowerCase() + ")")));
+  if (st.fields) {
+    if (st.fields.some(f => !f.noSuggest)) {
+      const row = document.createElement("div"); row.className = "row";
+      const b = document.createElement("button"); b.className = "btn"; b.id = "sugStep"; b.textContent = "Suggest ideas for this step";
+      const s = document.createElement("span"); s.className = "status"; s.id = "stStep"; s.setAttribute("role", "status");
+      b.onclick = suggestStep; row.append(b, s); body.appendChild(row);
+    }
+    st.fields.forEach(f => {
+      const wrap = document.createElement("div"); wrap.className = "fieldset";
+      const lab = document.createElement("label"); lab.className = "f" + (f.k === "oldBelief" ? " belief-old" : f.k === "newBelief" ? " belief-new" : "");
+      lab.htmlFor = "f-" + f.k; lab.textContent = f.label;
+      if (f.hint) { const hs = document.createElement("span"); hs.className = "hint"; hs.textContent = f.hint; lab.appendChild(hs); }
+      const inp = document.createElement(f.type === "text" ? "input" : "textarea");
+      if (f.type === "text") inp.type = "text";
+      inp.id = "f-" + f.k; inp.value = S[f.k] || "";
+      inp.addEventListener("input", () => { S[f.k] = inp.value; save(); renderNav(); });
+      const ch = document.createElement("div"); ch.className = "chips"; ch.id = "chips-" + f.k;
+      wrap.append(lab, inp, origLine(f.orig));
+      const R = S.research;
+      if (R && ((R.options && R.options[f.k] && R.options[f.k].length) || (R.quotes && R.quotes[f.k] && R.quotes[f.k].length))) {
+        const tag = document.createElement("span"); tag.className = "fromsurvey"; tag.textContent = "From your survey"; wrap.appendChild(tag);
+        ((R.quotes && R.quotes[f.k]) || []).forEach(q => { const qp = document.createElement("p"); qp.className = "eg"; qp.style.borderLeftColor = "var(--new)"; const qb = document.createElement("b"); qb.textContent = "They said: "; qp.append(qb, document.createTextNode(q)); wrap.appendChild(qp); });
+        const sc = document.createElement("div"); sc.className = "chips";
+        ((R.options && R.options[f.k]) || []).forEach(t => { const cb = document.createElement("button"); cb.className = "chip"; cb.textContent = t; cb.title = "Use this"; cb.onclick = () => setField(f.k, t); sc.appendChild(cb); });
+        wrap.appendChild(sc);
+      }
+      wrap.appendChild(ch); body.appendChild(wrap);
+    });
+  }
+  $("crackStep").hidden = st.special !== "cracks";
+  $("buildStep").hidden = st.special !== "build";
+  if (st.special === "cracks") renderCracks();
+  if (st.special === "build") { renderKit(); renderChat(); }
+}
+function go(n){ S.step = Math.min(LAST, Math.max(1, n)); save(); renderNav(); renderStep(); window.scrollTo({top:0}); }
+$("back").onclick = () => go(S.step - 1);
+$("next").onclick = () => go(S.step + 1);
+function setField(k, v){ S[k] = v; const el = $("f-" + k); if (el) el.value = v; save(); renderNav(); }
+function renderBanner(){ $("exampleBanner").hidden = !S.example; }
+$("startOwn").onclick = () => { S = fresh(); save(); renderBanner(); go(1); const f = $("f-offer"); if (f) f.focus(); };
+
+/* ---------- Claude ---------- */
+let sampleFn = null;
+const RULES = `Writing rules: plain English a 12-year-old could follow. Short sentences. UK spelling, but write "program". No em dashes. No hype words (unlock, game changer, skyrocket, transform your life). Sound like a real person talking.
+Belief-shifting rules:
+- The old belief is named out loud, in the audience's own words.
+- A crack lets them see for themselves that the old belief doesn't hold. Simple, concrete, from their own life.
+- An analogy comes from everyday life. One short sentence. If it needs explaining, it's too complicated.
+- Never invent statistics, studies, percentages, quotes, testimonials, client names or results.
+- Don't make the reader feel stupid for what they've tried. The real cause is never their fault.
+- The mechanism is the new reason the result happens.`;
+function ctx(){
+  const L = FIELDS.filter(k => (S[k] || "").trim()).map(k => FIELD[k].label + ": " + S[k].trim());
+  const cr = S.cracks.filter(c => c.picked && c.type !== "Analogy").map(c => c.text);
+  const an = S.cracks.filter(c => c.picked && c.type === "Analogy").map(c => c.text);
+  if (cr.length) L.push("Chosen cracks: " + cr.join(" | "));
+  if (an.length) L.push("Chosen analogies: " + an.join(" | "));
+  return L.join("\n");
+}
+const ctls = {};
+async function ask(key, btn, statusEl, prompt, onResult){
+  if (!sampleFn) { statusEl.className = "status err"; statusEl.textContent = "Suggestions need this page opened inside Claude. You can still type everything yourself."; return; }
+  if (ctls[key]) ctls[key].abort();
+  const ctl = ctls[key] = new AbortController();
+  btn.disabled = true; statusEl.className = "status"; statusEl.textContent = "Thinking…";
+  try {
+    const r = await sampleFn.json(prompt, {signal: ctl.signal, cache: false});
+    statusEl.textContent = ""; onResult(r);
+  } catch (e) {
+    if (ctl.signal.aborted) return;
+    statusEl.className = "status err";
+    statusEl.textContent = e && e.code === "rate_limited" ? "Too many requests just now. Wait a minute and try again." : e && e.code === "not_granted" ? "Claude access wasn't allowed for this page." : "That didn't work. Try again.";
+  } finally { if (ctls[key] === ctl) { btn.disabled = false; delete ctls[key]; } }
+}
+function chips(boxId, items, onPick){
+  const box = $(boxId); if (!box) return; box.textContent = "";
+  (items || []).filter(Boolean).forEach(t => {
+    const b = document.createElement("button"); b.className = "chip"; b.textContent = t; b.title = "Use this";
+    b.onclick = () => { onPick(t); box.textContent = ""; };
+    box.appendChild(b);
+  });
+}
+function suggestStep(){
+  const st = STEPS[S.step - 1], fs = st.fields.filter(f => !f.noSuggest);
+  const spec = fs.map(f => `- "${f.k}": 2 options for "${f.label}". ${f.hint || ""} How the template post did it: ${f.orig}`).join("\n");
+  ask("step", $("sugStep"), $("stStep"),
+`You help a business owner write a belief-shifting sales post modelled on a proven template post. Suggest options for this step: ${st.title}.
+${spec}
+Write in the style of the template (punchy, conversational), but for THIS business and audience. Don't copy the template's words, brands or jokes. Where a field asks for one per line, put each item on its own line inside the option. For prices or guarantees, only suggest ideas the owner can choose to honour.
+${RULES}
+What they've filled in so far:
+${ctx() || "(nothing yet)"}
+Reply as JSON with one key per field, each a list of 2 strings: {${fs.map(f => `"${f.k}":["",""]`).join(",")}}`,
+  r => fs.forEach(f => chips("chips-" + f.k, r[f.k], t => setField(f.k, t))));
+}
+
+/* ---------- survey import ---------- */
+const IMPORT_KEYS = ["who","effort","outcome","pain","whyNow","bleeding","oldBelief","source","cause","familiar","villain","proof"];
+function renderImport(){ $("clearImport").hidden = !S.research; }
+$("importBtn").onclick = () => {
+  const raw = $("importText").value.trim();
+  if (raw.length < 40) { $("stImport").className = "status err"; $("stImport").textContent = "Paste the Responses tab first, including the header row."; return; }
+  const spec = IMPORT_KEYS.map(k => '- "' + k + '" (' + FIELD[k].label + '): ' + (FIELD[k].hint || "")).join("\n");
+  const optShape = IMPORT_KEYS.map(k => '"' + k + '":["",""]').join(",");
+  const quoteShape = IMPORT_KEYS.map(k => '"' + k + '":[]').join(",");
+  ask("import", $("importBtn"), $("stImport"),
+"You help a business owner turn survey answers from their prospects and clients into the raw material for a belief-shifting sales post. The survey responses are pasted below (a spreadsheet copied as text, one row per person, first row is the headers).\n" +
+"For each field below, give:\n" +
+"- options: 2 ready-to-use versions written in the audience's own language, based on patterns across the answers (where a field asks for one per line, put each item on its own line inside the option).\n" +
+"- quotes: up to 3 short, striking quotes copied word for word from the answers that capture that field. Exact words only, never reworded or invented.\n" +
+"Fields:\n" + spec + "\n" +
+"Rules for proof: only use \"What's Changed Since Starting\" answers where \"OK To Share\" starts with \"Yes\". Quote them exactly and attribute them to the first name given, or \"A member\" if anonymous. If there are none, return empty lists for proof.\n" +
+"Also give:\n" +
+"- cracks: 5 cracks built from what they actually said. Include one \"Exaggeration\" crack built from what they've put the most into (multiply it to the extreme and show it still didn't work), and use how they answered whether the friends and family who found their person did as much work on themselves as they have. Each {\"type\": one of \"Exaggeration\", \"People around them\", \"Their own experience\", \"Results so far\", \"Contradiction\", \"text\": \"...\"}. Base them only on the answers. If you mention a share of people, it must be counted from the rows pasted.\n" +
+"- doubts: up to 5 of their doubts or objections, as short questions a prospect might ask.\n" +
+"- summary: 2 or 3 sentences on the biggest patterns, including how many responses there were.\n" +
+RULES + "\nSURVEY RESPONSES\n" + raw.slice(0, 60000) + "\n" +
+'Reply as JSON: {"options":{' + optShape + '},"quotes":{' + quoteShape + '},"cracks":[{"type":"","text":""}],"doubts":[],"summary":""}',
+  r => {
+    S.research = { options: r.options || {}, quotes: r.quotes || {}, doubts: r.doubts || [], summary: r.summary || "" };
+    (r.cracks || []).forEach(c => { if (c && c.text) S.cracks.push({type: CRACK_TYPES.includes(c.type) ? c.type : "Their own experience", text: c.text, picked: false, survey: true}); });
+    S.example = false; save(); renderBanner(); renderImport(); renderStep();
+    $("stImport").className = "status"; $("stImport").textContent = (r.summary ? r.summary + " " : "") + "Suggestions are now on each step.";
+  });
+};
+$("autoBtn").onclick = () => {
+  const raw = $("importText").value.trim();
+  const st = $("stImport");
+  if (raw.length < 40) { st.className = "status err"; st.textContent = "Paste the Responses tab first, including the header row."; return; }
+  const spec = FIELDS.map(k => {
+    const f = FIELD[k], cur = (S[k] || "").trim();
+    return '- "' + k + '" (' + f.label + '): ' + (f.hint || "") + " Template post did it like: " + f.orig + (cur && !S.example && (!IMPORT_KEYS.includes(k) || k === "proof") ? "\n  ALREADY FILLED IN, keep this unless it's empty: " + cur : "");
+  }).join("\n");
+  ask("auto", $("autoBtn"), st,
+"You help a business owner build a long-form belief-shifting sales post modelled on a proven template. Their prospects filled in a survey; the responses are pasted below (a spreadsheet copied as text, first row is the headers). Fill in EVERY field below.\n" +
+"- Audience fields (who, effort, outcome, pain, whyNow, bleeding, oldBelief, source, cause, familiar, villain) come from patterns across the answers, in the prospects' own language. Go with what most people said, not one unusual answer.\n" +
+"- Business fields (offer, oneThing, newBelief, mechanism, mechanismWhat, without, steps, anchor, price, risk, reasonWhy, cta): keep what's already filled in. If one is empty, propose something that fits the answers and the business, and the owner will check it. The one missing thing and new belief must directly answer the old belief the survey reveals.\n" +
+"- proof: keep what's filled in, otherwise leave it empty. Never invent proof.\n" +
+"- Where a field asks for one per line, put each item on its own line.\n" +
+"Fields:\n" + spec + "\n" +
+"Also give:\n" +
+"- quotes: for each audience field, up to 2 striking quotes copied word for word from the answers. Exact words only.\n" +
+"- cracks: 5 cracks and analogies. 2 of type \"Exaggeration\" built from what they've put the most into, 1 \"Analogy\" (a simple everyday picture of effort that can't work because one ingredient is missing), and 2 from \"People around them\" or \"Their own experience\", using how they compared themselves with friends who found their person. Mark the strongest crack and the strongest analogy with \"picked\": true. If you mention a share of people, it must be counted from the rows pasted.\n" +
+"- doubts: up to 5 of their doubts as short questions a prospect might ask.\n" +
+"- summary: 2 sentences on the biggest patterns, including how many responses there were.\n" +
+RULES + "\nSURVEY RESPONSES\n" + raw.slice(0, 60000) + "\n" +
+'Reply as JSON: {"fields":{' + FIELDS.map(k => '"' + k + '":""').join(",") + '},"quotes":{},"cracks":[{"type":"","text":"","picked":false}],"doubts":[],"summary":""}',
+  r => {
+    const wasExample = S.example;
+    const fl = r.fields || {};
+    FIELDS.forEach(k => {
+      const v = typeof fl[k] === "string" ? fl[k].trim() : "";
+      if (k === "proof") { if (wasExample) S.proof = ""; return; }
+      if (!v) { if (wasExample) S[k] = ""; return; }
+      if (IMPORT_KEYS.includes(k) || wasExample || !(S[k] || "").trim()) S[k] = v;
+    });
+    if (wasExample) S.cracks = [];
+    (r.cracks || []).forEach(c => { if (c && c.text) S.cracks.push({type: CRACK_TYPES.includes(c.type) ? c.type : "Their own experience", text: c.text, picked: !!c.picked, survey: true}); });
+    if (!S.cracks.some(c => c.picked) && S.cracks.length) S.cracks[0].picked = true;
+    S.research = { options: {}, quotes: r.quotes || {}, doubts: r.doubts || [], summary: r.summary || "" };
+    S.example = false; S.kit = null; S.chat = [];
+    save(); renderBanner(); renderImport();
+    const summary = r.summary || "";
+    onBuilt = () => { st.className = "status"; st.textContent = (summary ? summary + " " : "") + "Done. Everything below came from your survey. Check the offer and the new belief before you use it."; };
+    go(LAST);
+    st.className = "status"; st.textContent = "Steps filled in. Now writing your argument and post…";
+    if (runBuild() === false) { onBuilt = null; st.className = "status err"; st.textContent = "Steps filled in, but something's still missing. See the message under Write my post."; }
+  });
+};
+$("clearImport").onclick = () => { S.research = null; S.cracks = S.cracks.filter(c => !c.survey || c.picked); save(); renderImport(); renderStep(); $("stImport").textContent = ""; };
+
+/* ---------- cracks ---------- */
+const CRACK_TYPES = ["Exaggeration","Their own experience","Results so far","People around them","Contradiction","Analogy","Research to check"];
+function renderCracks(){
+  const box = $("crackList"); box.textContent = "";
+  $("findCracks").textContent = S.cracks.length ? "Find more" : "Find cracks and analogies";
+  if (!S.cracks.length) { const p = document.createElement("p"); p.className = "hint"; p.textContent = "Nothing yet. Press Find cracks and analogies, or add your own below. Tick at least one crack and one analogy."; box.appendChild(p); return; }
+  S.cracks.forEach((c, i) => {
+    const row = document.createElement("div"); row.className = "crack" + (c.picked ? " on" : "");
+    const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!c.picked; cb.id = "crk" + i; cb.setAttribute("aria-label", "Use this");
+    cb.onchange = () => { c.picked = cb.checked; save(); renderCracks(); renderNav(); };
+    const t = document.createElement("div"); t.className = "t";
+    const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = (c.type || "Your own") + (c.survey ? " · from your survey" : "");
+    const tx = document.createElement("label"); tx.htmlFor = cb.id; tx.textContent = c.text;
+    t.append(tag, tx);
+    if (c.type === "Research to check") { const w = document.createElement("span"); w.className = "check"; w.textContent = "Look this up before using it. Only quote a number you can link to a real source."; t.appendChild(w); }
+    const x = document.createElement("button"); x.className = "x"; x.textContent = "Remove"; x.setAttribute("aria-label", "Remove this");
+    x.onclick = () => { S.cracks.splice(i, 1); save(); renderCracks(); renderNav(); };
+    row.append(cb, t, x); box.appendChild(row);
+  });
+}
+$("findCracks").onclick = () => {
+  if (!S.oldBelief.trim()) { $("stCracks").className = "status err"; $("stCracks").textContent = "Fill in the current beliefs on step 3 first."; return; }
+  const have = S.cracks.map(c => c.text);
+  ask("cracks", $("findCracks"), $("stCracks"),
+`You help a business owner write a belief-shifting sales post. Find 8 CRACKS and ANALOGIES for the current beliefs below.
+Include:
+- 2 of type "Exaggeration", modelled on the template: multiply the current beliefs to the extreme and show it still fails. Template example: "You could post 10x per day… send 100s of DMs… and pay $1000s for ads… but without this one thing you won't get sales." Write it as one string with … between the parts.
+- 3 of type "Analogy", modelled on "You're baking a cake without the flour": a simple everyday picture of effort that can't work because one key ingredient is missing.
+- 3 more from these types: Their own experience, Results so far, People around them, Contradiction. At most one "Research to check", written as "Look up…", never a finding.
+${have.length ? "Don't repeat or reword these:\n- " + have.join("\n- ") + "\n" : ""}
+${RULES}
+${ctx()}
+Reply as JSON: {"cracks":[{"type":"one of: ${CRACK_TYPES.join(", ")}","text":"..."}]}`,
+  r => { (r.cracks || []).forEach(c => { if (c && c.text) S.cracks.push({type: CRACK_TYPES.includes(c.type) ? c.type : "Their own experience", text: c.text, picked: false}); }); save(); renderCracks(); });
+};
+function addOwn(type){ const v = $("ownCrack").value.trim(); if (!v) return; S.cracks.push({type, text: v, picked: true}); $("ownCrack").value = ""; save(); renderCracks(); renderNav(); }
+$("addCrack").onclick = () => addOwn("");
+$("addAnalogy").onclick = () => addOwn("Analogy");
+$("ownCrack").addEventListener("keydown", e => { if (e.key === "Enter") addOwn(""); });
+
+/* ---------- build ---------- */
+const GLANCE = ["Who","Promised land","Pain","Bleeding neck pain","Current belief","The crack","Analogy","Real cause","Solution","New belief (big domino)","Proof","Offer"];
+function kitText(k){
+  if (!k) return "";
+  return ["ARGUMENT AT A GLANCE", ...(k.glance || []).map(g => g.label + ": " + g.text), "", ...(k.deep && k.deep.length ? ["THE FULL ARGUMENT", ...k.deep.map(g => g.label.toUpperCase() + "\n" + g.text + "\n"), ""] : []), "THE POST", k.post, "", "HOOKS", ...(k.hooks || []).map((h, i) => (i + 1) + ". " + h)].join("\n");
+}
+function renderKit(){
+  const box = $("kit"); box.textContent = ""; const k = S.kit;
+  $("copyKit").hidden = !k;
+  if (!k) { const p = document.createElement("p"); p.className = "hint"; p.textContent = "Nothing written yet. Press Write my post when the earlier steps are filled in."; box.appendChild(p); return; }
+  const sec = (title, el, hint) => { const d = document.createElement("div"); d.className = "stack"; d.style.gap = "8px"; const l = document.createElement("span"); l.className = "label"; l.textContent = title; d.appendChild(l); if (hint) { const hp = document.createElement("p"); hp.className = "hint"; hp.textContent = hint; d.appendChild(hp); } d.appendChild(el); box.appendChild(d); return d; };
+  const dl = document.createElement("dl"); dl.className = "glance";
+  (k.glance || []).forEach(g => { const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = g.label; dd.textContent = g.text; dl.append(dt, dd); });
+  sec("Argument at a glance", dl);
+  if (k.deep && k.deep.length) {
+    const dd2 = document.createElement("div"); dd2.className = "stack"; dd2.style.gap = "12px";
+    k.deep.forEach(g => { const d = document.createElement("div"); const h = document.createElement("h3"); h.style.fontSize = "18px"; h.textContent = g.label; const t = document.createElement("p"); t.style.maxWidth = "70ch"; t.textContent = g.text; d.append(h, t); dd2.appendChild(d); });
+    const det = document.createElement("details"); const sm = document.createElement("summary"); sm.textContent = "Show the full argument"; sm.style.cursor = "pointer"; sm.style.fontWeight = "600"; det.append(sm, dd2); dd2.style.marginTop = "12px";
+    sec("The full argument", det);
+  }
+  const post = document.createElement("div"); post.className = "post"; post.textContent = k.post;
+  const ps = sec("Your post", post, "Follows the template post beat by beat.");
+  const cp = document.createElement("button"); cp.className = "btn small"; cp.textContent = "Copy post"; cp.style.alignSelf = "flex-start";
+  cp.onclick = () => copyText(k.post, cp); ps.appendChild(cp);
+  const ol = document.createElement("ol"); ol.className = "hooks"; (k.hooks || []).forEach(h => { const li = document.createElement("li"); li.textContent = h; ol.appendChild(li); }); sec("Hooks", ol);
+  const ul = document.createElement("ul"); ul.className = "checks";
+  (k.checks || []).forEach(c => { const li = document.createElement("li"); const m = document.createElement("span"); m.className = c.pass ? "ok" : "no"; m.textContent = c.pass ? "✓" : "!"; const t = document.createElement("span"); t.textContent = c.text; li.append(m, t); ul.appendChild(li); });
+  sec("Belief-shift check", ul);
+}
+function runBuild(){
+  const need = [["who","Who"],["outcome","the promised land"],["pain","Pain"],["oldBelief","Current beliefs"],["oneThing","the one missing thing"],["newBelief","New belief"],["mechanism","Solution name"]];
+  const missing = need.filter(([k]) => !(S[k] || "").trim()).map(([, l]) => l);
+  if (!S.cracks.some(c => c.picked)) missing.push("at least one ticked crack");
+  if (missing.length) { $("stBuild").className = "status err"; $("stBuild").textContent = "Still needed: " + missing.join(", ") + "."; return false; }
+  ask("build", $("build"), $("stBuild"),
+`You help a business owner write a long-form belief-shifting sales post. Model it on the TEMPLATE POST below: follow its beats in order, its rhythm (short lines ending in "…", capitals for the old beliefs and the reveal, emoji bullets, the 🙃 and 🤩 and ❌ lines) and its confidence. But write it entirely for THIS business, audience and offer, in their words. Don't copy the template's brands, jokes, names or numbers.
+
+THE BEATS, IN ORDER
+${BEATS}
+
+TEMPLATE POST (structure and style reference only)
+${TEMPLATE_POST}
+
+Also produce:
+- glance: one short line for each of these labels, in this order: ${GLANCE.join(", ")}. Use the first ticked crack and analogy. If there's no proof, write "Add your proof".
+- deep: the full argument, for the same labels in the same order: 2 to 4 plain-English sentences each, going deeper on what it means for this audience and why it's true (like a strategy document the owner can learn from). Use their words where you can.
+- hooks: 5 opening lines for this post or short videos about it. 5 to 12 words. Each names the old belief or the crack.
+- checks: 6 honest checks, each {"pass":true/false,"text":"..."}: old beliefs named out loud, crack is undeniable, analogy is simple, real cause isn't their fault, the solution clearly explains why the result happens, no invented proof or numbers. If one fails, say what to fix.
+Use only proof, prices and guarantees given below. Leave a [square-bracket placeholder] for anything missing rather than inventing it.
+${RULES}
+
+THEIR ANSWERS
+${ctx()}
+
+Reply as JSON: {"glance":[{"label":"","text":""}],"deep":[{"label":"","text":""}],"post":"","hooks":[],"checks":[{"pass":true,"text":""}]}`,
+  r => { S.kit = r; save(); renderKit(); renderChat(); renderNav(); if (onBuilt) { onBuilt(); onBuilt = null; } });
+}
+let onBuilt = null;
+$("build").onclick = runBuild;
+async function copyText(text, btn){
+  const old = btn.textContent;
+  try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; }
+  catch { btn.textContent = "Couldn't copy. Select the text instead."; }
+  setTimeout(() => { btn.textContent = old; }, 1600);
+}
+$("copyKit").onclick = () => copyText(kitText(S.kit), $("copyKit"));
+
+/* ---------- stress test ---------- */
+function argumentText(){ return ctx() + (S.kit ? "\nThe post:\n" + S.kit.post : ""); }
+const DEFEND = () => `You are the strategist who helped build the marketing argument below, and you believe in it. The business owner is now stress-testing it by asking hard questions or raising objections, as a sceptical buyer, a friend or a competitor might.
+How to answer:
+- Talk like a sharp, warm person in conversation, not a bot. No headings, no bullet lists unless they really help, no "Great question". Usually 80 to 180 words.
+- Take the question seriously. Say what's fair about it first if something is, then defend the argument with reasoning: the audience's own experience, the cracks, simple analogies, the logic of the solution.
+- Answer the way the owner could answer a real prospect, and when useful give them a line they could actually say.
+- Be honest. If the question finds a real weak spot, say so plainly, then suggest exactly how to strengthen the argument (a line to add, a crack to use, a claim to soften). Don't defend what can't be defended.
+- Never invent statistics, studies, results or testimonials. If evidence would help, say what kind they should go and find.
+${RULES}
+
+THE ARGUMENT
+${argumentText()}`;
+function renderChat(){
+  $("stressBox").hidden = !S.kit;
+  const box = $("chat"); box.textContent = "";
+  (S.chat || []).forEach(m => {
+    const d = document.createElement("div"); d.className = "msg " + (m.role === "user" ? "q" : "a");
+    const w = document.createElement("span"); w.className = "who"; w.textContent = m.role === "user" ? "You" : "Defence";
+    const t = document.createElement("span"); t.textContent = m.content;
+    d.append(w, t); box.appendChild(d);
+  });
+  $("clearChat").hidden = !(S.chat && S.chat.length);
+  const sd = $("chipsSurvey"); sd.textContent = "";
+  const ds = (S.research && S.research.doubts) || [];
+  if (ds.length) {
+    const l = document.createElement("span"); l.className = "fromsurvey"; l.textContent = "Doubts from your survey"; sd.appendChild(l);
+    ds.forEach(t => { const b = document.createElement("button"); b.className = "chip"; b.textContent = t; b.onclick = () => sendQuestion(t); sd.appendChild(b); });
+  }
+}
+let askCtl = null;
+async function sendQuestion(q){
+  q = (q || "").trim(); if (!q) return;
+  const st = $("stAsk");
+  if (!sampleFn) { st.className = "status err"; st.textContent = "This needs the page opened inside Claude."; return; }
+  if (askCtl) askCtl.abort();
+  const ctl = askCtl = new AbortController();
+  S.chat = S.chat || []; S.chat.push({role:"user", content:q}); $("askBox").value = ""; save(); renderChat();
+  const msgs = S.chat.map((m, i) => ({role: m.role, content: i === 0 ? DEFEND() + "\n\nFIRST QUESTION\n" + m.content : m.content}));
+  const live = {role:"assistant", content:"Thinking…"}; S.chat.push(live); renderChat();
+  const liveEl = $("chat").lastChild.lastChild;
+  $("askBtn").disabled = true; st.className = "status"; st.textContent = "";
+  try {
+    const r = await sampleFn(msgs, {signal: ctl.signal, cache: false, onText: ({text}) => { liveEl.textContent = text; }});
+    live.content = r.text.trim(); save(); renderChat();
+  } catch (e) {
+    S.chat.pop(); S.chat.pop(); save(); renderChat(); $("askBox").value = q;
+    if (!ctl.signal.aborted) { st.className = "status err"; st.textContent = e && e.code === "rate_limited" ? "Too many requests just now. Wait a minute and try again." : "That didn't work. Try again."; }
+  } finally { if (askCtl === ctl) { askCtl = null; $("askBtn").disabled = false; } }
+}
+$("askBtn").onclick = () => sendQuestion($("askBox").value);
+$("askBox").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("askBtn").click(); } });
+$("clearChat").onclick = () => { S.chat = []; save(); renderChat(); };
+$("toughQs").onclick = () => ask("tough", $("toughQs"), $("stTough"),
+`You help a business owner stress-test their marketing argument. Write 5 of the hardest, most realistic questions or objections someone could raise against it: a sceptical buyer, a friend who's heard it all, a competitor, and someone who's been burned before. Short, the way a real person would say it. Aim at the weakest points: the crack, the real cause, whether the solution really causes the result, the proof and the offer.
+${RULES}
+THE ARGUMENT
+${argumentText()}
+Reply as JSON: {"questions":["","","","",""]}`,
+r => chips("chipsTough", r.questions, t => sendQuestion(t)));
+
+/* ---------- saved messaging ---------- */
+const saved = { col: null, items: [] };
+const localSaved = () => store.get("bb-saved", []);
+function renderSaved(){
+  const ul = $("savedList"); ul.textContent = "";
+  $("stSaved").textContent = saved.items.length ? "" : "Nothing saved yet.";
+  saved.items.forEach(it => {
+    const li = document.createElement("li"); li.className = "item";
+    const b = document.createElement("b"); b.textContent = it.label;
+    const m = document.createElement("span"); m.className = "meta"; m.textContent = new Date(it.savedAt).toLocaleDateString(undefined, {day:"numeric", month:"short"});
+    const row = document.createElement("div"); row.className = "row"; row.style.gap = "6px";
+    const o = document.createElement("button"); o.className = "btn small"; o.textContent = "Open";
+    o.onclick = () => { S = { ...fresh(), ...JSON.parse(JSON.stringify(it.data)), example: false }; FIELDS.forEach(k => { if (typeof S[k] !== "string") S[k] = ""; }); if (!Array.isArray(S.cracks)) S.cracks = []; S.step = S.kit ? LAST : 1; save(); renderBanner(); renderNav(); renderStep(); };
+    const d = document.createElement("button"); d.className = "x"; d.textContent = "Delete";
+    d.onclick = async () => {
+      if (d.dataset.sure !== "1") { d.dataset.sure = "1"; d.textContent = "Press again to delete"; setTimeout(() => { d.dataset.sure = ""; d.textContent = "Delete"; }, 3000); return; }
+      try {
+        if (saved.col) await saved.col.doc(it.id).delete();
+        else { const l = localSaved().filter(x => x.id !== it.id); store.set("bb-saved", l); saved.items = l; renderSaved(); }
+      } catch { $("stSaved").textContent = "Couldn't delete that. Try again."; }
+    };
+    row.append(o, d); li.append(b, m, row); ul.appendChild(li);
+  });
+}
+$("saveKit").onclick = async () => {
+  const label = (S.mechanism || S.offer || "Untitled").trim().slice(0, 60) + (S.oneThing ? " · " + S.oneThing.trim().slice(0, 40) : "");
+  const data = Object.fromEntries([...FIELDS.map(k => [k, S[k] || ""]), ["cracks", S.cracks], ["kit", S.kit], ["chat", S.chat || []], ["research", S.research || null]]);
+  const item = { label, data, savedAt: Date.now() };
+  const st = $("stBuild");
+  try {
+    if (saved.col) await saved.col.add(item);
+    else { const l = localSaved(); l.unshift({ id: "l" + Date.now(), ...item }); store.set("bb-saved", l); saved.items = l; renderSaved(); }
+    st.className = "status"; st.textContent = "Saved.";
+  } catch { st.className = "status err"; st.textContent = "Couldn't save. Try again."; }
+};
+async function initSaved(){
+  const useLocal = () => { saved.col = null; saved.items = localSaved(); renderSaved(); };
+  if (!window.claude?.use) { useLocal(); return; }
+  try {
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    const uid = user ? await user.id() : null;
+    if (!db || !uid) { useLocal(); return; }
+    saved.col = db.collection("data/users/" + uid);
+    saved.col.orderBy("savedAt", "desc").onSnapshot(snap => { saved.items = snap.docs.map(s => ({ id: s.id, ...s.data() })); renderSaved(); }, useLocal);
+  } catch { useLocal(); }
+}
+
+/* ---------- boot ---------- */
+renderBanner(); renderImport(); renderNav(); renderStep();
+initSaved();
+if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; });
+</script>

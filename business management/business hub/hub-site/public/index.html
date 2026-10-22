@@ -1668,6 +1668,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function localSave(s){
     try { localStorage.setItem("heart-attractor-community-tracker", JSON.stringify(s)); } catch(e){}
   }
+  // Survives a reload: set the moment there are unsaved edits, cleared only
+  // by a successful save. Holds the server rev those edits were based on, so
+  // the 409 guard still catches another device saving in between. Without
+  // this, reloading (e.g. to log back in after Cloudflare Access expired)
+  // booted as "saved" and the server pull silently overwrote the edits.
+  var DIRTY_KEY = "heart-attractor-community-tracker-dirty";
+  function dirtyGet(){
+    try { var v = localStorage.getItem(DIRTY_KEY); return v === null ? null : Number(v) || 0; } catch(e){ return null; }
+  }
+  function dirtySet(rev){ try { localStorage.setItem(DIRTY_KEY, String(rev)); } catch(e){} }
+  function dirtyClear(){ try { localStorage.removeItem(DIRTY_KEY); } catch(e){} }
   function localLoad(){
     try {
       var raw = localStorage.getItem("heart-attractor-community-tracker");
@@ -1707,6 +1718,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     else if (kind === "unsaved"){ dot.classList.add("unsaved"); label.textContent = "unsaved changes"; btn.disabled = false; }
     else if (kind === "saving"){ dot.classList.add("saving"); label.textContent = "saving…"; btn.disabled = true; }
     else if (kind === "error"){ dot.classList.add("error"); label.textContent = "save failed — try again"; btn.disabled = false; }
+    else if (kind === "expired"){ dot.classList.add("error"); label.textContent = "logged out — changes kept on this device"; btn.disabled = false; }
   }
 
   // No autosave — edits only ever update `state` in memory and the local
@@ -1715,6 +1727,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // overwriting entries: nothing syncs across devices until you say so.
   function markDirty(){
     localSave(state);
+    if (dirtyGet() === null) dirtySet(serverRev);
     setSaveState("unsaved");
   }
 
@@ -1729,11 +1742,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
         if (!data) return;
+        if (dirtyGet() !== null) return; // unsaved edits here — keep them and their base rev
         serverRev = Number(data.rev) || 0;
         if (!data.state) return; // KV empty — first ever run, local seed stands
-        var labelEl = document.getElementById("saveLabel");
-        var dirty = labelEl && labelEl.textContent === "unsaved changes";
-        if (dirty) return; // don't overwrite edits in progress
         state = data.state;
         migrateState();
         localSave(state);
@@ -1757,8 +1768,23 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     fetch(API, {
       method:"PUT",
       headers:{ "content-type":"application/json" },
-      body: JSON.stringify({ rev: serverRev, force: !!force, state: state })
+      body: JSON.stringify({ rev: serverRev, force: !!force, state: state }),
+      redirect: "manual"
     }).then(function(r){
+      // Cloudflare Access login lapsed: the request is redirected to the
+      // login page, which fetch can't follow. Edits are already in
+      // localStorage with the dirty marker, so a reload (which goes through
+      // the login) brings them straight back as unsaved.
+      if (r.type === "opaqueredirect" || r.status === 0){
+        setSaveState("expired");
+        if (onDone) onDone(false);
+        if (window.confirm(
+          "Your login to the Hub has expired, so this couldn't save.\n\n" +
+          "Your changes are kept on this device. Press OK to log in again, " +
+          "then press Save."
+        )) location.reload();
+        return;
+      }
       if (r.status === 409){
         // Another device saved since this one loaded. Ask before overwriting.
         return r.json().then(function(d){
@@ -1768,12 +1794,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
             "Cancel = reload and lose unsaved changes here"
           );
           if (ok){ serverRev = Number(d.rev) || serverRev; putState(true, onDone); }
-          else { location.reload(); }
+          else { dirtyClear(); location.reload(); }
         });
       }
       if (!r.ok) throw new Error("save failed " + r.status);
       return r.json().then(function(d){
         serverRev = Number(d.rev) || serverRev;
+        dirtyClear();
         setSaveState("saved");
         if (onDone) onDone(true);
       });
@@ -3797,7 +3824,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
     rerenderAll();
     closeDayModal();   // never boot with the day panel open, whatever the saved HTML had
-    setSaveState("saved");
+    var baseRev = dirtyGet();
+    if (baseRev !== null){ serverRev = baseRev; setSaveState("unsaved"); }
+    else setSaveState("saved");
 
     // Now reconcile with the shared record across all devices.
     pullServerState();

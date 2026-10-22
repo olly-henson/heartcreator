@@ -1,0 +1,497 @@
+<title>Attraction Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: phone-width member app in one column, with a slim preview toolbar above it (Olly only). Single dark brand theme by choice. */
+:root{
+  --bg:#0C0610;
+  --glow-1:#4B1466;
+  --glow-2:#3D1252;
+  --surface:#170D1E;
+  --surface-2:#22142C;
+  --line:rgba(235,217,226,.12);
+  --fg:#FFFFFF;
+  --body:#EBD9E2;
+  --muted:#A893A3;
+  --accent:#B84FE8;
+  --accent-soft:#E1A6FF;
+  --accent-wash:rgba(184,79,232,.14);
+  --good:#86E0B8;
+  --note:#F3D99B;
+  --font:'Poppins',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(60rem 40rem at 110% -10%, color-mix(in srgb,var(--glow-1) 55%,transparent), transparent 60%),
+    radial-gradient(40rem 30rem at -20% 40%, color-mix(in srgb,var(--glow-2) 40%,transparent), transparent 65%);
+  background-attachment:fixed;
+  color:var(--body);font-family:var(--font);font-size:15px;line-height:1.55;
+  padding-inline:16px;padding-block:0 64px;
+}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent-soft);outline-offset:2px;border-radius:6px}
+h1,h2,h3{color:var(--fg);margin:0;text-wrap:balance;line-height:1.2}
+p{margin:0}
+
+/* Preview toolbar (not part of the member app) */
+.pv{max-width:560px;margin:0 auto;padding-block:14px 10px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.pv-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pv-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pv-days{display:flex;flex-wrap:wrap;gap:6px}
+.pv-day{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 11px;font-size:13px;color:var(--body)}
+.pv-day[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.pv-toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-left:auto}
+.pv-toggle input{accent-color:var(--accent)}
+
+/* App */
+.app{max-width:560px;margin:0 auto;padding-top:22px;display:flex;flex-direction:column;gap:18px}
+.hello{display:flex;flex-direction:column;gap:6px;padding-inline:4px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-soft)}
+.hello h1{font-size:28px;font-weight:800}
+.hello p{color:var(--muted)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.card h2{font-size:19px;font-weight:700}
+.card .sub{color:var(--muted);font-size:14px}
+.card.hero{background:linear-gradient(160deg,color-mix(in srgb,var(--glow-1) 70%,var(--surface)),var(--surface) 70%);border-color:rgba(184,79,232,.35)}
+
+/* Journey map */
+.journey{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:10px}
+.stage{display:flex;flex-direction:column;gap:6px;min-width:0}
+.stage-name{font-size:13px;font-weight:700;color:var(--fg)}
+.stage-meta{font-size:12px;color:var(--muted)}
+.stage.now .stage-name{color:var(--accent-soft)}
+.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line)}
+.dot.on{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px rgba(184,79,232,.6)}
+.bar{height:12px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+.lock{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.lock svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
+
+/* Sliders */
+.q{display:flex;flex-direction:column;gap:8px}
+.q label{font-weight:500;color:var(--fg);font-size:15px}
+.q-row{display:flex;align-items:center;gap:12px}
+.q-row input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:28px}
+.q-val{min-width:2.2ch;text-align:right;font-size:22px;font-weight:800;color:var(--accent-soft);font-variant-numeric:tabular-nums}
+.q-desc{padding:10px 12px;border-radius:12px;background:var(--accent-wash);color:var(--fg);font-size:14px;line-height:1.45;min-height:3.4em}
+.q-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding-right:calc(2.2ch + 12px)}
+
+.check{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);text-align:left;width:100%}
+.check .box{width:24px;height:24px;border-radius:8px;border:2px solid var(--accent);flex:none;display:grid;place-items:center}
+.check[aria-pressed="true"] .box{background:var(--accent)}
+.check[aria-pressed="true"] .box::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.check strong{color:var(--fg);font-weight:600;display:block}
+.check span{font-size:13px;color:var(--muted)}
+
+.btn{border:0;border-radius:14px;padding:14px 18px;background:var(--accent);color:#fff;font-weight:600;font-size:15px;box-shadow:0 8px 24px rgba(184,79,232,.35)}
+.btn:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--body)}
+.done-line{display:flex;align-items:center;gap:10px;color:var(--good);font-weight:600}
+.done-line svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.5}
+
+/* Chart */
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{border:1px solid var(--line);background:transparent;border-radius:999px;padding:5px 12px;font-size:13px;color:var(--body)}
+.tab[aria-pressed="true"]{background:var(--accent-wash);border-color:rgba(184,79,232,.55);color:var(--fg);font-weight:600}
+.chart{width:100%;height:auto;display:block}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{fill:var(--muted);font-size:10px;font-family:var(--font)}
+.chart .area{fill:url(#areaGrad)}
+.chart .line{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.chart .pt{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.chart .end{fill:var(--accent-soft);stroke:var(--bg);stroke-width:2}
+.chart .endlbl{fill:var(--fg);font-size:12px;font-weight:700;font-family:var(--font)}
+.chart .base{stroke:var(--muted);stroke-dasharray:3 4;stroke-width:1}
+.delta{font-size:14px;color:var(--muted)}
+.delta b{color:var(--fg)}
+.delta .good{color:var(--good);font-weight:600}
+
+/* Report */
+.rep-rows{display:flex;flex-direction:column;gap:10px}
+.rep-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;background:rgba(12,6,16,.45)}
+.rep-row .name{font-weight:500;color:var(--fg);min-width:0}
+.rep-row .nums{font-variant-numeric:tabular-nums;font-size:18px;font-weight:700;color:var(--fg);white-space:nowrap}
+.rep-row .nums small{color:var(--muted);font-weight:500;font-size:14px}
+.rep-row .chg{font-size:13px;font-weight:600;color:var(--good);white-space:nowrap}
+.next{display:flex;flex-direction:column;gap:12px}
+.next-item{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:baseline}
+.next-item .when{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-soft)}
+.next-item .what{color:var(--body);min-width:0}
+.next-item .what b{color:var(--fg)}
+
+/* Belief */
+.beliefs{display:flex;flex-direction:column;gap:8px}
+.belief-opt{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;text-align:left;color:var(--fg);font-weight:500}
+.belief-opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-wash)}
+.eg{font-size:14px;color:var(--body)}
+.eg-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.new-belief{font-size:clamp(24px,6.5vw,32px);font-weight:800;line-height:1.15;background:linear-gradient(90deg,var(--accent),var(--accent-soft));-webkit-background-clip:text;background-clip:text;color:transparent;text-wrap:balance}
+.old-belief{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(168,147,163,.6)}
+
+/* Scene */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:500;color:var(--fg);font-size:14px}
+.field textarea{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:72px;resize:vertical;color:var(--fg);line-height:1.5}
+.scene{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:14px;background:rgba(12,6,16,.45);font-size:14px}
+.scene p{color:var(--body)}
+.scene .k{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Share */
+.share{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
+.share p{color:var(--fg);font-size:14px}
+.share-actions{display:flex;flex-wrap:wrap;gap:8px}
+.share-actions .btn{padding:10px 14px;font-size:14px}
+
+/* Olly's notes */
+.why{font-size:13px;color:var(--note);display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+.why svg{flex:none;width:16px;height:16px;margin-top:2px;fill:none;stroke:currentColor;stroke-width:2}
+.why b{font-weight:600}
+body.hide-notes .why{display:none}
+
+@media (max-width:420px){
+  .journey{grid-template-columns:1fr;gap:12px}
+  .rep-row{grid-template-columns:1fr auto;}
+  .rep-row .chg{grid-column:1 / -1}
+  .next-item{grid-template-columns:1fr;gap:2px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .card{animation:rise .35s ease both}
+  @keyframes rise{from{transform:translateY(6px)}to{transform:none}}
+}
+</style>
+
+<div class="pv" aria-label="Preview controls">
+  <div class="pv-row">
+    <span class="pv-label">Preview · jump to trial day</span>
+    <label class="pv-toggle"><input type="checkbox" id="notes-toggle" checked> Show my notes</label>
+  </div>
+  <div class="pv-days" id="pv-days"></div>
+</div>
+
+<main class="app" id="app"></main>
+
+<script>
+(function(){
+  // The 8 Internal Working Models: quote / becomes / looksLike copied VERBATIM
+  // from rewrite-belief-finder.html (= funnel/sections/belief-quiz.html). Never redraft.
+  var BELIEFS = [
+    {quote:"I'm not worthy / not enough", becomes:"I am worthy of love", looksLike:"You downplay compliments, chase achievements to feel okay, or hold back from someone you like because part of you doesn't believe they'd choose you."},
+    {quote:"I have to earn love", becomes:"I am loved for who I am", looksLike:"You overgive, overperform, or keep proving yourself in relationships — worried that if you stopped, the love would stop too."},
+    {quote:"If I need too much, I'll be too much", becomes:"I am deserving of a love that meets my needs", looksLike:"You shrink your needs, apologize for asking, or go quiet rather than risk being 'a lot' for someone."},
+    {quote:"Others can't be trusted, people leave", becomes:"I am safe to trust in love", looksLike:"You stay guarded even when someone's shown up consistently, or you brace for the exit before things have even really started."},
+    {quote:"Closeness is dangerous", becomes:"I am safe being close to someone", looksLike:"You pull back right when things get good, pick fights to create distance, or feel unsafe the moment someone gets emotionally close."},
+    {quote:"I will be abandoned", becomes:"I am secure in love", looksLike:"You read neutral moments as rejection, need constant reassurance, or leave first so you're never the one left."},
+    {quote:"I have to manage everyone's emotions to be safe", becomes:"I am free to be loved as I am", looksLike:"You're always reading the room, walking on eggshells, or taking responsibility for how your partner feels before your own."},
+    {quote:"Closeness is fragile and temporary", becomes:"I am built for lasting love", looksLike:"You brace for things to fall apart, hold back from fully investing, or treat every good patch as the calm before it ends."}
+  ];
+
+  // Draft check-in questions (Olly to rewrite)
+  var METRICS = [
+    {key:'a', short:'Calm', q:'How calm do you feel about meeting your person?', lo:'Not at all', hi:'Completely calm', better:'up', steps:[
+      "Thinking about it makes my chest tight. I'd rather not think about it at all.",
+      "I feel a knot of dread. Part of me thinks it's never going to happen.",
+      "I'm anxious most of the time I think about it. I overthink every date and every text.",
+      "I'm on edge. I feel hopeful for a moment then the worry comes straight back.",
+      "Some days I'm okay with it. Other days the worry takes over.",
+      "I'm calmer than I used to be. I still catch myself looking for signs it's going wrong.",
+      "Mostly relaxed. A few old worries pop up but they pass quickly.",
+      "I feel settled. I'm not chasing it or trying to force it.",
+      "I feel at ease. I trust it's on its way to me.",
+      "Completely calm. I feel safe and open, like it's already done."
+    ]},
+    {key:'o', short:'Belief', q:'How much do you believe that you can meet your soulmate?', lo:'Not at all', hi:'Completely', better:'up', steps:[
+      "I don't think it's going to happen for me.",
+      "It happens for other people. I just can't see it happening for me.",
+      "I want to believe it but I keep expecting to be let down.",
+      "Maybe. Most days I doubt it.",
+      "I go back and forth. I can see it's possible but I can't feel it yet.",
+      "I'm starting to believe it could really happen.",
+      "I believe it's possible for me. The doubt is quieter now.",
+      "I believe it. I can picture it without my mind arguing back.",
+      "I'm sure it's going to happen. It's only a matter of when.",
+      "I know it. It feels as real as something that's already happened."
+    ]},
+    {key:'p', short:'Clarity', q:'How clear are you on exactly who you want to be with?', lo:'No idea', hi:'Crystal clear', better:'up', steps:[
+      "I have no idea what I actually want. I just don't want to be alone.",
+      "I mostly know what I don't want, from past relationships.",
+      "I have a vague picture. It changes depending on my mood.",
+      "I know a few things I want but I couldn't describe the person.",
+      "I know some of the qualities I want. The picture is still blurry.",
+      "I know how I want to feel with them. Some of the details are still fuzzy.",
+      "I'm clear on who they are at their core and how they treat me.",
+      "I can picture them and our life together in detail.",
+      "I know exactly who they are and how I feel with them. I could write it down right now.",
+      "Crystal clear. I know who they are, how they love me and how I feel with them."
+    ]}
+  ];
+
+  // Example member data for the preview (not real client figures)
+  var SAMPLE_BASE = {a:3,o:3,p:2};
+  var SAMPLE_LOGS = [{a:3,o:3,p:3},{a:4,o:3,p:3},{a:4,o:4,p:4},{a:5,o:4,p:5},{a:6,o:5,p:7},{a:6,o:5,p:7},{a:7,o:6,p:8}];
+  var SAMPLE_BELIEF = 5;
+  var SAMPLE_SCENE = {
+    where:"A slow Sunday morning in our kitchen. My partner is making coffee and humming badly.",
+    moment:"They reach for my hand without me asking. I don't scan their face for clues. I just know they're staying.",
+    body:"My chest feels soft and open. My shoulders drop. I breathe all the way out."
+  };
+  var MEMBER = 'Amy';
+
+  var S = {};
+  function loadDay(d){
+    S = {
+      day:d,
+      base: d>=1 ? Object.assign({},SAMPLE_BASE) : null,
+      logs: d>=1 ? SAMPLE_LOGS.slice(0,d-1).map(function(x){return Object.assign({},x)}) : [],
+      today:{done:false,a:5,o:5,p:5},
+      draft:{a:5,o:5,p:5},
+      belief: d>4 ? SAMPLE_BELIEF : null,
+      pick:null,
+      scene: d>5 ? Object.assign({},SAMPLE_SCENE) : null,
+      metric:'a',
+      copied:null
+    };
+    if(d>=1){ var last = S.logs.length ? S.logs[S.logs.length-1] : S.base; S.today = {done:false,a:last.a,o:last.o,p:last.p}; }
+    render();
+  }
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  var LOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  var TICK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var BULB = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
+  function why(t){return '<p class="why">'+BULB+'<span><b>Why this is here:</b> '+t+'</span></p>'}
+
+  function series(){ // baseline + all saved days (+ today if saved)
+    if(!S.base) return [];
+    var out=[S.base].concat(S.logs);
+    return out;
+  }
+  function latest(){var s=series(); return s[s.length-1];}
+  function daysDone(){return S.logs.length;}
+
+  function slider(prefix,m,val){
+    var id=prefix+'-'+m.key;
+    return '<div class="q"><label for="'+id+'">'+esc(m.q)+'</label>'+
+      '<div class="q-row"><input type="range" min="1" max="10" step="1" id="'+id+'" data-k="'+m.key+'" data-p="'+prefix+'" value="'+val+'"><output class="q-val" id="'+id+'-out">'+val+'</output></div>'+
+      '<div class="q-ends"><span>1 · '+esc(m.lo)+'</span><span>10 · '+esc(m.hi)+'</span></div>'+
+      '<p class="q-desc" id="'+id+'-desc">&ldquo;'+esc(m.steps[val-1])+'&rdquo;</p></div>';
+  }
+
+  function shareBox(text,id){
+    return '<div class="share"><span class="eg-label">Post this in the community</span><p id="share-'+id+'">'+esc(text)+'</p>'+
+      '<div class="share-actions"><button class="btn" data-act="copy" data-id="'+id+'">'+(S.copied===id?'Copied':'Copy post')+'</button>'+
+      '<button class="btn ghost" data-act="noop">Open the community</button></div></div>';
+  }
+
+  /* ---------- Sections ---------- */
+  function hello(){
+    var d=S.day;
+    var eb = d===0 ? 'Before you begin' : 'Day '+d+' of 7 · Regulate';
+    var line = d===0 ? 'Let\'s take a 2-minute snapshot of where you are now, so you can see exactly what changes.'
+      : d===7 ? 'Last day of Regulate. Look how far you\'ve come.'
+      : 'Your 60-second check-in is below.';
+    return '<header class="hello"><span class="eyebrow">'+eb+'</span><h1>'+(d===0?'Welcome, ':'Hi ')+esc(MEMBER)+'</h1><p>'+line+'</p></header>';
+  }
+
+  function journey(){
+    var done=daysDone()+(S.today.done?1:0);
+    var dots=''; for(var i=1;i<=7;i++) dots+='<span class="dot'+(i<=done?' on':'')+'"></span>';
+    return '<section class="card" aria-label="Your Attraction Formula journey">'+
+      '<div class="journey">'+
+        '<div class="stage now"><span class="stage-name">1 · Regulate</span><div class="dots">'+dots+'</div><span class="stage-meta">'+done+' of 7 days</span></div>'+
+        '<div class="stage"><span class="stage-name">2 · Rewrite</span><div class="bar"></div><span class="stage-meta">30 days · starts day 8</span></div>'+
+        '<div class="stage"><span class="stage-name">3 · Rehearse</span><div class="bar"></div><span class="lock">'+LOCK+'Unlocks after Rewrite</span></div>'+
+      '</div>'+
+      why('the trial is shown as step 1 of 3 from the very first day. When the card is charged she is at the start of something, not the end of it.')+
+    '</section>';
+  }
+
+  function baseline(){
+    if(S.base){
+      return '<section class="card hero"><div class="done-line">'+TICK+'Snapshot saved</div><h2>Regulate Day 1 starts tomorrow</h2><p class="sub">Do your first Regulate meditation, then come back here for a 60-second check-in. In 6 days you\'ll get your report comparing today with day 6.</p>'+
+        '<button class="btn" data-act="goto" data-d="1">Preview Day 1</button></section>';
+    }
+    var h='<section class="card hero"><h2>Your starting snapshot</h2><p class="sub">Be honest. Nobody else sees this. It\'s the "before" picture you\'ll compare against.</p>';
+    METRICS.forEach(function(m){h+=slider('base',m,S.draft[m.key])});
+    h+='<button class="btn" data-act="save-base">Save my snapshot</button>';
+    h+=why('Amy is analytical. Most people quit manifestation work because they "don\'t feel anything yet". A baseline turns a vague feeling into a number she can watch move.');
+    return h+'</section>';
+  }
+
+  function todayCard(){
+    var d=S.day;
+    if(S.today.done){
+      return '<section class="card"><div class="done-line">'+TICK+'Day '+d+' check-in saved</div><p class="sub">Your chart just updated. '+(d<7?'See you tomorrow for Day '+(d+1)+'.':'That\'s all 7 days of Regulate done.')+'</p>'+
+        (d<7?'<button class="btn ghost" data-act="goto" data-d="'+(d+1)+'">Preview Day '+(d+1)+'</button>':'')+'</section>';
+    }
+    var h='<section class="card"><h2>Today\'s check-in</h2>';
+    h+='<button class="check" data-act="med" aria-pressed="'+(S.today.med?'true':'false')+'"><span class="box"></span><span><strong>I did today\'s Regulate meditation</strong><span>Day '+d+' meditation in the Classroom</span></span></button>';
+    METRICS.forEach(function(m){h+=slider('today',m,S.today[m.key])});
+    h+='<button class="btn" data-act="save-today"'+(S.today.med?'':' disabled')+'>Save today\'s check-in</button>';
+    if(d===1) h+=why('a tiny daily action inside Skool builds the habit of opening the community every day. Members who build a daily habit in week one are far less likely to cancel.');
+    return h+'</section>';
+  }
+
+  function chartCard(){
+    var s=series(); if(s.length<2) return '';
+    var m=METRICS.filter(function(x){return x.key===S.metric})[0];
+    var tabs=METRICS.map(function(x){return '<button class="tab" data-act="metric" data-k="'+x.key+'" aria-pressed="'+(x.key===S.metric)+'">'+esc(x.short)+'</button>'}).join('');
+    var W=340,H=180,L=26,R=22,T=14,B=28,pw=W-L-R,ph=H-T-B;
+    function X(i){return L+i*pw/7} function Y(v){return T+(10-v)*ph/9}
+    var g='';
+    [1,5,10].forEach(function(v){g+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="axis" x="'+(L-8)+'" y="'+(Y(v)+3)+'" text-anchor="end">'+v+'</text>'});
+    for(var i=0;i<=7;i++) g+='<text class="axis" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+(i===0?'Start':i)+'</text>';
+    var pts=s.map(function(p,i){return [X(i),Y(p[m.key])]});
+    var line=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)}).join(' ');
+    var area=line+' L'+pts[pts.length-1][0].toFixed(1)+' '+Y(1)+' L'+pts[0][0].toFixed(1)+' '+Y(1)+' Z';
+    var dots=pts.slice(0,-1).map(function(p){return '<circle class="pt" cx="'+p[0]+'" cy="'+p[1]+'" r="3.5"/>'}).join('');
+    var e=pts[pts.length-1], ev=s[s.length-1][m.key];
+    var svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(m.short)+' from start to today">'+
+      '<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B84FE8" stop-opacity=".35"/><stop offset="1" stop-color="#B84FE8" stop-opacity="0"/></linearGradient></defs>'+
+      g+'<line class="base" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(s[0][m.key])+'" y2="'+Y(s[0][m.key])+'"/>'+
+      '<path class="area" d="'+area+'"/><path class="line" d="'+line+'"/>'+dots+
+      '<circle class="end" cx="'+e[0]+'" cy="'+e[1]+'" r="6"/><text class="endlbl" x="'+e[0]+'" y="'+(e[1]-11)+'" text-anchor="middle">'+ev+'</text></svg>';
+    var st=s[0][m.key], diff=ev-st, good=(m.better==='down'?diff<0:diff>0);
+    var txt = diff===0 ? 'Holding steady at <b>'+ev+'</b>. Change often shows after day 3.'
+      : 'Start <b>'+st+'</b> → now <b>'+ev+'</b> · <span class="'+(good?'good':'')+'">'+(diff<0?'down ':'up ')+Math.abs(diff)+'</span>';
+    return '<section class="card"><h2>Your progress</h2><div class="tabs">'+tabs+'</div>'+svg+'<p class="delta">'+txt+'</p>'+
+      (S.day===2?why('she sees her own line moving within 48 hours. The dashed line is her "before". Any gap from it is proof the work is doing something.'):'')+'</section>';
+  }
+
+  function halfway(){
+    var l=latest(), st=S.base;
+    var text='Day 3 of Regulate. I\'ve gone from '+st.a+' to '+l.a+' on how calm I feel about meeting my person. Anyone else noticing a shift?';
+    return '<section class="card"><h2>You\'re nearly halfway</h2><p class="sub">Share where you\'re at. Other members on the same week will see it and you\'ll see theirs.</p>'+shareBox(text,'d3')+
+      why('posting and getting replies is one of the strongest signals that someone stays in a Skool community. Pre-written posts take the effort out of the first one.')+'</section>';
+  }
+
+  function beliefFinder(){
+    if(S.belief!==null) return '';
+    var h='<section class="card hero"><span class="eyebrow">New today · Prepare your Rewrite</span><h2>Which of these sounds most like you?</h2><p class="sub">Pick the one that hits hardest. This becomes the belief you install in the Rewrite.</p><div class="beliefs">';
+    BELIEFS.forEach(function(b,i){h+='<button class="belief-opt" data-act="pick" data-i="'+i+'" aria-pressed="'+(S.pick===i)+'">&ldquo;'+esc(b.quote)+'&rdquo;</button>'});
+    h+='</div>';
+    if(S.pick!==null){
+      var b=BELIEFS[S.pick];
+      h+='<div><div class="eg-label">How it can show up in your life</div><p class="eg">'+esc(b.looksLike)+'</p></div>'+
+        '<div><div class="eg-label">Your new belief</div><div class="new-belief">&ldquo;'+esc(b.becomes)+'&rdquo;</div></div>'+
+        '<button class="btn" data-act="save-belief">Save this as my Rewrite belief</button>';
+    }
+    h+=why('she builds something personal before the trial ends. Her new belief is saved here, waiting for Rewrite Day 1. (In the live version this would be your full belief finder, not this short pick list.)');
+    return h+'</section>';
+  }
+
+  function beliefCard(){
+    if(S.belief===null) return '';
+    var b=BELIEFS[S.belief];
+    return '<section class="card"><span class="eyebrow">Your Rewrite belief</span><p class="old-belief">&ldquo;'+esc(b.quote)+'&rdquo;</p><div class="new-belief">&ldquo;'+esc(b.becomes)+'&rdquo;</div>'+
+      '<p class="sub">You\'ll install this during the 30-day Rewrite, starting day 8.</p></section>';
+  }
+
+  function sceneBuilder(){
+    if(S.scene) return '';
+    var t=S.sceneDraft||{where:'',moment:'',body:''};
+    var ok=t.where.trim()&&t.moment.trim()&&t.body.trim();
+    return '<section class="card hero"><span class="eyebrow">New today · Write your Rehearse scene</span><h2>Picture one ordinary moment with your partner</h2>'+
+      '<p class="sub">Not the wedding. Something small and everyday. You\'ll rehearse this exact scene in the third part of the formula.</p>'+
+      '<div class="field"><label for="sc-where">Where are you and what\'s happening?</label><textarea id="sc-where" data-f="where" placeholder="'+esc(SAMPLE_SCENE.where)+'">'+esc(t.where)+'</textarea></div>'+
+      '<div class="field"><label for="sc-moment">What does your partner do that lets you know you\'re safe?</label><textarea id="sc-moment" data-f="moment" placeholder="'+esc(SAMPLE_SCENE.moment)+'">'+esc(t.moment)+'</textarea></div>'+
+      '<div class="field"><label for="sc-body">What do you feel in your body?</label><textarea id="sc-body" data-f="body" placeholder="'+esc(SAMPLE_SCENE.body)+'">'+esc(t.body)+'</textarea></div>'+
+      '<div class="share-actions"><button class="btn" data-act="save-scene" id="save-scene"'+(ok?'':' disabled')+'>Save my scene</button><button class="btn ghost" data-act="fill-scene">Fill with example</button></div>'+
+      why('this is the strongest hook in the tool. Cancelling now means walking away from a future she wrote herself. It stays visible but locked until Rewrite is done.')+'</section>';
+  }
+
+  function sceneCard(){
+    if(!S.scene) return '';
+    return '<section class="card"><span class="eyebrow">Your Rehearse scene</span>'+
+      '<div class="scene"><span class="k">Where</span><p>'+esc(S.scene.where)+'</p><span class="k">The moment</span><p>'+esc(S.scene.moment)+'</p><span class="k">In my body</span><p>'+esc(S.scene.body)+'</p></div>'+
+      '<span class="lock">'+LOCK+'You\'ll rehearse this after Rewrite Day 30</span></section>';
+  }
+
+  function report(){
+    var l=latest(), st=S.base, b=S.belief!==null?BELIEFS[S.belief]:null;
+    var rows=METRICS.map(function(m){
+      var diff=l[m.key]-st[m.key], good=(m.better==='down'?diff<0:diff>0);
+      var chg = diff===0?'no change yet':(diff<0?'down ':'up ')+Math.abs(diff)+' point'+(Math.abs(diff)===1?'':'s');
+      return '<div class="rep-row"><span class="name">'+esc(m.short)+'</span><span class="nums">'+st[m.key]+' <small>→</small> '+l[m.key]+'</span><span class="chg" style="'+(good?'':'color:var(--muted)')+'">'+chg+'</span></div>';
+    }).join('');
+    var text='One week of Regulate done. Calm about meeting my person '+st.a+' → '+l.a+', belief I\'ll meet them '+st.o+' → '+l.o+', clarity on who I want '+st.p+' → '+l.p+'. Starting the Rewrite next'+(b?' with "'+b.becomes+'"':'')+'.';
+    return '<section class="card hero"><span class="eyebrow">Your 7-day report</span><h2>Here\'s what changed this week</h2>'+
+      '<div class="rep-rows">'+rows+'</div>'+
+      '<div class="next"><span class="eg-label">What happens next</span>'+
+        '<div class="next-item"><span class="when">Tomorrow</span><span class="what">Your last Regulate day</span></div>'+
+        '<div class="next-item"><span class="when">Day 8</span><span class="what">Rewrite Day 1'+(b?' · installing <b>&ldquo;'+esc(b.becomes)+'&rdquo;</b>':'')+'</span></div>'+
+        '<div class="next-item"><span class="when">Day 38</span><span class="what">Rehearse unlocks · '+(S.scene?'<b>your scene</b> is waiting':'your scene is waiting')+'</span></div>'+
+      '</div>'+shareBox(text,'d6')+
+      why('this lands on day 6, while she is still deciding, not after the charge. She decides with her own before and after numbers in front of her, plus a clear next step with her name on it.')+'</section>';
+  }
+
+  function complete(){
+    if(!S.today.done) return '';
+    return '<section class="card hero"><span class="eyebrow">Regulate complete</span><h2>All 7 days done. Rewrite Day 1 opens tomorrow.</h2>'+
+      shareBox('Just completed the Regulate Meditation and ready to start the Rewrite Meditation!','d7')+'</section>';
+  }
+
+  function render(){
+    var d=S.day, h=hello();
+    if(d===0){ h+=journey()+baseline(); }
+    else{
+      h+=journey();
+      if(d>=6) h+=report();
+      if(d===7) h+=complete();
+      h+=todayCard();
+      if(d===3) h+=halfway();
+      if(d===4) h+=beliefFinder();
+      if(d===5) h+=sceneBuilder();
+      h+=chartCard()+beliefCard()+sceneCard();
+    }
+    document.getElementById('app').innerHTML=h;
+    var pv=''; for(var i=0;i<=7;i++) pv+='<button class="pv-day" data-act="goto" data-d="'+i+'" aria-pressed="'+(i===d)+'">'+(i===0?'Sign-up':'Day '+i)+'</button>';
+    document.getElementById('pv-days').innerHTML=pv;
+  }
+
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-act]'); if(!t) return;
+    var a=t.dataset.act;
+    if(a==='goto'){ loadDay(+t.dataset.d); window.scrollTo(0,0); return; }
+    if(a==='save-base'){ S.base=Object.assign({},S.draft); }
+    else if(a==='med'){ S.today.med=!S.today.med; }
+    else if(a==='save-today'){ S.logs.push({a:S.today.a,o:S.today.o,p:S.today.p}); S.today.done=true; }
+    else if(a==='metric'){ S.metric=t.dataset.k; }
+    else if(a==='pick'){ S.pick=+t.dataset.i; }
+    else if(a==='save-belief'){ S.belief=S.pick; }
+    else if(a==='fill-scene'){ S.sceneDraft=Object.assign({},SAMPLE_SCENE); }
+    else if(a==='save-scene'){ S.scene=Object.assign({},S.sceneDraft); }
+    else if(a==='copy'){
+      var id=t.dataset.id, txt=document.getElementById('share-'+id).textContent;
+      var done=function(){S.copied=id; render();};
+      try{ navigator.clipboard.writeText(txt).then(done,function(){selectText(id)}); }catch(err){ selectText(id); }
+      return;
+    }
+    else return;
+    render();
+  });
+  function selectText(id){var el=document.getElementById('share-'+id);var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);}
+
+  document.addEventListener('input',function(e){
+    var t=e.target;
+    if(t.type==='range'){
+      var v=+t.value; document.getElementById(t.id+'-out').textContent=v;
+      var mm=METRICS.filter(function(x){return x.key===t.dataset.k})[0];
+      document.getElementById(t.id+'-desc').textContent='“'+mm.steps[v-1]+'”';
+      (t.dataset.p==='base'?S.draft:S.today)[t.dataset.k]=v;
+    } else if(t.dataset && t.dataset.f){
+      S.sceneDraft=S.sceneDraft||{where:'',moment:'',body:''};
+      S.sceneDraft[t.dataset.f]=t.value;
+      var ok=S.sceneDraft.where.trim()&&S.sceneDraft.moment.trim()&&S.sceneDraft.body.trim();
+      document.getElementById('save-scene').disabled=!ok;
+    }
+  });
+  document.getElementById('notes-toggle').addEventListener('change',function(e){document.body.classList.toggle('hide-notes',!e.target.checked)});
+
+  loadDay(4);
+})();
+</script>

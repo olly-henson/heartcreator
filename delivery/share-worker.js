@@ -21,9 +21,15 @@ export default {
     // `intro` carries a fixed pre-written message so the link can stay
     // short (just ?type=intro) — used by the "Unlock Your First Program"
     // classroom lesson: the visitor copies this, posts it in the
-    // community, and that post is Olly's cue to unlock The Regulate
-    // Program. A ?text= param still overrides it if ever needed.
-    const INTRO_MSG = "Hey! I'm ready to start The Seven Day Regulate Meditation!";
+    // community, and that post is Olly's cue to unlock The Attraction
+    // Formula Meditation classroom (was The Regulate Program until
+    // 2026-10-05). A ?text= param still overrides it if ever needed.
+    // The sentence starters nudge new members to introduce themselves; the
+    // box is editable for intro so they finish them before copying.
+    const INTRO_MSG = "Hey, I'm ready to start using The Attraction Formula!\n\n" +
+      "A little about me: \n" +
+      "What brought me here: \n" +
+      "The relationship I'm creating: ";
     // Same wording as regulate-start.html's own post-signup share text —
     // was missing entirely before, so the `started` page had a heading
     // but nothing pre-written to copy.
@@ -36,11 +42,11 @@ export default {
                        type === 'results' ? 'Share client results' :
                        type === 'final'   ? 'Share Your Results' :
                        type === 'started' ? 'Let us know you\'ve started!' :
-                       type === 'intro'   ? 'Unlock Your Meditation' :
+                       type === 'intro'   ? 'Unlock The Attraction Formula' :
                        type === 'checkin' ? 'Share your update' :
                                             'Share your win';
     const subheading = type === 'intro'
-      ? 'Copy and paste this message into the community to unlock your Regulate Meditation'
+      ? 'Copy and paste the text below in the community and let us know what you\'re looking for and you\'ll unlock The Attraction Formula.'
       : '';
     const buttonText = type === 'coach'   ? 'Respond in Community' :
                        type === 'help'    ? 'Get help in the community' :
@@ -55,6 +61,9 @@ export default {
     // a prompt as placeholder), or with a short starter if ?text= is given
     // (e.g. "Day 10 update: "), instead of read-only pre-filled text.
     const isCheckin = type === 'checkin';
+    // intro is also editable (pre-filled, with sentence starters to finish),
+    // so it doesn't auto-copy either.
+    const isEditable = isCheckin || type === 'intro';
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -149,7 +158,7 @@ export default {
     <p class="label">The Attraction Formula Community</p>
     <h1>${heading}</h1>
     ${subheading ? `<p class="sub">${subheading}</p>` : ''}
-    <textarea id="win" rows="4"${isCheckin ? ' placeholder="How is it going? What shifted, what felt hard, what you noticed..."' : ' readonly'}>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+    <textarea id="win" rows="${type === 'intro' ? 8 : 4}"${isCheckin ? ' placeholder="How is it going? What shifted, what felt hard, what you noticed..."' : isEditable ? '' : ' readonly'}>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
     <div class="actions">
       <button class="btn btn-primary" onclick="copyText()">Copy to clipboard</button>
       <a class="btn btn-secondary" href="https://www.skool.com/heartcreator" target="_blank">${buttonText}</a>
@@ -159,11 +168,12 @@ export default {
   <script>
     const winText = ${JSON.stringify(text)};
     const isCheckin = ${JSON.stringify(isCheckin)};
+    const isEditable = ${JSON.stringify(isEditable)};
 
     function copyText() {
       // checkin reads live from the box (the visitor typed into it);
       // every other type copies the fixed pre-written text.
-      const toCopy = isCheckin ? document.getElementById('win').value : winText;
+      const toCopy = isEditable ? document.getElementById('win').value : winText;
       navigator.clipboard.writeText(toCopy).then(function() {
         document.getElementById('status').textContent = 'Copied — head to the community and paste.';
       }).catch(function() {
@@ -179,8 +189,17 @@ export default {
       box.setSelectionRange(box.value.length, box.value.length);
     }
 
-    // Auto-copy on load — skipped for checkin, there's nothing written yet.
-    if (winText && !isCheckin) {
+    // intro — drop the cursor at the end of the first sentence starter
+    // ("A little about me: ") so they can start typing straight away.
+    if (!isCheckin && isEditable) {
+      const box = document.getElementById('win');
+      const lineStart = box.value.indexOf('\\n\\n');
+      const pos = lineStart > -1 ? box.value.indexOf('\\n', lineStart + 2) : -1;
+      if (pos > -1) { box.focus(); box.setSelectionRange(pos, pos); }
+    }
+
+    // Auto-copy on load — skipped for editable boxes (checkin, intro).
+    if (winText && !isEditable) {
       navigator.clipboard.writeText(winText).then(function() {
         document.getElementById('status').textContent = 'Copied to clipboard — head to the community and paste.';
       }).catch(function() {
