@@ -59,6 +59,11 @@ button:disabled{opacity:.55;cursor:wait}
 .idea .editable:focus{box-shadow:0 0 0 2px var(--heart)}
 .idea .hook.ighead{align-self:flex-start;max-width:min(100%,360px);background:#fff;color:#111;font:700 20px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center;padding:8px 14px;border-radius:7px;box-shadow:0 0 0 1px var(--line)}
 .idea .say{font-style:italic}
+.idea > .btn{align-self:flex-start}
+.idea .link{background:var(--calm-soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.idea .link p{margin:0}
+.idea .link .sub{display:block;margin-bottom:2px}
+.idea .link .gap{color:var(--warn)}
 .tag{display:inline-block;font:500 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--calm);background:var(--calm-soft);padding:5px 8px;border-radius:4px}
 .idea ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
 .lands{border-left:3px solid var(--heart);padding-left:12px}
@@ -853,6 +858,7 @@ function renderIdeas(type, ideas, ch){
     }
     const hk = c.querySelector(".hook"); hk.classList.add("ighead");
     hk.before(el("span", "sub", "Header · on the cover, your first line and the caption's first line · click it to edit"));
+    c.appendChild(connectButton(c, i));
     c.appendChild(ideaButtons(c, ch, type, i, noun + " · " + type, []));
     box.appendChild(c);
   });
@@ -1083,6 +1089,56 @@ function queueBrief(){
   return "\n\nTITLES OLLY LIKED AND QUEUED (most recent first). This is the standard he wants: match their tone, length and style, but never repeat them or write near copies; find fresh angles:\n"
     + q.map(x => "- \"" + x.title + "\"").join("\n")
     + (edits.length ? "\n\nTITLES OLLY REWROTE before queuing. Study what he changed and write that way from the start:\n" + edits.map(x => "- \"" + x.orig + "\" became \"" + x.title + "\"").join("\n") : "");
+}
+/* ---------- "Where does this connect?": explains how a Reel header ties to the core message ---------- */
+function connectPrompt(hook){
+  return `You check Instagram Reel headers for Olly Henson (The Attraction Formula community) against his core message.
+${CORE}
+
+THE HEADER
+"${hook}"
+
+Explain, plainly and briefly, where this header connects to the messaging above. Only use what's in the core message; never invent claims, stats or stories.
+- part: the part or parts of the core message it draws on, named as they are above (e.g. Pain, The crack, Real cause, What to expect, an objection, an Audience voice angle)
+- link: one or two short sentences on how the header connects to that part
+- lands: the point from the core message the Reel should land on, in one sentence
+- gap: if the header drifts from the messaging or could work against it (undercuts the promised land, sounds like "think positive", manifestation words, knocks therapy, a claim the message doesn't make), say how in one sentence. Otherwise ""
+
+Reply as JSON: {"part":"","link":"","lands":"","gap":""}`;
+}
+function connectButton(card, i){
+  const btn = el("button", "btn small", "Where does this connect?");
+  btn.onclick = async () => {
+    const open = card.querySelector(".link");
+    if (open) { open.remove(); btn.textContent = "Where does this connect?"; return; }
+    const hook = i.hook || "";
+    let d = i.link && i.link.hook === hook ? i.link : null;
+    if (!d) {
+      if (!sampleFn) { const st = $("st"); st.className = "status err"; st.textContent = "This needs the page opened inside Claude."; return; }
+      btn.disabled = true; btn.textContent = "Checking the messaging…";
+      try {
+        const r = await sampleFn.json(connectPrompt(hook), {cache: false});
+        d = {hook, part: r.part || "", link: r.link || "", lands: r.lands || "", gap: r.gap || ""};
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = e && e.code === "rate_limited" ? "Too many requests. Try again in a minute" : "Couldn't check. Try again";
+        return;
+      }
+      btn.disabled = false;
+      i.link = d;
+      const last = store.get("cig-ideas", null);
+      if (last && Array.isArray(last.ideas)) { last.ideas = last.ideas.map(x => x.hook === hook ? {...x, link:d} : x); store.set("cig-ideas", last); }
+    }
+    const box = el("div", "link");
+    const line = (label, text, cls) => { if (!text) return; const w = el("div"); w.append(el("span", "sub", label), el("p", cls || "", text)); box.appendChild(w); };
+    line("Part of the message", d.part);
+    line("How it connects", d.link);
+    line("Land the Reel on", d.lands);
+    line("Watch out", d.gap, "gap");
+    btn.after(box);
+    btn.textContent = "Hide where it connects";
+  };
+  return btn;
 }
 function ideaButtons(card, ch, type, i, level, cover){
   const row = el("div", "row");
