@@ -79,6 +79,9 @@ state = {
     ideas: [ { title, date, mode, synced, posted, caption } ],
     captionTemplates: [ { name, text } ]
   },
+  stories: {
+    ideas: [ { title, type, date, mode, posted, images: [imageId] } ]  // Stories tab, 2026-10-23
+  },
   delivery: {
     projects: [ { title, urgent, important, done } ]
   },
@@ -227,3 +230,10 @@ Notes on fields that aren't obvious:
 
 - **2026-10-23:** Daily Reel target raised from 3 to 5 (`DAILY_REEL_TARGET = 5`, Olly asked). "Add to next available slot" now fills each day with 5 Reels before moving to the next day, the calendar counts show x/5, and the Video ideas hint says "aiming for 5 a day". Syntax-check note: the first inline `<script>` is `type="application/json"` state data, so skip it when checking.
 - **2026-10-23:** The Content tab's button now reads **Reels** (Olly asked). Only the label changed: the internal id is still `data-tab="content"` and the data still lives in `state.content`, so saved data and the remembered tab keep working. When Olly says "the Reels tab" he means this one.
+- **2026-10-23: Stories tab added** (Olly asked: "add the calendar option and the add ideas option like before, don't worry about ranking etc"). Tab button `data-tab="stories"` after Reels; panel `#tab-stories`; its own day panel `#storyModalOverlay`. Code is one block before "Wire up": `renderStories()`, `renderStoryIdeas()`, `renderStoryCalendar()`, `renderStoryModal()`. Data lives in `state.stories.ideas`, separate from Reels (guarded in `migrateState()`, rendered in `rerenderAll()`, calendar month remembered as `ui.storyCalMonth`).
+  - **Type** per Story: Personal story / Lifestyle / Questions / entertainment (the Connection types in the Content Idea Generator) + Meme. Pick it in the ideas list or the day panel.
+  - **No daily limit** (Olly): "next available slot" = today; calendar cells show a plain count, no x/target.
+  - **Draft / Posted** is only a status here. No captions, stats tracking or leaderboard.
+  - **Images:** "+ Attach image" in the day panel. Photos are shrunk to 1600px JPEG in the browser, then uploaded straight away to the new Pages Function `functions/api/image/[id].js` (GET / PUT / DELETE, KV keys `img:<id>`, 8 MB cap, images only). The idea keeps only the ids, saved with the normal Save. Removing an image or a Story deletes its images from KV. Images are uploaded immediately, unlike the rest of the app (manual Save), because they can't sit in localStorage.
+  - Testing: `npx wrangler pages dev public --kv HUB_KV --port 8790`, then PUT test state. Use the full seed from `#state-data` plus test data: a bare `{rows:[],content:{}}` state makes an earlier render throw inside `rerenderAll()`, so later tabs never draw. At 420px wide in headless Edge the whole page renders wider than the window on every tab (existing, not Stories-specific).
+

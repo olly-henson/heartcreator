@@ -786,6 +786,17 @@
   .statusbtn:hover{ border-color: var(--accent); color: var(--text); }
   .statusbtn.draft.active{ background: rgba(224,177,104,.16); color: var(--warn); border-color: rgba(224,177,104,.4); }
   .statusbtn.published.active{ background: rgba(143,208,168,.16); color: var(--good); border-color: rgba(143,208,168,.4); }
+  .storytype{
+    font-size:13px; padding:6px 8px; border-radius:6px;
+    border:1px solid var(--border-soft); background: var(--surface-2);
+    color: var(--text-body); font-family:'Poppins',sans-serif;
+  }
+  .storyimgs{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+  .storyimgs:empty{ display:none; }
+  .storyimg{ position:relative; width:84px; height:84px; border-radius:8px; overflow:hidden; border:1px solid var(--border-soft); background: var(--surface-2); }
+  .storyimg img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .storyimg-rm{ position:absolute; top:3px; right:3px; width:22px; height:22px; border-radius:50%; border:0; background:rgba(0,0,0,.65); color:#fff; font-size:12px; line-height:22px; padding:0; cursor:pointer; }
+  @media (max-width: 700px){ .storytype{ font-size:16px; } }
   .dayitem-move{
     flex-shrink:0;
     font-size:11.5px;
@@ -1106,6 +1117,7 @@
     <button class="tabbtn" data-tab="braindump" role="tab" aria-selected="false">Brain Dump</button>
     <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false">MRR</button>
     <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Reels</button>
+    <button class="tabbtn" data-tab="stories" role="tab" aria-selected="false">Stories</button>
     <button class="tabbtn" data-tab="instagram" role="tab" aria-selected="false">Instagram</button>
     <button class="tabbtn" data-tab="email" role="tab" aria-selected="false">Email</button>
     <button class="tabbtn" data-tab="delivery" role="tab" aria-selected="false">Delivery</button>
@@ -1331,6 +1343,42 @@
 
   </div>
 
+  <div id="tab-stories" class="tabpanel" hidden="">
+
+    <p class="section-label" style="margin-top:20px;">Story ideas</p>
+    <span class="hint" style="display:block; margin:-6px 0 20px;">Type an idea, then choose whether it fills the next open slot or a specific date. Once it has both a title and a date it drops off this list and lives on the calendar below instead — there's no limit on how many go on one day, so "next available slot" just means today.</span>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="min-width:260px;">Idea</th>
+            <th style="width:180px;">Type</th>
+            <th style="width:190px;">Scheduling</th>
+            <th style="width:150px;">Date</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="storyIdeaTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Click a calendar date to mark a Story Draft or Posted, rename it, move it or remove it.</span>
+        <button class="addbtn" id="storyIdeaAdd">+ Add idea</button>
+      </div>
+    </div>
+
+    <div class="calhead">
+      <p class="section-label" style="margin:40px 0 0;">Calendar</p>
+      <div class="calnav">
+        <button class="calnavbtn" id="storyCalPrev" title="Previous month">‹</button>
+        <span class="calmonth" id="storyCalMonthLabel"></span>
+        <button class="calnavbtn" id="storyCalNext" title="Next month">›</button>
+        <button class="calnavbtn calToday" id="storyCalToday">Today</button>
+      </div>
+    </div>
+    <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot published"></span>Posted</span></div>
+    <div class="calendar" id="storyCalendar"></div>
+  </div>
+
   <div id="tab-instagram" class="tabpanel" hidden="">
 
     <div class="settingsbar">
@@ -1482,6 +1530,19 @@
 
 </div>
 
+<div class="daymodal-overlay" id="storyModalOverlay" hidden="">
+  <div class="daymodal">
+    <div class="daymodal-head">
+      <h3 id="storyModalTitle"></h3>
+      <div class="daymodal-headactions">
+        <span class="daymodal-savestatus" id="storyModalSaveStatus"></span>
+        <button class="daymodal-savebtn" id="storyModalSave" title="Save changes made in this day">Save</button>
+        <button class="daymodal-x" id="storyModalClose" title="Close">✕</button>
+      </div>
+    </div>
+    <div id="storyModalBody"></div>
+  </div>
+</div>
 <div class="daymodal-overlay" id="dayModalOverlay" hidden="">
   <div class="daymodal">
     <div class="daymodal-head">
@@ -3709,6 +3770,449 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderBrainDump();
   });
 
+  // ── Stories tab — Story ideas + calendar ──────────────────────────────
+  // A lighter copy of the Reels ideas list + calendar + day panel, with its
+  // own data (`state.stories.ideas`) so Reels and Stories never mix. No
+  // captions, stats tracking or leaderboard: Draft / Posted is just a
+  // status here, it doesn't add the Story anywhere else.
+  // Each Story has a type (the Connection types from the Content Idea
+  // Generator, plus Meme) and can carry images. Images are uploaded straight
+  // away to /api/image/<id> (their own KV keys); the idea only stores the ids.
+  // No daily limit on Stories (Olly, 2026-10-23), so "next available slot"
+  // is simply today, and the calendar shows a plain count.
+  var STORY_TYPES = ["Personal story", "Lifestyle", "Questions / entertainment", "Meme"];
+
+  function storyTypeSelect(idea, attr){
+    var sel = document.createElement("select");
+    sel.className = "storytype";
+    if (attr) sel.setAttribute(attr[0], attr[1]);
+    sel.add(new Option("Type…", ""));
+    STORY_TYPES.forEach(function(t){ sel.add(new Option(t, t)); });
+    sel.value = idea.type || "";
+    sel.addEventListener("change", function(){
+      idea.type = sel.value;
+      markDirty();
+      renderStoryCalendar();
+    });
+    return sel;
+  }
+
+  // Shrink big photos before upload (max 1600px, JPEG) so they load fast on
+  // the phone. GIFs go up as they are so they keep moving.
+  function prepareImage(file){
+    return new Promise(function(resolve, reject){
+      if (file.type === "image/gif") return resolve(file);
+      var img = new Image();
+      img.onload = function(){
+        var scale = Math.min(1, 1600 / Math.max(img.width, img.height));
+        var c = document.createElement("canvas");
+        c.width = Math.round(img.width * scale);
+        c.height = Math.round(img.height * scale);
+        var g = c.getContext("2d");
+        g.fillStyle = "#fff";
+        g.fillRect(0, 0, c.width, c.height);
+        g.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(img.src);
+        c.toBlob(function(b){ b ? resolve(b) : reject(new Error("resize failed")); }, "image/jpeg", 0.85);
+      };
+      img.onerror = function(){ reject(new Error("not an image")); };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function uploadStoryImage(file){
+    var id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10));
+    return prepareImage(file).then(function(blob){
+      return fetch("/api/image/" + id, { method: "PUT", headers: { "content-type": blob.type || "image/jpeg" }, body: blob, credentials: "same-origin" });
+    }).then(function(r){
+      if (!r.ok) throw new Error("upload failed " + r.status);
+      return id;
+    });
+  }
+
+  function deleteStoryImage(id){
+    fetch("/api/image/" + id, { method: "DELETE", credentials: "same-origin" }).catch(function(){});
+  }
+  var storyTableBuiltForCount = -1;
+  var storyCalCursor = new Date(); // restored from uiLoad() in boot()
+  var storyModalDate = null;
+
+  function storyIdeas(){
+    if (!state.stories) state.stories = { ideas: [] };
+    if (!Array.isArray(state.stories.ideas)) state.stories.ideas = [];
+    return state.stories.ideas;
+  }
+
+  function renderStories(){
+    renderStoryIdeas();
+    renderStoryCalendar();
+  }
+
+  function findNextStoryDate(){
+    return todayISO();
+  }
+
+  function buildStoryIdeaRow(idea, i){
+    var tr = document.createElement("tr");
+    var mode = idea.mode === "specific" ? "specific" : "auto";
+    tr.innerHTML =
+      '<td><input type="text" data-sti="'+i+'" value="'+String(idea.title||"").replace(/"/g,"&quot;")+'" placeholder="Story idea"></td>' +
+      '<td class="storytypecell"></td>' +
+      '<td class="slotmode">' +
+        '<label class="slotopt"><input type="checkbox" data-sti="'+i+'" data-stslot="auto"'+(mode==="auto"?" checked":"")+'> Add to next available slot</label>' +
+        '<label class="slotopt"><input type="checkbox" data-sti="'+i+'" data-stslot="specific"'+(mode==="specific"?" checked":"")+'> Add to specific date</label>' +
+      '</td>' +
+      '<td><input type="date" data-sti="'+i+'" value="'+(idea.date||"")+'"'+(mode==="auto"?" disabled":"")+'></td>' +
+      '<td class="rowdel"><button data-stdel="'+i+'" title="Remove idea">✕</button></td>';
+    tr.querySelector(".storytypecell").appendChild(storyTypeSelect(idea));
+    return tr;
+  }
+
+  // Same rule as Reels: a row only drops off this list at a natural
+  // transition point (adding another idea, changing a date or slot mode),
+  // never while the title is being typed.
+  function renderStoryIdeas(){
+    var all = storyIdeas();
+    var tbody = document.getElementById("storyIdeaTbody");
+    var visible = [];
+    all.forEach(function(idea, i){ if (!isIdeaPlaced(idea)) visible.push(i); });
+    if (visible.length === storyTableBuiltForCount) return;
+    tbody.innerHTML = "";
+    if (!visible.length){
+      tbody.innerHTML = '<tr><td colspan="5" class="hint">No unscheduled Story ideas. Tap + Add idea.</td></tr>';
+    }
+    visible.forEach(function(i){ tbody.appendChild(buildStoryIdeaRow(all[i], i)); });
+    storyTableBuiltForCount = visible.length;
+
+    tbody.querySelectorAll("input[type=text]").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        var i = Number(inp.dataset.sti), idea = storyIdeas()[i];
+        idea.title = inp.value;
+        if (idea.mode !== "specific" && idea.date && idea.date < todayISO()) idea.date = findNextStoryDate();
+        markDirty();
+        renderStoryCalendar();
+      });
+    });
+    tbody.querySelectorAll("input[type=date]").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        storyIdeas()[Number(inp.dataset.sti)].date = inp.value;
+        markDirty();
+        storyTableBuiltForCount = -1;
+        renderStories();
+      });
+    });
+    tbody.querySelectorAll("input[data-stslot]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        if (!cb.checked){ cb.checked = true; return; } // one option always selected
+        var i = Number(cb.dataset.sti), idea = storyIdeas()[i];
+        idea.mode = cb.dataset.stslot;
+        var tr = cb.closest("tr");
+        tr.querySelectorAll("input[data-stslot]").forEach(function(other){ if (other !== cb) other.checked = false; });
+        var dateInput = tr.querySelector("input[type=date]");
+        if (idea.mode === "auto"){
+          idea.date = findNextStoryDate();
+          dateInput.value = idea.date;
+          dateInput.disabled = true;
+        } else {
+          dateInput.disabled = false;
+          dateInput.focus();
+        }
+        markDirty();
+        storyTableBuiltForCount = -1;
+        renderStories();
+      });
+    });
+    tbody.querySelectorAll("[data-stdel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var gone = storyIdeas().splice(Number(btn.dataset.stdel), 1)[0];
+        (gone && gone.images || []).forEach(deleteStoryImage);
+        storyTableBuiltForCount = -1;
+        markDirty();
+        renderStories();
+      });
+    });
+  }
+
+  function renderStoryCalendar(){
+    document.getElementById("storyCalMonthLabel").textContent =
+      storyCalCursor.toLocaleDateString("en-GB", { month:"long", year:"numeric" });
+    var grid = document.getElementById("storyCalendar");
+    grid.innerHTML = "";
+    DOW_LABELS.forEach(function(d){
+      var h = document.createElement("div");
+      h.className = "caldow";
+      h.textContent = d;
+      grid.appendChild(h);
+    });
+    var year = storyCalCursor.getFullYear(), month = storyCalCursor.getMonth();
+    var startOffset = (new Date(year, month, 1).getDay() + 6) % 7;
+    var gridStart = new Date(year, month, 1 - startOffset);
+    var list = storyIdeas();
+    var today = todayISO();
+
+    for (var i = 0; i < 42; i++){
+      let cellDate = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
+      let cellISO = isoDate(cellDate);
+      var outside = cellDate.getMonth() !== month;
+      var dayIdeas = list.filter(function(idea){ return idea.date === cellISO && idea.title; });
+      var cell = document.createElement("div");
+      cell.className = "calcell" + (outside ? " outside" : "") + (cellISO === today ? " today" : "");
+      var countHTML = (outside || !dayIdeas.length) ? "" :
+        '<span class="calcount met">'+dayIdeas.length+'</span>';
+      cell.innerHTML = '<div class="caldatehead"><span class="caldatenum">'+cellDate.getDate()+'</span>'+countHTML+'</div>';
+      var itemsWrap = document.createElement("div");
+      itemsWrap.className = "calitems";
+      dayIdeas.slice(0, 4).forEach(function(idea){
+        var it = document.createElement("div");
+        it.className = "calitem " + (idea.posted ? "published" : "draft");
+        it.title = (idea.type ? idea.type + ": " : "") + idea.title + " — " + (idea.posted ? "Posted" : "Draft");
+        var dot = document.createElement("span");
+        dot.className = "calitem-dot";
+        var label = document.createElement("span");
+        label.className = "calitem-label";
+        label.textContent = idea.title;
+        it.appendChild(dot);
+        it.appendChild(label);
+        itemsWrap.appendChild(it);
+      });
+      if (dayIdeas.length > 4){
+        var more = document.createElement("div");
+        more.className = "calitem";
+        more.style.color = "var(--text-muted)";
+        more.textContent = "+"+(dayIdeas.length-4)+" more";
+        itemsWrap.appendChild(more);
+      }
+      cell.appendChild(itemsWrap);
+      if (!outside) cell.addEventListener("click", function(){ openStoryModal(cellISO); });
+      grid.appendChild(cell);
+      if (i >= 34 && cellDate.getMonth() !== month && (i+1) % 7 === 0) break;
+    }
+  }
+
+  function openStoryModal(iso){
+    storyModalDate = iso;
+    renderStoryModal();
+    document.getElementById("storyModalOverlay").hidden = false;
+  }
+  function closeStoryModal(){
+    document.getElementById("storyModalOverlay").hidden = true;
+    storyModalDate = null;
+  }
+
+  function renderStoryModal(){
+    if (!storyModalDate) return;
+    document.getElementById("storyModalTitle").textContent =
+      new Date(storyModalDate+"T00:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long" });
+    var body = document.getElementById("storyModalBody");
+    body.innerHTML = "";
+    var dayIdeas = storyIdeas().filter(function(idea){ return idea.date === storyModalDate && idea.title; });
+    if (!dayIdeas.length){
+      body.innerHTML = '<p class="hint">Nothing scheduled for this day yet.</p>';
+      return;
+    }
+    dayIdeas.forEach(function(idea){
+      var row = document.createElement("div");
+      row.className = "dayitem" + (idea.posted ? " posted" : "");
+
+      var top = document.createElement("div");
+      top.className = "dayitem-top";
+      var titleIn = document.createElement("input");
+      titleIn.type = "text";
+      titleIn.className = "dayitem-titlein";
+      titleIn.value = idea.title;
+      var deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "rowdel-btn";
+      deleteBtn.title = "Remove this idea";
+      deleteBtn.textContent = "✕";
+      top.appendChild(titleIn);
+      top.appendChild(deleteBtn);
+      row.appendChild(top);
+
+      var statusRow = document.createElement("div");
+      statusRow.className = "dayitem-statusrow";
+      var toggle = document.createElement("div");
+      toggle.className = "statustoggle";
+      var draftBtn = document.createElement("button");
+      draftBtn.type = "button";
+      draftBtn.className = "statusbtn draft" + (!idea.posted ? " active" : "");
+      draftBtn.textContent = "Draft";
+      var postedBtn = document.createElement("button");
+      postedBtn.type = "button";
+      postedBtn.className = "statusbtn published" + (idea.posted ? " active" : "");
+      postedBtn.textContent = "Posted";
+      toggle.appendChild(draftBtn);
+      toggle.appendChild(postedBtn);
+      var moveInput = document.createElement("input");
+      moveInput.type = "date";
+      moveInput.className = "dayitem-move";
+      moveInput.value = idea.date || "";
+      moveInput.title = "Move to another date";
+      statusRow.appendChild(toggle);
+      statusRow.appendChild(moveInput);
+      row.appendChild(statusRow);
+
+      var typeRow = document.createElement("div");
+      typeRow.className = "dayitem-statusrow";
+      typeRow.appendChild(storyTypeSelect(idea));
+      row.appendChild(typeRow);
+
+      // Images: thumbnails (tap to open full size), ✕ to remove, and an
+      // "Attach image" button. Uploads go straight to the server; the idea
+      // just keeps the ids, saved with the normal Save.
+      if (!Array.isArray(idea.images)) idea.images = [];
+      var imgWrap = document.createElement("div");
+      imgWrap.className = "storyimgs";
+      idea.images.forEach(function(id){
+        var fig = document.createElement("div");
+        fig.className = "storyimg";
+        var a = document.createElement("a");
+        a.href = "/api/image/" + id;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.title = "Open full size (long-press to save on your phone)";
+        var im = document.createElement("img");
+        im.src = "/api/image/" + id;
+        im.alt = "Story image";
+        im.loading = "lazy";
+        a.appendChild(im);
+        var rm = document.createElement("button");
+        rm.type = "button";
+        rm.className = "storyimg-rm";
+        rm.title = "Remove image";
+        rm.textContent = "✕";
+        rm.addEventListener("click", function(){
+          if (!window.confirm("Remove this image?")) return;
+          idea.images = idea.images.filter(function(x){ return x !== id; });
+          deleteStoryImage(id);
+          markDirty();
+          renderStoryModal();
+        });
+        fig.appendChild(a);
+        fig.appendChild(rm);
+        imgWrap.appendChild(fig);
+      });
+      var fileIn = document.createElement("input");
+      fileIn.type = "file";
+      fileIn.accept = "image/*";
+      fileIn.multiple = true;
+      fileIn.hidden = true;
+      var attachBtn = document.createElement("button");
+      attachBtn.type = "button";
+      attachBtn.className = "copybtn";
+      attachBtn.textContent = "+ Attach image";
+      var imgStatus = document.createElement("span");
+      imgStatus.className = "daymodal-savestatus";
+      attachBtn.addEventListener("click", function(){ fileIn.click(); });
+      fileIn.addEventListener("change", function(){
+        var files = Array.prototype.slice.call(fileIn.files || []);
+        if (!files.length) return;
+        attachBtn.disabled = true;
+        imgStatus.textContent = "Uploading…";
+        var chain = Promise.resolve(), failed = 0;
+        files.forEach(function(f){
+          chain = chain.then(function(){
+            return uploadStoryImage(f).then(function(id){ idea.images.push(id); }, function(){ failed++; });
+          });
+        });
+        chain.then(function(){
+          markDirty();
+          renderStoryModal();
+          if (failed) window.alert(failed + " image(s) couldn't upload. If you've been away a while, open hub.ollyhenson.com in a new tab to log in again, then try again.");
+        });
+      });
+      var imgActions = document.createElement("div");
+      imgActions.className = "dayitem-copyrow";
+      imgActions.appendChild(attachBtn);
+      imgActions.appendChild(imgStatus);
+      imgActions.appendChild(fileIn);
+      row.appendChild(imgWrap);
+      row.appendChild(imgActions);
+
+      var copyRow = document.createElement("div");
+      copyRow.className = "dayitem-copyrow";
+      var copyTitleBtn = document.createElement("button");
+      copyTitleBtn.className = "copybtn";
+      copyTitleBtn.type = "button";
+      copyTitleBtn.textContent = "Copy idea";
+      copyRow.appendChild(copyTitleBtn);
+      row.appendChild(copyRow);
+      body.appendChild(row);
+
+      titleIn.addEventListener("blur", function(){
+        var newTitle = titleIn.value.trim();
+        if (!newTitle || newTitle === idea.title){ titleIn.value = idea.title; return; }
+        idea.title = newTitle;
+        markDirty();
+        renderStoryCalendar();
+      });
+      moveInput.addEventListener("change", function(){
+        idea.date = moveInput.value;
+        idea.mode = "specific";
+        markDirty();
+        storyTableBuiltForCount = -1;
+        renderStoryModal();
+        renderStories();
+      });
+      function setPosted(v){
+        if (!!idea.posted === v) return;
+        idea.posted = v;
+        markDirty();
+        renderStoryModal();
+        renderStoryCalendar();
+      }
+      draftBtn.addEventListener("click", function(){ setPosted(false); });
+      postedBtn.addEventListener("click", function(){ setPosted(true); });
+      copyTitleBtn.addEventListener("click", function(){ copyToClipboard(idea.title, copyTitleBtn); });
+      deleteBtn.addEventListener("click", function(){
+        var realIndex = storyIdeas().indexOf(idea);
+        if (realIndex === -1) return;
+        if ((idea.images || []).length && !window.confirm("Remove this Story and its images?")) return;
+        storyIdeas().splice(realIndex, 1);
+        (idea.images || []).forEach(deleteStoryImage);
+        markDirty();
+        storyTableBuiltForCount = -1;
+        renderStoryModal();
+        renderStories();
+      });
+    });
+  }
+
+  document.getElementById("storyModalClose").addEventListener("click", closeStoryModal);
+  document.getElementById("storyModalOverlay").addEventListener("click", function(e){
+    if (e.target === this) closeStoryModal();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && storyModalDate) closeStoryModal();
+  });
+  document.getElementById("storyModalSave").addEventListener("click", function(){
+    var btn = document.getElementById("storyModalSave");
+    var status = document.getElementById("storyModalSaveStatus");
+    saveNow(function(ok){
+      btn.disabled = false;
+      status.textContent = ok ? "Saved ✓" : "Save failed";
+      setTimeout(function(){ status.textContent = ""; }, 1300);
+    });
+    setTimeout(function(){
+      btn.disabled = true;
+      status.textContent = "Saving…";
+    }, 0);
+  });
+  function moveStoryMonth(delta){
+    storyCalCursor = delta === 0 ? new Date() : new Date(storyCalCursor.getFullYear(), storyCalCursor.getMonth()+delta, 1);
+    uiSave({ storyCalMonth: storyCalCursor.getFullYear() + "-" + String(storyCalCursor.getMonth()+1).padStart(2,"0") });
+    renderStoryCalendar();
+  }
+  document.getElementById("storyCalPrev").addEventListener("click", function(){ moveStoryMonth(-1); });
+  document.getElementById("storyCalNext").addEventListener("click", function(){ moveStoryMonth(1); });
+  document.getElementById("storyCalToday").addEventListener("click", function(){ moveStoryMonth(0); });
+  document.getElementById("storyIdeaAdd").addEventListener("click", function(){
+    storyIdeas().push({ title:"", date: findNextStoryDate(), mode:"auto" });
+    storyTableBuiltForCount = -1;
+    markDirty();
+    renderStories();
+  });
+
   // ── Wire up ────────────────────────────────────────────────────────────
   document.querySelectorAll(".tabbtn").forEach(function(btn){
     btn.addEventListener("click", function(){
@@ -3778,6 +4282,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     state.content.ideas.forEach(function(idea){
       if (idea.posted && idea.title) syncIdeaToOutliers(idea);
     });
+    if (!state.stories) state.stories = { ideas: [] };
+    if (!Array.isArray(state.stories.ideas)) state.stories.ideas = [];
     if (!state.delivery) state.delivery = { projects: [] };
     if (!state.brainDump) state.brainDump = { cards: [] };
     if (!Array.isArray(state.brainDump.cards)) state.brainDump.cards = [];
@@ -3787,6 +4293,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     render();
     renderContentTab();
     renderIdeasAndWeek();
+    storyTableBuiltForCount = -1;
+    renderStories();
     renderDelivery();
     renderCaptionTemplates();
     renderBrainDump();
@@ -3810,6 +4318,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var y = Number(parts[0]), m = Number(parts[1]);
       if (y && m) calCursor = new Date(y, m-1, 1);
     }
+    if (ui && ui.storyCalMonth){
+      var sp = ui.storyCalMonth.split("-");
+      if (Number(sp[0]) && Number(sp[1])) storyCalCursor = new Date(Number(sp[0]), Number(sp[1])-1, 1);
+    }
     if (ui && ui.tab && document.getElementById("tab-"+ui.tab)){
       var targetBtn = document.querySelector('.tabbtn[data-tab="'+ui.tab+'"]');
       if (targetBtn){
@@ -3824,6 +4336,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
     rerenderAll();
     closeDayModal();   // never boot with the day panel open, whatever the saved HTML had
+    closeStoryModal();
     var baseRev = dirtyGet();
     if (baseRev !== null){ serverRev = baseRev; setSaveState("unsaved"); }
     else setSaveState("saved");
