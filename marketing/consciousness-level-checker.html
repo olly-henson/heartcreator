@@ -349,8 +349,8 @@ Object.assign(POST_TYPES, {
 /* Memes: each template is a content type, and the format is where the meme is going. */
 const MEME_PLACES = ["Instagram Story","Reel (meme on screen while I talk)","Skool post","Instagram feed post"];
 Object.assign(POST_TYPES, {
-  "Any template (tool picks)": {group:"Meme", desc:"The tool picks the template that lands the idea best.", formats:MEME_PLACES,
-    rule:"Pick the best template for the idea from: Bell curve, Buff Doge vs Cheems, Two guys on a bus, Drake, Galaxy brain, Gru's plan, Distracted boyfriend, Two buttons, Panik Kalm Panik, Tuxedo Winnie the Pooh, Charlie's conspiracy board, They don't know. Use a different template for each idea."},
+  "Any template (tool picks)": {group:"Meme", desc:"A mix of templates: a different one for each meme, favouring ones you haven't had recently.", formats:MEME_PLACES,
+    rule:"The page picks a different template for each meme, favouring ones you haven't had recently."},
   "Bell curve": {group:"Meme", desc:"The IQ bell curve: simple guy on the left, crying overthinker in the middle, calm wise guy on the right. Left and right say the same simple thing.", formats:MEME_PLACES,
     rule:"Three panels: Left (simple guy), Middle (crying guy, the long list of things the old belief says to learn first), Right (calm wise guy, same words as Left). The middle is the old belief; left and right are the right emotional state."},
   "Buff Doge vs Cheems": {group:"Meme", desc:"Strong, confident Buff Doge next to small, sad Cheems.", formats:MEME_PLACES,
@@ -671,8 +671,25 @@ For each post give:
 
 Reply as JSON: {"ideas":[{"hook":"","stage":"","post":"","poll":[],"when":"","why":""}]}`;
 }
+/* "Any template": the page picks the templates itself, so Claude can't default to Drake every time.
+   Least-used recently first (remembered in this browser), ties broken at random, never the same one twice in a batch. */
+const MEME_TEMPLATES = Object.keys(POST_TYPES).filter(k => POST_TYPES[k].group === "Meme" && k !== "Any template (tool picks)");
+function pickMemeTemplates(n){
+  const recent = store.get("cig-meme-recent", []);
+  const uses = k => recent.filter(x => x === k).length;
+  const picks = MEME_TEMPLATES.map(k => ({k, u: uses(k), r: Math.random()}))
+    .sort((a, b) => a.u - b.u || a.r - b.r).slice(0, Math.min(n, MEME_TEMPLATES.length)).map(x => x.k);
+  store.set("cig-meme-recent", picks.concat(recent).slice(0, 24));
+  return picks;
+}
 function memePrompt(type, t, fmt, n, part, topic){
   const place = fmt || "pick the best place for each meme from: " + MEME_PLACES.join(" / ");
+  const auto = type === "Any template (tool picks)";
+  const picks = auto ? pickMemeTemplates(n) : [];
+  if (auto) n = picks.length;
+  const templateBrief = auto
+    ? "Templates (use exactly these, one per meme, in this order; the template name must match exactly):\n" + picks.map((k, x) => (x + 1) + ". " + k + ": " + POST_TYPES[k].desc + " How to fill it: " + POST_TYPES[k].rule).join("\n")
+    : "Template: " + type + ". " + t.desc + "\nHow to fill it: " + t.rule;
   return `You write meme ideas for Olly Henson (The Attraction Formula community), who helps singles attract the right partner by shifting into the right emotional state.
 ${CORE}
 
@@ -693,12 +710,11 @@ WHERE IT'S GOING
 - Instagram feed post: a short caption, full stops instead of dashes, ending with a question.
 
 THIS REQUEST
-Template: ${type}. ${t.desc}
-How to fill it: ${t.rule}
+${templateBrief}
 Where it's going: ${place}
 Part of the message: ${part}
 ${topic ? "Topic or angle: " + topic : ""}
-Give ${n} different memes. Make each one genuinely different in angle (and template, if the tool is picking).
+Give ${n} different memes. Make each one genuinely different in angle.
 
 For each meme give:
 - template: the template name
