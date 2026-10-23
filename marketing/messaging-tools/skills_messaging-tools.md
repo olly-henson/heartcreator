@@ -120,6 +120,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - Never make a meme that mocks being single, someone's looks or age, or the reader.
 - Never leave a choice that needs variety (meme template, hook style) to Claude alone; it drifts to the most famous option (Drake every time). Let the page choose and rotate, then tell Claude what to use.
 - Never sound like "Think positive. Just change your thoughts. It's easy." It's the advice the audience finds most annoying (survey, 2026-10-22). Never call the change easy.
+- Never write "free trial" / "try it free for 7 days" calls to action any more (trial closed 2026-10-23). Reels point to the free training (comment RESONANCE).
 - Never change the core messaging off one survey response. Olly said it's "pretty on point"; discuss in chat and wait for a pattern.
 
 ## 6. Examples (current strong versions)
@@ -139,6 +140,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 
 ## Changelog
 
+- **2026-10-23 (offer change, not yet in the tools):** The business moved to the high-ticket **The Heart Attractor Program** ($497/month or $2,500/year, community + daily access to Olly, no 1-to-1, 14-day feel-the-difference guarantee). Funnel: Reel → comment RESONANCE → opt-in → free YouTube training → DM follow-up → application/call. Source of truth: `marketing\memory\offer_heart_attractor_program.md` and the Claude Doc "The Heart Attractor Program: Offer". The 7-day free trial is OFF. **Still to do:** update the Messaging Center, Content Idea Generator CTAs (ATTRACTION/free trial → RESONANCE/free training) and Reel caption in the next session; don't write free-trial CTAs meanwhile.
 - **2026-10-23 (v69):** Memes tab: "Any template (tool picks)" kept coming back as Drake, because Claude was choosing. The page now picks the templates (`pickMemeTemplates()`): one per meme, least-used recently first (last 24 picks in `cig-meme-recent`), ties random, and tells Claude exactly which template each meme uses. Tested: 8 batches of 3 used all 12 templates twice each.
 - **2026-10-23 (backup):** Exported the generator's database (queues `ideaqueue`, rejections `rejected`) to `messaging-tools\content-idea-generator-backup\` (`database.json` + readable `README.md`). To restore into a new artifact, write `database.json` back with ArtifactData batch. Re-export after big queue changes.
 - **2026-10-23 (v68):** Reel header cards have a "Where does this connect?" button (`connectButton` / `connectPrompt`). It asks Claude, using CORE, which part of the message the header draws on, how it connects, what the Reel should land on, and any drift ("Watch out"). The answer is saved on the idea (`i.link`, keyed to the header text) so reopening is instant; editing the header asks again.
