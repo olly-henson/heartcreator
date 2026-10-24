@@ -81,6 +81,15 @@
     font-family: 'Poppins', sans-serif; font-size: 16px; color: #ffffff;
     outline: none; transition: border-color .2s, box-shadow .2s;
   }
+  /* stop browser autofill painting the fields light blue / white */
+  .ohc-input:-webkit-autofill, .ohc-input:-webkit-autofill:hover, .ohc-input:-webkit-autofill:focus,
+  .ohc-textarea:-webkit-autofill, .ohc-select:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px #140a1c inset;
+    box-shadow: 0 0 0 1000px #140a1c inset;
+    caret-color: #ffffff;
+    transition: background-color 9999s ease-out 0s;
+  }
   .ohc-input::placeholder { color: rgba(230,220,242,.4); }
   .ohc-input:focus { border-color: #d946ef; box-shadow: 0 0 0 4px rgba(217,70,239,.15); }
 

@@ -116,6 +116,15 @@
     background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
     background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right: 40px; }
   .ohc-select option { background: #150818; color: #ffffff; }
+  /* stop browser autofill painting the fields light blue / white */
+  .ohc-input:-webkit-autofill, .ohc-input:-webkit-autofill:hover, .ohc-input:-webkit-autofill:focus,
+  .ohc-textarea:-webkit-autofill, .ohc-select:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px #140a1c inset;
+    box-shadow: 0 0 0 1000px #140a1c inset;
+    caret-color: #ffffff;
+    transition: background-color 9999s ease-out 0s;
+  }
   .ohc-input::placeholder, .ohc-textarea::placeholder { color: rgba(230,220,242,.4); }
   .ohc-input:focus, .ohc-textarea:focus, .ohc-select:focus {
     border-color: #d946ef; box-shadow: 0 0 0 4px rgba(217,70,239,.15);
