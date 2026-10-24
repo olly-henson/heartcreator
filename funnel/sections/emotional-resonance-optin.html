@@ -5,7 +5,7 @@
 <!-- Flow: Reel -> ManyChat DM (RESONANCE) -> this page -> name + email to GHL (daily email list) -> redirect to the training (YouTube). -->
 <!-- GHL: One Custom HTML block. Section + row + column padding/margin = 0. Full Width. -->
 <!-- GHL quirks handled: no <form> tag, button type="button" + click handler, ohc_ ids for name/email, html/body background reset, 100vw escape. -->
-<!-- Before going live: set WEBHOOK_URL (GHL "Emotional Resonance Training" workflow) and REDIRECT_URL (the training page or YouTube link). -->
+<!-- Webhook set 2026-10-24 (GHL "Emotional Resonance Training Opt-in"). Still to set: REDIRECT_URL = the YouTube video link. -->
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -191,7 +191,7 @@
 <script>
 (function(){
   // ⚠️ Set these before going live. While they're placeholders, the button just shows "You're In" (safe for previews).
-  var WEBHOOK_URL  = 'PASTE_YOUR_GHL_WEBHOOK_URL_HERE'; // GHL "Emotional Resonance Training" workflow -> Inbound Webhook trigger
+  var WEBHOOK_URL  = 'https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/aaa6a82e-9714-4f85-9e07-e1ddb13f77a2'; // GHL "Emotional Resonance Training Opt-in" workflow (2026-10-24)
   var REDIRECT_URL = ''; // the training's YouTube video link, e.g. 'https://www.youtube.com/watch?v=XXXXXXXXXXX' (people land on YouTube so they can subscribe)
 
   function $(id){ return document.getElementById(id); }
