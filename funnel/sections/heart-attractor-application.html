@@ -296,18 +296,6 @@
             <input class="ohc-input" type="text" id="ohc_profession" autocomplete="organization-title" placeholder="What do you do for work?">
             <div class="ohc-field-err">Please add your profession.</div>
           </div>
-          <div class="ohc-field" data-required>
-            <label class="ohc-label" for="ohc_age">Age <span class="req">*</span></label>
-            <select class="ohc-select" id="ohc_age">
-              <option value="">Choose…</option>
-              <option>Under 25</option>
-              <option>25–34</option>
-              <option>35–44</option>
-              <option>45–54</option>
-              <option>55+</option>
-            </select>
-            <div class="ohc-field-err">Please choose your age range.</div>
-          </div>
         </div>
 
         <hr class="ohc-divider">
@@ -494,7 +482,6 @@
       city:       val('ohc_city'),
       timezone:   (Intl.DateTimeFormat().resolvedOptions().timeZone || ''),
       profession: val('ohc_profession'),
-      age_range:  val('ohc_age'),
       status:          picked('status'),
       relationship_wanted: val('ohc_want'),
       how_long:        picked('how_long'),
