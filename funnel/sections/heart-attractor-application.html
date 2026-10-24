@@ -5,7 +5,7 @@
 <!-- GHL: One Custom HTML block. Section + row + column padding/margin = 0. Full Width. -->
 <!-- GHL quirks handled (see funnel/CLAUDE.md): no <form> tag, button type="button" + click handler,
      name/email inputs use ohc_ ids, html/body background reset, 100vw escape on .ohc-page. -->
-<!-- Before going live: paste the GHL "Heart Attractor Applications" webhook URL into WEBHOOK_URL and set THANK_YOU_URL. -->
+<!-- Webhook: GHL "Heart Attractor Applications" workflow (set 2026-10-24). THANK_YOU_URL empty = inline thank-you message. -->
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -420,7 +420,7 @@
 (function(){
   // ⚠️ Set these before going live. While the webhook is still the placeholder,
   // submitting just shows the thank-you message (safe for previews).
-  var WEBHOOK_URL   = 'PASTE_YOUR_GHL_WEBHOOK_URL_HERE';
+  var WEBHOOK_URL   = 'https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/1e82ca06-926b-43b8-a13d-16703c5c7d6d'; // GHL "Heart Attractor Applications" workflow (2026-10-24)
   var THANK_YOU_URL = ''; // e.g. 'https://ollyhenson.com/application-received' (empty = show the inline thank-you)
 
   function $(id){ return document.getElementById(id); }
