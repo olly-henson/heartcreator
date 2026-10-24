@@ -45,6 +45,17 @@
     .ohc-h1-desk { display: none; }
     .ohc-h1-mob { display: block; }
   }
+  /* every line of the header steps down (inverted pyramid). Phones: hand-set lines, sizes tied to screen width
+     so the ratios hold: headline lines 323/308, sub 333/281/260, note 230/212/185/118 (measured at 32/15/13px). */
+  .ohc-mob-only { display: none; }
+  @media (max-width: 760px) {
+    .ohc-desk-only { display: none; }
+    .ohc-mob-only { display: block; }
+    .ohc-mob-only > span { display: block; white-space: nowrap; }
+    .ohc-h1 { font-size: min(34px, calc((100vw - 40px) / 10.2)); }
+    .ohc-sub.ohc-mob-only { font-size: min(14.5px, calc((100vw - 40px) / 23.9)); max-width: none; }
+    .ohc-note.ohc-mob-only { font-size: min(13px, calc((100vw - 40px) / 26.7)); max-width: none; }
+  }
   .ohc-grad {
     background: linear-gradient(135deg, #E1A6FF, #d946ef);
     -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -52,6 +63,13 @@
   .ohc-sub {
     font-size: clamp(16px, 1.8vw, 20px); line-height: 1.6; color: #E6DCF2;
     max-width: 640px; margin: 0 auto; text-wrap: balance;
+  }
+  /* desktop: hand-set inverted pyramid, top line wider */
+  @media (min-width: 761px) {
+    .ohc-sub { max-width: none; }
+    .ohc-sub-l1, .ohc-sub-l2 { display: block; white-space: nowrap; }
+    .ohc-note { max-width: none; }
+    .ohc-note-l1, .ohc-note-l2 { display: block; white-space: nowrap; }
   }
   .ohc-note {
     font-size: 14px; color: rgba(230,220,242,.7); margin: 18px auto 0; max-width: 560px; line-height: 1.6;
@@ -170,8 +188,10 @@
       <span class="ohc-h1-desk">Apply For <span class="ohc-grad">The Heart Attractor Program</span></span>
       <span class="ohc-h1-mob"><span class="ohc-line">Apply For <span class="ohc-grad">The Heart</span></span><span class="ohc-line ohc-grad">Attractor Program</span></span>
     </h1>
-    <p class="ohc-sub">Attract a genuine and committed long&#8209;term relationship without doing more inner work or learning more dating rules.</p>
-    <p class="ohc-note">Takes about 5 minutes. I read every application myself, and if it looks like a good fit I'll reach out to you on WhatsApp.</p>
+    <p class="ohc-sub ohc-desk-only"><span class="ohc-sub-l1">Attract a genuine and committed long&#8209;term relationship without</span> <span class="ohc-sub-l2">doing more inner work or learning more dating rules.</span></p>
+    <p class="ohc-sub ohc-mob-only"><span>Attract a genuine and committed long&#8209;term</span> <span>relationship without doing more inner</span> <span>work or learning more dating rules.</span></p>
+    <p class="ohc-note ohc-desk-only"><span class="ohc-note-l1">Takes about 5 minutes. I read every application myself, and if it</span> <span class="ohc-note-l2">looks like a good fit I'll reach out to you on WhatsApp.</span></p>
+    <p class="ohc-note ohc-mob-only"><span>Takes about 5 minutes. I read every</span> <span>application myself, and if it looks</span> <span>like a good fit I'll reach out to</span> <span>you on WhatsApp.</span></p>
   </div>
 
   <!-- FORM (a div, not a <form>: GHL intercepts real form tags) -->
