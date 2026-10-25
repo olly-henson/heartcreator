@@ -374,6 +374,18 @@
         <hr class="ohc-divider">
         <p class="ohc-section-label">Working Together</p>
 
+        <div class="ohc-field" data-required data-group="priority">
+          <span class="ohc-label">How much of a priority is finding someone for a long-term relationship in your life right now? <span class="req">*</span></span>
+          <div class="ohc-choices ohc-choices--stack">
+            <label class="ohc-choice"><input type="radio" name="priority" value="Not really a priority right now"> Not really a priority right now</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="Something I think about now and then"> Something I think about now and then</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="It matters, but other things come first"> It matters, but other things come first</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="One of my top priorities"> One of my top priorities</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="It's my main focus in life right now"> It's my main focus in life right now</label>
+          </div>
+          <div class="ohc-field-err">Please choose one.</div>
+        </div>
+
         <div class="ohc-field" data-required data-group="daily">
           <span class="ohc-label">Just to be upfront: this isn't about learning more information. It's about implementation, embodiment and support, so this actually happens for you. How does that sound? <span class="req">*</span></span>
           <div class="ohc-choices ohc-choices--stack">
@@ -457,6 +469,19 @@
   }
   utm();
 
+  // Page-view counter for the Business Hub (2026-10-24): one count per visit,
+  // live site only (not the GHL editor preview). GHL has no API for its own
+  // page stats, so the Hub keeps its own count.
+  (function(){
+    if (!/(^|\.)ollyhenson\.com$/.test(location.hostname)) return;
+    try { if (sessionStorage.getItem('ohc_pv_apply')) return; sessionStorage.setItem('ohc_pv_apply', '1'); } catch(e){}
+    // Where the visit came from (2026-10-25): the UTMs, else the site that
+    // linked here, else (direct).
+    var u = utm(), src = u.utm_source, med = u.utm_medium, con = u.utm_content;
+    if (!src){ try { var r = document.referrer && new URL(document.referrer).hostname; if (r && !/(^|\.)ollyhenson\.com$/.test(r)){ src = r.replace(/^www\./, ''); med = 'referral'; } } catch(e){} }
+    try { navigator.sendBeacon('https://hub.ollyhenson.com/api/track', ['apply', src || '(direct)', med || '', con || ''].join('|')); } catch(e){}
+  })();
+
   function validate(){
     var ok = true, first = null;
     document.querySelectorAll('#ohcAppForm .ohc-field[data-required]').forEach(function(f){
@@ -504,6 +529,7 @@
       not_happening:   val('ohc_not_happening'),
       feelings_about_love: val('ohc_why'),
       meet_right_person_once: val('ohc_once'),
+      relationship_priority: picked('priority'),
       implementation_fit: picked('daily'),
       willing_to_invest: picked('invest'),
       anything_else:   val('ohc_anything'),

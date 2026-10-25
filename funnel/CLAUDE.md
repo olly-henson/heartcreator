@@ -93,6 +93,12 @@ funnel/
 - **Form ID:** `inmmplT2BZ` (native GHL form — not used directly)
 - **Webhook URL:** `https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/QNu0d7RU7RwtabcD1aQo`
 
+### Changing a live page (Olly, 2026-10-25)
+- **Design experiments never go in the live page file.** Try them in a variant file (e.g. `emotional-resonance-optin-video-variant.html`) plus a preview artifact, and only move them into the live file once Olly approves. The bright pink badge sat in the live opt-in file after Olly rejected it ("too pink"), and nearly went into GHL with an unrelated tracking change.
+- **Keep tracking/functional changes separate from design changes**, so Olly can paste one without the other. "Keep the opt-in as it was" meant the design (no video player, original badge), not the tracking: he still wanted the visitor-source tracking added.
+- **Before telling Olly to paste a page, diff it against the last version he pasted** (`git diff` on the file) and list every change, so nothing he rejected rides along.
+- **Phone above-the-fold beats extras.** The video player in the middle of the opt-in pushed the form down ("takes up too much room"), so it became A/B variant B.
+
 ## How It Works
 - The visible form is custom HTML/CSS — it looks great and is fully styled
 - On submit, it POSTs JSON to the GHL webhook which creates the contact
@@ -287,6 +293,17 @@ Links from funnel pages to the coaching application use `ref=` for upgrade path 
 
 ## Changelog
 
+### 2026-10-25 — Opt-in: video player in the middle
+- `emotional-resonance-optin.html` now has a paused video player between the subheading and the form (Olly: "the centre of the page, as it would be for most video opt-in offers"): the YouTube thumbnail (`https://i.ytimg.com/vi/IneemXUd7Nw/maxresdefault.jpg`, so nothing to upload to GHL and it follows YouTube thumbnail changes), a pulsing play button and a progress bar. Tapping it scrolls to the form, nudges the card and focuses First Name (the real video is on YouTube after opting in). Preview artifact: https://claude.ai/artifact/E2Cs7byvnnMisWgBzWwWVw (webhook + redirect blanked and the thumbnail embedded, because the artifact viewer blocks outside images; never paste the preview into GHL).
+- **Decision (same day):** the player takes up too much room, so it's OFF the live page and parked as A/B **variant B** in `emotional-resonance-optin-video-variant.html` for the split test later. A bright pink badge was tried and dropped (too bright). **Olly, 2026-10-25: keep the live opt-in page's design as it was** (original soft badge, no video player). The only change to the opt-in HTML is tracking: the page-view beacon now also sends where the visit came from (`optin|<source>|<medium>|<content>`: the UTMs, else the referring site, else `(direct)`), feeding the Hub's "Opt-in page traffic". The same was added to the application page and the video variant. Don't change the opt-in design unless Olly asks.
+
+### 2026-10-24 — Hub page-view counter on the opt-in + application pages
+- Both `emotional-resonance-optin.html` and `heart-attractor-application.html` send one `navigator.sendBeacon` per visit to `https://hub.ollyhenson.com/api/track` (body `optin` / `apply`), live domain only. The Business Hub uses it for page conversion rates (GHL has no funnel-stats API). Keep the snippet (after `utm();`) when editing these pages; re-paste into GHL after any change. Opt-in REDIRECT_URL = `https://youtu.be/IneemXUd7Nw` (set 2026-10-24).
+
+### 2026-10-24 — Application page: guarantee box + priority question
+- **The guarantee is NOT on the application page** (Olly, 2026-10-24): it's said only on the sales call. A guarantee box was added, then removed the same day.
+- New required question, first in Working Together: "How much of a priority is finding someone for a long-term relationship in your life right now?", with 5 options from "Not really a priority right now" to "It's my main focus in life right now". Webhook key `relationship_priority`; GHL custom field to create: HA Relationship Priority (single line).
+
 ### 2026-10-23 — High-ticket funnel pages: emotional-resonance-optin.html + heart-attractor-application.html
 - **New pages** (purple training style, Poppins, same GHL quirk fixes as the old forms): `emotional-resonance-optin.html` (opt-in for the free video training; name + email; WEBHOOK_URL + REDIRECT_URL still placeholders) and `heart-attractor-application.html` (application for The Heart Attractor Program, linked from the YouTube description; country + time zone, profession, age, love-life questions, implementation fit, willing-to-invest ranges; WEBHOOK_URL placeholder). Both show their success message without sending anything until the webhook is set. Offer: `marketing\memory\offer_heart_attractor_program.md`.
 - **Mobile above-the-fold (Olly, iPhone):** the whole form + button must sit above Safari's bottom bar (~715px of visible height at 414px wide). Names side by side on phones, tighter spacing, test in a 414x715 and 375x715 iframe (headless Edge won't go narrower than ~500px, so wrap the page in an iframe).
@@ -379,3 +396,6 @@ git add .
 git commit -m "Session update: [one-line summary]"
 git push
 ```
+
+### 2026-10-25 — Skill review
+- Added "Changing a live page": design experiments only in variant files, tracking kept separate from design, diff before a paste, phone above-the-fold first. Why: the rejected pink badge was still in the live opt-in file, and "keep it as it was" meant the design, not the tracking.

@@ -5,7 +5,7 @@
 <!-- Flow: Reel -> ManyChat DM (RESONANCE) -> this page -> name + email to GHL (daily email list) -> redirect to the training (YouTube). -->
 <!-- GHL: One Custom HTML block. Section + row + column padding/margin = 0. Full Width. -->
 <!-- GHL quirks handled: no <form> tag, button type="button" + click handler, ohc_ ids for name/email, html/body background reset, 100vw escape. -->
-<!-- Webhook set 2026-10-24 (GHL "Emotional Resonance Training Opt-in"). Still to set: REDIRECT_URL = the YouTube video link. -->
+<!-- Webhook set 2026-10-24 (GHL "Emotional Resonance Training Opt-in"). REDIRECT_URL set 2026-10-24 (YouTube training). -->
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -201,7 +201,7 @@
 (function(){
   // ⚠️ Set these before going live. While they're placeholders, the button just shows "You're In" (safe for previews).
   var WEBHOOK_URL  = 'https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/aaa6a82e-9714-4f85-9e07-e1ddb13f77a2'; // GHL "Emotional Resonance Training Opt-in" workflow (2026-10-24)
-  var REDIRECT_URL = ''; // the training's YouTube video link, e.g. 'https://www.youtube.com/watch?v=XXXXXXXXXXX' (people land on YouTube so they can subscribe)
+  var REDIRECT_URL = 'https://youtu.be/IneemXUd7Nw'; // the training's YouTube video link (people land on YouTube so they can subscribe)
 
   function $(id){ return document.getElementById(id); }
   function isEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
@@ -219,6 +219,19 @@
     return u;
   }
   utm();
+
+  // Page-view counter for the Business Hub (2026-10-24): one count per visit,
+  // live site only (not the GHL editor preview). GHL has no API for its own
+  // page stats, so the Hub keeps its own count.
+  (function(){
+    if (!/(^|\.)ollyhenson\.com$/.test(location.hostname)) return;
+    try { if (sessionStorage.getItem('ohc_pv_optin')) return; sessionStorage.setItem('ohc_pv_optin', '1'); } catch(e){}
+    // Where the visit came from (2026-10-25): the UTMs, else the site that
+    // linked here, else (direct).
+    var u = utm(), src = u.utm_source, med = u.utm_medium, con = u.utm_content;
+    if (!src){ try { var r = document.referrer && new URL(document.referrer).hostname; if (r && !/(^|\.)ollyhenson\.com$/.test(r)){ src = r.replace(/^www\./, ''); med = 'referral'; } } catch(e){} }
+    try { navigator.sendBeacon('https://hub.ollyhenson.com/api/track', ['optin', src || '(direct)', med || '', con || ''].join('|')); } catch(e){}
+  })();
 
   $('ohcBtn').addEventListener('click', function(e){
     e.preventDefault();

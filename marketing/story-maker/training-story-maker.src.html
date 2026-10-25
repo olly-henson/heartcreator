@@ -1,0 +1,408 @@
+<title>Training Story Maker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: phone-shaped preview on the left, one column of controls on the right; stacks on a phone. */
+:root{
+  --bg:#f6f2f9; --panel:#ffffff; --fg:#22102e; --muted:#6d5b78; --line:#e4d9ec;
+  --accent:#8a2be2; --accent-fg:#ffffff; --soft:#f1e6fa;
+  --font:'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#130a1a; --panel:#1d1127; --fg:#f3eaf9; --muted:#b4a3c2; --line:#33233f; --accent:#b46cf2; --accent-fg:#1a0524; --soft:#2a1838; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#130a1a; --panel:#1d1127; --fg:#f3eaf9; --muted:#b4a3c2; --line:#33233f; --accent:#b46cf2; --accent-fg:#1a0524; --soft:#2a1838; color-scheme:dark; }
+[hidden]{ display:none !important; }
+body{ background:var(--bg); color:var(--fg); font-family:var(--font); font-size:15px; }
+.wrap{ max-width:1000px; margin:0 auto; padding-block:28px 48px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+h1{ font-size:24px; font-weight:800; margin:0 0 4px; text-wrap:balance; }
+.lede{ color:var(--muted); margin:0 0 24px; max-width:62ch; line-height:1.5; }
+.grid{ display:grid; grid-template-columns:minmax(0, 340px) minmax(0, 1fr); gap:28px; align-items:start; }
+@media (max-width:720px){ .grid{ grid-template-columns:minmax(0,1fr); } .preview{ max-width:320px; margin:0 auto; } }
+.preview img{ width:100%; aspect-ratio:9/16; border-radius:18px; display:block; background:var(--soft);
+  box-shadow:0 10px 30px rgba(40,10,60,.18); }
+.controls{ display:flex; flex-direction:column; gap:20px; min-width:0; }
+.group{ display:flex; flex-direction:column; gap:8px; }
+.label{ font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.seg{ display:flex; flex-wrap:wrap; gap:8px; }
+.seg button{ font:inherit; font-weight:600; font-size:14px; padding:10px 14px; border-radius:10px; cursor:pointer;
+  border:1px solid var(--line); background:var(--panel); color:var(--fg); }
+.seg button[aria-pressed="true"]{ background:var(--accent); color:var(--accent-fg); border-color:var(--accent); }
+textarea, input[type="text"]{ font:inherit; font-size:16px; width:100%; box-sizing:border-box; padding:10px 12px;
+  border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--fg); resize:vertical; }
+.row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.btn{ font:inherit; font-weight:600; font-size:14px; padding:10px 16px; border-radius:10px; cursor:pointer;
+  border:1px solid var(--line); background:var(--panel); color:var(--fg); }
+.btn.primary{ background:var(--accent); color:var(--accent-fg); border-color:var(--accent); font-size:15px; padding:12px 20px; }
+.btn:focus-visible, .seg button:focus-visible, textarea:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.hint{ font-size:13px; color:var(--muted); line-height:1.5; }
+.status{ font-size:13px; color:var(--muted); }
+.file{ position:relative; overflow:hidden; }
+.picks{ display:flex; flex-wrap:wrap; gap:8px; }
+.picks button{ padding:0; width:64px; height:86px; border-radius:10px; overflow:hidden; cursor:pointer;
+  border:2px solid var(--line); background:var(--soft); }
+.picks button[aria-pressed="true"]{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); }
+.picks img{ width:100%; height:100%; object-fit:cover; display:block; }
+input[type="range"]{ width:100%; accent-color:var(--accent); }
+.file input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+</style>
+
+<div class="wrap">
+  <h1>Training Story Maker</h1>
+  <p class="lede">One Instagram Story a day that sells the free training. Pick a layout, take a fresh hook, save the image and post it. People reply VIDEO and ManyChat sends the link.</p>
+
+  <div class="grid">
+    <div class="preview"><img id="preview" alt="Story preview"></div>
+
+    <div class="controls">
+      <div class="group">
+        <span class="label">Layout</span>
+        <div class="seg" id="layouts">
+          <button type="button" data-layout="video" aria-pressed="true">Video preview</button>
+          <button type="button" data-layout="notes" aria-pressed="false">Notes app</button>
+          <button type="button" data-layout="myth" aria-pressed="false">Myth-buster</button>
+        </div>
+      </div>
+
+      <div class="group" id="hookGroup">
+        <label class="label" for="hook">Hook</label>
+        <textarea id="hook" rows="2"></textarea>
+        <div class="row">
+          <button type="button" class="btn" id="newHook">New hook</button>
+          <span class="hint">A different hook each day keeps the same design feeling new.</span>
+        </div>
+      </div>
+
+      <div class="group" id="mythGroup" hidden>
+        <label class="label" for="mythA">What most people think</label>
+        <textarea id="mythA" rows="2"></textarea>
+        <label class="label" for="mythB">The answer</label>
+        <input type="text" id="mythB">
+        <div class="row"><button type="button" class="btn" id="newMyth">New pair</button></div>
+      </div>
+
+      <div class="group" id="photoGroup">
+        <span class="label">Photo</span>
+        <div class="picks" id="photoPicks"></div>
+        <div class="row">
+          <span class="btn file">Upload your own<input type="file" id="photo" accept="image/*"></span>
+        </div>
+        <label class="label" for="photoPos">Move photo down</label>
+        <input type="range" id="photoPos" min="0" max="500" step="10">
+        <span class="hint">Slide until faces sit clear of the title.</span>
+      </div>
+
+      <div class="group">
+        <div class="row">
+          <button type="button" class="btn primary" id="save">Save image</button>
+          <span class="status" id="status" role="status"></span>
+        </div>
+        <span class="hint">1080 × 1920. Text stays clear of Instagram's top bar and the reply box at the bottom. In ManyChat, the VIDEO keyword needs story replies switched on.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var W = 1080, H = 1920;
+  // Built-in photos from Olly's AI OS folders; dy = how far down the photo sits so faces clear the title.
+  var PHOTOS = [
+    { label:"At the bar",   dy:240, src:"data:image/jpeg;base64,__PHOTO__" },
+    { label:"Wedding",      dy:0,   src:"data:image/jpeg;base64,__P_wedding__" },
+    // Landscape talking-to-camera stills: shown as a paused video player, not full-screen,
+    // because full-screen put the play button on Olly's mouth.
+    { label:"Talking 1",    dy:0, frame:true, src:"data:image/jpeg;base64,__P_talk1__" },
+    { label:"Talking 2",    dy:0, frame:true, src:"data:image/jpeg;base64,__P_talk2__" }
+  ];
+
+  // Hook bank: 5–8 words, "most people / we", never "you"; outcome-led; no manifestation words.
+  var TITLE = "How To Attract A Genuine And Committed Long-Term Relationship (Without More Inner Work or Dating Rules)";
+  var HOOKS = [
+    TITLE,
+    "Why the right person hasn't shown up yet",
+    "Most people think love needs more inner work",
+    "The real reason love hasn't moved yet",
+    "Years of inner work and still single?",
+    "What most people miss about attracting love",
+    "It starts with a feeling, not a fix",
+    "Happy couples never fixed everything first",
+    "Why more dating rules never worked",
+    "The missing piece after years of inner work",
+    "Most of us were taught to fix ourselves first",
+    "The emotional state that attracts real commitment",
+    "Love doesn't need another book. It needs this.",
+    "What actually attracts a committed relationship",
+    "Most people skip the one thing that matters"
+  ];
+  var MYTHS = [
+    ["Most people think they need more inner work to find love.", "They don't."],
+    ["Most of us think we need to fix everything first.", "Happy couples never did."],
+    ["Most people think they need better dating rules.", "It was never the rules."],
+    ["Most people think love is about meeting the right person.", "It starts with a feeling."],
+    ["Most of us think we're not ready for love yet.", "Ready isn't the missing piece."]
+  ];
+
+  var st = { layout:"video", hook:"", mythA:"", mythB:"", photo:PHOTOS[0].src, dy:PHOTOS[0].dy, frame:false };
+  var $ = function(id){ return document.getElementById(id); };
+  var store = {
+    get:function(k){ try { return JSON.parse(localStorage.getItem("tsm-" + k)); } catch(e){ return null; } },
+    set:function(k, v){ try { localStorage.setItem("tsm-" + k, JSON.stringify(v)); } catch(e){} }
+  };
+
+  // Next item that hasn't been used recently (remembered on this device only).
+  function nextFrom(list, key){
+    var recent = store.get(key) || [];
+    var fresh = list.map(function(_, i){ return i; }).filter(function(i){ return recent.indexOf(i) === -1; });
+    if (!fresh.length){ recent = []; fresh = list.map(function(_, i){ return i; }); }
+    var pick = fresh[Math.floor(Math.random() * fresh.length)];
+    recent.push(pick); store.set(key, recent.slice(-Math.max(1, list.length - 2)));
+    return list[pick];
+  }
+
+  // ── Drawing helpers ──────────────────────────────────────────────
+  function font(weight, size){ return weight + " " + size + "px Poppins, system-ui, sans-serif"; }
+  function wrap(ctx, text, maxW){
+    var words = String(text).trim().split(/\s+/), lines = [], cur = "";
+    words.forEach(function(w){
+      var t = cur ? cur + " " + w : w;
+      if (ctx.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else cur = t;
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  // Biggest size (down to min) where the text fits in maxLines.
+  function fit(ctx, text, weight, size, min, maxW, maxLines){
+    for (var s = size; s >= min; s -= 2){
+      ctx.font = font(weight, s);
+      var l = wrap(ctx, text, maxW);
+      if (l.length <= maxLines) return { size:s, lines:balance(ctx, text, maxW) };
+    }
+    ctx.font = font(weight, min);
+    return { size:min, lines:wrap(ctx, text, maxW) };
+  }
+  // Same number of lines as a greedy wrap, but as even as possible (no lone word on the last line).
+  function balance(ctx, text, maxW){
+    var base = wrap(ctx, text, maxW), best = base;
+    for (var w = maxW - 10; w > maxW * 0.4; w -= 10){
+      var l = wrap(ctx, text, w);
+      if (l.length !== base.length) break;
+      best = l;
+    }
+    return best;
+  }
+  function lines(ctx, l, x, y, lh, align){
+    ctx.textAlign = align || "center";
+    l.forEach(function(t, i){ ctx.fillText(t, x, y + i * lh); });
+    return y + l.length * lh;
+  }
+  function rrect(ctx, x, y, w, h, r){
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function arrow(ctx, x, y, color){
+    ctx.strokeStyle = color; ctx.lineWidth = 10; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 90); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x - 32, y + 58); ctx.lineTo(x, y + 92); ctx.lineTo(x + 32, y + 58); ctx.stroke();
+  }
+  function loadImg(src){
+    return new Promise(function(ok, no){ var i = new Image(); i.onload = function(){ ok(i); }; i.onerror = no; i.src = src; });
+  }
+  // dy pushes the photo down (faces clear the title card); the strip it uncovers at the top
+  // is filled with the same photo underneath and sits under the dark top fade.
+  function cover(ctx, img, dy){
+    var s = Math.max(W / img.width, H / img.height), w = img.width * s, h = img.height * s;
+    if (dy){ ctx.save(); ctx.translate(0, dy); ctx.scale(1, -1); ctx.drawImage(img, (W - w) / 2, 0, w, h); ctx.restore(); }
+    ctx.drawImage(img, (W - w) / 2, (H - h) / 2 + (dy || 0), w, h);
+  }
+
+  // Safe area: Instagram's top bar ends ~250px down, the reply box starts ~1720px.
+  var DRAW = {
+    // Native-Story look (Olly, 2026-10-24: "space it out… clearly big and visible… like Stories that get replies"):
+    // full-bleed photo, title in Instagram-style white highlight boxes, small badge, sticker-style CTA.
+    video: async function(ctx){
+      var img = await loadImg(st.photo);
+      cover(ctx, img, st.frame ? 0 : st.dy);
+      if (st.frame){ ctx.fillStyle = "rgba(20,4,32,.72)"; ctx.fillRect(0, 0, W, H); }
+      var g = ctx.createLinearGradient(0, 0, 0, 560);
+      g.addColorStop(0, "rgba(20,4,32,.6)"); g.addColorStop(1, "rgba(20,4,32,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, 560);
+      var g2 = ctx.createLinearGradient(0, 1250, 0, H);
+      g2.addColorStop(0, "rgba(20,4,32,0)"); g2.addColorStop(1, "rgba(20,4,32,.85)");
+      ctx.fillStyle = g2; ctx.fillRect(0, 1250, W, H - 1250);
+
+      // badge
+      ctx.font = font(700, 30); var bt = "FREE TRAINING", bw = ctx.measureText(bt).width + 48;
+      ctx.fillStyle = "#d946ef"; rrect(ctx, (W - bw) / 2, 252, bw, 58, 29); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.textBaseline = "middle"; ctx.textAlign = "center"; ctx.fillText(bt, W / 2, 282);
+
+      // title: one white rounded box per line, like Instagram's own text highlight
+      var f = fit(ctx, st.hook, 800, 64, 44, 880, 5);
+      var lh = f.size * 1.34, bh = f.size * 1.24, y = 336 + bh / 2;
+      ctx.font = font(800, f.size);
+      f.lines.forEach(function(t){
+        var w = ctx.measureText(t).width + 44;
+        ctx.fillStyle = "#ffffff"; rrect(ctx, (W - w) / 2, y - bh / 2, w, bh, 16); ctx.fill();
+        ctx.fillStyle = "#1a0524"; ctx.fillText(t, W / 2, y + f.size * 0.04);
+        y += lh;
+      });
+      ctx.textBaseline = "alphabetic";
+
+      var ctaY = 1388;
+      if (st.frame){
+        // paused video player: the photo in a 4:3 frame with a player bar along its foot
+        var FW = 860, FH = 645, fx = (W - FW) / 2, fy = 790;
+        ctx.save(); rrect(ctx, fx, fy, FW, FH, 28); ctx.clip();
+        var sc = Math.max(FW / img.width, FH / img.height);
+        ctx.drawImage(img, fx + (FW - img.width * sc) / 2, fy + (FH - img.height * sc) / 2, img.width * sc, img.height * sc);
+        var pg = ctx.createLinearGradient(0, fy + FH - 150, 0, fy + FH);
+        pg.addColorStop(0, "rgba(0,0,0,0)"); pg.addColorStop(1, "rgba(0,0,0,.65)");
+        ctx.fillStyle = pg; ctx.fillRect(fx, fy + FH - 150, FW, 150);
+        ctx.restore();
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.moveTo(fx + 40, fy + FH - 66); ctx.lineTo(fx + 40, fy + FH - 26); ctx.lineTo(fx + 74, fy + FH - 46); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,.35)"; rrect(ctx, fx + 104, fy + FH - 50, FW - 144, 8, 4); ctx.fill();
+        ctx.fillStyle = "#d946ef"; rrect(ctx, fx + 104, fy + FH - 50, 90, 8, 4); ctx.fill();
+        ctaY = 1478;
+      } else {
+        // play button, on the chest so it never covers a face
+        ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.beginPath(); ctx.arc(W / 2, 1230, 86, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#8a2be2"; ctx.beginPath(); ctx.moveTo(W / 2 - 26, 1186); ctx.lineTo(W / 2 - 26, 1274); ctx.lineTo(W / 2 + 46, 1230); ctx.closePath(); ctx.fill();
+      }
+
+      // CTA: a sticker-style pill plus one line, then an arrow to the reply box
+      ctx.font = font(800, 76); var ct = "Reply \u201cVIDEO\u201d", cw = ctx.measureText(ct).width + 90;
+      ctx.fillStyle = "#fff"; rrect(ctx, (W - cw) / 2, ctaY, cw, 132, 66); ctx.fill();
+      ctx.fillStyle = "#5b1596"; ctx.textAlign = "center"; ctx.fillText(ct, W / 2, ctaY + 92);
+      ctx.fillStyle = "#fff"; ctx.font = font(600, 38); ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 12;
+      if (st.frame){ ctx.font = font(600, 34); ctx.fillText("and I'll send you the free training", W / 2, ctaY + 180); }
+      else { ctx.fillText("and I'll send you the free training", W / 2, ctaY + 196); }
+      ctx.shadowBlur = 0;
+      if (!st.frame) arrow(ctx, W / 2, 1614, "#fff");
+    },
+
+    notes: async function(ctx){
+      ctx.fillStyle = "#fbfaf6"; ctx.fillRect(0, 0, W, H);
+      // Notes top bar
+      ctx.fillStyle = "#d9a400"; ctx.font = font(500, 46); ctx.textAlign = "left"; ctx.fillText("‹ Notes", 60, 330);
+      ctx.textAlign = "right"; ctx.fillText("Done", W - 60, 330);
+      var d = new Date(), months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      ctx.fillStyle = "#9b978c"; ctx.font = font(400, 32); ctx.textAlign = "center";
+      ctx.fillText(d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear(), W / 2, 430);
+      // title
+      ctx.fillStyle = "#1c1c1e";
+      var f = fit(ctx, st.hook, 700, 64, 44, 940, 4);
+      var y = lines(ctx, f.lines, 70, 520 + f.size, f.size * 1.15, "left");
+      // body
+      ctx.font = font(400, 48); ctx.fillStyle = "#2c2c2e";
+      var body = [
+        "I made a free in-depth training on this.",
+        "",
+        "Why more inner work hasn't brought the right person in, and what to do instead.",
+        "",
+        "It's what I focused on before I met my wife."
+      ];
+      y += 70;
+      body.forEach(function(p){
+        if (!p){ y += 30; return; }
+        y = lines(ctx, wrap(ctx, p, 940), 70, y, 66, "left");
+      });
+      // CTA
+      y = Math.max(y + 80, 1340);
+      ctx.fillStyle = "#1c1c1e"; ctx.font = font(700, 64); ctx.textAlign = "left";
+      ctx.fillText("Reply VIDEO", 70, y);
+      ctx.font = font(400, 44); ctx.fillStyle = "#2c2c2e"; ctx.fillText("and I'll send it to you", 70, y + 66);
+      arrow(ctx, W / 2, Math.min(y + 130, 1600), "#d9a400");
+    },
+
+    myth: async function(ctx){
+      var g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#2a0846"); g.addColorStop(1, "#12041f");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "rgba(217,70,239,.16)"; ctx.beginPath(); ctx.arc(W * 0.85, 520, 420, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = "#f3eaf9";
+      var a = fit(ctx, st.mythA, 600, 70, 50, 920, 4);
+      var y = lines(ctx, a.lines, W / 2, 520, a.size * 1.2);
+      var b = fit(ctx, st.mythB, 800, 112, 70, 920, 2);
+      var gb = ctx.createLinearGradient(80, 0, W - 80, 0);
+      gb.addColorStop(0, "#e879f9"); gb.addColorStop(1, "#c084fc");
+      ctx.fillStyle = gb;
+      y = lines(ctx, b.lines, W / 2, y + 60 + b.size, b.size * 1.1);
+
+      ctx.fillStyle = "#cbb8da"; ctx.font = font(500, 42);
+      lines(ctx, ["What actually matters is in", "my free in-depth training."], W / 2, Math.max(y + 110, 1150), 58);
+
+      ctx.fillStyle = "#d946ef"; rrect(ctx, 200, 1370, W - 400, 150, 75); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.font = font(800, 72); ctx.textAlign = "center"; ctx.fillText("Reply VIDEO", W / 2, 1470);
+      arrow(ctx, W / 2, 1570, "#f3eaf9");
+    }
+  };
+
+  var canvas = document.createElement("canvas"); canvas.width = W; canvas.height = H;
+  var seq = 0;
+  async function render(){
+    var me = ++seq;
+    try { await Promise.all([400, 500, 600, 700, 800].map(function(w){ return document.fonts.load(font(w, 40)); })); } catch(e){}
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, W, H); ctx.textBaseline = "alphabetic"; ctx.shadowBlur = 0;
+    try { await DRAW[st.layout](ctx); } catch(e){ $("status").textContent = "Couldn't load that photo. Try another."; return; }
+    if (me === seq) $("preview").src = canvas.toDataURL("image/jpeg", 0.9);
+  }
+
+  function showLayout(){
+    document.querySelectorAll("#layouts button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.layout === st.layout)); });
+    $("hookGroup").hidden = st.layout === "myth";
+    $("mythGroup").hidden = st.layout !== "myth";
+    $("photoGroup").hidden = st.layout !== "video";
+    store.set("layout", st.layout);
+  }
+
+  // ── Wire up ──────────────────────────────────────────────────────
+  document.querySelectorAll("#layouts button").forEach(function(b){
+    b.addEventListener("click", function(){ st.layout = b.dataset.layout; showLayout(); render(); });
+  });
+  $("hook").addEventListener("input", function(e){ st.hook = e.target.value; render(); });
+  $("mythA").addEventListener("input", function(e){ st.mythA = e.target.value; render(); });
+  $("mythB").addEventListener("input", function(e){ st.mythB = e.target.value; render(); });
+  $("newHook").addEventListener("click", function(){ st.hook = nextFrom(HOOKS, "hooks"); $("hook").value = st.hook; render(); });
+  $("newMyth").addEventListener("click", function(){ var p = nextFrom(MYTHS, "myths"); st.mythA = p[0]; st.mythB = p[1]; $("mythA").value = p[0]; $("mythB").value = p[1]; render(); });
+  function pickPhoto(src, dy, btn, frame){
+    st.photo = src; st.dy = dy; st.frame = !!frame; $("photoPos").value = dy;
+    $("photoPos").disabled = st.frame;
+    document.querySelectorAll("#photoPicks button").forEach(function(b){ b.setAttribute("aria-pressed", String(b === btn)); });
+    $("status").textContent = ""; render();
+  }
+  PHOTOS.forEach(function(p, i){
+    var b = document.createElement("button"); b.type = "button"; b.title = p.label; b.setAttribute("aria-label", p.label);
+    b.setAttribute("aria-pressed", String(i === 0));
+    var im = document.createElement("img"); im.src = p.src; im.alt = ""; b.appendChild(im);
+    b.addEventListener("click", function(){ pickPhoto(p.src, p.dy, b, p.frame); });
+    $("photoPicks").appendChild(b);
+  });
+  $("photoPos").value = st.dy;
+  $("photoPos").addEventListener("input", function(e){ st.dy = Number(e.target.value) || 0; render(); });
+  $("photo").addEventListener("change", function(e){
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    var r = new FileReader(); r.onload = function(){ pickPhoto(r.result, 0, null); }; r.readAsDataURL(f);
+  });
+
+  $("save").addEventListener("click", async function(){
+    var status = $("status");
+    var dl = window.claude && window.claude.use ? await claude.use("downloads").catch(function(){ return null; }) : null;
+    if (!dl){ status.textContent = "Saving isn't available here. Long-press or right-click the preview to save it."; return; }
+    var d = new Date(), name = "training-story-" + st.layout + "-" + d.toISOString().slice(0, 10) + ".png";
+    canvas.toBlob(async function(blob){
+      try { await dl.save({ filename:name, data:blob }); status.textContent = "✓ Saved"; }
+      catch(e){ status.textContent = e && e.code === "declined" ? "" : "Couldn't save. Long-press or right-click the preview instead."; }
+    }, "image/png");
+  });
+
+  // Start on the last layout used, showing the training's title (Olly, 2026-10-24). New hook rotates from there.
+  var last = store.get("layout"); if (DRAW[last]) st.layout = last;
+  st.hook = TITLE; $("hook").value = st.hook;
+  var p = nextFrom(MYTHS, "myths"); st.mythA = p[0]; st.mythB = p[1]; $("mythA").value = p[0]; $("mythB").value = p[1];
+  showLayout(); render();
+})();
+</script>

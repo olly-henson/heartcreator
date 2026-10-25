@@ -121,6 +121,19 @@
     font-family:'Poppins',sans-serif;
   }
   .savebtn:hover{ filter:brightness(1.06); }
+  .savebtns{ display:flex; gap:8px; }
+  .refreshbtn{
+    background: var(--surface-2);
+    color: var(--text);
+    border:1px solid var(--border);
+    padding:10px 16px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+  }
+  .refreshbtn:hover{ border-color: var(--accent-2); }
   .savebtn:disabled{ opacity:.55; cursor:default; filter:none; }
   .savepill{
     display:flex;
@@ -160,6 +173,7 @@
     border-bottom:2px solid var(--accent-2);
   }
   .tabpanel[hidden]{ display:none; }
+  .tabmenubtn{ display:none; }   /* phone-only tab menu, see the 640px block */
   .comingsoon{
     background: var(--surface);
     border:1px solid var(--border-soft);
@@ -564,7 +578,9 @@
     align-items:flex-start;
   }
   .bdcard-text{
-    flex:1;
+    display:block;
+    width:100%;
+    min-height:1.5em;
     min-width:0;
     background:transparent;
     border:none;
@@ -797,6 +813,30 @@
   .storyimg img{ width:100%; height:100%; object-fit:cover; display:block; }
   .storyimg-rm{ position:absolute; top:3px; right:3px; width:22px; height:22px; border-radius:50%; border:0; background:rgba(0,0,0,.65); color:#fff; font-size:12px; line-height:22px; padding:0; cursor:pointer; }
   @media (max-width: 700px){ .storytype{ font-size:16px; } }
+  /* Sales tab (2026-10-24) */
+  .salessel{
+    font-size:13px; padding:6px 8px; border-radius:6px;
+    border:1px solid var(--border-soft); background: var(--surface-2);
+    color: var(--text-body); font-family:'Poppins',sans-serif;
+  }
+  td input.leaddate{ width:140px; }
+  td input.leadnotes{ min-width:280px; }
+  tr.leadclosed td{ opacity:.55; }
+  .fuplist{ display:flex; flex-direction:column; gap:8px; }
+  .fupitem{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding:10px 14px; border-radius: var(--radius);
+    background: var(--surface); border:1px solid var(--border-soft);
+  }
+  .fupname{ font-weight:700; color: var(--text); }
+  .fupstage{ font-size:12px; color: var(--text-muted); }
+  .fupdate{ margin-left:auto; font-size:12px; color: var(--text-muted); }
+  .fupitem.overdue .fupdate{ color: var(--warn); font-weight:600; }
+  .fupempty{ color: var(--text-muted); font-size:13px; }
+  @media (max-width: 700px){ .salessel{ font-size:16px; } }
+  /* Overview tab */
+  .ovsub{ font-size:11.5px; color: var(--text-muted); margin-top:6px; }
+  #ovBody .kpigrid{ margin-bottom:26px; }
   .dayitem-move{
     flex-shrink:0;
     font-size:11.5px;
@@ -993,6 +1033,18 @@
      rather than an input because inputs can't wrap; height is set from
      JS (autosizeTitleTextarea) to match its content exactly. */
   .outliertitlecell{ min-width:220px; display:flex; align-items:flex-start; gap:6px; padding-top:8px; padding-bottom:8px; }
+  /* Outliers list (Reels tab, 2026-10-24) */
+  .oladd{ display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .oladd input{
+    flex:1; min-width:220px; padding:11px 14px; border-radius:10px;
+    border:1px solid var(--border-soft); background: var(--surface-2);
+    color: var(--text); font-family:'Poppins',sans-serif; font-size:14px;
+  }
+  .oladd input:focus{ outline:none; border-color: var(--accent-2); }
+  td.oltitle{ text-align:left; }
+  td.oltitle .outliertitlein{ display:block; width:100%; min-width:260px; text-align:left; }
+  td input.oldate{ width:140px; }
+  @media (max-width: 640px){ .oladd input{ font-size:16px; } }
   .outliertitlein{
     flex:1; min-width:0;
     resize:none; overflow:hidden;
@@ -1081,8 +1133,30 @@
     td input, td textarea{ padding:8px 9px; }
     .wrap{ padding:28px 14px 72px; }
     h1{ font-size:22px; }
-    .tabbar{ gap:2px; }
-    .tabbtn{ padding:10px 12px 12px; font-size:13px; }
+    /* Tabs on a phone (2026-10-24): one "☰ <current tab> ▾" button opens
+       a 2-column grid of every tab; picking one closes it. Replaces the
+       single scrolling row, which broke once there were 10 tabs. */
+    .tabmenubtn{
+      display:flex; align-items:center; gap:10px; width:100%;
+      margin:20px 0 0; padding:13px 16px;
+      background: var(--surface-2); border:1px solid var(--border); border-radius:12px;
+      color: var(--text); font-family:'Poppins',sans-serif; font-size:15px; font-weight:600;
+      cursor:pointer; text-align:left;
+    }
+    .tabmenubtn-icon{ color: var(--accent-2); }
+    .tabmenubtn-caret{ margin-left:auto; color: var(--text-muted); transition:transform .2s; }
+    .tabmenubtn[aria-expanded="true"] .tabmenubtn-caret{ transform:rotate(180deg); }
+    .tabbar{
+      display:none; grid-template-columns:1fr 1fr; gap:8px;
+      margin:8px 0 0; padding:10px; border:1px solid var(--border); border-radius:12px;
+      background: var(--surface-solid);
+    }
+    .tabbar.open{ display:grid; }
+    .tabbtn{
+      top:0; padding:12px 10px; font-size:14px; text-align:center;
+      border-radius:9px; background: var(--surface);
+    }
+    .tabbtn.active{ border-bottom:none; background: var(--accent); color:#fff; }
     .goalcard{ padding:16px 16px; }
     .calendar{ gap:4px; }
     .calcell{ padding:5px 6px; min-height:64px; gap:3px; }
@@ -1108,18 +1182,27 @@
       <p>MRR, content and delivery — one place for the numbers that run the community.</p>
     </div>
     <div class="saveblock">
-      <button class="savebtn" id="saveBtn" disabled="">Save</button>
+      <div class="savebtns">
+        <button class="refreshbtn" id="refreshBtn" type="button" title="Load the latest version and data">↻ Refresh</button>
+        <button class="savebtn" id="saveBtn" disabled="">Save</button>
+      </div>
       <div class="savepill"><span class="dot saving" id="saveDot"></span><span id="saveLabel">saving…</span></div>
     </div>
   </header>
 
-  <nav class="tabbar" role="tablist">
+  <button class="tabmenubtn" id="tabMenuBtn" type="button" aria-expanded="false" aria-controls="tabBar">
+    <span class="tabmenubtn-icon">☰</span><span id="tabMenuLabel">Menu</span><span class="tabmenubtn-caret">▾</span>
+  </button>
+  <nav class="tabbar" id="tabBar" role="tablist">
+    <button class="tabbtn" data-tab="overview" role="tab" aria-selected="false">Overview</button>
     <button class="tabbtn" data-tab="braindump" role="tab" aria-selected="false">Brain Dump</button>
     <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false">MRR</button>
+    <button class="tabbtn" data-tab="sales" role="tab" aria-selected="false">Sales</button>
     <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Reels</button>
     <button class="tabbtn" data-tab="stories" role="tab" aria-selected="false">Stories</button>
     <button class="tabbtn" data-tab="instagram" role="tab" aria-selected="false">Instagram</button>
     <button class="tabbtn" data-tab="email" role="tab" aria-selected="false">Email</button>
+    <button class="tabbtn" data-tab="youtube" role="tab" aria-selected="false">YouTube</button>
     <button class="tabbtn" data-tab="delivery" role="tab" aria-selected="false">Delivery</button>
   </nav>
 
@@ -1139,7 +1222,7 @@
       <select id="periodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
     </div>
     <div class="divider"></div>
-    <span class="hint">Every month below is entered and stored independently — nothing carries over automatically. This view just totals up whichever months you pick.</span>
+    <span class="hint">The Heart Attractor Program: $497/month or $2,500/year (counted as $208.33/month). Fill in sign-ups and cancellations each month; members carry over automatically.</span>
   </div>
 
   <div class="goalcard">
@@ -1158,28 +1241,32 @@
   </div>
 
   <p class="section-label" id="glanceLabel">This month at a glance</p>
-  <div class="kpigrid" id="kpiGrid"><div class="kpi"><div class="label">About Page visits</div><div class="value">54</div></div><div class="kpi accent"><div class="label">Visits growth vs. prev. month</div><div class="value">-196</div></div><div class="kpi"><div class="label">Free trials started</div><div class="value">0</div></div><div class="kpi accent"><div class="label">Trials growth vs. prev. month</div><div class="value">-9</div></div><div class="kpi accent"><div class="label">Trial conversion</div><div class="value">0.0%</div></div><div class="kpi"><div class="label">New paying members</div><div class="value">0</div></div><div class="kpi accent"><div class="label">New members growth vs. prev. month</div><div class="value">-1</div></div><div class="kpi accent"><div class="label">Trial → paid conversion</div><div class="value">0.0%</div></div><div class="kpi"><div class="label">Active members</div><div class="value">1</div></div><div class="kpi accent"><div class="label">Active members growth vs. prev. month</div><div class="value">+0</div></div><div class="kpi"><div class="label">Retention rate</div><div class="value">100.0%</div></div><div class="kpi"><div class="label">MRR</div><div class="value">$30</div></div><div class="kpi accent"><div class="label">MRR growth vs. prev. month</div><div class="value">+$0</div></div><div class="kpi"><div class="label">Avg. revenue / member</div><div class="value">$30</div></div><div class="kpi"><div class="label">LTV / member</div><div class="value">—</div></div></div>
+  <div class="kpigrid" id="kpiGrid"></div>
 
   <p class="section-label">Trends</p>
   <div class="chartsgrid">
     <div class="chartcard">
       <h3>MRR</h3>
-      <div class="chartsub">Monthly recurring revenue</div>
-      <div class="chartwrap"><svg class="chart" id="chartMRR"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,10 L316,10" class="noline" stroke="#B84FE8" stroke-width="2"></path><circle cx="4" cy="10" r="3" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="10" r="4.5" fill="#B84FE8" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttMRR" style="left: 317px; top: -20px; opacity: 0;">Sept 26 · MRR: $198</div></div>
+      <div class="chartsub">Monthly recurring revenue, annual pro-rated</div>
+      <div class="chartwrap"><svg class="chart" id="chartMRR"></svg><div class="chart-tooltip" id="ttMRR"></div></div>
     </div>
     <div class="chartcard">
       <h3>Active members</h3>
-      <div class="chartsub">Paying members at month end</div>
-      <div class="chartwrap"><svg class="chart" id="chartMembers"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,10 L316,10" class="noline" stroke="#E1A6FF" stroke-width="2"></path><circle cx="4" cy="10" r="3" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="10" r="4.5" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttMembers"></div></div>
+      <div class="chartsub">At month end</div>
+      <div class="legend">
+        <span><i style="background:var(--accent-2)"></i>Monthly</span>
+        <span><i style="background:var(--warn)"></i>Annual</span>
+      </div>
+      <div class="chartwrap"><svg class="chart" id="chartMembers"></svg><div class="chart-tooltip" id="ttMembers"></div></div>
     </div>
     <div class="chartcard">
-      <h3>Conversion rates</h3>
-      <div class="chartsub">Two hand-offs in the funnel</div>
+      <h3>Retention &amp; churn</h3>
+      <div class="chartsub">Share of members kept or lost each month</div>
       <div class="legend">
-        <span><i style="background:var(--accent-2)"></i>About Page → Trial</span>
-        <span><i style="background:var(--warn)"></i>Trial → Paying</span>
+        <span><i style="background:var(--good)"></i>Retention</span>
+        <span><i style="background:var(--critical)"></i>Churn</span>
       </div>
-      <div class="chartwrap"><svg class="chart" id="chartConv"><line x1="4" x2="316" y1="10" y2="10" class="gridline"></line><line x1="4" x2="316" y1="69" y2="69" class="gridline"></line><line x1="4" x2="316" y1="128" y2="128" class="gridline"></line><path d="M4,89.768 L316,128" class="noline" stroke="#E1A6FF" stroke-width="2"></path><circle cx="4" cy="89.768" r="3" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="128" r="4.5" fill="#E1A6FF" class="chartpt" style="cursor: pointer;"></circle><path d="M4,10 L316,128" class="noline" stroke="#E0B168" stroke-width="2"></path><circle cx="4" cy="10" r="3" fill="#E0B168" class="chartpt" style="cursor: pointer;"></circle><circle cx="316" cy="128" r="4.5" fill="#E0B168" class="chartpt" style="cursor: pointer;"></circle><text x="4" y="146" text-anchor="start" font-size="10.5" style="fill: var(--text-muted);">Aug 26</text><text x="316" y="146" text-anchor="end" font-size="10.5" style="fill: var(--text-muted);">Sept 26</text></svg><div class="chart-tooltip" id="ttConv"></div></div>
+      <div class="chartwrap"><svg class="chart" id="chartConv"></svg><div class="chart-tooltip" id="ttConv"></div></div>
     </div>
   </div>
 
@@ -1190,26 +1277,23 @@
         <tr>
           <th></th>
           <th>Month</th>
-          <th>About Page visits</th>
-          <th>Free trials started</th>
-          <th>New paying members</th>
-          <th>Members lost</th>
-          <th>Active members (month end)</th>
-          <th>New member price ($/mo)</th>
-          <th class="calc">Trial conv.</th>
-          <th class="calc">Trial→paid conv.</th>
-          <th class="calc">Visit→paid conv.</th>
+          <th>New monthly ($497)</th>
+          <th>New annual ($2,500)</th>
+          <th>Monthly cancelled</th>
+          <th>Annual cancelled</th>
+          <th class="calc">Monthly members</th>
+          <th class="calc">Annual members</th>
+          <th class="calc">Total members</th>
           <th class="calc">Churn</th>
           <th class="calc">Retention</th>
           <th class="calc">MRR</th>
-          <th class="calc">LTV</th>
           <th class="rowdel"></th>
         </tr>
       </thead>
-      <tbody id="tbody"><tr data-row="0" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="0" title="Unlock this month">🔒</button></td><td class="month">Aug 26</td><td><input type="number" min="0" data-i="0" data-field="visits" value="250" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="trials" value="9" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="newMembers" value="1" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="0" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="0" data-field="price" value="30" disabled=""></td><td class="calc" data-calc="0">3.6%</td><td class="calc" data-calc="1">11.1%</td><td class="calc" data-calc="2">0.4%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr><tr data-row="1" class="locked"><td class="rowlock"><button class="lockbtn" data-lock="1" title="Unlock this month">🔒</button></td><td class="month">Sept 26</td><td><input type="number" min="0" data-i="1" data-field="visits" value="54" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="trials" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="newMembers" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="lost" value="0" disabled=""></td><td><input type="number" min="0" data-i="1" data-field="activeMembers" value="1" disabled=""></td><td><input type="number" min="0" step="0.5" data-i="1" data-field="price" value="99" disabled=""></td><td class="calc" data-calc="0">0.0%</td><td class="calc" data-calc="1">0.0%</td><td class="calc" data-calc="2">0.0%</td><td class="calc" data-calc="3">0.0%</td><td class="calc" data-calc="4">100.0%</td><td class="money" data-calc="5">$30</td><td class="money" data-calc="6">—</td><td class="rowdel"></td></tr></tbody>
+      <tbody id="tbody"></tbody>
     </table>
     <div class="tablefoot">
-      <span class="hint">Every field here is typed in by hand for that month only — including Active members. Nothing is calculated from another row. Click 🔓 on a finished month to lock it and stop accidental edits.</span>
+      <span class="hint">Fill in the first four columns each month. Members, churn, retention and MRR work themselves out. Click 🔓 on a finished month to lock it.</span>
       <button class="addbtn" id="addMonth">+ Add next month</button>
     </div>
   </div>
@@ -1217,20 +1301,16 @@
   <div class="glossary">
     <h2>How each figure is worked out</h2>
     <dl>
-      <div><dt>Active members (month end)</dt><dd>Typed in by hand each month — the total paying member count as of that month's end. Not calculated from the previous month, so a mistake in one month never throws off another.</dd></div>
-      <div><dt>Trial conversion rate</dt><dd>Free trials started ÷ About Page visits. How well the page turns browsers into trialists.</dd></div>
-      <div><dt>Trial → paid conversion</dt><dd>New paying members ÷ free trials started that month. How well the trial itself sells the community.</dd></div>
-      <div><dt>Visit → paid conversion</dt><dd>New paying members ÷ About Page visits. The full-funnel rate, start to finish.</dd></div>
-      <div><dt>Churn rate</dt><dd>Members lost ÷ that month's active members. Each month calculates this from its own two numbers only.</dd></div>
-      <div><dt>Retention rate</dt><dd>100% minus churn. The share of members who stuck around.</dd></div>
-      <div><dt>New member price</dt><dd>What someone signing up that month pays — $30/mo through August 2026, $99/mo (or $990/yr) from September 2026 onward.</dd></div>
-      <div><dt>MRR</dt><dd>Calculated automatically, but not as Active members × price. Every month's new members lock in at that month's own price and keep contributing it every month afterward — so a member who joined at $30 keeps paying $30 even once the price rises to $99 for new signups. Lost members are removed at the average rate across current members, since exactly which member left isn't tracked. The only figure on this page that isn't fully independent per month — it has to look back, because grandfathered pricing means you can't tell current MRR from one month's numbers alone.</dd></div>
-      <div><dt>Avg. revenue / member</dt><dd>MRR ÷ Active members. The true blended amount each member is worth this month, accounting for mixed pricing.</dd></div>
-      <div><dt>LTV</dt><dd>Avg. revenue per member ÷ churn rate. What an average member is worth over their full membership, based on what they're actually paying rather than the sticker price.</dd></div>
-      <div><dt>Lock 🔓 / 🔒</dt><dd>Marks a month finished and greys out its row so you can't accidentally overwrite it while filling in the next one. Click 🔒 again to unlock and correct something. Locking doesn't save on its own — click Save when you're ready.</dd></div>
-      <div><dt>Save</dt><dd>Nothing publishes until you click Save, top right. The dot turns amber with "unsaved changes" the moment you edit anything, and back to green once it's saved. Your edits stay safe in this browser even before you save — but click Save to make them visible next time you (or anyone else) open this link.</dd></div>
-      <div><dt>Monthly / Yearly / All time view</dt><dd>The glance cards at the top total up whichever months you're viewing — visits, trials and new members are added together; active members, price and MRR use the most recent month with a real Active members count, so live current MRR stays correct even if a later month's Active members field just hasn't been filled in yet.</dd></div>
-      <div><dt>MRR goal</dt><dd>Always shows your true current MRR against the target you set, regardless of which view is selected above. Set the target once — it's saved with everything else.</dd></div>
+      <div><dt>What you fill in</dt><dd>Four numbers a month: new monthly members ($497/month), new annual members ($2,500/year), monthly members who cancelled, and annual members who cancelled or didn't renew.</dd></div>
+      <div><dt>Members</dt><dd>A running total: last month's members, plus this month's new ones, minus this month's cancellations. Split into monthly and annual.</dd></div>
+      <div><dt>MRR</dt><dd>Monthly members × $497, plus annual members × $208.33 ($2,500 ÷ 12). Annual is pro-rated so MRR shows the real monthly revenue, not the upfront payment.</dd></div>
+      <div><dt>Churn</dt><dd>Members lost that month ÷ members at the start of the month. The first month shows "—" because there was nobody to lose yet.</dd></div>
+      <div><dt>Retention</dt><dd>100% minus churn. The share of members who stayed.</dd></div>
+      <div><dt>Avg. revenue / member</dt><dd>MRR ÷ active members.</dd></div>
+      <div><dt>LTV</dt><dd>Avg. revenue per member ÷ churn. What an average member is worth over their whole membership. Shows "—" until someone has cancelled.</dd></div>
+      <div><dt>Monthly / Yearly / All time view</dt><dd>Sign-ups and cancellations add up across the months you're viewing. Members and MRR come from the latest month. Churn and retention are averaged across the months.</dd></div>
+      <div><dt>Lock 🔓 / 🔒</dt><dd>Greys out a finished month so you can't overwrite it by accident. Locking doesn't save on its own — click Save when you're ready.</dd></div>
+      <div><dt>MRR goal</dt><dd>Always shows your current MRR against the target you set, whatever view is selected.</dd></div>
     </dl>
   </div>
 
@@ -1253,7 +1333,7 @@
         <tbody id="ideaTbody"><tr data-idrow="20"><td><input type="text" data-idi="20" data-idfield="title" value="" placeholder="Video idea"></td><td class="slotmode"><label class="slotopt"><input type="checkbox" data-idi="20" data-slotmode="auto" checked=""> Add to next available slot</label><label class="slotopt"><input type="checkbox" data-idi="20" data-slotmode="specific"> Add to specific date</label></td><td><input type="date" data-idi="20" data-idfield="date" value="2026-09-08" disabled=""></td><td class="rowdel"><button data-iddel="20" title="Remove idea">✕</button></td></tr></tbody>
       </table>
       <div class="tablefoot">
-        <span class="hint">Click a calendar date and mark a video Published to pull it into Video stats tracking below — no retyping once it's live. Draft videos stay on the calendar only.</span>
+        <span class="hint">Click a calendar date to open that day: mark a video Published once it's live, or move it to another day.</span>
         <button class="addbtn" id="ideaAdd">+ Add idea</button>
       </div>
     </div>
@@ -1270,6 +1350,42 @@
     <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
     <div class="calendar" id="calendar"><div class="caldow">Mon</div><div class="caldow">Tue</div><div class="caldow">Wed</div><div class="caldow">Thu</div><div class="caldow">Fri</div><div class="caldow">Sat</div><div class="caldow">Sun</div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">31</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">1</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">2</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">3</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="Why you can't stop doubting if you're going to manifest love ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">Why you can't stop doubting if you're going to manifest love ♥️</span></div><div class="calitem published" title="How long should you wait before giving up on manifesting love? ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How long should you wait before giving up on manifesting love? ♥️</span></div><div class="calitem published" title="If you're still doubting that you can manifest love - you MUST change this today ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you're still doubting that you can manifest love - you MUST change this today ♥️</span></div><div class="calitem published" title="How manifest love in your life - without the doubts ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How manifest love in your life - without the doubts ♥️</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">4</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="If you are worried time is running out to manifest love - do this today ❤️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you are worried time is running out to manifest love - do this today ❤️</span></div><div class="calitem published" title="How to manifest love into your life - scientifically 🧪  — Published"><span class="calitem-dot"></span><span class="calitem-label">How to manifest love into your life - scientifically 🧪 </span></div><div class="calitem published" title="6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔 — Published"><span class="calitem-dot"></span><span class="calitem-label">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</span></div><div class="calitem published" title="How to attract a really great partner ♥️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">How to attract a really great partner ♥️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">5</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem published" title="How I manifested my dream partner ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How I manifested my dream partner ♥️</span></div><div class="calitem published" title="Two REALLY important steps for meeting and attracting your special person ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">Two REALLY important steps for meeting and attracting your special person ❤️✅</span></div><div class="calitem published" title="This type of person always attracts the partner that they want ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">This type of person always attracts the partner that they want ❤️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">6</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="The real reason that you haven’t manifested love yet 💔 — Published"><span class="calitem-dot"></span><span class="calitem-label">The real reason that you haven’t manifested love yet 💔</span></div><div class="calitem published" title="Manifesting harder pushes love away - 👉here's why  — Published"><span class="calitem-dot"></span><span class="calitem-label">Manifesting harder pushes love away - 👉here's why </span></div><div class="calitem published" title="It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this — Published"><span class="calitem-dot"></span><span class="calitem-label">It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this</span></div><div class="calitem published" title="A guaranteed system for attracting the relationship that you want  — Published"><span class="calitem-dot"></span><span class="calitem-label">A guaranteed system for attracting the relationship that you want </span></div></div></div><div class="calcell today"><div class="caldatehead"><span class="caldatenum">7</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem draft" title="I can only help these people manifest a great relationship — Draft"><span class="calitem-dot"></span><span class="calitem-label">I can only help these people manifest a great relationship</span></div><div class="calitem draft" title="You don’t need a manifestation technique to attract someone you love - you need this — Draft"><span class="calitem-dot"></span><span class="calitem-label">You don’t need a manifestation technique to attract someone you love - you need this</span></div><div class="calitem draft" title="How to use your nervous system to attract your dream partner ♥️✅ — Draft"><span class="calitem-dot"></span><span class="calitem-label">How to use your nervous system to attract your dream partner ♥️✅</span></div><div class="calitem draft" title="The 3-Step System That Will Attract Your Dream Partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">The 3-Step System That Will Attract Your Dream Partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">8</span><span class="calcount short">1/3</span></div><div class="calitems"><div class="calitem draft" title="Why you need to regulate your nervous system to attract your partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">Why you need to regulate your nervous system to attract your partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">9</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">10</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">11</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">12</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">13</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">14</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">15</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">16</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">17</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">18</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">19</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">20</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">21</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">22</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">23</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">24</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">25</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">26</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">27</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">28</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">29</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">30</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">1</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">2</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">4</span></div><div class="calitems"></div></div></div>
 
+    <p class="section-label" style="margin-top:40px;">Outliers</p>
+    <span class="hint" style="display:block; margin:-6px 0 14px;">When a Reel takes off, type its title here and hit Add. Then fill in its numbers from Instagram's insights. Newest on top. Save rate, share rate and engagement work themselves out.</span>
+    <div class="oladd">
+      <input type="text" id="olInput" placeholder="Title of the Reel that took off…" autocomplete="off">
+      <button class="addbtn" id="olAdd">+ Add outlier</button>
+    </div>
+    <div class="tablewrap sticky-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="min-width:280px;">Title</th>
+            <th class="calc">Save rate</th>
+            <th class="calc">Share rate</th>
+            <th class="calc">Engagement</th>
+            <th>Posted</th>
+            <th>Views</th>
+            <th>Reach</th>
+            <th>Likes</th>
+            <th>Comments</th>
+            <th>Shares</th>
+            <th>Saves</th>
+            <th>Follows</th>
+            <th>Avg. watch (s)</th>
+            <th>Skip rate %</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="olTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Old Video stats tracking + Leaderboard, hidden 2026-10-24 (Olly: one
+         simple Outliers list instead, no ranking). Kept in the DOM, hidden,
+         so the existing code that renders them keeps working; their data
+         (state.content.outliers) is untouched. -->
+    <div id="legacyVideoStats" hidden="">
     <p class="section-label" style="margin-top:40px;">Video stats tracking</p>
     <div class="outliersearchbar">
       <input type="search" id="outlierSearch" placeholder="Search titles…" autocomplete="off">
@@ -1326,6 +1442,8 @@
         </thead>
         <tbody id="leaderboardTbody"><tr class="rank1"><td class="rankcell">1</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">84</td><td>2,948</td><td>31</td><td>21</td><td>31</td><td>94</td><td>9</td><td class="calc">6.0%</td></tr><tr class="rank2"><td class="rankcell">2</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">79</td><td>4,775</td><td>59</td><td>13</td><td>54</td><td>220</td><td>6</td><td class="calc">7.2%</td></tr><tr class="rank3"><td class="rankcell">3</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Sept 26</td><td class="calc">24</td><td>1,800</td><td>9</td><td>5</td><td>14</td><td>43</td><td>2</td><td class="calc">3.9%</td></tr><tr><td class="rankcell">4</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">18</td><td>2,423</td><td>20</td><td>8</td><td>25</td><td>61</td><td>0</td><td class="calc">4.7%</td></tr><tr><td class="rankcell">5</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">3 Sept</td><td>—</td><td class="calc">18</td><td>1,760</td><td>15</td><td>2</td><td>15</td><td>56</td><td>1</td><td class="calc">5.0%</td></tr><tr><td class="rankcell">6</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">12</td><td>1,769</td><td>18</td><td>2</td><td>12</td><td>42</td><td>0</td><td class="calc">4.2%</td></tr><tr><td class="rankcell">7</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>Aug 26</td><td class="calc">12</td><td>1,924</td><td>12</td><td>0</td><td>16</td><td>67</td><td>0</td><td class="calc">4.9%</td></tr><tr><td class="rankcell">8</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">3 Sept</td><td>—</td><td class="calc">9</td><td>1,388</td><td>11</td><td>0</td><td>11</td><td>54</td><td>0</td><td class="calc">5.5%</td></tr><tr><td class="rankcell">9</td><td class="leadertitle"><input type="text" class="leadertitlein" placeholder="Untitled"></td><td class="calc">—</td><td>—</td><td class="calc">2</td><td>503</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="calc">0.0%</td></tr></tbody>
       </table>
+    </div>
+
     </div>
 
     <p class="section-label" style="margin-top:40px;">Caption templates</p>
@@ -1432,7 +1550,8 @@
         <select id="emailPeriodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
       </div>
       <div class="divider"></div>
-      <span class="hint">Entered by hand, same as MRR Tracker — whatever the subscriber count stood at by the end of that month.</span>
+      <button class="addbtn" id="emailGhlPull">Pull from GHL</button>
+      <span class="hint" id="emailGhlStatus">The daily email list (GHL tag <code>daily email list</code>, unsubscribes not counted), from 24 Oct 2026. Pull from GHL fills in this month's count; lock a month at month end to keep its number.</span>
     </div>
 
     <p class="section-label">This month at a glance</p>
@@ -1464,6 +1583,81 @@
       <div class="tablefoot">
         <span class="hint">Growth compares to the previous row in this table — it's just a display, not something you enter.</span>
         <button class="addbtn" id="emailAddMonth">+ Add next month</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="tab-youtube" class="tabpanel" hidden="">
+
+    <div class="settingsbar">
+      <div class="field-inline">
+        <label for="ytPeriodSel">Viewing</label>
+        <select id="ytPeriodSel"></select>
+      </div>
+      <div class="divider"></div>
+      <div class="field-inline">
+        <label for="ytBaseline">Starting subscribers</label>
+        <input type="number" min="0" id="ytBaseline" value="0" style="width:110px;">
+      </div>
+      <div class="divider"></div>
+      <span class="hint">Starting subscribers = your count before this tracking began (the older, mixed audience). Growth is measured from there. Monthly numbers come from YouTube Studio → Analytics.</span>
+    </div>
+
+    <p class="section-label">Shorts description</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">Paste into every Short. Links in Shorts descriptions aren't clickable, so it points people to the related video (set it to the training in YouTube Studio on a computer) and gives the short link to type.</span>
+    <div class="chartcard" style="margin-bottom:20px;">
+      <textarea id="ytShortsDesc" readonly rows="14" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;">Watch the full free training: tap the video link on this Short.
+
+Done the inner work and still can't find the right person? The full training explains why and what to do instead (without more inner work or dating rules). 💜
+
+Or type this into your browser:
+ollyhenson.com/free-video-training
+
+I'm Olly. I help people consciously attract high-quality relationships. Happily married and coaching full-time since 2016.
+
+Instagram: @attractwitholly
+
+#shorts #attractlove #longtermrelationship #soulmate</textarea>
+      <div style="margin-top:10px;"><button type="button" class="copybtn" id="ytShortsCopy">Copy description</button></div>
+    </div>
+
+    <p class="section-label">This month at a glance</p>
+    <div class="kpigrid" id="ytKpiGrid"></div>
+
+    <p class="section-label">Trends</p>
+    <div class="chartsgrid">
+      <div class="chartcard">
+        <h3>Subscribers</h3>
+        <div class="chartsub">Total at month end</div>
+        <div class="chartwrap"><svg class="chart" id="chartYTSubs"></svg><div class="chart-tooltip" id="ttYTSubs"></div></div>
+      </div>
+      <div class="chartcard">
+        <h3>Views</h3>
+        <div class="chartsub">Views across the month</div>
+        <div class="chartwrap"><svg class="chart" id="chartYTViews"></svg><div class="chart-tooltip" id="ttYTViews"></div></div>
+      </div>
+    </div>
+
+    <p class="section-label">Monthly log</p>
+    <div class="tablewrap">
+      <table style="min-width:620px;">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Month</th>
+            <th>Subscribers</th>
+            <th>Views</th>
+            <th class="calc">Subscriber growth</th>
+            <th class="calc">Views vs. prev. month</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="ytTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Growth compares each month with the one before. It's worked out for you, not typed in.</span>
+        <button class="addbtn" id="ytAddMonth">+ Add next month</button>
       </div>
     </div>
 
@@ -1511,6 +1705,160 @@
         <button class="addbtn" id="projectAdd">+ Add project</button>
       </div>
     </div>
+
+  </div>
+
+  <div id="tab-sales" class="tabpanel" hidden="">
+
+    <div class="settingsbar">
+      <div class="field-inline">
+        <label for="salesPeriodSel">Viewing</label>
+        <select id="salesPeriodSel"></select>
+      </div>
+      <div class="divider"></div>
+      <span class="hint">The Heart Attractor Program funnel: Reel → VIDEO → opt-in → application → call → sale. Opt-ins and applications fill in from GHL when you press Pull from GHL (further down).</span>
+    </div>
+
+    <p class="section-label">Follow up today</p>
+    <div id="salesFollowUps" class="fuplist"></div>
+
+    <p class="section-label" style="margin-top:28px;">This month at a glance</p>
+    <div class="kpigrid" id="salesKpiGrid"></div>
+
+    <p class="section-label">Funnel by month</p>
+    <div class="tablewrap">
+      <table style="min-width:860px;">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>VIDEO requests</th>
+            <th>Opt-ins</th>
+            <th>Applications</th>
+            <th>Calls booked</th>
+            <th>Calls taken</th>
+            <th>Monthly sales</th>
+            <th>Annual sales</th>
+            <th class="calc">Opt-in → app</th>
+            <th class="calc">Close rate</th>
+            <th class="calc">New cash</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="salesTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">VIDEO requests = ManyChat runs. Calls taken = calls that actually happened. New cash = monthly sales × $497 + annual sales × $2,500.</span>
+        <button class="addbtn" id="salesAddMonth">+ Add next month</button>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:40px;">Page conversion</p>
+    <div class="tablewrap">
+      <table style="min-width:560px;">
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Views</th>
+            <th>Conversions</th>
+            <th class="calc">Rate</th>
+          </tr>
+        </thead>
+        <tbody id="pcTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">For the month you're viewing above. Views = visits counted by the Hub on the live pages (once per visit, from 24 Oct 2026). Conversions = GHL tags. Updates when you press Pull from GHL.</span>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:40px;">Opt-in page traffic</p>
+    <div class="tablewrap">
+      <table style="min-width:760px;">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Where</th>
+            <th>Detail</th>
+            <th>Visits</th>
+            <th>Share</th>
+            <th>Opted in</th>
+            <th class="calc">Opt-in rate</th>
+          </tr>
+        </thead>
+        <tbody id="trafficTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Everyone who viewed the opt-in page in the month you're viewing above, by where they came from: the UTM link they clicked, else the site that linked to the page. Direct = no link info (often a typed or copied link). Opted in = GHL contacts with the same UTMs. Updates when you press Pull from GHL.</span>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:40px;">Where they came from</p>
+    <div class="settingsbar">
+      <button class="addbtn" id="ghlPull">Pull from GHL</button>
+      <span class="hint" id="ghlStatus"></span>
+    </div>
+    <div class="tablewrap">
+      <table style="min-width:720px;">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Where</th>
+            <th>Detail</th>
+            <th>Opt-ins</th>
+            <th>Applied</th>
+            <th>Joined</th>
+          </tr>
+        </thead>
+        <tbody id="ghlTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Live from GHL for the month you're viewing above, from the UTM fields on each contact. "Unknown" = signed up before the UTM fields were mapped, or came without a tracked link.</span>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:40px;">Leads</p>
+    <span class="hint" style="display:block; margin:-6px 0 14px;">Everyone you're talking to in the DMs. Set a follow-up date and they show up in "Follow up today" when it's due. Joined and Not a fit drop off the follow-up list.</span>
+    <div class="tablewrap">
+      <table style="min-width:860px;">
+        <thead>
+          <tr>
+            <th style="min-width:180px;">Name</th>
+            <th>Came from</th>
+            <th>Stage</th>
+            <th>Next follow-up</th>
+            <th style="min-width:280px;">Notes</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="leadTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint" id="leadStageCounts"></span>
+        <button class="addbtn" id="leadAdd">+ Add lead</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="tab-overview" class="tabpanel" hidden="">
+
+    <div class="settingsbar">
+      <div class="field-inline">
+        <label for="ovMode">View</label>
+        <select id="ovMode">
+          <option value="month">Month</option>
+          <option value="year">Year</option>
+        </select>
+      </div>
+      <div class="field-inline">
+        <label for="ovPeriodSel">Period</label>
+        <select id="ovPeriodSel"></select>
+      </div>
+      <div class="divider"></div>
+      <button class="addbtn" id="ovGhlPull">Pull from GHL</button>
+      <span class="hint" id="ovGhlStatus">A summary of the other tabs. Pull from GHL updates page views, leads, applicants and the email list; everything else comes from what you log in the other tabs.</span>
+    </div>
+
+    <div id="ovBody"></div>
 
   </div>
 
@@ -1637,90 +1985,61 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return y + "-" + String(m).padStart(2,"0");
   }
 
-  // Every month is entered independently — nothing here reads a previous or
-  // later row. Each row's calculated figures come only from its own six
-  // input fields, so a value typed into one month can never shift another.
-  // Non-MRR figures for one row — self-contained, no reference to any other
-  // month, so a change here can never bleed into another row.
-  function computeRow(r){
-    var price = Number(r.price) || 0;   // new-member signup price that month
-    var active = Number(r.activeMembers) || 0;
-    var visits = Number(r.visits) || 0, trials = Number(r.trials) || 0;
-    var newM = Number(r.newMembers) || 0, lost = Number(r.lost) || 0;
-    var trialConv = safeDiv(trials, visits) * 100;
-    var trialToPaid = safeDiv(newM, trials) * 100;
-    var visitToPaid = safeDiv(newM, visits) * 100;
-    var churn = safeDiv(lost, active) * 100;
-    var retention = 100 - churn;
-    return Object.assign({}, r, {
-      visits: visits, trials: trials,
-      newMembers: newM, lost: lost, activeMembers: active, price: price,
-      trialConv: trialConv, trialToPaid: trialToPaid, visitToPaid: visitToPaid,
-      churn: churn, retention: retention
-    });
-  }
+  // MRR for The Heart Attractor Program (rebuilt from scratch 2026-10-24).
+  // Two price points: $497/month and $2,500/year. Annual is pro-rated to
+  // $2,500 ÷ 12 a month so MRR reflects the real monthly revenue.
+  // Olly types in four numbers a month: new monthly sign-ups, new annual
+  // sign-ups, monthly members who cancelled, annual members who cancelled
+  // (or didn't renew). Active members are a running total from those, so
+  // they're never typed in. The old Skool rows (state.rows) are kept in
+  // storage untouched but nothing reads them any more.
+  var MRR_PRICE_MONTHLY = 497, MRR_PRICE_ANNUAL = 2500;
+  var MRR_FIELDS = ["newMonthly","newAnnual","lostMonthly","lostAnnual"];
 
-  // MRR is the one figure that's genuinely cumulative rather than per-month:
-  // members who joined at an old price keep paying that price after a price
-  // rise ("grandfathering"), so MRR can't be read off a single month's own
-  // fields. It's calculated automatically as a running cohort total — each
-  // month's new members lock in at that month's price and keep contributing
-  // it every month after, until they're recorded as lost (removed at the
-  // average rate across current members, since we don't track exactly which
-  // member left). Every other figure on this page stays fully independent
-  // per month — only MRR (and what's derived from it, ARPU and LTV) chains.
   function computeRows(s){
-    var rows = s.rows.map(computeRow);
-    var runningMrr = 0, runningCount = 0;
-    rows.forEach(function(r){
-      runningMrr += r.newMembers * r.price;
-      runningCount += r.newMembers;
-      if (r.lost > 0 && runningCount > 0){
-        var avgRev = runningMrr / runningCount;
-        var removed = Math.min(r.lost, runningCount);
-        runningMrr = Math.max(0, runningMrr - avgRev * removed);
-        runningCount = Math.max(0, runningCount - removed);
-      }
-      r.mrr = runningMrr;
-      r.arpu = safeDiv(r.mrr, r.activeMembers);
-      r.ltv = r.churn > 0 ? r.arpu / (r.churn/100) : null;
+    var actM = 0, actA = 0;
+    return s.mrrRows.map(function(r){
+      var o = Object.assign({}, r);
+      MRR_FIELDS.forEach(function(f){ o[f] = Number(r[f]) || 0; });
+      o.startMembers = actM + actA;
+      actM = Math.max(0, actM + o.newMonthly - o.lostMonthly);
+      actA = Math.max(0, actA + o.newAnnual - o.lostAnnual);
+      o.activeMonthly = actM;
+      o.activeAnnual = actA;
+      o.activeMembers = actM + actA;
+      o.newMembers = o.newMonthly + o.newAnnual;
+      o.lost = o.lostMonthly + o.lostAnnual;
+      o.mrr = actM * MRR_PRICE_MONTHLY + actA * (MRR_PRICE_ANNUAL / 12);
+      // Churn = members lost ÷ members at the start of the month. No
+      // starting members (the first month) means there's nothing to churn.
+      o.churn = o.startMembers > 0 ? (o.lost / o.startMembers) * 100 : null;
+      o.retention = o.churn == null ? null : 100 - o.churn;
+      o.arpu = safeDiv(o.mrr, o.activeMembers);
+      o.ltv = o.churn > 0 ? o.arpu / (o.churn/100) : null;
+      return o;
     });
-    return rows;
   }
 
-  // Totals a period (a Monthly single row, a Yearly set of months, or All
-  // time) purely by summing each month's own inputs — flow metrics (leads,
-  // visits, trials, new/lost members) add up; point-in-time metrics (active
-  // members, price, MRR, LTV) are read from the most recent month in the
-  // period, since they describe a snapshot, not a flow.
+  // Totals a period (one month, a year, or all time). Sign-ups and
+  // cancellations add up; members and MRR are read from the last month in
+  // the period. Churn over several months = average of the months that had
+  // members to lose.
   function aggregatePeriod(rows){
     if (!rows.length) return null;
     var sorted = rows.slice().sort(function(a,b){ return a.month < b.month ? -1 : 1; });
-    // "Latest" for a snapshot metric (active members, price, MRR) must be
-    // judged by Active members specifically, not "any field is non-zero" —
-    // a month can have real visits/leads typed in while Active members is
-    // still sitting at 0 because that field just hasn't been filled in yet.
-    // Using any-field-nonzero picked that half-filled month and read current
-    // MRR as $0 even with real paying members recorded the month before.
-    var withMembers = sorted.filter(function(r){ return r.activeMembers > 0; });
-    var latest = withMembers.length ? withMembers[withMembers.length-1] : sorted[sorted.length-1];
-    var sum = { visits:0, trials:0, newMembers:0, lost:0 };
-    sorted.forEach(function(r){
-      sum.visits += r.visits; sum.trials += r.trials;
-      sum.newMembers += r.newMembers; sum.lost += r.lost;
-    });
-    var trialConv = safeDiv(sum.trials, sum.visits) * 100;
-    var trialToPaid = safeDiv(sum.newMembers, sum.trials) * 100;
-    var visitToPaid = safeDiv(sum.newMembers, sum.visits) * 100;
-    var churn = safeDiv(sum.lost, latest.activeMembers) * 100;
-    var retention = 100 - churn;
-    var mrr = Number(latest.mrr) || 0;
-    var arpu = safeDiv(mrr, latest.activeMembers);
-    var ltv = churn > 0 ? arpu / (churn/100) : null;
-    return Object.assign({}, sum, {
-      activeMembers: latest.activeMembers, price: latest.price, mrr: mrr,
-      trialConv: trialConv, trialToPaid: trialToPaid, visitToPaid: visitToPaid,
-      churn: churn, retention: retention, arpu: arpu, ltv: ltv,
+    var latest = sorted[sorted.length-1];
+    var sum = { newMonthly:0, newAnnual:0, lostMonthly:0, lostAnnual:0 };
+    sorted.forEach(function(r){ MRR_FIELDS.forEach(function(f){ sum[f] += r[f]; }); });
+    var churnRows = sorted.filter(function(r){ return r.churn != null; });
+    var churn = churnRows.length ? churnRows.reduce(function(a,r){ return a + r.churn; }, 0) / churnRows.length : null;
+    var arpu = safeDiv(latest.mrr, latest.activeMembers);
+    return Object.assign(sum, {
+      newMembers: sum.newMonthly + sum.newAnnual,
+      lost: sum.lostMonthly + sum.lostAnnual,
+      activeMonthly: latest.activeMonthly, activeAnnual: latest.activeAnnual,
+      activeMembers: latest.activeMembers, mrr: latest.mrr,
+      churn: churn, retention: churn == null ? null : 100 - churn,
+      arpu: arpu, ltv: churn > 0 ? arpu / (churn/100) : null,
       monthCount: sorted.length
     });
   }
@@ -1814,6 +2133,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       })
       .catch(function(){ /* offline — local copy is fine */ });
   }
+
+  // Refresh (2026-10-24): the phone app often resumes without reloading, and
+  // a leftover "unsaved" marker made every boot skip the server pull, so
+  // desktop edits never showed up there. This loads the newest code AND the
+  // shared data: drops this device's unsaved edits (after asking), then
+  // reloads with a cache-busting query.
+  function hardRefresh(){
+    if (dirtyGet() !== null && !window.confirm(
+      "This device has unsaved changes.\n\n" +
+      "OK = throw them away and load the latest version\n" +
+      "Cancel = keep them (press Save first)"
+    )) return;
+    dirtyClear();   // with no marker, boot lets the server copy win
+    location.replace(location.pathname + "?r=" + Date.now() + location.hash);
+  }
+  // Coming back to the app: quietly pull the shared data if nothing here is unsaved.
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "visible" && dirtyGet() === null) pullServerState();
+  });
 
   // `onDone(ok)` is optional — used by the day modal's own Save button so
   // it can reflect the real outcome (saved vs. error) instead of guessing
@@ -1993,46 +2331,36 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!periodRows.length) return;
 
     var sel = aggregatePeriod(periodRows);
-    var showGrowth = viewMode === "month";
-    var idx = showGrowth ? rows.findIndex(function(r){ return r.month === selectedPeriod; }) : -1;
-    function growthCard(field, label){
-      if (!showGrowth || idx <= 0) return null;
-      var g = mrrGrowth(rows, idx, field);
-      return kpiCard(label, (g>=0?"+":"")+fmtInt(g), "accent");
-    }
+    var latestTag = sel.monthCount > 1 ? " (latest)" : "";
+    var idx = viewMode === "month" ? rows.findIndex(function(r){ return r.month === selectedPeriod; }) : -1;
 
-    grid.appendChild(kpiCard("About Page visits", fmtInt(sel.visits)));
-    var c2 = growthCard("visits", "Visits growth vs. prev. month"); if (c2) grid.appendChild(c2);
-    grid.appendChild(kpiCard("Free trials started", fmtInt(sel.trials)));
-    var c3 = growthCard("trials", "Trials growth vs. prev. month"); if (c3) grid.appendChild(c3);
-    grid.appendChild(kpiCard("Trial conversion", fmtPct(sel.trialConv), "accent"));
-    grid.appendChild(kpiCard("New paying members", fmtInt(sel.newMembers)));
-    var c4 = growthCard("newMembers", "New members growth vs. prev. month"); if (c4) grid.appendChild(c4);
-    grid.appendChild(kpiCard("Trial → paid conversion", fmtPct(sel.trialToPaid), "accent"));
-    grid.appendChild(kpiCard("Active members" + (sel.monthCount>1 ? " (latest)" : ""), fmtInt(sel.activeMembers)));
-    var c5 = growthCard("activeMembers", "Active members growth vs. prev. month"); if (c5) grid.appendChild(c5);
-    grid.appendChild(kpiCard("Retention rate", fmtPct(sel.retention)));
-    grid.appendChild(kpiCard("MRR" + (sel.monthCount>1 ? " (latest)" : ""), fmtMoney(sel.mrr)));
-    if (showGrowth && idx > 0){
-      var mrrG = mrrGrowth(rows, idx, "mrr");
-      grid.appendChild(kpiCard("MRR growth vs. prev. month", (mrrG>=0?"+":"")+fmtMoney(mrrG), "accent"));
+    grid.appendChild(kpiCard("New monthly members", fmtInt(sel.newMonthly)));
+    grid.appendChild(kpiCard("New annual members", fmtInt(sel.newAnnual)));
+    grid.appendChild(kpiCard("Members lost", fmtInt(sel.lost)));
+    grid.appendChild(kpiCard("Active members" + latestTag, fmtInt(sel.activeMembers)));
+    grid.appendChild(kpiCard("Monthly / annual" + latestTag, fmtInt(sel.activeMonthly) + " / " + fmtInt(sel.activeAnnual), "accent"));
+    grid.appendChild(kpiCard("MRR" + latestTag, fmtMoney(sel.mrr)));
+    if (idx > 0){
+      var g = rows[idx].mrr - rows[idx-1].mrr;
+      grid.appendChild(kpiCard("MRR growth vs. prev. month", (g>=0?"+":"-")+fmtMoney(Math.abs(g)), "accent"));
     }
+    grid.appendChild(kpiCard((sel.monthCount > 1 ? "Avg. churn" : "Churn"), sel.churn == null ? "—" : fmtPct(sel.churn), "accent"));
+    grid.appendChild(kpiCard((sel.monthCount > 1 ? "Avg. retention" : "Retention"), sel.retention == null ? "—" : fmtPct(sel.retention), "accent"));
     grid.appendChild(kpiCard("Avg. revenue / member", fmtMoney(sel.arpu)));
     grid.appendChild(kpiCard("LTV / member", sel.ltv != null ? fmtMoney(sel.ltv) : "—"));
   }
 
   // Row count the table body is currently built for. The table is only torn
   // down and rebuilt when this changes (a month added/removed) or on first
-  // render — an edit inside a cell updates that row's calculated cells in
-  // place instead. Rebuilding on every keystroke's blur destroyed the input
-  // elements mid-edit, which lost keyboard focus and made Tab jump to an
-  // unrelated row — the cause of values landing in the wrong month.
+  // render — an edit inside a cell updates the calculated cells in place
+  // instead, so typing never loses focus.
   var tableBuiltForCount = -1;
 
   function calcCellsHTML(r){
     return [
-      fmtPct(r.trialConv), fmtPct(r.trialToPaid), fmtPct(r.visitToPaid),
-      fmtPct(r.churn), fmtPct(r.retention), fmtMoney(r.mrr), (r.ltv!=null?fmtMoney(r.ltv):"—")
+      fmtInt(r.activeMonthly), fmtInt(r.activeAnnual), fmtInt(r.activeMembers),
+      r.churn == null ? "—" : fmtPct(r.churn), r.retention == null ? "—" : fmtPct(r.retention),
+      fmtMoney(r.mrr)
     ];
   }
 
@@ -2041,30 +2369,27 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tr.dataset.row = i;
     if (r.locked) tr.classList.add("locked");
     var dis = r.locked ? " disabled" : "";
-    tr.innerHTML =
+    var html =
       '<td class="rowlock"><button class="lockbtn" data-lock="'+i+'" title="'+(r.locked?'Unlock this month':'Lock this month')+'">'+(r.locked?'🔒':'🔓')+'</button></td>' +
-      '<td class="month">'+monthLabel(r.month)+'</td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="visits" value="'+r.visits+'"'+dis+'></td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="trials" value="'+r.trials+'"'+dis+'></td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="newMembers" value="'+r.newMembers+'"'+dis+'></td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="lost" value="'+r.lost+'"'+dis+'></td>' +
-      '<td><input type="number" min="0" data-i="'+i+'" data-field="activeMembers" value="'+r.activeMembers+'"'+dis+'></td>' +
-      '<td><input type="number" min="0" step="0.5" data-i="'+i+'" data-field="price" value="'+r.price+'"'+dis+'></td>' +
+      '<td class="month">'+monthLabel(r.month)+'</td>';
+    MRR_FIELDS.forEach(function(f){
+      html += '<td><input type="number" min="0" data-i="'+i+'" data-field="'+f+'" value="'+r[f]+'"'+dis+'></td>';
+    });
+    html +=
       '<td class="calc" data-calc="0"></td>' +
       '<td class="calc" data-calc="1"></td>' +
       '<td class="calc" data-calc="2"></td>' +
       '<td class="calc" data-calc="3"></td>' +
       '<td class="calc" data-calc="4"></td>' +
       '<td class="money" data-calc="5"></td>' +
-      '<td class="money" data-calc="6"></td>' +
       '<td class="rowdel">'+(rowCount>1 && !r.locked ? '<button data-del="'+i+'" title="Remove month">✕</button>' : '')+'</td>';
-    updateRowCalcCells(tr, r, rowCount, i);
+    tr.innerHTML = html;
+    updateRowCalcCells(tr, r);
     return tr;
   }
 
-  function updateRowCalcCells(tr, r, rows, i){
-    var vals = calcCellsHTML(r);
-    vals.forEach(function(v, idx){
+  function updateRowCalcCells(tr, r){
+    calcCellsHTML(r).forEach(function(v, idx){
       var cell = tr.querySelector('[data-calc="'+idx+'"]');
       if (cell) cell.textContent = v;
     });
@@ -2078,6 +2403,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       wireTableEvents(tbody);
       tableBuiltForCount = rows.length;
     } else {
+      // Every row after an edited month changes too (members are a running
+      // total), so refresh all of them.
       rows.forEach(function(r, i){
         var tr = tbody.querySelector('tr[data-row="'+i+'"]');
         if (tr) updateRowCalcCells(tr, r);
@@ -2087,12 +2414,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
   function wireTableEvents(tbody){
     tbody.querySelectorAll("input").forEach(function(inp){
-      // "input" fires on every keystroke as well as an arrow-spinner click —
-      // "change" alone only fires once the field is left, which made typed
-      // values look like they hadn't registered until you clicked away.
       inp.addEventListener("input", function(){
         var i = Number(inp.dataset.i), f = inp.dataset.field;
-        state.rows[i][f] = Number(inp.value) || 0;
+        state.mrrRows[i][f] = Number(inp.value) || 0;
         markDirty();
         render();
       });
@@ -2100,7 +2424,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tbody.querySelectorAll("[data-lock]").forEach(function(btn){
       btn.addEventListener("click", function(){
         var i = Number(btn.dataset.lock);
-        state.rows[i].locked = !state.rows[i].locked;
+        state.mrrRows[i].locked = !state.mrrRows[i].locked;
         markDirty();
         tableBuiltForCount = -1; // force rebuild — disabled state changed
         render();
@@ -2108,8 +2432,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     });
     tbody.querySelectorAll("[data-del]").forEach(function(btn){
       btn.addEventListener("click", function(){
-        var i = Number(btn.dataset.del);
-        state.rows.splice(i,1);
+        var i = Number(btn.dataset.del), r = state.mrrRows[i];
+        var hasData = MRR_FIELDS.some(function(f){ return Number(r[f]) > 0; });
+        if (hasData && !window.confirm("Delete " + monthLabel(r.month) + " and its numbers? Every later month's member count changes too.")) return;
+        state.mrrRows.splice(i,1);
         tableBuiltForCount = -1; // force rebuild — indices shift
         markDirty();
         render();
@@ -2193,16 +2519,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var accent2Var = cs.getPropertyValue('--accent-2').trim() || "#E1A6FF";
     var warnVar = cs.getPropertyValue('--warn').trim() || "#E0B168";
 
+    var goodVar = cs.getPropertyValue('--good').trim() || "#8FD0A8";
+    var critVar = cs.getPropertyValue('--critical').trim() || "#FF7A9A";
+
     drawLine("chartMRR","ttMRR", rows, [
       { name:"MRR", color: accentVar, get:function(r){return r.mrr;}, fmt:fmtMoney }
     ]);
     drawLine("chartMembers","ttMembers", rows, [
-      { name:"Active members", color: accent2Var, get:function(r){return r.activeMembers;}, fmt:fmtInt }
+      { name:"Monthly", color: accent2Var, get:function(r){return r.activeMonthly;}, fmt:fmtInt },
+      { name:"Annual", color: warnVar, get:function(r){return r.activeAnnual;}, fmt:fmtInt }
     ]);
     drawLine("chartConv","ttConv", rows, [
-      { name:"About Page → Trial", color: accent2Var, get:function(r){return r.trialConv;}, fmt:fmtPct },
-      { name:"Trial → Paying", color: warnVar, get:function(r){return r.trialToPaid;}, fmt:fmtPct }
-    ], { minMax: 10 });
+      { name:"Retention", color: goodVar, get:function(r){return r.retention;}, fmt:fmtPct },
+      { name:"Churn", color: critVar, get:function(r){return r.churn;}, fmt:fmtPct }
+    ], { minMax: 100 });
   }
 
   // ── Content tab ───────────────────────────────────────────────────────
@@ -2224,14 +2554,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // contentSelectedMonth, and locking/deleting a row from either tab's
     // table has to reset both tables' built-count so they rebuild in sync.
     syncPeriodSel("igPeriodSel", rows);
-    syncPeriodSel("emailPeriodSel", rows);
 
     renderInstagramKPIs(rows);
-    renderEmailKPIs(rows);
     renderInstagramTable(rows);
-    renderEmailTable(rows);
     renderInstagramChart(rows);
-    renderEmailChart(rows);
+    renderEmailSection();
     renderOutliers();
   }
 
@@ -2276,11 +2603,37 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     grid.appendChild(kpiCard("IG growth vs. prev. month", igG==null ? "—" : (igG>=0?"+":"")+fmtInt(igG), "accent"));
   }
 
+  // Email has its own rows since 2026-10-24 (Olly restarted the count with
+  // the new daily-email list). state.emailRows = [{ month, emailList, locked }].
+  // The old emailList numbers stay in state.content.rows, unread.
+  var emailSelectedMonth = null;
+
+  function renderEmailSection(){
+    var rows = state.emailRows.slice().sort(function(a,b){ return a.month < b.month ? -1 : 1; });
+    var sel = document.getElementById("emailPeriodSel");
+    sel.innerHTML = "";
+    rows.forEach(function(r){
+      var opt = document.createElement("option");
+      opt.value = r.month; opt.textContent = monthLabel(r.month);
+      sel.appendChild(opt);
+    });
+    if (rows.length){
+      var todayYM = todayISO().slice(0, 7);
+      if (!emailSelectedMonth || !rows.some(function(r){return r.month===emailSelectedMonth;})){
+        emailSelectedMonth = rows.some(function(r){return r.month===todayYM;}) ? todayYM : rows[rows.length-1].month;
+      }
+      sel.value = emailSelectedMonth;
+    }
+    renderEmailKPIs(rows);
+    renderEmailTable(rows);
+    renderEmailChart(rows);
+  }
+
   function renderEmailKPIs(rows){
     var grid = document.getElementById("emailKpiGrid");
     grid.innerHTML = "";
     if (!rows.length) return;
-    var idx = rows.findIndex(function(r){ return r.month === contentSelectedMonth; });
+    var idx = rows.findIndex(function(r){ return r.month === emailSelectedMonth; });
     if (idx === -1) idx = rows.length - 1;
     var r = rows[idx];
     var emG = contentGrowth(rows, idx, "emailList");
@@ -2328,7 +2681,43 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   }
 
   function renderInstagramTable(rows){ renderMetricTable("igTbody", rows, "igFollowers", true); }
-  function renderEmailTable(rows){ renderMetricTable("emailTbody", rows, "emailList", false); }
+  function renderEmailTable(rows){
+    var tbody = document.getElementById("emailTbody");
+    if (rows.length !== emailTableBuiltForCount){
+      tbody.innerHTML = "";
+      rows.forEach(function(r, i){ tbody.appendChild(buildMetricRow(r, i, rows, rows.length, "emailList")); });
+      tbody.querySelectorAll("input").forEach(function(inp){
+        inp.addEventListener("input", function(){
+          state.emailRows[Number(inp.dataset.i)].emailList = Number(inp.value) || 0;
+          markDirty();
+          renderEmailSection();
+        });
+      });
+      tbody.querySelectorAll("[data-clock]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var r = state.emailRows[Number(btn.dataset.clock)];
+          r.locked = !r.locked;
+          markDirty();
+          emailTableBuiltForCount = -1;
+          renderEmailSection();
+        });
+      });
+      tbody.querySelectorAll("[data-cdel]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          state.emailRows.splice(Number(btn.dataset.cdel), 1);
+          markDirty();
+          emailTableBuiltForCount = -1;
+          renderEmailSection();
+        });
+      });
+      emailTableBuiltForCount = rows.length;
+    } else {
+      rows.forEach(function(r, i){
+        var tr = tbody.querySelector('tr[data-row="'+i+'"]');
+        if (tr) updateMetricRowCalc(tr, rows, i, "emailList");
+      });
+    }
+  }
 
   function wireMetricTableEvents(tbody, rows, field){
     tbody.querySelectorAll("input").forEach(function(inp){
@@ -2384,8 +2773,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderContentTab();
   });
   document.getElementById("emailPeriodSel").addEventListener("change", function(e){
-    contentSelectedMonth = e.target.value;
-    renderContentTab();
+    emailSelectedMonth = e.target.value;
+    renderEmailSection();
   });
   function addContentMonth(){
     if (!state.content) state.content = { rows: [] };
@@ -2396,7 +2785,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     markDirty(); renderContentTab();
   }
   document.getElementById("igAddMonth").addEventListener("click", addContentMonth);
-  document.getElementById("emailAddMonth").addEventListener("click", addContentMonth);
+  document.getElementById("emailAddMonth").addEventListener("click", function(){
+    var rows = state.emailRows, last = rows.length ? rows[rows.length-1] : null;
+    rows.push({ month: last ? nextMonth(last.month) : todayISO().slice(0,7), emailList:0, locked:false });
+    emailTableBuiltForCount = -1;
+    markDirty(); renderEmailSection();
+  });
 
   // ── Video ideas + content calendar ──────────────────────────────────
   // Type an idea, then pick a real date — it drops into that day on the
@@ -2913,6 +3307,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Falls back to a manual copy prompt if the Clipboard API is blocked —
   // it needs a secure context and a real click to work, which this always
   // is, but never leave someone stuck with no way to grab the text.
+  // YouTube tab: copy the Shorts description (2026-10-25)
+  document.getElementById("ytShortsCopy").addEventListener("click", function(){
+    copyToClipboard(document.getElementById("ytShortsDesc").value, this);
+  });
+
   function copyToClipboard(text, btn){
     var original = btn.textContent;
     if (!text){
@@ -3678,8 +4077,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return d.toLocaleDateString(undefined, { day:"numeric", month:"short", year:"numeric" });
   }
 
+  // A hidden tab has no layout, so scrollHeight reads 0 and the card used
+  // to collapse to nothing (2026-10-24). Skip sizing while hidden; the tab
+  // button re-sizes every card when Brain Dump is opened.
   function autosizeBdCard(ta){
     ta.style.height = "auto";
+    if (!ta.scrollHeight) return;
     ta.style.height = ta.scrollHeight + "px";
   }
 
@@ -3747,14 +4150,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     });
     host.querySelectorAll("[data-bddel]").forEach(function(btn){
       btn.addEventListener("click", function(){
+        // No confirm (Olly, 2026-10-24): ✕ removes the card straight away.
         var i = Number(btn.dataset.bddel);
-        if (!(state.brainDump.cards[i].text || "").trim() ||
-            window.confirm("Delete this card?")){
-          state.brainDump.cards.splice(i, 1);
-          bdBuiltForCount = -1;
-          markDirty();
-          renderBrainDump();
-        }
+        state.brainDump.cards.splice(i, 1);
+        bdBuiltForCount = -1;
+        markDirty();
+        renderBrainDump();
       });
     });
   }
@@ -4213,6 +4614,877 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderStories();
   });
 
+  // ── Overview tab (2026-10-24) ─────────────────────────────────────────
+  // Read-only summary of the other tabs for one month or one year. Nothing
+  // is stored here: every figure is pulled live from the other tabs' data.
+  //  - flows (sign-ups, opt-ins, sales, views…) add up across the period
+  //  - snapshots (MRR, members, followers, subscribers) use the latest
+  //    month in the period, with growth measured against the month before
+  //    the period started.
+  var ovMode = "month", ovPeriod = null;
+
+  function ovInPeriod(ym){
+    return ovMode === "year" ? ym.slice(0,4) === ovPeriod : ym === ovPeriod;
+  }
+  function ovSort(rows){
+    return (rows || []).slice().sort(function(a,b){ return a.month < b.month ? -1 : 1; });
+  }
+  function ovSum(rows, f){
+    return ovSort(rows).filter(function(r){ return ovInPeriod(r.month); })
+      .reduce(function(a, r){ return a + (Number(r[f]) || 0); }, 0);
+  }
+  // { value, growth } for a month-end figure; growth null when there's
+  // nothing earlier to compare with (unless a baseline is given).
+  function ovSnap(rows, f, baseline){
+    var sorted = ovSort(rows);
+    var inRows = sorted.filter(function(r){ return ovInPeriod(r.month); });
+    if (!inRows.length) return null;
+    var last = inRows[inRows.length-1];
+    var firstIdx = sorted.indexOf(inRows[0]);
+    var base = firstIdx > 0 ? Number(sorted[firstIdx-1][f]) || 0 : (baseline > 0 ? baseline : null);
+    var v = Number(last[f]) || 0;
+    return { value: v, growth: base == null ? null : v - base, fromBaseline: firstIdx === 0 && base != null };
+  }
+  function ovGrowthText(g, money){
+    if (g == null) return "";
+    var abs = money ? fmtMoney(Math.abs(g)) : fmtInt(Math.abs(g));
+    return (g >= 0 ? "+" : "-") + abs + (ovMode === "year" ? " this year" : " vs. last month");
+  }
+  function ovCard(label, value, sub, cls){
+    var c = kpiCard(label, value, cls);
+    if (sub){
+      var s = document.createElement("div");
+      s.className = "ovsub";
+      s.textContent = sub;
+      c.appendChild(s);
+    }
+    return c;
+  }
+  function ovGroup(title, cards){
+    var wrap = document.createElement("div");
+    var h = document.createElement("p");
+    h.className = "section-label";
+    h.textContent = title;
+    var grid = document.createElement("div");
+    grid.className = "kpigrid";
+    cards.forEach(function(c){ if (c) grid.appendChild(c); });
+    wrap.appendChild(h); wrap.appendChild(grid);
+    return wrap;
+  }
+
+  function ovPeriods(){
+    var months = {};
+    months[todayISO().slice(0,7)] = true;
+    [state.mrrRows, state.sales && state.sales.rows, state.emailRows, state.youtubeRows, state.content && state.content.rows]
+      .forEach(function(rows){ (rows || []).forEach(function(r){ if (r.month) months[r.month] = true; }); });
+    var list = Object.keys(months).sort();
+    if (ovMode === "year"){
+      var years = {};
+      list.forEach(function(m){ years[m.slice(0,4)] = true; });
+      return Object.keys(years).sort();
+    }
+    return list;
+  }
+
+  function renderOverview(){
+    var host = document.getElementById("ovBody");
+    if (!host) return;
+    document.getElementById("ovMode").value = ovMode;
+    var periods = ovPeriods();
+    var sel = document.getElementById("ovPeriodSel");
+    sel.innerHTML = "";
+    periods.forEach(function(p){
+      var o = document.createElement("option");
+      o.value = p; o.textContent = ovMode === "year" ? p : monthLabel(p);
+      sel.appendChild(o);
+    });
+    if (periods.indexOf(ovPeriod) === -1){
+      var now = ovMode === "year" ? todayISO().slice(0,4) : todayISO().slice(0,7);
+      ovPeriod = periods.indexOf(now) !== -1 ? now : periods[periods.length-1];
+    }
+    sel.value = ovPeriod;
+
+    host.innerHTML = "";
+
+    // Funnel pages first (Olly, 2026-10-24): views from the Hub's counter,
+    // leads/applicants from the GHL tags. Filled by Pull from GHL.
+    var pc = pageConversion(ovInPeriod), po = pc[0], pa = pc[1];
+    var pulled = state.ghlSources && state.ghlSources.fetchedAt;
+    var notYet = pulled ? "" : "press Pull from GHL";
+    var rateTxt = function(p){ return p.rate == null ? "—" : fmtPct(p.rate); };
+    host.appendChild(ovGroup("Opt-in page", [
+      ovCard("Opt-in page views", fmtInt(po.views), notYet),
+      ovCard("Opt-in page leads", fmtInt(po.conv), notYet),
+      ovCard("Opt-in rate", rateTxt(po), "everyone who opted in ÷ everyone who viewed the page", "accent")
+    ]));
+    // Where the opt-in page's visitors came from (Olly, 2026-10-25): top 6 by visits
+    var tRows = trafficRowsFor("optin", ovInPeriod).slice(0, 6);
+    if (tRows.length){
+      host.appendChild(ovGroup("Opt-in page traffic", tRows.map(function(r){
+        var sub = (r.share == null ? "" : fmtPct(r.share) + " of visitors") +
+          (r.before ? "" : " · " + fmtInt(r.optins) + " opted in" + (r.rate == null ? "" : " (" + fmtPct(r.rate) + ")"));
+        return ovCard(trafficLabel(r), fmtInt(r.visits) + (r.visits === 1 ? " visit" : " visits"), sub);
+      })));
+    }
+    host.appendChild(ovGroup("Application page", [
+      ovCard("Application page views", fmtInt(pa.views), notYet),
+      ovCard("Applicants", fmtInt(pa.conv), notYet),
+      ovCard("Application rate", rateTxt(pa), "everyone who applied ÷ everyone who viewed the page", "accent")
+    ]));
+
+    // Revenue (MRR tab)
+    var mrrRows = computeRows(state).filter(function(r){ return ovInPeriod(r.month); });
+    var agg = aggregatePeriod(mrrRows);
+    var allMrr = computeRows(state);
+    var mrrSnap = ovSnap(allMrr, "mrr");
+    host.appendChild(ovGroup("Revenue", [
+      ovCard("MRR", agg ? fmtMoney(agg.mrr) : "—", mrrSnap ? ovGrowthText(mrrSnap.growth, true) : ""),
+      ovCard("Active members", agg ? fmtInt(agg.activeMembers) : "—", agg ? fmtInt(agg.activeMonthly) + " monthly · " + fmtInt(agg.activeAnnual) + " annual" : ""),
+      ovCard("New members", agg ? fmtInt(agg.newMembers) : "—", agg ? fmtInt(agg.newMonthly) + " monthly · " + fmtInt(agg.newAnnual) + " annual" : ""),
+      ovCard("Retention", agg && agg.retention != null ? fmtPct(agg.retention) : "—", agg && agg.churn != null ? fmtPct(agg.churn) + " churn" : "", "accent")
+    ]));
+
+    // Sales funnel (Sales tab)
+    var sr = state.sales.rows;
+    var optins = ovSum(sr, "optins"), apps = ovSum(sr, "applications"), taken = ovSum(sr, "callsTaken");
+    var sales = ovSum(sr, "salesMonthly") + ovSum(sr, "salesAnnual");
+    var cash = ovSum(sr, "salesMonthly") * SALES_PRICE_MONTHLY + ovSum(sr, "salesAnnual") * SALES_PRICE_ANNUAL;
+    host.appendChild(ovGroup("Calls and sales", [
+      ovCard("Calls taken", fmtInt(taken), fmtInt(ovSum(sr, "callsBooked")) + " booked"),
+      ovCard("Sales", fmtInt(sales), fmtPct(safeDiv(sales, taken)*100) + " close rate"),
+      ovCard("New cash", fmtMoney(cash), "", "accent")
+    ]));
+
+    // Where they came from (last GHL pull) — top 4 sources by opt-ins
+    var srcRows = ghlRowsFor(ovInPeriod).slice(0, 4);
+    if (srcRows.length){
+      host.appendChild(ovGroup("Where they came from", srcRows.map(function(r){
+        return ovCard(ghlLabel(r), fmtInt(r.optins) + " opt-ins", fmtInt(r.applied) + " applied · " + fmtInt(r.joined) + " joined");
+      })));
+    }
+
+    // Audience (Instagram, Email, YouTube tabs)
+    var ig = ovSnap(state.content.rows, "igFollowers");
+    var em = ovSnap(state.emailRows, "emailList");
+    var yt = ovSnap(state.youtubeRows, "subscribers", Number(state.youtubeBaseline) || 0);
+    if (yt && !(yt.value > 0)) yt = null;   // month not filled in yet
+    var ytLatest = ovSort(state.youtubeRows).filter(function(r){
+      return Number(r.subscribers) > 0 && (ovMode === "year" ? r.month.slice(0,4) <= ovPeriod : r.month <= ovPeriod);
+    }).pop();
+    var ytBase = Number(state.youtubeBaseline) || 0;
+    host.appendChild(ovGroup("Audience", [
+      ovCard("Instagram followers", ig ? fmtInt(ig.value) : "—", ig ? ovGrowthText(ig.growth) : "not logged"),
+      ovCard("Email list", em ? fmtInt(em.value) : "—", em ? ovGrowthText(em.growth) : "not logged"),
+      yt ? ovCard("YouTube subscribers", fmtInt(yt.value), yt.fromBaseline ? (yt.growth>=0?"+":"-") + fmtInt(Math.abs(yt.growth)) + " since you started tracking" : ovGrowthText(yt.growth))
+         : ytLatest ? ovCard("YouTube subscribers", fmtInt(ytLatest.subscribers), "total as of " + monthLabel(ytLatest.month))
+         : ytBase ? ovCard("YouTube subscribers", fmtInt(ytBase), "current total (starting count)")
+         : ovCard("YouTube subscribers", "—", "not logged"),
+      ovCard("YouTube views", fmtInt(ovSum(state.youtubeRows, "views")), "")
+    ]));
+
+    // Content: Reel outliers only (Olly, 2026-10-24: Reels published and
+    // Stories posted removed from the Overview)
+    var inP = function(d){ return !!d && ovInPeriod(String(d).slice(0,7)); };
+    var outliers = state.content.outlierList.filter(function(o){ return inP(o.date); }).length;
+    host.appendChild(ovGroup("Content", [
+      ovCard("Reel outliers", fmtInt(outliers), "")
+    ]));
+
+    // Right now (not tied to the period)
+    var today = todayISO();
+    var due = state.sales.leads.filter(function(l){ return l.followUp && l.followUp <= today && !LEAD_CLOSED[l.stage] && (l.name||"").trim(); }).length;
+    var openLeads = state.sales.leads.filter(function(l){ return !LEAD_CLOSED[l.stage] && (l.name||"").trim(); }).length;
+    var doFirst = state.delivery.projects.filter(function(p){ return !p.done && p.title && p.urgent && p.important; }).length;
+    host.appendChild(ovGroup("Right now", [
+      ovCard("Follow-ups due", fmtInt(due), "Sales tab", due ? "accent" : ""),
+      ovCard("Open leads", fmtInt(openLeads), "not joined or not a fit"),
+      ovCard("Do-first projects", fmtInt(doFirst), "Delivery tab")
+    ]));
+  }
+
+  document.getElementById("ovMode").addEventListener("change", function(e){
+    ovMode = e.target.value;
+    ovPeriod = null;
+    renderOverview();
+  });
+  document.getElementById("ovPeriodSel").addEventListener("change", function(e){
+    ovPeriod = e.target.value;
+    renderOverview();
+  });
+
+  // ── YouTube tab (2026-10-24) ──────────────────────────────────────────
+  // Same shape as Email: its own rows, typed in by hand each month.
+  // state.youtubeRows = [{ month, subscribers, views, locked }]. Growth is
+  // a display only, comparing with the row before.
+  var ytSelectedMonth = null, ytTableBuiltForCount = -1;
+
+  function ytSorted(){
+    return state.youtubeRows.slice().sort(function(a,b){ return a.month < b.month ? -1 : 1; });
+  }
+  function ytGrowthText(rows, i, f){
+    // A month still at 0 hasn't been filled in yet, so don't compare it
+    // (0 minus the starting count read as a huge drop, 2026-10-24).
+    if (!(Number(rows[i][f]) > 0)) return "—";
+    var g = contentGrowth(rows, i, f);
+    if (g != null && !(Number(rows[i-1][f]) > 0)) g = null;
+    // First month's subscriber growth is measured from the baseline.
+    if (i === 0 && f === "subscribers" && Number(state.youtubeBaseline) > 0) g = (rows[0].subscribers || 0) - Number(state.youtubeBaseline);
+    return g == null ? "—" : (g>=0?"+":"") + fmtInt(g);
+  }
+
+  function renderYouTube(){
+    var rows = ytSorted();
+    var baseInp = document.getElementById("ytBaseline");
+    if (document.activeElement !== baseInp) baseInp.value = state.youtubeBaseline || 0;
+    var sel = document.getElementById("ytPeriodSel");
+    sel.innerHTML = "";
+    rows.forEach(function(r){
+      var opt = document.createElement("option");
+      opt.value = r.month; opt.textContent = monthLabel(r.month);
+      sel.appendChild(opt);
+    });
+    if (rows.length){
+      var todayYM = todayISO().slice(0, 7);
+      if (!ytSelectedMonth || !rows.some(function(r){return r.month===ytSelectedMonth;})){
+        ytSelectedMonth = rows.some(function(r){return r.month===todayYM;}) ? todayYM : rows[rows.length-1].month;
+      }
+      sel.value = ytSelectedMonth;
+    }
+
+    var grid = document.getElementById("ytKpiGrid");
+    grid.innerHTML = "";
+    var idx = rows.findIndex(function(r){ return r.month === ytSelectedMonth; });
+    if (idx !== -1){
+      var ytKnown = rows.slice(0, idx+1).filter(function(r){ return Number(r.subscribers) > 0; }).pop();
+      var ytTotal = ytKnown ? ytKnown.subscribers : (Number(state.youtubeBaseline) || 0);
+      grid.appendChild(kpiCard("Total subscribers", fmtInt(ytTotal)));
+      grid.appendChild(kpiCard("Subscriber growth vs. prev. month", ytGrowthText(rows, idx, "subscribers"), "accent"));
+      if (Number(state.youtubeBaseline) > 0 && Number(rows[idx].subscribers) > 0){
+        var since = (rows[idx].subscribers || 0) - Number(state.youtubeBaseline);
+        grid.appendChild(kpiCard("Gained since start (" + fmtInt(state.youtubeBaseline) + ")", (since>=0?"+":"") + fmtInt(since), "accent"));
+      }
+      grid.appendChild(kpiCard("Views this month", fmtInt(rows[idx].views || 0)));
+      grid.appendChild(kpiCard("Views vs. prev. month", ytGrowthText(rows, idx, "views"), "accent"));
+    }
+
+    var tbody = document.getElementById("ytTbody");
+    if (rows.length !== ytTableBuiltForCount){
+      tbody.innerHTML = "";
+      rows.forEach(function(r, i){
+        var tr = document.createElement("tr");
+        tr.dataset.row = i;
+        if (r.locked) tr.classList.add("locked");
+        var dis = r.locked ? " disabled" : "";
+        tr.innerHTML =
+          '<td class="rowlock"><button class="lockbtn" data-ytlock="'+i+'" title="'+(r.locked?'Unlock this month':'Lock this month')+'">'+(r.locked?'🔒':'🔓')+'</button></td>' +
+          '<td class="month">'+monthLabel(r.month)+'</td>' +
+          '<td><input type="number" min="0" data-yti="'+i+'" data-ytfield="subscribers" value="'+(r.subscribers||0)+'"'+dis+'></td>' +
+          '<td><input type="number" min="0" data-yti="'+i+'" data-ytfield="views" value="'+(r.views||0)+'"'+dis+'></td>' +
+          '<td class="calc" data-ytcalc="subscribers"></td><td class="calc" data-ytcalc="views"></td>' +
+          '<td class="rowdel">'+(rows.length>1 && !r.locked ? '<button data-ytdel="'+i+'" title="Remove month">✕</button>' : '')+'</td>';
+        tbody.appendChild(tr);
+      });
+      // rows is a sorted copy, but its objects are the real state objects,
+      // so edits go straight onto them.
+      tbody.querySelectorAll("[data-ytfield]").forEach(function(inp){
+        inp.addEventListener("input", function(){
+          rows[Number(inp.dataset.yti)][inp.dataset.ytfield] = Number(inp.value) || 0;
+          markDirty();
+          renderYouTube();
+        });
+      });
+      tbody.querySelectorAll("[data-ytlock]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var r = rows[Number(btn.dataset.ytlock)];
+          r.locked = !r.locked;
+          markDirty();
+          ytTableBuiltForCount = -1;
+          renderYouTube();
+        });
+      });
+      tbody.querySelectorAll("[data-ytdel]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var r = rows[Number(btn.dataset.ytdel)];
+          if ((r.subscribers || r.views) && !window.confirm("Delete " + monthLabel(r.month) + " and its numbers?")) return;
+          state.youtubeRows.splice(state.youtubeRows.indexOf(r), 1);
+          markDirty();
+          ytTableBuiltForCount = -1;
+          renderYouTube();
+        });
+      });
+      ytTableBuiltForCount = rows.length;
+    }
+    tbody.querySelectorAll("tr").forEach(function(tr){
+      var i = Number(tr.dataset.row);
+      tr.querySelector('[data-ytcalc="subscribers"]').textContent = ytGrowthText(rows, i, "subscribers");
+      tr.querySelector('[data-ytcalc="views"]').textContent = ytGrowthText(rows, i, "views");
+    });
+
+    var cs = getComputedStyle(document.documentElement);
+    drawLine("chartYTSubs","ttYTSubs", rows, [
+      { name:"Subscribers", color: cs.getPropertyValue('--accent').trim() || "#B84FE8", get:function(r){return r.subscribers || 0;}, fmt:fmtInt }
+    ]);
+    drawLine("chartYTViews","ttYTViews", rows, [
+      { name:"Views", color: cs.getPropertyValue('--accent-2').trim() || "#E1A6FF", get:function(r){return r.views || 0;}, fmt:fmtInt }
+    ]);
+  }
+
+  document.getElementById("ytBaseline").addEventListener("input", function(e){
+    state.youtubeBaseline = Number(e.target.value) || 0;
+    markDirty();
+    renderYouTube();
+  });
+  document.getElementById("ytPeriodSel").addEventListener("change", function(e){
+    ytSelectedMonth = e.target.value;
+    renderYouTube();
+  });
+  document.getElementById("ytAddMonth").addEventListener("click", function(){
+    var rows = ytSorted(), last = rows.length ? rows[rows.length-1] : null;
+    state.youtubeRows.push({ month: last ? nextMonth(last.month) : todayISO().slice(0,7), subscribers:0, views:0, locked:false });
+    ytTableBuiltForCount = -1;
+    markDirty(); renderYouTube();
+  });
+
+  // ── Outliers list (Reels tab, 2026-10-24) ─────────────────────────────
+  // Replaces Video stats tracking + Leaderboard in the UI (Olly: "just a
+  // place to write the outliers quickly", no ranking). Typed in by title,
+  // not linked to the calendar. Data: state.content.outlierList, newest
+  // first. The old state.content.outliers stays untouched.
+  var OL_FIELDS = ["views","reach","likes","comments","shares","saves","follows","watchSecs","skipRate"];
+  var olBuiltForCount = -1;
+
+  function olRates(o){
+    var n = function(f){ return Number(o[f]) || 0; };
+    var v = n("views");
+    return {
+      saveRate: v ? fmtPct(n("saves")/v*100) : "—",
+      shareRate: v ? fmtPct(n("shares")/v*100) : "—",
+      engagement: v ? fmtPct((n("likes")+n("comments")+n("shares")+n("saves"))/v*100) : "—"
+    };
+  }
+
+  function updateOlCalc(tr){
+    var o = state.content.outlierList[Number(tr.dataset.olrow)];
+    if (!o) return;
+    var r = olRates(o);
+    Object.keys(r).forEach(function(k){ tr.querySelector('[data-olcalc="'+k+'"]').textContent = r[k]; });
+  }
+
+  function buildOlRow(o, i){
+    var tr = document.createElement("tr");
+    tr.dataset.olrow = i;
+    var html = '<td class="oltitle"><textarea class="outliertitlein" rows="1" data-oli="'+i+'" data-olfield="title" placeholder="Title"></textarea></td>' +
+      '<td class="calc" data-olcalc="saveRate"></td><td class="calc" data-olcalc="shareRate"></td><td class="calc" data-olcalc="engagement"></td>' +
+      '<td><input type="date" class="oldate" data-oli="'+i+'" data-olfield="date" value="'+(o.date||"")+'"></td>';
+    OL_FIELDS.forEach(function(f){
+      html += '<td><input type="number" min="0" step="any" data-oli="'+i+'" data-olfield="'+f+'" value="'+(o[f] === "" || o[f] == null ? "" : o[f])+'"></td>';
+    });
+    html += '<td class="rowdel"><button data-oldel="'+i+'" title="Remove">✕</button></td>';
+    tr.innerHTML = html;
+    tr.querySelector("textarea").value = o.title || "";
+    updateOlCalc(tr);
+    return tr;
+  }
+
+  function renderOutlierList(){
+    var tbody = document.getElementById("olTbody");
+    var list = state.content.outlierList;
+    if (list.length === olBuiltForCount) return;
+    tbody.innerHTML = "";
+    if (!list.length){
+      tbody.innerHTML = '<tr><td colspan="15" class="fupempty">No outliers yet. Add the first one above.</td></tr>';
+      olBuiltForCount = 0;
+      return;
+    }
+    list.forEach(function(o, i){ tbody.appendChild(buildOlRow(o, i)); });
+    tbody.querySelectorAll("[data-olfield]").forEach(function(el){
+      el.addEventListener(el.type === "date" ? "change" : "input", function(){
+        var o = state.content.outlierList[Number(el.dataset.oli)], f = el.dataset.olfield;
+        o[f] = (f === "title" || f === "date") ? el.value : (el.value === "" ? "" : Number(el.value));
+        if (f === "title") autosizeTitleTextarea(el);
+        markDirty();
+        updateOlCalc(el.closest("tr"));
+      });
+    });
+    tbody.querySelectorAll("[data-oldel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = Number(btn.dataset.oldel), o = state.content.outlierList[i];
+        if ((o.title || "").trim() && !window.confirm('Remove "' + o.title + '" from your outliers?')) return;
+        state.content.outlierList.splice(i, 1);
+        olBuiltForCount = -1;
+        markDirty();
+        renderOutlierList();
+      });
+    });
+    tbody.querySelectorAll(".outliertitlein").forEach(autosizeTitleTextarea);
+    olBuiltForCount = list.length;
+  }
+
+  function addOutlier(){
+    var inp = document.getElementById("olInput");
+    var title = inp.value.trim();
+    if (!title){ inp.focus(); return; }
+    state.content.outlierList.unshift({ title: title, date: todayISO() });
+    inp.value = "";
+    olBuiltForCount = -1;
+    markDirty();
+    renderOutlierList();
+  }
+  document.getElementById("olAdd").addEventListener("click", addOutlier);
+  document.getElementById("olInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter"){ e.preventDefault(); addOutlier(); }
+  });
+
+  // ── Sales tab — The Heart Attractor Program funnel + leads (2026-10-24) ─
+  // Its own data (`state.sales`), separate from the old Skool MRR rows.
+  // Monthly rows are typed in by hand from the GHL smart lists / ManyChat,
+  // same as Instagram and Email. Leads are Olly's DM pipeline: a follow-up
+  // date puts someone on the "Follow up today" list once it's due.
+  var SALES_PRICE_MONTHLY = 497, SALES_PRICE_ANNUAL = 2500;
+  var SALES_FIELDS = ["videoRequests","optins","applications","callsBooked","callsTaken","salesMonthly","salesAnnual"];
+  var LEAD_SOURCES = ["Reel comment","DM","Story","Email","Other"];
+  var LEAD_STAGES = ["Opted in","Messaged","Applied","Call booked","Joined","Not a fit"];
+  var LEAD_CLOSED = { "Joined":true, "Not a fit":true };
+  var salesTableBuiltForCount = -1, leadTableBuiltForCount = -1;
+  var salesSelectedMonth = "";   // tracked variable, never read from sel.value (see §5)
+
+  function salesRowCalc(r){
+    var n = function(f){ return Number(r[f]) || 0; };
+    var sales = n("salesMonthly") + n("salesAnnual");
+    return {
+      optinToApp: safeDiv(n("applications"), n("optins")) * 100,
+      closeRate:  safeDiv(sales, n("callsTaken")) * 100,
+      cash: n("salesMonthly") * SALES_PRICE_MONTHLY + n("salesAnnual") * SALES_PRICE_ANNUAL
+    };
+  }
+
+  function salesCurrentRow(){
+    var rows = state.sales.rows;
+    if (!rows.length) return null;
+    if (!salesSelectedMonth || !rows.some(function(r){ return r.month === salesSelectedMonth; })){
+      var nowYm = todayISO().slice(0,7);
+      salesSelectedMonth = rows.some(function(r){ return r.month === nowYm; }) ? nowYm : rows[rows.length-1].month;
+    }
+    return rows.filter(function(r){ return r.month === salesSelectedMonth; })[0];
+  }
+
+  function renderSalesPeriod(){
+    var sel = document.getElementById("salesPeriodSel");
+    salesCurrentRow();
+    sel.innerHTML = "";
+    state.sales.rows.forEach(function(r){
+      var o = document.createElement("option");
+      o.value = r.month; o.textContent = monthLabel(r.month);
+      if (r.month === salesSelectedMonth) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+
+  function renderSalesKPIs(){
+    var grid = document.getElementById("salesKpiGrid");
+    grid.innerHTML = "";
+    var r = salesCurrentRow();
+    if (!r) return;
+    var n = function(f){ return Number(r[f]) || 0; };
+    var c = salesRowCalc(r);
+    grid.appendChild(kpiCard("VIDEO requests", fmtInt(n("videoRequests"))));
+    grid.appendChild(kpiCard("Opt-ins", fmtInt(n("optins"))));
+    // Page rates, all sources together (Olly, 2026-10-24: no per-channel rates here)
+    var pcs = pageConversion(function(m){ return m === r.month; });
+    grid.appendChild(kpiCard("Opt-in rate", pcs[0].rate == null ? "—" : fmtPct(pcs[0].rate), "accent"));
+    grid.appendChild(kpiCard("Applications", fmtInt(n("applications"))));
+    grid.appendChild(kpiCard("Application rate", pcs[1].rate == null ? "—" : fmtPct(pcs[1].rate), "accent"));
+    grid.appendChild(kpiCard("Calls taken", fmtInt(n("callsTaken"))));
+    grid.appendChild(kpiCard("Show-up rate", fmtPct(safeDiv(n("callsTaken"), n("callsBooked"))*100), "accent"));
+    grid.appendChild(kpiCard("Sales", fmtInt(n("salesMonthly") + n("salesAnnual"))));
+    grid.appendChild(kpiCard("Close rate", fmtPct(c.closeRate), "accent"));
+    grid.appendChild(kpiCard("New cash", fmtMoney(c.cash)));
+  }
+
+  function buildSalesRow(r, i){
+    var tr = document.createElement("tr");
+    tr.dataset.srow = i;
+    var html = '<td class="month">'+monthLabel(r.month)+'</td>';
+    SALES_FIELDS.forEach(function(f){
+      html += '<td><input type="number" min="0" data-si="'+i+'" data-sfield="'+f+'" value="'+(Number(r[f])||0)+'"></td>';
+    });
+    html += '<td class="calc" data-scalc="optinToApp"></td><td class="calc" data-scalc="closeRate"></td>' +
+            '<td class="money" data-scalc="cash"></td>' +
+            '<td class="rowdel"><button data-sdel="'+i+'" title="Remove month">✕</button></td>';
+    tr.innerHTML = html;
+    return tr;
+  }
+
+  function updateSalesCalc(tr){
+    var r = state.sales.rows[Number(tr.dataset.srow)];
+    if (!r) return;
+    var c = salesRowCalc(r);
+    tr.querySelector('[data-scalc="optinToApp"]').textContent = fmtPct(c.optinToApp);
+    tr.querySelector('[data-scalc="closeRate"]').textContent = fmtPct(c.closeRate);
+    tr.querySelector('[data-scalc="cash"]').textContent = fmtMoney(c.cash);
+  }
+
+  function renderSalesTable(){
+    var tbody = document.getElementById("salesTbody");
+    var rows = state.sales.rows;
+    if (rows.length !== salesTableBuiltForCount){
+      tbody.innerHTML = "";
+      rows.forEach(function(r, i){ tbody.appendChild(buildSalesRow(r, i)); });
+      tbody.querySelectorAll("input[data-sfield]").forEach(function(inp){
+        inp.addEventListener("input", function(){
+          state.sales.rows[Number(inp.dataset.si)][inp.dataset.sfield] = Number(inp.value) || 0;
+          markDirty();
+          updateSalesCalc(inp.closest("tr"));
+          renderSalesKPIs();
+        });
+      });
+      tbody.querySelectorAll("[data-sdel]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = Number(btn.dataset.sdel), r = state.sales.rows[i];
+          var hasData = SALES_FIELDS.some(function(f){ return Number(r[f]) > 0; });
+          if (hasData && !window.confirm("Delete " + monthLabel(r.month) + " and its numbers?")) return;
+          state.sales.rows.splice(i, 1);
+          salesTableBuiltForCount = -1;
+          markDirty();
+          renderSales();
+        });
+      });
+      salesTableBuiltForCount = rows.length;
+    }
+    tbody.querySelectorAll("tr").forEach(updateSalesCalc);
+  }
+
+  function leadSelect(options, value, field, i){
+    var html = '<select class="salessel" data-li="'+i+'" data-lfield="'+field+'">';
+    options.forEach(function(o){
+      html += '<option'+(o === value ? ' selected' : '')+'>'+o+'</option>';
+    });
+    return html + '</select>';
+  }
+
+  function buildLeadRow(l, i){
+    var tr = document.createElement("tr");
+    tr.dataset.lrow = i;
+    var q = function(s){ return String(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); };
+    tr.innerHTML =
+      '<td><input type="text" data-li="'+i+'" data-lfield="name" value="'+q(l.name)+'" placeholder="Name or @handle"></td>' +
+      '<td>'+leadSelect(LEAD_SOURCES, l.source, "source", i)+'</td>' +
+      '<td>'+leadSelect(LEAD_STAGES, l.stage, "stage", i)+'</td>' +
+      '<td><input type="date" class="leaddate" data-li="'+i+'" data-lfield="followUp" value="'+q(l.followUp)+'"></td>' +
+      '<td><input type="text" class="leadnotes" data-li="'+i+'" data-lfield="notes" value="'+q(l.notes)+'" placeholder="Where things are at"></td>' +
+      '<td class="rowdel"><button data-ldel="'+i+'" title="Remove lead">✕</button></td>';
+    return tr;
+  }
+
+  function renderLeads(){
+    var tbody = document.getElementById("leadTbody");
+    var leads = state.sales.leads;
+    if (leads.length !== leadTableBuiltForCount){
+      tbody.innerHTML = "";
+      if (!leads.length){
+        tbody.innerHTML = '<tr><td colspan="6" class="fupempty">No leads yet. Add one when someone asks for the training or replies in the DMs.</td></tr>';
+      }
+      leads.forEach(function(l, i){ tbody.appendChild(buildLeadRow(l, i)); });
+      tbody.querySelectorAll("[data-lfield]").forEach(function(el){
+        // Text fields store live on input; selects and the date commit on change.
+        el.addEventListener(el.tagName === "SELECT" || el.type === "date" ? "change" : "input", function(){
+          state.sales.leads[Number(el.dataset.li)][el.dataset.lfield] = el.value;
+          markDirty();
+          renderFollowUps();
+          renderLeadMeta();
+        });
+      });
+      tbody.querySelectorAll("[data-ldel]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = Number(btn.dataset.ldel), l = state.sales.leads[i];
+          if ((l.name || "").trim() && !window.confirm("Remove " + l.name + " from your leads?")) return;
+          state.sales.leads.splice(i, 1);
+          leadTableBuiltForCount = -1;
+          markDirty();
+          renderSales();
+        });
+      });
+      leadTableBuiltForCount = leads.length;
+    }
+    renderLeadMeta();
+  }
+
+  function renderLeadMeta(){
+    var leads = state.sales.leads;
+    document.querySelectorAll("#leadTbody tr[data-lrow]").forEach(function(tr){
+      var l = leads[Number(tr.dataset.lrow)];
+      tr.classList.toggle("leadclosed", !!(l && LEAD_CLOSED[l.stage]));
+    });
+    var counts = LEAD_STAGES.map(function(s){
+      var k = leads.filter(function(l){ return l.stage === s; }).length;
+      return k ? s + ": " + k : "";
+    }).filter(Boolean);
+    document.getElementById("leadStageCounts").textContent = counts.length ? counts.join(" · ") : "";
+  }
+
+  function renderFollowUps(){
+    var host = document.getElementById("salesFollowUps");
+    var today = todayISO();
+    var due = state.sales.leads.filter(function(l){
+      return l.followUp && l.followUp <= today && !LEAD_CLOSED[l.stage] && (l.name || "").trim();
+    }).sort(function(a, b){ return a.followUp < b.followUp ? -1 : 1; });
+    host.innerHTML = "";
+    if (!due.length){
+      host.innerHTML = '<p class="fupempty">Nobody to follow up today.</p>';
+      return;
+    }
+    due.forEach(function(l){
+      var div = document.createElement("div");
+      div.className = "fupitem" + (l.followUp < today ? " overdue" : "");
+      var name = document.createElement("span"); name.className = "fupname"; name.textContent = l.name;
+      var stage = document.createElement("span"); stage.className = "fupstage"; stage.textContent = l.stage + (l.notes ? " · " + l.notes : "");
+      var date = document.createElement("span"); date.className = "fupdate";
+      var fd = new Date(l.followUp + "T00:00:00");
+      date.textContent = l.followUp < today ? "Overdue since " + fd.toLocaleDateString("en-GB", { day:"numeric", month:"short" }) : "Today";
+      div.appendChild(name); div.appendChild(stage); div.appendChild(date);
+      host.appendChild(div);
+    });
+  }
+
+  // ── Where they came from (GHL pull, 2026-10-24) ─────────────────────────
+  // /api/ghl-sources returns counts only, grouped by month + UTMs. Stored in
+  // state.ghlSources so the Overview and the phone see the last pull too.
+  var GHL_SOURCE_NAMES = { instagram:"Instagram", facebook:"Facebook", youtube:"YouTube", email:"Email" };
+  var GHL_MEDIUM_NAMES = { bio:"Bio link", dm:"DM", comment:"Comment", description:"Video description", pinned_comment:"Pinned comment", welcome_email:"Welcome email",
+    stories:"Stories", reels:"Reels", shorts:"Shorts", referral:"Link on another site" };
+  function ghlNice(map, v){
+    if (!v) return "";
+    return map[v] || v.replace(/_/g, " ").replace(/^./, function(c){ return c.toUpperCase(); });
+  }
+  // Rows in a period, merged by source/medium/content, most opt-ins first.
+  function ghlRowsFor(inPeriod){
+    var merged = {};
+    ((state.ghlSources && state.ghlSources.rows) || []).forEach(function(r){
+      if (!inPeriod(r.month)) return;
+      var k = [r.source, r.medium, r.content].join("|");
+      if (!merged[k]) merged[k] = { source:r.source, medium:r.medium, content:r.content, optins:0, applied:0, joined:0 };
+      merged[k].optins += r.optins; merged[k].applied += r.applied; merged[k].joined += r.joined;
+    });
+    return Object.keys(merged).map(function(k){ return merged[k]; })
+      .sort(function(a, b){ return (b.optins - a.optins) || (b.applied - a.applied); });
+  }
+  function ghlLabel(r){
+    if (!r.source) return "Unknown";
+    return ghlNice(GHL_SOURCE_NAMES, r.source) + (r.medium ? " · " + ghlNice(GHL_MEDIUM_NAMES, r.medium) : "");
+  }
+  function renderGhlSources(){
+    var body = document.getElementById("ghlTbody");
+    var status = document.getElementById("ghlStatus");
+    if (!body) return;
+    body.innerHTML = "";
+    var g = state.ghlSources;
+    status.textContent = g && g.fetchedAt
+      ? "Last pulled " + new Date(g.fetchedAt).toLocaleString("en-GB", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" })
+      : "Not pulled yet. Click to fetch the latest from GHL.";
+    var rows = ghlRowsFor(function(m){ return m === salesSelectedMonth; });
+    if (!rows.length){
+      var tr = document.createElement("tr");
+      var td = document.createElement("td");
+      td.colSpan = 6; td.className = "hint";
+      td.textContent = g && g.fetchedAt ? "No opt-ins or applications in " + monthLabel(salesSelectedMonth) + "." : "";
+      tr.appendChild(td); body.appendChild(tr);
+      return;
+    }
+    rows.forEach(function(r){
+      var tr = document.createElement("tr");
+      [r.source ? ghlNice(GHL_SOURCE_NAMES, r.source) : "Unknown", ghlNice(GHL_MEDIUM_NAMES, r.medium), (r.content || "").replace(/_/g, " "),
+       fmtInt(r.optins), fmtInt(r.applied), fmtInt(r.joined)].forEach(function(v){
+        var td = document.createElement("td"); td.textContent = v; tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+  // One pull feeds three places: the sources table, the Sales rows'
+  // Opt-ins/Applications (every month, from GHL tags) and this month's
+  // Email list (skipped if that month is locked).
+  function applyGhlPull(d){
+    state.ghlSources = { fetchedAt: d.fetchedAt, rows: d.rows };
+    state.sales.rows.forEach(function(row){
+      var opt = 0, app = 0;
+      d.rows.forEach(function(r){ if (r.month === row.month){ opt += r.optins; app += r.applied; } });
+      row.optins = opt; row.applications = app;
+    });
+    if (typeof d.emailList === "number"){
+      var ym = todayISO().slice(0,7);
+      var er = state.emailRows.filter(function(r){ return r.month === ym; })[0];
+      if (!er){ er = { month: ym, emailList: 0, locked: false }; state.emailRows.push(er); }
+      if (!er.locked) er.emailList = d.emailList;
+    }
+    salesTableBuiltForCount = -1;
+    emailTableBuiltForCount = -1;
+    markDirty();
+    renderSales();
+    renderEmailSection();
+    renderOverview();
+  }
+  function pullFromGhl(btn, status){
+    btn.disabled = true;
+    status.textContent = "Pulling from GHL…";
+    // Page views come from the Hub's own counter (/api/track), read alongside.
+    fetch("/api/pageviews", { cache:"no-store" })
+      .then(function(r){ return r.json(); })
+      .then(function(p){ if (p && p.ok){ state.pageViews = p.months; if (p.sources) state.pageSources = p.sources; } })
+      .catch(function(){ /* counter not reachable — keep the last numbers */ })
+      .then(function(){ return fetch("/api/ghl-sources", { cache:"no-store" }); })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d.ok) throw new Error(d.error || "unknown error");
+        applyGhlPull(d);
+        var note = "Pulled just now. Press Save to keep it.";
+        if (d.utmFieldsFound && d.utmFieldsFound.length < 4)
+          note += " (only found UTM fields: " + (d.utmFieldsFound.join(", ") || "none") + ")";
+        status.textContent = note;
+      })
+      .catch(function(e){ status.textContent = "Couldn't pull from GHL: " + e.message; })
+      .then(function(){ btn.disabled = false; });
+  }
+  document.getElementById("ghlPull").addEventListener("click", function(){
+    pullFromGhl(this, document.getElementById("ghlStatus"));
+  });
+  document.getElementById("ovGhlPull").addEventListener("click", function(){
+    pullFromGhl(this, document.getElementById("ovGhlStatus"));
+  });
+  document.getElementById("emailGhlPull").addEventListener("click", function(){
+    pullFromGhl(this, document.getElementById("emailGhlStatus"));
+  });
+
+  // Page conversion (2026-10-24): views from the Hub's counter, conversions
+  // from the GHL tags (opt-in tag / applicant tag) for the same months.
+  // inPeriod is a month filter; returns one entry per page.
+  function pageConversion(inPeriod){
+    var views = { optin:0, apply:0 }, conv = { optin:0, apply:0 };
+    var pv = state.pageViews || {};
+    Object.keys(pv).forEach(function(m){
+      if (!inPeriod(m)) return;
+      views.optin += pv[m].optin || 0; views.apply += pv[m].apply || 0;
+    });
+    ((state.ghlSources && state.ghlSources.rows) || []).forEach(function(r){
+      if (!inPeriod(r.month)) return;
+      conv.optin += r.optins; conv.apply += r.applied;
+    });
+    return [
+      { name:"Opt-in page", what:"opt-ins", views:views.optin, conv:conv.optin },
+      { name:"Application page", what:"applications", views:views.apply, conv:conv.apply }
+    ].map(function(p){ p.rate = p.views ? p.conv / p.views * 100 : null; return p; });
+  }
+  function renderPageConversion(){
+    var body = document.getElementById("pcTbody");
+    if (!body) return;
+    body.innerHTML = "";
+    pageConversion(function(m){ return m === salesSelectedMonth; }).forEach(function(p){
+      var tr = document.createElement("tr");
+      [p.name, fmtInt(p.views), fmtInt(p.conv) + " " + p.what, p.rate == null ? "—" : fmtPct(p.rate)].forEach(function(v, i){
+        var td = document.createElement("td"); td.textContent = v;
+        if (i === 3) td.className = "calc";
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  // Where the opt-in page's visitors came from (2026-10-25). Visits by
+  // source from the Hub's counter (state.pageSources, filled by Pull from
+  // GHL), opt-ins for the same source from the GHL UTM fields. Visits counted
+  // before the pages sent their source show as "Before source tracking".
+  function trafficRowsFor(page, inPeriod){
+    var merged = {}, sourced = 0, total = 0, ps = state.pageSources || {}, pv = state.pageViews || {};
+    Object.keys(ps).forEach(function(m){
+      if (!inPeriod(m)) return;
+      var bySrc = ps[m][page] || {};
+      Object.keys(bySrc).forEach(function(k){
+        var a = k.split("|");
+        if (!merged[k]) merged[k] = { source:a[0], medium:a[1] || "", content:a[2] || "", visits:0, optins:0 };
+        merged[k].visits += bySrc[k]; sourced += bySrc[k];
+      });
+    });
+    Object.keys(pv).forEach(function(m){ if (inPeriod(m)) total += pv[m][page] || 0; });
+    if (page === "optin"){
+      ((state.ghlSources && state.ghlSources.rows) || []).forEach(function(r){
+        if (!inPeriod(r.month)) return;
+        var k = [r.source, r.medium, r.content].map(function(v){ return String(v || "").toLowerCase(); }).join("|");
+        if (merged[k]) merged[k].optins += r.optins;
+      });
+    }
+    var rows = Object.keys(merged).map(function(k){ return merged[k]; });
+    if (!sourced) return [];   // nothing sends a source yet: hide the panel
+    if (total > sourced) rows.push({ before:true, source:"", medium:"", content:"", visits: total - sourced, optins:0 });
+    rows.forEach(function(r){
+      r.share = total ? r.visits / total * 100 : null;
+      r.rate = r.visits && !r.before ? r.optins / r.visits * 100 : null;
+    });
+    return rows.sort(function(a, b){ return (!!a.before - !!b.before) || (b.visits - a.visits); });
+  }
+  function trafficLabel(r){
+    if (r.before) return "Before source tracking";
+    if (r.source === "(direct)") return "Direct (no link info)";
+    return ghlLabel(r);
+  }
+  function renderTraffic(){
+    var body = document.getElementById("trafficTbody");
+    if (!body) return;
+    body.innerHTML = "";
+    var rows = trafficRowsFor("optin", function(m){ return m === salesSelectedMonth; });
+    if (!rows.length){
+      var tr = document.createElement("tr"), td = document.createElement("td");
+      td.colSpan = 7; td.className = "hint";
+      td.textContent = "No visitor sources recorded yet (they start once the updated opt-in page is live in GHL).";
+      tr.appendChild(td); body.appendChild(tr);
+      return;
+    }
+    rows.forEach(function(r){
+      var tr = document.createElement("tr");
+      var src = r.before ? "Before source tracking" : r.source === "(direct)" ? "Direct (no link info)" : ghlNice(GHL_SOURCE_NAMES, r.source);
+      [src, ghlNice(GHL_MEDIUM_NAMES, r.medium), (r.content || "").replace(/_/g, " "), fmtInt(r.visits),
+       r.share == null ? "—" : fmtPct(r.share), r.before ? "—" : fmtInt(r.optins), r.rate == null ? "—" : fmtPct(r.rate)].forEach(function(v, i){
+        var td = document.createElement("td"); td.textContent = v;
+        if (i === 6) td.className = "calc";
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  function renderSales(){
+    renderSalesPeriod();
+    renderGhlSources();
+    renderPageConversion();
+    renderTraffic();
+    renderFollowUps();
+    renderSalesKPIs();
+    renderSalesTable();
+    renderLeads();
+  }
+
+  document.getElementById("salesPeriodSel").addEventListener("change", function(e){
+    salesSelectedMonth = e.target.value;
+    renderSalesKPIs();
+    renderGhlSources();
+    renderPageConversion();
+    renderTraffic();
+  });
+  document.getElementById("salesAddMonth").addEventListener("click", function(){
+    var rows = state.sales.rows, last = rows[rows.length-1];
+    var row = { month: last ? nextMonth(last.month) : todayISO().slice(0,7) };
+    SALES_FIELDS.forEach(function(f){ row[f] = 0; });
+    rows.push(row);
+    salesTableBuiltForCount = -1;
+    markDirty();
+    renderSales();
+  });
+  document.getElementById("leadAdd").addEventListener("click", function(){
+    state.sales.leads.unshift({ name:"", source:"Reel comment", stage:"Opted in", followUp:"", notes:"", added: Date.now() });
+    leadTableBuiltForCount = -1;
+    markDirty();
+    renderSales();
+    var first = document.querySelector('#leadTbody input[data-lfield="name"]');
+    if (first) first.focus();
+  });
+
   // ── Wire up ────────────────────────────────────────────────────────────
   document.querySelectorAll(".tabbtn").forEach(function(btn){
     btn.addEventListener("click", function(){
@@ -4222,7 +5494,26 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       btn.classList.add("active"); btn.setAttribute("aria-selected","true");
       document.querySelectorAll(".tabpanel").forEach(function(p){ p.hidden = true; });
       document.getElementById("tab-"+btn.dataset.tab).hidden = false;
+      if (btn.dataset.tab === "braindump") document.querySelectorAll(".bdcard-text").forEach(autosizeBdCard);
+      if (btn.dataset.tab === "overview") renderOverview();
       uiSave({ tab: btn.dataset.tab });
+    });
+  });
+  // Phone tab menu: label shows the open tab; picking a tab closes the grid.
+  function syncTabMenu(open){
+    var bar = document.getElementById("tabBar"), btn = document.getElementById("tabMenuBtn");
+    var active = document.querySelector(".tabbtn.active");
+    document.getElementById("tabMenuLabel").textContent = active ? active.textContent : "Menu";
+    bar.classList.toggle("open", !!open);
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  document.getElementById("tabMenuBtn").addEventListener("click", function(){
+    syncTabMenu(!document.getElementById("tabBar").classList.contains("open"));
+  });
+  document.querySelectorAll(".tabbtn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      syncTabMenu(false);
+      if (window.innerWidth <= 640) window.scrollTo({ top:0 });
     });
   });
   document.getElementById("targetInput").addEventListener("input", function(e){
@@ -4239,16 +5530,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     render();
   });
   document.getElementById("addMonth").addEventListener("click", function(){
-    var last = state.rows[state.rows.length-1];
-    var nm = last ? nextMonth(last.month) : "2026-01";
-    var carryPrice = last ? Number(last.price)||0 : 30;
-    state.rows.push({ month:nm, visits:0, trials:0, newMembers:0, lost:0, activeMembers:0, price:carryPrice, locked:false });
+    var last = state.mrrRows[state.mrrRows.length-1];
+    var nm = last ? nextMonth(last.month) : todayISO().slice(0,7);
+    state.mrrRows.push({ month:nm, newMonthly:0, newAnnual:0, lostMonthly:0, lostAnnual:0, locked:false });
     markDirty(); render();
   });
   // Wrapped, not passed directly — otherwise the click event object is
   // handed to saveNow() as its onDone callback and gets called on success,
   // which throws and flips the state to "save failed".
   document.getElementById("saveBtn").addEventListener("click", function(){ saveNow(); });
+  document.getElementById("refreshBtn").addEventListener("click", hardRefresh);
   window.addEventListener("resize", function(){ render(); });
   window.addEventListener("beforeunload", function(e){
     var label = document.getElementById("saveLabel");
@@ -4275,6 +5566,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     });
     if (!state.content.ideas) state.content.ideas = [];
     if (!state.content.captionTemplates) state.content.captionTemplates = [];
+    if (!Array.isArray(state.content.outlierList)) state.content.outlierList = [];
+    if (!Array.isArray(state.emailRows)) state.emailRows = [{ month: todayISO().slice(0,7), emailList:0, locked:false }];
+    if (state.youtubeBaseline === undefined) state.youtubeBaseline = 0;
+    if (!Array.isArray(state.youtubeRows)) state.youtubeRows = [{ month: todayISO().slice(0,7), subscribers:0, views:0, locked:false }];
     // Repair pass: only ideas already ticked posted should be in Video
     // stats tracking. Covers anything posted under an earlier version of
     // this logic that never made the jump — dedupe-safe, so a no-op for
@@ -4287,6 +5582,22 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!state.delivery) state.delivery = { projects: [] };
     if (!state.brainDump) state.brainDump = { cards: [] };
     if (!Array.isArray(state.brainDump.cards)) state.brainDump.cards = [];
+    // MRR rebuilt from scratch for The Heart Attractor Program (2026-10-24,
+    // Olly: "wiped clean"). New rows live in state.mrrRows; the old Skool
+    // rows stay in state.rows untouched as an archive, read by nothing.
+    if (!Array.isArray(state.mrrRows)) state.mrrRows = [];
+    if (!state.mrrRows.length){
+      state.mrrRows.push({ month: todayISO().slice(0,7), newMonthly:0, newAnnual:0, lostMonthly:0, lostAnnual:0, locked:false });
+    }
+    // Sales tab (2026-10-24): starts with the current month's row.
+    if (!state.sales) state.sales = {};
+    if (!Array.isArray(state.sales.rows)) state.sales.rows = [];
+    if (!Array.isArray(state.sales.leads)) state.sales.leads = [];
+    if (!state.sales.rows.length){
+      var firstRow = { month: todayISO().slice(0,7) };
+      SALES_FIELDS.forEach(function(f){ firstRow[f] = 0; });
+      state.sales.rows.push(firstRow);
+    }
   }
 
   function rerenderAll(){
@@ -4298,6 +5609,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderDelivery();
     renderCaptionTemplates();
     renderBrainDump();
+    salesTableBuiltForCount = -1;
+    leadTableBuiltForCount = -1;
+    renderSales();
+    olBuiltForCount = -1;
+    renderOutlierList();
+    ytTableBuiltForCount = -1;
+    renderYouTube();
+    renderOverview();
   }
 
   function boot(){
@@ -4334,6 +5653,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       }
     }
 
+    syncTabMenu();
     rerenderAll();
     closeDayModal();   // never boot with the day panel open, whatever the saved HTML had
     closeStoryModal();

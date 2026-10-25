@@ -9,6 +9,9 @@
 
 | Date | Platform | Placement | Destination | UTM Content | Link |
 |---|---|---|---|---|---|
+| 2026-10-25 | YouTube | Shorts (Olly's own redirect, said or shown in Shorts; Shorts description links aren't clickable) | Emotional Resonance training opt-in | shorts | `https://ollyhenson.com/training?utm_source=youtube&utm_medium=shorts&utm_campaign=emotional_resonance_training&utm_content=shorts` |
+| 2026-10-25 | YouTube | Channel profile links (bio) | Emotional Resonance training opt-in | — | `https://ollyhenson.com/training?utm_source=youtube&utm_medium=bio&utm_campaign=emotional_resonance_training` |
+| 2026-10-24 | Instagram | ManyChat story reply (VIDEO) | Emotional Resonance training opt-in | video_keyword | `https://ollyhenson.com/training?utm_source=instagram&utm_medium=story_reply&utm_campaign=emotional_resonance_training&utm_content=video_keyword` |
 | 2026-06-17 | Website | Practice Guide upgrade path CTA | Coaching Application | — | `https://ollyhenson.com/coaching-application?ref=practice_guide` |
 | 2026-06-16 | Email | Nurture — Email 10 (Your personal offer) | Coaching Application | email-10 | `https://ollyhenson.com/coaching-application?utm_source=email&utm_medium=nurture&utm_campaign=coaching&utm_content=email-10` |
 
