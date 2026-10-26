@@ -10,7 +10,7 @@
 
 > Built with Olly on 2026-10-18. **This replaces v5 below.** The live source of truth is the Core message tab of the Messaging Center (https://claude.ai/artifact/QPbzwHtvFExE8qqZKbB8ea, file `marketing\messaging-center.html`). If the two differ, the Messaging Center wins; update this sheet to match. Tool links and upkeep: `marketing\messaging-tools\`.
 
-**One line:** Who you attract isn't about what you know. It's about your emotional state around love.
+**One line:** Who you attract isn't about what you know. It's how you feel.
 
 **The one thing:** THE RIGHT EMOTIONAL STATE. The pain is the wrong emotional state, and The Attraction Formula Meditation puts you in the right one, so you attract the right person.
 
@@ -28,7 +28,8 @@
    - **Feel It:** generate a new emotional state aligned with the future you want with your partner.
 10. **New belief:** "The right emotional state attracts the right person. The Attraction Formula Meditation puts me in it, every day."
 11. **Proof:** I met my wife when I focused on how I was feeling every day, improving it and shifting my state, rather than learning more about what I should be doing.
-12. **What to expect:** You're better able to spot high-quality partners. You naturally repel people who are time wasters and who aren't right for you. The right people start showing up in your world and things unfold in a natural and exciting way.
+12. **What to expect:** You're better able to spot high-quality partners. You naturally repel people who are time wasters and who aren't right for you. The right people start showing up in your world and things unfold in a natural and exciting way. And you get to be fully yourself: vulnerable, outgoing, playful, without faking it or thinking about how to act.
+   - **Be fully yourself (Olly, 2026-10-25):** elevated emotional states let people be their authentic selves, not a performance. A big part of why Catrin joined: she wanted to "cultivate safety in myself to be able to be fully vulnerable and fully myself." Use it in content now and then (about one idea in five), never forced.
 13. **Why it's a no-brainer:** 10 minutes a day. 7 days free. Nothing to fix.
 
 **Heart field (HeartMath, added 2026-10-19):** the heart gives off the strongest rhythmic electromagnetic field in the body, detectable a few feet away; in small HeartMath lab studies one person's heartbeat showed up in another's brainwaves at close range. Present it as early research ("connection may be more physical than we think"), never as the field attracting a partner.
@@ -180,3 +181,7 @@ Belief is a skill, so nobody is good at it on day one. You feel different first,
 **Competitive landscape:** manifestation/LOA (cheap, vague) vs attachment-theory coaching (credentialed, $99+/month, lots to fix). The Attraction Formula is one simple, grounded daily practice at $30/month.
 
 **Founder story:** breakup from a 7-year relationship in early 2019 → struggled with dating → tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results → developed the practice → used it to meet his now-wife.
+
+
+## Addition (2026-10-26): the root is fear
+It all stems from fear. Impatience, frustration, envy, exhaustion, despair and hopelessness are all low, survival-based emotions on the emotional scale. In that fear, people try to learn more (books, courses, attachment styles), but learning does not touch the fear, so they stay in the same emotional state every day. Moving up the emotional scale is the practical way out, a little every day. Payoffs: better quality people, feeling better about yourself, feeling more authentically you, dating becomes fun and spontaneous again rather than a chore, things play out naturally. Adds to the argument; does not replace anything. Lives in the Messaging Center (Core: "The root of it all: fear", glance row "The root") and the Content Idea Generator (CORE, part "fear", Reel type "It's all fear", Story type "Fear check-in").

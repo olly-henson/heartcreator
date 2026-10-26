@@ -22,6 +22,36 @@ photo tool", **match his reference image to a tool before editing anything.**
 On 2026-09-25 I opened and changed `cover-photo-generator.html`, but his
 finished cover came from `relationship-ad-generator.html`.
 
+**`youtube-thumbnail-generator.html`** (built 2026-10-24) makes **YouTube
+thumbnails, 1280 × 720 JPG**. It's a fork of the relationship ad tool:
+dark purple panel on the left (base `#0a0510`, glow `#6b21a8`), with Olly's
+photo on the right (embedded IMG_2549 from `marketing\thumbnail-photos\`; more
+photos in that folder). Up to 3 text lines, each with its own style
+(White / Lilac / Gradient / White lighter). Blank lines are dropped. The
+default text is WHY LOVE / WON'T MOVE. There's **no CTA pill**, because
+thumbnails don't take buttons. Extras compared with the ad tool:
+- a "Darken the room behind you" radial vignette, since the source photos are
+  taken in a bright room
+- a phone-size preview
+- a Save key `olly-youtube-thumbnail-v1`
+
+Brand rules come from `marketing\youtube-thumbnail-guide.docx`: max 4 words,
+face right / text left, dark background. Its Playfair font is outdated; the
+brand now uses Poppins.
+
+**YouTube banner (2026-10-24): `YouTube Cover v3.jpg` (2560 × 1440).** It's built from Olly's Gemini image `YouTube Cover v1.jpg` (1376 × 768). The whole image is scaled ×1.68 **as one piece** and centred on the dark band (rows 255–513, centre 384). Olly spotted that at ×1.5 a strip of light wall showed above and below the band in the desktop view: the band must be at least 423 px tall (the desktop strip's height). Like that, it's centred, so the text + couple fill YouTube's "all devices" box (1546 × 423). The rest of the canvas is filled by **mirroring the image's own edges** (numpy `pad` mode `symmetric`).
+
+Lessons from the two failed versions:
+- Pasting a rescaled cut-out of the content onto a separately scaled wall made visible seams.
+- Filling the edges with a **blur** looked washed out in YouTube's desktop/TV preview.
+
+Olly then wanted the text and the couple closer together. The text was **moved 80px right in the original** (55, then 25 more at Olly's request):
+- I lifted it with a colour mask, refilled its old spot with a vertical blend (the panel behind it is a smooth gradient), added a soft dark glow at the new spot so the white stays readable, and pasted it back.
+- The group (text 326 → couple 1117) was then re-centred.
+- Moving the couple instead isn't practical, because they sit on textured wall.
+
+Image generators ignore pixel safe zones, so generate the content, then centre it in code. Check copies draw the safe zones: green = 1546 × 423, yellow = 1235 × 338, blue = the desktop strip.
+
 Everything from here down to the Tool 2 section is about tool 1.
 
 ### Tool 1 — `cover-photo-generator.html`

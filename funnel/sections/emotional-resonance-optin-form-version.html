@@ -1,0 +1,271 @@
+<title>How To Attract A Genuine And Committed Long-Term Relationship Using Emotional Resonance</title>
+
+<!-- OPT-IN PAGE | Free video training "How To Use Emotional Resonance To Attract A Genuine, Committed Long-Term Relationship". Built 2026-10-23. -->
+<!-- Same simple format as belief-quiz-optin.html, styled to match heart-attractor-application.html. -->
+<!-- Flow: Reel -> ManyChat DM (RESONANCE) -> this page -> name + email to GHL (daily email list) -> redirect to the training (YouTube). -->
+<!-- GHL: One Custom HTML block. Section + row + column padding/margin = 0. Full Width. -->
+<!-- GHL quirks handled: no <form> tag, button type="button" + click handler, ohc_ ids for name/email, html/body background reset, 100vw escape. -->
+<!-- Webhook set 2026-10-24 (GHL "Emotional Resonance Training Opt-in"). REDIRECT_URL set 2026-10-24 (YouTube training). -->
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; background: #0A0510 !important; }
+  .ohc-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    background: radial-gradient(120% 100% at 20% 0%, #4B1466 0%, #150818 55%, #0A0510 100%);
+    display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  .ohc-page *, .ohc-page *::before, .ohc-page *::after { box-sizing: border-box; }
+
+  .ohc-wrap {
+    flex: 1; width: 100%; max-width: 1060px; margin: 0 auto;
+    padding: 40px 24px 56px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  }
+  .ohc-eyebrow {
+    display: inline-block;
+    font-size: clamp(16px, 1.7vw, 20px); font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: #E1A6FF; margin-bottom: 22px;
+    border: 1px solid rgba(217,70,239,.45); background: rgba(217,70,239,.12);
+    border-radius: 999px; padding: 9px 22px;
+  }
+  .ohc-h1 { font-weight: 800; line-height: 1.15; margin: 0 0 22px; color: #ffffff; }
+  .ohc-grad {
+    background: linear-gradient(135deg, #E1A6FF, #d946ef);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  /* "Emotional Resonance" highlight: gradient text on a soft magenta glow (the key selling point) */
+  .ohc-hl {
+    display: inline !important; white-space: nowrap;
+    background: linear-gradient(135deg, #E1A6FF, #d946ef);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: none; filter: drop-shadow(0 0 18px rgba(217,70,239,.45));
+  }
+  /* desktop: hand-set reverse pyramid (widest line first) */
+  .ohc-h1-desk { display: block; font-size: min(48px, calc((min(100vw, 1060px) - 60px) / 21.8)); }
+  .ohc-h1-desk span { display: block; white-space: nowrap; }
+  .ohc-h1-mob { display: none; }
+  .ohc-sub {
+    font-size: clamp(16px, 1.8vw, 20px); line-height: 1.6; color: #E6DCF2;
+    max-width: 620px; margin: 0 auto 34px; text-wrap: balance;
+  }
+
+  /* card (same look as the application form) */
+  .ohc-card {
+    width: 100%; max-width: 520px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(225,166,255,.18);
+    border-radius: 24px;
+    padding: 30px 30px 26px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 80px rgba(75,20,102,.25);
+    text-align: left;
+  }
+  .ohc-row { display: flex; gap: 14px; }
+  .ohc-row .ohc-field { flex: 1; min-width: 0; }
+  .ohc-field { margin-bottom: 16px; }
+  .ohc-label { display: block; font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 8px; }
+  .ohc-input {
+    width: 100%;
+    background: rgba(10,5,16,.6);
+    border: 1px solid rgba(225,166,255,.25);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'Poppins', sans-serif; font-size: 16px; color: #ffffff;
+    outline: none; transition: border-color .2s, box-shadow .2s;
+  }
+  /* stop browser autofill painting the fields light blue / white */
+  .ohc-input:-webkit-autofill, .ohc-input:-webkit-autofill:hover, .ohc-input:-webkit-autofill:focus,
+  .ohc-textarea:-webkit-autofill, .ohc-select:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px #140a1c inset;
+    box-shadow: 0 0 0 1000px #140a1c inset;
+    caret-color: #ffffff;
+    transition: background-color 9999s ease-out 0s;
+  }
+  .ohc-input::placeholder { color: rgba(230,220,242,.4); }
+  .ohc-input:focus { border-color: #d946ef; box-shadow: 0 0 0 4px rgba(217,70,239,.15); }
+
+  .ohc-btn {
+    width: 100%; margin-top: 6px; padding: 18px;
+    border: none; border-radius: 999px;
+    background: linear-gradient(135deg, #E1A6FF, #d946ef);
+    color: #150818; font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800;
+    letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+    box-shadow: 0 10px 40px rgba(217,70,239,.35);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .ohc-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 50px rgba(217,70,239,.5); }
+  .ohc-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+  .ohc-error { display: none; margin-top: 12px; text-align: center; font-size: 14px; color: #ff9ab3; }
+  .ohc-done { display: none; text-align: center; padding: 10px 0; }
+  .ohc-done h2 { font-size: 24px; font-weight: 800; margin: 0 0 10px; }
+  .ohc-done p { margin: 0; color: #E6DCF2; line-height: 1.6; }
+
+  .ohc-trust {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 26px;
+    margin-top: 26px; font-size: 14px; color: rgba(230,220,242,.75);
+  }
+  .ohc-trust span::before { content: '\2713'; color: #d946ef; font-weight: 800; margin-right: 8px; }
+
+  .ohc-footer { border-top: 1px solid rgba(225,166,255,.12); padding: 24px 20px; text-align: center; }
+  .ohc-footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 8px; flex-wrap: wrap; }
+  .ohc-footer-links a { font-size: 13px; color: rgba(225,166,255,.55); text-decoration: none; }
+  .ohc-footer-links a:hover { color: #d946ef; }
+  .ohc-footer-copy { font-size: 12px; color: rgba(225,166,255,.35); margin: 0; }
+
+  @media (max-width: 760px) {
+    .ohc-wrap { padding: 43px 16px 32px; }
+    .ohc-eyebrow { font-size: 12px; padding: 6px 14px; margin-bottom: 14px; letter-spacing: .12em; }
+    .ohc-h1 { margin-bottom: 14px; }
+    .ohc-h1-desk { display: none; }
+    /* mobile: hand-set reverse pyramid, sized so the widest (first) line fits a ~390px screen */
+    /* phone headline: shorter wording so the pyramid can be big; widest line = 13.1x the font size */
+    .ohc-h1-mob { display: block; font-size: min(32px, calc((100vw - 48px) / 13.6)); line-height: 1.15; }
+    .ohc-h1-mob > span { display: block; white-space: nowrap; }
+    .ohc-h1-mob > span > span { display: inline; }
+    .ohc-sub { font-size: 15px; margin-bottom: 18px; }
+    .ohc-card { padding: 18px 16px 16px; border-radius: 20px; }
+    .ohc-row { gap: 10px; }
+    .ohc-field { margin-bottom: 12px; }
+    .ohc-label { font-size: 13px; margin-bottom: 6px; }
+    .ohc-input { padding: 12px 14px; }
+    .ohc-btn { padding: 16px; font-size: 15px; }
+    .ohc-trust { margin-top: 18px; font-size: 13px; gap: 8px 18px; }
+  }
+</style>
+
+<div class="ohc-page">
+  <div class="ohc-wrap">
+    <div class="ohc-eyebrow">Free In-Depth Video Training</div>
+    <h1 class="ohc-h1">
+      <span class="ohc-h1-desk">
+        <span>How To Attract A Genuine And Committed</span>
+        <span>Long-Term Relationship Using</span>
+        <span class="ohc-hl">Emotional Resonance</span>
+      </span>
+      <span class="ohc-h1-mob"><span>How To Attract A Genuine</span><span>Committed Relationship</span><span>Using <span class="ohc-hl">Emotional</span></span><span><span class="ohc-hl">Resonance</span></span></span>
+    </h1>
+    <p class="ohc-sub">Without doing more inner work or learning more dating rules.</p>
+
+    <div class="ohc-card">
+      <!-- a div, not a <form>: GHL intercepts real form tags -->
+      <div id="ohcForm">
+        <div class="ohc-row">
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_fname">First Name</label>
+            <input class="ohc-input" type="text" id="ohc_fname" autocomplete="given-name" placeholder="First name">
+          </div>
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_lname">Last Name</label>
+            <input class="ohc-input" type="text" id="ohc_lname" autocomplete="family-name" placeholder="Last name">
+          </div>
+        </div>
+        <div class="ohc-field">
+          <label class="ohc-label" for="ohc_email">Email Address</label>
+          <input class="ohc-input" type="text" id="ohc_email" autocomplete="email" inputmode="email" placeholder="you@example.com">
+        </div>
+        <button type="button" class="ohc-btn" id="ohcBtn">Watch The Free Training</button>
+        <div class="ohc-error" id="ohcError">Please add your first name and a valid email address.</div>
+      </div>
+      <div class="ohc-done" id="ohcDone">
+        <h2>You're In <span class="ohc-grad">&#10084;</span></h2>
+        <p>Taking you to the training on YouTube now…</p>
+      </div>
+    </div>
+
+    <div class="ohc-trust">
+      <span>100% free</span>
+      <span>Watch straight away</span>
+      <span>For people ready to settle down</span>
+    </div>
+  </div>
+
+  <footer class="ohc-footer">
+    <nav class="ohc-footer-links">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </nav>
+    <p class="ohc-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  // ⚠️ Set these before going live. While they're placeholders, the button just shows "You're In" (safe for previews).
+  var WEBHOOK_URL  = 'https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/aaa6a82e-9714-4f85-9e07-e1ddb13f77a2'; // GHL "Emotional Resonance Training Opt-in" workflow (2026-10-24)
+  var REDIRECT_URL = 'https://youtu.be/IneemXUd7Nw'; // the training's YouTube video link (people land on YouTube so they can subscribe)
+
+  function $(id){ return document.getElementById(id); }
+  function isEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+  function utm(){
+    var p = new URLSearchParams(window.location.search), s = {};
+    try { s = JSON.parse(sessionStorage.getItem('ohc_utm') || '{}'); } catch(e){}
+    var u = {
+      utm_source:   p.get('utm_source')   || s.utm_source   || '',
+      utm_medium:   p.get('utm_medium')   || s.utm_medium   || '',
+      utm_campaign: p.get('utm_campaign') || s.utm_campaign || '',
+      utm_content:  p.get('utm_content')  || s.utm_content  || ''
+    };
+    try { sessionStorage.setItem('ohc_utm', JSON.stringify(u)); } catch(e){}
+    return u;
+  }
+  utm();
+
+  // Page-view counter for the Business Hub (2026-10-24): one count per visit,
+  // live site only (not the GHL editor preview). GHL has no API for its own
+  // page stats, so the Hub keeps its own count.
+  (function(){
+    if (!/(^|\.)ollyhenson\.com$/.test(location.hostname)) return;
+    try { if (sessionStorage.getItem('ohc_pv_optin')) return; sessionStorage.setItem('ohc_pv_optin', '1'); } catch(e){}
+    // Where the visit came from (2026-10-25): the UTMs, else the site that
+    // linked here, else (direct).
+    var u = utm(), src = u.utm_source, med = u.utm_medium, con = u.utm_content;
+    if (!src){ try { var r = document.referrer && new URL(document.referrer).hostname; if (r && !/(^|\.)ollyhenson\.com$/.test(r)){ src = r.replace(/^www\./, ''); med = 'referral'; } } catch(e){} }
+    try { navigator.sendBeacon('https://hub.ollyhenson.com/api/track', ['optin', src || '(direct)', med || '', con || ''].join('|')); } catch(e){}
+  })();
+
+  $('ohcBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    var first = $('ohc_fname').value.trim(), last = $('ohc_lname').value.trim(), email = $('ohc_email').value.trim();
+    if (!first || !isEmail(email)) { $('ohcError').style.display = 'block'; return; }
+    $('ohcError').style.display = 'none';
+    var btn = $('ohcBtn'); btn.disabled = true; btn.textContent = 'Sending…';
+
+    function done(){
+      $('ohcForm').style.display = 'none'; $('ohcDone').style.display = 'block';
+      if (REDIRECT_URL) window.location.href = REDIRECT_URL;
+    }
+    if (WEBHOOK_URL.indexOf('http') !== 0) { done(); return; } // preview / not wired up yet
+
+    var u = utm();
+    // Never leave someone waiting: if GHL is slow, go to the video after 4 seconds anyway.
+    var sent = false;
+    function go(){ if (sent) return; sent = true; done(); }
+    setTimeout(go, 4000);
+    fetch(WEBHOOK_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        first_name: first, last_name: last, email: email, full_name: first + ' ' + last,
+        lead_magnet: 'Emotional Resonance Training',
+        utm_source: u.utm_source, utm_medium: u.utm_medium, utm_campaign: u.utm_campaign, utm_content: u.utm_content
+      })
+    }).then(go).catch(function(){
+      if (sent) return;
+      sent = true;
+      btn.disabled = false; btn.textContent = 'Watch The Free Training';
+      $('ohcError').textContent = 'Something went wrong. Please try again.';
+      $('ohcError').style.display = 'block';
+    });
+  });
+
+})();
+</script>

@@ -2,13 +2,27 @@
 
 > Read this at the start of every marketing session. Update it as tasks are completed or added.
 
-**Last updated:** 2026-06-18
+**Last updated:** 2026-10-26
 
 ---
 
 ## Current focus
 
 Phase 1 foundations are largely done. Moving into content creation at scale and building the content planning system.
+
+---
+
+## ⏰ Tomorrow — 2026-10-27: sort out the GHL redirects
+
+Create in GHL (Sites → Settings → URL Redirects), test each in a private window (UTMs must survive), then tell Claude so the Hub + generator switch to the short links. Full list: marketing/memory/utm-link-log.md.
+- [ ] `/love` → `https://ollyhenson.com/scale?utm_source=youtube&utm_medium=shorts&utm_campaign=emotional_scale_check` (Shorts description already says ollyhenson.com/love)
+- [ ] `/apply-ig`, `/apply-email`, `/apply-fb`, `/apply-tt`, `/apply-wa` → the apply links in the Hub Overview box
+- [ ] `/scale-tt` → `https://ollyhenson.com/scale?utm_source=tiktok&utm_medium=dm&utm_campaign=emotional_scale_check`
+- [ ] `/video-tt` → `https://ollyhenson.com/training?utm_source=tiktok&utm_medium=dm&utm_campaign=emotional_resonance_training`
+- [ ] Check `/lovescale` points to the description link (`…utm_medium=description…`)
+- [ ] With Claude: Facebook Reels show "copyright scan still running, 0%" on the last two uploads. Look into it alongside the native-upload test (views after 48 hours).
+
+Also open: approve the Socials preview (artifact PsyL7F4KRfRH2TjehXW2f1) → move into the real generator; Hub Overview rebuild; Facebook native-upload test check (started 2026-10-26).
 
 ---
 

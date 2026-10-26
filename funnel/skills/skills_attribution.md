@@ -239,3 +239,5 @@ The following preview pages are excluded from the Website Pages section of the d
 - Added opt-in tracking source of truth note — dashboard uses webhook-based tag count, not GHL native stats
 - Added tag management rules for pipeline progression — correct sequence when contact applies
 - Added EXCLUDED_PAGES rule for preview URLs
+
+- **2026-10-26 · Application UTMs in their own fields (Olly):** new GHL contact fields **HA UTM Source / Medium / Campaign / Content**. The "Heart Attractor Applications" workflow now maps `{{inboundWebhookRequest.utm_*}}` into the HA fields, NOT the plain UTM fields, so applying (e.g. from an email) no longer overwrites where someone opted in from. Plain UTM fields = opt-in source (opt-in workflow only); HA UTM fields = application source. The Hub's `functions/api/ghl-sources.js` counts opt-ins by the plain fields and applications by the HA fields (falling back to the plain ones for applicants from before 2026-10-26).

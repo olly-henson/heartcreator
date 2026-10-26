@@ -14,7 +14,7 @@
 //
 // GHL has no API for its own funnel stats (2026-10-24), hence this.
 
-const PAGES = { optin: true, apply: true };
+const PAGES = { optin: true, apply: true, scale: true };   // scale = The Love Scale (2026-10-26)
 const BOT_RE = /bot|crawl|spider|preview|facebookexternalhit|headless/i;
 
 // Keep source labels short and safe for a KV key.

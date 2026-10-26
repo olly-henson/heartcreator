@@ -1,0 +1,663 @@
+<title>Apply For The Heart Attractor Program</title>
+
+<!-- APPLICATION PAGE, STEP-BY-STEP VERSION (2026-10-26): the same 17 questions as heart-attractor-application.html,
+     one screen at a time with a progress bar, Back and Next (Olly: "the carousel way of filling it in").
+     Never moves on by itself when an answer is tapped: people press Next (Olly's survey rule).
+     Sends exactly the same data to the same GHL "Heart Attractor Applications" webhook, so the workflow and the
+     11 "HA " fields work unchanged. Not live yet: heart-attractor-application.html is still the live page. -->
+<!-- Started applications: after step 1, name + email go to STARTED_WEBHOOK_URL (a separate GHL workflow, e.g. tag
+     "application started") so people who don't finish can be followed up. Empty = skipped. -->
+<!-- Olly's photo: GHL Media (marketing\assets\PFP 800x800.png), set 2026-10-26. -->
+<!-- GHL: One Custom HTML block. Section + row + column padding/margin = 0. Full Width. No <form> tag, button
+     type="button" + click handlers, ohc_ ids for name/email, html/body background reset, 100vw escape on .ohc-page. -->
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; background: #0A0510 !important; }
+  .ohc-page {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(120% 70% at 20% 0%, #4B1466 0%, #150818 50%, #0A0510 100%);
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column;
+  }
+  .ohc-page *, .ohc-page *::before, .ohc-page *::after { box-sizing: border-box; }
+
+  /* ── HEADER (compact, so the first question is on screen straight away) ── */
+  .ohc-header { padding: 48px 24px 28px; text-align: center; }
+  .ohc-eyebrow { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #E1A6FF; margin-bottom: 14px; }
+  .ohc-h1 { font-weight: 800; line-height: 1.15; margin: 0 auto 12px; color: #ffffff; }
+  .ohc-h1-desk { display: block; white-space: nowrap; font-size: min(46px, calc((min(100vw, 900px) - 60px) / 19.5)); }
+  .ohc-h1-mob { display: none; }
+  .ohc-h1 .ohc-line { display: block; white-space: nowrap; }
+  .ohc-grad { background: linear-gradient(135deg, #E1A6FF, #d946ef); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .ohc-note { font-size: 15px; color: rgba(230,220,242,.75); margin: 0 auto; line-height: 1.6; }
+
+  /* ── STEP CARD ── */
+  .ohc-form-wrap { flex: 1; padding: 0 20px 72px; display: flex; justify-content: center; align-items: flex-start; }
+  .ohc-form-card {
+    width: 100%; max-width: 640px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(225,166,255,.18);
+    border-radius: 26px;
+    padding: 30px 40px 34px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 80px rgba(75,20,102,.25);
+    scroll-margin-top: 16px;
+  }
+  .ohc-progress { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .ohc-track { flex: 1; height: 6px; border-radius: 3px; background: rgba(225,166,255,.14); overflow: hidden; }
+  .ohc-fill { height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, #E1A6FF, #d946ef); transition: width .35s ease; }
+  .ohc-count { font-size: 13px; font-weight: 600; color: rgba(230,220,242,.7); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .ohc-step { display: none; }
+  .ohc-step.ohc-on { display: block; animation: ohcIn .3s ease; }
+  .ohc-step.ohc-on.ohc-back { animation-name: ohcInBack; }
+  @keyframes ohcIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+  @keyframes ohcInBack { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .ohc-step.ohc-on { animation: none; } .ohc-fill { transition: none; } }
+
+  .ohc-section-label { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #E1A6FF; margin: 0 0 10px; }
+  .ohc-q { font-size: clamp(20px, 2.4vw, 24px); font-weight: 700; line-height: 1.35; margin: 0 0 8px; color: #ffffff; }
+  .ohc-qhint { font-size: 14px; color: rgba(230,220,242,.7); margin: 0 0 20px; line-height: 1.55; }
+  .ohc-q + .ohc-field, .ohc-q + .ohc-row, .ohc-q + .ohc-choices { margin-top: 20px; }
+
+  .ohc-field { margin-bottom: 18px; }
+  .ohc-row { display: flex; gap: 14px; }
+  .ohc-row .ohc-field { flex: 1; min-width: 0; }
+  .ohc-label { display: block; font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 8px; }
+  .ohc-hint { display: block; font-size: 13px; color: rgba(230,220,242,.65); margin-top: 6px; }
+
+  .ohc-input, .ohc-textarea, .ohc-select {
+    width: 100%;
+    background: rgba(10,5,16,.6);
+    border: 1px solid rgba(225,166,255,.25);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'Poppins', sans-serif; font-size: 16px; color: #ffffff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .ohc-select { appearance: none; -webkit-appearance: none; cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, #E1A6FF 50%), linear-gradient(135deg, #E1A6FF 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+    background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right: 40px; }
+  .ohc-select option { background: #150818; color: #ffffff; }
+  /* stop browser autofill painting the fields light blue / white */
+  .ohc-input:-webkit-autofill, .ohc-input:-webkit-autofill:hover, .ohc-input:-webkit-autofill:focus,
+  .ohc-textarea:-webkit-autofill, .ohc-select:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px #140a1c inset;
+    box-shadow: 0 0 0 1000px #140a1c inset;
+    caret-color: #ffffff;
+    transition: background-color 9999s ease-out 0s;
+  }
+  .ohc-input::placeholder, .ohc-textarea::placeholder { color: rgba(230,220,242,.4); }
+  .ohc-input:focus, .ohc-textarea:focus, .ohc-select:focus { border-color: #d946ef; box-shadow: 0 0 0 4px rgba(217,70,239,.15); }
+  .ohc-textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+  .ohc-phone { display: flex; gap: 10px; }
+  .ohc-phone .ohc-select { width: 140px; flex: 0 0 140px; }
+  .ohc-other { margin-top: 10px; display: none; }
+
+  /* tap-to-choose answers */
+  .ohc-choices { display: flex; flex-direction: column; gap: 10px; }
+  .ohc-choices--wrap { flex-direction: row; flex-wrap: wrap; }
+  .ohc-choice {
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid rgba(225,166,255,.25); background: rgba(10,5,16,.6);
+    border-radius: 14px; padding: 15px 18px;
+    font-size: 16px; color: #E6DCF2; cursor: pointer;
+    transition: border-color .2s, background .2s, color .2s;
+  }
+  .ohc-choice:hover { border-color: rgba(217,70,239,.6); }
+  .ohc-choice:has(input:checked) { border-color: #d946ef; background: rgba(217,70,239,.18); color: #ffffff; }
+  .ohc-choice input { accent-color: #d946ef; width: 18px; height: 18px; flex: 0 0 18px; margin: 0; cursor: pointer; }
+
+  .ohc-err { display: none; font-size: 14px; color: #ff9ab3; margin-top: 4px; }
+  .ohc-step.ohc-invalid .ohc-err { display: block; }
+  .ohc-step.ohc-invalid .ohc-bad { border-color: #ff7a9a !important; }
+
+  /* ── NAV ── */
+  .ohc-nav { display: flex; align-items: center; gap: 12px; margin-top: 26px; }
+  .ohc-backbtn {
+    border: 1px solid rgba(225,166,255,.3); background: transparent; color: #E6DCF2;
+    font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600;
+    border-radius: 999px; padding: 16px 22px; cursor: pointer; transition: border-color .2s, color .2s;
+  }
+  .ohc-backbtn:hover { border-color: #d946ef; color: #ffffff; }
+  .ohc-backbtn[hidden] { display: none; }
+  .ohc-btn {
+    flex: 1; padding: 18px; border: none; border-radius: 999px;
+    background: linear-gradient(135deg, #E1A6FF, #d946ef);
+    color: #150818; font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800;
+    letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+    box-shadow: 0 10px 40px rgba(217,70,239,.35);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .ohc-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 50px rgba(217,70,239,.5); }
+  .ohc-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+  /* what happens next (Olly, 2026-10-26) */
+  .ohc-steps { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 22px; margin: 18px auto 0; }
+  .ohc-steps span { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #E6DCF2; white-space: nowrap; }
+  .ohc-steps b { width: 22px; height: 22px; flex: 0 0 22px; border-radius: 50%; background: rgba(217,70,239,.28); color: #ffffff; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+  /* step 1: Olly's photo and a personal hello */
+  .ohc-hello { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+  .ohc-hello img { width: 56px; height: 56px; flex: 0 0 56px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(217,70,239,.6); }
+  .ohc-hello .ohc-q { margin: 0; }
+  /* screen 1 hello: one smaller paragraph so it doesn't overwhelm (Olly, 2026-10-26) */
+  .ohc-hello .ohc-hi { font-size: 17px; font-weight: 600; line-height: 1.5; }
+  .ohc-hello .ohc-hey { display: block; margin-bottom: 10px; }
+  /* welcome-card layout (Olly, 2026-10-26): bigger photo centred on top, text centred underneath */
+  .ohc-hello { flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+  .ohc-hello img { width: 88px; height: 88px; flex: 0 0 auto; border-width: 3px; box-shadow: 0 8px 24px rgba(217,70,239,.25); }
+  .ohc-hello .ohc-hey { font-size: 1.15em; font-weight: 700; }
+  .ohc-hello + .ohc-row, .ohc-step[data-check="intro"] .ohc-hello { margin-bottom: 18px; }
+  @media (max-width: 600px){ .ohc-hello img { width: 80px; height: 80px; flex-basis: auto; } .ohc-hello { gap: 12px; } }
+  @media (max-width: 600px){ .ohc-hello .ohc-hi { font-size: 15px; } }
+  .ohc-story { font-size: 14px; color: #E6DCF2; line-height: 1.55; margin: 10px 0 18px; }
+  .ohc-guarantee { font-size: 13px; color: rgba(230,220,242,.75); text-align: center; margin: 12px 0 0; }
+  .ohc-guarantee::before { content: '¹3'; color: #d946ef; font-weight: 800; margin-right: 8px; }
+  .ohc-guarantee[hidden] { display: none; }
+  .ohc-keyhint { font-size: 12px; color: rgba(230,220,242,.45); text-align: center; margin: 12px 0 0; }
+  .ohc-error-msg {
+    display: none; margin-top: 16px; text-align: center; font-size: 14px; color: #ff9ab3;
+    border: 1px solid rgba(255,122,154,.4); background: rgba(255,122,154,.08); border-radius: 12px; padding: 12px 16px;
+  }
+  .ohc-done { display: none; text-align: center; padding: 24px 0 10px; }
+  .ohc-done h2 { font-size: 30px; font-weight: 800; margin: 0 0 14px; }
+  .ohc-done p { color: #E6DCF2; line-height: 1.7; margin: 0 auto; max-width: 480px; }
+
+  /* ── FOOTER ── */
+  .ohc-footer { border-top: 1px solid rgba(225,166,255,.12); padding: 28px 20px; text-align: center; }
+  .ohc-footer-links { display: flex; justify-content: center; gap: 28px; margin-bottom: 10px; flex-wrap: wrap; }
+  .ohc-footer-links a { font-size: 13px; color: rgba(225,166,255,.55); text-decoration: none; }
+  .ohc-footer-links a:hover { color: #d946ef; }
+  .ohc-footer-copy { font-size: 12px; color: rgba(225,166,255,.35); margin: 0; }
+
+  @media (max-width: 640px) {
+    /* tighter on phones so the first screen's Next button is fully visible (Olly, 2026-10-26) */
+    .ohc-header { padding: 20px 16px 12px; }
+    .ohc-eyebrow { margin-bottom: 8px; font-size: 12px; }
+    .ohc-h1 { margin-bottom: 6px; }
+    .ohc-h1-desk { display: none; }
+    .ohc-h1-mob { display: block; font-size: min(28px, calc((100vw - 40px) / 11.2)); }
+    .ohc-note { font-size: 13px; }
+    .ohc-form-wrap { padding: 0 12px 48px; }
+    .ohc-form-card { padding: 18px 18px 20px; border-radius: 20px; }
+    .ohc-progress { margin-bottom: 16px; }
+    .ohc-section-label { margin-bottom: 6px; }
+    .ohc-q { font-size: 19px; }
+    .ohc-q + .ohc-field, .ohc-q + .ohc-row, .ohc-q + .ohc-choices { margin-top: 14px; }
+    .ohc-field { margin-bottom: 12px; }
+    .ohc-input, .ohc-select { padding: 12px 14px; }
+    .ohc-nav { margin-top: 18px; }
+    .ohc-row { gap: 10px; } /* first + last name stay side by side so Next fits on screen */
+    .ohc-note { font-size: 12.5px; line-height: 1.5; }
+    .ohc-phone .ohc-select { width: 120px; flex-basis: 120px; }
+    .ohc-choice { padding: 14px 16px; font-size: 15px; }
+    .ohc-textarea { min-height: 120px; }
+    .ohc-backbtn { padding: 16px 18px; }
+    .ohc-keyhint { display: none; }
+    .ohc-steps { gap: 6px 12px; margin-top: 10px; }
+    .ohc-steps span { font-size: 12px; gap: 6px; }
+    .ohc-steps b { width: 18px; height: 18px; flex-basis: 18px; font-size: 11px; }
+    .ohc-hello img { width: 46px; height: 46px; flex-basis: 46px; }
+    .ohc-hello { gap: 12px; }
+    .ohc-story { font-size: 13px; margin: 8px 0 12px; }
+  }
+</style>
+
+<div class="ohc-page">
+
+  <div class="ohc-header">
+    <div class="ohc-eyebrow">Application</div>
+    <h1 class="ohc-h1">
+      <span class="ohc-h1-desk">Apply For <span class="ohc-grad">The Heart Attractor Program</span></span>
+      <span class="ohc-h1-mob"><span class="ohc-line">Apply For <span class="ohc-grad">The Heart</span></span><span class="ohc-line ohc-grad">Attractor Program</span></span>
+    </h1>
+  </div>
+
+  <!-- a div, not a <form>: GHL intercepts real form tags -->
+  <div class="ohc-form-wrap">
+    <div class="ohc-form-card" id="ohcCard">
+
+      <div id="ohcAppForm">
+        <div class="ohc-progress" aria-hidden="true">
+          <div class="ohc-track"><div class="ohc-fill" id="ohcFill"></div></div>
+          <span class="ohc-count" id="ohcCount"></span>
+        </div>
+
+        <!-- 1. hello + Get Started (no fields) -->
+        <div class="ohc-step" data-check="intro">
+          <div class="ohc-hello">
+            <img src="https://assets.cdn.filesafe.space/LRqVZmxns8f3xcJLHzBK/media/6adf0c24736386d0dcdb1108.png" alt="Olly" id="ohcPhoto">
+            <p class="ohc-q ohc-hi"><span class="ohc-hey">Hey, I'm Olly 👋</span>If you'd like to find out more about how I can help you attract a great relationship in my private program…<span style="display:block; margin:10px 0 0;">Just answer a few questions and I'll be in touch.</span></p>
+          </div>
+        </div>
+
+        <!-- 2. name + email -->
+        <div class="ohc-step" data-check="name">
+          <p class="ohc-q">First, what's your name and email?</p>
+          <div class="ohc-row">
+            <div class="ohc-field">
+              <label class="ohc-label" for="ohc_fname">First Name</label>
+              <input class="ohc-input" type="text" id="ohc_fname" autocomplete="given-name">
+            </div>
+            <div class="ohc-field">
+              <label class="ohc-label" for="ohc_lname">Last Name</label>
+              <input class="ohc-input" type="text" id="ohc_lname" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_email">Email Address</label>
+            <input class="ohc-input" type="text" id="ohc_email" autocomplete="email" inputmode="email" placeholder="you@example.com">
+          </div>
+          <p class="ohc-err">Please add your first name, last name and a valid email address.</p>
+        </div>
+
+        <!-- 2 -->
+        <div class="ohc-step" data-group="status">
+          <p class="ohc-section-label">Your Love Life</p>
+          <p class="ohc-q">Where are things at right now?</p>
+          <div class="ohc-choices">
+            <label class="ohc-choice"><input type="radio" name="status" value="Single and dating"> Single and dating</label>
+            <label class="ohc-choice"><input type="radio" name="status" value="Single and not really dating"> Single and not really dating</label>
+            <label class="ohc-choice"><input type="radio" name="status" value="Seeing someone, but it's not going anywhere"> Seeing someone, but it's not going anywhere</label>
+            <label class="ohc-choice"><input type="radio" name="status" value="In a relationship"> In a relationship</label>
+          </div>
+          <p class="ohc-err">Please choose one.</p>
+        </div>
+
+        <!-- 3 -->
+        <div class="ohc-step" data-group="how_long">
+          <p class="ohc-section-label">Your Love Life</p>
+          <p class="ohc-q">How long have you been looking for the right person?</p>
+          <div class="ohc-choices">
+            <label class="ohc-choice"><input type="radio" name="how_long" value="Less than a year"> Less than a year</label>
+            <label class="ohc-choice"><input type="radio" name="how_long" value="1 to 3 years"> 1 to 3 years</label>
+            <label class="ohc-choice"><input type="radio" name="how_long" value="3 to 5 years"> 3 to 5 years</label>
+            <label class="ohc-choice"><input type="radio" name="how_long" value="More than 5 years"> More than 5 years</label>
+          </div>
+          <p class="ohc-err">Please choose one.</p>
+        </div>
+
+        <!-- 4 -->
+        <div class="ohc-step" data-text="ohc_want">
+          <p class="ohc-section-label">Your Love Life</p>
+          <p class="ohc-q"><label for="ohc_want">What kind of relationship do you want?</label></p>
+          <div class="ohc-field"><textarea class="ohc-textarea" id="ohc_want" placeholder="e.g. someone to settle down and build a life with"></textarea></div>
+          <p class="ohc-err">Please tell me a little about it.</p>
+        </div>
+
+        <!-- 5 -->
+        <div class="ohc-step" data-group="tried">
+          <p class="ohc-section-label">Your Love Life</p>
+          <p class="ohc-q">What have you already tried?</p>
+          <p class="ohc-qhint">Tick all that apply.</p>
+          <div class="ohc-choices ohc-choices--wrap">
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Therapy or counselling"> Therapy or counselling</label>
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Inner child or healing work"> Inner child or healing work</label>
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Learning about attachment styles"> Attachment styles</label>
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Manifestation or visualising"> Manifestation or visualising</label>
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Meditation or breathwork"> Meditation or breathwork</label>
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Books and courses"> Books and courses</label>
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Dating coaches or dating rules"> Dating coaches or dating rules</label>
+            <label class="ohc-choice"><input type="checkbox" name="tried" value="Dating apps"> Dating apps</label>
+          </div>
+          <p class="ohc-err">Please tick at least one.</p>
+        </div>
+
+        <!-- 6 -->
+        <div class="ohc-step" data-text="ohc_not_happening">
+          <p class="ohc-section-label">Your Love Life</p>
+          <p class="ohc-q"><label for="ohc_not_happening">After everything you've done, what still isn't happening?</label></p>
+          <div class="ohc-field"><textarea class="ohc-textarea" id="ohc_not_happening"></textarea></div>
+          <p class="ohc-err">Please tell me a little about it.</p>
+        </div>
+
+        <!-- 7 -->
+        <div class="ohc-step" data-text="ohc_why">
+          <p class="ohc-section-label">Your Love Life</p>
+          <p class="ohc-q"><label for="ohc_why">How do you feel when you think about love and dating right now?</label></p>
+          <div class="ohc-field"><textarea class="ohc-textarea" id="ohc_why" placeholder="Be as honest as you like"></textarea></div>
+          <p class="ohc-err">Please tell me a little about it.</p>
+        </div>
+
+        <!-- 8 -->
+        <div class="ohc-step" data-text="ohc_once">
+          <p class="ohc-section-label">Your Love Life</p>
+          <p class="ohc-q"><label for="ohc_once">Finish this sentence: "I'll meet the right person once I…"</label></p>
+          <div class="ohc-field"><textarea class="ohc-textarea" id="ohc_once"></textarea></div>
+          <p class="ohc-err">Please finish the sentence.</p>
+        </div>
+
+        <!-- 9 -->
+        <div class="ohc-step" data-group="priority">
+          <p class="ohc-section-label">Working Together</p>
+          <p class="ohc-q">How much of a priority is finding someone for a long-term relationship in your life right now?</p>
+          <div class="ohc-choices">
+            <label class="ohc-choice"><input type="radio" name="priority" value="Not really a priority right now"> Not really a priority right now</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="Something I think about now and then"> Something I think about now and then</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="It matters, but other things come first"> It matters, but other things come first</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="One of my top priorities"> One of my top priorities</label>
+            <label class="ohc-choice"><input type="radio" name="priority" value="It's my main focus in life right now"> It's my main focus in life right now</label>
+          </div>
+          <p class="ohc-err">Please choose one.</p>
+        </div>
+
+        <!-- 10 -->
+        <div class="ohc-step" data-group="daily">
+          <p class="ohc-section-label">Working Together</p>
+          <p class="ohc-q">Just to be upfront: this isn't about learning more information. It's about implementation, embodiment and support, so this actually happens for you. How does that sound?</p>
+          <div class="ohc-choices">
+            <label class="ohc-choice"><input type="radio" name="daily" value="That's exactly what I need"> That's exactly what I need</label>
+            <label class="ohc-choice"><input type="radio" name="daily" value="I'm open to giving it a proper go"> I'm open to giving it a proper go</label>
+            <label class="ohc-choice"><input type="radio" name="daily" value="I'd rather learn more information first"> I'd rather learn more information first</label>
+          </div>
+          <p class="ohc-err">Please choose one.</p>
+        </div>
+
+        <!-- 11 -->
+        <div class="ohc-step" data-group="invest">
+          <p class="ohc-section-label">Working Together</p>
+          <p class="ohc-q">If you found the right program to help you attract someone to settle down and build a life with, how much would you be willing to invest in it?</p>
+          <div class="ohc-choices">
+            <label class="ohc-choice"><input type="radio" name="invest" value="Under $500"> Under $500</label>
+            <label class="ohc-choice"><input type="radio" name="invest" value="$500 to $1,000"> $500 to $1,000</label>
+            <label class="ohc-choice"><input type="radio" name="invest" value="$1,000 to $2,500"> $1,000 to $2,500</label>
+            <label class="ohc-choice"><input type="radio" name="invest" value="$2,500 to $5,000"> $2,500 to $5,000</label>
+            <label class="ohc-choice"><input type="radio" name="invest" value="$5,000 or more"> $5,000 or more</label>
+          </div>
+          <p class="ohc-err">Please choose one.</p>
+        </div>
+
+        <!-- 12 -->
+        <div class="ohc-step" data-check="where">
+          <p class="ohc-section-label">Nearly There</p>
+          <p class="ohc-q">Where in the world are you based, and what do you do?</p>
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_country">Country</label>
+            <select class="ohc-select" id="ohc_country">
+              <option value="">Choose your country…</option>
+              <option>United Kingdom</option>
+              <option>Ireland</option>
+              <option>United States</option>
+              <option>Canada</option>
+              <option>Australia</option>
+              <option>New Zealand</option>
+              <option>South Africa</option>
+              <option>Netherlands</option>
+              <option>Germany</option>
+              <option>France</option>
+              <option>Spain</option>
+              <option>Portugal</option>
+              <option>Italy</option>
+              <option>Switzerland</option>
+              <option>Austria</option>
+              <option>Belgium</option>
+              <option>Sweden</option>
+              <option>Norway</option>
+              <option>Denmark</option>
+              <option>Finland</option>
+              <option>United Arab Emirates</option>
+              <option>Singapore</option>
+              <option>Hong Kong</option>
+              <option value="other">Somewhere else (type it in)</option>
+            </select>
+            <input class="ohc-input ohc-other" type="text" id="ohc_country_other" placeholder="Country">
+            <input class="ohc-input" type="text" id="ohc_city" placeholder="City or town (optional)" style="margin-top:10px;">
+          </div>
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_profession">Profession</label>
+            <input class="ohc-input" type="text" id="ohc_profession" autocomplete="organization-title" placeholder="What do you do for work?">
+          </div>
+          <p class="ohc-err">Please add your country and profession.</p>
+        </div>
+
+        <!-- 13 -->
+        <div class="ohc-step" data-check="whatsapp">
+          <p class="ohc-section-label">Last Step</p>
+          <p class="ohc-q">What's the best WhatsApp number to reach you on?</p>
+          <p class="ohc-qhint">If it looks like a good fit, this is where I'll get in touch.</p>
+          <div class="ohc-field">
+            <div class="ohc-phone">
+              <select class="ohc-select" id="ohc_wa_code" aria-label="Country code">
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+1 (CA)">🇨🇦 +1</option>
+                <option value="+61">🇦🇺 +61</option>
+                <option value="+64">🇳🇿 +64</option>
+                <option value="+353">🇮🇪 +353</option>
+                <option value="+27">🇿🇦 +27</option>
+                <option value="+31">🇳🇱 +31</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="+33">🇫🇷 +33</option>
+                <option value="+34">🇪🇸 +34</option>
+                <option value="+351">🇵🇹 +351</option>
+                <option value="+39">🇮🇹 +39</option>
+                <option value="+41">🇨🇭 +41</option>
+                <option value="+43">🇦🇹 +43</option>
+                <option value="+32">🇧🇪 +32</option>
+                <option value="+46">🇸🇪 +46</option>
+                <option value="+47">🇳🇴 +47</option>
+                <option value="+45">🇩🇰 +45</option>
+                <option value="+358">🇫🇮 +358</option>
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+65">🇸🇬 +65</option>
+                <option value="+852">🇭🇰 +852</option>
+                <option value="other">Other</option>
+              </select>
+              <input class="ohc-input" type="tel" id="ohc_whatsapp" autocomplete="tel-national" placeholder="7911 123456" aria-label="WhatsApp number">
+            </div>
+            <span class="ohc-hint">Choose "Other" if your code isn't listed, and type it in front of your number.</span>
+          </div>
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_anything">Anything else you'd like me to know, or ask me? <span style="font-weight:400;color:rgba(230,220,242,.6)">(optional)</span></label>
+            <textarea class="ohc-textarea" id="ohc_anything" style="min-height:100px"></textarea>
+          </div>
+          <p class="ohc-err">Please add your WhatsApp number.</p>
+        </div>
+
+        <div class="ohc-nav">
+          <button type="button" class="ohc-backbtn" id="ohcBack" hidden>Back</button>
+          <button type="button" class="ohc-btn" id="ohcNext">Next</button>
+        </div>
+        <p class="ohc-keyhint" id="ohcKeyHint">Press Enter ↵ to go to the next question</p>
+        <div class="ohc-error-msg" id="ohcError">Something went wrong. Please try again, or email olly@ollyhenson.com</div>
+      </div>
+
+      <div class="ohc-done" id="ohcDone">
+        <h2>Thank You <span class="ohc-grad">&#10084;</span></h2>
+        <p>Your application is in. I read every one myself, and if it looks like a good fit I'll be in touch on WhatsApp.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="ohc-footer">
+    <nav class="ohc-footer-links">
+      <a href="https://ollyhenson.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://ollyhenson.com/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+    </nav>
+    <p class="ohc-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var WEBHOOK_URL         = 'https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/1e82ca06-926b-43b8-a13d-16703c5c7d6d'; // GHL "Heart Attractor Applications" workflow (2026-10-24)
+  var STARTED_WEBHOOK_URL = ''; // left off on purpose (Olly, 2026-10-26: not finishing is a natural disqualifier)
+  var THANK_YOU_URL       = ''; // empty = show the inline thank-you
+
+  function $(id){ return document.getElementById(id); }
+  // no photo uploaded yet: hide it rather than show a broken image
+  (function(){ var ph = $('ohcPhoto'); if (ph && ph.getAttribute('src').indexOf('http') !== 0 && ph.getAttribute('src').indexOf('data:') !== 0) ph.style.display = 'none'; if (ph) ph.onerror = function(){ ph.style.display = 'none'; }; })();
+  function val(id){ var el = $(id); return el ? el.value.trim() : ''; }
+  function picked(name){ var el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+  function pickedAll(name){ return Array.prototype.map.call(document.querySelectorAll('input[name="' + name + '"]:checked'), function(el){ return el.value; }); }
+  function isEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+  $('ohc_country').addEventListener('change', function(){
+    $('ohc_country_other').style.display = this.value === 'other' ? 'block' : 'none';
+    if (this.value === 'other') $('ohc_country_other').focus();
+  });
+
+  function utm(){
+    var p = new URLSearchParams(window.location.search), s = {};
+    try { s = JSON.parse(sessionStorage.getItem('ohc_utm') || '{}'); } catch(e){}
+    var u = {
+      utm_source:   p.get('utm_source')   || s.utm_source   || '',
+      utm_medium:   p.get('utm_medium')   || s.utm_medium   || '',
+      utm_campaign: p.get('utm_campaign') || s.utm_campaign || '',
+      utm_content:  p.get('utm_content')  || s.utm_content  || ''
+    };
+    try { sessionStorage.setItem('ohc_utm', JSON.stringify(u)); } catch(e){}
+    return u;
+  }
+  utm();
+
+  // Page-view counter for the Business Hub: one count per visit, live site only, with where the visit came from.
+  (function(){
+    if (!/(^|\.)ollyhenson\.com$/.test(location.hostname)) return;
+    try { if (sessionStorage.getItem('ohc_pv_apply')) return; sessionStorage.setItem('ohc_pv_apply', '1'); } catch(e){}
+    var u = utm(), src = u.utm_source, med = u.utm_medium, con = u.utm_content;
+    if (!src){ try { var r = document.referrer && new URL(document.referrer).hostname; if (r && !/(^|\.)ollyhenson\.com$/.test(r)){ src = r.replace(/^www\./, ''); med = 'referral'; } } catch(e){} }
+    try { navigator.sendBeacon('https://hub.ollyhenson.com/api/track', ['apply', src || '(direct)', med || '', con || ''].join('|')); } catch(e){}
+  })();
+
+  // ── Steps ──
+  var steps = Array.prototype.slice.call(document.querySelectorAll('#ohcAppForm .ohc-step'));
+  var at = 0, startedSent = false, started = false;
+
+  // Returns the elements that are wrong on a step (empty = fine).
+  function problems(step){
+    var bad = [];
+    if (step.dataset.group){
+      if (!document.querySelector('input[name="' + step.dataset.group + '"]:checked')) bad = Array.prototype.slice.call(step.querySelectorAll('.ohc-choice'));
+    } else if (step.dataset.text){
+      if (!val(step.dataset.text)) bad = [$(step.dataset.text)];
+    } else if (step.dataset.check === 'name'){
+      if (!val('ohc_fname')) bad.push($('ohc_fname'));
+      if (!val('ohc_lname')) bad.push($('ohc_lname'));
+      if (!isEmail(val('ohc_email'))) bad.push($('ohc_email'));
+    } else if (step.dataset.check === 'where'){
+      var c = $('ohc_country').value;
+      if (!c) bad.push($('ohc_country'));
+      if (c === 'other' && !val('ohc_country_other')) bad.push($('ohc_country_other'));
+      if (!val('ohc_profession')) bad.push($('ohc_profession'));
+    } else if (step.dataset.check === 'whatsapp'){
+      if (!val('ohc_whatsapp')) bad.push($('ohc_whatsapp'));
+    }
+    return bad;
+  }
+
+  function show(n, backwards){
+    steps[at].classList.remove('ohc-on', 'ohc-back', 'ohc-invalid');
+    at = n;
+    var s = steps[at];
+    s.classList.toggle('ohc-back', !!backwards);
+    s.classList.add('ohc-on');
+    var last = at === steps.length - 1;
+    $('ohcFill').style.width = Math.round((at - 1) / (steps.length - 1) * 100) + '%';
+    $('ohcCount').textContent = at + ' of ' + (steps.length - 1);
+    document.querySelector('.ohc-progress').style.display = at === 0 ? 'none' : '';
+    $('ohcBack').hidden = at === 0;
+    $('ohcNext').textContent = last ? 'Submit My Application' : (at === 0 ? 'Get Started' : 'Next');
+    $('ohcKeyHint').style.visibility = last ? 'hidden' : 'visible';
+    // keep the question in view on phones; focus the first box on typing steps (not on tap steps, so no keyboard pops up)
+    if (!started) { started = true; return; } // first load: don't scroll or focus
+    var card = $('ohcCard'), r = card.getBoundingClientRect();
+    if (r.top < 0 || r.top > window.innerHeight * 0.5) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var first = s.querySelector('input.ohc-input, textarea, select');
+    if (first && !s.dataset.group && n > 0) setTimeout(function(){ try { first.focus({ preventScroll: true }); } catch(e){} }, 320);
+  }
+
+  function sendStarted(){
+    if (startedSent || STARTED_WEBHOOK_URL.indexOf('http') !== 0) return;
+    startedSent = true;
+    var u = utm();
+    try {
+      fetch(STARTED_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+        body: JSON.stringify({ first_name: val('ohc_fname'), last_name: val('ohc_lname'), email: val('ohc_email'),
+          application_status: 'started', utm_source: u.utm_source, utm_medium: u.utm_medium, utm_campaign: u.utm_campaign, utm_content: u.utm_content }) }).catch(function(){});
+    } catch(e){}
+  }
+
+  function next(){
+    var s = steps[at], bad = problems(s);
+    s.querySelectorAll('.ohc-bad').forEach(function(el){ el.classList.remove('ohc-bad'); });
+    if (bad.length){ s.classList.add('ohc-invalid'); bad.forEach(function(el){ el.classList.add('ohc-bad'); }); return; }
+    s.classList.remove('ohc-invalid');
+    if (s.dataset.check === 'name') sendStarted();
+    if (at < steps.length - 1) show(at + 1);
+    else submit();
+  }
+
+  steps.forEach(function(s){
+    s.addEventListener('input', function(){ s.classList.remove('ohc-invalid'); s.querySelectorAll('.ohc-bad').forEach(function(el){ el.classList.remove('ohc-bad'); }); });
+    s.addEventListener('change', function(){ s.classList.remove('ohc-invalid'); s.querySelectorAll('.ohc-bad').forEach(function(el){ el.classList.remove('ohc-bad'); }); });
+  });
+  $('ohcNext').addEventListener('click', next);
+  $('ohcBack').addEventListener('click', function(){ if (at > 0) show(at - 1, true); });
+  // Enter = Next (in a big text box, Enter makes a new line; Ctrl/Cmd+Enter still moves on)
+  $('ohcAppForm').addEventListener('keydown', function(e){
+    if (e.key !== 'Enter' || $('ohcNext').disabled) return;
+    var t = e.target;
+    if (t.tagName === 'TEXTAREA' && !(e.ctrlKey || e.metaKey)) return;
+    if (t.tagName === 'BUTTON') return;
+    e.preventDefault(); next();
+  });
+
+  async function submit(){
+    var btn = $('ohcNext'), errorEl = $('ohcError');
+    btn.disabled = true; $('ohcBack').disabled = true; btn.textContent = 'Sending…'; errorEl.style.display = 'none';
+    var code = $('ohc_wa_code').value, u = utm();
+    var data = {
+      first_name: val('ohc_fname'),
+      last_name:  val('ohc_lname'),
+      email:      val('ohc_email'),
+      whatsapp:   (code === 'other' ? '' : code.replace(' (CA)', '') + ' ') + val('ohc_whatsapp'),
+      country:    $('ohc_country').value === 'other' ? val('ohc_country_other') : $('ohc_country').value,
+      city:       val('ohc_city'),
+      timezone:   (Intl.DateTimeFormat().resolvedOptions().timeZone || ''),
+      profession: val('ohc_profession'),
+      status:          picked('status'),
+      relationship_wanted: val('ohc_want'),
+      how_long:        picked('how_long'),
+      tried:           pickedAll('tried').join(', '),
+      not_happening:   val('ohc_not_happening'),
+      feelings_about_love: val('ohc_why'),
+      meet_right_person_once: val('ohc_once'),
+      relationship_priority: picked('priority'),
+      implementation_fit: picked('daily'),
+      willing_to_invest: picked('invest'),
+      anything_else:   val('ohc_anything'),
+      utm_source: u.utm_source, utm_medium: u.utm_medium, utm_campaign: u.utm_campaign, utm_content: u.utm_content,
+      upgrade_path: new URLSearchParams(window.location.search).get('ref') || ''
+    };
+    function done(){
+      if (THANK_YOU_URL) { window.location.href = THANK_YOU_URL; return; }
+      $('ohcAppForm').style.display = 'none';
+      $('ohcDone').style.display = 'block';
+      $('ohcCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (WEBHOOK_URL.indexOf('http') !== 0) { $('ohcFill').style.width = '100%'; done(); return; } // preview / not wired up yet
+    try {
+      await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      $('ohcFill').style.width = '100%';
+      done();
+    } catch(err) {
+      btn.disabled = false; $('ohcBack').disabled = false; btn.textContent = 'Submit My Application';
+      errorEl.style.display = 'block';
+    }
+  }
+
+  show(0);
+})();
+</script>

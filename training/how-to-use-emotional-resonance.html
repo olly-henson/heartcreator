@@ -137,6 +137,17 @@
   /* landscape frame for graphs (heart coherence) */
   .photo-frame--wide{ width:min(clamp(300px,40vw,560px), 56vh); aspect-ratio:16/9; transform:rotate(-1.5deg); }
   .photo-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+  /* photo carousel (Who I Am, 2026-10-24): photos stacked in one frame, cross-fading */
+  .photo-frame--carousel{ position:relative; cursor:pointer; user-select:none; }
+  .photo-frame--carousel .car-item{ position:absolute; inset:0; opacity:0; transition:opacity 1.2s ease; display:flex; align-items:center; justify-content:center; }
+  .photo-frame--carousel .car-item.is-on{ opacity:1; }
+  .car-caption{ transition:opacity .45s ease; min-height:3.2em; }
+  .car-wrap{ display:flex; align-items:center; justify-content:center; gap:22px; margin:0 auto 22px; }
+  .car-wrap .photo-frame{ margin:0; }
+  .car-btn{ width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.06);
+    color:#f8f4ff; font-size:28px; line-height:1; padding:0 0 4px; cursor:pointer; font-family:inherit; transition:background .2s, border-color .2s; flex:0 0 auto; }
+  .car-btn:hover{ background:rgba(225,166,255,.18); border-color:rgba(225,166,255,.6); }
+  .car-caption.is-fading{ opacity:0; }
   .photo-frame .placeholder{ color:rgba(255,255,255,.35); font-size:12px; letter-spacing:.08em; text-transform:uppercase; padding:14px; text-align:center; }
   /* ---------- emotional scale image (9:16) ---------- */
   .scale-img{ height:min(86vh, 800px); aspect-ratio:9/16; margin:0 auto; border-radius:18px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.45); background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; }
@@ -187,6 +198,48 @@
       </div>
       <span class="eyebrow">Who This Is For</span>
       <h2 class="step-title" data-lines="For People Who Want To Find Someone|To Settle Down And Build|A Life With">For People Who Want To Find Someone To Settle Down And Build A Life With</h2>
+    </div>
+  </section>
+
+  <section class="step" data-title="Who I Am">
+    <div class="step-inner">
+      <!-- Carousel: click the photo to fade to the next one. Each slot is a .car-item
+           (img + placeholder shown until the photo exists). Order follows Olly's
+           talking points: you, Cape Town, Gherkin talk, podcast, wedding, everyday life. -->
+      <div class="car-wrap">
+      <button type="button" class="car-btn car-prev" aria-label="Previous photo">&#8249;</button>
+      <div class="photo-frame photo-frame--carousel">
+        <div class="car-item is-on" data-caption="I help people consciously attract high-quality relationships.">
+          <img src="who am i images/Olly About Page Tile Profile Photo.png" alt="Olly" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">1 · You</div>
+        </div>
+        <div class="car-item" data-caption="Currently living in Cape Town, South Africa after moving from the UK in October 2025.">
+          <img src="who am i images/Cape Town.jpg" alt="Olly and his wife in Cape Town" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">2 · Cape Town</div>
+        </div>
+        <div class="car-item" data-caption="I&#39;ve coached over 1,000 people full-time since 2016 across fitness, health,|nervous system regulation and conscious lifestyle transformation.">
+          <img src="who am i images/Gherkin.JPG" style="object-position:8% 50%;" alt="Olly speaking at the Gherkin in London" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">3 · Gherkin talk</div>
+        </div>
+        <div class="car-item" data-caption="I&#39;ve always had a keen interest in neuroscience, physiology and conscious transformation.">
+          <img src="who am i images/Podcast.jpg" alt="Olly on a podcast" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">4 · Podcast</div>
+        </div>
+        <div class="car-item" data-caption="Happily married husband who wants people to experience the same joy|after meeting someone in a natural way.">
+          <img src="who am i images/wife.JPG" alt="Olly and his wife on their wedding day" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">5 · Wedding</div>
+        </div>
+        <div class="car-item" data-caption="This system is built as a result of all my coaching, professional and personal experience.">
+          <img src="how to attract a committed relationship images/Wife.png" alt="Olly and his wife together" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">6 · You two, everyday life</div>
+        </div>
+      </div>
+      <button type="button" class="car-btn car-next" aria-label="Next photo">&#8250;</button>
+      </div>
+      <span class="eyebrow">Who I Am</span>
+      <h2 class="step-title">Hi, I'm Olly</h2>
+      <!-- This line changes with each photo: it shows the current photo's data-caption. -->
+      <div class="step-body step-body--one car-caption" id="whoCaption">I help people consciously attract high-quality relationships.</div>
     </div>
   </section>
 
@@ -397,6 +450,43 @@
 </div>
 
 <script>
+  // Photo carousels: click the photo to cross-fade to the next one (Olly
+  // moves through them himself while talking, so no auto-play). Loops back
+  // to the first after the last.
+  document.querySelectorAll('.photo-frame--carousel').forEach(frame => {
+    const imgs = frame.querySelectorAll('.car-item');
+    if (imgs.length < 2) return;
+    let i = 0;
+    // The caption under the title (same slide) follows the photo.
+    const inner = frame.closest('.step-inner');
+    const cap = inner.querySelector('.car-caption');
+    function show(n){
+      imgs[i].classList.remove('is-on');
+      i = (n + imgs.length) % imgs.length;
+      imgs[i].classList.add('is-on');
+      if (cap && imgs[i].dataset.caption){
+        cap.classList.add('is-fading');
+        const text = imgs[i].dataset.caption;
+        setTimeout(() => {
+          // "|" in a caption = a line break (hand-set lines, each narrower than the one above)
+          cap.innerHTML = '';
+          text.split('|').forEach(t => {
+            const line = document.createElement('span');
+            line.style.display = 'block';
+            line.textContent = t;
+            cap.appendChild(line);
+          });
+          cap.classList.remove('is-fading');
+        }, 450);
+      }
+    }
+    // Arrows either side, and the photo itself still moves forward.
+    frame.addEventListener('click', () => show(i + 1));
+    const prev = inner.querySelector('.car-prev'), next = inner.querySelector('.car-next');
+    if (prev) prev.addEventListener('click', () => show(i - 1));
+    if (next) next.addEventListener('click', () => show(i + 1));
+  });
+
   const stepsEl = document.getElementById('steps');
   const steps = document.querySelectorAll('.step');
   const dotsEl = document.getElementById('dots');

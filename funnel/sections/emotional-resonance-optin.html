@@ -1,5 +1,6 @@
 <title>How To Attract A Genuine And Committed Long-Term Relationship Using Emotional Resonance</title>
 
+<!-- LIVE OPT-IN (2026-10-26): video player + one button that opens a popup form. The old on-page form version is kept in emotional-resonance-optin-form-version.html. -->
 <!-- OPT-IN PAGE | Free video training "How To Use Emotional Resonance To Attract A Genuine, Committed Long-Term Relationship". Built 2026-10-23. -->
 <!-- Same simple format as belief-quiz-optin.html, styled to match heart-attractor-application.html. -->
 <!-- Flow: Reel -> ManyChat DM (RESONANCE) -> this page -> name + email to GHL (daily email list) -> redirect to the training (YouTube). -->
@@ -57,6 +58,50 @@
     font-size: clamp(16px, 1.8vw, 20px); line-height: 1.6; color: #E6DCF2;
     max-width: 620px; margin: 0 auto 34px; text-wrap: balance;
   }
+
+  /* video player (Olly, 2026-10-25): the training's thumbnail in a paused player, the centre of the page like most
+     video opt-ins. Tapping it takes people to the form. The thumbnail comes straight from YouTube. */
+  .ohc-video {
+    position: relative; display: block; width: 100%; max-width: 720px; margin: 0 auto 32px; padding: 0;
+    aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; cursor: pointer;
+    border: 1px solid rgba(225,166,255,.25); background: #000;
+    box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 90px rgba(217,70,239,.22);
+  }
+  .ohc-video img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ohc-video::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(transparent, rgba(0,0,0,.6)); }
+  .ohc-play {
+    position: absolute; left: 50%; top: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px; z-index: 2;
+    border-radius: 50%; background: rgba(255,255,255,.94); animation: ohcPulse 2.2s ease-out infinite;
+  }
+  .ohc-play::before { content: ''; position: absolute; left: 38px; top: 28px; border-left: 32px solid #d946ef; border-top: 20px solid transparent; border-bottom: 20px solid transparent; }
+  .ohc-bar { position: absolute; left: 24px; right: 24px; bottom: 20px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.35); z-index: 2; }
+  .ohc-bar::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 12%; border-radius: 3px; background: #d946ef; }
+  .ohc-video:hover .ohc-play { transform: scale(1.06); }
+  @keyframes ohcPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.45), 0 8px 30px rgba(0,0,0,.35); }
+    70%  { box-shadow: 0 0 0 22px rgba(255,255,255,0), 0 8px 30px rgba(0,0,0,.35); }
+    100% { box-shadow: 0 0 0 0 rgba(255,255,255,0), 0 8px 30px rgba(0,0,0,.35); }
+  }
+  /* one button on the page; the form opens in a popup (Olly, 2026-10-26) */
+  .ohc-cta { max-width: 520px; margin-top: 0; padding: 20px 28px; font-size: 17px; }
+  .ohc-modal {
+    position: fixed; inset: 0; z-index: 2147483000; display: none;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(10,5,16,.78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font-family: 'Poppins', sans-serif; color: #ffffff; -webkit-font-smoothing: antialiased;
+  }
+  .ohc-modal.ohc-open { display: flex; animation: ohcFade .2s ease; }
+  .ohc-modal *, .ohc-modal *::before, .ohc-modal *::after { box-sizing: border-box; }
+  .ohc-modal .ohc-card { position: relative; max-height: calc(100vh - 40px); overflow-y: auto; background: #1a0b24; animation: ohcRise .25s ease; }
+  .ohc-mtitle { font-size: 22px; font-weight: 800; line-height: 1.25; margin: 0 34px 6px 0; }
+  .ohc-mnote { font-size: 14px; line-height: 1.5; color: #E6DCF2; margin: 0 0 20px; }
+  .ohc-x {
+    position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(225,166,255,.25); background: transparent; color: #E6DCF2; font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .ohc-x:hover { border-color: #d946ef; color: #ffffff; }
+  @keyframes ohcFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes ohcRise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
 
   /* card (same look as the application form) */
   .ohc-card {
@@ -132,6 +177,10 @@
     .ohc-h1-mob > span { display: block; white-space: nowrap; }
     .ohc-h1-mob > span > span { display: inline; }
     .ohc-sub { font-size: 15px; margin-bottom: 18px; }
+    .ohc-video { border-radius: 14px; margin-bottom: 18px; }
+    .ohc-play { width: 68px; height: 68px; margin: -34px 0 0 -34px; }
+    .ohc-play::before { left: 27px; top: 20px; border-left-width: 23px; border-top-width: 14px; border-bottom-width: 14px; }
+    .ohc-bar { left: 14px; right: 14px; bottom: 12px; height: 4px; }
     .ohc-card { padding: 18px 16px 16px; border-radius: 20px; }
     .ohc-row { gap: 10px; }
     .ohc-field { margin-bottom: 12px; }
@@ -139,6 +188,12 @@
     .ohc-input { padding: 12px 14px; }
     .ohc-btn { padding: 16px; font-size: 15px; }
     .ohc-trust { margin-top: 18px; font-size: 13px; gap: 8px 18px; }
+    .ohc-cta { padding: 18px 20px; font-size: 15px; }
+    /* phone: popup sits near the top so the keyboard doesn't cover the fields */
+    .ohc-modal { align-items: flex-start; padding: 6vh 12px 12px; }
+    .ohc-modal .ohc-card { padding: 22px 16px 18px; }
+    .ohc-mtitle { font-size: 19px; }
+    .ohc-mnote { margin-bottom: 16px; }
   }
 </style>
 
@@ -155,31 +210,13 @@
     </h1>
     <p class="ohc-sub">Without doing more inner work or learning more dating rules.</p>
 
-    <div class="ohc-card">
-      <!-- a div, not a <form>: GHL intercepts real form tags -->
-      <div id="ohcForm">
-        <div class="ohc-row">
-          <div class="ohc-field">
-            <label class="ohc-label" for="ohc_fname">First Name</label>
-            <input class="ohc-input" type="text" id="ohc_fname" autocomplete="given-name" placeholder="First name">
-          </div>
-          <div class="ohc-field">
-            <label class="ohc-label" for="ohc_lname">Last Name</label>
-            <input class="ohc-input" type="text" id="ohc_lname" autocomplete="family-name" placeholder="Last name">
-          </div>
-        </div>
-        <div class="ohc-field">
-          <label class="ohc-label" for="ohc_email">Email Address</label>
-          <input class="ohc-input" type="text" id="ohc_email" autocomplete="email" inputmode="email" placeholder="you@example.com">
-        </div>
-        <button type="button" class="ohc-btn" id="ohcBtn">Watch The Free Training</button>
-        <div class="ohc-error" id="ohcError">Please add your first name and a valid email address.</div>
-      </div>
-      <div class="ohc-done" id="ohcDone">
-        <h2>You're In <span class="ohc-grad">&#10084;</span></h2>
-        <p>Taking you to the training on YouTube now…</p>
-      </div>
-    </div>
+    <button type="button" class="ohc-video" id="ohcVideo" aria-label="Watch the free training">
+      <img src="https://i.ytimg.com/vi/IneemXUd7Nw/maxresdefault.jpg" alt="" loading="eager">
+      <span class="ohc-play"></span>
+      <span class="ohc-bar"></span>
+    </button>
+
+    <button type="button" class="ohc-btn ohc-cta" id="ohcOpen" aria-haspopup="dialog">Watch The Free Training</button>
 
     <div class="ohc-trust">
       <span>100% free</span>
@@ -195,6 +232,38 @@
     </nav>
     <p class="ohc-footer-copy">&copy; 2026 Olly Henson Coaching. All rights reserved.</p>
   </footer>
+</div>
+
+<!-- The popup. Moved to <body> when opened, because a fixed popup inside .ohc-page (which uses transform) wouldn't cover the screen. -->
+<div class="ohc-modal" id="ohcModal" role="dialog" aria-modal="true" aria-labelledby="ohcMTitle">
+    <div class="ohc-card">
+      <button type="button" class="ohc-x" id="ohcClose" aria-label="Close">&times;</button>
+      <!-- a div, not a <form>: GHL intercepts real form tags -->
+      <div id="ohcForm">
+        <p class="ohc-mtitle" id="ohcMTitle">Where should I send the training?</p>
+        <p class="ohc-mnote">Pop your details in and you'll go straight to the video.</p>
+        <div class="ohc-row">
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_fname">First Name</label>
+            <input class="ohc-input" type="text" id="ohc_fname" autocomplete="given-name" placeholder="First name">
+          </div>
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_lname">Last Name</label>
+            <input class="ohc-input" type="text" id="ohc_lname" autocomplete="family-name" placeholder="Last name">
+          </div>
+        </div>
+        <div class="ohc-field">
+          <label class="ohc-label" for="ohc_email">Email Address</label>
+          <input class="ohc-input" type="text" id="ohc_email" autocomplete="email" inputmode="email" placeholder="you@example.com">
+        </div>
+        <button type="button" class="ohc-btn" id="ohcBtn">Watch Now</button>
+        <div class="ohc-error" id="ohcError">Please add your first name and a valid email address.</div>
+      </div>
+      <div class="ohc-done" id="ohcDone">
+        <h2>You're In <span class="ohc-grad">&#10084;</span></h2>
+        <p>Taking you to the training on YouTube now…</p>
+      </div>
+    </div>
 </div>
 
 <script>
@@ -233,6 +302,31 @@
     try { navigator.sendBeacon('https://hub.ollyhenson.com/api/track', ['optin', src || '(direct)', med || '', con || ''].join('|')); } catch(e){}
   })();
 
+  // The button and the player both open the popup form (the video itself is on YouTube, after they opt in).
+  var modal = $('ohcModal'), lastFocus = null, bodyOverflow = '';
+  function openForm(){
+    if (modal.parentNode !== document.body) document.body.appendChild(modal);
+    lastFocus = document.activeElement;
+    bodyOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden';
+    modal.classList.add('ohc-open');
+    setTimeout(function(){ try { $('ohc_fname').focus({ preventScroll: true }); } catch(e){ $('ohc_fname').focus(); } }, 60);
+  }
+  function closeForm(){
+    if ($('ohcBtn').disabled) return; // sending: stay put
+    modal.classList.remove('ohc-open');
+    document.body.style.overflow = bodyOverflow;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  $('ohcOpen').addEventListener('click', openForm);
+  $('ohcVideo').addEventListener('click', openForm);
+  $('ohcClose').addEventListener('click', closeForm);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeForm(); });
+  document.addEventListener('keydown', function(e){
+    if (!modal.classList.contains('ohc-open')) return;
+    if (e.key === 'Escape') closeForm();
+    if (e.key === 'Enter' && e.target && e.target.classList && e.target.classList.contains('ohc-input')) { e.preventDefault(); $('ohcBtn').click(); }
+  });
+
   $('ohcBtn').addEventListener('click', function(e){
     e.preventDefault();
     var first = $('ohc_fname').value.trim(), last = $('ohc_lname').value.trim(), email = $('ohc_email').value.trim();
@@ -261,7 +355,7 @@
     }).then(go).catch(function(){
       if (sent) return;
       sent = true;
-      btn.disabled = false; btn.textContent = 'Watch The Free Training';
+      btn.disabled = false; btn.textContent = 'Watch Now';
       $('ohcError').textContent = 'Something went wrong. Please try again.';
       $('ohcError').style.display = 'block';
     });

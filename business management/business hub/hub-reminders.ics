@@ -1,0 +1,36 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Olly Henson Coaching//Business Hub reminders//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:hub-monthly-update@ollyhenson.com
+DTSTAMP:20261026T120000Z
+DTSTART;TZID=Africa/Johannesburg:20261101T090000
+DTEND;TZID=Africa/Johannesburg:20261101T091500
+RRULE:FREQ=MONTHLY;BYMONTHDAY=1
+SUMMARY:Business Hub: log last month's numbers
+DESCRIPTION:Open the Hub's To-do tab and work down Updates due: YouTube subscribers and views\, TikTok followers and views\, Instagram followers\, MRR members\, calls and sales (then lock each month). https://hub.ollyhenson.com/#todo
+URL:https://hub.ollyhenson.com/#todo
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Business Hub: log last month's numbers
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:hub-weekly-update@ollyhenson.com
+DTSTAMP:20261026T120000Z
+DTSTART;TZID=Africa/Johannesburg:20261102T090000
+DTEND;TZID=Africa/Johannesburg:20261102T091500
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:Business Hub: weekly update
+DESCRIPTION:Open the Hub's To-do tab: press Pull from GHL\, add the views for last week's Reels\, check follow-ups and your to-dos. https://hub.ollyhenson.com/#todo
+URL:https://hub.ollyhenson.com/#todo
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Business Hub: weekly update
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

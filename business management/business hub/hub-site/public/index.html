@@ -568,6 +568,22 @@
   }
   .bdinput:focus{ outline:none; border-color: var(--accent-2); }
   .bdlist{ display:flex; flex-direction:column; gap:12px; }
+  .tdadd{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .tdinput{ flex:1 1 240px; min-width:0; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:10px; padding:10px 12px; font:inherit; font-size:14px; }
+  .tdwho{ background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:10px; padding:8px 10px; font:inherit; font-size:13px; }
+  .tdlist{ display:flex; flex-direction:column; gap:8px; }
+  .tditem{ display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border-soft); border-radius:10px; padding:8px 10px; }
+  .tditem input[type=checkbox]{ width:18px; height:18px; flex:none; accent-color: var(--accent); cursor:pointer; }
+  .tditem .tdtext{ flex:1; min-width:0; background:transparent; border:0; color:var(--text); font:inherit; font-size:14px; line-height:1.45; padding:4px 0; resize:none; overflow:hidden; min-height:22px; }
+  .tabbtn[data-tab="braindump"]{ white-space:nowrap; }
+  .tditem .tdtext:focus{ outline:none; }
+  .tditem.done .tdtext{ text-decoration:line-through; color:var(--text-muted); }
+  .tdtag{ flex:none; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:3px 8px; border-radius:20px; cursor:pointer; border:1px solid var(--border-soft); color:var(--text-muted); background:var(--surface-2); }
+  .tdtag.us{ color:#8fb0f0; border-color:rgba(140,170,240,.45); background:rgba(140,170,240,.12); }
+  .tdup{ flex:none; background:none; border:0; color:var(--text-muted); cursor:pointer; font-size:14px; padding:2px 4px; }
+  .tdup:hover{ color:var(--text); }
+  .tddone{ margin-top:12px; }
+  .tddone summary{ cursor:pointer; color:var(--text-muted); font-size:12.5px; margin-bottom:8px; }
   .bdcard{
     background: var(--surface);
     border:1px solid var(--border-soft);
@@ -802,6 +818,11 @@
   .statusbtn:hover{ border-color: var(--accent); color: var(--text); }
   .statusbtn.draft.active{ background: rgba(224,177,104,.16); color: var(--warn); border-color: rgba(224,177,104,.4); }
   .statusbtn.published.active{ background: rgba(143,208,168,.16); color: var(--good); border-color: rgba(143,208,168,.4); }
+  /* Reels: Draft / Recorded / Published (Olly, 2026-10-26). Smaller buttons so all three fit where two did on a phone. */
+  .statustoggle.three{ gap:4px; }
+  .statustoggle.three .statusbtn{ padding:4px 8px; font-size:10px; letter-spacing:.02em; }
+  .statusbtn.recorded.active{ background: rgba(140,170,240,.16); color: #8fb0f0; border-color: rgba(140,170,240,.45); }
+  .calitem.recorded .calitem-dot, .calitem-dot.recorded{ background: #8fb0f0; }
   .storytype{
     font-size:13px; padding:6px 8px; border-radius:6px;
     border:1px solid var(--border-soft); background: var(--surface-2);
@@ -836,6 +857,17 @@
   @media (max-width: 700px){ .salessel{ font-size:16px; } }
   /* Overview tab */
   .ovsub{ font-size:11.5px; color: var(--text-muted); margin-top:6px; }
+  .ovtable{ width:100%; border-collapse:collapse; font-size:13px; min-width:560px; }
+  .ovtable th{ text-align:right; font-size:11px; font-weight:600; color: var(--text-muted); text-transform:uppercase; letter-spacing:.03em; padding:8px 10px; border-bottom:1px solid var(--border-soft); }
+  .ovtable td{ text-align:right; padding:8px 10px; border-bottom:1px solid var(--border-soft); font-variant-numeric: tabular-nums; }
+  .ovtable th:first-child, .ovtable td:first-child{ text-align:left; }
+  .ovtable tr.total td{ font-weight:700; border-bottom:0; }
+  .ovtablewrap{ overflow-x:auto; margin-bottom:26px; border:1px solid var(--border-soft); border-radius:12px; background: var(--surface); }
+  .duelist{ display:flex; flex-direction:column; gap:8px; margin-bottom:26px; }
+  .dueitem{ display:flex; align-items:center; gap:12px; background: var(--surface); border:1px solid var(--border-soft); border-left:3px solid var(--warn); border-radius:10px; padding:10px 12px; font-size:13.5px; }
+  .dueitem span{ flex:1; min-width:0; }
+  .dueitem button{ flex:none; }
+  .dueok{ color: var(--text-muted); font-size:12.5px; font-style:italic; margin-bottom:26px; }
   #ovBody .kpigrid{ margin-bottom:26px; }
   .dayitem-move{
     flex-shrink:0;
@@ -943,6 +975,10 @@
   .capttpl textarea::placeholder{ color: var(--text-muted); }
   .capttpl .rowdel{ padding-top:6px; }
   .captionchips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .yttpl{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+  .yttpl-row{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .yttpl-row input{ flex:1 1 180px; min-width:0; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:7px 10px; font:inherit; font-size:13px; }
+  .yttpl-label{ font-size:11px; font-weight:600; color: var(--text-muted); }
   .captionchip{
     background: var(--surface-2);
     color: var(--text-body);
@@ -958,6 +994,10 @@
     white-space:nowrap;
   }
   .captionchip:hover{ border-color: var(--accent); color: var(--text); }
+  .captionchip[aria-pressed="true"]{ background: var(--accent); border-color: var(--accent); color:#fff; font-weight:600; }
+  .capgrid{ display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+  .capline{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+  .capline-label{ font-size:11px; font-weight:600; color: var(--text-muted); min-width:92px; }
   td input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
   td.month{ font-weight:700; color: var(--text); }
   td.rowdel{text-align:center;}
@@ -1195,7 +1235,7 @@
   </button>
   <nav class="tabbar" id="tabBar" role="tablist">
     <button class="tabbtn" data-tab="overview" role="tab" aria-selected="false">Overview</button>
-    <button class="tabbtn" data-tab="braindump" role="tab" aria-selected="false">Brain Dump</button>
+    <button class="tabbtn" data-tab="braindump" role="tab" aria-selected="false">To-do</button>
     <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false">MRR</button>
     <button class="tabbtn" data-tab="sales" role="tab" aria-selected="false">Sales</button>
     <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Reels</button>
@@ -1203,6 +1243,7 @@
     <button class="tabbtn" data-tab="instagram" role="tab" aria-selected="false">Instagram</button>
     <button class="tabbtn" data-tab="email" role="tab" aria-selected="false">Email</button>
     <button class="tabbtn" data-tab="youtube" role="tab" aria-selected="false">YouTube</button>
+    <button class="tabbtn" data-tab="tiktok" role="tab" aria-selected="false">TikTok</button>
     <button class="tabbtn" data-tab="delivery" role="tab" aria-selected="false">Delivery</button>
   </nav>
 
@@ -1347,7 +1388,7 @@
         <button class="calnavbtn calToday" id="calToday">Today</button>
       </div>
     </div>
-    <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
+    <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot recorded"></span>Recorded</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
     <div class="calendar" id="calendar"><div class="caldow">Mon</div><div class="caldow">Tue</div><div class="caldow">Wed</div><div class="caldow">Thu</div><div class="caldow">Fri</div><div class="caldow">Sat</div><div class="caldow">Sun</div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">31</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">1</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">2</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">3</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="Why you can't stop doubting if you're going to manifest love ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">Why you can't stop doubting if you're going to manifest love ♥️</span></div><div class="calitem published" title="How long should you wait before giving up on manifesting love? ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How long should you wait before giving up on manifesting love? ♥️</span></div><div class="calitem published" title="If you're still doubting that you can manifest love - you MUST change this today ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you're still doubting that you can manifest love - you MUST change this today ♥️</span></div><div class="calitem published" title="How manifest love in your life - without the doubts ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How manifest love in your life - without the doubts ♥️</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">4</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="If you are worried time is running out to manifest love - do this today ❤️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you are worried time is running out to manifest love - do this today ❤️</span></div><div class="calitem published" title="How to manifest love into your life - scientifically 🧪  — Published"><span class="calitem-dot"></span><span class="calitem-label">How to manifest love into your life - scientifically 🧪 </span></div><div class="calitem published" title="6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔 — Published"><span class="calitem-dot"></span><span class="calitem-label">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</span></div><div class="calitem published" title="How to attract a really great partner ♥️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">How to attract a really great partner ♥️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">5</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem published" title="How I manifested my dream partner ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How I manifested my dream partner ♥️</span></div><div class="calitem published" title="Two REALLY important steps for meeting and attracting your special person ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">Two REALLY important steps for meeting and attracting your special person ❤️✅</span></div><div class="calitem published" title="This type of person always attracts the partner that they want ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">This type of person always attracts the partner that they want ❤️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">6</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="The real reason that you haven’t manifested love yet 💔 — Published"><span class="calitem-dot"></span><span class="calitem-label">The real reason that you haven’t manifested love yet 💔</span></div><div class="calitem published" title="Manifesting harder pushes love away - 👉here's why  — Published"><span class="calitem-dot"></span><span class="calitem-label">Manifesting harder pushes love away - 👉here's why </span></div><div class="calitem published" title="It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this — Published"><span class="calitem-dot"></span><span class="calitem-label">It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this</span></div><div class="calitem published" title="A guaranteed system for attracting the relationship that you want  — Published"><span class="calitem-dot"></span><span class="calitem-label">A guaranteed system for attracting the relationship that you want </span></div></div></div><div class="calcell today"><div class="caldatehead"><span class="caldatenum">7</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem draft" title="I can only help these people manifest a great relationship — Draft"><span class="calitem-dot"></span><span class="calitem-label">I can only help these people manifest a great relationship</span></div><div class="calitem draft" title="You don’t need a manifestation technique to attract someone you love - you need this — Draft"><span class="calitem-dot"></span><span class="calitem-label">You don’t need a manifestation technique to attract someone you love - you need this</span></div><div class="calitem draft" title="How to use your nervous system to attract your dream partner ♥️✅ — Draft"><span class="calitem-dot"></span><span class="calitem-label">How to use your nervous system to attract your dream partner ♥️✅</span></div><div class="calitem draft" title="The 3-Step System That Will Attract Your Dream Partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">The 3-Step System That Will Attract Your Dream Partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">8</span><span class="calcount short">1/3</span></div><div class="calitems"><div class="calitem draft" title="Why you need to regulate your nervous system to attract your partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">Why you need to regulate your nervous system to attract your partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">9</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">10</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">11</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">12</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">13</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">14</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">15</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">16</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">17</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">18</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">19</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">20</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">21</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">22</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">23</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">24</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">25</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">26</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">27</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">28</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">29</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">30</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">1</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">2</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">4</span></div><div class="calitems"></div></div></div>
 
     <p class="section-label" style="margin-top:40px;">Outliers</p>
@@ -1586,6 +1627,24 @@
       </div>
     </div>
 
+    <p class="section-label" style="margin-top:40px;">Emails that sent people to apply</p>
+    <div class="tablewrap">
+      <table style="min-width:560px;">
+        <thead>
+          <tr>
+            <th>Email (subject)</th>
+            <th>Application page visits</th>
+            <th>Applied</th>
+            <th class="calc">Application rate</th>
+          </tr>
+        </thead>
+        <tbody id="emailApplyTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">For the month picked above. Uses the application link from the Content Idea Generator's Email tab (Copy application link), which tags the visit with the email's subject. Visits come from the Hub's own counter and update every time you open the Hub; Applied comes from GHL, so press Pull from GHL for the latest.</span>
+      </div>
+    </div>
+
   </div>
 
   <div id="tab-youtube" class="tabpanel" hidden="">
@@ -1607,19 +1666,72 @@
     <p class="section-label">Shorts description</p>
     <span class="hint" style="display:block; margin:-6px 0 12px;">Paste into every Short. Links in Shorts descriptions aren't clickable, so it points people to the related video (set it to the training in YouTube Studio on a computer) and gives the short link to type.</span>
     <div class="chartcard" style="margin-bottom:20px;">
-      <textarea id="ytShortsDesc" readonly rows="14" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;">Watch the full free training: tap the video link on this Short.
+      <textarea id="ytShortsDesc" data-ytcopy="shorts" rows="14" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;">Watch the full free training: tap the video link on this Short.
 
 Done the inner work and still can't find the right person? The full training explains why and what to do instead (without more inner work or dating rules). 💜
 
 Or type this into your browser:
 ollyhenson.com/free-video-training
 
+💜 How close are you to love? Take The Love Scale, a free 2-minute check. Type this into your browser:
+ollyhenson.com/love
+
 I'm Olly. I help people consciously attract high-quality relationships. Happily married and coaching full-time since 2016.
 
 Instagram: @attractwitholly
 
 #shorts #attractlove #longtermrelationship #soulmate</textarea>
+      <div class="yttpl" data-yttpl="shorts"></div>
       <div style="margin-top:10px;"><button type="button" class="copybtn" id="ytShortsCopy">Copy description</button></div>
+    </div>
+
+    <p class="section-label">Training video description</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">For the full training video (and future long videos). Links work here, so line 2 goes straight to The Love Scale.</span>
+    <div class="chartcard" style="margin-bottom:20px;">
+      <textarea id="ytLongDesc" data-ytcopy="long" rows="16" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;">➡️ Apply for The Heart Attractor Program here: https://ollyhenson.com/heartattractor
+💜 How close are you to love? Take The Love Scale, a free 2-minute check: https://ollyhenson.com/lovescale
+
+You've done the inner work.
+And you still can't seem to find the right person.
+
+This in-depth training explains why.
+And what you need to do to turn things around (without more inner work or learning a million different dating rules). 💜
+
+In this video you'll learn:
+
+• Why more inner work hasn't brought the right person in
+• What Emotional Resonance is and why it matters
+• How to find the emotional state that attracts a high-quality relationship
+• How to use it every day to attract the perfect person into your world
+
+This is for people who want to find someone to settle down and build a life with.
+
+🤝 WANT MY HELP?
+
+The Heart Attractor Program will help you attract a high-quality long-term relationship with someone who's genuine and committed.
+
+➡️ Apply here: https://ollyhenson.com/heartattractor
+
+💜 NOT SURE WHERE YOU ARE YET?
+
+Take The Love Scale, a free 2-minute check that shows how close you are to love right now: https://ollyhenson.com/lovescale
+
+👋 ABOUT ME
+
+I'm Olly. I help people consciously attract high-quality relationships.
+
+I've coached over 1,000 people full-time since 2016 across fitness, health, nervous system regulation and conscious lifestyle transformation.
+
+I'm happily married and want everyone to experience the same joy after meeting someone in a natural way.
+
+📲 CONNECT WITH ME
+
+Instagram: @attractwitholly
+https://www.instagram.com/attractwitholly
+
+#attractlove #longtermrelationship #lifepartner #soulmate</textarea>
+      <div class="yttpl" data-yttpl="long"></div>
+      <div style="margin-top:10px;"><button type="button" class="copybtn" id="ytLongCopy">Copy description</button></div>
     </div>
 
     <p class="section-label">This month at a glance</p>
@@ -1658,6 +1770,94 @@ Instagram: @attractwitholly
       <div class="tablefoot">
         <span class="hint">Growth compares each month with the one before. It's worked out for you, not typed in.</span>
         <button class="addbtn" id="ytAddMonth">+ Add next month</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="tab-tiktok" class="tabpanel" hidden="">
+
+    <div class="settingsbar">
+      <div class="field-inline">
+        <label for="tkPeriodSel">Viewing</label>
+        <select id="tkPeriodSel"></select>
+      </div>
+      <div class="divider"></div>
+      <div class="field-inline">
+        <label for="tkBaseline">Starting followers</label>
+        <input type="number" min="0" id="tkBaseline" value="0" style="width:110px;">
+      </div>
+      <div class="divider"></div>
+      <span class="hint">Your Reels, reposted on TikTok. Everything below is ready to copy and you can edit any of it (press Save to keep changes). Monthly numbers come from TikTok's Business Suite → Analytics.</span>
+    </div>
+
+    <p class="section-label">Caption template</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">Swap the first line for the Reel's header (the same hook you say first). No "comment VIDEO": TikTok has no ManyChat, so point people to the link in your profile. 3 to 5 hashtags is plenty on TikTok.</span>
+    <div class="chartcard" style="margin-bottom:20px;">
+      <textarea data-tkcopy="caption" rows="10" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;"></textarea>
+      <div style="margin-top:10px;"><button type="button" class="copybtn" data-tkcopybtn="caption">Copy</button></div>
+    </div>
+    <p class="section-label">Bio</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">TikTok bios are capped at 80 characters.</span>
+    <div class="chartcard" style="margin-bottom:20px;">
+      <textarea data-tkcopy="bio" rows="3" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;"></textarea>
+      <div style="margin-top:10px;"><button type="button" class="copybtn" data-tkcopybtn="bio">Copy</button></div>
+    </div>
+    <p class="section-label">Profile link</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">Paste into Edit profile → Website. If TikTok hasn't unlocked the Website field, put the short address (ollyhenson.com/tiktok, once the GHL redirect is set up) in your bio as text instead. Visits show in the Sales tab traffic as TikTok.</span>
+    <div class="chartcard" style="margin-bottom:20px;">
+      <textarea data-tkcopy="link" rows="3" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;"></textarea>
+      <div style="margin-top:10px;"><button type="button" class="copybtn" data-tkcopybtn="link">Copy</button></div>
+    </div>
+    <p class="section-label">What to say at the end of a video</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">Pick one per video. Works on Shorts too.</span>
+    <div class="chartcard" style="margin-bottom:20px;">
+      <textarea data-tkcopy="cta" rows="8" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;"></textarea>
+      <div style="margin-top:10px;"><button type="button" class="copybtn" data-tkcopybtn="cta">Copy</button></div>
+    </div>
+    <p class="section-label">Posting checklist</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;"></span>
+    <div class="chartcard" style="margin-bottom:20px;">
+      <textarea data-tkcopy="checklist" rows="8" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;"></textarea>
+      <div style="margin-top:10px;"><button type="button" class="copybtn" data-tkcopybtn="checklist">Copy</button></div>
+    </div>
+
+    <p class="section-label">This month at a glance</p>
+    <div class="kpigrid" id="tkKpiGrid"></div>
+
+    <p class="section-label">Trends</p>
+    <div class="chartsgrid">
+      <div class="chartcard">
+        <h3>Followers</h3>
+        <div class="chartsub">Total at month end</div>
+        <div class="chartwrap"><svg class="chart" id="chartTKSubs"></svg><div class="chart-tooltip" id="ttTKSubs"></div></div>
+      </div>
+      <div class="chartcard">
+        <h3>Views</h3>
+        <div class="chartsub">Views across the month</div>
+        <div class="chartwrap"><svg class="chart" id="chartTKViews"></svg><div class="chart-tooltip" id="ttTKViews"></div></div>
+      </div>
+    </div>
+
+    <p class="section-label">Monthly log</p>
+    <div class="tablewrap">
+      <table style="min-width:620px;">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Month</th>
+            <th>Followers</th>
+            <th>Views</th>
+            <th class="calc">Follower growth</th>
+            <th class="calc">Views vs. prev. month</th>
+            <th class="rowdel"></th>
+          </tr>
+        </thead>
+        <tbody id="tkTbody"></tbody>
+      </table>
+      <div class="tablefoot">
+        <span class="hint">Growth compares each month with the one before. It's worked out for you, not typed in.</span>
+        <button class="addbtn" id="tkAddMonth">+ Add next month</button>
       </div>
     </div>
 
@@ -1858,13 +2058,56 @@ Instagram: @attractwitholly
       <span class="hint" id="ovGhlStatus">A summary of the other tabs. Pull from GHL updates page views, leads, applicants and the email list; everything else comes from what you log in the other tabs.</span>
     </div>
 
+    <!-- Application links to send by hand (Olly, 2026-10-26): when someone asks "how can I work with you?" in a DM or an email reply. -->
+    <p class="section-label">Application links to send</p>
+    <span class="hint" style="display:block; margin:-6px 0 12px;">When someone messages you or replies to an email asking how to work with you, copy the one for where they messaged you. Applications from these show up as that source in the HA UTM fields.</span>
+    <div class="chartcard" style="margin-bottom:24px;">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:8px 0;">
+          <span style="flex:0 0 140px; font-weight:600;">Instagram DM</span>
+          <input type="text" readonly value="https://ollyhenson.com/apply?utm_source=instagram&amp;utm_medium=dm&amp;utm_campaign=heart_attractor" data-applink style="flex:1 1 260px; min-width:0; box-sizing:border-box; background:var(--surface); color:var(--text-muted); border:1px solid var(--border-soft); border-radius:8px; padding:8px 10px; font:inherit; font-size:13px;">
+          <button type="button" class="copybtn" data-applinkcopy>Copy</button>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:8px 0; border-top:1px solid var(--border-soft);">
+          <span style="flex:0 0 140px; font-weight:600;">Email reply</span>
+          <input type="text" readonly value="https://ollyhenson.com/apply?utm_source=email&amp;utm_medium=reply&amp;utm_campaign=heart_attractor" data-applink style="flex:1 1 260px; min-width:0; box-sizing:border-box; background:var(--surface); color:var(--text-muted); border:1px solid var(--border-soft); border-radius:8px; padding:8px 10px; font:inherit; font-size:13px;">
+          <button type="button" class="copybtn" data-applinkcopy>Copy</button>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:8px 0; border-top:1px solid var(--border-soft);">
+          <span style="flex:0 0 140px; font-weight:600;">Facebook message</span>
+          <input type="text" readonly value="https://ollyhenson.com/apply?utm_source=facebook&amp;utm_medium=dm&amp;utm_campaign=heart_attractor" data-applink style="flex:1 1 260px; min-width:0; box-sizing:border-box; background:var(--surface); color:var(--text-muted); border:1px solid var(--border-soft); border-radius:8px; padding:8px 10px; font:inherit; font-size:13px;">
+          <button type="button" class="copybtn" data-applinkcopy>Copy</button>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:8px 0; border-top:1px solid var(--border-soft);">
+          <span style="flex:0 0 140px; font-weight:600;">TikTok DM</span>
+          <input type="text" readonly value="https://ollyhenson.com/apply?utm_source=tiktok&amp;utm_medium=dm&amp;utm_campaign=heart_attractor" data-applink style="flex:1 1 260px; min-width:0; box-sizing:border-box; background:var(--surface); color:var(--text-muted); border:1px solid var(--border-soft); border-radius:8px; padding:8px 10px; font:inherit; font-size:13px;">
+          <button type="button" class="copybtn" data-applinkcopy>Copy</button>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:8px 0; border-top:1px solid var(--border-soft);">
+          <span style="flex:0 0 140px; font-weight:600;">WhatsApp</span>
+          <input type="text" readonly value="https://ollyhenson.com/apply?utm_source=whatsapp&amp;utm_medium=dm&amp;utm_campaign=heart_attractor" data-applink style="flex:1 1 260px; min-width:0; box-sizing:border-box; background:var(--surface); color:var(--text-muted); border:1px solid var(--border-soft); border-radius:8px; padding:8px 10px; font:inherit; font-size:13px;">
+          <button type="button" class="copybtn" data-applinkcopy>Copy</button>
+        </div>
+    </div>
+
     <div id="ovBody"></div>
 
   </div>
 
   <div id="tab-braindump" class="tabpanel" hidden="">
 
-    <p class="section-label">Brain dump</p>
+    <div id="tdDue"></div>
+    <!-- To-do (Olly, 2026-10-26): priority tasks, for Olly or shared with Claude. Brain dump stays underneath for loose ideas. -->
+    <p class="section-label">To-do</p>
+    <span class="hint" style="display:block; margin:-6px 0 14px;">Things to get done, in priority order. Tag each one Me or With Claude (stuff we're doing together). Tick it off when it's done; the arrow moves it up.</span>
+    <div class="tdadd">
+      <input type="text" id="tdInput" class="tdinput" placeholder="Add a to-do…">
+      <select id="tdWho" class="tdwho"><option value="me">Me</option><option value="us">With Claude</option></select>
+      <button class="addbtn" id="tdAdd">+ Add</button>
+    </div>
+    <div id="tdList" class="tdlist"></div>
+    <details class="tddone" id="tdDoneWrap"><summary id="tdDoneSum">Done</summary><div id="tdDone" class="tdlist"></div></details>
+
+    <p class="section-label" style="margin-top:36px;">Brain dump</p>
     <span class="hint" style="display:block; margin:-6px 0 20px;">One card per thought. Add a card whenever you need to get something out of your head. Newest on top. Edit any card in place, ✕ to clear it.</span>
 
     <div class="bdadd">
@@ -2627,6 +2870,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderEmailKPIs(rows);
     renderEmailTable(rows);
     renderEmailChart(rows);
+    renderEmailApply();
   }
 
   function renderEmailKPIs(rows){
@@ -3053,8 +3297,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       itemsWrap.className = "calitems";
       dayIdeas.slice(0, 4).forEach(function(idea){
         var it = document.createElement("div");
-        it.className = "calitem " + (idea.posted ? "published" : "draft");
-        it.title = idea.title + " — " + (idea.posted ? "Published" : "Draft");
+        it.className = "calitem " + (idea.posted ? "published" : idea.recorded ? "recorded" : "draft");
+        it.title = idea.title + " — " + (idea.posted ? "Published" : idea.recorded ? "Recorded" : "Draft");
         var dot = document.createElement("span");
         dot.className = "calitem-dot";
         var label = document.createElement("span");
@@ -3153,16 +3397,22 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       // stats tracking, ready to be picked up by the leaderboard once
       // it's also marked Saved there.
       var toggle = document.createElement("div");
-      toggle.className = "statustoggle";
+      toggle.className = "statustoggle three";
       var draftBtn = document.createElement("button");
       draftBtn.type = "button";
-      draftBtn.className = "statusbtn draft" + (!idea.posted ? " active" : "");
+      draftBtn.className = "statusbtn draft" + (!idea.posted && !idea.recorded ? " active" : "");
       draftBtn.textContent = "Draft";
+      // Recorded (2026-10-26): filmed but not posted yet. Stays off Video stats tracking like a draft.
+      var recBtn = document.createElement("button");
+      recBtn.type = "button";
+      recBtn.className = "statusbtn recorded" + (!idea.posted && idea.recorded ? " active" : "");
+      recBtn.textContent = "Recorded";
       var pubBtn = document.createElement("button");
       pubBtn.type = "button";
       pubBtn.className = "statusbtn published" + (idea.posted ? " active" : "");
       pubBtn.textContent = "Published";
       toggle.appendChild(draftBtn);
+      toggle.appendChild(recBtn);
       toggle.appendChild(pubBtn);
 
       var moveInput = document.createElement("input");
@@ -3185,25 +3435,66 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var captionWrap = document.createElement("div");
       captionWrap.className = "dayitem-caption";
 
-      var templates = (state.content.captionTemplates || []).filter(function(tpl){ return tpl && tpl.text; });
-      if (templates.length){
-        var chipRow = document.createElement("div");
-        chipRow.className = "captionchips";
-        templates.forEach(function(tpl){
-          var chip = document.createElement("button");
-          chip.type = "button";
-          chip.className = "captionchip";
+      // 1. Which call to action this Reel ended with (VIDEO or SCALE), saved on the idea.
+      // 2. Which platform you're posting to: fills that platform's caption for that offer.
+      // A saved caption template named e.g. "IG SCALE" or "TIKTOK VIDEO" overrides the built-in text.
+      var savedTpls = (state.content.captionTemplates || []).filter(function(tpl){ return tpl && tpl.text; });
+      var capGrid = document.createElement("div"); capGrid.className = "capgrid";
+      var offerLine = document.createElement("div"); offerLine.className = "capline";
+      var offerLbl = document.createElement("span"); offerLbl.className = "capline-label"; offerLbl.textContent = "This Reel's CTA";
+      offerLine.appendChild(offerLbl);
+      var platLine = document.createElement("div"); platLine.className = "capline";
+      var platLbl = document.createElement("span"); platLbl.className = "capline-label"; platLbl.textContent = "Caption for";
+      platLine.appendChild(platLbl);
+      var offerBtns = [], platBtns = [];
+      [["video", "VIDEO"], ["scale", "SCALE"]].forEach(function(o){
+        var bt = document.createElement("button"); bt.type = "button"; bt.className = "captionchip"; bt.textContent = o[1];
+        bt.setAttribute("aria-pressed", String((idea.offer || "video") === o[0]));
+        bt.addEventListener("click", function(){
+          idea.offer = o[0];
+          offerBtns.forEach(function(x){ x.setAttribute("aria-pressed", String(x === bt)); });
+          // keep the platform picked: refill its caption for the new offer
+          if (idea.capPlat) fillCaption(idea.capPlat);
+          markDirty();
+        });
+        offerBtns.push(bt); offerLine.appendChild(bt);
+      });
+      function fillCaption(plat){
+        var text = reelCaption(idea.offer || "video", plat, savedTpls).replace(/VIDEO TITLE GOES HERE/g, idea.title || "VIDEO TITLE GOES HERE");
+        idea.caption = text; idea.capPlat = plat;
+        captionArea.value = text;
+        platBtns.forEach(function(x){ x.setAttribute("aria-pressed", String(x.dataset.plat === plat)); });
+        markDirty();
+      }
+      [["instagram", "Instagram"], ["facebook", "Facebook"], ["tiktok", "TikTok"], ["youtube", "YouTube"]].forEach(function(pl){
+        var bt = document.createElement("button"); bt.type = "button"; bt.className = "captionchip"; bt.textContent = pl[1];
+        bt.dataset.plat = pl[0]; bt.setAttribute("aria-pressed", String(idea.capPlat === pl[0]));
+        bt.title = "Fill the " + pl[1] + " caption for this Reel's CTA";
+        bt.addEventListener("click", function(){ fillCaption(pl[0]); });
+        platBtns.push(bt); platLine.appendChild(bt);
+      });
+      capGrid.appendChild(offerLine); capGrid.appendChild(platLine);
+      // any other saved templates (not the platform ones) stay available as chips
+      var extra = savedTpls.filter(function(tpl){ return !REEL_CAP_NAME.test(String(tpl.name || "").trim()); });
+      if (extra.length){
+        var exLine = document.createElement("div"); exLine.className = "capline";
+        var exLbl = document.createElement("span"); exLbl.className = "capline-label"; exLbl.textContent = "Other templates";
+        exLine.appendChild(exLbl);
+        extra.forEach(function(tpl){
+          var chip = document.createElement("button"); chip.type = "button"; chip.className = "captionchip";
           chip.textContent = tpl.name && tpl.name.trim() ? tpl.name : (tpl.text.length > 40 ? tpl.text.slice(0,40)+"…" : tpl.text);
           chip.title = tpl.text;
           chip.addEventListener("click", function(){
-            idea.caption = tpl.text;
-            captionArea.value = tpl.text;
+            var text = tpl.text.replace(/VIDEO TITLE GOES HERE/g, idea.title || "VIDEO TITLE GOES HERE");
+            idea.caption = text; idea.capPlat = ""; captionArea.value = text;
+            platBtns.forEach(function(x){ x.setAttribute("aria-pressed", "false"); });
             markDirty();
           });
-          chipRow.appendChild(chip);
+          exLine.appendChild(chip);
         });
-        captionWrap.appendChild(chipRow);
+        capGrid.appendChild(exLine);
       }
+      captionWrap.appendChild(capGrid);
 
       var captionArea = document.createElement("textarea");
       captionArea.placeholder = "Caption for this reel (optional)…";
@@ -3265,8 +3556,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         copyToClipboard(idea.caption || "", copyCaptionBtn);
       });
 
-      function setStatus(published){
-        if (published === idea.posted) return;
+      function setStatus(published, recorded){
+        if (published === idea.posted && !!recorded === !!idea.recorded) return;
+        idea.recorded = !!recorded || (published && !!idea.recorded);
+        if (published === idea.posted){ markDirty(); renderDayModal(); renderCalendar(); return; }
         idea.posted = published;
         row.className = "dayitem" + (idea.posted ? " posted" : "");
         // This is the one and only trigger that adds a video to Video
@@ -3283,8 +3576,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         renderCalendar();
         renderOutliers();
       }
-      draftBtn.addEventListener("click", function(){ setStatus(false); });
-      pubBtn.addEventListener("click", function(){ setStatus(true); });
+      draftBtn.addEventListener("click", function(){ setStatus(false, false); });
+      recBtn.addEventListener("click", function(){ setStatus(false, true); });
+      pubBtn.addEventListener("click", function(){ setStatus(true, true); });
 
       // Once an idea has a title+date it disappears from the Video ideas
       // list (it lives on the calendar instead), so this is the only
@@ -3308,6 +3602,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // it needs a secure context and a real click to work, which this always
   // is, but never leave someone stuck with no way to grab the text.
   // YouTube tab: copy the Shorts description (2026-10-25)
+  document.querySelectorAll("[data-applinkcopy]").forEach(function(btn){
+    btn.addEventListener("click", function(){ copyToClipboard(btn.parentNode.querySelector("[data-applink]").value, btn); });
+  });
+  document.getElementById("ytLongCopy").addEventListener("click", function(){
+    copyToClipboard(document.getElementById("ytLongDesc").value, this);
+  });
   document.getElementById("ytShortsCopy").addEventListener("click", function(){
     copyToClipboard(document.getElementById("ytShortsDesc").value, this);
   });
@@ -4117,6 +4417,60 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return wrap;
   }
 
+  // ── To-do (2026-10-26): state.todos = [{ text, who:"me"|"us", done, ts, doneTs }] ──
+  function renderTodos(){
+    var open = document.getElementById("tdList"), donebox = document.getElementById("tdDone");
+    if (!open) return;
+    renderDue(document.getElementById("tdDue"), true);
+    open.innerHTML = ""; donebox.innerHTML = "";
+    var items = state.todos || [];
+    function row(t){
+      var d = document.createElement("div"); d.className = "tditem" + (t.done ? " done" : "");
+      var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!t.done; cb.setAttribute("aria-label", "Done");
+      cb.addEventListener("change", function(){ t.done = cb.checked; t.doneTs = cb.checked ? Date.now() : null; markDirty(); renderTodos(); });
+      // a textarea that grows, so long to-dos wrap instead of being cut off
+      var tx = document.createElement("textarea"); tx.rows = 1; tx.className = "tdtext"; tx.value = t.text;
+      // only size it when it's on screen (a hidden tab measures 0 and squashed the text, 2026-10-26)
+      var fit = function(){ if (!tx.offsetParent) return; tx.style.height = "auto"; tx.style.height = tx.scrollHeight + "px"; };
+      tx._fit = fit;
+      tx.addEventListener("input", function(){ t.text = tx.value; fit(); markDirty(); });
+      setTimeout(fit, 0);
+      var tag = document.createElement("button"); tag.type = "button"; tag.className = "tdtag" + (t.who === "us" ? " us" : "");
+      tag.textContent = t.who === "us" ? "With Claude" : "Me"; tag.title = "Switch between Me and With Claude";
+      tag.addEventListener("click", function(){ t.who = t.who === "us" ? "me" : "us"; markDirty(); renderTodos(); });
+      d.appendChild(cb); d.appendChild(tx); d.appendChild(tag);
+      if (!t.done){
+        var up = document.createElement("button"); up.type = "button"; up.className = "tdup"; up.textContent = "\u2191"; up.title = "Move up";
+        up.addEventListener("click", function(){
+          var i = items.indexOf(t);
+          var openIdx = items.map(function(x, k){ return x.done ? -1 : k; }).filter(function(k){ return k > -1; });
+          var pos = openIdx.indexOf(i); if (pos < 1) return;
+          var j = openIdx[pos - 1]; items[i] = items[j]; items[j] = t; markDirty(); renderTodos();
+        });
+        d.appendChild(up);
+      }
+      var del = document.createElement("button"); del.type = "button"; del.className = "rowdel-btn"; del.textContent = "\u2715"; del.title = "Remove";
+      del.addEventListener("click", function(){ items.splice(items.indexOf(t), 1); markDirty(); renderTodos(); });
+      d.appendChild(del);
+      return d;
+    }
+    var openItems = items.filter(function(t){ return !t.done; }), doneItems = items.filter(function(t){ return t.done; });
+    if (!openItems.length) open.innerHTML = '<p class="bdlist-empty">Nothing to do. Add one above.</p>';
+    openItems.forEach(function(t){ open.appendChild(row(t)); });
+    doneItems.sort(function(a, b){ return (b.doneTs || 0) - (a.doneTs || 0); }).forEach(function(t){ donebox.appendChild(row(t)); });
+    document.getElementById("tdDoneSum").textContent = "Done (" + doneItems.length + ")";
+    document.getElementById("tdDoneWrap").hidden = !doneItems.length;
+  }
+  function addTodo(){
+    var inp = document.getElementById("tdInput"), text = inp.value.trim();
+    if (!text){ inp.focus(); return; }
+    state.todos = state.todos || [];
+    state.todos.unshift({ text:text, who:document.getElementById("tdWho").value, done:false, ts:Date.now() });
+    inp.value = ""; markDirty(); renderTodos();
+  }
+  document.getElementById("tdAdd").addEventListener("click", addTodo);
+  document.getElementById("tdInput").addEventListener("keydown", function(e){ if (e.key === "Enter") addTodo(); });
+
   function renderBrainDump(){
     var list = state.brainDump.cards;
     var host = document.getElementById("bdList");
@@ -4686,6 +5040,132 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return list;
   }
 
+  // ── Overview helpers (2026-10-26) ─────────────────────────────────────
+  var OV_PAGES = [["optin", "Training opt-in page", "optins", "opted in"], ["scale", "The Love Scale", "scale", "took it"], ["apply", "Application page", "applied", "applied"]];
+  function ovViews(page, inPeriod){
+    var n = 0, pv = state.pageViews || {};
+    Object.keys(pv).forEach(function(m){ if (inPeriod(m)) n += pv[m][page] || 0; });
+    return n;
+  }
+  function ovGhlSum(field, inPeriod){
+    return ((state.ghlSources && state.ghlSources.rows) || []).reduce(function(a, r){ return a + (inPeriod(r.month) ? (Number(r[field]) || 0) : 0); }, 0);
+  }
+  // one row per traffic source: visits to each page (Hub counter) + sign-ups/applications/joins (GHL UTM fields)
+  function ovSourceRows(inPeriod){
+    var by = {};
+    // referral sites and UTM sources become one row per platform (youtube.com + youtube = YouTube)
+    function norm(src){
+      var k = String(src || "").toLowerCase().replace(/^(www\.|m\.|l\.|lm\.)/, "");
+      var map = { "youtube.com":"youtube", "youtu.be":"youtube", "instagram.com":"instagram", "facebook.com":"facebook", "fb.com":"facebook", "tiktok.com":"tiktok", "google.com":"google" };
+      return map[k] || k || "(unknown)";
+    }
+    function row(src){ var k = norm(src); return by[k] || (by[k] = { source:k, visits:0, optin:0, scale:0, apply:0, optins:0, scaleDone:0, applied:0, joined:0 }); }
+    var ps = state.pageSources || {};
+    Object.keys(ps).forEach(function(m){
+      if (!inPeriod(m)) return;
+      ["optin", "scale", "apply"].forEach(function(page){
+        var bySrc = ps[m][page] || {};
+        Object.keys(bySrc).forEach(function(k){ var r = row(k.split("|")[0]); r[page] += bySrc[k]; r.visits += bySrc[k]; });
+      });
+    });
+    ((state.ghlSources && state.ghlSources.rows) || []).forEach(function(g){
+      if (!inPeriod(g.month)) return;
+      var r = row(g.source); r.optins += g.optins || 0; r.scaleDone += g.scale || 0; r.applied += g.applied || 0; r.joined += g.joined || 0;
+    });
+    return Object.keys(by).map(function(k){ return by[k]; })
+      .filter(function(r){ return r.visits || r.optins || r.scaleDone || r.applied || r.joined; })
+      .sort(function(a, b){ return (b.optins + b.scaleDone + b.applied * 3) - (a.optins + a.scaleDone + a.applied * 3) || b.visits - a.visits; });
+  }
+  function ovSourceName(src){
+    if (src === "(unknown)") return "Unknown (no UTM)";
+    if (src === "(direct)") return "Direct (typed or bookmarked)";
+    if (src === "scale_check") return "The Love Scale result page";
+    if (src === "(earlier)") return "Earlier visits (before source tracking)";
+    return typeof GHL_SOURCE_NAMES !== "undefined" && GHL_SOURCE_NAMES[src] ? GHL_SOURCE_NAMES[src] : src.charAt(0).toUpperCase() + src.slice(1);
+  }
+  function ovSourceTable(inPeriod){
+    var rows = ovSourceRows(inPeriod);
+    var wrap = document.createElement("div");
+    var h = document.createElement("p"); h.className = "section-label"; h.textContent = "Traffic sources"; wrap.appendChild(h);
+    if (!rows.length){
+      var e = document.createElement("p"); e.className = "dueok"; e.textContent = "Nothing tracked for this period yet. Press Pull from GHL to refresh."; wrap.appendChild(e); return wrap;
+    }
+    var box = document.createElement("div"); box.className = "ovtablewrap";
+    var t = document.createElement("table"); t.className = "ovtable";
+    var cols = [["Source"], ["Visits"], ["Training opt-ins"], ["Love Scale"], ["Applied"], ["Joined"], ["Visit → sign-up"]];
+    var thead = document.createElement("thead"), hr = document.createElement("tr");
+    cols.forEach(function(c){ var th = document.createElement("th"); th.textContent = c[0]; hr.appendChild(th); });
+    thead.appendChild(hr); t.appendChild(thead);
+    var tb = document.createElement("tbody"), tot = { visits:0, optins:0, scaleDone:0, applied:0, joined:0 };
+    function addRow(label, r, cls){
+      var tr = document.createElement("tr"); if (cls) tr.className = cls;
+      var signups = r.optins + r.scaleDone, rate = r.visits ? fmtPct(signups / r.visits * 100) : "—";
+      [label, fmtInt(r.visits), fmtInt(r.optins), fmtInt(r.scaleDone), fmtInt(r.applied), fmtInt(r.joined), rate].forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
+      tb.appendChild(tr);
+    }
+    rows.forEach(function(r){ addRow(ovSourceName(r.source), r); Object.keys(tot).forEach(function(k){ tot[k] += r[k]; }); });
+    // page views counted before the pages sent where they came from
+    var allViews = ovViews("optin", inPeriod) + ovViews("scale", inPeriod) + ovViews("apply", inPeriod);
+    if (allViews > tot.visits){ var early = { visits: allViews - tot.visits, optins:0, scaleDone:0, applied:0, joined:0 }; addRow(ovSourceName("(earlier)"), early); tot.visits = allViews; }
+    addRow("Total", tot, "total");
+    t.appendChild(tb); box.appendChild(t); wrap.appendChild(box);
+    return wrap;
+  }
+
+  // ── Updates due (2026-10-26): what needs filling in, from the data itself ──
+  function prevMonthISO(){ var d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - 1); return d.toISOString().slice(0, 7); }
+  function dueUpdates(){
+    var out = [], pm = prevMonthISO(), pml = monthLabel(pm);
+    function monthly(rows, field, label, tab, startMonth){
+      rows = rows || [];
+      var first = ovSort(rows).filter(function(r){ return r.month; })[0];
+      if (!first && !startMonth) return;
+      if ((first ? first.month : startMonth) > pm) return;   // tracking started after last month
+      var r = rows.filter(function(x){ return x.month === pm; })[0];
+      if (!r || !(Number(r[field]) > 0)) out.push({ text:"Log " + pml + "'s " + label, tab:tab });
+    }
+    monthly(state.youtubeRows, "subscribers", "YouTube subscribers and views", "youtube");
+    monthly(state.tiktokRows, "followers", "TikTok followers and views", "tiktok");
+    monthly(state.content && state.content.rows, "igFollowers", "Instagram followers", "instagram");
+    var mr = (state.mrrRows || []).filter(function(r){ return r.month === pm; })[0];
+    if ((state.mrrRows || []).length && (!mr || !mr.locked)) out.push({ text:"Check " + pml + "'s members on the MRR tab, then lock the month", tab:"mrr" });
+    var sr = ((state.sales && state.sales.rows) || []).filter(function(r){ return r.month === pm; })[0];
+    if (((state.sales && state.sales.rows) || []).length && (!sr || !sr.locked)) out.push({ text:"Fill in " + pml + "'s calls and sales, then lock the month", tab:"sales" });
+    var g = state.ghlSources && state.ghlSources.fetchedAt;
+    var days = g ? Math.floor((Date.now() - new Date(g).getTime()) / 86400000) : null;
+    if (days == null || days >= 7) out.push({ text:"Pull from GHL to refresh opt-ins, applications and traffic" + (days == null ? "" : " (last pulled " + days + " days ago)"), tab:"overview", pull:true });
+    var weekAgo = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10), today = todayISO();
+    var noViews = ((state.content && state.content.ideas) || []).filter(function(i){
+      if (!i.posted || !i.date || i.date < weekAgo || i.date > today) return false;
+      var o = ((state.content && state.content.outlierList) || []).filter(function(x){ return x.title === i.title; })[0];
+      return !o || !(Number(o.views) > 0);
+    }).length;
+    if (noViews) out.push({ text:"Add the views for " + noViews + " Reel" + (noViews === 1 ? "" : "s") + " published in the last 2 weeks", tab:"content" });
+    var fu = ((state.sales && state.sales.leads) || []).filter(function(l){ return l.followUp && l.followUp <= today && !LEAD_CLOSED[l.stage] && (l.name || "").trim(); }).length;
+    if (fu) out.push({ text:fu + " sales follow-up" + (fu === 1 ? "" : "s") + " due", tab:"sales" });
+    return out;
+  }
+  function goTab(tab){ var b = document.querySelector('.tabbtn[data-tab="' + tab + '"]'); if (b) { b.click(); window.scrollTo(0, 0); } }
+  function renderDue(host, withTitle){
+    if (!host) return;
+    host.innerHTML = "";
+    var items = dueUpdates();
+    if (withTitle){ var h = document.createElement("p"); h.className = "section-label"; h.textContent = "Updates due"; host.appendChild(h); }
+    if (!items.length){ var ok = document.createElement("p"); ok.className = "dueok"; ok.textContent = "All up to date."; host.appendChild(ok); return; }
+    var list = document.createElement("div"); list.className = "duelist";
+    items.forEach(function(it){
+      var d = document.createElement("div"); d.className = "dueitem";
+      var t = document.createElement("span"); t.textContent = it.text; d.appendChild(t);
+      var b = document.createElement("button"); b.type = "button"; b.className = "copybtn"; b.textContent = it.pull ? "Pull now" : "Go";
+      b.addEventListener("click", function(){
+        if (it.pull){ goTab("overview"); var pb = document.getElementById("ovGhlPull"); if (pb) pb.click(); }
+        else goTab(it.tab);
+      });
+      d.appendChild(b); list.appendChild(d);
+    });
+    host.appendChild(list);
+  }
+
   function renderOverview(){
     var host = document.getElementById("ovBody");
     if (!host) return;
@@ -4706,31 +5186,40 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
     host.innerHTML = "";
 
-    // Funnel pages first (Olly, 2026-10-24): views from the Hub's counter,
-    // leads/applicants from the GHL tags. Filled by Pull from GHL.
-    var pc = pageConversion(ovInPeriod), po = pc[0], pa = pc[1];
-    var pulled = state.ghlSources && state.ghlSources.fetchedAt;
-    var notYet = pulled ? "" : "press Pull from GHL";
-    var rateTxt = function(p){ return p.rate == null ? "—" : fmtPct(p.rate); };
-    host.appendChild(ovGroup("Opt-in page", [
-      ovCard("Opt-in page views", fmtInt(po.views), notYet),
-      ovCard("Opt-in page leads", fmtInt(po.conv), notYet),
-      ovCard("Opt-in rate", rateTxt(po), "everyone who opted in ÷ everyone who viewed the page", "accent")
+    // 0. What needs filling in
+    var dueHost = document.createElement("div"); renderDue(dueHost, true); host.appendChild(dueHost);
+
+    // 1. The big picture (Olly, 2026-10-26): visits, sign-ups, applications, sales, cash for the month or year
+    var pulled = state.ghlSources && state.ghlSources.fetchedAt, notYet = pulled ? "" : "press Pull from GHL";
+    var vO = ovViews("optin", ovInPeriod), vS = ovViews("scale", ovInPeriod), vA = ovViews("apply", ovInPeriod);
+    var sO = ovGhlSum("optins", ovInPeriod), sS = ovGhlSum("scale", ovInPeriod), sAp = ovGhlSum("applied", ovInPeriod), sJ = ovGhlSum("joined", ovInPeriod);
+    var srB = state.sales.rows, salesN = ovSum(srB, "salesMonthly") + ovSum(srB, "salesAnnual");
+    var cashB = ovSum(srB, "salesMonthly") * SALES_PRICE_MONTHLY + ovSum(srB, "salesAnnual") * SALES_PRICE_ANNUAL;
+    host.appendChild(ovGroup("The big picture", [
+      ovCard("Page visits", fmtInt(vO + vS + vA), fmtInt(vO) + " opt-in · " + fmtInt(vS) + " Love Scale · " + fmtInt(vA) + " application"),
+      ovCard("Sign-ups", fmtInt(sO + sS), notYet || (fmtInt(sO) + " training · " + fmtInt(sS) + " Love Scale")),
+      ovCard("Applications", fmtInt(sAp), notYet || ((sO + sS) ? fmtPct(sAp / (sO + sS) * 100) + " of sign-ups" : "")),
+      ovCard("Sales", fmtInt(salesN), sJ ? fmtInt(sJ) + " joined (GHL)" : "Sales tab"),
+      ovCard("New cash", fmtMoney(cashB), "", "accent")
     ]));
-    // Where the opt-in page's visitors came from (Olly, 2026-10-25): top 6 by visits
-    var tRows = trafficRowsFor("optin", ovInPeriod).slice(0, 6);
-    if (tRows.length){
-      host.appendChild(ovGroup("Opt-in page traffic", tRows.map(function(r){
-        var sub = (r.share == null ? "" : fmtPct(r.share) + " of visitors") +
-          (r.before ? "" : " · " + fmtInt(r.optins) + " opted in" + (r.rate == null ? "" : " (" + fmtPct(r.rate) + ")"));
-        return ovCard(trafficLabel(r), fmtInt(r.visits) + (r.visits === 1 ? " visit" : " visits"), sub);
+
+    // 2. Each page: visits → sign-ups
+    host.appendChild(ovGroup("Pages and lead magnets", OV_PAGES.map(function(pg){
+      var v = ovViews(pg[0], ovInPeriod), c = ovGhlSum(pg[2], ovInPeriod);
+      return ovCard(pg[1], v ? fmtPct(c / v * 100) : "—", fmtInt(v) + " visits · " + fmtInt(c) + " " + pg[3] + (notYet ? " · " + notYet : ""));
+    })));
+
+    // 3. Every traffic source, side by side
+    host.appendChild(ovSourceTable(ovInPeriod));
+
+    // Which emails sent people to apply (Olly, 2026-10-26): top 4, only once there's something to show
+    var eRows = emailApplyRows(ovInPeriod).slice(0, 4);
+    if (eRows.length){
+      host.appendChild(ovGroup("Emails that sent people to apply", eRows.map(function(r){
+        return ovCard(emailSubjectLabel(r), fmtInt(r.applied) + (r.applied === 1 ? " applied" : " applied"),
+          fmtInt(r.visits) + (r.visits === 1 ? " visit" : " visits") + (r.rate == null ? "" : " · " + fmtPct(r.rate) + " applied"));
       })));
     }
-    host.appendChild(ovGroup("Application page", [
-      ovCard("Application page views", fmtInt(pa.views), notYet),
-      ovCard("Applicants", fmtInt(pa.conv), notYet),
-      ovCard("Application rate", rateTxt(pa), "everyone who applied ÷ everyone who viewed the page", "accent")
-    ]));
 
     // Revenue (MRR tab)
     var mrrRows = computeRows(state).filter(function(r){ return ovInPeriod(r.month); });
@@ -4755,14 +5244,6 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       ovCard("New cash", fmtMoney(cash), "", "accent")
     ]));
 
-    // Where they came from (last GHL pull) — top 4 sources by opt-ins
-    var srcRows = ghlRowsFor(ovInPeriod).slice(0, 4);
-    if (srcRows.length){
-      host.appendChild(ovGroup("Where they came from", srcRows.map(function(r){
-        return ovCard(ghlLabel(r), fmtInt(r.optins) + " opt-ins", fmtInt(r.applied) + " applied · " + fmtInt(r.joined) + " joined");
-      })));
-    }
-
     // Audience (Instagram, Email, YouTube tabs)
     var ig = ovSnap(state.content.rows, "igFollowers");
     var em = ovSnap(state.emailRows, "emailList");
@@ -4779,7 +5260,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
          : ytLatest ? ovCard("YouTube subscribers", fmtInt(ytLatest.subscribers), "total as of " + monthLabel(ytLatest.month))
          : ytBase ? ovCard("YouTube subscribers", fmtInt(ytBase), "current total (starting count)")
          : ovCard("YouTube subscribers", "—", "not logged"),
-      ovCard("YouTube views", fmtInt(ovSum(state.youtubeRows, "views")), "")
+      ovCard("YouTube views", fmtInt(ovSum(state.youtubeRows, "views")), ""),
+      (function(){
+        var tl = ovSort(state.tiktokRows || []).filter(function(r){ return Number(r.followers) > 0 && (ovMode === "year" ? r.month.slice(0,4) <= ovPeriod : r.month <= ovPeriod); }).pop();
+        return tl ? ovCard("TikTok followers", fmtInt(tl.followers), "total as of " + monthLabel(tl.month)) : ovCard("TikTok followers", "—", "not logged");
+      })(),
+      ovCard("TikTok views", fmtInt(ovSum(state.tiktokRows || [], "views")), "")
     ]));
 
     // Content: Reel outliers only (Olly, 2026-10-24: Reels published and
@@ -4943,6 +5429,221 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     state.youtubeRows.push({ month: last ? nextMonth(last.month) : todayISO().slice(0,7), subscribers:0, views:0, locked:false });
     ytTableBuiltForCount = -1;
     markDirty(); renderYouTube();
+  });
+
+  // ── TikTok tab (2026-10-26, cloned from YouTube) ──────────────────────────────────────────
+  // Same shape as Email: its own rows, typed in by hand each month.
+  // state.tiktokRows = [{ month, followers, views, locked }]. Growth is
+  // a display only, comparing with the row before.
+  var tkSelectedMonth = null, tkTableBuiltForCount = -1;
+
+  function tkSorted(){
+    return state.tiktokRows.slice().sort(function(a,b){ return a.month < b.month ? -1 : 1; });
+  }
+  function tkGrowthText(rows, i, f){
+    // A month still at 0 hasn't been filled in yet, so don't compare it
+    // (0 minus the starting count read as a huge drop, 2026-10-24).
+    if (!(Number(rows[i][f]) > 0)) return "—";
+    var g = contentGrowth(rows, i, f);
+    if (g != null && !(Number(rows[i-1][f]) > 0)) g = null;
+    // First month's follower growth is measured from the baseline.
+    if (i === 0 && f === "followers" && Number(state.tiktokBaseline) > 0) g = (rows[0].followers || 0) - Number(state.tiktokBaseline);
+    return g == null ? "—" : (g>=0?"+":"") + fmtInt(g);
+  }
+
+  function renderTikTok(){
+    var rows = tkSorted();
+    var baseInp = document.getElementById("tkBaseline");
+    if (document.activeElement !== baseInp) baseInp.value = state.tiktokBaseline || 0;
+    var sel = document.getElementById("tkPeriodSel");
+    sel.innerHTML = "";
+    rows.forEach(function(r){
+      var opt = document.createElement("option");
+      opt.value = r.month; opt.textContent = monthLabel(r.month);
+      sel.appendChild(opt);
+    });
+    if (rows.length){
+      var todayYM = todayISO().slice(0, 7);
+      if (!tkSelectedMonth || !rows.some(function(r){return r.month===tkSelectedMonth;})){
+        tkSelectedMonth = rows.some(function(r){return r.month===todayYM;}) ? todayYM : rows[rows.length-1].month;
+      }
+      sel.value = tkSelectedMonth;
+    }
+
+    var grid = document.getElementById("tkKpiGrid");
+    grid.innerHTML = "";
+    var idx = rows.findIndex(function(r){ return r.month === tkSelectedMonth; });
+    if (idx !== -1){
+      var tkKnown = rows.slice(0, idx+1).filter(function(r){ return Number(r.followers) > 0; }).pop();
+      var tkTotal = tkKnown ? tkKnown.followers : (Number(state.tiktokBaseline) || 0);
+      grid.appendChild(kpiCard("Total followers", fmtInt(tkTotal)));
+      grid.appendChild(kpiCard("Follower growth vs. prev. month", tkGrowthText(rows, idx, "followers"), "accent"));
+      if (Number(state.tiktokBaseline) > 0 && Number(rows[idx].followers) > 0){
+        var since = (rows[idx].followers || 0) - Number(state.tiktokBaseline);
+        grid.appendChild(kpiCard("Gained since start (" + fmtInt(state.tiktokBaseline) + ")", (since>=0?"+":"") + fmtInt(since), "accent"));
+      }
+      grid.appendChild(kpiCard("Views this month", fmtInt(rows[idx].views || 0)));
+      grid.appendChild(kpiCard("Views vs. prev. month", tkGrowthText(rows, idx, "views"), "accent"));
+    }
+
+    var tbody = document.getElementById("tkTbody");
+    if (rows.length !== tkTableBuiltForCount){
+      tbody.innerHTML = "";
+      rows.forEach(function(r, i){
+        var tr = document.createElement("tr");
+        tr.dataset.row = i;
+        if (r.locked) tr.classList.add("locked");
+        var dis = r.locked ? " disabled" : "";
+        tr.innerHTML =
+          '<td class="rowlock"><button class="lockbtn" data-tklock="'+i+'" title="'+(r.locked?'Unlock this month':'Lock this month')+'">'+(r.locked?'🔒':'🔓')+'</button></td>' +
+          '<td class="month">'+monthLabel(r.month)+'</td>' +
+          '<td><input type="number" min="0" data-tki="'+i+'" data-tkfield="followers" value="'+(r.followers||0)+'"'+dis+'></td>' +
+          '<td><input type="number" min="0" data-tki="'+i+'" data-tkfield="views" value="'+(r.views||0)+'"'+dis+'></td>' +
+          '<td class="calc" data-tkcalc="followers"></td><td class="calc" data-tkcalc="views"></td>' +
+          '<td class="rowdel">'+(rows.length>1 && !r.locked ? '<button data-tkdel="'+i+'" title="Remove month">✕</button>' : '')+'</td>';
+        tbody.appendChild(tr);
+      });
+      // rows is a sorted copy, but its objects are the real state objects,
+      // so edits go straight onto them.
+      tbody.querySelectorAll("[data-tkfield]").forEach(function(inp){
+        inp.addEventListener("input", function(){
+          rows[Number(inp.dataset.tki)][inp.dataset.tkfield] = Number(inp.value) || 0;
+          markDirty();
+          renderTikTok();
+        });
+      });
+      tbody.querySelectorAll("[data-tklock]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var r = rows[Number(btn.dataset.tklock)];
+          r.locked = !r.locked;
+          markDirty();
+          tkTableBuiltForCount = -1;
+          renderTikTok();
+        });
+      });
+      tbody.querySelectorAll("[data-tkdel]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var r = rows[Number(btn.dataset.tkdel)];
+          if ((r.followers || r.views) && !window.confirm("Delete " + monthLabel(r.month) + " and its numbers?")) return;
+          state.tiktokRows.splice(state.tiktokRows.indexOf(r), 1);
+          markDirty();
+          tkTableBuiltForCount = -1;
+          renderTikTok();
+        });
+      });
+      tkTableBuiltForCount = rows.length;
+    }
+    tbody.querySelectorAll("tr").forEach(function(tr){
+      var i = Number(tr.dataset.row);
+      tr.querySelector('[data-tkcalc="followers"]').textContent = tkGrowthText(rows, i, "followers");
+      tr.querySelector('[data-tkcalc="views"]').textContent = tkGrowthText(rows, i, "views");
+    });
+
+    var cs = getComputedStyle(document.documentElement);
+    drawLine("chartTKSubs","ttTKSubs", rows, [
+      { name:"Followers", color: cs.getPropertyValue('--accent').trim() || "#B84FE8", get:function(r){return r.followers || 0;}, fmt:fmtInt }
+    ]);
+    drawLine("chartTKViews","ttTKViews", rows, [
+      { name:"Views", color: cs.getPropertyValue('--accent-2').trim() || "#E1A6FF", get:function(r){return r.views || 0;}, fmt:fmtInt }
+    ]);
+  }
+
+  document.getElementById("tkBaseline").addEventListener("input", function(e){
+    state.tiktokBaseline = Number(e.target.value) || 0;
+    markDirty();
+    renderTikTok();
+  });
+  document.getElementById("tkPeriodSel").addEventListener("change", function(e){
+    tkSelectedMonth = e.target.value;
+    renderTikTok();
+  });
+  document.getElementById("tkAddMonth").addEventListener("click", function(){
+    var rows = tkSorted(), last = rows.length ? rows[rows.length-1] : null;
+    state.tiktokRows.push({ month: last ? nextMonth(last.month) : todayISO().slice(0,7), followers:0, views:0, locked:false });
+    tkTableBuiltForCount = -1;
+    markDirty(); renderTikTok();
+  });
+
+
+  // TikTok copy (editable, saved in state.tiktokCopy). Built from the Reel caption, the YouTube Shorts description and the
+  // ManyChat flow, adapted for TikTok: no comment keyword (no ManyChat), link in profile, 3 to 5 hashtags, 80-character bio.
+  var TK_COPY_DEFAULTS = {
+    caption: "[The Reel's header: the hook you say first]\n\nWho you attract isn't about what you know. It's how you feel.\n\nThe free training shows you how to attract a genuine, committed relationship without more inner work or dating rules. It's linked in my profile 👆\n\n#datingadvice #attractlove #soulmate #relationshipadvice #healthyrelationships",
+    bio: "Helping singles attract a committed relationship ❤️ Free training 👇",
+    link: "https://ollyhenson.com/training?utm_source=tiktok&utm_medium=bio&utm_campaign=emotional_resonance_training",
+    cta: "The free training's linked in my profile, go and watch it.\n\nIf you want the full breakdown, the free training is in my profile.\n\nI go much deeper on this in my free training. It's linked in my profile.\n\nFollow for more on attracting the right person, and the free training's in my profile.",
+    checklist: "1. Upload the original video file, not one saved from Instagram (TikTok holds back watermarked videos).\n2. First line of the caption = the Reel's header hook.\n3. Keep the hook on screen as text for the first few seconds (lots of people watch with the sound off).\n4. Swap in the caption template above, with 3 to 5 hashtags.\n5. No \"comment VIDEO\": end with the link-in-profile line instead.\n6. Post the same Reels you post on Instagram. No new content needed.\n7. Log followers and views here at the end of each month."
+  };
+  // Reel captions per offer + platform (Olly, 2026-10-26). VIDEO uses the saved IG/FB templates, the TikTok tab's caption
+  // and the YouTube tab's Shorts description; SCALE has built-in text. A saved template with the same name wins.
+  var REEL_CAP_NAME = /^(IG|FB|TIKTOK|YOUTUBE) (VIDEO|SCALE)$/i;
+  var SCALE_CAPTIONS = {
+    instagram: "➡️ If you'd like to find out how close you are to love right now, comment 'SCALE' below and I'll send you The Love Scale, a free 2-minute check.\n\n(If you'd like to keep it private just DM me the word 'SCALE' and I'll send it over)\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
+    facebook: "VIDEO TITLE GOES HERE\n\n➡️ If you'd like to find out how close you are to love right now, comment 'SCALE' below and I'll send you The Love Scale, a free 2-minute check.\n\n(If you'd like to keep it private just DM me the word 'SCALE' and I'll send it over)\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
+    tiktok: "➡️ If you'd like to find out how close you are to love right now, DM me the word 'SCALE' and I'll send you The Love Scale, a free 2-minute check.\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
+    youtube: "💜 Comment 'SCALE' or go to ollyhenson.com/scale to take The Love Scale, a free 2-minute check that shows how close you are to love.\n\n#shorts #attractlove #longtermrelationship #soulmate"
+  };
+  // fallbacks if the saved IG VIDEO / FB VIDEO templates are ever deleted (copied from them, 2026-10-26)
+  var VIDEO_CAPTIONS = {
+    instagram: "➡️ If you'd like an in-depth training on how to use Emotional Resonance to attract a high-quality long-term relationship, comment 'VIDEO' below and I'll send it to you for free.\n\n(If you'd like to keep it private just DM me the word 'VIDEO' and I'll send it over)\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
+    facebook: "VIDEO TITLE GOES HERE\n\n➡️ If you'd like an in-depth training on how to use Emotional Resonance to attract a high-quality long-term relationship, comment 'VIDEO' below and I'll send it to you for free.\n\n(If you'd like to keep it private just DM me the word 'VIDEO' and I'll send it over)\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove"
+  };
+  function reelCaption(offer, plat, saved){
+    var key = { instagram:"IG", facebook:"FB", tiktok:"TIKTOK", youtube:"YOUTUBE" }[plat] + " " + (offer === "scale" ? "SCALE" : "VIDEO");
+    var hit = (saved || []).filter(function(tpl){ return String(tpl.name || "").trim().toUpperCase() === key; })[0];
+    if (hit) return hit.text;
+    if (offer === "scale") return SCALE_CAPTIONS[plat] || "";
+    if (VIDEO_CAPTIONS[plat]) return VIDEO_CAPTIONS[plat];
+    if (plat === "tiktok") return tkCopy("caption");
+    if (plat === "youtube"){ var d = document.getElementById("ytShortsDesc"); return d ? d.value : ""; }
+    return "";
+  }
+  function tkCopy(k){ return (state.tiktokCopy && typeof state.tiktokCopy[k] === "string") ? state.tiktokCopy[k] : TK_COPY_DEFAULTS[k]; }
+  // YouTube descriptions (Olly, 2026-10-26): editable, saved with the Hub, plus named templates per box.
+  var YT_COPY_DEFAULTS = {};
+  document.querySelectorAll("[data-ytcopy]").forEach(function(t){ YT_COPY_DEFAULTS[t.dataset.ytcopy] = t.value; });
+  function ytCopy(k){ return (state.youtubeCopy && typeof state.youtubeCopy[k] === "string") ? state.youtubeCopy[k] : YT_COPY_DEFAULTS[k]; }
+  function renderYouTubeCopy(){
+    document.querySelectorAll("[data-ytcopy]").forEach(function(t){ if (document.activeElement !== t) t.value = ytCopy(t.dataset.ytcopy); });
+    document.querySelectorAll("[data-yttpl]").forEach(function(box){
+      var kind = box.dataset.yttpl, area = document.querySelector('[data-ytcopy="' + kind + '"]');
+      box.innerHTML = "";
+      var saveRow = document.createElement("div"); saveRow.className = "yttpl-row";
+      var name = document.createElement("input"); name.type = "text"; name.placeholder = "Name this version, e.g. Love Scale first";
+      var saveBtn = document.createElement("button"); saveBtn.type = "button"; saveBtn.className = "vidsavebtn"; saveBtn.textContent = "Save as template";
+      saveBtn.addEventListener("click", function(){
+        state.youtubeTemplates = state.youtubeTemplates || [];
+        state.youtubeTemplates.unshift({ kind:kind, name:name.value.trim() || ("Template " + (state.youtubeTemplates.filter(function(x){ return x.kind === kind; }).length + 1)), text:area.value });
+        markDirty(); renderYouTubeCopy();
+      });
+      saveRow.appendChild(name); saveRow.appendChild(saveBtn); box.appendChild(saveRow);
+      var mine = (state.youtubeTemplates || []).filter(function(x){ return x.kind === kind; });
+      if (mine.length){
+        var lbl = document.createElement("span"); lbl.className = "yttpl-label"; lbl.textContent = "Saved templates (tap to use)"; box.appendChild(lbl);
+        var chips = document.createElement("div"); chips.className = "captionchips";
+        mine.forEach(function(tpl){
+          var chip = document.createElement("button"); chip.type = "button"; chip.className = "captionchip"; chip.textContent = tpl.name; chip.title = tpl.text;
+          chip.addEventListener("click", function(){ state.youtubeCopy = state.youtubeCopy || {}; state.youtubeCopy[kind] = tpl.text; area.value = tpl.text; markDirty(); });
+          var del = document.createElement("button"); del.type = "button"; del.className = "rowdel-btn"; del.title = "Delete this template"; del.textContent = "✕";
+          del.addEventListener("click", function(){ var i = state.youtubeTemplates.indexOf(tpl); if (i > -1) state.youtubeTemplates.splice(i, 1); markDirty(); renderYouTubeCopy(); });
+          var wrap = document.createElement("span"); wrap.style.display = "inline-flex"; wrap.style.alignItems = "center"; wrap.style.gap = "2px";
+          wrap.appendChild(chip); wrap.appendChild(del); chips.appendChild(wrap);
+        });
+        box.appendChild(chips);
+      }
+    });
+  }
+  document.querySelectorAll("[data-ytcopy]").forEach(function(t){
+    t.addEventListener("input", function(){ state.youtubeCopy = state.youtubeCopy || {}; state.youtubeCopy[t.dataset.ytcopy] = t.value; markDirty(); });
+  });
+  function renderTikTokCopy(){
+    document.querySelectorAll("[data-tkcopy]").forEach(function(t){ if (document.activeElement !== t) t.value = tkCopy(t.dataset.tkcopy); });
+  }
+  document.querySelectorAll("[data-tkcopy]").forEach(function(t){
+    t.addEventListener("input", function(){ state.tiktokCopy = state.tiktokCopy || {}; state.tiktokCopy[t.dataset.tkcopy] = t.value; markDirty(); });
+  });
+  document.querySelectorAll("[data-tkcopybtn]").forEach(function(btn){
+    btn.addEventListener("click", function(){ copyToClipboard(document.querySelector('[data-tkcopy="' + btn.dataset.tkcopybtn + '"]').value, this); });
   });
 
   // ── Outliers list (Reels tab, 2026-10-24) ─────────────────────────────
@@ -5249,7 +5950,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // ── Where they came from (GHL pull, 2026-10-24) ─────────────────────────
   // /api/ghl-sources returns counts only, grouped by month + UTMs. Stored in
   // state.ghlSources so the Overview and the phone see the last pull too.
-  var GHL_SOURCE_NAMES = { instagram:"Instagram", facebook:"Facebook", youtube:"YouTube", email:"Email" };
+  var GHL_SOURCE_NAMES = { instagram:"Instagram", facebook:"Facebook", youtube:"YouTube", email:"Email", tiktok:"TikTok" };
   var GHL_MEDIUM_NAMES = { bio:"Bio link", dm:"DM", comment:"Comment", description:"Video description", pinned_comment:"Pinned comment", welcome_email:"Welcome email",
     stories:"Stories", reels:"Reels", shorts:"Shorts", referral:"Link on another site" };
   function ghlNice(map, v){
@@ -5306,7 +6007,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     state.ghlSources = { fetchedAt: d.fetchedAt, rows: d.rows };
     state.sales.rows.forEach(function(row){
       var opt = 0, app = 0;
-      d.rows.forEach(function(r){ if (r.month === row.month){ opt += r.optins; app += r.applied; } });
+      d.rows.forEach(function(r){ if (r.month === row.month){ opt += r.optins + (r.scale || 0); app += r.applied; } });
       row.optins = opt; row.applications = app;
     });
     if (typeof d.emailList === "number"){
@@ -5419,6 +6120,44 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     });
     return rows.sort(function(a, b){ return (!!a.before - !!b.before) || (b.visits - a.visits); });
   }
+  // Emails -> application page (Olly, 2026-10-26). utm_source=email, utm_content = the subject slug (max 40, the
+  // counter's limit, so visits and GHL applicants match). Rows with applicants but no counted visit still show.
+  function emailApplyRows(inPeriod){
+    var by = {}, ps = state.pageSources || {};
+    function row(content){ var k = String(content || "").toLowerCase().slice(0, 40); return by[k] || (by[k] = { content:k, visits:0, applied:0 }); }
+    Object.keys(ps).forEach(function(m){
+      if (!inPeriod(m)) return;
+      var bySrc = ps[m].apply || {};
+      Object.keys(bySrc).forEach(function(k){ var a = k.split("|"); if (a[0] === "email") row(a[2]).visits += bySrc[k]; });
+    });
+    ((state.ghlSources && state.ghlSources.rows) || []).forEach(function(r){
+      if (!inPeriod(r.month) || String(r.source || "").toLowerCase() !== "email" || !r.applied) return;
+      row(r.content).applied += r.applied;
+    });
+    return Object.keys(by).map(function(k){ var r = by[k]; r.rate = r.visits ? r.applied / r.visits * 100 : null; return r; })
+      .sort(function(a, b){ return (b.applied - a.applied) || (b.visits - a.visits); });
+  }
+  function emailSubjectLabel(r){ return r.content ? r.content.replace(/-/g, " ") : "Email (no subject in the link)"; }
+  function renderEmailApply(){
+    var body = document.getElementById("emailApplyTbody");
+    if (!body) return;
+    body.innerHTML = "";
+    var rows = emailApplyRows(function(m){ return m === emailSelectedMonth; });
+    if (!rows.length){
+      var tr = document.createElement("tr"), td = document.createElement("td");
+      td.colSpan = 4; td.className = "hint";
+      td.textContent = "No email has sent anyone to the application page this month yet.";
+      tr.appendChild(td); body.appendChild(tr);
+      return;
+    }
+    rows.forEach(function(r){
+      var tr = document.createElement("tr");
+      [emailSubjectLabel(r), fmtInt(r.visits), fmtInt(r.applied), r.rate == null ? "—" : fmtPct(r.rate)].forEach(function(v, i){
+        var td = document.createElement("td"); if (i === 3) td.className = "calc"; td.textContent = v; tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
   function trafficLabel(r){
     if (r.before) return "Before source tracking";
     if (r.source === "(direct)") return "Direct (no link info)";
@@ -5494,7 +6233,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       btn.classList.add("active"); btn.setAttribute("aria-selected","true");
       document.querySelectorAll(".tabpanel").forEach(function(p){ p.hidden = true; });
       document.getElementById("tab-"+btn.dataset.tab).hidden = false;
-      if (btn.dataset.tab === "braindump") document.querySelectorAll(".bdcard-text").forEach(autosizeBdCard);
+      if (btn.dataset.tab === "braindump"){ document.querySelectorAll(".bdcard-text").forEach(autosizeBdCard); document.querySelectorAll(".tdtext").forEach(function(t){ if (t._fit) t._fit(); }); }
       if (btn.dataset.tab === "overview") renderOverview();
       uiSave({ tab: btn.dataset.tab });
     });
@@ -5570,6 +6309,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!Array.isArray(state.emailRows)) state.emailRows = [{ month: todayISO().slice(0,7), emailList:0, locked:false }];
     if (state.youtubeBaseline === undefined) state.youtubeBaseline = 0;
     if (!Array.isArray(state.youtubeRows)) state.youtubeRows = [{ month: todayISO().slice(0,7), subscribers:0, views:0, locked:false }];
+    if (state.tiktokBaseline === undefined) state.tiktokBaseline = 0;
+    if (!Array.isArray(state.tiktokRows)) state.tiktokRows = [{ month: todayISO().slice(0,7), followers:0, views:0, locked:false }];
     // Repair pass: only ideas already ticked posted should be in Video
     // stats tracking. Covers anything posted under an earlier version of
     // this logic that never made the jump — dedupe-safe, so a no-op for
@@ -5581,6 +6322,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!Array.isArray(state.stories.ideas)) state.stories.ideas = [];
     if (!state.delivery) state.delivery = { projects: [] };
     if (!state.brainDump) state.brainDump = { cards: [] };
+    // first time only: start the To-do list with what's open right now (2026-10-26)
+    if (!Array.isArray(state.todos)) state.todos = [
+      { text:"Create the GHL redirects: /love, /apply-ig, /apply-email, /apply-fb, /apply-tt, /apply-wa, /scale-tt, /video-tt (links in the UTM log), test each, then tell Claude", who:"us", done:false, ts:Date.now() },
+      { text:"Check /lovescale points to the YouTube description link (utm_medium=description)", who:"me", done:false, ts:Date.now() },
+      { text:"Approve the Socials preview of the content generator, then Claude moves it into the real one", who:"us", done:false, ts:Date.now() },
+      { text:"Rebuild the Hub Overview: big picture at the top, each lead magnet and traffic source underneath", who:"us", done:false, ts:Date.now() },
+      { text:"Check the Facebook native-upload test (views after 48 hours, started 26 Oct)", who:"me", done:false, ts:Date.now() }
+    ];
     if (!Array.isArray(state.brainDump.cards)) state.brainDump.cards = [];
     // MRR rebuilt from scratch for The Heart Attractor Program (2026-10-24,
     // Olly: "wiped clean"). New rows live in state.mrrRows; the old Skool
@@ -5609,6 +6358,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderDelivery();
     renderCaptionTemplates();
     renderBrainDump();
+    renderTodos();
     salesTableBuiltForCount = -1;
     leadTableBuiltForCount = -1;
     renderSales();
@@ -5616,6 +6366,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderOutlierList();
     ytTableBuiltForCount = -1;
     renderYouTube();
+    tkTableBuiltForCount = -1;
+    renderTikTok();
+    renderTikTokCopy();
+    renderYouTubeCopy();
     renderOverview();
   }
 
@@ -5653,10 +6407,27 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       }
     }
 
+    // #todo / #overview / #youtube … in the address opens that tab (reminder links, 2026-10-26)
+    var hashTab = (location.hash || "").replace("#", "").toLowerCase();
+    if (hashTab === "todo") hashTab = "braindump";
+    if (hashTab && document.querySelector('.tabbtn[data-tab="' + hashTab + '"]')){
+      document.querySelectorAll(".tabbtn").forEach(function(b){ var on = b.dataset.tab === hashTab; b.classList.toggle("active", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
+      document.querySelectorAll(".tabpanel").forEach(function(pn){ pn.hidden = pn.id !== "tab-" + hashTab; });
+    }
     syncTabMenu();
     rerenderAll();
     closeDayModal();   // never boot with the day panel open, whatever the saved HTML had
     closeStoryModal();
+    // Page views are the Hub's own counter, not GHL, so they refresh on every open (Olly, 2026-10-26:
+    // the Overview showed yesterday's numbers until the next Pull from GHL). Not marked dirty: it's live data.
+    fetch("/api/pageviews", { cache:"no-store" })
+      .then(function(r){ return r.json(); })
+      .then(function(p){
+        if (!p || !p.ok) return;
+        state.pageViews = p.months; if (p.sources) state.pageSources = p.sources;
+        renderSales(); renderOverview(); renderEmailApply();
+      })
+      .catch(function(){ /* offline: keep the last numbers */ });
     var baseRev = dirtyGet();
     if (baseRev !== null){ serverRev = baseRev; setSaveState("unsaved"); }
     else setSaveState("saved");
