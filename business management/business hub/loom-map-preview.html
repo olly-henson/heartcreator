@@ -1,0 +1,186 @@
+<title>Loom Mind Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: Hub-style page. Left = applications list, right = a 16:9 mind map stage (scaled to fit) built for screen-recording a Loom.
+   Branches follow Olly's argument: where they are → what's in the way → where they want to be → fit → plan of action. Single dark look. */
+:root{
+  --bg:#0c0712; --panel:#161020; --line:#2e2340; --text:#f6eefb; --soft:#d6c8e4; --muted:#9c8bb0;
+  --pink:#e04fd6; --lilac:#e1a6ff; --red:#f87171; --amber:#fbbf24; --green:#4ade80; --blue:#7dd3fc;
+  --head:"Poppins", "Segoe UI", system-ui, sans-serif; --body:"Inter", "Segoe UI", system-ui, sans-serif;
+  color-scheme:dark;
+}
+*{ box-sizing:border-box; }
+body{ background:var(--bg); color:var(--text); font:15px/1.5 var(--body); margin:0;
+  padding-block:20px 40px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+.top{ display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; justify-content:space-between; max-width:1500px; margin:0 auto 14px; }
+.top h1{ font:700 22px/1.2 var(--head); margin:0; }
+.ex{ font:600 11px/1 var(--head); letter-spacing:.1em; text-transform:uppercase; color:#1a0b24; background:var(--amber); padding:6px 9px; border-radius:6px; }
+.wrap{ display:grid; grid-template-columns:250px minmax(0,1fr); gap:16px; max-width:1500px; margin:0 auto; }
+@media (max-width:900px){ .wrap{ grid-template-columns:minmax(0,1fr); } }
+.list{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:10px; display:flex; flex-direction:column; gap:6px; align-self:start; }
+.list h2{ font:600 11px/1 var(--head); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:6px 8px 8px; }
+.app{ text-align:left; background:transparent; border:1px solid transparent; border-radius:10px; padding:10px 12px; color:var(--text); cursor:pointer; font:inherit; }
+.app b{ display:block; font:600 15px/1.3 var(--head); }
+.app span{ font-size:12.5px; color:var(--muted); }
+.app[aria-pressed="true"]{ background:#241733; border-color:var(--pink); }
+.app:focus-visible, button:focus-visible{ outline:2px solid var(--lilac); outline-offset:2px; }
+.main{ min-width:0; display:flex; flex-direction:column; gap:10px; }
+.bar{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.btn{ font:600 13.5px/1 var(--head); padding:10px 14px; border-radius:999px; border:1px solid var(--line); background:var(--panel); color:var(--text); cursor:pointer; }
+.btn.main{ background:linear-gradient(135deg, var(--lilac), var(--pink)); color:#1a0b24; border-color:transparent; }
+.note{ font-size:13px; color:var(--muted); }
+
+/* the stage: drawn at 1600 x 900 and scaled to fit, so it looks the same on any screen and when recording */
+.stagebox{ position:relative; width:100%; aspect-ratio:16/9; max-width:100%; border-radius:16px; overflow:hidden; border:1px solid var(--line);
+  background:radial-gradient(90% 90% at 50% 35%, #2a1238 0%, #120a1a 60%, #0a0510 100%); }
+.stagebox:fullscreen{ border-radius:0; border:0; }
+.stage{ position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin:0 0; }
+svg.links{ position:absolute; inset:0; width:1600px; height:900px; }
+.centre{ position:absolute; left:610px; top:265px; width:380px; padding:22px 24px; text-align:center; border-radius:24px;
+  background:linear-gradient(160deg, #4a1a66, #2a0f3a); border:2px solid var(--pink); box-shadow:0 0 60px rgba(224,79,214,.35); }
+.centre .nm{ font:800 34px/1.1 var(--head); }
+.centre .meta{ font-size:15px; color:var(--soft); margin-top:6px; }
+.centre .want{ font:600 16px/1.4 var(--head); margin-top:12px; color:#fff; }
+.centre .want small{ display:block; font:600 11px/1 var(--head); letter-spacing:.12em; text-transform:uppercase; color:var(--lilac); margin-bottom:6px; }
+.br{ position:absolute; width:470px; display:flex; flex-direction:column; gap:10px; }
+.br h3{ margin:0 0 2px; font:700 15px/1 var(--head); letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:10px; }
+.br h3 i{ width:12px; height:12px; border-radius:50%; display:inline-block; }
+.card{ background:rgba(22,16,32,.92); border:1px solid var(--line); border-left:4px solid var(--c); border-radius:12px; padding:10px 14px; }
+.card small{ display:block; font:600 11px/1.3 var(--head); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:3px; }
+.card p{ margin:0; font-size:15.5px; line-height:1.4; color:var(--text); }
+.card.hot{ background:rgba(60,18,40,.92); border-color:rgba(248,113,113,.5); border-left-color:var(--red); }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
+.chips span{ font-size:13px; padding:3px 9px; border-radius:999px; border:1px solid var(--line); background:#1f1630; color:var(--soft); }
+.ff{ display:flex; align-items:center; gap:10px; font:700 17px/1.2 var(--head); }
+.ff .a{ color:var(--red); } .ff .b{ color:var(--green); } .ff .arw{ color:var(--muted); font-weight:500; }
+.plan{ position:absolute; left:560px; top:520px; width:480px; }
+.plan .card{ --c:var(--pink); border-left-width:4px; }
+.plan ol{ margin:4px 0 0; padding-left:22px; }
+.plan li{ font-size:15.5px; line-height:1.4; margin:2px 0; outline:none; }
+.plan li:empty::before{ content:"Type a step…"; color:var(--muted); }
+.edit{ font:500 12px var(--body); color:var(--muted); margin-top:6px; }
+
+/* phones: the same branches stacked (record on a computer) */
+.stack{ display:none; flex-direction:column; gap:14px; }
+@media (max-width:760px){ .stagebox{ display:none; } .stack{ display:flex; } }
+</style>
+
+<div class="top">
+  <h1>Applications</h1>
+  <span class="ex">Preview · example applicants, not real people</span>
+</div>
+<div class="wrap">
+  <nav class="list" aria-label="Applications">
+    <h2>Newest first</h2>
+    <div id="apps"></div>
+  </nav>
+  <section class="main">
+    <div class="bar">
+      <button type="button" class="btn main" id="full">Full screen for the Loom</button>
+      <button type="button" class="btn" id="clear">Clear the plan</button>
+      <span class="note">Click a step in "Your plan of action" to type. In the Hub your plan saves to their contact.</span>
+    </div>
+    <div class="stagebox" id="box"><div class="stage" id="stage"></div></div>
+    <div class="stack" id="stack"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  // EXAMPLE applicants for the preview. In the Hub these come from GHL (tag "heart attractor applicant", HA + FF fields).
+  var APPS = [
+    { id:"a1", name:"Sarah", age:"38", place:"Manchester, UK", work:"Nurse", date:"Today",
+      want:"Someone kind and consistent to settle down with and start a family",
+      status:"Single and dating", howLong:"More than 5 years",
+      notHappening:"I meet men who seem great for a few weeks, then they pull away or aren't ready for anything serious.",
+      feel:"Honestly anxious. I go in expecting it to go wrong and I can feel my chest tighten before a date.",
+      once:"…finally sort out my self-worth and stop attracting the wrong people.",
+      tried:["Therapy or counselling", "Inner child or healing work", "Learning about attachment styles", "Dating apps"],
+      priority:"One of my top priorities", daily:"That's exactly what I need", invest:"$2,500 to $5,000",
+      anything:"Is it too late to start a family at 38?",
+      ff:{ now:"Anxiety", emotion:"Safety", intentions:["Emotionally available", "Wants a family", "Makes me laugh", "Backs my career"] } },
+    { id:"a2", name:"Emma", age:"44", place:"Dublin, Ireland", work:"Marketing manager", date:"Yesterday",
+      want:"A committed partner who's fun, loyal and shares my values",
+      status:"Single and not really dating", howLong:"3 to 5 years",
+      notHappening:"I've stopped dating because it feels pointless. Everyone seems to want something casual.",
+      feel:"Tired and a bit hopeless if I'm honest.",
+      once:"…have done enough work on myself.",
+      tried:["Manifestation or visualising", "Meditation or breathwork", "Books and courses"],
+      priority:"It matters, but other things come first", daily:"I'm open to giving it a proper go", invest:"$1,000 to $2,500",
+      anything:"",
+      ff:null }
+  ];
+  var cur = APPS[0];
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
+
+  var BR = [
+    { key:"where", title:"Where they are", c:"var(--blue)", x:40, y:40, cards:function(a){ return [
+      ["Right now", a.status], ["Looking for", a.howLong], ["What still isn't happening", a.notHappening]]; } },
+    { key:"block", title:"What's in the way", c:"var(--red)", x:40, y:430, cards:function(a){ return [
+      ["How they feel about love", a.feel, "hot"], ["“I'll meet the right person once I…”", a.once, "hot"], ["Already tried", { chips:a.tried }]]; } },
+    { key:"want", title:"Where they want to be", c:"var(--green)", x:1090, y:40, cards:function(a){ var c = [["What they want", a.want]];
+      if (a.ff) { c.push(["The Feeling Finder", { ff:a.ff }]); c.push(["Their 4 intentions", { chips:a.ff.intentions }]); }
+      else c.push(["The Feeling Finder", "Not done yet"]);
+      return c; } },
+    { key:"fit", title:"Fit for the program", c:"var(--amber)", x:1090, y:470, cards:function(a){ var c = [
+      ["Priority", a.priority], ["Implementation, not information", a.daily], ["Willing to invest", a.invest], ["Based in · Work", a.place + " · " + a.work]];
+      if (a.anything) c.push(["Anything else", a.anything]); return c; } }
+  ];
+  function cardHtml(c, colour){
+    var v = c[1], body;
+    if (v && v.chips) body = '<div class="chips">' + v.chips.map(function(x){ return "<span>" + esc(x) + "</span>"; }).join("") + "</div>";
+    else if (v && v.ff) body = '<div class="ff"><span class="a">' + esc(v.ff.now) + '</span><span class="arw">now → needs to feel</span><span class="b">' + esc(v.ff.emotion) + "</span></div>";
+    else body = "<p>" + esc(v) + "</p>";
+    return '<div class="card' + (c[2] === "hot" ? " hot" : "") + '" style="--c:' + colour + '"><small>' + esc(c[0]) + "</small>" + body + "</div>";
+  }
+  function planKey(a){ return "loom-plan-" + a.id; }
+  function getPlan(a){ try { var v = JSON.parse(localStorage.getItem(planKey(a))); if (Array.isArray(v)) return v; } catch(e){} return ["", "", ""]; }
+  function setPlan(a, v){ try { localStorage.setItem(planKey(a), JSON.stringify(v)); } catch(e){} }
+
+  function render(){
+    var a = cur, st = $("stage");
+    var html = '<svg class="links" viewBox="0 0 1600 900" aria-hidden="true">';
+    // each line leaves the side of the centre box nearest its branch, so nothing crosses the plan
+    [[610, 320, 510, 200], [610, 375, 510, 620], [990, 320, 1090, 200], [990, 375, 1090, 640], [800, 458, 800, 512]].forEach(function(p, i){
+      var col = ["#7dd3fc", "#f87171", "#4ade80", "#fbbf24", "#e04fd6"][i], mx = (p[0] + p[2]) / 2;
+      var d = i === 4 ? "M" + p[0] + " " + p[1] + " L " + p[2] + " " + p[3] : "M" + p[0] + " " + p[1] + " C " + mx + " " + p[1] + ", " + mx + " " + p[3] + ", " + p[2] + " " + p[3];
+      html += '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="3" stroke-opacity=".6"/>';
+    });
+    html += "</svg>";
+    html += '<div class="centre"><div class="nm">' + esc(a.name) + '</div><div class="meta">' + esc(a.age) + " · " + esc(a.place) + '</div><div class="want"><small>What they want</small>' + esc(a.want) + "</div></div>";
+    BR.forEach(function(b){
+      html += '<div class="br" style="left:' + b.x + "px; top:" + b.y + 'px"><h3 style="color:' + b.c + '"><i style="background:' + b.c + '"></i>' + esc(b.title) + "</h3>" + b.cards(a).map(function(c){ return cardHtml(c, b.c); }).join("") + "</div>";
+    });
+    var plan = getPlan(a);
+    html += '<div class="plan"><h3 style="margin:0 0 8px; font:700 15px/1 var(--head); letter-spacing:.1em; text-transform:uppercase; color:var(--pink)">Your plan of action</h3><div class="card"><small>The Attraction Formula, for ' + esc(a.name) + '</small><ol id="planList">' +
+      plan.map(function(p){ return '<li contenteditable="true">' + esc(p) + "</li>"; }).join("") + '</ol><div class="edit">Press Enter for a new step.</div></div></div>';
+    st.innerHTML = html;
+    // phones: same content, stacked
+    var sk = '<div class="card" style="--c:var(--pink)"><small>' + esc(a.age) + " · " + esc(a.place) + '</small><p style="font:800 22px/1.2 var(--head)">' + esc(a.name) + '</p><p style="margin-top:6px">' + esc(a.want) + "</p></div>";
+    BR.forEach(function(b){ sk += '<h3 style="margin:6px 0 0; font:700 13px/1 var(--head); letter-spacing:.1em; text-transform:uppercase; color:' + b.c + '">' + esc(b.title) + "</h3>" + b.cards(a).map(function(c){ return cardHtml(c, b.c); }).join(""); });
+    $("stack").innerHTML = sk;
+    var ol = $("planList");
+    function save(){ setPlan(a, Array.prototype.map.call(ol.querySelectorAll("li"), function(li){ return li.textContent.trim(); })); }
+    ol.addEventListener("input", save);
+    ol.addEventListener("keydown", function(e){
+      if (e.key !== "Enter") return; e.preventDefault();
+      var li = document.createElement("li"); li.contentEditable = "true"; e.target.closest("li").after(li); li.focus(); save();
+    });
+    fit();
+    document.querySelectorAll(".app").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.id === a.id)); });
+  }
+  function fit(){ var box = $("box"), s = box.clientWidth / 1600; $("stage").style.transform = "scale(" + s + ")"; }
+  window.addEventListener("resize", fit);
+  document.addEventListener("fullscreenchange", function(){ setTimeout(fit, 50); });
+
+  $("apps").innerHTML = APPS.map(function(a){ return '<button type="button" class="app" data-id="' + a.id + '"><b>' + esc(a.name) + "</b><span>" + esc(a.date) + " · " + esc(a.place) + "</span></button>"; }).join("");
+  document.querySelectorAll(".app").forEach(function(b){ b.addEventListener("click", function(){ cur = APPS.filter(function(x){ return x.id === b.dataset.id; })[0]; render(); }); });
+  $("full").addEventListener("click", function(){ var box = $("box"); if (box.requestFullscreen) box.requestFullscreen().catch(function(){}); });
+  $("clear").addEventListener("click", function(){ setPlan(cur, ["", "", ""]); render(); });
+  render();
+})();
+</script>

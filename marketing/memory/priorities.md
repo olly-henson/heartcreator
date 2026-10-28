@@ -12,7 +12,7 @@ Phase 1 foundations are largely done. Moving into content creation at scale and 
 
 ---
 
-## ⏰ Tomorrow — 2026-10-27: sort out the GHL redirects
+## ✅ Done 2026-10-27: GHL redirects (/love, /video-tt, /scale-tt, /apply-ig, /apply-email, /apply-fb, /apply-tt made; /lovescale fixed to the description link; /apply-wa dropped, not needed)
 
 Create in GHL (Sites → Settings → URL Redirects), test each in a private window (UTMs must survive), then tell Claude so the Hub + generator switch to the short links. Full list: marketing/memory/utm-link-log.md.
 - [ ] `/love` → `https://ollyhenson.com/scale?utm_source=youtube&utm_medium=shorts&utm_campaign=emotional_scale_check` (Shorts description already says ollyhenson.com/love)

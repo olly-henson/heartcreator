@@ -1,0 +1,151 @@
+<title>Feeling Finder Emails</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- Copy page for the Feeling Finder workflow emails (Olly, 2026-10-28). "Copy email" puts formatted text
+     (Arial, 18px, 1.5 line spacing, linked "here") on the clipboard, ready to paste into a GHL email step. -->
+<style>
+  /* Layout: one column of email cards, each with subject/preview and a formatted body to copy. */
+  :root{
+    --bg:#f6f3f8; --card:#ffffff; --ink:#1d1424; --muted:#6b5d78; --line:#e4dcea; --accent:#9b2fc4; --paper:#ffffff;
+    --ui:system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#140c19; --card:#1e1426; --ink:#f3ecf7; --muted:#b4a5c2; --line:#34263f; --accent:#d78cff; color-scheme:dark; } }
+  :root[data-theme="dark"]{ --bg:#140c19; --card:#1e1426; --ink:#f3ecf7; --muted:#b4a5c2; --line:#34263f; --accent:#d78cff; color-scheme:dark; }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--ui); }
+  main{ max-width:760px; margin:0 auto; padding-block:28px 48px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:flex; flex-direction:column; gap:24px; }
+  h1{ font-size:24px; margin:0; text-wrap:balance; }
+  .intro{ margin:6px 0 0; color:var(--muted); font-size:15px; line-height:1.5; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .card h2{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin:0; }
+  .meta{ display:grid; grid-template-columns:auto 1fr auto; gap:8px 12px; align-items:center; font-size:14px; }
+  .meta b{ color:var(--muted); font-weight:600; }
+  .meta span{ min-width:0; overflow-wrap:anywhere; }
+  button{ font:600 14px var(--ui); border-radius:999px; border:1px solid var(--line); background:transparent; color:var(--ink); padding:7px 14px; cursor:pointer; }
+  button.main{ background:var(--accent); border-color:var(--accent); color:#fff; padding:10px 18px; align-self:flex-start; }
+  button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .body{ background:#ffffff; color:#000000; border:1px solid var(--line); border-radius:10px; padding:20px; overflow-x:auto; }
+  .status{ font-size:13px; color:var(--muted); min-height:18px; }
+</style>
+
+<main>
+  <div>
+    <h1>Feeling Finder Emails</h1>
+    <p class="intro">In the GHL email step: pick your template first, delete any text it adds, then press <b>Copy email</b> here and paste. It pastes in Arial, 18px, with 1.5 line spacing and "here" already linked. If GHL strips the formatting, press <b>Copy HTML code</b> and paste it into the editor's code view (the &lt;/&gt; button).</p>
+  </div>
+
+  <section class="card" data-email="result">
+    <h2>Day 0 · Result email (Feeling Finder: result)</h2>
+    <div class="meta">
+      <b>Subject</b><span>your results</span><button type="button" data-copytext="your results">Copy</button>
+      <b>Preview</b><span>your emotion and the plan to make it happen</span><button type="button" data-copytext="your emotion and the plan to make it happen">Copy</button>
+    </div>
+    <div class="body" id="body_result"><div style="font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:1.5; color:#000000;">
+<p style="margin:0 0 18px;">Hey {{contact.first_name}},</p>
+<p style="margin:0 0 18px;">Here are your results from The Feeling Finder.</p>
+<p style="margin:0 0 18px;">Right now, when you think about dating and relationships, the main emotion you feel is {{contact.ff_current_emotion}}.</p>
+<p style="margin:0 0 18px;">The person you want:</p>
+<p style="margin:0 0 18px;">{{contact.ff_intentions}}</p>
+<p style="margin:0 0 18px;">And the emotion you'll feel with them: {{contact.ff_resonance}}.</p>
+<p style="margin:0 0 18px;">That's the emotion that attracts your person.</p>
+<p style="margin:0 0 18px;">Here's your plan:</p>
+<p style="margin:0 0 18px;">➡️ Write your 4 intentions down on paper and keep them somewhere you'll see them.</p>
+<p style="margin:0 0 18px;">➡️ Every day, take a few minutes to calm your mind and feel {{contact.ff_resonance}} in your body, as if you're already with them.</p>
+<p style="margin:0 0 18px;">➡️ Keep coming back to it during the day, especially when the old emotion shows up.</p>
+<p style="margin:0 0 18px;">Do this until it feels normal. That's when things start to change.</p>
+<p style="margin:0 0 18px;">This is called The Attraction Formula.</p>
+<p style="margin:0 0 18px;">If you'd like to put it into practice with me, you can find out more about The Heart Attractor Program ===&gt; <a href="https://ollyhenson.com/apply?utm_source=email&amp;utm_medium=feeling_finder_result&amp;utm_campaign=feeling_finder" style="color:#1a0dab; text-decoration:underline;">here</a></p>
+<p style="margin:0 0 18px;">Speak soon,</p>
+<p style="margin:0;">Olly</p>
+</div></div>
+    <button type="button" class="main" data-copyhtml="body_result">Copy email</button>
+    <div class="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card" data-email="bonus">
+    <h2>Day 1 · Bonus email (Feeling Finder: bonus training)</h2>
+    <div class="meta">
+      <b>Subject</b><span>a bonus for you</span><button type="button" data-copytext="a bonus for you">Copy</button>
+      <b>Preview</b><span>the full training on attracting your person</span><button type="button" data-copytext="the full training on attracting your person">Copy</button>
+    </div>
+    <div class="body" id="body_bonus"><div style="font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:1.5; color:#000000;">
+<p style="margin:0 0 18px;">Hey {{contact.first_name}},</p>
+<p style="margin:0 0 18px;">Yesterday you used The Feeling Finder and found your emotion: {{contact.ff_resonance}}.</p>
+<p style="margin:0 0 18px;">Today I want to give you a bonus to go with it.</p>
+<p style="margin:0 0 18px;">It's my full free training on how to use that emotion to attract a genuine, committed relationship.</p>
+<p style="margin:0 0 18px;">In it I show you:</p>
+<p style="margin:0 0 18px;">➡️ why more inner work hasn't brought the right person in</p>
+<p style="margin:0 0 18px;">➡️ why the emotion you're in decides who you attract</p>
+<p style="margin:0 0 18px;">➡️ how to embody your emotion every day</p>
+<p style="margin:0 0 18px;">You can watch it ===&gt; <a href="https://youtu.be/IneemXUd7Nw" style="color:#1a0dab; text-decoration:underline;">here</a></p>
+<p style="margin:0 0 18px;">Speak soon,</p>
+<p style="margin:0;">Olly</p>
+</div></div>
+    <button type="button" class="main" data-copyhtml="body_bonus">Copy email</button>
+    <div class="status" aria-live="polite"></div>
+  </section>
+  <section class="card" data-email="training">
+    <h2>Training opt-in workflow · Day 1 · Training bonus: The Feeling Finder</h2>
+    <div class="meta">
+      <b>Subject</b><span>a bonus for you</span><button type="button" data-copytext="a bonus for you">Copy</button>
+      <b>Preview</b><span>find the emotion that attracts your person</span><button type="button" data-copytext="find the emotion that attracts your person">Copy</button>
+    </div>
+    <div class="body" id="body_training"><div style="font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:1.5; color:#000000;">
+<p style="margin:0 0 18px;">Hey {{contact.first_name}},</p>
+<p style="margin:0 0 18px;">Yesterday I sent you my free training on Emotional Resonance.</p>
+<p style="margin:0 0 18px;">Today I want to give you a bonus to go with it.</p>
+<p style="margin:0 0 18px;">It's called The Feeling Finder.</p>
+<p style="margin:0 0 18px;">It takes 2 minutes and shows you the exact emotion you need to attract your perfect relationship.</p>
+<p style="margin:0 0 18px;">In it you'll find out:</p>
+<p style="margin:0 0 18px;">➡️ the main emotion you feel about dating right now</p>
+<p style="margin:0 0 18px;">➡️ the emotion you'll feel with your perfect partner</p>
+<p style="margin:0 0 18px;">➡️ where you are on the scale, and where you need to be</p>
+<p style="margin:0 0 18px;">➡️ your plan to close the gap</p>
+<p style="margin:0 0 18px;">You can use it ===&gt; <a href="https://ollyhenson.com/feeling?utm_source=email&amp;utm_medium=training_followup&amp;utm_campaign=feeling_finder" style="color:#1a0dab; text-decoration:underline;">here</a></p>
+<p style="margin:0 0 18px;">Speak soon,</p>
+<p style="margin:0;">Olly</p>
+</div></div>
+    <button type="button" class="main" data-copyhtml="body_training">Copy email</button>
+    <div class="status" aria-live="polite"></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  function flash(btn, msg){ var t = btn.textContent; btn.textContent = msg; setTimeout(function(){ btn.textContent = t; }, 1500); }
+  function selectEl(el){ var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+  document.querySelectorAll("[data-copytext]").forEach(function(b){
+    b.addEventListener("click", function(){
+      navigator.clipboard.writeText(b.dataset.copytext).then(function(){ flash(b, "Copied"); }, function(){ flash(b, "Select it"); });
+    });
+  });
+
+  // "Copy HTML code": for GHL's code view / Custom HTML element, where pasted formatting can get stripped
+  document.querySelectorAll("[data-copyhtml]").forEach(function(b){
+    var c = document.createElement("button"); c.type = "button"; c.textContent = "Copy HTML code"; c.style.alignSelf = "flex-start";
+    b.insertAdjacentElement("afterend", c);
+    c.addEventListener("click", function(){
+      var html = document.getElementById(b.dataset.copyhtml).innerHTML.trim(), status = b.parentNode.querySelector(".status");
+      navigator.clipboard.writeText(html).then(function(){ status.textContent = "HTML code copied. Paste it into GHL's code view (</> button) or a Custom HTML element."; flash(c, "Copied"); },
+        function(){ status.textContent = "Couldn't copy. Try the Copy email button instead."; });
+    });
+  });
+  document.querySelectorAll("[data-copyhtml]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var el = document.getElementById(b.dataset.copyhtml), status = b.parentNode.querySelector(".status");
+      var html = el.innerHTML, text = el.innerText;
+      function fallback(){
+        // select the formatted email and use the browser's own copy, which keeps the formatting
+        selectEl(el);
+        var ok = false; try { ok = document.execCommand("copy"); } catch(e){}
+        status.textContent = ok ? "Copied with formatting. Paste it into GHL." : "Selected. Press Ctrl+C (Cmd+C on Mac) to copy, then paste into GHL.";
+      }
+      try {
+        if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+          navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type:"text/html" }), "text/plain": new Blob([text], { type:"text/plain" }) })])
+            .then(function(){ status.textContent = "Copied with formatting. Paste it into GHL."; flash(b, "Copied"); }, fallback);
+        } else fallback();
+      } catch(e){ fallback(); }
+    });
+  });
+})();
+</script>

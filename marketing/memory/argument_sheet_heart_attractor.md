@@ -10,24 +10,54 @@
 
 > Built with Olly on 2026-10-18. **This replaces v5 below.** The live source of truth is the Core message tab of the Messaging Center (https://claude.ai/artifact/QPbzwHtvFExE8qqZKbB8ea, file `marketing\messaging-center.html`). If the two differ, the Messaging Center wins; update this sheet to match. Tool links and upkeep: `marketing\messaging-tools\`.
 
+**The core problem (2026-10-28):** Part of you doesn't believe it will happen. That's because you don't 'feel' it. It's a belief problem, and it lives in how they feel, not what they think. Feel it first, and the belief follows.
+
+**Olly's summary:** see the Messaging Center, "The argument in short (Olly's words)" (2026-10-28).
+
 **One line:** Who you attract isn't about what you know. It's how you feel.
 
 **The one thing:** THE RIGHT EMOTIONAL STATE. The pain is the wrong emotional state, and The Attraction Formula Meditation puts you in the right one, so you attract the right person.
 
+
+## The argument, systemised (Olly's summary, 2026-10-28; Messaging Center is the source of truth)
+
+- **Who:** Driven, growth-minded singles who've done years of inner work and tried every method.
+- **Promised land:** A committed, genuine long-term relationship with someone they're attracted to, who's still fun to be with. Calm, ordinary days together where they feel safe being themselves.
+- **Pain:** They know intellectually exactly what they want, but nothing is happening. Meanwhile their friends are settling down.
+- **Bleeding neck pain:** They don't really believe it can happen for them, even though they really want it to.
+- **Old belief:** "If I keep working on myself and get clearer on what I want, it'll happen."
+- **Why it isn't working:** The work is awesome and has made them intellectually clear about what they want and what to do. But they still don't feel like it can happen for them. So the loop continues.
+- **The crack:** Their friends and family don't understand relationships as well as they do, and haven't done as much work on themselves. Yet they found a great partner and built a life together. They just had a connection, and that emotional connection matters.
+- **Analogy:** You're reading the radio manual instead of changing the station. However much you know about radios, you only pick up the station you're tuned to.
+- **Real cause (THE problem, like FitPro's "no authority"):** You don't feel it can happen for you.
+- **How it shows up:** dread, despair, frustration, impatience every time they think about dating; the body reacts (shift in heartbeat, worry, tightness in chest or throat). Those reactions attract the wrong people and keep the right ones away.
+- **Why it matters:** we resonate with people we emotionally connect with, so someone can tick every box and still feel wrong. Only shifting your emotional state changes it.
+- **Reel flow:** see Messaging Center → Content → "How a Reel carries it (Olly's example)".
+- **The root:** Fear. Those reactions are all survival emotions, and learning more doesn't touch them, so they bring the same emotional state to dating every day.
+- **Solution:** Embody the emotional state of the relationship before it happens. The Attraction Formula puts you in the right emotional state around love, so that you attract a consistent, committed relationship where you feel safe being yourself. Two steps: find the emotion of your relationship, then embody it every single day.
+- **Lead magnet:** The Feeling Finder (ollyhenson.com/feeling, keyword FEELING): finds the exact emotion that will attract their perfect relationship and shows where they are right now vs where they need to be.
+- **New belief:** "When I embody the emotion of my relationship before it happens, it unfolds naturally with someone who feels the same."
+- **Ideology:** Love isn't earned or forced. Feel it first, and the belief follows.
+- **Proof:** I didn't meet my wife after doing more work on myself. I met her when I stopped learning more and focused on how I felt about love every day.
+- **What to expect:** It starts to unfold naturally with someone who resonates at the same emotional level. You notice the right people and lose interest in the ones who keep you guessing. You show up relaxed and fully yourself, and dating feels fun again, not a chore.
+- **Why it's a no-brainer:** Nothing to fix and nothing more to learn. Daily access to Olly and a 14-day money-back guarantee.
+
 1. **Who:** Driven, growth-minded singles who've done years of inner work and tried every method.
-2. **Promised land:** A genuine, long-lasting, committed relationship with someone they're attracted to, where they feel safe and can fully be themselves. Someone they can settle down and build a life with. (From Catrin's own words.)
-3. **Pain:** Love is the one area that won't move, while friends who did no inner work settle down.
-4. **Bleeding neck pain:** Part of them doubts it'll ever happen, and when someone great shows up it feels too good to be true.
-5. **Old belief:** "Once I've learned what's wrong with me and fixed it, I'll meet my person."
-6. **The crack:** Your friends who settled down weren't even trying.
+2. **Promised land:** A long-term, committed relationship with someone they're attracted to, who's still fun to be with. Calm, ordinary days together where they feel safe being themselves.
+3. **Pain:** Nothing is happening, despite everything they've done to manifest, heal and fix themselves. Meanwhile their friends are settling down.
+4. **Bleeding neck pain:** Thoughts like "Maybe I'm too much", "Maybe I'm not enough" and "Maybe it can happen for others but not for me". Part of them doesn't believe it's really possible.
+5. **Old belief:** "Once I've healed, fixed myself or manifested hard enough, it'll happen." So they keep doing more work on themselves.
+   - **Why it isn't working:** Their self-development is great: they're growing, more self-aware and happier in most areas of life. But none of it changes how they feel about love. None of it is making them truly believe it's possible for them.
+6. **The crack:** Your friends and family didn't do all this work on themselves to meet their person. That's proof you don't need to do more work on yourself. All you need is to build the belief and feel like it's actually possible for you.
 7. **Analogy:** You're reading the radio manual instead of changing the station. However much you know about radios, you only pick up the station you're tuned to. (Replaced the cat analogy; still for Olly's review.)
-8. **Real cause:** The wrong emotional state around love. You might feel free at work and joyful with friends, but every time you think about being with someone, you feel frustration, anxiety or worry. That's the state you bring to dating, so you keep attracting people who match it, the right ones don't come in, and you can't even see them when they're there. So you stay stuck in the loop.
-9. **Solution:** The Attraction Formula Meditation: a 10-minute daily meditation that puts you in the right emotional state.
+8. **Real cause:** A belief problem, and it lives in how they feel, not what they think. They don't feel it's possible, so they're stuck in survival emotions around love (doubt, worry, fear) and go into every date braced for it to fail.
+9. **Mechanism:** The Attraction Formula puts you in the right emotional state around love, so that you attract a consistent, committed relationship where you feel safe being yourself. (Content stays at this principle. The 2 steps, find your emotional resonance then embody it every day, are for the Loom. What's inside: The Attraction Formula Meditation, 10 minutes a day:)
    - **Drop In:** bring your attention out of your head and into your heart.
    - **Open Up:** begin to slow your breathing so your body relaxes and opens up.
    - **Feel It:** generate a new emotional state aligned with the future you want with your partner.
-10. **New belief:** "The right emotional state attracts the right person. The Attraction Formula Meditation puts me in it, every day."
-11. **Proof:** I met my wife when I focused on how I was feeling every day, improving it and shifting my state, rather than learning more about what I should be doing.
+10. **New belief:** "I don't need to fix myself or believe harder first. When I feel it every day, I start to believe it, and I attract the right person."
+    - **Ideology:** Love isn't earned or forced. Feel it first, and the belief follows.
+11. **Proof:** I didn't meet my wife after doing more work on myself. I met her when I stopped learning more and focused on how I felt about love every day.
 12. **What to expect:** You're better able to spot high-quality partners. You naturally repel people who are time wasters and who aren't right for you. The right people start showing up in your world and things unfold in a natural and exciting way. And you get to be fully yourself: vulnerable, outgoing, playful, without faking it or thinking about how to act.
    - **Be fully yourself (Olly, 2026-10-25):** elevated emotional states let people be their authentic selves, not a performance. A big part of why Catrin joined: she wanted to "cultivate safety in myself to be able to be fully vulnerable and fully myself." Use it in content now and then (about one idea in five), never forced.
 13. **Why it's a no-brainer:** 10 minutes a day. 7 days free. Nothing to fix.

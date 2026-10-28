@@ -1,0 +1,449 @@
+<title>The Love Scale</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--
+  Emotional Scale Check (lead magnet, PREVIEW 2026-10-26). A 2-minute quiz: 8 real moments around love,
+  each answer is a feeling from the training's Emotional Scale. Email gate before the result, then
+  where they are on the scale, what it means, their next step up and their biggest gap.
+  Same look as the live opt-in (emotional-resonance-optin.html): dark purple, Poppins, lilac/pink gradient.
+  WEBHOOK_URL = GHL workflow "Emotional Scale Check" (2026-10-26). The preview artifact LE5bghduvHGxcuW5iNWECf was published before the webhook was added: never republish this file as the preview.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+  /* Layout: one centred card column, one screen at a time (start → 8 questions → email → result). Single dark look, same as the opt-in. */
+  :root{
+    --bg:#0A0510; --deep:#150818; --card:#1a0b24; --field:#140a1c;
+    --text:#ffffff; --soft:#E6DCF2; --muted:#B9A6CC;
+    --lilac:#E1A6FF; --pink:#d946ef; --line:rgba(225,166,255,.22);
+    --font:'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color-scheme: dark;
+  }
+  html, body{ margin:0 !important; padding:0 !important; overflow-x:hidden !important; background:#0A0510 !important; }
+  /* GHL's own section/row/column wrappers default to white: paint them dark so no white strip shows under a short screen */
+  .hl_page-preview--content, .hl_page-preview--content .fullSection, .hl_page-preview--content .c-section, .hl_page-preview--content .c-row, .hl_page-preview--content .c-column, #preview-container{ background:#0A0510 !important; }
+  body{ background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .ohc-page{
+    width:100vw !important; position:relative !important; left:50% !important; transform:translateX(-50%) !important; box-sizing:border-box;
+    min-height:100vh; min-height:100dvh; background:radial-gradient(120% 100% at 20% 0%, #4B1466 0%, var(--deep) 55%, var(--bg) 100%);
+    padding-block:36px 56px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+  .ohc-wrap{ max-width:560px; margin:0 auto; }
+  .ohc-badge{
+    display:inline-block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lilac);
+    border:1px solid var(--line); border-radius:999px; padding:7px 14px; margin-bottom:18px;
+  }
+  .ohc-h1{ font-size:clamp(28px, 7vw, 40px); font-weight:800; line-height:1.15; margin:0 0 14px; text-wrap:balance; }
+  .ohc-grad{ background:linear-gradient(135deg, var(--lilac), var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .ohc-sub{ font-size:17px; line-height:1.6; color:var(--soft); margin:0 0 24px; }
+  /* start screen = landing page: centred, inverted pyramid (each line narrower than the one above) */
+  #ohc_start{ text-align:center; }
+  #ohc_start .ohc-teaser{ text-align:left; }
+  .ohc-pyr span{ display:block; white-space:nowrap; }
+  /* headline wider than the subheading's first line on every screen (Olly, 2026-10-26) */
+  .ohc-big{ font-size:48px; }
+  .ohc-big > span{ display:block; white-space:nowrap; }
+  .ohc-phone{ display:none; }
+  @media (max-width:600px){
+    .ohc-big{ font-size:min(48px, calc((100vw - 32px) * 0.98 / 11.4)); }
+    .ohc-desk{ display:none; }
+    .ohc-phone{ display:block; font-size:min(16px, calc((100vw - 32px) * 0.85 / 18)); }
+  }
+  .ohc-btn{
+    display:block; width:100%; border:0; border-radius:14px; padding:17px 20px; cursor:pointer; text-align:center; text-decoration:none;
+    background:linear-gradient(135deg, var(--lilac), var(--pink)); color:var(--deep); font:800 16px/1.2 var(--font);
+    box-shadow:0 10px 30px rgba(217,70,239,.25); transition:transform .15s ease, opacity .15s ease;
+  }
+  .ohc-btn:hover{ transform:translateY(-1px); }
+  .ohc-btn:disabled{ opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
+  .ohc-btn:focus-visible, .ohc-opt:focus-visible, .ohc-back:focus-visible, .ohc-input:focus-visible{ outline:2px solid var(--lilac); outline-offset:3px; }
+  .ohc-ghost{ background:transparent; color:var(--lilac); border:1px solid var(--line); box-shadow:none; font-weight:700; }
+  .ohc-trust{ display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:center; margin-top:16px; font-size:13px; color:var(--muted); }
+  .ohc-trust span::before{ content:'\2713'; color:var(--pink); font-weight:800; margin-right:6px; }
+
+  /* start screen: a mini scale as the "hero" */
+  .ohc-teaser{ display:grid; grid-template-columns:14px 1fr; gap:0 14px; margin:0 0 26px; padding:18px; border:1px solid var(--line); border-radius:16px; background:rgba(26,11,36,.6); }
+  .ohc-teaser .bar{ grid-row:1 / span 2; border-radius:7px; background:linear-gradient(180deg, #4ade80 0%, #facc15 45%, #fb923c 60%, #b91c1c 100%); }
+  .ohc-teaser p{ margin:0; padding:8px 0; font-size:14px; color:var(--soft); display:flex; justify-content:space-between; gap:10px; }
+  .ohc-teaser p b{ color:var(--text); font-weight:600; }
+  .ohc-teaser p + p{ border-top:1px dashed var(--line); }
+
+  /* progress */
+  .ohc-top{ display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+  /* small text "Back" bottom left, Next button beside it (same as the step-by-step application) */
+  .ohc-nav{ display:flex; align-items:center; gap:16px; }
+  .ohc-nav .ohc-btn{ flex:1; }
+  .ohc-back{ flex:none; background:none; border:0; padding:10px 4px; color:var(--muted); font:600 14px var(--font); cursor:pointer; }
+  .ohc-back:hover{ color:var(--text); }
+  .ohc-back[disabled]{ visibility:hidden; }
+  .ohc-backlink{ display:inline-block; margin:0 0 14px; padding-left:0; }
+  .ohc-back[disabled]{ visibility:hidden; }
+  .ohc-prog{ flex:1; height:6px; border-radius:3px; background:rgba(225,166,255,.15); overflow:hidden; }
+  .ohc-prog i{ display:block; height:100%; width:0; border-radius:3px; background:linear-gradient(90deg, var(--lilac), var(--pink)); transition:width .3s ease; }
+  .ohc-count{ flex:none; font-size:13px; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; }
+
+  /* question */
+  .ohc-moment{ font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lilac); margin:0 0 8px; }
+  .ohc-q{ font-size:clamp(21px, 5.4vw, 26px); font-weight:700; line-height:1.3; margin:0 0 20px; text-wrap:balance; }
+  .ohc-opts{ display:flex; flex-direction:column; gap:10px; margin-bottom:22px; }
+  .ohc-opt{
+    display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer;
+    background:var(--card); color:var(--soft); border:1px solid var(--line); border-radius:14px; padding:15px 16px;
+    font:500 15px/1.45 var(--font); transition:border-color .15s ease, background .15s ease;
+  }
+  .ohc-opt::before{ content:''; flex:none; width:18px; height:18px; border-radius:50%; border:2px solid var(--line); }
+  .ohc-opt:hover{ border-color:rgba(225,166,255,.5); }
+  .ohc-opt[aria-pressed="true"]{ border-color:var(--pink); background:#2a1238; color:var(--text); }
+  .ohc-opt[aria-pressed="true"]::before{ border-color:var(--pink); background:radial-gradient(circle, var(--pink) 0 45%, transparent 50%); }
+
+  /* email */
+  .ohc-card{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:24px 20px; }
+  .ohc-label{ display:block; font-size:14px; font-weight:600; margin:0 0 8px; }
+  .ohc-field{ margin-bottom:16px; min-width:0; }
+  .ohc-names{ display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
+  .ohc-input{
+    width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:12px; padding:14px 16px; background:var(--field);
+    font:400 16px var(--font); color:var(--text); caret-color:var(--text);
+  }
+  .ohc-input:focus{ outline:none; border-color:var(--pink); box-shadow:0 0 0 4px rgba(217,70,239,.15); }
+  .ohc-error{ min-height:20px; margin:10px 0 0; text-align:center; font-size:14px; color:#ff9ab3; }
+  .ohc-note{ font-size:13px; color:var(--muted); text-align:center; margin:12px 0 0; }
+
+  /* result: the scale */
+  .ohc-result-h{ font-size:clamp(26px, 6.6vw, 34px); font-weight:800; line-height:1.2; margin:0 0 10px; text-wrap:balance; }
+  .ohc-scale{ position:relative; display:grid; grid-template-columns:14px 16px 1fr; gap:0 12px; margin:22px 0 28px; padding:16px 16px 16px 18px; border:1px solid var(--line); border-radius:18px; background:rgba(26,11,36,.7); }
+  .ohc-scale .bar{ position:relative; border-radius:8px; background:linear-gradient(180deg, #4ade80 0%, #22c55e 18%, #facc15 38%, #fb923c 58%, #ef4444 80%, #b91c1c 100%); } /* traffic light: green top, red survival emotions at the bottom */
+  /* Threshold (Olly, 2026-10-28): the scale's halfway point, survival-based emotions below, elevated above */
+  .ohc-zones{ display:flex; flex-direction:column; }
+  .ohc-zones span{ flex:1; display:flex; align-items:center; justify-content:center; writing-mode:vertical-rl; transform:rotate(180deg); font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
+  .ohc-zones .up{ color:#4ade80; }
+  .ohc-zones .down{ color:#f87171; }
+  .ohc-scale::after{ content:""; position:absolute; left:10px; right:10px; top:50%; height:2px; margin-top:-1px; background:rgba(255,255,255,.7); border-radius:2px; pointer-events:none; }
+  @media (max-width:389px){ .ohc-scale{ gap:0 8px; padding:14px 10px 14px 12px; } .ohc-levels li .tag{ font-size:9px; letter-spacing:.03em; } .ohc-levels li{ font-size:12px; } .ohc-scale .ohc-marker{ width:20px; height:20px; margin:-10px 0 0 -10px; border-width:3px; } }
+  .ohc-marker{
+    position:absolute; left:50%; width:26px; height:26px; margin:-13px 0 0 -13px; border-radius:50%;
+    background:#fff; border:4px solid var(--pink); box-shadow:0 0 0 6px rgba(217,70,239,.25), 0 4px 18px rgba(0,0,0,.4);
+    top:100%; transition:top 1.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .ohc-levels{ list-style:none; margin:0; padding:0; }
+  .ohc-levels li{ display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; line-height:1; height:22px; color:var(--muted); }
+  .ohc-levels li.band-start{ border-top:1px dashed var(--line); }
+  .ohc-levels li .tag{ font-size:10px; font-weight:700; letter-spacing:.05em; white-space:nowrap; text-transform:uppercase; color:var(--muted); opacity:.75; }
+  .ohc-levels li.mine{ color:var(--text); font-weight:700; }
+  .ohc-levels li.inband{ color:var(--soft); }
+  .ohc-sec{ margin:0 0 22px; }
+  .ohc-sec h3{ font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lilac); margin:0 0 8px; }
+  .ohc-sec p{ font-size:16px; line-height:1.65; color:var(--soft); margin:0 0 10px; }
+  .ohc-formula{ border:1px solid var(--pink); background:#2a1238; border-radius:14px; padding:18px 18px 8px; margin:0 0 22px; }
+  .ohc-formula .ohc-mech{ font-size:18px; line-height:1.5; font-weight:700; color:var(--text); }
+  .ohc-formula .ohc-btn{ width:100%; max-width:100%; box-sizing:border-box; white-space:normal; padding-left:14px; padding-right:14px; }
+  .ohc-steps{ list-style:none; margin:6px 0 0; padding:0; display:flex; flex-direction:column; gap:14px; counter-reset:step; }
+  .ohc-steps > li{ position:relative; padding-left:46px; counter-increment:step; }
+  .ohc-steps > li::before{ content:counter(step); position:absolute; left:0; top:0; width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, var(--lilac), var(--pink)); color:#1a0b24; font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center; }
+  .ohc-steps b{ display:block; color:var(--text); font-size:17px; line-height:1.35; margin:4px 0 4px; }
+  .ohc-steps p{ margin:0 0 8px; }
+  .ohc-steps ul{ list-style:disc; margin:2px 0 10px; padding-left:20px; color:var(--soft); font-size:16px; line-height:1.6; }
+  .ohc-steps .ex{ font-size:14px; color:var(--muted); font-style:italic; }
+  .ohc-chips{ display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 10px; }
+  .ohc-chips span{ font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; border:1px solid var(--pink); color:var(--text); background:#2a1238; }
+  .ohc-gap{ border:1px solid var(--line); border-radius:14px; padding:14px 16px; background:var(--card); }
+  .ohc-gap b{ display:block; color:var(--text); margin-bottom:4px; }
+  .ohc-ctas{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+  .ohc-restart{ display:block; margin:22px auto 0; background:none; border:0; color:var(--muted); font:500 14px var(--font); text-decoration:underline; cursor:pointer; }
+  .ohc-preview{ margin:28px 0 0; padding:10px 14px; border:1px dashed var(--line); border-radius:10px; font-size:12px; line-height:1.5; color:var(--muted); }
+  .ohc-screen{ animation:ohcIn .3s ease; }
+  @keyframes ohcIn{ from{ opacity:.4; transform:translateY(6px); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion: reduce){ .ohc-screen{ animation:none; } .ohc-marker{ transition:none; } .ohc-prog i{ transition:none; } }
+</style>
+
+<div class="ohc-page">
+  <div class="ohc-wrap" id="ohc_app">
+
+    <!-- START -->
+    <section class="ohc-screen" id="ohc_start">
+      <span class="ohc-badge">The Love Scale · Free</span>
+      <h1 class="ohc-h1 ohc-big"><span>Are You In The Right</span><span><span class="ohc-grad">Emotional State</span></span><span>To Attract Love?</span></h1>
+      <p class="ohc-sub ohc-pyr ohc-desk"><span>Answer 10 simple questions to find out if you're</span><span>in the right emotional state to attract love.</span></p>
+      <p class="ohc-sub ohc-pyr ohc-phone"><span>Answer 10 simple questions</span><span>to find out if you're in the right</span><span>emotional state to attract love.</span></p>
+      <div class="ohc-teaser" aria-hidden="true">
+        <div class="bar"></div>
+        <p><b>Elevated emotions</b><span>Joy · Love · Hope</span></p>
+        <p><b>Survival-based emotions</b><span>Worry · Doubt · Fear</span></p>
+      </div>
+      <button class="ohc-btn" type="button" id="ohc_begin">Find Out</button>
+      <div class="ohc-trust"><span>10 questions</span><span>About 2 minutes</span><span>Free</span></div>
+    </section>
+
+    <!-- QUESTION -->
+    <section class="ohc-screen" id="ohc_quiz" hidden>
+      <div class="ohc-top">
+        <div class="ohc-prog"><i id="ohc_bar"></i></div>
+        <span class="ohc-count" id="ohc_count">1 / 10</span>
+      </div>
+      <p class="ohc-moment" id="ohc_moment"></p>
+      <h2 class="ohc-q" id="ohc_q"></h2>
+      <div class="ohc-opts" id="ohc_opts"></div>
+      <div class="ohc-nav">
+        <button class="ohc-back" type="button" id="ohc_back">&#8592; Back</button>
+        <button class="ohc-btn" type="button" id="ohc_next" disabled>Next</button>
+      </div>
+    </section>
+
+    <!-- EMAIL -->
+    <section class="ohc-screen" id="ohc_email" hidden>
+      <button class="ohc-back ohc-backlink" type="button" id="ohc_eback">&#8592; Back</button><br>
+      <span class="ohc-badge">Your result is ready</span>
+      <h2 class="ohc-h1" style="font-size:clamp(24px,6vw,32px);">Where shall I send your <span class="ohc-grad">personal breakdown?</span></h2>
+      <p class="ohc-sub">You'll see your result straight away, and I'll email you a copy with how to start attracting high-quality people.</p>
+      <div class="ohc-card">
+        <div class="ohc-names">
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_first">First name</label>
+            <input class="ohc-input" id="ohc_first" type="text" autocomplete="given-name" placeholder="First name">
+          </div>
+          <div class="ohc-field">
+            <label class="ohc-label" for="ohc_last">Last name</label>
+            <input class="ohc-input" id="ohc_last" type="text" autocomplete="family-name" placeholder="Last name">
+          </div>
+        </div>
+        <div class="ohc-field">
+          <label class="ohc-label" for="ohc_mail">Email</label>
+          <input class="ohc-input" id="ohc_mail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com">
+        </div>
+        <button class="ohc-btn" type="button" id="ohc_show">Show My Result</button>
+        <p class="ohc-error" id="ohc_err" role="alert"></p>
+        <p class="ohc-note">No spam. Unsubscribe any time.</p>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="ohc-screen" id="ohc_result" hidden>
+      <span class="ohc-badge" id="ohc_rband"></span>
+      <h2 class="ohc-result-h" id="ohc_rhead"></h2>
+      <p class="ohc-sub" id="ohc_rline"></p>
+
+      <div class="ohc-scale">
+        <div class="ohc-zones" aria-hidden="true"><span class="up">Elevated emotions</span><span class="down">Survival-based emotions</span></div>
+        <div class="bar"><span class="ohc-marker" id="ohc_marker"></span></div>
+        <ul class="ohc-levels" id="ohc_levels"></ul>
+      </div>
+
+      <div class="ohc-sec"><h3>What this means</h3><div id="ohc_rmeans"></div></div>
+      <div class="ohc-sec"><h3>Your next steps</h3>
+        <p id="ohc_sintro"></p>
+        <ol class="ohc-steps">
+          <li><b>Get really clear on the relationship you want.</b>
+            <p>This is your first and most important step. Write down your intentions for the relationship. For example:</p>
+            <ul>
+              <li>An emotionally available partner</li>
+              <li>Someone I'm physically attracted to</li>
+              <li>Someone who shares my values</li>
+              <li>Someone who makes me feel safe</li>
+            </ul>
+            <p class="ex">Make it specific to you.</p>
+            <p>Then write down the emotions being with this person would make you feel. That could be peace, safety, passion, empowerment or appreciation. There's no right answer. The emotions that attract your partner are specific to you, so take your time and make them yours.</p></li>
+          <li><b id="ohc_s2t"></b>
+            <p id="ohc_s2p"></p></li>
+        </ol>
+      </div>
+      <div class="ohc-formula"><div class="ohc-sec">
+        <h3>This is called The Attraction Formula</h3>
+        <p class="ohc-mech" id="ohc_mech"></p>
+        <p>If you'd like to put this into practice and get things moving, you can find out more about The Heart Attractor Program.</p>
+        <p>♥️ It's how I met my wife.</p>
+        <div class="ohc-ctas" id="ohc_rbtns"></div>
+      </div></div>
+      <button class="ohc-restart" type="button" id="ohc_again">Take the check again</button>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/d2d567ec-81e9-4b28-9e5a-151273a0c42a"; // GHL "Emotional Scale Check" workflow
+  var TRAINING_URL = "https://youtu.be/IneemXUd7Nw";
+  var APPLY_URL = "https://ollyhenson.com/apply?utm_source=scale_check&utm_medium=result&utm_campaign=heart_attractor";
+
+  // The training's Emotional Scale, top (21) to bottom (0).
+  var SCALE = ["Joy","Love","Freedom","Passion","Enthusiasm","Happiness","Optimism","Hopefulness","Belief","Contentment","Positivity",
+               "Boredom","Pessimism","Frustration","Impatience","Doubt","Worry","Jealousy","Insecurity","Guilt","Fear","Powerlessness"];
+  function lvl(name){ return SCALE.length - 1 - SCALE.indexOf(name); }
+
+  // Two outcomes (Olly, 2026-10-28): cross the threshold. name goes to GHL as scale_band.
+  var BANDS = [
+    { key:"survival", name:"Survival-based emotions", label:"Attracting the wrong people", min:0, max:10.5, top:"Boredom",
+      head:"Your emotional state around relationships is still in survival",
+      line:"That's below the threshold, in the survival-based emotions.",
+      means:[],
+      intro:"Here's what to do to get into the right emotional state, so you can attract the relationship you want.",
+      s2t:"Practise feeling it every day.",
+      s2p:"Once you know what you want and how it will feel, practise feeling it and keep that feeling with you through the day. Use a daily meditation to imprint the new emotion, then anchor it throughout the day until it feels normal.",
+      mech:"These two steps put you in the right emotional state before you meet your partner, so the right person can show up in your life in a natural and enjoyable way.",
+      next:["Joy","Love","Passion"],
+      apply:"",
+      practice:"Above the threshold, in the elevated emotions. This is where you attract high-quality people: consistent, available and ready to commit."},
+    { key:"elevated", name:"Elevated emotions", label:"Attracting high-quality people", min:10.5, max:22, top:"Joy",
+      head:"You're above the threshold",
+      line:"That's above the threshold, in the elevated emotions.",
+      means:[],
+      intro:"You're already in a good place. Here's how to keep this state and point it at the relationship you want.",
+      s2t:"Keep this feeling every single day.",
+      s2p:"Feeling good most days is great. The key now is keeping it on the days that test you: when a match goes quiet, a date falls flat or a friend gets engaged. Use a daily meditation to keep the emotions you wrote down feeling normal, and anchor them throughout the day.",
+      mech:"These two steps keep you in the right emotional state before you meet your partner, so the right person can show up in your life in a natural and enjoyable way.",
+      next:["Joy","Love","Passion"],
+      apply:"",
+      practice:"You're already above the threshold. The key now is staying here every single day."}
+  ];
+
+  // 8 real moments. Each answer = one feeling on the scale (order mixed on purpose).
+  var QUESTIONS = [
+    { moment:"A friend's news", gap:"when other people's love lands", calm:"a friend shares their news and you feel genuinely happy, knowing yours is on its way", q:"A friend tells you they've just got engaged. Your first feeling is…",
+      a:[["Happy for them, with a little pang underneath","Hopefulness"],["A quiet sinking feeling. It's happening for everyone but me","Insecurity"],
+         ["Genuinely happy for them. It reminds me it's possible","Joy"],["“When's it going to be my turn?”","Impatience"]] },
+    { moment:"A match goes quiet", gap:"when someone goes quiet", calm:"a match goes quiet and you feel calm and secure, getting on with your day", q:"Someone you've been chatting to hasn't replied in two days.",
+      a:[["I check my phone more than I'd like to admit","Worry"],["I assume they're busy and get on with my day","Contentment"],
+         ["Here we go again. They're all the same","Pessimism"],["I start replaying what I might have said wrong","Guilt"]] },
+    { moment:"A Sunday on your own", gap:"time on your own", calm:"a quiet Sunday on your own feels peaceful and full", q:"It's Sunday afternoon and you've got nothing planned.",
+      a:[["It's fine, though I notice what's missing","Boredom"],["It's the loneliest part of my week","Powerlessness"],
+         ["I enjoy it. My life feels full as it is","Happiness"],["I keep busy so I don't have to feel it","Frustration"]] },
+    { moment:"Your future", gap:"picturing your future", calm:"you picture your future, see your person beside you and it feels real", q:"When you picture your life five years from now…",
+      a:[["I hope there's someone, but I can't quite see it","Doubt"],["I can see someone beside me and it feels real","Belief"],
+         ["I picture myself on my own and it scares me","Fear"],["I try not to think about it too much","Worry"]] },
+    { moment:"A first date", gap:"dating itself", calm:"the night before a date feels exciting rather than nerve-racking", q:"You've got a first date tomorrow.",
+      a:[["Nervous, but curious to see who they are","Optimism"],["Already wondering if it's worth the effort","Pessimism"],
+         ["Planning what to say so they'll like me","Insecurity"],["Excited. Whatever happens, it'll be fun","Enthusiasm"]] },
+    { moment:"Couples out and about", gap:"seeing other couples", calm:"you see a couple and smile, because that's where you're heading", q:"You walk past a couple holding hands and laughing.",
+      a:[["A small stab of “why not me?”","Jealousy"],["I smile. That's what I'm heading for","Love"],
+         ["I look away","Powerlessness"],["Nice. One day","Hopefulness"]] },
+    { moment:"Someone great is interested", gap:"letting good people in", calm:"someone great shows interest and you relax and enjoy it", q:"Someone genuinely great starts showing real interest in you.",
+      a:[["I like it, but I'm waiting for the catch","Doubt"],["I wonder what they see in me","Insecurity"],
+         ["I let myself enjoy it","Joy"],["I pull back before it can go wrong","Fear"]] },
+    { moment:"Dating right now", gap:"how dating feels overall", calm:"dating feels light and fun again", q:"Honestly, how does dating feel right now?",
+      a:[["Tiring. It feels like a second job","Frustration"],["Open. I enjoy meeting new people","Passion"],
+         ["Done. I've almost given up","Powerlessness"],["It's okay. I dip in and out","Contentment"]] },
+    // About you (2026-10-28): not scored. Shows who's done years of inner work (the ideal client); sent to GHL for the Loom.
+    { about:"looking_for", moment:"About you", q:"How long have you been looking for your person?",
+      a:[["Less than a year"],["1 to 3 years"],["3 to 5 years"],["More than 5 years"]] },
+    { about:"tried_most", moment:"About you", q:"What have you put the most into so far?",
+      a:[["Therapy or healing work"],["Manifestation or visualizing"],["Dating coaches, books or courses"],["Not much yet. This is new for me"]] }
+  ];
+
+  var answers = new Array(QUESTIONS.length).fill(null), qi = 0;
+  var $ = function(id){ return document.getElementById(id); };
+  function show(id){ ["ohc_start","ohc_quiz","ohc_email","ohc_result"].forEach(function(s){ $(s).hidden = (s !== id); }); window.scrollTo(0, 0); }
+
+  function renderQ(){
+    var Q = QUESTIONS[qi];
+    $("ohc_moment").textContent = Q.moment;
+    $("ohc_q").textContent = Q.q;
+    $("ohc_count").textContent = (qi + 1) + " / " + QUESTIONS.length;
+    $("ohc_bar").style.width = ((qi) / QUESTIONS.length * 100) + "%";
+    $("ohc_back").disabled = qi === 0;
+    var box = $("ohc_opts"); box.innerHTML = "";
+    Q.a.forEach(function(opt, j){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "ohc-opt"; b.textContent = opt[0];
+      b.setAttribute("aria-pressed", answers[qi] === j ? "true" : "false");
+      b.addEventListener("click", function(){
+        answers[qi] = j;
+        box.querySelectorAll(".ohc-opt").forEach(function(x, k){ x.setAttribute("aria-pressed", k === j ? "true" : "false"); });
+        $("ohc_next").disabled = false;
+      });
+      box.appendChild(b);
+    });
+    $("ohc_next").disabled = answers[qi] === null;
+    $("ohc_next").textContent = qi === QUESTIONS.length - 1 ? "See My Result" : "Next";
+  }
+
+  function score(){
+    // only the 8 moments are scored; the "about you" questions are skipped
+    var idx = QUESTIONS.map(function(q, k){ return k; }).filter(function(k){ return !QUESTIONS[k].about; });
+    var levels = idx.map(function(k){ return lvl(QUESTIONS[k].a[answers[k]][1]); });
+    var avg = levels.reduce(function(s, v){ return s + v; }, 0) / levels.length;
+    var band = BANDS.filter(function(b){ return avg >= b.min && avg < b.max; })[0] || BANDS[BANDS.length - 1];
+    var lowAt = 0; levels.forEach(function(v, k){ if (v < levels[lowAt]) lowAt = k; });
+    var low = idx[lowAt];
+    // the feeling they picked most often (ties go to the lower one, the more honest read)
+    var counts = {}; idx.forEach(function(k){ var f = QUESTIONS[k].a[answers[k]][1]; counts[f] = (counts[f] || 0) + 1; });
+    var feelings = Object.keys(counts).sort(function(x, y){ return counts[y] - counts[x] || lvl(x) - lvl(y); });
+    var inBand = feelings.filter(function(x){ var L = lvl(x); return L >= band.min && L < band.max; });
+    return { avg:avg, band:band, low:low, feelings:(inBand.length ? inBand : feelings).slice(0, 2), levels:levels };
+  }
+
+  function aboutAnswer(key){ var k = QUESTIONS.findIndex(function(q){ return q.about === key; }); return k < 0 || answers[k] === null ? "" : QUESTIONS[k].a[answers[k]][0]; }
+  function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  function renderResult(name){
+    var r = score(), b = r.band;
+    $("ohc_rband").textContent = b.name;
+    $("ohc_rhead").textContent = (name ? name + ", " + b.head.charAt(0).toLowerCase() + b.head.slice(1) : b.head);
+    $("ohc_rline").textContent = "Your default emotional state around love is roughly " + SCALE[SCALE.length - 1 - Math.round(r.avg)] + ". " + b.line;
+
+    var ul = $("ohc_levels"); ul.innerHTML = "";
+    var mine = SCALE[SCALE.length - 1 - Math.round(r.avg)];
+    SCALE.forEach(function(f){
+      var li = el("li"); li.appendChild(el("span", "", f));
+      var L = lvl(f), bandOf = BANDS.filter(function(x){ return L >= x.min && L < x.max; })[0];
+      if (bandOf && bandOf.top === f) { li.className = "band-start"; li.appendChild(el("span", "tag", bandOf.label || bandOf.name)); }
+      if (bandOf === b) li.classList.add("inband");
+      if (f === mine) li.classList.add("mine");
+      ul.appendChild(li);
+    });
+    var pct = (SCALE.length - 1 - r.avg) / (SCALE.length - 1) * 100;
+    $("ohc_marker").style.top = "100%";
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ $("ohc_marker").style.top = pct + "%"; }); });
+
+    var m = $("ohc_rmeans"); m.innerHTML = ""; b.means.forEach(function(t){ m.appendChild(el("p", "", t)); }); m.parentNode.hidden = !b.means.length; // survival result has no "What this means" (Olly, 2026-10-28)
+    // "Where you want to be" removed from the result page (Olly, 2026-10-28)
+    // Next steps: above the threshold is about keeping the state, below is about getting there
+    $("ohc_sintro").textContent = b.intro; $("ohc_s2t").textContent = b.s2t; $("ohc_s2p").textContent = b.s2p; $("ohc_mech").textContent = b.mech;
+    // Biggest gap section removed from the result page (Olly, 2026-10-26); still sent to GHL as biggest_gap.
+
+    // Next step for every result = the application (Olly, 2026-10-26: most people come from YouTube and have seen the training).
+    var cta = $("ohc_rcta"), btns = $("ohc_rbtns"); btns.innerHTML = "";
+    if (cta) cta.textContent = b.apply;
+    var apply = el("a", "ohc-btn", "Find Out More"); apply.href = APPLY_URL; apply.target = "_blank"; apply.rel = "noopener";
+    btns.appendChild(apply);
+    // Free training button removed (Olly, 2026-10-28): the training is sent as a bonus in the follow-up email instead
+    return r;
+  }
+
+
+  // Page-view counter for the Business Hub (2026-10-26, same as the opt-in page): one count per visit, live site only,
+  // with where the visit came from (the UTMs, else the referring site, else (direct)).
+  (function(){
+    if (!/(^|\.)ollyhenson\.com$/.test(location.hostname)) return;
+    try { if (sessionStorage.getItem('ohc_pv_scale')) return; sessionStorage.setItem('ohc_pv_scale', '1'); } catch(e){}
+    var q = new URLSearchParams(location.search), src = q.get('utm_source') || '', med = q.get('utm_medium') || '', con = q.get('utm_content') || '';
+    if (!src){ try { var r = document.referrer && new URL(document.referrer).hostname; if (r && !/(^|\.)ollyhenson\.com$/.test(r)){ src = r.replace(/^www\./, ''); med = 'referral'; } } catch(e){} }
+    try { navigator.sendBeacon('https://hub.ollyhenson.com/api/track', ['scale', src || '(direct)', med || '', con || ''].join('|')); } catch(e){}
+  })();
+
+  $("ohc_begin").addEventListener("click", function(){ qi = 0; show("ohc_quiz"); renderQ(); });
+  $("ohc_next").addEventListener("click", function(){
+    if (answers[qi] === null) return;
+    if (qi < QUESTIONS.length - 1) { qi++; renderQ(); }
+    else { $("ohc_bar").style.width = "100%"; show("ohc_email"); $("ohc_first").focus(); }
+  });
+  $("ohc_back").addEventListener("click", function(){ if (qi > 0) { qi--; renderQ(); } });
+  $("ohc_eback").addEventListener("click", function(){ qi = QUESTIONS.length - 1; show("ohc_quiz"); renderQ(); });
+  $("ohc_show").addEventListener("click", function(){
+    var first = $("ohc_first").value.trim(), last = $("ohc_last").value.trim(), mail = $("ohc_mail").value.trim();
+    if (!first) { $("ohc_err").textContent = "Add your first name."; return; }
+    if (!last) { $("ohc_err").textContent = "Add your last name."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) { $("ohc_err").textContent = "That email doesn't look right. Check it and try again."; return; }
+    $("ohc_err").textContent = "";
+    var r = renderResult(first);
+    show("ohc_result");
+    if (WEBHOOK_URL) {
+      var p = new URLSearchParams(location.search);
+      fetch(WEBHOOK_URL, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({
+        first_name:first, last_name:last, email:mail, scale_band:r.band.name, scale_feelings:r.feelings.join(" and "), scale_score:Math.round(r.avg * 10) / 10, scale_emotion:SCALE[SCALE.length - 1 - Math.round(r.avg)],
+        biggest_gap:QUESTIONS[r.low].moment,
+        looking_for:aboutAnswer("looking_for"), tried_most:aboutAnswer("tried_most"),
+        utm_source:p.get("utm_source") || "", utm_medium:p.get("utm_medium") || "", utm_campaign:p.get("utm_campaign") || "", utm_content:p.get("utm_content") || ""
+      }) }).catch(function(){});
+    }
+  });
+  $("ohc_again").addEventListener("click", function(){ answers = new Array(QUESTIONS.length).fill(null); qi = 0; show("ohc_start"); });
+})();
+</script>

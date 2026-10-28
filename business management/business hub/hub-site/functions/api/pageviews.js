@@ -28,6 +28,15 @@ export async function onRequestGet({ env }) {
     sources[ym][page] = sources[ym][page] || {};
     sources[ym][page][src] = (sources[ym][page][src] || 0) + n;
   });
+  // per-day views and sources (2026-10-27) for the Overview's Week view
+  const days = {}, daySources = {};
+  await sumPrefix(env, "psd:", function (name, n) {
+    const i = name.indexOf(":", 4), j = name.indexOf(":", i + 1);   // psd:page:YYYY-MM-DD:src
+    const page = name.slice(4, i), d = name.slice(i + 1, j), src = name.slice(j + 1);
+    daySources[d] = daySources[d] || {};
+    daySources[d][page] = daySources[d][page] || {};
+    daySources[d][page][src] = (daySources[d][page][src] || 0) + n;
+  });
   const months = {};
   let cursor;
   do {
@@ -38,10 +47,12 @@ export async function onRequestGet({ env }) {
       const ym = parts[2].slice(0, 7);
       months[ym] = months[ym] || {};
       months[ym][parts[1]] = (months[ym][parts[1]] || 0) + (Number(vals[i]) || 0);
+      days[parts[2]] = days[parts[2]] || {};
+      days[parts[2]][parts[1]] = (days[parts[2]][parts[1]] || 0) + (Number(vals[i]) || 0);
     });
     cursor = list.list_complete ? null : list.cursor;
   } while (cursor);
-  return new Response(JSON.stringify({ ok: true, months, sources }), {
+  return new Response(JSON.stringify({ ok: true, months, sources, days, daySources }), {
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 }

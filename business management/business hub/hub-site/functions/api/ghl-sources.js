@@ -17,7 +17,10 @@
 const API = "https://services.leadconnectorhq.com";
 const LOCATION_ID = "LRqVZmxns8f3xcJLHzBK";
 const TAG_OPTIN = "emotional resonance training";
-const TAG_SCALE = "emotional scale check";   // The Love Scale sign-ups (2026-10-26)
+const TAG_SCALE = "emotional scale check";
+const TAG_FEELING = "feeling finder";   // The Feeling Finder (2026-10-28)
+const TAG_LOOM = "loom video sent";
+const TAG_CANCELLED = "cancelled heart attractor program";   // added by Olly when a member leaves (2026-10-27)   // added by Olly when he sends an applicant a Loom (2026-10-27)   // The Love Scale sign-ups (2026-10-26)
 const TAG_APPLIED = "heart attractor applicant";
 const TAG_JOINED = "joined heart attractor program";
 // The daily email list. Olly's plan called it "daily email"; the opt-in
@@ -62,7 +65,27 @@ async function utmFieldIds(env) {
       else if (name === "utm " + k || key.endsWith("utm_" + k)) ids[k] = ids[k] || f.id;
     });
   });
-  return { ids, ha };
+  // the two date fields the "Loom sent date" / "Joined date" workflows fill in
+  const dates = {};
+  (data.customFields || []).forEach(function (f) {
+    const name = String(f.name || "").toLowerCase().trim();
+    if (name === "loom sent date") dates.loom = f.id;
+    if (name === "joined date") dates.joined = f.id;
+    if (name === "cancelled date") dates.cancelled = f.id;
+    if (name === "ha plan") dates.plan = f.id;
+  });
+  return { ids, ha, dates };
+}
+
+// a date custom field can come back as epoch ms or as text; returns YYYY-MM-DD or ""
+function dateValue(c, id) {
+  if (!id) return "";
+  const f = (c.customFields || c.customField || []).find(function (x) { return x.id === id; });
+  const v = f ? (f.value != null ? f.value : f.field_value) : null;
+  if (v == null || v === "") return "";
+  if (/^[0-9]{10,13}$/.test(String(v))) return new Date(Number(v) < 1e12 ? Number(v) * 1000 : Number(v)).toISOString().slice(0, 10);
+  const d = new Date(v);
+  return isNaN(d) ? String(v).slice(0, 10) : d.toISOString().slice(0, 10);
 }
 
 // All contacts carrying one tag. Uses the search endpoint; if GHL rejects
@@ -129,34 +152,55 @@ export async function onRequestGet({ env }) {
   if (!env.GHL_TOKEN) return json({ ok: false, error: "GHL_TOKEN secret is missing in Cloudflare" }, 500);
   allCache = null;
   try {
-    const { ids, ha } = await utmFieldIds(env);
-    const [optins, applied, scale] = await Promise.all([contactsWithTag(env, TAG_OPTIN), contactsWithTag(env, TAG_APPLIED), contactsWithTag(env, TAG_SCALE)]);
+    const { ids, ha, dates } = await utmFieldIds(env);
+    const [optins, applied, scale, feeling, loom, joined] = await Promise.all([contactsWithTag(env, TAG_OPTIN), contactsWithTag(env, TAG_APPLIED), contactsWithTag(env, TAG_SCALE), contactsWithTag(env, TAG_FEELING), contactsWithTag(env, TAG_LOOM), contactsWithTag(env, TAG_JOINED)]);
 
     const byId = {};
-    optins.concat(applied, scale).forEach(function (c) { byId[c.id] = c; });
+    optins.concat(applied, scale, feeling, loom, joined).forEach(function (c) { byId[c.id] = c; });
 
     const groups = {};
-    function bump(c, set, what) {
+    function bump(c, set, what, when) {
+      const d = when || String(c.dateAdded || "").slice(0, 10);
       const row = {
-        month: String(c.dateAdded || "").slice(0, 7),
+        month: d.slice(0, 7),
+        day: d,
         source: fieldValue(c, set.source),
         medium: fieldValue(c, set.medium),
         campaign: fieldValue(c, set.campaign),
         content: fieldValue(c, set.content),
       };
-      const k = [row.month, row.source, row.medium, row.campaign, row.content].join("|");
-      if (!groups[k]) groups[k] = Object.assign(row, { optins: 0, applied: 0, joined: 0, scale: 0 });
+      const k = [row.day, row.source, row.medium, row.campaign, row.content].join("|");
+      if (!groups[k]) groups[k] = Object.assign(row, { optins: 0, applied: 0, joined: 0, scale: 0, feeling: 0, loom: 0 });
       groups[k][what]++;
     }
     Object.values(byId).forEach(function (c) {
       if (hasTag(c, TAG_OPTIN)) bump(c, ids, "optins");
       if (hasTag(c, TAG_SCALE)) bump(c, ids, "scale");
+      if (hasTag(c, TAG_FEELING)) bump(c, ids, "feeling");
       if (hasTag(c, TAG_APPLIED)) {
         // applications count where the application came from; older applicants (before the HA fields) fall back to the opt-in UTMs
         const appliedSet = (ha.source && fieldValue(c, ha.source)) ? ha : ids;
         bump(c, appliedSet, "applied");
-        if (hasTag(c, TAG_JOINED)) bump(c, appliedSet, "joined");
       }
+      // Loom videos and sales: credited to where they applied from (HA fields), else where they opted in;
+      // dated by the Loom Sent Date / Joined Date fields when the workflows have filled them in
+      const saleSet = (ha.source && fieldValue(c, ha.source)) ? ha : ids;
+      if (hasTag(c, TAG_LOOM)) bump(c, saleSet, "loom", dateValue(c, dates.loom));
+      // free clients (HA Plan "Free (testimonial)", 2026-10-27) aren't sales
+      const isFree = fieldValue(c, dates.plan).indexOf("free") !== -1;
+      if (hasTag(c, TAG_JOINED) && !isFree) bump(c, saleSet, "joined", dateValue(c, dates.joined));
+    });
+
+    // Members, anonymised: plan + dates + where they applied from. The Hub works out cash, MRR and churn from these.
+    const members = joined.map(function (c) {
+      const set = (ha.source && fieldValue(c, ha.source)) ? ha : ids;
+      const plan = fieldValue(c, dates.plan);
+      return {
+        plan: plan.indexOf("free") !== -1 ? "free" : plan.indexOf("annual") !== -1 ? "annual" : plan.indexOf("monthly") !== -1 ? "monthly" : "",
+        joined: dateValue(c, dates.joined) || String(c.dateAdded || "").slice(0, 10),
+        cancelled: hasTag(c, TAG_CANCELLED) ? (dateValue(c, dates.cancelled) || new Date().toISOString().slice(0, 10)) : "",
+        source: fieldValue(c, set.source), medium: fieldValue(c, set.medium), content: fieldValue(c, set.content),
+      };
     });
 
     // Email list size: everyone on the daily list who hasn't unsubscribed.
@@ -169,7 +213,9 @@ export async function onRequestGet({ env }) {
       fetchedAt: new Date().toISOString(),
       utmFieldsFound: Object.keys(ids),
       haUtmFieldsFound: Object.keys(ha),
+      dateFieldsFound: Object.keys(dates),
       rows: Object.values(groups),
+      members: members,
       emailList: Object.keys(subs).length,
     });
   } catch (e) {

@@ -1,4 +1,4 @@
-<title>How To Attract A Genuine And Committed Long-Term Relationship Using Emotional Resonance</title>
+<title>How To Attract A Genuine And Committed Long-Term Relationship (Without More Inner Work Or Dating Rules)</title>
 
 <!-- LIVE OPT-IN (2026-10-26): video player + one button that opens a popup form. The old on-page form version is kept in emotional-resonance-optin-form-version.html. -->
 <!-- OPT-IN PAGE | Free video training "How To Use Emotional Resonance To Attract A Genuine, Committed Long-Term Relationship". Built 2026-10-23. -->
@@ -51,9 +51,14 @@
     text-shadow: none; filter: drop-shadow(0 0 18px rgba(217,70,239,.45));
   }
   /* desktop: hand-set reverse pyramid (widest line first) */
-  .ohc-h1-desk { display: block; font-size: min(48px, calc((min(100vw, 1060px) - 60px) / 21.8)); }
+  /* top line may run a little wider than the 1060px column (Olly, 2026-10-28: bigger top line) */
+  .ohc-h1-desk { display: block; font-size: min(52px, calc((min(100vw, 1200px) - 48px) / 21.6)); }
   .ohc-h1-desk span { display: block; white-space: nowrap; }
   .ohc-h1-mob { display: none; }
+  /* lines under the top line are bigger, so the top line is only a little wider (Olly, 2026-10-28) */
+  .ohc-h1-desk .ohc-big { font-size: 1.25em; line-height: 1.1; }
+  /* title line 2 (Olly, 2026-10-28): the bracketed "without" line, smaller and softer than the headline */
+  .ohc-h1-note { display: block; margin-top: 14px; font-size: min(26px, calc((min(100vw, 1060px) - 60px) / 30)); font-weight: 600; color: #E6DCF2; }
   .ohc-sub {
     font-size: clamp(16px, 1.8vw, 20px); line-height: 1.6; color: #E6DCF2;
     max-width: 620px; margin: 0 auto 34px; text-wrap: balance;
@@ -173,9 +178,11 @@
     .ohc-h1-desk { display: none; }
     /* mobile: hand-set reverse pyramid, sized so the widest (first) line fits a ~390px screen */
     /* phone headline: shorter wording so the pyramid can be big; widest line = 13.1x the font size */
-    .ohc-h1-mob { display: block; font-size: min(32px, calc((100vw - 48px) / 13.6)); line-height: 1.15; }
+    .ohc-h1-mob { display: block; font-size: min(32px, calc((100vw - 28px) / 15.2)); line-height: 1.15; }
     .ohc-h1-mob > span { display: block; white-space: nowrap; }
     .ohc-h1-mob > span > span { display: inline; }
+    .ohc-h1-mob .ohc-big { font-size: 1em; }   /* phone: all three lines the same size (Olly, 2026-10-28) */
+    .ohc-h1-note { margin-top: 10px; font-size: min(19px, calc((100vw - 32px) / 22)); }
     .ohc-sub { font-size: 15px; margin-bottom: 18px; }
     .ohc-video { border-radius: 14px; margin-bottom: 18px; }
     .ohc-play { width: 68px; height: 68px; margin: -34px 0 0 -34px; }
@@ -203,12 +210,11 @@
     <h1 class="ohc-h1">
       <span class="ohc-h1-desk">
         <span>How To Attract A Genuine And Committed</span>
-        <span>Long-Term Relationship Using</span>
-        <span class="ohc-hl">Emotional Resonance</span>
+        <span class="ohc-big"><span class="ohc-hl">Long-Term Relationship</span></span>
       </span>
-      <span class="ohc-h1-mob"><span>How To Attract A Genuine</span><span>Committed Relationship</span><span>Using <span class="ohc-hl">Emotional</span></span><span><span class="ohc-hl">Resonance</span></span></span>
+      <span class="ohc-h1-mob"><span>How To Attract A Genuine And</span><span class="ohc-big">Committed Long-Term</span><span class="ohc-big"><span class="ohc-hl">Relationship</span></span></span>
+      <span class="ohc-h1-note">(Without More Inner Work Or Dating Rules)</span>
     </h1>
-    <p class="ohc-sub">Without doing more inner work or learning more dating rules.</p>
 
     <button type="button" class="ohc-video" id="ohcVideo" aria-label="Watch the free training">
       <img src="https://i.ytimg.com/vi/IneemXUd7Nw/maxresdefault.jpg" alt="" loading="eager">

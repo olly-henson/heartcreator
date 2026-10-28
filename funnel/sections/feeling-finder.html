@@ -1,0 +1,380 @@
+<title>The Feeling Finder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--
+  The Feeling Finder (lead magnet, PREVIEW 2026-10-28; was called The Ordinary Sunday). Reel keyword: FEELING. Step 1 of The Attraction Formula from the free training:
+  picture an ordinary Sunday a year from now with your person, pick what you're doing, notice how it feels,
+  choose the strongest feelings = their Emotional Resonance. Email gate before the result, then step 2 (embody it
+  every day) and The Heart Attractor Program. Same look as The Love Scale: dark purple, Poppins, lilac/pink gradient.
+  Page: ollyhenson.com/feeling. Hub beacon page name: feeling.
+  WEBHOOK_URL = GHL workflow "Feeling Finder" (2026-10-28), tag `feeling finder`. Previews are built from a scratchpad copy with it blanked.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+  /* Layout: one centred column, one screen at a time (start → what you're doing → how it feels → strongest → email → result). Single dark look, same as The Love Scale. */
+  :root{
+    --bg:#0A0510; --deep:#150818; --card:#1a0b24; --field:#140a1c;
+    --text:#ffffff; --soft:#E6DCF2; --muted:#B9A6CC;
+    --lilac:#E1A6FF; --pink:#d946ef; --line:rgba(225,166,255,.22);
+    --font:'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color-scheme: dark;
+  }
+  html, body{ margin:0 !important; padding:0 !important; overflow-x:hidden !important; background:#0A0510 !important; }
+  .hl_page-preview--content, .hl_page-preview--content .fullSection, .hl_page-preview--content .c-section, .hl_page-preview--content .c-row, .hl_page-preview--content .c-column, #preview-container{ background:#0A0510 !important; }
+  body{ background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .ohc-page{
+    width:100vw !important; position:relative !important; left:50% !important; transform:translateX(-50%) !important; box-sizing:border-box;
+    min-height:100vh; min-height:100dvh; background:radial-gradient(120% 100% at 20% 0%, #4B1466 0%, var(--deep) 55%, var(--bg) 100%);
+    padding-block:36px 56px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+  .ohc-wrap{ max-width:560px; margin:0 auto; }
+  .ohc-screen{ animation:ohcIn .35s ease both; }
+  @keyframes ohcIn{ from{ opacity:.4; transform:translateY(6px); } to{ opacity:1; transform:none; } }
+  .ohc-badge{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lilac); border:1px solid var(--line); border-radius:999px; padding:7px 14px; margin-bottom:18px; }
+  .ohc-h1{ font-size:clamp(28px, 7vw, 40px); font-weight:800; line-height:1.15; margin:0 0 14px; text-wrap:balance; }
+  .ohc-grad{ background:linear-gradient(135deg, var(--lilac), var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .ohc-sub{ font-size:17px; line-height:1.6; color:var(--soft); margin:0 0 24px; }
+  #ohc_start{ text-align:center; }
+  .ohc-big{ font-size:44px; }
+  /* inverted pyramid (Olly): every line narrower than the one above, headline then subheading, on desktop and phones */
+  .ohc-pyr > span{ display:block; white-space:nowrap; }
+  .ohc-phone{ display:none; }
+  @media (max-width:600px){
+    .ohc-big{ font-size:min(44px, calc((100vw - 32px) * 0.98 / 11.8)); }
+    .ohc-sub.ohc-pyr{ font-size:min(16px, calc((100vw - 32px) / 23)); }
+    .ohc-desk{ display:none; }
+    .ohc-phone{ display:block; }
+  }
+
+  /* the landing "hero": a quiet Sunday scene in words */
+  .ohc-scene{ text-align:left; margin:0 0 26px; padding:20px; border:1px solid var(--line); border-radius:16px; background:rgba(26,11,36,.6); display:flex; flex-direction:column; gap:12px; }
+  .ohc-scene p{ margin:0; display:flex; gap:12px; align-items:baseline; font-size:15px; color:var(--soft); line-height:1.5; }
+  .ohc-scene b{ flex:none; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:linear-gradient(135deg, var(--lilac), var(--pink)); color:var(--deep); font-size:13px; font-weight:800; }
+
+  .ohc-btn{ display:block; width:100%; border:0; border-radius:14px; padding:17px 20px; cursor:pointer; text-align:center; text-decoration:none; background:linear-gradient(135deg, var(--lilac), var(--pink)); color:var(--deep); font:800 16px/1.2 var(--font); box-shadow:0 10px 30px rgba(217,70,239,.25); box-sizing:border-box; transition:transform .15s ease, opacity .15s ease; }
+  .ohc-btn:hover{ transform:translateY(-1px); }
+  .ohc-btn:disabled{ opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
+  .ohc-btn:focus-visible, .ohc-chip:focus-visible, .ohc-back:focus-visible, .ohc-input:focus-visible, .ohc-restart:focus-visible{ outline:2px solid var(--lilac); outline-offset:3px; }
+  .ohc-trust{ display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:center; margin-top:16px; font-size:13px; color:var(--muted); }
+  .ohc-trust span::before{ content:'\2713'; color:var(--pink); font-weight:800; margin-right:6px; }
+
+  /* steps */
+  .ohc-top{ display:flex; align-items:center; gap:14px; margin-bottom:22px; }
+  .ohc-prog{ flex:1; height:6px; border-radius:6px; background:rgba(225,166,255,.15); overflow:hidden; }
+  .ohc-prog i{ display:block; height:100%; width:0; background:linear-gradient(90deg, var(--lilac), var(--pink)); transition:width .4s ease; }
+  .ohc-count{ font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .ohc-step-label{ font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lilac); margin:0 0 8px; }
+  .ohc-q{ font-size:clamp(22px, 5.5vw, 28px); font-weight:800; line-height:1.25; margin:0 0 10px; text-wrap:balance; }
+  .ohc-hint{ font-size:15px; color:var(--muted); margin:0 0 18px; line-height:1.55; }
+  .ohc-chips{ display:flex; flex-wrap:wrap; gap:10px; margin:0 0 24px; }
+  .ohc-chip{ font:600 15px/1.2 var(--font); padding:12px 16px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--soft); cursor:pointer; transition:background .15s ease, border-color .15s ease; }
+  .ohc-chip[aria-pressed="true"]{ background:linear-gradient(135deg, var(--lilac), var(--pink)); color:var(--deep); border-color:transparent; }
+  .ohc-other{ display:flex; gap:10px; margin:-8px 0 24px; }
+  .ohc-other .ohc-input{ flex:1; }
+  .ohc-other[hidden], .ohc-screen[hidden], .ohc-chips[hidden], .ohc-intents[hidden]{ display:none !important; }
+  .ohc-ex{ margin:0 0 2px; font-size:15px; font-style:italic; color:var(--muted); }
+  .ohc-intents{ display:flex; flex-direction:column; gap:10px; margin:0 0 24px; }
+  .ohc-add{ font:700 15px var(--font); padding:0 18px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--lilac); cursor:pointer; }
+  .ohc-add:focus-visible{ outline:2px solid var(--lilac); outline-offset:3px; }
+  .ohc-chips.single{ flex-direction:column; }
+  .ohc-chips.single .ohc-chip{ width:100%; text-align:left; border-radius:14px; padding:15px 16px; line-height:1.4; }
+  .ohc-nav{ display:flex; gap:12px; align-items:center; }
+  .ohc-nav .ohc-btn{ flex:1; }
+  .ohc-back{ background:none; border:0; color:var(--muted); font:600 15px var(--font); cursor:pointer; padding:10px 4px; }
+  .ohc-back:disabled{ visibility:hidden; }
+
+  /* email */
+  .ohc-card{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; display:flex; flex-direction:column; gap:14px; }
+  .ohc-names{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:420px){ .ohc-names{ grid-template-columns:1fr; } }
+  .ohc-field{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .ohc-label{ font-size:13px; font-weight:600; color:var(--soft); }
+  .ohc-input{ font:500 16px var(--font); color:var(--text); background:var(--field); border:1px solid var(--line); border-radius:12px; padding:14px; min-width:0; }
+  .ohc-error{ color:#ff9db8; font-size:14px; margin:0; min-height:1em; }
+  .ohc-note{ font-size:13px; color:var(--muted); margin:0; text-align:center; }
+
+  /* result */
+  .ohc-res{ text-align:center; margin:4px 0 26px; padding:30px 20px; border-radius:20px; border:1px solid var(--line); background:radial-gradient(100% 120% at 50% 0%, rgba(217,70,239,.22), rgba(26,11,36,.7)); }
+  .ohc-res .ohc-big{ margin:6px 0 12px; line-height:1.1; text-wrap:balance; }
+  .ohc-res p{ margin:0; color:var(--soft); font-size:16px; line-height:1.6; }
+  .ohc-res .ohc-mine{ margin-top:10px; font-size:14px; color:var(--muted); }
+  .ohc-sec{ margin:0 0 22px; }
+  .ohc-sec h3{ font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--lilac); margin:0 0 8px; }
+  .ohc-sec p{ font-size:16px; line-height:1.65; color:var(--soft); margin:0 0 10px; }
+  .ohc-sunday{ font-style:italic; }
+  /* The scale (same as The Love Scale): you're here vs where you want to be */
+  .ohc-scale{ position:relative; display:grid; grid-template-columns:14px 16px 1fr; gap:0 12px; margin:22px 0 28px; padding:16px 16px 16px 18px; border:1px solid var(--line); border-radius:18px; background:rgba(26,11,36,.7); }
+  .ohc-scale .bar{ position:relative; border-radius:8px; background:linear-gradient(180deg, #4ade80 0%, #22c55e 18%, #facc15 38%, #fb923c 58%, #ef4444 80%, #b91c1c 100%); } /* traffic light: green top, red survival emotions at the bottom */
+  /* Threshold (Olly, 2026-10-28): the scale's halfway point, survival-based emotions below, elevated above */
+  .ohc-zones{ display:flex; flex-direction:column; }
+  .ohc-zones span{ flex:1; display:flex; align-items:center; justify-content:center; writing-mode:vertical-rl; transform:rotate(180deg); font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
+  .ohc-zones .up{ color:#4ade80; }
+  .ohc-zones .down{ color:#f87171; }
+  .ohc-scale::after{ content:""; position:absolute; left:10px; right:10px; top:50%; height:2px; margin-top:-1px; background:rgba(255,255,255,.7); border-radius:2px; pointer-events:none; }
+  @media (max-width:389px){ .ohc-scale{ gap:0 8px; padding:14px 10px 14px 12px; } .ohc-levels li .tag{ font-size:9px; letter-spacing:.03em; } .ohc-levels li{ font-size:12px; } .ohc-scale .ohc-marker{ width:20px; height:20px; margin:-10px 0 0 -10px; border-width:3px; } }
+  .ohc-marker{
+    position:absolute; left:50%; width:26px; height:26px; margin:-13px 0 0 -13px; border-radius:50%;
+    background:#fff; border:4px solid var(--pink); box-shadow:0 0 0 6px rgba(217,70,239,.25), 0 4px 18px rgba(0,0,0,.4);
+    top:100%; transition:top 1.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .ohc-levels{ list-style:none; margin:0; padding:0; }
+  .ohc-levels li{ display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; line-height:1; height:22px; color:var(--muted); }
+  .ohc-levels li.band-start{ border-top:1px dashed var(--line); }
+  .ohc-levels li .tag{ font-size:10px; font-weight:700; letter-spacing:.05em; white-space:nowrap; text-transform:uppercase; color:var(--muted); opacity:.75; }
+  .ohc-levels li.mine{ color:var(--text); font-weight:700; }
+  .ohc-levels li.inband{ color:var(--soft); }
+  .ohc-scale .ohc-marker.want{ border-color:#22c55e; box-shadow:0 0 0 6px rgba(34,197,94,.25), 0 4px 18px rgba(0,0,0,.4); }
+  .ohc-levels li .tag.here{ color:#fda4af; opacity:1; }
+  .ohc-levels li.want{ color:var(--text); font-weight:700; }
+  .ohc-levels li .tag.go{ color:#86efac; opacity:1; }
+  .ohc-gap{ font-size:16px; line-height:1.65; color:var(--soft); margin:0 0 22px; }
+  .ohc-who{ margin:0; padding-left:20px; color:var(--soft); font-size:16px; line-height:1.7; }
+  .ohc-formula{ border:1px solid var(--pink); background:#2a1238; border-radius:14px; padding:18px; margin:0 0 22px; }
+  .ohc-formula .ohc-mech{ font-size:18px; line-height:1.5; font-weight:700; color:var(--text); }
+  .ohc-restart{ display:block; margin:22px auto 0; background:none; border:0; color:var(--muted); font:500 14px var(--font); text-decoration:underline; cursor:pointer; }
+  @media (prefers-reduced-motion: reduce){ .ohc-screen{ animation:none; } .ohc-prog i{ transition:none; } }
+</style>
+
+<div class="ohc-page">
+  <div class="ohc-wrap" id="ohc_app">
+
+    <!-- START -->
+    <section class="ohc-screen" id="ohc_start">
+      <span class="ohc-badge">The Feeling Finder · Free</span>
+      <h1 class="ohc-h1 ohc-big ohc-pyr"><span>Find The Exact Feeling</span><span>That <span class="ohc-grad">Attracts</span></span><span class="ohc-grad">Your Person</span></h1>
+      <p class="ohc-sub ohc-pyr ohc-desk"><span>In 2 minutes, find the exact feeling</span><span>that will attract your perfect</span><span>relationship.</span></p>
+      <p class="ohc-sub ohc-pyr ohc-phone"><span>In 2 minutes, find the exact feeling</span><span>that will attract your perfect</span><span>relationship.</span></p>
+      <button class="ohc-btn" type="button" id="ohc_begin">Find My Feeling</button>
+      <div class="ohc-trust"><span>3 quick steps</span><span>About 2 minutes</span><span>Free</span></div>
+    </section>
+
+    <!-- STEPS -->
+    <section class="ohc-screen" id="ohc_steps" hidden>
+      <div class="ohc-top">
+        <div class="ohc-prog"><i id="ohc_bar"></i></div>
+        <span class="ohc-count" id="ohc_count">1 / 3</span>
+      </div>
+      <p class="ohc-step-label" id="ohc_slabel"></p>
+      <h2 class="ohc-q" id="ohc_q"></h2>
+      <p class="ohc-hint" id="ohc_hint"></p>
+      <div class="ohc-chips" id="ohc_chips"></div>
+      <div class="ohc-intents" id="ohc_intents" hidden></div>
+      <div class="ohc-other" id="ohc_otherwrap">
+        <input class="ohc-input" id="ohc_other" type="text" maxlength="40" aria-label="Something else">
+        <button class="ohc-add" type="button" id="ohc_add">Add</button>
+      </div>
+      <div class="ohc-nav">
+        <button class="ohc-back" type="button" id="ohc_back">&#8592; Back</button>
+        <button class="ohc-btn" type="button" id="ohc_next" disabled>Next</button>
+      </div>
+    </section>
+
+    <!-- EMAIL -->
+    <section class="ohc-screen" id="ohc_email" hidden>
+      <button class="ohc-back" type="button" id="ohc_eback">&#8592; Back</button><br>
+      <span class="ohc-badge">Your emotion is ready</span>
+      <h2 class="ohc-h1" style="font-size:clamp(22px,5.8vw,30px);">Ready to see the feeling you need to attract your perfect relationship <span class="ohc-grad">and the plan of action to make it happen?</span></h2>
+      <p class="ohc-sub">You'll see it straight away, and I'll email you a copy so you can come back to it.</p>
+      <div class="ohc-card">
+        <div class="ohc-names">
+          <div class="ohc-field"><label class="ohc-label" for="ohc_first">First name</label><input class="ohc-input" id="ohc_first" type="text" autocomplete="given-name" placeholder="First name"></div>
+          <div class="ohc-field"><label class="ohc-label" for="ohc_last">Last name</label><input class="ohc-input" id="ohc_last" type="text" autocomplete="family-name" placeholder="Last name"></div>
+        </div>
+        <div class="ohc-field"><label class="ohc-label" for="ohc_mail">Email</label><input class="ohc-input" id="ohc_mail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
+        <button class="ohc-btn" type="button" id="ohc_show">Show My Results</button>
+        <p class="ohc-error" id="ohc_err" role="alert"></p>
+        <p class="ohc-note">No spam. Unsubscribe any time.</p>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="ohc-screen" id="ohc_result" hidden>
+      <div class="ohc-res">
+        <span class="ohc-badge" id="ohc_rname">Your emotion is</span>
+        <div class="ohc-h1 ohc-big"><span class="ohc-grad" id="ohc_rfeel"></span></div>
+        <p>This is the emotion you will feel with your perfect partner.</p>
+      </div>
+
+      <div class="ohc-sec"><h3>You're here. This is where you need to be.</h3>
+        <div class="ohc-scale">
+          <div class="ohc-zones" aria-hidden="true"><span class="up">Elevated emotions</span><span class="down">Survival-based emotions</span></div>
+          <div class="bar"><span class="ohc-marker want" id="ohc_mwant"></span><span class="ohc-marker" id="ohc_mnow"></span></div>
+          <ul class="ohc-levels" id="ohc_levels"></ul>
+        </div>
+        <p class="ohc-gap" id="ohc_gap"></p>
+      </div>
+
+      <div class="ohc-sec"><h3>Who you want to be with</h3>
+        <ul class="ohc-who" id="ohc_rwho"></ul>
+      </div>
+
+      <div class="ohc-sec"><h3>Now the important part</h3>
+        <p><b style="color:var(--text)">Knowing your emotion isn't enough. You have to embody it.</b></p>
+        <p id="ohc_rembody"></p>
+      </div>
+
+      <div class="ohc-formula"><div class="ohc-sec" style="margin:0">
+        <h3>This is called The Attraction Formula</h3>
+        <p class="ohc-mech">Getting clear on who you want and the emotion you'll feel with them is step 1. Embodying that emotion every single day is step 2.</p>
+        <p>If you'd like to put this into practice and get things moving, you can find out more about The Heart Attractor Program.</p>
+        <p>♥️ It's how I met my wife.</p>
+        <a class="ohc-btn" id="ohc_apply" href="#" target="_blank" rel="noopener">Find Out More</a>
+      </div></div>
+      <button class="ohc-restart" type="button" id="ohc_again">Do it again</button>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/27fecd84-c766-4400-81f4-d420327376ad"; // GHL workflow "Feeling Finder" (2026-10-28)
+  var APPLY_URL = "https://ollyhenson.com/apply?utm_source=feeling_finder&utm_medium=result&utm_campaign=heart_attractor";
+
+  // Step 1 of The Attraction Formula: who you want, then how it would feel (Olly, 2026-10-28; the ordinary Sunday step was removed)
+  var SCALE = ["Joy","Love","Freedom","Passion","Enthusiasm","Happiness","Optimism","Hopefulness","Belief","Contentment","Positivity",
+               "Boredom","Pessimism","Frustration","Impatience","Doubt","Worry","Jealousy","Insecurity","Guilt","Fear","Powerlessness"];
+  function lvl(name){ return SCALE.length - 1 - SCALE.indexOf(name); }
+  // The main emotion they feel about dating right now, in the words the audience uses, and where it sits on the scale (0 = bottom)
+  var NOWE = [["Exhaustion",1],["Anxiety",5],["Worry",5],["Irritation",8],["Impatience",7],["Envy",4],["Frustration",8],["Doubt",6],["Fear",1],
+    ["Hopelessness",0],["Loneliness",2],["Disappointment",6],["Overwhelm",4],["Insecurity",3],["Pessimism",9],["Boredom",10]];
+  // anything they type in instead: a few elevated words are placed above the line, everything else sits with worry (Olly, 2026-10-28: options show only the painful emotions)
+  var TYPED_UP = { hopeful:14, hope:14, calm:12, content:12, contented:12, excited:17, happy:16, peaceful:15, optimistic:13, positive:11, grateful:18, joyful:21, free:19, open:15, curious:14, confident:16, relaxed:13 };
+  function nowLevel(word){ var hit = NOWE.filter(function(x){ return x[0].toLowerCase() === String(word).toLowerCase(); })[0]; if (hit) return hit[1]; var k = String(word).toLowerCase().trim(); return TYPED_UP[k] !== undefined ? TYPED_UP[k] : 5; }
+  // where each feeling they want sits on the scale (feelings not on the scale are placed with the ones they're closest to)
+  var WANT_LVL = { Joy:21, Love:20, Freedom:19, Passion:18, Excitement:17, Playfulness:17, Peace:19, Appreciation:20, Gratitude:20, Belonging:18, Empowerment:18, Safety:16, Calm:15, Contentment:12 };
+  var WHO = ["Emotionally available","Consistent","Ready to commit","Makes me feel safe","Supports my work and goals","Fun to be with","I'm physically attracted to them","Shares my values","Kind","Affectionate","Communicates openly","Loyal","Wants a family","Has their own life and interests","Adventurous","Calm"];
+  var DOING = ["Breakfast together","A walk","Cooking together","Seeing friends","Family time","A day at the beach","A pub lunch","A lazy morning","Coffee out","Reading on the sofa","A day trip","Making plans together"];
+  var FEELS = ["Peace","Safety","Joy","Freedom","Love","Appreciation","Gratitude","Excitement","Passion","Playfulness","Calm","Belonging","Contentment","Empowerment"];
+  var picks = { now:[], who:["","","",""], doing:[], feels:[], top:[] }, step = 0;
+  var EXTRA = { now:[], who:[], doing:[], feels:[] }; // anything they type in "Something else?"
+  var $ = function(id){ return document.getElementById(id); };
+  function show(id){ ["ohc_start","ohc_steps","ohc_email","ohc_result"].forEach(function(s){ $(s).hidden = (s !== id); }); window.scrollTo(0, 0); }
+  function list(a){ return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]; }
+
+  var STEPS = [
+    { key:"now", label:"Let's start with where you are right now", q:"Which is the main emotion you feel right now?", hint:"When you think about dating, relationships and meeting someone. Pick the one that's strongest.", opts:function(){ return NOWE.map(function(x){ return x[0]; }).concat(EXTRA.now); }, min:1, max:1 },
+    { key:"who", label:"Where you want to be", q:"Who do you want to be with?", hint:"Get clear on your intentions for the relationship. Write down the 4 things that matter most to you in your person.", text:4, opts:function(){ return []; }, min:4, max:4 },
+    { key:"feels", label:"How it feels", q:"If you were with this person, what main emotion would you feel?", hint:"", opts:function(){ return FEELS.concat(EXTRA.feels); }, min:1, max:1 }
+  ];
+
+  function renderStep(){
+    var S = STEPS[step], box = $("ohc_chips");
+    // step 3 only makes sense with more than three feelings; otherwise their picks are their strongest
+    if (S.key === "top") picks.top = picks.top.filter(function(x){ return picks.feels.indexOf(x) > -1; });
+    $("ohc_slabel").textContent = S.label; $("ohc_q").textContent = S.q;
+    $("ohc_hint").textContent = S.key === "feels" ? "Pick the one emotion you'd feel most if you were with this person, in this relationship." : S.hint;
+    $("ohc_count").textContent = (step + 1) + " / " + STEPS.length;
+    $("ohc_bar").style.width = (step / STEPS.length * 100) + "%";
+    $("ohc_back").disabled = false;
+    $("ohc_otherwrap").hidden = S.key === "top" || !!S.single || !!S.text;
+    box.hidden = !!S.text;
+    var iw = $("ohc_intents"); iw.hidden = !S.text; iw.innerHTML = "";
+    if (S.text) {
+      var ord = ["first","second","third","fourth"];
+      var ex = document.createElement("p"); ex.className = "ohc-ex"; ex.textContent = "For example: someone who's emotionally available and ready to commit"; iw.appendChild(ex);
+      for (var k = 0; k < S.text; k++) (function(k){
+        var inp = document.createElement("input"); inp.className = "ohc-input"; inp.type = "text"; inp.maxLength = 60; inp.id = "ohc_who" + k;
+        inp.placeholder = "Your " + ord[k] + " intention"; inp.setAttribute("aria-label", "Intention " + (k + 1)); inp.value = picks.who[k] || "";
+        inp.addEventListener("input", function(){ picks.who[k] = inp.value.trim(); $("ohc_next").disabled = filled() < S.min; });
+        inp.addEventListener("keydown", function(e){ if (e.key !== "Enter") return; e.preventDefault(); var nx = $("ohc_who" + (k + 1)); if (nx) nx.focus(); else if (!$("ohc_next").disabled) $("ohc_next").click(); });
+        iw.appendChild(inp);
+      })(k);
+    }
+    box.className = "ohc-chips" + (S.single ? " single" : "");
+    $("ohc_other").placeholder = (S.key === "feels" || S.key === "now") ? "Another emotion? Type it here" : "Something else? Type it here";
+    box.innerHTML = "";
+    S.opts().forEach(function(o){
+      var b = document.createElement("button"); b.type = "button"; b.className = "ohc-chip"; b.textContent = o;
+      b.setAttribute("aria-pressed", picks[S.key].indexOf(o) > -1 ? "true" : "false");
+      b.addEventListener("click", function(){
+        var a = picks[S.key], i = a.indexOf(o);
+        if (i > -1) a.splice(i, 1); else { if (a.length >= S.max) a.shift(); a.push(o); }
+        renderStep();
+      });
+      box.appendChild(b);
+    });
+    $("ohc_next").disabled = (S.text ? filled() : picks[S.key].length) < S.min;
+    $("ohc_next").textContent = step === STEPS.length - 1 ? "See My Emotion" : "Next";
+  }
+  function filled(){ return picks.who.filter(function(x){ return x; }).length; }
+  function next(){
+    if (step === STEPS.length - 1) { picks.top = picks.feels.slice(); toEmail(); return; }
+    step++; renderStep();
+  }
+  function toEmail(){ $("ohc_bar").style.width = "100%"; show("ohc_email"); $("ohc_first").focus(); }
+
+  function renderResult(name){
+    var top = picks.top.length ? picks.top : picks.feels;
+    $("ohc_rname").textContent = name ? name + ", your emotion is" : "Your emotion is";
+    $("ohc_rfeel").textContent = top.join(" + ");
+    
+    $("ohc_rembody").textContent = "Practise feeling and embodying " + list(top).toLowerCase() + " every day, until it becomes your normal. When this is how you feel, you stop waiting for someone to make you feel it, and you attract the person who matches it.";
+    // where they are (average of the feelings under their thoughts) vs where they want to be (their chosen feelings)
+    var nowWord = picks.now[0] || "Worry";
+    var nowAvg = nowLevel(nowWord);
+    var wantL = top.map(function(t){ return WANT_LVL[t] || (SCALE.indexOf(t) > -1 ? lvl(t) : 19); });
+    var wantAvg = wantL.reduce(function(a, b){ return a + b; }, 0) / wantL.length;
+    var here = SCALE[SCALE.length - 1 - Math.round(nowAvg)], want = SCALE[SCALE.length - 1 - Math.round(wantAvg)];
+    var lv = $("ohc_levels"); lv.innerHTML = "";
+    SCALE.forEach(function(e){
+      var li = document.createElement("li"), sp = document.createElement("span"); sp.textContent = e; li.appendChild(sp);
+      if (e === "Boredom") li.className = "band-start";
+      if (e === here) { sp.textContent = nowWord; li.classList.add("mine"); var t1 = document.createElement("span"); t1.className = "tag here"; t1.textContent = "You're here"; li.appendChild(t1); }
+      if (e === want && e !== here) { sp.textContent = top[0]; li.classList.add("want"); var t2 = document.createElement("span"); t2.className = "tag go"; t2.textContent = "Where you need to be"; li.appendChild(t2); }
+      lv.appendChild(li);
+    });
+    var pos = function(L){ return (SCALE.length - 1 - L) / (SCALE.length - 1) * 100 + "%"; };
+    $("ohc_mnow").style.top = pos(Math.round(nowAvg)); $("ohc_mwant").style.top = pos(Math.round(wantAvg));
+    var feel = list(top).toLowerCase();
+    $("ohc_gap").textContent = nowAvg < 10.5
+      ? "Right now you feel " + nowWord.toLowerCase() + ", below the line in the survival-based emotions. " + feel.charAt(0).toUpperCase() + feel.slice(1) + ", the emotion you'll feel with your perfect partner, sits above it. Closing that gap is what changes who you attract."
+      : "Right now you feel " + nowWord.toLowerCase() + ", already above the line. The emotion you'll feel with your perfect partner is " + feel + ". The key is making that your everyday state.";
+    var ul = $("ohc_rwho"); ul.innerHTML = ""; picks.who.filter(function(x){ return x; }).forEach(function(w){ var li = document.createElement("li"); li.textContent = w; ul.appendChild(li); });
+    $("ohc_apply").href = APPLY_URL;
+    return top;
+  }
+
+  function addOther(){
+    var S = STEPS[step], v = $("ohc_other").value.trim().replace(/\s+/g, " ");
+    if (!v || S.key === "top") return;
+    v = v.charAt(0).toUpperCase() + v.slice(1);
+    var all = S.opts(), hit = all.filter(function(x){ return x.toLowerCase() === v.toLowerCase(); })[0];
+    if (!hit) { EXTRA[S.key].push(v); hit = v; }
+    if (picks[S.key].indexOf(hit) < 0) { if (picks[S.key].length >= S.max) picks[S.key].shift(); picks[S.key].push(hit); }
+    $("ohc_other").value = ""; renderStep(); $("ohc_other").focus();
+  }
+  $("ohc_add").addEventListener("click", addOther);
+  $("ohc_other").addEventListener("keydown", function(e){ if (e.key === "Enter") { e.preventDefault(); addOther(); } });
+  // Page-view counter for the Business Hub (same as The Love Scale): one count per visit, live site only,
+  // with where the visit came from (the UTMs, else the referring site, else (direct)).
+  (function(){
+    if (!/(^|\.)ollyhenson\.com$/.test(location.hostname)) return;
+    try { if (sessionStorage.getItem('ohc_pv_feeling')) return; sessionStorage.setItem('ohc_pv_feeling', '1'); } catch(e){}
+    var q = new URLSearchParams(location.search), src = q.get('utm_source') || '', med = q.get('utm_medium') || '', con = q.get('utm_content') || '';
+    if (!src){ try { var r = document.referrer && new URL(document.referrer).hostname; if (r && !/(^|\.)ollyhenson\.com$/.test(r)){ src = r.replace(/^www\./, ''); med = 'referral'; } } catch(e){} }
+    try { navigator.sendBeacon('https://hub.ollyhenson.com/api/track', ['feeling', src || '(direct)', med || '', con || ''].join('|')); } catch(e){}
+  })();
+
+  $("ohc_begin").addEventListener("click", function(){ step = 0; show("ohc_steps"); renderStep(); });
+  $("ohc_next").addEventListener("click", next);
+  $("ohc_back").addEventListener("click", function(){ if (step === 0) show("ohc_start"); else { step--; renderStep(); } });
+  $("ohc_eback").addEventListener("click", function(){ step = STEPS.length - 1; show("ohc_steps"); renderStep(); });
+  $("ohc_show").addEventListener("click", function(){
+    var first = $("ohc_first").value.trim(), last = $("ohc_last").value.trim(), mail = $("ohc_mail").value.trim();
+    if (!first) { $("ohc_err").textContent = "Add your first name."; return; }
+    if (!last) { $("ohc_err").textContent = "Add your last name."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) { $("ohc_err").textContent = "That email doesn't look right. Check it and try again."; return; }
+    $("ohc_err").textContent = "";
+    var top = renderResult(first);
+    show("ohc_result");
+    if (WEBHOOK_URL) {
+      var p = new URLSearchParams(location.search);
+      fetch(WEBHOOK_URL, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({
+        first_name:first, last_name:last, email:mail, resonance:top.join(" + "), person:picks.who.filter(function(x){ return x; }).join(" · "), variant:"plain", // A/B test (2026-10-28): A = no phone image current_emotion:picks.now[0] || "", all_feelings:picks.feels.join(", "),
+        utm_source:p.get("utm_source") || "", utm_medium:p.get("utm_medium") || "", utm_campaign:p.get("utm_campaign") || "", utm_content:p.get("utm_content") || ""
+      }) }).catch(function(){});
+    }
+  });
+  $("ohc_again").addEventListener("click", function(){ picks = { now:[], who:["","","",""], doing:[], feels:[], top:[] }; EXTRA = { now:[], who:[], doing:[], feels:[] }; step = 0; show("ohc_start"); });
+})();
+</script>

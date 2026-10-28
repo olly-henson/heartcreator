@@ -34,10 +34,15 @@ Use this whenever Olly asks to change, fix, rebuild or find any tool listed in `
 8. **Supporting files** (the meme templates) only reach the page if they're passed in `files` on the publish. Pass them again whenever one is added or changed.
 
 ### Content Idea Generator map
-- Tabs: Instagram (Reels = authority headers, Stories = connection), Skool, Memes. Each is a `channel` in `CHANNELS`, with its own prompt (`buildPrompt` / `storyPrompt` / `skoolPrompt` / `memePrompt`), its own queue (`QUEUES`, `chanOf()`) and its own rejections.
-- Content types and formats live in `POST_TYPES`, grouped by `group` (Authority, Connection, Skool, Meme).
+- Tabs: Socials (Reels = authority headers, Stories = connection, Story memes), Email, Skool, YouTube (community posts, 2026-10-28). Each is a `channel` in `CHANNELS` (`reels`, `stories`, `memes`, `email`, `skool`, `ytpost`), with its own prompt (`buildPrompt` / `storyPrompt` / `emailPrompt` / `skoolPrompt` / `memePrompt` / `ytPrompt`), its own queue (`QUEUES`, `chanOf()`) and its own rejections.
+- Content types and formats live in `POST_TYPES`, grouped by `group` (Authority, Connection, Email, Skool, Meme, YouTube). Email and YouTube keys are prefixed ("Email · Science", "YouTube · Poll"); the part after the prefix matches the Hub calendar's type names.
+- **Add to calendar** (`hubButton(kind, getPayload)`) opens `hub.ollyhenson.com/#add<kind>=<JSON>`; the Hub places it and saves itself. Kinds: `reel`, `story` (with image + songs), `email`, `ytpost` (with image). `getPayload` runs at the moment of the tap.
+- Story Image Maker extras: song ideas (`SONGS` mood banks, `SONG_MOOD`, rotate after each send); Results share **Cover names and photos** (`red`: Claude finds boxes via `sampleFn.json(..., {images:[blob]})`, blurred by default, drag to add, tap to remove).
+- YouTube: `ytFill()` swaps `[LINK]` for the tracked `utm_medium=community` link (`YT_DEST`, `ytLink()`); square 1080 × 1080 image maker `ytImg` (Purple / Photo / Light).
+- **Load order:** code near the top that runs at load must never use a `const`/`let` declared further down. It throws and the whole generator stops working (2026-10-28, `HUB_URL`; now the function `hubUrl()`).
+- Small changes: publish with Artifact `edits` (changes the file and the page in one call), then `node tools/jscheck.js`. Test over `python -m http.server` from `marketing/` (canvas images); that server sends no charset, so non-ASCII looks mangled in tests only.
 - Meme images: `MEME_LAYOUTS` (template image, text boxes) → `memeEditor()` → `composeMeme()` → `downloads.save()`.
-- Capabilities: `sample`, `db`, `downloads`. Omit `capabilities` on redeploys unless adding one; a non-empty object replaces the whole set.
+- Capabilities: `{sample: {images: true}, db: {}, downloads: true}` (images added 2026-10-28 for the Results share name/photo cover). Omit `capabilities` on redeploys unless adding one; a non-empty object replaces the whole set.
 
 ## 3. Process: when the core message changes (the update cascade)
 
@@ -50,6 +55,8 @@ When Olly changes any part of the argument, update all of these in one go, unles
 5. **Argument sheet:** `memory\argument_sheet_heart_attractor.md`, v6 section.
 6. **Instagram caption:** give Olly the new text to paste into the Business Hub. Don't edit the Hub without being asked.
 7. **Memory:** update `project_attract_not_force.md`.
+8. **Apply it to every section, systematically.** When Olly gives a new summary of the argument ("you don't feel it can happen for you", 2026-10-28), rewrite every section that carries the argument (glance rows, pillars, Reel titles, Skool welcome, About page, DMs), not just the core card. He had to ask twice ("properly apply that argument to all of those sections… systemized").
+9. **The generator's CORE is its own copy, not linked to the Messaging Center.** Sync it in the same job ("make sure the new messaging is being pulled into the content generator"), then republish the generator.
 
 Then re-count the Skool limits (section 5) and republish each tool you changed.
 
@@ -85,6 +92,8 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - The science is emotional contagion. Heart coherence is the "how", never the headline. Never claim people sense heart rhythms.
 - "The right people start showing up", never "you'll meet someone". No time-bound guarantees ("in 30 days").
 - What to expect = tangible good things that start happening, not what stops happening.
+- **Short and simple: a couple of sentences per line at most** (Olly, 2026-10-28: "Simplify… a couple of sentences per line"). If a glance row or card needs a paragraph, it isn't decided yet.
+- **The mechanism line, word for word:** "The Attraction Formula puts you in the right emotional state around love, so that you attract a consistent, committed relationship where you feel safe being yourself." The 2 steps (find your emotional resonance, embody it every day) are saved for the Loom, not content.
 - About page: lead with the promised land and positive outcomes, not a list of pains.
 - The community is about shifting into the right emotional state. The meditation is one part of it, not the whole offer.
 
@@ -95,6 +104,8 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 
 **Tool design:**
 - Simple beats complete. Build the control Olly asks for, one at a time. Don't add extras in advance.
+- **Decide, then build one plan to the highest spec.** Olly: "just keep giving me loads of information… everything keeps changing its mind… I just want this to make sense". Give one recommendation with the reason, not a menu of options, and don't flip a decision unless he does.
+- **Lead magnet names follow the current lead magnet everywhere.** When one is replaced (The Love Scale → The Feeling Finder), rename every leftover Olly can see: Image Maker badges and the line under the button, captions, CTA pickers, email links, offer labels. He spotted a "Love Scale" badge after the switch. Every badge and fixed line on a layout stays editable per layout.
 - Answers in surveys never auto-advance. Only the Next button moves on.
 - The Messaging Survey is for prospects only. No membership or relationship-status questions.
 - A microphone can't run inside an artifact. Point to the device's dictation instead (Windows: Win+H).
@@ -102,7 +113,14 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - Tools for outside people (prospects) can't be artifacts that need a Claude login. Build them as GHL pages that post to a Sheet.
 - **Build the finished thing, not instructions for another app.** When Olly wants an asset (a meme image), make it inside the tool, ready to save. Pointing him to Imgflip or Canva wasn't what he needed ("help with building the actual meme (image), that's what I need help with").
 - **Every piece of generated text Olly might reword is click-to-edit** on the card (titles, meme panels, "How to post it"), and edits are saved and flow into the queue and the image.
-- **One queue per content type** (Reels, Stories, Skool posts, Memes). Only that type's queued titles are fed back as the standard.
+- **One queue per content type** (Reels, Stories, Skool posts, Memes, Email, YouTube). The queue is Olly's finished versions and the generator learns from it: that type's queued titles and rewrites (`queueBrief`), plus full text and first-draft-vs-his-version for emails (`emailBrief`) and posts (`postBrief`). (Was titles only, until 2026-10-28.)
+- **Add to queue never removes the idea from the screen** (Olly, 2026-10-28: "don't remove it from where it is"). It saves the finished version, the button turns to "✓ In queue · update", pressing again updates the same queue item, and the idea stays there to Add to calendar.
+- **Anything with a Hub calendar gets Add to calendar**, on the card and on its queue row, and it sends exactly what's on screen now, edits included (Olly hit edited Reel titles arriving as the original).
+- **Everything Olly posts is editable on the card before it's sent**: email body and P.S., YouTube post and pinned comment (text boxes, kept on reload).
+- **Stories: the Image Maker is the main tool** (Olly, 2026-10-28). He wants a calendar of up to 7 Story images a day, each with a recommended song; his own videos he adds ad hoc. Every image gets 3 song ideas that suit its kind, for Catrin's crowd (women about 28–42, UK/US/Australia, warm hopeful songs they know), and they change from image to image ("with a bit of variation").
+- **Results share screenshots: names and photos covered automatically, blurred** so people can see it's a real message (Olly: "pixelation like you're blurring something out, so people can see it's real"). Always let him drag to add a cover and tap to remove one; only the covered version reaches the image.
+- **Every email has tracked Feeling Finder, training and application links** (built from its subject at the time of copying), on the card and on its queue row.
+- **YouTube community posts:** the call to action is Olly's choice per batch (none, or the best of training / Feeling Finder / application, or one of them); a blank line after every line; the first line is the hook; links are `[LINK]` in the prompt and swapped for the tracked link.
 - **Story images (Story Image Maker):**
   - Every fixed label on an image is editable (the "Most of us were told" line was hard-coded in v77; Olly asked for it on every style in v78). Default it, never lock it.
   - Ship every new layout with position sliders from the start: one to move everything and one per element (Olly asked for them on Belief breaking, then again on Aspiration).
@@ -112,7 +130,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
   - Lead gen: "FREE VIDEO TRAINING" big enough to read at a glance, titles as an inverted pyramid with the (bracketed) part in italic.
   - Tab order and names follow Olly's list (Lead gen, Lifestyle, Aspiration, Belief breaking, Emotional scale, Engagement, Meme, Results share), with an overview line at the top.
 - **Big changes go to a preview copy first.** Overhauls (the Socials rebuild) are built in a scratchpad copy, published as a separate artifact for Olly to click through, and only patched into the real generator after he says yes. Small fixes he asks for go straight in.
-- **Platform choice only where it changes the output:** Stories get Instagram/TikTok (+ VIDEO/SCALE); Reels don't (filmed once). Memes live inside Socials as "Story memes" because that's the only place Olly uses them. Tab order: Socials, Email, Skool.
+- **Platform choice only where it changes the output:** Stories get Instagram/TikTok (+ VIDEO/FEELING); Reels don't (filmed once). Memes live inside Socials as "Story memes" because that's the only place Olly uses them. Tab order: Socials, Email, Skool, YouTube.
 - **Olly's chosen wording becomes the default.** When he makes a Story he likes (the Love Scale hook "Use the 2 minute 'Love Scale'…"), make it the layout's starting text and first in its hook bank.
 - **Every Lead gen layout has Size + Up/down per part and saved versions** (hook text + sizes) so Olly can A/B test which design gets replies. Text parts get a bigger font and rewrap, never a stretched image; a long title shrinks to fit instead of running off the canvas.
 - **A caption that follows a question needs a capital letter.** "…right now? comment 'SCALE'" was wrong; phrase the lead-in so the next word starts a sentence or follows a comma.
@@ -135,9 +153,11 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - Never edit the Original FitPro post, CLAUDE.md or the Business Hub unless asked.
 - Never feed generic creator-guide hook patterns into Story ideas. "Nobody's calm relationship looks like this. Including ours..." came from one, didn't tie to the messaging and contradicted the promised land. When Olly asks where something came from, trace it and say plainly.
 - Never make a meme that mocks being single, someone's looks or age, or the reader.
+- Never say the right partner feels boring, flat or less exciting ("consistent feels boring" was removed everywhere, 2026-10-28). The right relationship is committed AND fun; fear decides who you notice, who you're drawn to and how you show up.
+- Never hand Olly a list of options to choose between when he's asked for the thing built. Decide and say why.
 - Never leave a choice that needs variety (meme template, hook style) to Claude alone; it drifts to the most famous option (Drake every time). Let the page choose and rotate, then tell Claude what to use.
 - Never sound like "Think positive. Just change your thoughts. It's easy." It's the advice the audience finds most annoying (survey, 2026-10-22). Never call the change easy.
-- Never write "free trial" / "try it free for 7 days" calls to action any more (trial closed 2026-10-23). Reels end with "Comment 'VIDEO' (or 'SCALE') below, or DM me…" (2026-10-26), never ATTRACTION or RESONANCE.
+- Never write "free trial" / "try it free for 7 days" calls to action any more (trial closed 2026-10-23). Reels end with "Comment 'VIDEO' (or 'FEELING', which replaced 'SCALE' on 2026-10-28) below, or DM me…" (2026-10-26), never ATTRACTION or RESONANCE.
 - Never write platform-specific spoken calls to action on Reels. Olly films each Reel once and posts it everywhere ("I'll always ask people to comment or DM, can't work around that"); only captions and how replies are handled change per platform, and the captions live in the Hub calendar.
 - Never put Reel captions in the generator. Reels = ideas and talking points; the Hub's day panel picks the caption (VIDEO/SCALE × Instagram/Facebook/TikTok/YouTube).
 - Never suggest breakup, heartbreak or explicit songs for Story music, and never invent a song. Real, well-known, warm and hopeful (MUSIC_TASTE).
@@ -145,12 +165,14 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - Never change the core messaging off one survey response.
 - Never draw a guide (sticker box, safe-area line) on the canvas: it must stay an HTML overlay so it can't end up in the saved PNG.
 - Never put invented DMs, results or screenshots on a Story image. DM and Results share use real messages with names hidden.
+- Never build a link or payload when the card is drawn. Read the text at the moment of the tap, or Olly's edits get lost.
+- Never use the browser share sheet or a new tab for saving images from the Hub on a computer (see the Hub skill); in the generator, saving goes through `downloads.save()`.
 - Never present the Aspiration stock images as Olly's family: the words stay about the vision, not "my Sunday". Olly said it's "pretty on point"; discuss in chat and wait for a pattern.
 
 ## 6. Examples (current strong versions)
 
 - **One line:** "Who you attract isn't about what you know. It's how you feel."
-- **Real cause (FitPro-style "No authority" equivalent):** "The wrong emotional state around love. You might feel free at work and joyful with friends, but every time you think about being with someone, you feel frustration, anxiety or worry…"
+- **Real cause (FitPro-style "No authority" equivalent, Olly's words 2026-10-28):** "You don't feel it can happen for you." How it shows up: you can picture the relationship and you know what you want, but every time you think about it you feel worry, frustration or doubt, so you attract people who match that.
 - **Crack, strong:** "Your friends who settled down weren't even trying." (Everyone has these friends, and it breaks "fix yourself first".)
 - **Crack, strong (2026-10-22 addition):** "The friends and family in great relationships aren't flawless. They never fixed everything first. They just felt an emotional connection with the person they met." (Olly's wording. My first version, "they just felt safe and open around love", was replaced.)
 - **Crack, weak (rejected):** "You let them pay for dinner." (It only fits some people and was invented.)
@@ -160,12 +182,14 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **Audience language (survey, keep verbatim):** "Dating apps make people feel disposable", "time wasters", "I catastrophise", "found faults early on". Use when they fit, never forced.
 - **Belief breaking, Emotional scale (strong, 2026-10-25):** top line "Most of us are dating from the bottom half", the scale's bottom half, "Frustration" circled with "Most of us date from here", bottom line "We attract people who match how we feel." (Uses the training's own image, one point, ties straight back to the core.)
 - **Root of it all (2026-10-26, Olly's addition):** "All of it stems from fear. Impatience, frustration, envy, exhaustion, despair, hopelessness: low, survival-based emotions. In that fear we try to learn more, but learning doesn't touch the fear. Moving up the emotional scale is practical." Payoffs: better quality people, feel better about yourself, more authentically you, dating fun and spontaneous again, things play out naturally.
-- **Love Scale Story hook (Olly's, now the default):** "Use the 2 minute 'Love Scale' to see how close you are to a great relationship ❤️"
+- **Daily email, Olly's edit (2026-10-28, "the baggage test", Belief breaking):** "Think of the happiest couple you know. / Now be honest. / Are they flawless? / … Of course they do, they're human just like you and me. / So what makes them so special? / The truth is, nothing." He cut the draft's scene-setting lines ("the Sunday walks, the shared cooking") and went straight from the question to the point: short single lines, one idea, ends on how elevating your state makes meeting someone exciting again, P.S. to The Love Scale.
 - **Proof:** "I met my wife when I focused on how I was feeling every day, improving it and shifting my state, rather than learning more about what I should be doing."
 
 ---
 
 ## Changelog
+
+- **2026-10-28: Skill review.** Generator map updated (YouTube tab, Add to calendar kinds, songs, cover-names step, `ytImg`, load-order rule, publish with `edits`). Rules: Add to queue keeps the idea on screen and the queue's full text teaches the generator (overrides "only titles are fed back"); Add to calendar reads the text at the tap; everything posted is editable; Stories = Image Maker first, with varied songs for Catrin's crowd; Results share names/photos blurred automatically; tracked links on every email; YouTube CTA per batch. Never: build links at draw time; share sheet/new tab for desktop saves. Example: Olly's edit of "the baggage test" email (cut the scene-setting, short single lines).
 
 - **2026-10-24 (v70): Outliers per tab**, at Olly's request ("give this tool the best performing outliers so it can generate more ideas around those core concepts"). Side panel, above the queue: title/hook + **post type dropdown** (that tab's `POST_TYPES`, e.g. Free value / Personal philosophy / Results share for Reels; Olly asked for the type so it's "tighter") + optional note (numbers / why it worked). Saved in db collection `outliers` `{channel, title, type, note, savedAt}` (local fallback `cig-outliers`). `outlierBrief()` adds the tab's latest 25 to every prompt (before rejections and queue), told to build on their core concepts without copying, leaning on outliers of the type being generated. "More like this" on each outlier sets the type, puts the outlier in Topic and generates. Note: the file has Windows line endings; patch scripts must split on CR+LF (build the characters with `String.fromCharCode`, not escapes passed through bash).
 
@@ -249,3 +273,6 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **v104 (2026-10-26):** Socials overhaul approved and LIVE (from preview PsyL7F4KRfRH2TjehXW2f1 via scratchpad cig_post.py): tabs Socials / Email / Skool; Socials = Reels (ideas only + the line to say at the end, captions picked in the Hub calendar) / Stories (Posting to Instagram or TikTok + offer VIDEO or SCALE: story CTA, TikTok DM link, sticker rules, Story image CTA "Reply" vs "DM me") / Story memes (memes now Story-only, Memes tab hidden); ctaFor(kind, plat, offer), POST in localStorage "cig-post"; email CTA option "Take The Love Scale" with tracked scaleLink(); old ATTRACTION/free-trial CTAs removed.
 
 - **2026-10-26 skill review:** Replaced the RESONANCE Reel CTA rule (overridden: Reels now say "Comment 'VIDEO'/'SCALE' below, or DM me"). Added Never rules: no platform-specific spoken Reel CTAs (filmed once), no Reel captions in the generator (Hub owns them), no breakup/invented songs, never replace core messaging when Olly adds a point. Added tool-design rules: preview copy for overhauls then patch after approval; platform switch only on Stories; memes inside Socials; Olly's chosen wording becomes the default; Size/Up-down + saved versions on every Lead gen layout; capitalise after a question in captions. Added examples: the fear root and the Love Scale hook. Why: each came from a correction Olly made this session.
+- 2026-10-28: Story Image Maker Lead gen has two new layouts, "Opt-in page" (data-layout="page", training, VIDEO) and "Love Scale page" ("scalepage", SCALE): the real page at phone width (PAGE_IMG, JPEG screenshots of funnel/sections/emotional-resonance-optin.html and emotional-scale-check.html at 390px @2x) in a phone frame with a magenta glow, hook above, Reply/DM me button below. Drawn by drawPageLayout(); parts badge/hook/media/cta with size + up/down. "page" is the default (one-off store flag tsm-pageDefault), and Posting to SCALE picks "scalepage" (unless "scalecheck" is already picked). If an opt-in page changes, re-screenshot (scratchpad page_jpgs.js) and replace PAGE_IMG.
+- 2026-10-28: Opt-in page / Love Scale page layouts have a Style row (#tsm-pgStyles, st.pgStyle, remembered as tsm-pgStyle): Centred (phone in the middle), Tilted (bigger phone at ~7 degrees, glow circle), Big phone (phone fills the Story, button over its foot, no line under the button), Close-up (top 58% of the page as a tilted card, no phone). All in drawPageLayout(); the size/up-down parts apply to every style.
+- **2026-10-28: Skill review 2.** Rules: a couple of sentences per line; the mechanism line word for word (2 steps saved for the Loom); decide and build one plan, no option menus (Olly: "everything keeps changing its mind"); lead magnet names and badges follow the current lead magnet everywhere (a Love Scale badge survived the switch). Never: the right partner feels boring (removed everywhere); option menus. Cascade: apply a new argument to every section, and sync the generator CORE in the same job (Olly had to ask twice). Overridden and updated: SCALE → FEELING in the Reel CTA, Stories platform note, email links and YouTube CTA; the Love Scale Story hook example removed; the Real cause example is now Olly's "You don't feel it can happen for you".

@@ -14,7 +14,7 @@
 //
 // GHL has no API for its own funnel stats (2026-10-24), hence this.
 
-const PAGES = { optin: true, apply: true, scale: true };   // scale = The Love Scale (2026-10-26)
+const PAGES = { optin: true, apply: true, scale: true, feeling: true, feelingb: true };   // feelingb = The Feeling Finder A/B variant B (phone image), 2026-10-28   // scale = The Love Scale (2026-10-26), feeling = The Feeling Finder (2026-10-28)
 const BOT_RE = /bot|crawl|spider|preview|facebookexternalhit|headless/i;
 
 // Keep source labels short and safe for a KV key.
@@ -45,6 +45,10 @@ export async function onRequestPost({ request, env }) {
     const skey = "ps:" + page + ":" + day.slice(0, 7) + ":" + src;
     const m = Number(await env.HUB_KV.get(skey)) || 0;
     await env.HUB_KV.put(skey, String(m + 1));
+    // per day as well (2026-10-27), so the Hub's Overview can show a week
+    const dkey = "psd:" + page + ":" + day + ":" + src;
+    const dn = Number(await env.HUB_KV.get(dkey)) || 0;
+    await env.HUB_KV.put(dkey, String(dn + 1));
   }
   return done();
 }
