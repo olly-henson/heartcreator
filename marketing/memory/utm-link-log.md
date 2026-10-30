@@ -81,3 +81,7 @@
 | 2026-06-16 | YouTube | Pinned Comment | Coaching Application | — | `https://ollyhenson.com/coaching-application?utm_source=youtube&utm_medium=pinned_comment&utm_campaign=coaching` |
 | 2026-06-16 | Website | Homepage | Meditation Download | — | `https://ollyhenson.com/meditation?utm_source=website&utm_medium=homepage&utm_campaign=meditation` |
 | 2026-06-16 | Website | Homepage | Coaching Application | — | `https://ollyhenson.com/coaching-application?utm_source=website&utm_medium=homepage&utm_campaign=coaching` |
+| 2026-10-29 | Instagram | ManyChat comment reply (EMOTION, carousels only) | The Feeling Finder | emotion_keyword | `https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=comment&utm_campaign=feeling_finder&utm_content=emotion_keyword` |
+| 2026-10-29 | Instagram | ManyChat DM (EMOTION, carousels only; trigger = message is exactly EMOTION) | The Feeling Finder | emotion_keyword | `https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=emotion_keyword` |
+| 2026-10-29 | Facebook | ManyChat comment reply (EMOTION, if carousels are cross-posted) | The Feeling Finder | emotion_keyword | `https://ollyhenson.com/feeling?utm_source=facebook&utm_medium=comment&utm_campaign=feeling_finder&utm_content=emotion_keyword` |
+| 2026-10-29 | Facebook | ManyChat DM (EMOTION, if carousels are cross-posted) | The Feeling Finder | emotion_keyword | `https://ollyhenson.com/feeling?utm_source=facebook&utm_medium=dm&utm_campaign=feeling_finder&utm_content=emotion_keyword` |

@@ -13,7 +13,8 @@
 - **Where she is:** has been "doing the work." She's now "much more regulated, not as triggered, able to regulate myself, changed stories around friends and family." Love is the one area that hasn't shifted.
 - **Has tried:** "quite a few different approaches myself, from manifestation and mindset work through to nervous system regulation, so I'm really open to exploring that mind/body connection."
 - **Why she joined:** "so much of the content out there seems to overcomplicate finding a relationship, especially when I look at my friends in happy relationships who didn't have to consciously do loads of 'work' to get there... What you presented sounded grounded and simple."
-- **Age, location, job, relationship history, kids:** **[gap]**
+- **Work:** background in psychology (her words). Olly's impression on 2026-10-23: she's doing well in her work, which she vaguely alluded to that day. Her exact job is still unknown.
+- **Age, location, relationship history, kids:** **[gap]**
 - **Which Reel or post brought her in:** **[gap]**
 
 ## Her own diagnosis (in her words)

@@ -78,7 +78,7 @@ export async function onRequestGet({ env }) {
     const names = {};
     (cf.customFields || []).forEach(function (f) {
       const n = String(f.name || "").trim();
-      if (/^(HA|FF) /i.test(n)) names[f.id] = n;
+      if (/^(HA|FF|Scale) /i.test(n)) names[f.id] = n;
     });
     const list = (await applicants(env)).map(function (c) {
       const fields = {};

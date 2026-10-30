@@ -246,6 +246,55 @@
   }
 
   /* ── MRR goal ─────────────────────────────────────────── */
+  /* Today card (Olly, 2026-10-29): daily routine + content targets counted from the calendars */
+  .todaycard{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:18px; display:flex; flex-direction:column; gap:14px; }
+  .todayhead{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .todaylist{ display:flex; flex-direction:column; gap:8px; margin:0; padding:0; list-style:none; }
+  .todaylist label{ display:flex; gap:10px; align-items:flex-start; cursor:pointer; line-height:1.4; }
+  .todaylist input{ width:18px; height:18px; margin-top:1px; accent-color:var(--accent); flex:none; }
+  .todaylist .done span{ text-decoration:line-through; opacity:.6; }
+  .todaylist .golink{ margin-left:28px; font-size:13px; background:none; border:0; padding:2px 0; color:var(--accent); cursor:pointer; font-family:inherit; }
+  .tgrid{ display:grid; grid-template-columns:minmax(90px,auto) minmax(0,1fr) minmax(0,1fr); gap:8px 14px; align-items:center; font-variant-numeric:tabular-nums; }
+  .tgrid.tgrid2{ grid-template-columns:minmax(90px,auto) minmax(0,1fr); }
+  .coretasks{ display:flex; flex-direction:column; gap:16px; }
+  .coretasks .todaycard{ margin-bottom:0; }
+  .corenav{ display:flex; gap:8px; flex-wrap:wrap; }
+  .coredays{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:14px; }
+  .coreday.today{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .coreday.past{ opacity:.85; }
+  .corebadge{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; background:var(--accent); color:#fff; padding:3px 8px; border-radius:999px; }
+  .tgrid .th{ font-size:12px; text-transform:uppercase; letter-spacing:.06em; opacity:.7; }
+  .tcell{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .tbar{ height:8px; border-radius:4px; background:var(--border); overflow:hidden; }
+  .tbar i{ display:block; height:100%; border-radius:4px; background:var(--accent); }
+  .tbar i.full{ background:#22a06b; }
+  .tbar.tbar2{ position:relative; }
+  .consbig{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+  .consscore{ font-size:44px; font-weight:700; line-height:1; font-variant-numeric:tabular-nums; }
+  .consscore.good{ color:#22a06b; } .consscore.mid{ color:#d9a400; } .consscore.low{ color:#e5484d; }
+  .consdet summary{ cursor:pointer; font-weight:600; }
+  .constable{ margin-top:10px; overflow-x:auto; }
+  .constable .cr{ display:grid; grid-template-columns:minmax(96px,1.2fr) repeat(4,minmax(70px,1fr)) minmax(56px,.7fr); gap:6px; padding:6px 0; border-top:1px solid var(--border); font-variant-numeric:tabular-nums; font-size:14px; min-width:520px; }
+  .constable .cr.ch{ border-top:0; font-size:12px; text-transform:uppercase; letter-spacing:.05em; opacity:.7; }
+  .constable .cr.today{ color:var(--accent); font-weight:600; }
+  .constable .cr.fut{ opacity:.55; }
+  .constable .ok{ color:#22a06b; font-weight:600; }
+  .constable .plan{ color:#d9a400; font-weight:600; }
+  .constable .crbtn{ width:100%; text-align:left; background:none; border:0; border-top:1px solid var(--border); color:inherit; font:inherit; cursor:pointer; border-radius:0; }
+  .constable .crbtn:hover{ background:rgba(184,79,232,.08); }
+  .conschip{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:4px 10px; border-radius:999px; border:1px solid var(--border); }
+  .conschip.good{ background:rgba(34,160,107,.18); color:#3ccf8e; border-color:transparent; }
+  .conschip.mid{ background:rgba(217,164,0,.18); color:#f0c14b; border-color:transparent; }
+  .conschip.low{ background:rgba(229,72,77,.18); color:#ff7b80; border-color:transparent; }
+  .constodo{ background:rgba(184,79,232,.08); border-radius:10px; padding:10px 14px; font-size:14px; }
+  .constodo ul{ margin:6px 0 0; padding-left:18px; display:flex; flex-direction:column; gap:3px; }
+  .constodo.good{ background:rgba(34,160,107,.12); }
+  .constodo li.stepdone{ text-decoration:line-through; opacity:.6; list-style:none; margin-left:-14px; }
+  .conslists{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+  .tbar.tbar2 i{ position:absolute; left:0; top:0; }
+  .tbar.tbar2 i.ready{ background:var(--accent); opacity:.35; }
+  .tnum{ font-size:13px; }
+  .tnum em{ font-style:normal; opacity:.65; }
   .goalcard{
     background: var(--surface);
     border:1px solid var(--border-soft);
@@ -1376,8 +1425,9 @@
     <span class="tabmenubtn-icon">☰</span><span id="tabMenuLabel">Menu</span><span class="tabmenubtn-caret">▾</span>
   </button>
   <nav class="tabbar" id="tabBar" role="tablist">
-    <button class="tabbtn" data-tab="overview" role="tab" aria-selected="false">Overview</button>
     <button class="tabbtn" data-tab="braindump" role="tab" aria-selected="false">To-do</button>
+    <button class="tabbtn" data-tab="core" role="tab" aria-selected="false">Core tasks</button>
+    <button class="tabbtn" data-tab="overview" role="tab" aria-selected="false">Overview</button>
     <button class="tabbtn" data-tab="links" role="tab" aria-selected="false">Links</button>
     <button class="tabbtn" data-tab="looms" role="tab" aria-selected="false">Looms</button>
     <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false" hidden>MRR</button>
@@ -1868,7 +1918,7 @@ I'm Olly. I help people consciously attract high-quality relationships. Happily 
 
 Instagram: @attractwitholly
 
-#shorts #attractlove #longtermrelationship #soulmate</textarea>
+#shorts #attractlove #readyforlove #datingover30 #soulmate #manifestlove</textarea>
       <div class="yttpl" data-yttpl="shorts"></div>
       <div style="margin-top:10px;"><button type="button" class="copybtn" id="ytShortsCopy">Copy description</button></div>
     </div>
@@ -2237,6 +2287,11 @@ https://www.instagram.com/attractwitholly
 
   </div>
 
+  <!-- Core tasks tab (Olly, 2026-10-29): the daily routine, a card for each day, and the content targets -->
+  <div id="tab-core" class="tabpanel" hidden="">
+  <div class="coretasks" id="todayCard"></div>
+  </div>
+
   <div id="tab-overview" class="tabpanel" hidden="">
 
   <!-- MRR goal, moved from the MRR tab (Olly, 2026-10-27): live from the MRR numbers, which the GHL pull fills in -->
@@ -2564,6 +2619,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // re-render. If it does have unsaved edits and the server moved on since,
   // we keep the local edits but flag it so a save doesn't clobber the
   // other device silently.
+  var migSave = false;
   function pullServerState(){
     return fetch(API, { headers:{ "accept":"application/json" }, cache:"no-store" })
       .then(function(r){ return r.ok ? r.json() : null; })
@@ -2577,6 +2633,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         localSave(state);
         rerenderAll();
         setSaveState("saved");
+        if (migSave){ migSave = false; markDirty(); saveNow(); } // a one-off data migration ran: store it
       })
       .catch(function(){ /* offline — local copy is fine */ })
       .then(function(){ placePendingReel(); placePendingStory(); placePendingEmail(); placePendingYt(); emAutoPublish(); ytAutoPublish(); }); // content sent from the generator lands on the freshest data
@@ -3932,7 +3989,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       nameInput.dataset.ctpli = i;
 
       var ta = document.createElement("textarea");
-      ta.placeholder = "e.g. Comment HEART for the free meditation 💜\n\n#manifestlove #lawofattraction";
+      ta.placeholder = "e.g. Comment HEART for the free meditation 💜\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove";
       ta.value = tpl.text || "";
       ta.dataset.ctpli = i;
 
@@ -4880,7 +4937,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmStore(id){ if (!state.looms || typeof state.looms !== "object") state.looms = {}; return state.looms[id] || (state.looms[id] = { rating:"", plan:["", "", ""] }); }
   function lmEsc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
   // find an answer by the GHL field name (HA … / FF …), e.g. "HA Feelings About Love"
-  function lmAns(a, re, used){ var k = Object.keys(a.fields || {}).filter(function(n){ return re.test(n); })[0]; if (k && used) used[k] = 1; return k ? a.fields[k] : ""; }
+  // Love Scale fields ("Scale …") only match patterns that ask for them by name
+  function lmAns(a, re, used){ var k = Object.keys(a.fields || {}).filter(function(n){ return re.test(n) && (!/^Scale /i.test(n) || /^\^Scale/.test(re.source)); })[0]; if (k && used) used[k] = 1; return k ? a.fields[k] : ""; }
   function lmLoad(){
     lmLoading = true; lmErr = ""; renderLooms();
     fetch("/api/applicants", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){
@@ -4893,8 +4951,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var used = {};
     var tried = lmAns(a, /tried/i, used), ints = lmAns(a, /^FF Intentions/i, used), now = lmAns(a, /^FF Current Emotion/i, used), emo = lmAns(a, /^FF Resonance/i, used);
     var B = [
-      { title:"Where you are", c:"#7dd3fc", x:40, y:40, cards:[["Right now", lmAns(a, /status|right now|situation/i, used)], ["Looking for", lmAns(a, /how long/i, used)], ["What still isn't happening", lmAns(a, /not happening|isn.t happening/i, used)]] },
-      { title:"What's in the way", c:"#f87171", x:40, y:430, cards:[["How you feel about love", lmAns(a, /feel/i, used), "hot"], ["\u201cI'll meet the right person once I\u2026\u201d", lmAns(a, /once/i, used), "hot"], ["Already tried", tried ? { chips:tried.split(/\s*,\s*/) } : ""]] },
+      { title:"Where you are", c:"#7dd3fc", x:40, y:40, cards:[["Right now", lmAns(a, /status|right now|situation/i, used)], ["Looking for", lmAns(a, /how long/i, used)], ["What still isn't happening", lmAns(a, /not happening|isn.t happening/i, used)], ["The Love Scale", [lmAns(a, /^Scale Result/i, used), lmAns(a, /^Scale Feelings/i, used)].filter(Boolean).join(" · ")]] },
+      { title:"What's in the way", c:"#f87171", x:40, y:430, cards:[["How you feel about love", lmAns(a, /feel/i, used), "hot"], ["Where it goes wrong", lmAns(a, /^Scale Biggest Gap/i, used), "hot"],["\u201cI'll meet the right person once I\u2026\u201d", lmAns(a, /once/i, used), "hot"], ["Already tried", tried ? { chips:tried.split(/\s*,\s*/) } : ""]] },
       { title:"Where you want to be", c:"#4ade80", x:1090, y:40, cards:[["What you want", lmAns(a, /want/i, used)], ["The Feeling Finder", (now || emo) ? { ff:[now || "?", emo || "?"] } : "Not done yet"], ["Your intentions", ints ? { chips:ints.split(/\s*[·|]\s*/) } : ""]] },
       { title:"Fit for the program", c:"#fbbf24", x:1090, y:470, cards:[["Priority", lmAns(a, /priority/i, used)], ["Implementation, not information", lmAns(a, /implementation|daily|information/i, used)], ["Willing to invest", lmAns(a, /invest/i, used)], ["Based in · Work", [[a.city, a.country].filter(Boolean).join(", "), lmAns(a, /profession|work/i, used)].filter(Boolean).join(" · ")], ["Anything else", lmAns(a, /anything/i, used)]] }
     ];
@@ -6622,6 +6680,315 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     host.appendChild(list);
   }
 
+  // Core tasks (Olly, 2026-10-29): his daily routine, in his order, with a card for each day of the week (ticks kept per
+  // day in state.coreTasks), and the content targets counted straight from the Reels / Stories / Email / YouTube
+  // calendars, so nothing extra to log. Done = Reels and Stories marked Published/Posted; emails and YouTube posts once
+  // Scheduled or Published. Content scheduled ahead counts on the day it goes out.
+  var ROUTINE = [
+    ["skool", "Check in with current members in the Skool app"],
+    ["whatsapp", "Reply to WhatsApps (people you've sent Looms or messages to)"],
+    ["looms", "Check applications and send the Looms with the offer", "looms"],
+    ["socials", "Check socials: messages and DMs from people who are interested"],
+    ["content", "Content: Reels, Stories, email and YouTube post"]
+  ];
+  var TARGETS = [["Reels", 5, 35], ["Stories", 7, 49], ["Emails", 1, 7], ["YouTube posts", 1, 7]];
+  var ROUTINE_START = "2026-10-29";
+  var coreWeek = null;
+  function coreStore(){
+    if (!state.coreTasks || typeof state.coreTasks !== "object") state.coreTasks = {};
+    if (state.routine && state.routine.date) { state.coreTasks[state.routine.date] = state.routine.done || {}; delete state.routine; }
+    return state.coreTasks;
+  }
+  function contentCounts(from, to){
+    var inR = function(d){ return !!d && d >= from && d <= to; };
+    var reels = (state.content && state.content.ideas) || [], st = (state.stories && state.stories.ideas) || [];
+    var sched = function(x){ return x.status === "scheduled" || x.status === "sent"; };
+    return {
+      "Reels": { done: reels.filter(function(i){ return inR(i.date) && i.posted; }).length, planned: reels.filter(function(i){ return inR(i.date) && i.title; }).length },
+      "Stories": { done: st.filter(function(i){ return inR(i.date) && i.posted; }).length, planned: st.filter(function(i){ return inR(i.date); }).length },
+      "Emails": { done: emList().filter(function(e){ return inR(e.date) && sched(e); }).length, planned: emList().filter(function(e){ return inR(e.date); }).length },
+      "YouTube posts": { done: ytList().filter(function(x){ return inR(x.date) && sched(x); }).length, planned: ytList().filter(function(x){ return inR(x.date); }).length }
+    };
+  }
+  function coreCell(c, target){
+    var pct = Math.min(100, Math.round(c.done / target * 100));
+    var extra = c.planned > c.done ? " <em>(+" + (c.planned - c.done) + " planned)</em>" : "";
+    return '<div class="tcell"><span class="tnum"><b>' + c.done + "</b> of " + target + extra + '</span><div class="tbar"><i class="' + (c.done >= target ? "full" : "") + '" style="width:' + pct + '%"></i></div></div>';
+  }
+  // the week line shows two numbers (Olly batches ahead): ready = on the calendar or scheduled, out = published
+  function coreWeekCell(c, target, kind){
+    var ready = Math.max(c.planned, c.done), out = kind === "Emails" || kind === "YouTube posts" ? c.done : c.done;
+    var rp = Math.min(100, Math.round(ready / target * 100)), op = Math.min(100, Math.round(out / target * 100));
+    var outLbl = kind === "Emails" || kind === "YouTube posts" ? "scheduled" : "published";
+    return '<div class="tcell"><span class="tnum"><b>' + ready + '</b> of ' + target + ' ready <em>· ' + out + ' ' + outLbl + '</em></span><div class="tbar tbar2"><i class="ready" style="width:' + rp + '%"></i><i class="' + (out >= target ? "full" : "") + '" style="width:' + op + '%"></i></div></div>';
+  }
+  // Content consistency (Olly, 2026-10-29): "pull the data in from the calendars and see if I'm against my target", by day,
+  // week, month or year, without batching everything on a Monday. Out = Reels/Stories marked Published, emails/YouTube posts
+  // Scheduled or Published, on the day they go out. The score only counts days up to today, so it's fair mid-period.
+  var consMode = "week", consPeriod = null;
+  var CONS_DAILY = {"Reels": 5, "Stories": 7, "Emails": 1, "YouTube posts": 1};
+  function consByDay(){
+    var m = {}, add = function(d, k, out){ if (!d) return; var x = m[d] || (m[d] = {}); var c = x[k] || (x[k] = {out: 0, cal: 0}); c.cal++; if (out) c.out++; };
+    var sched = function(x){ return x.status === "scheduled" || x.status === "sent"; };
+    ((state.content && state.content.ideas) || []).forEach(function(i){ if (i.title) add(i.date, "Reels", !!i.posted); });
+    ((state.stories && state.stories.ideas) || []).forEach(function(i){ add(i.date, "Stories", !!i.posted); });
+    emList().forEach(function(e){ add(e.date, "Emails", sched(e)); });
+    ytList().forEach(function(x){ add(x.date, "YouTube posts", sched(x)); });
+    return m;
+  }
+  function consRange(mode, key){
+    if (mode === "day") return [key, key];
+    if (mode === "week") return [key, addDaysISO(key, 6)];
+    if (mode === "month") { var p = key.split("-").map(Number), last = new Date(Date.UTC(p[0], p[1], 0)).getUTCDate(); return [key + "-01", key + "-" + String(last).padStart(2, "0")]; }
+    return [key + "-01-01", key + "-12-31"];
+  }
+  function consPeriods(mode){
+    var t = todayISO(), out = [], i;
+    if (mode === "day") for (i = -45; i <= 7; i++) out.push(addDaysISO(t, i));
+    else if (mode === "week") for (i = -12; i <= 2; i++) out.push(addDaysISO(mondayOf(t), i * 7));
+    else if (mode === "month") { var y = Number(t.slice(0, 4)), mo = Number(t.slice(5, 7)); for (i = -11; i <= 1; i++) { var d = new Date(Date.UTC(y, mo - 1 + i, 1)); out.push(d.toISOString().slice(0, 7)); } }
+    else for (i = 2026; i <= Number(t.slice(0, 4)) + 1; i++) out.push(String(i));
+    return out;
+  }
+  function consLabel(mode, key){ return mode === "day" ? dayLabel(key) : mode === "week" ? "Week of " + dayLabel(key) : mode === "month" ? monthLabel(key) : key; }
+  // On track, not "behind at 9am" (Olly, 2026-10-29): finished days count what went out; today counts what's ready for
+  // today (on the calendar or scheduled), so the score shows whether the plan covers it. Rows click through: a day opens
+  // that day, a month (in the year view) opens that month.
+  function renderConsistency(host){
+    var t = todayISO(), byDay = consByDay(), kinds = Object.keys(CONS_DAILY);
+    var periods = consPeriods(consMode);
+    if (!consPeriod || periods.indexOf(consPeriod) === -1) consPeriod = consMode === "day" ? t : consMode === "week" ? mondayOf(t) : consMode === "month" ? t.slice(0, 7) : t.slice(0, 4);
+    var r = consRange(consMode, consPeriod), days = [];
+    for (var d = r[0]; d <= r[1]; d = addDaysISO(d, 1)) days.push(d);
+    var first = ROUTINE_START;   // a fresh start on 29 Oct 2026 (Olly): earlier days aren't scored
+    var done = days.filter(function(x){ return x < t && x >= first; }), hasToday = days.indexOf(t) !== -1, future = days.filter(function(x){ return x > t; });
+    var cnt = function(x, k){ var c = byDay[x] && byDay[x][k]; return c || {out: 0, cal: 0}; };
+    var sum = function(list, k, f){ return list.reduce(function(a, x){ return a + cnt(x, k)[f]; }, 0); };
+    var hit = function(x){ return kinds.every(function(k){ return cnt(x, k).out >= CONS_DAILY[k]; }); };
+    var ready = function(x){ return kinds.every(function(k){ return Math.max(cnt(x, k).out, cnt(x, k).cal) >= CONS_DAILY[k]; }); };
+    var counted = done.length + (hasToday ? 1 : 0);
+    var perKind = {};
+    kinds.forEach(function(k){
+      var n = CONS_DAILY[k], todayGot = hasToday ? Math.min(n, Math.max(cnt(t, k).out, cnt(t, k).cal)) : 0;
+      var got = done.reduce(function(a, x){ return a + Math.min(n, cnt(x, k).out); }, 0) + todayGot;
+      perKind[k] = {got: got, of: n * counted, out: sum(done, k, "out") + (hasToday ? cnt(t, k).out : 0)};
+    });
+    var score = counted ? Math.round(kinds.reduce(function(a, k){ return a + (perKind[k].of ? perKind[k].got / perKind[k].of : 1); }, 0) / kinds.length * 100) : null;
+    var full = done.filter(hit).length;
+    var streak = 0, sd = hit(t) ? t : addDaysISO(t, -1);
+    for (var g = 0; g < 400 && hit(sd); g++) { streak++; sd = addDaysISO(sd, -1); }
+    var status = score == null ? ["", "Not started"] : score >= 90 ? ["good", "On track"] : score >= 70 ? ["mid", "Slightly behind"] : ["low", "Behind"];
+
+    // what to do to get back on track: today first, then the rest of this period (missed days are gone, so not listed)
+    var nm = function(k, m){ return (m === 1 ? {"Reels": "Reel", "Stories": "Story", "Emails": "email", "YouTube posts": "YouTube post"} : {"Reels": "Reels", "Stories": "Stories", "Emails": "emails", "YouTube posts": "YouTube posts"})[k]; };
+    // Two lists, always for today and this week, whatever view is open (Olly, 2026-10-29): each line is the next concrete
+    // step. Not on the calendar yet: add it. On the calendar but not out: post it (and mark it Published) or schedule it.
+    var WHERE = {"Reels": "on Instagram (then the other channels)", "Stories": "on Instagram and TikTok"};
+    var todayList = [], weekList = [];
+    // Go back a day (Olly, 2026-10-30: "if I didn't get a chance to update the calendar"): in Day view on a past day, this
+    // list is that day's catch-up list instead of today's.
+    var Q = "\u2019";
+    var f = consMode === "day" && consPeriod < t && consPeriod >= ROUTINE_START ? consPeriod : t, isPast = f !== t;
+    var dayWord = isPast ? dayLabel(f).split(" ")[0] + Q : "today" + Q;
+    // each type shows both steps while it isn't finished: 1 get it on the calendar (ticks itself off), 2 publish / schedule it
+    kinds.forEach(function(k){
+      var c = cnt(f, k), n = CONS_DAILY[k], onCal = Math.max(c.out, c.cal), toAdd = n - onCal, toOut = n - c.out;
+      var sched = k === "Emails" || k === "YouTube posts";
+      if (toOut <= 0) return;
+      todayList.push(toAdd > 0
+        ? {text: (sched ? "Write " : "Add ") + toAdd + " more " + nm(k, toAdd) + (sched ? " and put " + (toAdd === 1 ? "it" : "them") + " on " + dayWord + "s calendar" : " to " + dayWord + "s calendar")}
+        : {text: (n === 1 ? "The " + nm(k, 1) + " is" : "All " + n + " " + nm(k, n) + " are") + " on " + dayWord + "s calendar", done: true});
+      todayList.push({text: sched
+        ? (isPast ? "Mark " : "Schedule ") + (n === 1 ? dayWord + "s " + nm(k, 1) + (isPast ? " as Scheduled or Published" : "") : toOut + " " + nm(k, toOut))
+        : isPast ? "Mark " + toOut + " " + nm(k, toOut) + " Published if you posted " + (toOut === 1 ? "it" : "them") : "Publish " + toOut + " " + nm(k, toOut) + ": post " + (toOut === 1 ? "it" : "them") + " " + WHERE[k] + ", then mark " + (toOut === 1 ? "it" : "them") + " Published"});
+    });
+    var wkStart = mondayOf(t), rest = [];
+    for (var wd = addDaysISO(t, 1); wd <= addDaysISO(wkStart, 6); wd = addDaysISO(wd, 1)) rest.push(wd);
+    kinds.forEach(function(k){
+      var n = CONS_DAILY[k], sched = k === "Emails" || k === "YouTube posts", missing = 0, drafts = 0, gapDays = [];
+      rest.forEach(function(x){ var c = cnt(x, k), m = n - c.cal; if (m > 0) { missing += m; gapDays.push(dayLabel(x).split(" ")[0]); } if (sched) drafts += Math.max(0, Math.min(n, c.cal) - c.out); });
+      if (missing > 0) weekList.push(k + ": " + (sched ? "write and schedule " : "add ") + missing + " more " + (sched ? "" : "to the calendar ") + "for " + gapDays.join(", ") + (n > 1 ? " (" + n + " a day)" : ""));
+      if (drafts > 0) weekList.push(k + ": schedule the " + drafts + " still in draft");
+    });
+
+    var card = document.createElement("div"); card.className = "todaycard";
+    var head = document.createElement("div"); head.className = "todayhead";
+    head.innerHTML = '<p class="section-label" style="margin:0;">Content consistency</p>';
+    var ctl = document.createElement("div"); ctl.className = "corenav";
+    var ms = document.createElement("select"), ps = document.createElement("select");
+    [["day", "Day"], ["week", "Week"], ["month", "Month"], ["year", "Year"]].forEach(function(o){ ms.add(new Option(o[1], o[0])); });
+    ms.value = consMode; periods.forEach(function(k){ ps.add(new Option(consLabel(consMode, k), k)); }); ps.value = consPeriod;
+    ms.setAttribute("aria-label", "View"); ps.setAttribute("aria-label", "Period");
+    ms.onchange = function(){ consMode = ms.value; consPeriod = null; renderToday(); };
+    ps.onchange = function(){ consPeriod = ps.value; renderToday(); };
+    ctl.append(ms, ps);
+    var focusDay = consMode === "day" ? consPeriod : t;
+    var dayBtn = function(label, to){ var b = document.createElement("button"); b.className = "addbtn"; b.textContent = label; b.onclick = function(){ consMode = "day"; consPeriod = to; coreWeek = mondayOf(to); renderToday(); }; return b; };
+    ctl.append(dayBtn("\u2039 Previous day", addDaysISO(focusDay, -1)));
+    if (!(consMode === "day" && consPeriod === t)) ctl.append(dayBtn("Today", t));
+    if (consMode === "day" && consPeriod < t) ctl.append(dayBtn("Next day \u203a", addDaysISO(consPeriod, 1)));
+    if (consMode !== "week" || consPeriod !== mondayOf(t)) { var bk = document.createElement("button"); bk.className = "addbtn"; bk.textContent = "This week"; bk.onclick = function(){ consMode = "week"; consPeriod = mondayOf(t); coreWeek = mondayOf(t); renderToday(); }; ctl.appendChild(bk); }
+    head.appendChild(ctl); card.appendChild(head);
+
+    var big = document.createElement("div"); big.className = "consbig";
+    big.innerHTML = score == null
+      ? '<span class="consscore">\u2013</span><span class="conschip">Not started</span><span class="hint">What\u2019s ready on the calendar is below.</span>'
+      : '<span class="consscore ' + status[0] + '">' + score + '%</span><span class="conschip ' + status[0] + '">' + status[1] + '</span><span class="hint">' + (done.length ? full + " of " + done.length + " finished day" + (done.length === 1 ? "" : "s") + " fully on target \u00b7 " : hasToday ? "Counting what\u2019s planned for today \u00b7 " : "") + "streak " + streak + " day" + (streak === 1 ? "" : "s") + "</span>";
+    card.appendChild(big);
+
+    // Whole-period totals (Olly, 2026-10-30): the week shows the whole week (and a day the day, a month the month), so the
+    // numbers match the task lists. Covered = gone out on finished days; on today and future days, also anything on the
+    // calendar or scheduled. Left = what's still missing. Days before the fresh start (ROUTINE_START) don't count.
+    var span = days.filter(function(x){ return x >= first; });
+    var grid = document.createElement("div"); grid.className = "tgrid";
+    grid.innerHTML = '<span class="th">Content</span><span class="th">' + (consMode === "day" ? "This day" : consMode === "week" ? "This week" : consMode === "month" ? "This month" : "This year") + ' \u00b7 done + planned</span><span class="th">Left to do</span>';
+    kinds.forEach(function(k){
+      var n = CONS_DAILY[k], sched = k === "Emails" || k === "YouTube posts", target = n * span.length, covered = 0, out = 0, planned = 0, missed = 0;
+      span.forEach(function(x){
+        var c = cnt(x, k), got = x < t ? c.out : Math.max(c.out, c.cal);
+        covered += Math.min(n, got); out += Math.min(n, c.out); planned += Math.max(0, Math.min(n, got) - Math.min(n, c.out));
+        if (x < t) missed += Math.max(0, n - Math.min(n, got));
+      });
+      var left = Math.max(0, target - covered - missed), pct = target ? Math.min(100, Math.round(covered / target * 100)) : 0;
+      var detail = " <em>\u00b7 " + out + (sched ? " scheduled" : " published") + (planned ? ", " + planned + " planned" : "") + "</em>";
+      var leftTxt = !target ? "<em>\u2013</em>" : left ? "<b>" + left + "</b> " + (sched ? "to write and schedule" : "to add to the calendar") : missed ? "Nothing left to add" : "\u2713 All covered";
+      if (missed) leftTxt += ' <em>· ' + missed + ' missed on past days (go back a day if you posted them)</em>';
+      if (target && !left && !missed && !sched && planned) leftTxt = "\u2713 All on the calendar <em>\u00b7 " + planned + " to publish</em>";
+      grid.insertAdjacentHTML("beforeend", "<span>" + k + "</span>"
+        + '<div class="tcell"><span class="tnum"><b>' + covered + "</b> of " + target + detail + '</span><div class="tbar"><i class="' + (target && covered >= target ? "full" : "") + '" style="width:' + pct + '%"></i></div></div>'
+        + '<div class="tcell"><span class="tnum">' + leftTxt + "</span></div>");
+    });
+    card.appendChild(grid);
+
+    var listBox = function(title, items, doneMsg){
+      var bx = document.createElement("div"); bx.className = "constodo" + (items.length ? "" : " good");
+      bx.innerHTML = "<b>" + title + "</b>" + (items.length ? "<ul>" + items.map(function(x){ var o = typeof x === "string" ? {text: x} : x; return '<li class="' + (o.done ? "stepdone" : "") + '">' + (o.done ? "✓ " : "") + o.text + "</li>"; }).join("") + "</ul>" : '<p style="margin:4px 0 0;">' + doneMsg + "</p>");
+      return bx;
+    };
+    var lists = document.createElement("div"); lists.className = "conslists";
+    lists.append(listBox(isPast ? "To finish " + dayLabel(f) + " (catch up on the calendar)" : "To be on track by the end of today", todayList, "Nothing left for today. Everything\u2019s out or scheduled."),
+      listBox("To be on track this week", weekList, rest.length ? "The rest of this week is on the calendar and scheduled." : "That\u2019s the week. Nothing left to plan."));
+    card.appendChild(lists);
+
+    if (consMode !== "day") {
+      var det = document.createElement("details"); det.className = "consdet"; det.open = true;
+      var sm = document.createElement("summary"); sm.textContent = (consMode === "year" ? "Month by month" : "Day by day") + " \u00b7 click one to open it"; det.appendChild(sm);
+      var tb = document.createElement("div"); tb.className = "constable";
+      tb.insertAdjacentHTML("beforeend", '<div class="cr ch"><span></span>' + kinds.map(function(k){ return "<span>" + k + "</span>"; }).join("") + "<span></span></div>");
+      var row = function(label, cells, end, cls, go){
+        var el2 = document.createElement("button"); el2.type = "button"; el2.className = "cr crbtn" + (cls ? " " + cls : "");
+        el2.innerHTML = "<span>" + label + "</span>" + cells + "<span>" + end + "</span>";
+        el2.onclick = go; tb.appendChild(el2);
+      };
+      if (consMode === "year") {
+        for (var mm = 1; mm <= 12; mm++) (function(key){
+          var mr = consRange("month", key), md = [];
+          for (var x = mr[0]; x <= mr[1]; x = addDaysISO(x, 1)) if (x <= t && x >= first) md.push(x);
+          if (!md.length) return;
+          row(monthLabel(key), kinds.map(function(k){ var o = sum(md, k, "out"), tg2 = CONS_DAILY[k] * md.length; return '<span class="' + (o >= tg2 ? "ok" : "") + '">' + o + " / " + tg2 + "</span>"; }).join(""),
+            md.filter(hit).length + "/" + md.length + " days", "", function(){ consMode = "month"; consPeriod = key; renderToday(); });
+        })(consPeriod + "-" + String(mm).padStart(2, "0"));
+      } else {
+        days.forEach(function(x){
+          var fut = x > t, isT = x === t;
+          if (x < first) { row(dayLabel(x), kinds.map(function(){ return "<span>–</span>"; }).join(""), "not tracked", "fut", function(){}); return; }
+          row(dayLabel(x), kinds.map(function(k){
+            var c = cnt(x, k), n = CONS_DAILY[k];
+            if (fut) return '<span class="' + (c.cal >= n ? "ok" : "") + '">' + c.cal + " / " + n + " ready</span>";
+            if (isT) return '<span class="' + (c.out >= n ? "ok" : Math.max(c.out, c.cal) >= n ? "plan" : "") + '">' + c.out + " / " + n + (c.cal > c.out ? " (+" + (c.cal - c.out) + ")" : "") + "</span>";
+            return '<span class="' + (c.out >= n ? "ok" : "") + '">' + c.out + " / " + n + "</span>";
+          }).join(""), fut ? (ready(x) ? "ready" : "") : hit(x) ? "\u2713" : isT && ready(x) ? "planned" : "", isT ? "today" : fut ? "fut" : "", function(){ consMode = "day"; consPeriod = x; renderToday(); });
+        });
+      }
+      det.appendChild(tb); card.appendChild(det);
+    }
+    card.insertAdjacentHTML("beforeend", '<span class="hint">From your calendars, on the day each one goes out: Reels and Stories count once marked Published, emails and YouTube posts once Scheduled. Today also counts what\u2019s planned for today, so you\u2019re not \u201cbehind\u201d first thing in the morning. Targets: 5 Reels, 7 Stories, 1 email and 1 YouTube post a day.</span>');
+    host.appendChild(card);
+  }
+  function renderToday(){
+    var host = document.getElementById("todayCard");
+    if (!host) return;
+    var t = todayISO(), store = coreStore();
+    if (!coreWeek) coreWeek = mondayOf(t);
+    var wk = coreWeek, wkEnd = addDaysISO(wk, 6), week = contentCounts(wk, wkEnd);
+    host.innerHTML = "";
+    renderConsistency(host);
+    // week bar
+    var bar = document.createElement("div"); bar.className = "todayhead";
+    var nav = document.createElement("div"); nav.className = "corenav";
+    var prev = document.createElement("button"), next = document.createElement("button"), now = document.createElement("button");
+    prev.className = next.className = now.className = "addbtn"; prev.textContent = "\u2039 Last week"; next.textContent = "Next week \u203a"; now.textContent = "This week";
+    prev.onclick = function(){ coreWeek = addDaysISO(coreWeek, -7); renderToday(); };
+    next.onclick = function(){ coreWeek = addDaysISO(coreWeek, 7); renderToday(); };
+    now.onclick = function(){ coreWeek = mondayOf(t); renderToday(); };
+    now.hidden = wk === mondayOf(t);
+    nav.append(prev, now, next);
+    // Routine efficiency (Olly, 2026-10-29): share of the 5 daily tasks ticked, from ROUTINE_START (tracking began on the 29th).
+    // Today only counts against you once it's over, so the score is finished days plus whatever you've ticked today.
+    var tickedOn = function(x){ var dd = store[x] || {}; return ROUTINE.filter(function(r){ return dd[r[0]]; }).length; };
+    var effOf = function(from, to){
+      var got = 0, of = 0, finished = 0, todayN = null;
+      for (var x = from < ROUTINE_START ? ROUTINE_START : from; x <= to && x <= t; x = addDaysISO(x, 1)) {
+        var n2 = tickedOn(x);
+        if (x === t) { todayN = n2; got += n2; of += n2; } else { finished++; got += n2; of += ROUTINE.length; }
+      }
+      // with no finished days yet (the first day), show today's real progress rather than a flattering 100%
+      if (!finished) return todayN == null ? null : Math.round(todayN / ROUTINE.length * 100);
+      return of ? Math.round(got / of * 100) : null;
+    };
+    var effWeek = effOf(wk, addDaysISO(wk, 6)), effAll = effOf(ROUTINE_START, t);
+    var rStreak = 0, rs = tickedOn(t) === ROUTINE.length ? t : addDaysISO(t, -1);
+    for (var gg = 0; gg < 400 && rs >= ROUTINE_START && tickedOn(rs) === ROUTINE.length; gg++) { rStreak++; rs = addDaysISO(rs, -1); }
+    var todayLeft = ROUTINE.length - tickedOn(t);
+    var effCard = document.createElement("div"); effCard.className = "todaycard";
+    var eCls = function(v){ return v == null ? "" : v >= 90 ? "good" : v >= 70 ? "mid" : "low"; };
+    effCard.innerHTML = '<div class="todayhead"><p class="section-label" style="margin:0;">Routine efficiency</p><span class="hint">Tracking since ' + dayLabel(ROUTINE_START) + '</span></div>'
+      + '<div class="consbig"><span class="consscore ' + eCls(effWeek == null ? effAll : effWeek) + '">' + (effWeek == null ? "\u2013" : effWeek + "%") + '</span><span class="conschip ' + eCls(effWeek) + '">' + (effWeek == null ? "Not started" : effWeek >= 90 ? "On track" : effWeek >= 70 ? "Slightly behind" : "Behind") + '</span><span class="hint">this week \u00b7 ' + (effAll == null ? "\u2013" : effAll + "%") + " since you started \u00b7 streak " + rStreak + " day" + (rStreak === 1 ? "" : "s") + " with all 5 done</span></div>"
+      + '<p class="constodo' + (todayLeft ? "" : " good") + '">' + (todayLeft ? "<b>Today:</b> " + todayLeft + " of " + ROUTINE.length + " tasks still to tick off." : "<b>Today\u2019s routine is done.</b>") + "</p>";
+    host.appendChild(effCard);
+    bar.innerHTML = '<div><p class="section-label" style="margin:0;">Daily routine \u00b7 week of ' + dayLabel(wk) + '</p><span class="hint">Tick each task off as you do it</span></div>';
+    bar.appendChild(nav);
+    host.appendChild(bar);
+    // (the weekly content totals now live in the Content consistency card above)
+    var tot = document.createElement("div"); tot.className = "todaycard"; tot.hidden = true;
+    var grid = '<p class="section-label" style="margin:0;">Content this week</p><div class="tgrid tgrid2">';
+    TARGETS.forEach(function(tg){ grid += "<span>" + tg[0] + "</span>" + coreWeekCell(week[tg[0]], tg[2], tg[0]); });
+    tot.innerHTML = grid + '</div><span class="hint">Ready = on the calendar for this week (the light bar), so you can batch ahead. Reels and Stories count as out once you mark them Published on the day. Emails and YouTube posts count once Scheduled. Everything counts on the day it goes out, not the day you made it.</span>';
+    host.appendChild(tot);
+    // a card for each day
+    var days = document.createElement("div"); days.className = "coredays";
+    for (var n = 0; n < 7; n++) (function(date){
+      if (date < ROUTINE_START) return;   // tick boxes run from the day tracking started
+      var c = document.createElement("div"); c.className = "todaycard coreday" + (date === t ? " today" : date < t ? " past" : "");
+      var done = store[date] || {}, count = ROUTINE.filter(function(r){ return done[r[0]]; }).length;
+      var h = document.createElement("div"); h.className = "todayhead";
+      h.innerHTML = "<b>" + dayLabel(date) + "</b>" + (date === t ? ' <span class="corebadge">Today</span>' : "") + '<span class="hint">' + count + " of " + ROUTINE.length + "</span>";
+      c.appendChild(h);
+      var ul = document.createElement("ul"); ul.className = "todaylist";
+      ROUTINE.forEach(function(r, i){
+        var li = document.createElement("li"), lab = document.createElement("label"), cb = document.createElement("input"), sp = document.createElement("span");
+        cb.type = "checkbox"; cb.checked = !!done[r[0]]; sp.textContent = (i + 1) + ". " + r[1];
+        lab.className = cb.checked ? "done" : ""; lab.append(cb, sp); li.appendChild(lab);
+        cb.addEventListener("change", function(){
+          var s2 = coreStore(); s2[date] = s2[date] || {}; s2[date][r[0]] = cb.checked;
+          var wasClean = dirtyGet() === null; markDirty(); if (wasClean) saveNow();
+          renderToday();
+        });
+        if (r[2] && date === t) {
+          var go = document.createElement("button"); go.type = "button"; go.className = "golink"; go.textContent = "Open the Looms tab \u2192";
+          go.addEventListener("click", function(){ var b2 = document.querySelector('.tabbtn[data-tab="' + r[2] + '"]'); if (b2) b2.click(); });
+          li.appendChild(go);
+        }
+        ul.appendChild(li);
+      });
+      c.appendChild(ul);
+      var dc = contentCounts(date, date), g = '<div class="tgrid tgrid2">';
+      TARGETS.forEach(function(tg){ g += "<span>" + tg[0] + "</span>" + coreCell(dc[tg[0]], tg[1]); });
+      c.insertAdjacentHTML("beforeend", g + "</div>");
+      days.appendChild(c);
+    })(addDaysISO(wk, n));
+    host.appendChild(days);
+  }
   function renderOverview(){
     var host = document.getElementById("ovBody");
     if (!host) return;
@@ -7043,7 +7410,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // TikTok copy (editable, saved in state.tiktokCopy). Built from the Reel caption, the YouTube Shorts description and the
   // ManyChat flow, adapted for TikTok: no comment keyword (no ManyChat), link in profile, 3 to 5 hashtags, 80-character bio.
   var TK_COPY_DEFAULTS = {
-    caption: "[The Reel's header: the hook you say first]\n\nWho you attract isn't about what you know. It's how you feel.\n\nThe free training shows you how to attract a genuine, committed relationship without more inner work or dating rules. It's linked in my profile 👆\n\n#datingadvice #attractlove #soulmate #relationshipadvice #healthyrelationships",
+    caption: "[The Reel's header: the hook you say first]\n\nWho you attract isn't about what you know. It's how you feel.\n\nThe free training shows you how to attract a genuine, committed relationship without more inner work or dating rules. It's linked in my profile 👆\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
     bio: "Helping singles attract a committed relationship ❤️ Free training 👇",
     link: "https://ollyhenson.com/training?utm_source=tiktok&utm_medium=bio&utm_campaign=emotional_resonance_training",
     dm: "VIDEO (free training): Here you go 💜 ollyhenson.com/video-tt\n\nFEELING (The Feeling Finder): Here you go 💜 ollyhenson.com/feeling-tt",
@@ -7055,17 +7422,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var REEL_CAP_NAME = /^(IG|FB|TIKTOK|YOUTUBE) (VIDEO|SCALE|FEELING)$/i;
   // FEELING captions (2026-10-28): The Feeling Finder replaced The Love Scale. The offer is still stored as "scale" on each idea.
   var SCALE_CAPTIONS = {
-    instagram: "➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
-    facebook: "VIDEO TITLE GOES HERE\n\n➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
-    tiktok: "➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
-    youtube: "➡️ Find the exact emotion that will attract your perfect relationship using The Feeling Finder. Type this into your browser: ollyhenson.com/feel\n\n#shorts #datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove"
+    instagram: "➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
+    facebook: "VIDEO TITLE GOES HERE\n\n➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
+    tiktok: "➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
+    youtube: "➡️ Find the exact emotion that will attract your perfect relationship using The Feeling Finder. Type this into your browser: ollyhenson.com/feel\n\n#shorts #attractlove #readyforlove #datingover30 #soulmate #manifestlove"
   };
   // VIDEO captions (Olly's new wording, 2026-10-28; saved IG/FB VIDEO templates were synced to these by videoCaptionV2)
   var VIDEO_CAPTIONS = {
-    instagram: "➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
-    facebook: "VIDEO TITLE GOES HERE\n\n➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
-    tiktok: "➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove",
-    youtube: "➡️ Watch my free training ‘How To Attract A Genuine And Committed Long-Term Relationship’ here: https://ollyhenson.com/free-video-training\n\n#shorts #datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove"
+    instagram: "➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
+    facebook: "VIDEO TITLE GOES HERE\n\n➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
+    tiktok: "➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
+    youtube: "➡️ Watch my free training ‘How To Attract A Genuine And Committed Long-Term Relationship’ here: https://ollyhenson.com/free-video-training\n\n#shorts #attractlove #readyforlove #datingover30 #soulmate #manifestlove"
   };
   function reelCaption(offer, plat, saved){
     var key = { instagram:"IG", facebook:"FB", tiktok:"TIKTOK", youtube:"YOUTUBE" }[plat] + " " + (offer === "scale" ? "FEELING" : "VIDEO");
@@ -7767,6 +8134,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       document.getElementById("tab-"+btn.dataset.tab).hidden = false;
       if (btn.dataset.tab === "braindump"){ document.querySelectorAll(".bdcard-text").forEach(autosizeBdCard); document.querySelectorAll(".tdtext").forEach(function(t){ if (t._fit) t._fit(); }); }
       if (btn.dataset.tab === "overview") renderOverview();
+      if (btn.dataset.tab === "core") renderToday();
       if (btn.dataset.tab === "audience") renderAudience();
       if (btn.dataset.tab === "links") renderLinks();
       if (btn.dataset.tab === "looms") { lmFilter = "newest"; renderLooms(); }
@@ -7876,6 +8244,24 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       });
       state.videoCaptionV2 = true;
     }
+    // Reel hashtags (Olly, 2026-10-29): the last all-hashtag line of every saved Reel caption becomes the 5 new tags (#shorts kept)
+    if (!state.reelTagsV1){
+      var swapTags = function(txt){
+        if (typeof txt !== "string") return txt;
+        var lines = txt.split("\n");
+        for (var k = lines.length - 1; k >= 0; k--){
+          if (!lines[k].trim()) continue;
+          if (/^\s*(#\w+\s*)+$/.test(lines[k])) lines[k] = (/#shorts\b/i.test(lines[k]) ? "#shorts " : "") + "#attractlove #readyforlove #datingover30 #soulmate #manifestlove";
+          break;
+        }
+        return lines.join("\n");
+      };
+      ((state.content && state.content.captionTemplates) || []).forEach(function(t){ if (t) t.text = swapTags(t.text); });
+      ((state.content && state.content.ideas) || []).forEach(function(i){ if (!i.posted && i.caption) i.caption = swapTags(i.caption); });
+      if (state.tiktokCopy && state.tiktokCopy.caption) state.tiktokCopy.caption = swapTags(state.tiktokCopy.caption);
+      if (state.youtubeCopy && state.youtubeCopy.shorts) state.youtubeCopy.shorts = swapTags(state.youtubeCopy.shorts);
+      state.reelTagsV1 = true; migSave = true;
+    }
     if (!state.content) state.content = { rows: [] };
     if (!state.content.outliers) state.content.outliers = [];
     // Migration: videos that already had real stats logged before the
@@ -7963,6 +8349,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderYouTubeCopy();
     renderLinks();
     renderOverview();
+    renderToday();
   }
 
   function boot(){

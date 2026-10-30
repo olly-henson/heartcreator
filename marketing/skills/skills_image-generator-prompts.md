@@ -86,3 +86,5 @@ A couple in their late 30s having a slow Sunday breakfast together at home, stil
 ## Changelog
 
 - **2026-10-23:** Created from the emotional resonance training session. Rules: one copy-ready prompt per image with the full style line repeated; every prompt ends with "Do not add any text, symbols, or anything else to the image." and the file name; Gemini may ignore the file name, so Claude identifies and renames dropped-in images; sizes per slot; check images for stray text before use; copyright caution on recreated charts.
+
+- 2026-10-29: Carousel slides (content generator) get prompts built in the page: 3:4, 1080x1440, subject in the top half and the middle/lower part calm because white text boxes sit there; real-people mode keeps one woman across slides ("same woman as the earlier images in this chat", pasted in order in one Gemini chat); colour mode = brand purples with lilac/magenta glows, no objects.

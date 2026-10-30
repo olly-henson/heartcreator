@@ -99,11 +99,14 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .tsmpicks button{padding:0;width:60px;height:80px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid var(--line);background:var(--heart-soft)}
 .tsmpicks button[aria-pressed="true"]{border-color:var(--heart);box-shadow:0 0 0 2px var(--heart)}
 .tsmpicks img{width:100%;height:100%;object-fit:cover;display:block}
+.tsmup{position:relative;display:inline-block}
+.tsmpicks .tsmup button.tsmrm{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 12px/1 var(--f-body);display:flex;align-items:center;justify-content:center;box-shadow:none}
 .tsmfile{position:relative;overflow:hidden;display:inline-block}
 .tsmfile input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .tsm input[type=range]{width:100%;accent-color:var(--heart)}
 .tsmkinds{margin-top:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
 .tsmprev{position:relative}
+.tsmprev img.tsmdrag{cursor:grab;touch-action:none}
 .tsmstk{position:absolute;left:13%;right:13%;top:61.5%;height:19.8%;border:2px dashed rgba(255,255,255,.9);border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font:600 12px/1.3 var(--f-body);color:#fff;background:rgba(0,0,0,.2);pointer-events:none}
 .tsmstk[hidden]{display:none}
 .tsmchk{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}
@@ -119,7 +122,8 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
 .tabs button{font:600 14px/1 var(--f-body);background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:13px 12px;cursor:pointer;margin-bottom:-1px;white-space:nowrap;flex:none}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--heart)}
-.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:1000px){.seg{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.seg{grid-template-columns:1fr}}
 .seg button{font:inherit;text-align:left;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
 .seg button b{font-size:15px}
@@ -142,6 +146,14 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .frames{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
 .frames li p{margin:2px 0 0}
 .frames .ot{font-weight:600}
+.crstrip{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.crstrip img{flex:none;width:230px;max-width:70vw;aspect-ratio:3/4;cursor:pointer;border-radius:10px;box-shadow:0 6px 18px rgba(40,10,60,.14);scroll-snap-align:start}
+.crsrow{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:640px){.crsrow{grid-template-columns:minmax(0,1fr)}.crsrow .crsprev{max-width:280px}}
+.crsprev{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;background:var(--heart-soft);box-shadow:0 6px 18px rgba(40,10,60,.14);cursor:move;touch-action:none;position:sticky;top:12px}
+.crsed input,.crsed textarea{font:15px/1.4 var(--f-body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;resize:vertical}
+#crsBox summary{cursor:pointer;display:flex;flex-direction:column;gap:4px}
+#crsBox summary b{font:400 21px/1.25 var(--f-display)}
 .memeed{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:18px;align-items:start;border-top:1px solid var(--line);padding-top:16px}
 @media (max-width:640px){.memeed{grid-template-columns:minmax(0,1fr)}}
 .memeed img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
@@ -186,6 +198,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           <button type="button" id="ch-reels" aria-pressed="true"><b>Reels · Authority</b><span>Your argument and philosophy: the ideas and talking points. Captions are picked in the Hub calendar.</span></button>
           <button type="button" id="ch-stories" aria-pressed="false"><b>Stories · Connection</b><span>Your life and your story, so people feel you understand them.</span></button>
           <button type="button" id="ch-memes" aria-pressed="false"><b>Story memes · Connection</b><span>A popular meme template on a Story: the old belief next to the right emotional state.</span></button>
+          <button type="button" id="ch-carousels" aria-pressed="false"><b>Carousels · Authority</b><span>Raw, belief-shifting feed posts: white text boxes over your photo, ending on Comment EMOTION.</span></button>
         </div>
         <div class="postbar" id="postBar">
           <div class="pbrow"><span class="label">Posting to</span><div class="pbchips" id="pbPlat" role="group" aria-label="Platform">
@@ -197,6 +210,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           <div class="pbcta" id="pbCta"></div>
         </div>
         <p class="hint" id="skoolNote" hidden>Posts for members who've already joined and get it. A good week mixes about two value posts (philosophy, teaching), a few engagement and accountability posts, and one wins or recognition post. The biggest drop-off is in the first two weeks, so lean on "What's normal" and "Welcome" posts for new members.</p>
+        <p class="hint" id="carouselNote" hidden>Belief-shifting carousels in your raw style: white text boxes over a photo of you, six slides that shift one belief and end on Comment EMOTION. Generate, then press Make carousel on an idea to turn it into finished slides. The last slide asks people to comment or DM EMOTION, the carousel-only keyword, so ManyChat tracks carousel sign-ups separately from Reels (FEELING).</p>
         <p class="hint" id="memeNote" hidden>Popular meme templates that show the old belief (learn everything first) next to the new one (get into the right emotional state). Pick a template and you get the text for each panel, sized for a Story. Turn it into the finished image in the Story Image Maker below (Meme), or with "Make a meme from scratch". The joke is on the old approach, never the person.</p>
         <p class="hint" id="emailNote" hidden>Daily emails for everyone who signed up for the free training (the <b>daily email</b> tag in GHL), 3 to 7 a week. Mostly belief breaking and free value, with connection (your story, everyday moments) worked into them. Most have no ask. Every so often one invites people to apply for The Heart Attractor Program: send those mainly to your most engaged readers. Pick Mixed week and ask for a few at once to get a ready-made week.</p>
         <p class="hint" id="balance">Reels show you can help them. Stories show you understand them. Keep both going so people neither friend-zone you nor feel intimidated.</p>
@@ -336,7 +350,8 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
               <div class="tsmg" id="tsm-sciPhotos">
                 <span class="label">Photo</span>
                 <div class="tsmpicks" id="tsm-sciPicks"></div>
-                <span class="hint">From the training images.</span>
+                <div class="row"><label class="tsmfile">Upload your own<input type="file" id="tsm-sciUp" accept="image/*"></label><span class="hint tsmupst"></span></div>
+                <span class="hint">The training images, then your gallery.</span>
               </div>
               <label class="label" for="tsm-sciBottom">Line at the bottom (optional)</label>
               <input type="text" id="tsm-sciBottom">
@@ -373,6 +388,26 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
               <div class="tsmg" id="tsm-convo"></div>
               <div class="row"><button type="button" class="btn small" id="tsm-addThem">+ Their message</button><button type="button" class="btn small" id="tsm-addMe">+ Your reply</button><button type="button" class="btn small" id="tsm-newConvo">New example</button></div>
             </div>
+            <div class="tsmg" id="tsm-txGroup" hidden>
+              <span class="label">All text</span>
+              <span class="hint">Drag the text on the preview to move it, or use the sliders.</span>
+              <label class="label" for="tsm-txSize">Text size</label>
+              <input type="range" id="tsm-txSize" min="60" max="160" step="5" value="100">
+              <label class="label" for="tsm-txY">Move up or down</label>
+              <input type="range" id="tsm-txY" min="-700" max="700" step="10" value="0">
+              <div class="row"><button type="button" class="btn small" id="tsm-txReset">Reset text position and size</button></div>
+            </div>
+            <div class="tsmg" id="tsm-engGroup" hidden>
+              <label class="label" for="tsm-engPick">Pick a question</label>
+              <select id="tsm-engPick"></select>
+              <span class="hint" id="tsm-engStk"></span>
+              <span class="hint">Drag the question on the preview to move it anywhere.</span>
+              <label class="label" for="tsm-engSize">Text size</label>
+              <input type="range" id="tsm-engSize" min="60" max="170" step="5" value="100">
+              <label class="label" for="tsm-engWidth">Text width</label>
+              <input type="range" id="tsm-engWidth" min="400" max="1000" step="10" value="880">
+              <div class="row"><button type="button" class="btn small" id="tsm-engReset">Reset position and size</button></div>
+            </div>
             <div class="tsmg" id="tsm-aspMoveGroup" hidden>
               <label class="label" for="tsm-aspUp">Move text up or down</label>
               <input type="range" id="tsm-aspUp" min="0" max="1400" step="10" value="0" style="direction:rtl">
@@ -381,7 +416,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
             <div class="tsmg" id="tsm-photoGroup">
               <span class="label">Photo</span>
               <div class="tsmpicks" id="tsm-photoPicks"></div>
-              <div class="row"><label class="tsmfile">Upload your own<input type="file" id="tsm-photo" accept="image/*"></label></div>
+              <div class="row"><label class="tsmfile">Upload your own<input type="file" id="tsm-photo" accept="image/*"></label><span class="hint tsmupst"></span></div>
               <label class="label" for="tsm-photoPos">Move photo down</label>
               <input type="range" id="tsm-photoPos" min="0" max="500" step="10">
               <span class="hint">Slide until faces sit clear of the title.</span>
@@ -398,6 +433,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
             </div>
             <div class="tsmg" id="tsm-thumbGroup" hidden>
               <span class="label">Thumbnail</span>
+              <div class="tsmpicks" id="tsm-thumbPicks"></div>
               <div class="row"><label class="tsmfile">Use a different thumbnail<input type="file" id="tsm-thumb" accept="image/*"></label><button type="button" class="btn small" id="tsm-thumbReset">Back to the training's</button></div>
               <span class="hint">Starts on the YouTube thumbnail for the Emotional Resonance training. Swap it when there's a new training.</span>
             </div>
@@ -423,7 +459,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
       <div class="olform">
         <textarea id="olTitle" placeholder="The title, hook or what the post said"></textarea>
         <select id="olType" aria-label="Post type"></select>
-        <input type="text" id="olNote" placeholder="Optional: the numbers or why it worked">
+        <input type="text" id="olNote" placeholder="Optional: why it's an outlier, e.g. 3× my usual sends, 12 FEELING comments">
         <div class="row"><button class="btn small primary" id="olAdd">Add outlier</button><span class="status" id="olst" role="status"></span></div>
       </div>
       <ul class="plain" id="olList"></ul>
@@ -461,12 +497,14 @@ Bleeding neck pain: They don't really believe it can happen for them, even thoug
 Old belief: "If I keep working on myself and get clearer on what I want, it'll happen."
 Why it isn't working: The work is awesome and has made them intellectually clear about what they want and what to do. But they still don't feel like it can happen for them. So the loop continues.
 The crack: Their friends and family don't understand relationships as well as they do, and haven't done as much work on themselves. Yet they found a great partner and built a life together. They just had a connection, and that emotional connection matters. Lean on this often, across every type of content.
-Analogy: you're reading the radio manual instead of changing the station. However much you know about radios, you only pick up the station you're tuned to.
+Analogy (use it sparingly: at most one piece in ten, and never in an email unless the format "Changing the station, not reading the manual" was picked): you're reading the radio manual instead of changing the station. However much you know about radios, you only pick up the station you're tuned to.
 Real cause (THE problem, say it like the FitPro post says "no authority"): You don't feel it can happen for you.
 How it shows up: Every time they think about dating or relationships they feel dread, despair, frustration or impatience, and their body reacts: a shift in heartbeat, a bit of worry, tightness in the chest or throat, or trying to ignore it. Those reactions attract the wrong people and keep the right ones away.
 Why it matters: We resonate with people we emotionally connect with. That's why someone can tick every box on paper and still feel wrong when you're actually with them. You can learn about relationships until you're blue in the face, but only shifting your emotional state changes it.
 Reel flow (Olly's own example, freestyle it): 1 the problem: you don't feel it; 2 the symptoms: the emotions and what the body does; 3 you know it intellectually but don't believe it; 4 we resonate with people we emotionally connect with, so someone can tick every box and still feel wrong; 5 learning won't change it, shifting your emotional state will; 6 The Feeling Finder finds the emotion and gives a plan of action, comment FEELING.
 The root: it all stems from fear. Impatience, frustration, envy, exhaustion, despair and hopelessness are all low, survival-based emotions on the emotional scale, and they're all fear. In that fear people try to learn more (another book, course or attachment-styles video), but learning doesn't touch the fear, so they're still in the same emotional state every single day. Moving up the emotional scale is the practical way out, a little every day. When you move up: the quality of the people you attract goes up, you feel better about yourself, you feel more authentically you, dating becomes fun and spontaneous again rather than a chore, and things play out naturally. This adds to the message; it never replaces it.
+Successful women, the sharper who (added 2026-10-29; adds to the message, never replaces it): mostly successful, professional women in their 30s and 40s. Everything else is sorted (work, friends, health); love is the one area that hasn't worked despite all the effort. They got where they are by planning, learning and working harder, so they've done the same with love, but love doesn't respond to effort or knowledge. It responds to how they feel. The skills that built their career (planning, researching, fixing, staying in control) keep them in their heads about love. You can't out-work this one. Use "successful" as a frame ("you've got everything else sorted"), never a label they must claim, and never "high achiever".
+The opposition (be the opposite): other coaches tell successful women something's wrong with them: "you're too masculine, soften into your feminine", "treat dating like a strategy, learn the rules", "heal your wounds first". We say nothing about who you are needs to change or soften, more rules is more thinking, and there's nothing to fix first (your friends didn't). Position against the advice, never name or knock the coaches, never knock therapy.
 What they need: the right emotional state (joy, freedom, appreciation, gratitude, excitement, empowerment, feeling safe).
 Mechanism (say it like this): The Attraction Formula puts you in the right emotional state around love, so that you attract a consistent, committed relationship where you feel safe being yourself. In that state all three flip. They notice the people who are ready. They're drawn to someone committed and still fun. They show up relaxed. The vehicle is The Attraction Formula Meditation, a 10-minute daily practice; the community also has a Find Your State training, state-shifting tools (the State Shifting Ladder) and daily support from Olly. Keep content at the principle: what it does and why, not the steps.
 Lead magnet: The Feeling Finder (ollyhenson.com/feeling, keyword FEELING): finds the exact emotion that will attract their perfect relationship and shows where they are right now vs where they need to be. The Love Scale is retired: never offer it.
@@ -696,8 +734,27 @@ Object.assign(POST_TYPES, {
   "Charlie's conspiracy board": {group:"Meme", desc:"Charlie from It's Always Sunny frantically explaining a wall of papers and red string.", formats:MEME_PLACES,
     rule:"Two parts: a top line (what we're doing, e.g. me working out why they didn't text back) and the board (a few overthinking notes pinned up). This shows overanalysing, the old state."},
   "They don't know": {group:"Meme", desc:"A man standing alone in the corner at a party, thinking a secret to himself.", formats:MEME_PLACES,
-    rule:"One panel: 'They don't know...' plus a quiet win, e.g. he's feeling calm about love now. Warm, a bit smug, never mocking anyone."}
+    rule:"One panel: 'They don't know...' plus a quiet win, e.g. he's feeling calm about love now. Warm, a bit smug, never mocking anyone."},
+  // Added 2026-10-29 for Catrin's crowd (women in their 30s and 40s): the templates they share with friends
+  "Woman yelling at cat": {group:"Meme", desc:"A woman shouting and pointing across the table at a confused white cat sitting behind a dinner plate.", formats:MEME_PLACES,
+    rule:"Two labels: Woman (the old voice: the friend, the dating advice or her own overthinking, e.g. \"You need to heal your attachment style first!\") and Cat (the calm new state, unbothered, e.g. \"I just want to feel safe and enjoy dinner\"). The cat always wins. Keep the woman's line recognisable, never cruel."},
+  "Evil Kermit": {group:"Meme", desc:"Kermit facing a hooded dark Kermit, the inner voice tempting him.", formats:MEME_PLACES,
+    rule:"Two labels: Me (a calm, healthy intention, e.g. \"Me: I'm going to enjoy this date and see how it feels\") and Me inside (the old fear talking, e.g. \"Me inside: Google his ex and plan the wedding\"). Funny and kind; she should see herself in it."},
+  "This is fine": {group:"Meme", desc:"A cartoon dog sips coffee in a room on fire and says \"This is fine.\"", formats:MEME_PLACES,
+    rule:"One top line naming a dating moment where we pretend we're calm but our body isn't, e.g. \"Me acting unbothered when he hasn't texted back in 4 hours\". The fire is the survival state. Never mock the reader."},
+  "Sad Pablo Escobar": {group:"Meme", desc:"Pablo Escobar alone and waiting in three scenes: on a swing, at a table, by an empty pool.", formats:MEME_PLACES,
+    rule:"One top line about waiting in the old state, e.g. \"Me waiting for the right one after my 14th self-development book\". The wait is the joke; the feeling is the fix."},
+  "Is this a pigeon?": {group:"Meme", desc:"An anime man points at a butterfly and asks \"Is this a pigeon?\", getting it wrong.", formats:MEME_PLACES,
+    rule:"Three labels: the man (me, or most of us, e.g. me after one good date), the butterfly (what's really there, e.g. a man who texts back on time) and the question at the bottom (the wrong read, e.g. \"Is this… a red flag?\"). It shows how fear misreads good things, like a consistent man giving the ick."}
 });
+// Meme order (Olly, 2026-10-29): templates for Catrin's crowd first; the gamer/male-coded ones are retired from the lists
+const MEME_RETIRED = ["Bell curve", "Buff Doge vs Cheems", "Galaxy brain", "Gru's plan", "Charlie's conspiracy board"];
+const MEME_FIRST = ["Any template (tool picks)", "Woman yelling at cat", "Evil Kermit", "This is fine", "Sad Pablo Escobar", "Is this a pigeon?"];
+(function(){
+  const memes = Object.keys(POST_TYPES).filter(k => POST_TYPES[k] && POST_TYPES[k].group === "Meme");
+  const keep = {}; memes.forEach(k => { keep[k] = POST_TYPES[k]; delete POST_TYPES[k]; });
+  MEME_FIRST.concat(memes.filter(k => !MEME_FIRST.includes(k))).forEach(k => { if (keep[k] && !MEME_RETIRED.includes(k)) POST_TYPES[k] = keep[k]; });
+})();
 /* Email (Olly, 2026-10-26): daily emails to the free training list. Same content family as Stories, plus the email-native
    types from the email skill (Ben Settle: story, Q&A, checklist, "what it's not", dogma, survey). */
 Object.assign(POST_TYPES, {
@@ -902,13 +959,37 @@ function hookBrief(){
 
 /* Instagram: Reels carry the authority posts, Stories carry the connection posts. */
 const CHANNELS = {
-  reels: {group:"Authority", noun:"Reel", button:"Generate Reel headers"},
+  reels: {group:"Authority", noun:"Reel", button:"Generate Reel hooks"},
   stories: {group:"Connection", noun:"Story", button:"Generate a Story idea"},
   skool: {group:"Skool", noun:"Skool post", button:"Generate Skool posts"},
   memes: {group:"Meme", noun:"Meme", button:"Generate memes"},
   email: {group:"Email", noun:"Email", button:"Write emails"},
-  ytpost: {group:"YouTube", noun:"Community post", button:"Write community posts"}
+  ytpost: {group:"YouTube", noun:"Community post", button:"Write community posts"},
+  carousels: {group:"Carousel", noun:"Carousel", button:"Write carousels"}
 };
+/* Carousels (Olly, 2026-10-29): raw, belief-shifting Instagram carousels. White text boxes on a photo of Olly, short beats
+   per slide, a six-slide belief-shift arc that ends on "Comment FEELING" (inspiration: justdavidboland's "belief" carousel). */
+Object.assign(POST_TYPES, {
+  "Carousel · Belief shift": {group:"Carousel", desc:"The six-slide belief shift: the belief they recognise, their world, the contrast, the new belief, the real cause, then The Feeling Finder.",
+    formats:["Knowing what you want isn't the problem", "Your friends didn't do the work. They still found love.", "\"Once I've healed, I'll meet my person\"", "Why more dating advice isn't working", "You don't believe it can happen for you"],
+    rule:"Follow the six-slide arc exactly."},
+  "Carousel · Mixed": {group:"Carousel", desc:"A different belief-shift angle for each carousel: the tool picks.", formats:[], rule:"MIXED"},
+  "Carousel · The crack": {group:"Carousel", desc:"Built on the crack: friends who know less about relationships and did no inner work still found their person.",
+    formats:["My friends didn't read a single book", "She did all the work. Her sister just met someone.", "They had a connection. That's it."],
+    rule:"Slides 2 to 4 build the crack: friends or family who understand relationships less and never did the inner work still found a great partner, because they had a connection, and that emotional connection matters. Validate the work they've done (it's awesome) before the turn."},
+  "Carousel · Myth vs truth": {group:"Carousel", desc:"Things they've been told about love, in quotes, each one flipped.",
+    formats:["\"Heal first, then love will come\"", "\"Love yourself first\"", "\"Just put yourself out there more\"", "\"Know your attachment style\""],
+    rule:"Slides 2 to 4: the myth in quotes as the first beat (something they've genuinely been told), then the beats that flip it, tied to the right emotional state. Never knock therapy or healing work."},
+  "Carousel · Signs you're stuck": {group:"Carousel", desc:"Recognisable signs they don't feel it can happen for them yet.",
+    formats:["Signs part of you doesn't believe it'll happen", "Signs fear is choosing who you date", "Signs you're in survival mode around love"],
+    rule:"Slides 2 to 4: one or two recognisable everyday signs per slide (the text you reread, the date you talked yourself out of), kind, never diagnosing. Slide 5 says what they mean: it isn't a knowledge problem, they don't feel it can happen for them."},
+  "Carousel · Science": {group:"Carousel", desc:"The belief shift told through the science (emotional contagion, heart rhythm), so the emotional state never feels vague.",
+    formats:["Why we're drawn to people who match how we feel", "What dating anxiety does to your body", "Why positive thinking fades"],
+    rule:"Use only what's in the core message (emotional contagion; HeartMath's early, small studies). Present it simply and honestly. Never claim the heart's field attracts a partner."},
+  "Carousel · Personal story": {group:"Carousel", desc:"Olly's real story as the belief shift.",
+    formats:["What I tried after my 7-year relationship ended", "The thing that changed before I met my wife"],
+    rule:"Only Olly's real story: his 7-year relationship ended in 2019, he tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results, and he met his wife when he focused on how he felt every day instead of learning more. Never invent details: use [placeholders] for anything not given."}
+});
 /* YouTube community posts (2026-10-28). Same type names as the Hub's YouTube community calendar (after "YouTube · "). */
 Object.assign(POST_TYPES, {
   "YouTube · Personal story": {group:"YouTube", desc:"A real moment from Olly's life that shows the right emotional state at work.",
@@ -957,8 +1038,550 @@ function ytPayload(i, type){
 }
 /* Community post image maker (2026-10-28): square 1080 × 1080 (what YouTube community posts show best), the post's
    image line in big type, three styles. Opened by "Make image" on a post; its Add to calendar sends the post with the image. */
+/* Gemini image prompts for a carousel (Olly, 2026-10-29): one copy-ready prompt per slide, real people or colour
+   backgrounds. Rules from marketing/skills/skills_image-generator-prompts.md: the whole style line in every prompt,
+   no text in the image, the file name at the end, ordinary people in their late 30s, nothing that invites stray words. */
+const CRS_STYLE_PEOPLE = "Style: photorealistic, natural candid photography, warm golden-hour light with a soft hint of violet in the shadows, shallow depth of field, gentle and emotional, no text, no logos, no watermarks. The people look like ordinary, real people in their late 30s, not models. Portrait orientation, 3:4 aspect ratio (1080x1440 px). Keep faces and key subjects away from the edges.";
+const CRS_STYLE_COLOUR = "Style: a smooth, softly lit abstract background with a fine film grain, in deep purples (#4B1466 to #150818) with gentle glows of lilac and magenta (#E1A6FF, #D946EF). No objects, no people, no shapes that look like anything. No text, no logos, no watermarks. Portrait orientation, 3:4 aspect ratio (1080x1440 px).";
+function crsScenePrompt(i, mode){
+  const slides = crsBeats(i);
+  return `You plan the background images for an Instagram carousel by Olly Henson (The Attraction Formula). Olly helps singles, mostly women in their 30s and 40s, attract a genuine, committed relationship by shifting into the right emotional state around love. White text boxes will sit over the middle and lower part of every image, so the subject stays in the top half and the rest stays calm.
+
+The slides:
+${slides.map((sl, n) => "Slide " + (n + 1) + ": " + (sl.beats || []).join(" / ")).join("\n")}
+
+${mode === "people"
+    ? `For each slide, write one concrete scene (25 to 45 words) that matches what the slide says: who, where, what they're doing, the feeling and the light. One woman in her late 30s carries the whole carousel (describe her once in slide 1: hair, clothes, setting) and the same woman appears in every slide; a partner can appear on the hopeful slides. The stuck slides are thoughtful or a little deflated, never crying, mocked or pitiful. The hopeful slides are calm, ordinary, warm moments (breakfast, a walk, laughing with friends), never fireworks. Never show phones, laptops, books, signs or screens with anything on them: leave them out, or say the screen is dark and covers are blank.`
+    : `For each slide, write a background mood (12 to 25 words) in the same colour family: where the soft glow sits, how dark or light it is, the texture. Stuck slides a little darker and moodier, hopeful slides warmer and lighter, the last slide the brightest. Keep the middle and lower part smooth and even so the white text boxes stay readable.`}
+
+Reply as JSON with exactly ${slides.length} items: {"slides":[{"scene":""}]}`;
+}
+function crsImagePrompts(i, mode, scenes){
+  const name = String(i.hook || "Carousel").replace(/[^A-Za-z0-9 ]+/g, "").trim().split(/\s+/).slice(0, 5).join(" ") || "Carousel";
+  return scenes.map((sc, n) => {
+    const file = name + " slide " + (n + 1) + ".jpg";
+    const keep = mode === "people" && n > 0 ? " Keep the same woman as in the earlier images in this chat: same face, hair and clothes." : "";
+    const body = mode === "people"
+      ? "Create a photograph for slide " + (n + 1) + " of an Instagram carousel. Scene: " + sc + keep + " Composition: keep the people in the top half of the frame and leave the middle and lower part calm and uncluttered, because text will be placed over it. " + CRS_STYLE_PEOPLE
+      : "Create a background image for slide " + (n + 1) + " of an Instagram carousel. Mood: " + sc + " Keep the middle and lower part smooth and even, because text will be placed over it. " + CRS_STYLE_COLOUR;
+    return {file, text: body + " Do not add any text, symbols, or anything else to the image. Name the image file \"" + file + "\"."};
+  });
+}
+/* Carousel maker (Olly, 2026-10-29): raw belief-shift carousels, 1080 x 1440 (Instagram's 3:4). Each beat is a white text
+   box (one box per line, like Instagram's own text style) over Olly's photo. One photo for every slide, or a different one
+   for any slide. Opened by "Make carousel" on an idea; every slide's words can be edited here. */
+const cImg = (function(){
+  const W = 1080, H = 1440, BUILT = ["breakfast-together", "coffee-date", "family-sunday", "friends-at-dinner", "wedding", "picturing-the-future", "at-the-bar", "heart-field"];
+  // your uploads first (newest first), then the built-in photos
+  const photos = () => (window.cigGallery ? window.cigGallery() : []).concat(BUILT.map(n => "cig-assets/" + n + ".jpg"));
+  const st = {style: store.get("crs-style2", "photo"), size: Number(store.get("crs-size", 100)) || 100, dy: Number(store.get("crs-dy", 0)) || 0,
+    photo: store.get("crs-photo", ""), per: {}, target: "all", slides: [], idea: null};
+  const box = el("details", "card"); box.id = "crsBox"; box.hidden = true;
+  const sum = el("summary"); sum.append(el("b", "", "Carousel maker"), el("span", "hint", " 1080 × 1440 a slide. Press Make carousel on an idea, pick your photo, edit any slide below, then save the slides."));
+  const inner = el("div", "stack"); inner.style.marginTop = "14px";
+  const styles = el("div", "row"), photoRow = el("div", "tsmpicks"), strip = el("div", "crstrip"), eds = el("div", "stack crsed");
+  const range = (id, min, max, step, val) => { const r = document.createElement("input"); r.type = "range"; r.id = id; r.min = min; r.max = max; r.step = step; r.value = String(val); r.style.cssText = "width:100%;accent-color:var(--heart)"; return r; };
+  const size = range("crs-size", 70, 130, 5, st.size), move = range("crs-dy", -500, 500, 10, st.dy);
+  const lab = (f, t) => { const l = el("label", "label", t); l.htmlFor = f; return l; };
+  const target = document.createElement("select"); target.id = "crs-target"; target.style.maxWidth = "260px";
+  const upLbl = el("label", "tsmfile", "Upload your own"), upIn = document.createElement("input"); upIn.type = "file"; upIn.accept = "image/*"; upLbl.appendChild(upIn);
+  const photoWrap = el("div", "stack"); photoWrap.style.gap = "8px";
+  const tRow = el("div", "row"); tRow.append(lab("crs-target", "Photo for"), target);
+  const upRow = el("div", "row"); upRow.append(upLbl, el("span", "hint", "A photo of you talking works best, like the inspiration posts."));
+  photoWrap.append(tRow, photoRow, upRow);
+  // Frames from a talking-head video (Olly, 2026-10-29: "the human element works really well"). The page takes 18 stills
+  // from one video in the browser; a still is only uploaded to the gallery once it's used on a slide.
+  const vidWrap = el("div", "stack"); vidWrap.style.gap = "8px";
+  const vidLbl = el("label", "tsmfile", "Upload a talking-head video"), vidIn = document.createElement("input"); vidIn.type = "file"; vidIn.accept = "video/*"; vidLbl.appendChild(vidIn);
+  const vidRow = el("div", "row"), vidPick = el("button", "btn small primary", "Pick a frame for every slide"), vidMsg = el("span", "status", "");
+  vidPick.hidden = true; vidRow.append(vidLbl, vidPick, vidMsg);
+  const frameRow = el("div", "tsmpicks");
+  vidWrap.append(el("span", "label", "Frames from a video"), el("p", "hint", "Upload one video of you talking. The page takes 18 stills from it. Press Pick a frame for every slide, or tap a still to use it where \u201cPhoto for\u201d says."), vidRow, frameRow);
+  photoWrap.appendChild(vidWrap);
+  let frames = [], fromBlob = {};
+  const frameUp = new Map();
+  // the stills are kept on this device (IndexedDB), so "Another still" still works after a reload
+  const idb = (() => {
+    let dbp = null;
+    const open = () => dbp || (dbp = new Promise((ok, no) => { try { const r = indexedDB.open("crs", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); } catch (e) { no(e); } }));
+    return {
+      get: k => open().then(db => new Promise(ok => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => ok(q.result); q.onerror = () => ok(null); })).catch(() => null),
+      set: (k, v) => open().then(db => new Promise(ok => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = ok; t.onerror = ok; })).catch(() => {})
+    };
+  })();
+  const asFrame = u => frames.includes(u) ? u : (fromBlob[u] != null ? frames[fromBlob[u]] : u);
+  function dataToBlob(d){
+    const b64 = d.split(",")[1] || "", bin = atob(b64), arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], {type: "image/jpeg"});
+  }
+  function shrink(d, max){
+    return loadI(d).then(img => {
+      const k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement("canvas");
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      return new Promise(ok => c.toBlob(ok, "image/jpeg", 0.8));
+    });
+  }
+  // once a still is used, it goes into the gallery and the slide points at the gallery copy, so Save carousel keeps it
+  function settleFrame(src){
+    if (!frames.includes(src) || !window.cigUpSave) return;
+    if (!frameUp.has(src)) frameUp.set(src, Promise.resolve(window.cigUpSave(new File([dataToBlob(src)], "video-frame.jpg", {type: "image/jpeg"}))).catch(() => ""));
+    frameUp.get(src).then(u => {
+      if (!u) return;
+      fromBlob[u] = frames.indexOf(src); idb.set("fromBlob", fromBlob);
+      if (st.photo === src) { st.photo = u; store.set("crs-photo", u); }
+      Object.keys(st.per).forEach(k => { if (st.per[k] === src) st.per[k] = u; });
+      saveLocal();
+    });
+  }
+  function showFrames(){
+    frameRow.textContent = "";
+    const cur = asFrame(st.target === "all" ? st.photo : slideSrc(Number(st.target)));
+    frames.forEach((f, i) => {
+      const b = el("button"); b.type = "button"; b.setAttribute("aria-label", "Still " + (i + 1)); b.setAttribute("aria-pressed", String(f === cur));
+      const im = el("img"); im.src = f; im.alt = ""; b.appendChild(im);
+      b.onclick = () => { pick(f); showFrames(); };
+      frameRow.appendChild(b);
+    });
+  }
+  async function grabFrames(file){
+    vidMsg.textContent = "Taking stills from the video…"; frames = []; frameRow.textContent = ""; vidPick.hidden = true;
+    const url = URL.createObjectURL(file), v = document.createElement("video");
+    v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = url;
+    try {
+      await new Promise((ok, no) => { v.onloadeddata = ok; v.onerror = no; setTimeout(no, 20000); });
+      const dur = v.duration || 0;
+      if (!dur || !isFinite(dur) || !v.videoWidth) throw new Error("no video");
+      const k = Math.min(1, 1600 / Math.max(v.videoWidth, v.videoHeight)), c = document.createElement("canvas");
+      c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
+      const x = c.getContext("2d");
+      for (let i = 0; i < 18; i++) {
+        await new Promise(ok => { const t = setTimeout(ok, 4000); v.onseeked = () => { clearTimeout(t); ok(); }; v.currentTime = Math.min(dur - 0.05, dur * (i + 0.5) / 18); });
+        x.drawImage(v, 0, 0, c.width, c.height); frames.push(c.toDataURL("image/jpeg", 0.9));
+        vidMsg.textContent = "Taking stills… " + (i + 1) + " of 18";
+      }
+      vidMsg.textContent = ""; fromBlob = {}; idb.set("frames", frames); idb.set("fromBlob", fromBlob); showFrames(); vidPick.hidden = !st.slides.length; buildEditors();
+    } catch {
+      vidMsg.textContent = "Couldn't read that video here. Try an MP4 (iPhone: Settings, Camera, Formats, Most Compatible) or a shorter clip.";
+    } finally { URL.revokeObjectURL(url); }
+  }
+  idb.get("frames").then(f => {
+    if (!Array.isArray(f) || !f.length || frames.length) return;
+    frames = f; idb.get("fromBlob").then(m => { fromBlob = m || {}; showFrames(); if (st.slides.length) { sync(); buildEditors(); } });
+  });
+  vidIn.onchange = () => { const f = vidIn.files && vidIn.files[0]; if (f) grabFrames(f); vidIn.value = ""; };
+  vidPick.onclick = async () => {
+    if (!frames.length || !st.slides.length) return;
+    const n = st.slides.length;
+    let picks = null, note = "";
+    if (sampleFn) {
+      vidPick.disabled = true; vidMsg.textContent = "Claude is choosing a still for each slide…";
+      try {
+        const small = await Promise.all(frames.map(f => shrink(f, 360)));
+        const r = await sampleFn.json(`These ${frames.length} images are stills from one talking-head video of Olly Henson, in order (image 1 is the first). They'll be the background photos of an Instagram carousel, with white text boxes over the middle and lower part.
+
+The slides:
+${st.slides.map((sl, i) => "Slide " + (i + 1) + ": " + (sl.beats || []).join(" / ")).join("\n")}
+
+Pick one image for each slide. Only use stills where his eyes are open, his face is sharp and his mouth isn't caught in an awkward shape mid-word. Match the expression to the slide: serious or questioning on the problem slides, warm or smiling on the new belief and the last slide. Use a different image for each slide where you can.
+
+Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with exactly ${n} numbers.`, {images: small, cache: false});
+        picks = ((r && r.picks) || []).map(x => Number(x) - 1).filter(x => x >= 0 && x < frames.length);
+        if (picks.length < n) picks = null;
+      } catch (e) { note = e && e.code === "images_unavailable" ? "Claude can't look at images here, so the stills are spread out in order. " : ""; }
+      finally { vidPick.disabled = false; }
+    }
+    if (!picks) picks = Array.from({length: n}, (_, i) => Math.round(i * (frames.length - 1) / Math.max(1, n - 1)));
+    picks.slice(0, n).forEach((f, i) => { st.per[i] = frames[f]; });
+    st.style = "photo"; store.set("crs-style2", "photo");
+    vidMsg.textContent = note + "\u2713 A still on every slide. To change one, choose that slide under Photo for, then tap a still.";
+    sync(); buildEditors(); draw(); showFrames();
+    picks.slice(0, n).forEach(f => settleFrame(frames[f]));
+  };
+  const sliders = el("div", "stack"); sliders.style.gap = "6px"; sliders.append(lab("crs-size", "Text size"), size, lab("crs-dy", "Move text up or down (every slide)"), move);
+  const acts = el("div", "row"), share = el("button", "btn small primary", "Share all slides"), save = el("button", "btn small primary", "Save all slides"), msg = el("span", "status", "");
+  const touch = window.matchMedia && matchMedia("(pointer: coarse)").matches;
+  share.hidden = !(navigator.canShare && touch);
+  acts.append(share, save, msg);
+  const empty = el("p", "hint", "Press Make carousel on one of the ideas above and its slides appear here.");
+  [["photo", "Photo"], ["purple", "Purple"]].forEach(([k, l]) => {
+    const b = el("button", "btn small", l); b.type = "button"; b.dataset.style = k;
+    b.onclick = () => { st.style = k; store.set("crs-style2", k); sync(); draw(); };
+    styles.appendChild(b);
+  });
+  // Gemini prompts, one under each slide (Olly, 2026-10-29: "I need the prompts to be here for each slide")
+  const ipRow = el("div", "row"), ipP = el("button", "btn small", "Write Gemini prompts: real people"), ipC = el("button", "btn small", "Write Gemini prompts: colour backgrounds");
+  const ipAll = el("button", "btn small", "Copy all prompts"), ipMsg = el("span", "status", "");
+  ipAll.hidden = true; ipRow.append(ipP, ipC, ipAll, ipMsg);
+  const ipHint = el("p", "hint", "Paste each slide's prompt into the same Gemini chat, in order, so the person stays the same. Then upload the image to that slide.");
+  inner.append(empty, styles, photoWrap, sliders, strip, acts, el("span", "sub", "Slides · one text box per line"), ipRow, ipHint, eds);
+  box.append(sum, inner);
+
+  const loadI = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+  function rr(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function wrap(ctx, text, maxW){
+    const out = []; let line = "";
+    String(text || "").split(/\s+/).filter(Boolean).forEach(w => { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t; });
+    if (line) out.push(line); return out;
+  }
+  // the biggest text size where every beat fits in the space
+  function layout(ctx, beats, own){
+    const k = st.size / 100 * (own || 1), maxW = W - 120;
+    for (let sz = Math.round(78 * k); sz >= 30; sz -= 2) {
+      ctx.font = "700 " + sz + "px Poppins, sans-serif";
+      const pad = sz * 0.36, blocks = beats.map(b => wrap(ctx, b, maxW - pad * 2));
+      const lh = sz * 1.32, gap = sz * 0.5, h = blocks.reduce((a, ls) => a + ls.length * lh, 0) + gap * Math.max(0, blocks.length - 1);
+      if (h <= H * 0.62 || sz <= 30) return {sz, pad, blocks, lh, gap, h};
+    }
+  }
+  function slideSrc(n){ return st.per[n] || st.photo || photos()[0]; }
+  async function background(ctx, n){
+    if (st.style === "photo") {
+      try {
+        const img = await loadI(slideSrc(n)), sc = Math.max(W / img.width, H / img.height);
+        ctx.drawImage(img, (W - img.width * sc) / 2, (H - img.height * sc) / 2, img.width * sc, img.height * sc);
+        return;
+      } catch {}
+    }
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#2a0846"); g.addColorStop(1, "#12041f");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(217,70,239,.16)"; ctx.beginPath(); ctx.arc(W * 0.85, 260, 440, 0, Math.PI * 2); ctx.fill();
+  }
+  // sl.sz (text size %), sl.dx and sl.dy (position) are this slide's own, on top of the every-slide settings
+  function beatsOn(ctx, beats, sl){
+    sl = sl || {};
+    const L = layout(ctx, beats, (Number(sl.sz) || 100) / 100);
+    ctx.font = "700 " + L.sz + "px Poppins, sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    const widest = Math.max(0, ...L.blocks.flat().map(t => ctx.measureText(t).width)) + L.pad * 2;
+    const x = Math.max(16, Math.min(W - widest - 16, 56 + (Number(sl.dx) || 0)));
+    let y = Math.min(H - L.h - 40, Math.max(40, H * 0.56 - L.h / 2 + st.dy + (Number(sl.dy) || 0)));
+    L.blocks.forEach(ls => {
+      ls.forEach((line, i) => {
+        const w = ctx.measureText(line).width + L.pad * 2, top = y + i * L.lh;
+        ctx.fillStyle = "#ffffff"; rr(ctx, x, top, w, L.lh + 1, L.sz * 0.24); ctx.fill();
+      });
+      ls.forEach((line, i) => { ctx.fillStyle = "#111111"; ctx.fillText(line, x + L.pad, y + i * L.lh + L.lh * 0.72); });
+      y += ls.length * L.lh + L.gap;
+    });
+  }
+  const cvs = [];
+  let seq = 0, timer = 0, files = null;
+  const later = () => { clearTimeout(timer); timer = setTimeout(draw, 120); };
+  async function draw(){
+    const me = ++seq;
+    if (!st.slides.length) return;
+    try { await document.fonts.load("700 40px Poppins"); } catch {}
+    const urls = [];
+    for (let n = 0; n < st.slides.length; n++) {
+      const cv = cvs[n] || (cvs[n] = document.createElement("canvas")); cv.width = W; cv.height = H;
+      const ctx = cv.getContext("2d"); ctx.clearRect(0, 0, W, H);
+      await background(ctx, n);
+      beatsOn(ctx, (st.slides[n].beats || []).filter(b => String(b).trim()), st.slides[n]);
+      if (me !== seq) return;
+      try { urls.push(cv.toDataURL("image/jpeg", 0.88)); } catch { urls.push(""); }
+    }
+    cvs.length = st.slides.length;
+    saveLocal();
+    urls.forEach((u, n) => { if (previews[n] && u) previews[n].src = u; });
+    strip.textContent = "";
+    urls.forEach((u, n) => { const im = el("img"); im.src = u; im.alt = "Slide " + (n + 1); im.title = "Slide " + (n + 1) + ": tap to change its photo"; im.onclick = () => { target.value = String(n); st.target = String(n); buildPhotos(); }; strip.appendChild(im); });
+    files = null;
+    if (!share.hidden) Promise.all(cvs.map((cv, n) => new Promise(r => cv.toBlob(b => r(b ? new File([b], "carousel-" + String(n + 1).padStart(2, "0") + ".jpg", {type: "image/jpeg"}) : null), "image/jpeg", 0.92))))
+      .then(fs => { if (me === seq) files = fs.filter(Boolean); });
+  }
+  function buildTargets(){
+    target.textContent = ""; target.add(new Option("Every slide", "all"));
+    st.slides.forEach((_, n) => target.add(new Option("Slide " + (n + 1) + " only", String(n))));
+    target.value = st.target in {all:1} || Number(st.target) < st.slides.length ? st.target : "all";
+  }
+  function buildPhotos(){
+    photoRow.textContent = "";
+    const cur = st.target === "all" ? (st.photo || photos()[0]) : slideSrc(Number(st.target));
+    photos().forEach((src, n) => {
+      const b = el("button"); b.type = "button"; b.setAttribute("aria-label", "Photo " + (n + 1)); b.setAttribute("aria-pressed", String(src === cur));
+      const im = el("img"); im.src = src; im.alt = ""; b.appendChild(im);
+      b.onclick = () => pick(src);
+      photoRow.appendChild(b);
+    });
+  }
+  function pick(src){
+    if (st.target === "all") { st.photo = src; if (!/^data:/.test(src)) store.set("crs-photo", src); }
+    else st.per[Number(st.target)] = src;
+    buildPhotos(); buildEditors(); draw(); settleFrame(src);
+  }
+  function sync(){
+    styles.querySelectorAll("[data-style]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.style === st.style)));
+    const has = st.slides.length > 0;
+    empty.hidden = has; [styles, sliders, strip, acts, eds, ipRow, keep].forEach(x => { x.hidden = !has; });
+    ipHint.hidden = !has || !(st.idea && st.idea.imgPrompts && st.idea.imgPrompts.length);
+    ipAll.hidden = ipHint.hidden;
+    photoWrap.hidden = !has || st.style !== "photo";
+    if (!photoWrap.hidden) { buildTargets(); buildPhotos(); }
+    vidPick.hidden = !has || !frames.length;
+  }
+  // each slide's controls sit next to a live preview of that slide (Olly, 2026-10-29: "I need to be able to see that per
+  // carousel image"); drag the preview up or down to move that slide's text
+  let previews = [];
+  // add or remove slides (Olly, 2026-10-29); photos, positions and prompts move with their slide
+  function insertSlide(k){
+    st.slides.splice(k, 0, {beats: ["New slide: type your words here"]});
+    const per = {}; Object.keys(st.per).forEach(i => { const j = Number(i); per[j >= k ? j + 1 : j] = st.per[i]; }); st.per = per;
+    if (st.idea && Array.isArray(st.idea.imgPrompts) && st.idea.imgPrompts.length) st.idea.imgPrompts.splice(k, 0, null);
+    sync(); buildEditors(); draw();
+    setTimeout(() => { const t = eds.querySelectorAll("textarea")[k]; if (t) { t.scrollIntoView({behavior: "smooth", block: "center"}); t.focus(); t.select(); } }, 60);
+  }
+  function removeSlide(k){
+    st.slides.splice(k, 1);
+    const per = {}; Object.keys(st.per).forEach(i => { const j = Number(i); if (j !== k) per[j > k ? j - 1 : j] = st.per[i]; }); st.per = per;
+    if (st.idea && Array.isArray(st.idea.imgPrompts) && st.idea.imgPrompts.length) st.idea.imgPrompts.splice(k, 1);
+    sync(); buildEditors(); draw();
+  }
+  function buildEditors(){
+    eds.textContent = ""; previews = [];
+    st.slides.forEach((sl, n) => {
+      const row = el("div", "crsrow"), pv = el("img"), side = el("div", "stack");
+      pv.className = "crsprev"; pv.alt = "Slide " + (n + 1) + " preview"; pv.title = "Drag up or down to move this slide's text";
+      if (cvs[n]) { try { pv.src = cvs[n].toDataURL("image/jpeg", 0.8); } catch {} }
+      side.style.gap = "10px"; row.append(pv, side); eds.appendChild(row); previews[n] = pv;
+      const l = el("label", "f", "Slide " + (n + 1) + (n === 0 ? " · cover" : n === st.slides.length - 1 ? " · call to action" : "")), ta = document.createElement("textarea");
+      ta.rows = Math.max(3, (sl.beats || []).length + 2); ta.value = (sl.beats || []).join("\n");
+      ta.oninput = () => { sl.beats = ta.value.split("\n").map(b => b.trim()).filter(Boolean); if (n === 0 && st.idea && sl.beats[0]) st.idea.hook = sl.beats[0]; later(); };
+      l.appendChild(ta); side.appendChild(l);
+      // this slide's own photo (Olly, 2026-10-29): upload one, or go back to the photo every slide uses
+      const pr = el("div", "row"), th = el("img"), upL = el("label", "tsmfile", "Upload a photo for slide " + (n + 1)), up = document.createElement("input");
+      th.alt = ""; th.style.cssText = "width:45px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--line)"; th.src = slideSrc(n);
+      up.type = "file"; up.accept = "image/*"; upL.appendChild(up);
+      const back = el("button", "btn small", "Use the main photo"); back.type = "button"; back.hidden = !st.per[n];
+      up.onchange = () => {
+        const f = up.files && up.files[0]; if (!f) return;
+        const r = new FileReader(); r.onload = () => { st.per[n] = r.result; th.src = r.result; back.hidden = false; if (st.style !== "photo") { st.style = "photo"; store.set("crs-style2", "photo"); sync(); } draw(); }; r.readAsDataURL(f);
+        if (window.cigUpSave) Promise.resolve(window.cigUpSave(f)).then(u => { if (u && (!st.per[n] || /^data:/.test(st.per[n]))) { st.per[n] = u; saveLocal(); } });
+        up.value = "";
+      };
+      back.onclick = () => { delete st.per[n]; th.src = slideSrc(n); back.hidden = true; draw(); };
+      pr.append(th, upL, back);
+      if (frames.length) {
+        // another still for this slide (Olly, 2026-10-29: "if I don't like the image, pick another one")
+        const nx = el("button", "btn small", "Another still"), ch = el("button", "btn small", "Choose a still");
+        nx.type = "button"; ch.type = "button";
+        nx.onclick = () => {
+          const used = new Set(st.slides.map((_, j) => j === n ? null : asFrame(slideSrc(j))));
+          const cur = frames.indexOf(asFrame(slideSrc(n)));
+          for (let k = 1; k <= frames.length; k++) { const f = frames[(Math.max(cur, -1) + k + frames.length) % frames.length]; if (!used.has(f)) { st.per[n] = f; break; } }
+          th.src = slideSrc(n); back.hidden = false; draw(); showFrames(); settleFrame(st.per[n]);
+        };
+        ch.onclick = () => { st.target = String(n); buildTargets(); target.value = String(n); showFrames(); vidWrap.scrollIntoView({behavior: "smooth", block: "center"}); };
+        pr.append(nx, ch);
+      }
+      if (st.slides.length > 2) {
+        const rm = el("button", "x", "Remove slide"); rm.type = "button";
+        rm.onclick = () => { if (rm.dataset.sure !== "1") { rm.dataset.sure = "1"; rm.textContent = "Tap again to remove slide " + (n + 1); return; } removeSlide(n); };
+        pr.appendChild(rm);
+      }
+      side.appendChild(pr);
+      // this slide's text: size, left or right, up or down (Olly, 2026-10-29), on top of the every-slide settings
+      const mvW = el("div", "stack"); mvW.style.gap = "4px"; side.appendChild(mvW);
+      const slider = (key, label, min, max, step, def) => {
+        const lb = el("label", "label", "Slide " + (n + 1) + ": " + label), r = document.createElement("input");
+        r.type = "range"; r.min = min; r.max = max; r.step = step; r.value = String(sl[key] != null ? Number(sl[key]) : def); r.id = "crs-" + key + "-" + n; lb.htmlFor = r.id;
+        r.style.cssText = "width:100%;accent-color:var(--heart)";
+        r.oninput = () => { sl[key] = Number(r.value); later(); };
+        mvW.append(lb, r); return r;
+      };
+      const szR = slider("sz", "text size", 50, 160, 5, 100), dxR = slider("dx", "move text left or right", -500, 500, 10, 0), mv = slider("dy", "move text up or down", -700, 700, 10, 0);
+      const rs = el("button", "btn small", "Reset this slide's text"); rs.type = "button"; rs.style.alignSelf = "flex-start";
+      rs.onclick = () => { delete sl.sz; delete sl.dx; delete sl.dy; szR.value = "100"; dxR.value = "0"; mv.value = "0"; later(); };
+      mvW.appendChild(rs);
+      let drag = null;
+      pv.title = "Drag to move this slide's text";
+      pv.addEventListener("pointerdown", e => { drag = {x: e.clientX, y: e.clientY, dx: Number(sl.dx) || 0, dy: Number(sl.dy) || 0, k: H / (pv.clientHeight || H)}; pv.setPointerCapture(e.pointerId); e.preventDefault(); });
+      pv.addEventListener("pointermove", e => {
+        if (!drag) return;
+        sl.dx = Math.max(-500, Math.min(500, Math.round((drag.dx + (e.clientX - drag.x) * drag.k) / 10) * 10));
+        sl.dy = Math.max(-700, Math.min(700, Math.round((drag.dy + (e.clientY - drag.y) * drag.k) / 10) * 10));
+        dxR.value = String(sl.dx); mv.value = String(sl.dy); later();
+      });
+      const end = () => { drag = null; };
+      pv.addEventListener("pointerup", end); pv.addEventListener("pointercancel", end);
+      const gp = st.idea && st.idea.imgPrompts && st.idea.imgPrompts[n];
+      if (gp) {
+        const gw = el("div", "stack"), gt = el("p", "post", gp.text), gc = el("button", "btn small", "Copy prompt for slide " + (n + 1));
+        gw.style.gap = "6px"; gc.style.alignSelf = "flex-start"; gc.onclick = () => copyText(gp.text, gc);
+        gw.append(el("span", "label", "Gemini prompt for slide " + (n + 1)), gt, gc); side.appendChild(gw);
+      } else side.appendChild(el("p", "hint", "Gemini prompt: press “Write Gemini prompts” above the slides and this slide's prompt appears here."));
+      if (n < st.slides.length - 1) { const hr = document.createElement("hr"); hr.style.cssText = "border:0;border-top:1px solid var(--line);margin:6px 0"; eds.appendChild(hr); }
+    });
+    if (!st.slides.length) return;
+    const addRow = el("div", "row"), addEnd = el("button", "btn small primary", "+ Add a slide at the end"), addBefore = el("button", "btn small", "+ Add a slide before the last one");
+    addEnd.type = "button"; addBefore.type = "button";
+    addEnd.onclick = () => insertSlide(st.slides.length);
+    addBefore.onclick = () => insertSlide(Math.max(0, st.slides.length - 1));
+    addRow.style.marginTop = "8px"; addRow.append(addEnd, addBefore);
+    eds.appendChild(addRow);
+  }
+  target.onchange = () => { st.target = target.value; buildPhotos(); };
+  ipAll.onclick = () => copyText(((st.idea && st.idea.imgPrompts) || []).map(x => x.text).join("\n\n"), ipAll);
+  [[ipP, "people"], [ipC, "colour"]].forEach(([btn, mode]) => btn.onclick = async () => {
+    if (!sampleFn) { ipMsg.textContent = "This needs the page opened inside Claude."; return; }
+    const idea = st.idea || {hook: "", slides: st.slides}, label = btn.textContent;
+    btn.disabled = true; btn.textContent = "Writing…"; ipMsg.textContent = "";
+    try {
+      const r = await sampleFn.json(crsScenePrompt(idea, mode), {cache: false});
+      const scenes = ((r && r.slides) || []).map(x => String((x && x.scene) || "").trim()).filter(Boolean);
+      if (!scenes.length) { ipMsg.textContent = "Nothing came back. Try again."; return; }
+      idea.imgPrompts = crsImagePrompts(idea, mode, scenes);
+      saveLocal();
+      if (!st.idea) st.idea = idea;
+      sync(); buildEditors();
+    } catch { ipMsg.textContent = "That didn't work. Try again."; }
+    finally { btn.disabled = false; btn.textContent = label; }
+  });
+  size.oninput = () => { st.size = Number(size.value) || 100; store.set("crs-size", st.size); later(); };
+  move.oninput = () => { st.dy = Number(move.value) || 0; store.set("crs-dy", st.dy); later(); };
+  upIn.onchange = () => {
+    const f = upIn.files && upIn.files[0]; if (!f) return;
+    const r = new FileReader(); r.onload = () => { st.style = "photo"; store.set("crs-style2", "photo"); pick(r.result); sync(); }; r.readAsDataURL(f);
+    if (window.cigUpSave) Promise.resolve(window.cigUpSave(f)).then(u => { if (u && /^data:/.test(st.photo)) { st.photo = u; store.set("crs-photo", u); saveLocal(); } });
+    upIn.value = "";
+  };
+  // One download for the whole carousel (Olly, 2026-10-29: "download them all at the same time", and an added slide was
+  // missed). Every slide is drawn fresh from what's on screen now, then they go into one zip, numbered in order.
+  let zipLib = null;
+  const loadZip = () => zipLib || (zipLib = new Promise((ok, no) => {
+    if (window.JSZip) return ok(window.JSZip);
+    const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+    sc.onload = () => ok(window.JSZip); sc.onerror = () => { zipLib = null; no(new Error("zip")); };
+    document.head.appendChild(sc);
+  }));
+  async function renderAll(){
+    try { await document.fonts.load("700 40px Poppins"); } catch {}
+    const out = [];
+    for (let n = 0; n < st.slides.length; n++) {
+      const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+      const ctx = cv.getContext("2d"); await background(ctx, n);
+      beatsOn(ctx, (st.slides[n].beats || []).filter(b => String(b).trim()), st.slides[n]);
+      out.push(cv);
+    }
+    return out;
+  }
+  save.textContent = "Download all slides (one zip)";
+  save.onclick = async () => {
+    const dl = window.claude?.use ? await claude.use("downloads").catch(() => null) : null;
+    if (!dl) { msg.textContent = "Downloading isn't available here. Long-press or right-click each slide to save it."; return; }
+    save.disabled = true; msg.textContent = "Making the zip…";
+    try {
+      const [Z, all] = await Promise.all([loadZip(), renderAll()]);
+      const zip = new Z(), base = "carousel-" + new Date().toISOString().slice(0, 10);
+      for (let n = 0; n < all.length; n++) zip.file(base + "-" + String(n + 1).padStart(2, "0") + ".jpg", await new Promise(r => all[n].toBlob(r, "image/jpeg", 0.92)));
+      const blob = await zip.generateAsync({type: "blob"});
+      await dl.save({filename: base + ".zip", data: blob});
+      msg.textContent = "\u2713 All " + all.length + " slides in one zip, numbered in order";
+    } catch (e) {
+      msg.textContent = e && e.code === "declined" ? "" : "Couldn't make the zip. Try again, or long-press each slide.";
+    } finally { save.disabled = false; }
+  };
+  // Safari only shares straight from the tap, so the files are made after each draw
+  share.onclick = async () => {
+    if (!files || !files.length) { msg.textContent = "One moment, the slides are still being made."; return; }
+    if (!navigator.canShare({files})) { msg.textContent = "Sharing isn't available here. Press and hold each slide to save it."; return; }
+    try { await navigator.share({files}); msg.textContent = ""; }
+    catch (e) { msg.textContent = e && e.name === "AbortError" ? "" : "Sharing isn't available here. Press and hold each slide to save it."; }
+  };
+  // Save and come back to it (Olly, 2026-10-29: "I need a save option so I can carry on without losing it"). Saved carousels
+  // live in the db collection "carousels" (phone and computer); the one open is also kept on this device after every change.
+  // Photos are kept by their gallery address, so a photo only counts once it has finished uploading.
+  const keep = el("div", "row"), keepBtn = el("button", "btn small primary", "Save carousel"), keepMsg = el("span", "status", "");
+  // Add to queue = the finished carousel as it is now, every slide (Olly, 2026-10-29), not the first idea
+  const qBtn = el("button", "btn small", "Add finished carousel to queue");
+  keep.append(keepBtn, qBtn, keepMsg);
+  const savedBox = el("details"), savedSum = el("summary", "", "Saved carousels"), savedList = el("div", "stack");
+  savedSum.style.cssText = "cursor:pointer;font-weight:600"; savedList.style.cssText = "gap:8px;margin-top:10px"; savedBox.append(savedSum, savedList);
+  inner.insertBefore(savedBox, empty); inner.insertBefore(keep, styles);
+  const clean = u => (u && !/^data:/.test(u)) ? u : "";
+  function snap(){
+    const i = st.idea || {}, per = {};
+    Object.keys(st.per).forEach(k => { const u = clean(st.per[k]); if (u) per[k] = u; });
+    return {hook: i.hook || ((st.slides[0] && (st.slides[0].beats || [])[0]) || "Carousel"), type: i.type || "", caption: i.caption || "", stage: i.stage || "", why: i.why || "",
+      slides: JSON.parse(JSON.stringify(st.slides)), imgPrompts: i.imgPrompts || [], style: st.style, photo: clean(st.photo), per, queueId: st.queueId || "", savedAt: Date.now()};
+  }
+  function saveLocal(){ if (st.slides.length) store.set("crs-current", Object.assign(snap(), {saveId: st.saveId || ""})); }
+  function open(d){
+    if (d.style) st.style = d.style;
+    if (d.photo) st.photo = d.photo;
+    api.load({hook: d.hook, type: d.type, caption: d.caption, stage: d.stage, why: d.why, slides: d.slides || [], imgPrompts: d.imgPrompts || []}, d.per || {}, d.id || d.saveId || null, d.queueId || null);
+  }
+  let col = null, savedItems = [];
+  const dbReady = (window.claude && window.claude.use) ? claude.use("db").then(db => {
+    if (!db) return null;
+    col = db.collection("carousels");
+    col.orderBy("savedAt", "desc").onSnapshot(sn => { savedItems = sn.docs.map(d => Object.assign({id: d.id}, d.data())); renderSaved(); }, () => {});
+    return col;
+  }).catch(() => null) : Promise.resolve(null);
+  function renderSaved(){
+    savedSum.textContent = "Saved carousels (" + savedItems.length + ")"; savedList.textContent = "";
+    if (!savedItems.length) { savedList.appendChild(el("p", "hint", "Nothing saved yet. Press Save carousel while you work on one.")); return; }
+    savedItems.forEach(d => {
+      const r = el("div", "row"), t = el("span", "", d.hook || "Carousel"), when = el("span", "hint", new Date(d.savedAt || 0).toLocaleDateString());
+      t.style.cssText = "flex:1;min-width:0;font-weight:600";
+      const o = el("button", "btn small", st.saveId === d.id ? "Open (current)" : "Open"), x = el("button", "x", "Delete");
+      o.onclick = () => open(d);
+      x.onclick = async () => {
+        if (x.dataset.sure !== "1") { x.dataset.sure = "1"; x.textContent = "Tap again to delete"; return; }
+        try { await col.doc(d.id).delete(); if (st.saveId === d.id) st.saveId = null; } catch {}
+      };
+      r.append(t, when, o, x); savedList.appendChild(r);
+    });
+  }
+  renderSaved();
+  const qLabel = () => { qBtn.textContent = st.queueId && queue.items.some(q => q.id === st.queueId) ? "✓ In queue · update" : "Add finished carousel to queue"; };
+  qBtn.onclick = async () => {
+    qBtn.disabled = true; keepMsg.textContent = "Adding to the queue…";
+    await Promise.all([...frameUp.values()]).catch(() => {});
+    const d = snap(), fields = {channel: "carousels", title: d.hook, level: "Carousel · " + (d.type || "Belief shift").replace("Carousel · ", ""), stage: d.stage, why: d.why,
+      cover: d.slides.map(sl => (sl.beats || []).join(" ")), slides: d.slides, caption: d.caption, per: d.per, photo: d.photo, style: d.style, imgPrompts: d.imgPrompts, savedAt: Date.now()};
+    try {
+      if (st.queueId && queue.items.some(q => q.id === st.queueId)) await queue.update(st.queueId, fields);
+      else st.queueId = await queue.add(fields);
+      keepMsg.textContent = "✓ In your Carousel queue with all " + d.slides.length + " slides. Open it from there any time.";
+      saveLocal();
+    } catch { keepMsg.textContent = "Couldn't add it. Try again."; }
+    finally { qBtn.disabled = false; qLabel(); }
+  };
+  keepBtn.onclick = async () => {
+    keepMsg.textContent = "Saving…";
+    // wait for any still that's still uploading, so every slide's photo is kept (2026-10-29: slide 4's wasn't)
+    await Promise.all([...frameUp.values()]).catch(() => {});
+    const c = await dbReady, data = snap();
+    try {
+      if (c) {
+        if (st.saveId) await c.doc(st.saveId).set(data); else st.saveId = (await c.add(data)).id;
+        keepMsg.textContent = "✓ Saved. It's under Saved carousels, on your phone too.";
+      } else keepMsg.textContent = "✓ Saved on this device.";
+      saveLocal(); renderSaved();
+    } catch { keepMsg.textContent = "Couldn't save. Try again."; }
+  };
+  sync();
+  const api = {
+    box,
+    load(i, per, saveId, queueId){
+      st.queueId = queueId || (i && i.queueId) || null;
+      st.idea = i || null; st.slides = crsBeats(i); if (i && st.slides !== i.slides) i.slides = st.slides;
+      st.per = per ? Object.assign({}, per) : {}; st.target = "all"; st.saveId = saveId || (i && i.saveId) || null; keepMsg.textContent = "";
+      box.hidden = false; box.open = true; sync(); buildEditors(); draw(); renderSaved(); qLabel(); box.scrollIntoView({behavior: "smooth", block: "start"});
+    },
+    show(on){
+      box.hidden = !on;
+      if (!on) return;
+      if (!st.slides.length) { const cur = store.get("crs-current", null); if (cur && Array.isArray(cur.slides) && cur.slides.length) { open(cur); return; } }
+      sync(); draw();
+    }
+  };
+  return api;
+})();
 const ytImg = (function(){
   const S = 1080, PHOTOS = ["breakfast-together", "coffee-date", "family-sunday", "friends-at-dinner", "wedding", "picturing-the-future", "at-the-bar", "heart-field"];
+  // the built-in photos, then everything in the shared gallery of uploads
+  const ytPhotos = () => PHOTOS.map(n => "cig-assets/" + n + ".jpg").concat(window.cigGallery ? window.cigGallery() : []);
   const st = {style: store.get("ytimg-style", "purple"), photo: Number(store.get("ytimg-photo", 0)) || 0, text: "", idea: null, type: ""};
   const box = el("details", "card"); box.id = "ytImgBox"; box.hidden = true;
   const sum = el("summary"); sum.append(el("b", "", "Community post image"), el("span", "hint", " Square 1080 × 1080, the size YouTube community posts show best. Press Make image on a post, or type your own line."));
@@ -972,8 +1595,17 @@ const ytImg = (function(){
     b.onclick = () => { st.style = k; store.set("ytimg-style", k); draw(); };
     styles.appendChild(b);
   });
-  nextPh.type = "button"; nextPh.onclick = () => { st.photo = (st.photo + 1) % PHOTOS.length; store.set("ytimg-photo", st.photo); draw(); };
+  nextPh.type = "button"; nextPh.onclick = () => { st.custom = ""; st.photo = (st.photo + 1) % ytPhotos().length; store.set("ytimg-photo", st.photo); draw(); };
   styles.appendChild(nextPh);
+  // your own photo: used straight away and kept in the shared gallery (Olly, 2026-10-29)
+  const upLbl = el("label", "tsmfile", "Upload your own"), upIn = document.createElement("input");
+  upIn.type = "file"; upIn.accept = "image/*"; upLbl.appendChild(upIn); styles.appendChild(upLbl);
+  upIn.onchange = () => {
+    const f = upIn.files && upIn.files[0]; if (!f) return;
+    const r = new FileReader(); r.onload = () => { st.custom = r.result; st.style = "photo"; store.set("ytimg-style", "photo"); draw(); }; r.readAsDataURL(f);
+    if (window.cigUpSave) window.cigUpSave(f);
+    upIn.value = "";
+  };
   ta.oninput = () => { st.text = ta.value; draw(); };
   const cal = hubButton("ytpost", () => Object.assign(st.idea ? ytPayload(st.idea, st.type) : {title: st.text.trim(), type: "", post: "", pinned: "", poll: []}, {image: cv.toDataURL("image/jpeg", 0.88)}));
   acts.append(save, cal, msg);
@@ -992,7 +1624,7 @@ const ytImg = (function(){
     if (st.style === "light") { ctx.fillStyle = "#fbfaf6"; ctx.fillRect(0, 0, S, S); ink = "#2a0846"; accent = "#a21caf"; }
     else if (st.style === "photo") {
       try {
-        const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = "cig-assets/" + PHOTOS[st.photo] + ".jpg"; });
+        const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = st.custom || ytPhotos()[st.photo % ytPhotos().length]; });
         if (me !== seq) return;
         const k = Math.max(S / img.width, S / img.height), w = img.width * k, h = img.height * k;
         ctx.drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
@@ -1049,7 +1681,7 @@ const POST = Object.assign({ plat:"instagram", offer:"video" }, (function(){ try
 if (!PLATS[POST.plat]) POST.plat = "instagram";
 if (!OFFERS[POST.offer]) POST.offer = "video";
 function savePost(){ try { localStorage.setItem("cig-post", JSON.stringify(POST)); } catch(e){} }
-const TAGS = { instagram:"#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove", facebook:"#datingadvice #lifepartner #soulmate #attachmentstyle #manifestinglove", tiktok:"#datingadvice #lifepartner #soulmate #attachmentstyle #attractlove" };
+const TAGS = { instagram:"#attractlove #readyforlove #datingover30 #soulmate #manifestlove", facebook:"#attractlove #readyforlove #datingover30 #soulmate #manifestlove", tiktok:"#attractlove #readyforlove #datingover30 #soulmate #manifestlove" };
 function offerPitch(o){
   return o === "scale"
     ? "➡️ If you'd like to find the exact emotion that will attract your perfect relationship, "
@@ -1154,18 +1786,21 @@ function setChannel(ch, keepType, keepFormat){
   $("ch-reels").setAttribute("aria-pressed", String(channel === "reels"));
   $("ch-stories").setAttribute("aria-pressed", String(channel === "stories"));
   $("ch-memes").setAttribute("aria-pressed", String(channel === "memes"));
+  $("ch-carousels").setAttribute("aria-pressed", String(channel === "carousels"));
   $("reelCtaWrap").hidden = true;
-  $("postBar").hidden = !(channel === "reels" || channel === "stories");
+  $("postBar").hidden = channel !== "reels";
 
   $("storyCtaWrap").hidden = channel !== "stories";
   $("countWrap").hidden = channel === "stories";
-  const ig = channel === "reels" || channel === "stories" || channel === "memes";
+  const ig = channel === "reels" || channel === "stories" || channel === "memes" || channel === "carousels";
   $("tab-instagram").setAttribute("aria-selected", String(ig));
   $("tab-skool").setAttribute("aria-selected", String(channel === "skool"));
   $("tab-yt").setAttribute("aria-selected", String(channel === "ytpost"));
   $("ytCtaWrap").hidden = channel !== "ytpost";
   if (!ytImg.box.isConnected) $("tsmBox").after(ytImg.box);
   ytImg.show(channel === "ytpost");
+  if (!cImg.box.isConnected) $("tsmBox").after(cImg.box);
+  cImg.show(channel === "carousels"); $("carouselNote").hidden = channel !== "carousels";
   $("tab-memes").setAttribute("aria-selected", String(channel === "memes"));
   $("tab-email").setAttribute("aria-selected", String(channel === "email"));
   $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email";
@@ -1205,6 +1840,7 @@ document.querySelector(".tabs").onkeydown = e => {
 };
 $("ch-stories").onclick = () => { setChannel("stories"); saveForm(); };
 $("ch-memes").onclick = () => { setChannel("memes"); saveForm(); };
+$("ch-carousels").onclick = () => { setChannel("carousels"); saveForm(); };
 function syncFormats(keep){
   const t = POST_TYPES[$("type").value], f = $("format");
   f.innerHTML = ""; f.add(new Option("Any of these formats", ""));
@@ -1228,8 +1864,9 @@ function buildPrompt(){
   if (channel === "memes") return memePrompt(type, t, fmt, n, part, topic);
   if (channel === "email") return emailPrompt(type, t, fmt, n, part, topic);
   if (channel === "ytpost") return ytPrompt(type, t, fmt, n, part, topic);
+  if (channel === "carousels") return carouselPrompt(type, t, fmt, n, part, topic);
   const goal = "Stop the right person scrolling so they watch the Reel. Olly freestyles the rest and adds the call to action himself, so write the header only.";
-  return `You write Instagram Reel headers for Olly Henson (The Attraction Formula community), who helps singles attract the right partner by shifting into the right emotional state.
+  return `You write Instagram Reel hooks for Olly Henson (The Attraction Formula community), who helps singles attract the right partner by shifting into the right emotional state.
 ${CORE}
 
 ${RULES}
@@ -1242,8 +1879,8 @@ Part of the message to focus on: ${part}
 Goal: ${goal}
 ${topic ? "Topic or angle: " + topic : ""}
 ${hookBrief()}
-THE HEADER (the most important part)
-The header is the hook. It sits above Olly's head on the Reel cover, he reads it out as his first sentence, and it's the first line of the caption. So it must:
+THE HOOK (the most important part)
+The hook is the text above Olly's head for the first 3 to 5 seconds of the Reel (and on the cover), he reads it out as his first sentence, and it's the first line of the caption. So it must:
 - read well on its own on a cover AND sound natural said out loud (a full, simple sentence, no "POV:", no colons, no fragments)
 - be 5 to 11 words, so it fits in 2 or 3 short lines on screen
 - name the exact outcome they want (your soulmate, your person, someone who wants a long-term committed relationship, the right partner) or the pain they're stuck in (time wasters, people who won't commit, being single after all the inner work)
@@ -1253,14 +1890,15 @@ The header is the hook. It sits above Olly's head on the Reel cover, he reads it
 - optionally end with one emoji that fits (🧪 for science, ❤️, 🧠). No dashes; use a comma if it needs a pause.
 Proven openers to work from (vary them, never copy): "How to [outcome] scientifically" · "The scientific way to [outcome]" · "The fastest way to [outcome]" · "How to [outcome] without [thing they're tired of]" · "Why you keep [pain]" · "The real reason you [pain]" · "What actually [makes the outcome happen]" · "The one thing [people who found their person] did differently" · "Stop [old habit] if you want [outcome]".
 Examples of the standard: "You don't need to heal everything first to meet your person" · "How to attract your soulmate, scientifically 🧪" · "The fastest way to find someone who wants a long-term committed relationship" · "Why you keep attracting people who won't commit".
-Give ${n} different headers. Make each one genuinely different in angle and opener. Headers only: no next line, talking points or call to action.
+Give ${n} different hooks. Make each one genuinely different in angle and opener. For each hook also give the second line: the one sentence Olly says straight after it, naming something the viewer has actually felt or lived (the reread text, the friend who just got engaged, the dread before a date), so they stay. No talking points or call to action: he freestyles the rest.
 
 For each give:
-- hook: the header
+- hook: the hook
+- say: the second line
 - stage: which part of the core message it points to, in a few words${type === "Research" ? `
 - research: 3 to 5 short bullet points summarising the study this header is built on, for Olly to glance at while filming: who was studied, what they did, what was found (exact numbers from the research list only), one honest caveat (e.g. small study, run by HeartMath) and the source in brackets (authors, year). Plain words, no more than about 15 words each.` : ""}
 
-Reply as JSON: {"ideas":[{"hook":"","stage":""${type === "Research" ? ',"research":[]' : ""}}]}`;
+Reply as JSON: {"ideas":[{"hook":"","say":"","stage":""${type === "Research" ? ',"research":[]' : ""}}]}`;
 }
 function ytPrompt(type, t, fmt, n, part, topic){
   const cta = $("ytCta").value, name = type.replace("YouTube · ", "");
@@ -1394,6 +2032,104 @@ For each email give:
 - why: one sentence on why it'll get opened and read
 
 Reply as JSON: {"ideas":[{"hook":"","preview":"","body":"","ps":"","cta":"none","technique":"","stage":"","why":""}]}`;
+}
+/* Carousel ideas: six slides of short beats, then the caption. */
+function carouselTypes(){ return Object.keys(POST_TYPES).filter(k => POST_TYPES[k] && POST_TYPES[k].group === "Carousel" && POST_TYPES[k].rule !== "MIXED").map(k => k.replace("Carousel · ", "")); }
+function carouselPrompt(type, t, fmt, n, part, topic){
+  const mixed = t && t.rule === "MIXED";
+  return `You write Instagram carousels for Olly Henson (The Attraction Formula), who helps singles attract a genuine, committed relationship by shifting into the right emotional state around love.
+${CORE}
+
+${RULES}
+
+BELIEF-SHIFTING CAROUSELS (Olly's style, follow it exactly)
+- Their job: shift a belief, so the reader can see the new belief for themselves, then get them to comment EMOTION for The Feeling Finder.
+- The look is raw: white text boxes over a photo of Olly, like he's talking to you. No headings, no titles, no numbered lists, no emojis, no hashtags on the slides.
+- Each slide is 2 to 5 short beats. A beat is one sentence or phrase (3 to 22 words) and gets its own text box. Beats can run on into the next with "...", can start lowercase, and can quote things people say or hear.
+- Who reads them: driven, self-aware women in their 30s and 40s who've done years of inner work and know the theory. A little provocative is good; mean or preachy never.
+- Six slides, this arc:
+  1. Cover, 2 beats: a belief or situation they recognise, then the twist that makes them swipe. Example shape (never copy it): "You know exactly what you want in a partner." / "And that's why it isn't happening."
+  2. Their world, 3 to 5 beats: things they say, hear or tell themselves, in quotes, then a beat naming what they actually want ("But you want someone who actually chooses you, right?").
+  3. The contrast, 2 to 4 beats: what they've been doing versus what actually changes it (knowing versus feeling). At most one word in CAPITALS.
+  4. The new belief, 2 to 4 beats: the reframe, said gently ("Not in a harsh way..."), so they can see it: when you embody the emotion of the relationship before it happens, it unfolds naturally with someone who feels the same.
+  5. The real cause and the cost, 3 to 5 beats: they don't feel it can happen for them, and until that shifts the same cycle continues. Name the cycle concretely.
+  6. The call to action, 2 to 4 beats: The Feeling Finder in one line (it finds the exact emotion that will attract their perfect relationship, in 2 minutes), then: Comment "EMOTION" and I'll send it to you.
+- No em dashes. Never call the change easy. Never say the right partner feels boring. Never invent stats or studies.
+- caption: line 1 is a short hook (5 to 11 words). Then 1 to 3 short lines. Then "Comment 'EMOTION' and I'll send you The Feeling Finder." Then on its own line: #attractlove #readyforlove #datingover30 #soulmate #manifestlove. No em dashes, no hyphens as separators, no comma before "and" or "or".
+
+THIS REQUEST
+Carousel type: ${type.replace("Carousel · ", "")}
+${mixed ? "Pick the best angle for this idea from: " + carouselTypes().join(", ") + "." : "How to handle this type: " + t.rule}
+Angle: ${fmt || (mixed ? "your pick" : "pick the best fit from: " + ((t && t.formats) || []).join(" / "))}
+Part of the message to connect to: ${part}
+${topic ? "Topic or angle: " + topic : ""}
+Write ${n} different carousel${n > 1 ? "s" : ""}.
+
+For each give:
+- hook: a short name for it (the cover's first beat is fine)
+- slides: all six slides, each {"beats":["",""]}
+- caption: the Instagram caption (use \\n for line breaks)
+- type: the carousel type
+- stage: which part of the core message it connects to, in a few words
+- why: one sentence on why it shifts the belief
+
+Reply as JSON: {"ideas":[{"hook":"","slides":[{"beats":["",""]}],"caption":"","type":"","stage":"","why":""}]}`;
+}
+// older carousel ideas (hook + slides of head/body) become beats
+function crsBeats(i){
+  if (!i || !Array.isArray(i.slides)) return [];
+  if (i.slides.every(sl => Array.isArray(sl.beats))) return i.slides;
+  return [{beats: [i.hook, i.sub].filter(Boolean)}].concat(i.slides.map(sl => ({beats: [sl.head, sl.body].filter(Boolean)})));
+}
+/* Several carousels: one request each, all at once (one answer runs out of room for several). */
+async function carouselBatch(signal){
+  const n = Number($("count").value) || 3, type = $("type").value, t = POST_TYPES[type], fmt = $("format").value;
+  const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1], topic = $("topic").value.trim();
+  const shuffle = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
+  const pool = shuffle(Object.keys(POST_TYPES).filter(k => POST_TYPES[k] && POST_TYPES[k].group === "Carousel" && POST_TYPES[k].rule !== "MIXED"));
+  const types = t && t.rule === "MIXED" ? Array.from({length: n}, (_, i) => pool[i % pool.length]) : Array(n).fill(type);
+  const extra = outlierBrief() + rejectBrief() + queueBrief() + postBrief();
+  const jobs = types.map((ty, i) => {
+    const tt = POST_TYPES[ty], f = fmt && ty === type ? fmt : shuffle((tt && tt.formats) || [])[0] || "";
+    const others = types.map((x, j) => j === i ? "" : (j + 1) + ": " + x.replace("Carousel · ", "")).filter(Boolean).join("; ");
+    const note = "\n\nTHIS IS CAROUSEL " + (i + 1) + " OF " + n + " (the others: " + others + "). Give it its own belief, hook and angle.";
+    return sampleFn.json(carouselPrompt(ty, tt, f, 1, part, topic) + note + extra, {signal, cache: false})
+      .then(r => { const x = r && r.ideas && r.ideas[0]; if (x && !x.type) x.type = ty.replace("Carousel · ", ""); return x; });
+  });
+  const res = await Promise.allSettled(jobs);
+  if (signal.aborted) throw new Error("aborted");
+  const ok = res.filter(r => r.status === "fulfilled" && r.value && Array.isArray(r.value.slides)).map(r => r.value);
+  if (!ok.length && res[0] && res[0].reason) throw res[0].reason;
+  return ok;
+}
+/* Several emails (Olly, 2026-10-29: asking for 3 only ever gave 1, because 3 full emails in one answer ran out of room).
+   Each email is its own request, all sent at once, each told its type, a subject technique and what the others cover. */
+const EMAIL_TECHS = ["Curiosity", "Odd detail", "Emotion", "Question", "Contrast", "Play on a phrase", "Challenge the dogma"];
+async function emailBatch(signal){
+  const n = Number($("count").value) || 3, type = $("type").value, t = POST_TYPES[type], fmt = $("format").value;
+  const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1], topic = $("topic").value.trim();
+  const shuffle = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
+  let types;
+  if (t && t.rule === "MIXED") {
+    const pool = Object.keys(POST_TYPES).filter(k => POST_TYPES[k] && POST_TYPES[k].group === "Email" && POST_TYPES[k].rule !== "MIXED");
+    const bb = pool.filter(k => /Belief breaking/.test(k)), rest = shuffle(pool.filter(k => !/Belief breaking/.test(k)));
+    types = []; for (let i = 0; i < n; i++) types.push(i % 3 === 0 && bb.length ? bb[0] : rest[i % rest.length]);
+  } else types = Array(n).fill(type);
+  const techs = shuffle(EMAIL_TECHS), auto = $("emailCta").value === "auto";
+  const extra = outlierBrief() + rejectBrief() + queueBrief() + emailBrief();
+  const jobs = types.map((ty, i) => {
+    const tt = POST_TYPES[ty], f = fmt || shuffle((tt && tt.formats) || [])[0] || "";
+    const others = types.map((x, j) => j === i ? "" : (j + 1) + ": " + x.replace("Email · ", "")).filter(Boolean).join("; ");
+    const note = "\n\nTHIS IS EMAIL " + (i + 1) + " OF " + n + " in a batch that goes out on different days (the others: " + others + "). Give it its own story, angle and opening. Subject line technique for this one: " + techs[i % techs.length] + "."
+      + (auto ? (i === n - 1 && n >= 3 ? " It may end with a soft invitation to apply, or have no call to action." : " No invitation to apply in this one: no call to action, or ask for a reply.") : "");
+    return sampleFn.json(emailPrompt(ty, tt, f, 1, part, topic) + note + extra, {signal, cache: false})
+      .then(r => { const x = r && r.ideas && r.ideas[0]; if (x && !x.type) x.type = ty.replace("Email · ", ""); return x; });
+  });
+  const res = await Promise.allSettled(jobs);
+  if (signal.aborted) throw new Error("aborted");
+  const ok = res.filter(r => r.status === "fulfilled" && r.value).map(r => r.value);
+  if (!ok.length && res[0] && res[0].reason) throw res[0].reason;
+  return ok;
 }
 /* Self-learning (Olly, 2026-10-26): emails he edited and queued are the standard. The newest few go in whole,
    and where he rewrote one, the before and after, so new emails come out closer to his voice each time. */
@@ -1570,8 +2306,10 @@ $("go").onclick = async () => {
   const mine = ctl = new AbortController();
   $("go").disabled = true; st.className = "status"; st.textContent = "Writing ideas…";
   try {
-    const r = await sampleFn.json(buildPrompt() + outlierBrief() + rejectBrief() + queueBrief() + (channel === "email" ? emailBrief() : postBrief()), {signal: mine.signal, cache: false});
-    const ideas = (r && r.ideas) || [];
+    const ideas = channel === "email" && (Number($("count").value) || 3) > 1
+      ? await emailBatch(mine.signal)
+      : channel === "carousels" && (Number($("count").value) || 3) > 1 ? await carouselBatch(mine.signal)
+      : ((await sampleFn.json(buildPrompt() + outlierBrief() + rejectBrief() + queueBrief() + (channel === "email" ? emailBrief() : postBrief()), {signal: mine.signal, cache: false})) || {}).ideas || [];
     st.textContent = ideas.length ? "" : "No ideas came back. Try again.";
     store.set("cig-ideas", {type:$("type").value, channel, ideas});
     renderIdeas($("type").value, ideas, channel);
@@ -1585,13 +2323,14 @@ function frameLines(f, n){
   return [(n + 1) + ". " + (f.show || ""), f.say ? "   Say: " + f.say : "", f.text ? "   Text: " + f.text : "", f.sticker ? "   Sticker: " + f.sticker : ""].filter(Boolean);
 }
 function ideaText(i){
+  if (Array.isArray(i.slides)) return [i.hook, "", ...crsBeats(i).map((sl, n) => "Slide " + (n + 1) + ":\n" + (sl.beats || []).map(b => "   " + b).join("\n")), "", "Caption:", i.caption || ""].join("\n").trim();
   if (Array.isArray(i.research) && i.research.length && !i.say && !i.cover) return [i.hook, "", "The research:", ...i.research.map(x => "- " + x)].join("\n");
   if (typeof i.body === "string") { const u = emailLink(i); return ["Subject: " + (i.hook || ""), "Preview: " + (i.preview || ""), "", fullEmail(i), u ? "\nLink the word in [brackets] to: " + u : ""].join("\n").trim(); }
   if (typeof i.post === "string") return [i.hook, "", i.post, ...(Array.isArray(i.poll) && i.poll.length ? ["", "Poll:", ...i.poll.map(o => "- " + o)] : [])].join("\n");
   if (Array.isArray(i.panels)) return [i.hook, "", (i.template || "") + (i.place ? " · " + i.place : ""), ...i.panels.map(p => (p.label ? p.label + ": " : "") + (p.text || "")), "", i.use || ""].join("\n").trim();
   if (typeof i.idea === "string") return [i.hook, "", i.idea, i.sticker ? "Sticker: " + i.sticker : "", Array.isArray(i.music) && i.music.length ? "Music: " + i.music.join(" / ") : "", i.cta ? "CTA: " + i.cta : "", i.old ? "Old belief: " + i.old : "", i.crack ? "The crack: " + i.crack : ""].filter(Boolean).join("\n");
   if (Array.isArray(i.frames)) return [i.hook, "", "Frames:", ...i.frames.flatMap(frameLines), "", i.cta ? "CTA: " + i.cta : ""].join("\n").trim();
-  if (!i.say && !i.cover) return i.hook || "";
+  if (!i.cover) return (i.hook || "") + (i.say ? "\nSecond line: " + i.say : "");
   return [i.hook, "", "Next line: " + (i.say || ""), "", "Cover:", ...(i.cover || []).map(c => "- " + c), "", "Land on: " + (i.lands || ""), "", "CTA: " + (i.cta || "")].join("\n");
 }
 async function copyText(text, btn){
@@ -1603,8 +2342,24 @@ async function copyText(text, btn){
 function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
 function renderIdeas(type, ideas, ch){
   const box = $("ideas"); box.textContent = "";
-  const noun = ch === "stories" ? "Story" : ch === "skool" ? "Skool" : ch === "memes" ? "Meme" : ch === "email" ? "Email" : ch === "ytpost" ? "Community" : "Reel";
+  const noun = ch === "stories" ? "Story" : ch === "skool" ? "Skool" : ch === "memes" ? "Meme" : ch === "email" ? "Email" : ch === "ytpost" ? "Community" : ch === "carousels" ? "Carousel" : "Reel";
   ideas.forEach(i => {
+    if (Array.isArray(i.slides)) {
+      const slides = crsBeats(i), c = el("article", "card idea");
+      c.append(el("span", "tag", ["Carousel", (i.type || type).replace("Carousel · ", ""), slides.length + " slides", i.stage].filter(Boolean).join(" · ")), el("p", "hook", i.hook || ""));
+      editableHook(c.querySelector(".hook"), i);
+      const ol = el("ol", "frames");
+      slides.forEach(sl => { const li = el("li"); (sl.beats || []).forEach((b, n) => li.appendChild(n ? el("p", "", b) : el("span", "ot", b))); ol.appendChild(li); });
+      c.appendChild(ol);
+      if (i.caption) { const cw = el("div"); cw.append(el("span", "sub", "Caption"), el("p", "post", i.caption)); c.appendChild(cw); }
+      const r = el("div", "row"), mk = el("button", "btn small primary", "Make carousel"), cc = el("button", "btn small", "Copy caption");
+      mk.onclick = () => cImg.load(i); cc.onclick = () => copyText(i.caption || "", cc);
+      r.append(mk, cc); c.appendChild(r);
+      if (i.why) c.appendChild(el("p", "hint", "Why it works: " + i.why));
+      c.appendChild(ideaButtons(c, ch, type, i, noun + " · " + (i.type || type).replace("Carousel · ", ""), slides.map(sl => (sl.beats || []).join(" "))));
+      box.appendChild(c);
+      return;
+    }
     if (typeof i.body === "string") {
       const c = el("article", "card idea"), tname = (type === "Email · Mixed week" && i.type ? i.type : type).replace("Email · ", "");
       const ctaName = {none:"No call to action", reply:"Reply", training:"Training", apply:"Apply"}[i.cta] || "";
@@ -1814,7 +2569,8 @@ function renderIdeas(type, ideas, ch){
       return;
     }
     const hk = c.querySelector(".hook"); hk.classList.add("ighead");
-    hk.before(el("span", "sub", "Header · on the cover, your first line and the caption's first line · click it to edit"));
+    hk.before(el("span", "sub", "Hook · above your head for the first 3 to 5 seconds, your first line and the caption's first line · click it to edit"));
+    if (i.say && !i.frames) hk.after(el("p", "say", "Second line: " + i.say));
     // Research Reels: the study in a few bullets, to reference while filming (Olly, 2026-10-26)
     const notes = Array.isArray(i.research) ? i.research.filter(Boolean) : [];
     if (notes.length) {
@@ -1873,7 +2629,21 @@ const MEME_LAYOUTS = {
     {name:"Top line", x:20, y:-160, w:984, h:150, style:"dark"},
     {name:"The board", x:430, y:20, w:580, h:190, style:"light"}]},
   "They don't know": {src:"memes/templates/they-dont-know.png", w:671, h:673, padTop:0, match:["they don"], boxes:[
-    {name:"They don't know...", x:225, y:10, w:440, h:140, style:"dark"}]}
+    {name:"They don't know...", x:225, y:10, w:440, h:140, style:"dark"}]},
+  "Woman yelling at cat": {src:"memes/templates/woman-yelling-at-cat.jpg", w:680, h:438, padTop:0, match:["yelling","cat"], boxes:[
+    {name:"Woman", x:8, y:4, w:322, h:88, style:"dark"},
+    {name:"Cat", x:350, y:4, w:322, h:88, style:"dark"}]},
+  "Evil Kermit": {src:"memes/templates/evil-kermit.jpg", w:700, h:325, padTop:150, match:["kermit"], boxes:[
+    {name:"Me", x:10, y:-140, w:330, h:130, style:"dark"},
+    {name:"Me inside", x:360, y:-140, w:330, h:130, style:"dark"}]},
+  "This is fine": {src:"memes/templates/this-is-fine.jpg", w:580, h:282, padTop:130, match:["this is fine","fine"], boxes:[
+    {name:"Top line", x:10, y:-120, w:560, h:110, style:"dark"}]},
+  "Sad Pablo Escobar": {src:"memes/templates/sad-pablo.jpg", w:720, h:709, padTop:140, match:["pablo","escobar"], boxes:[
+    {name:"Top line", x:10, y:-130, w:700, h:120, style:"dark"}]},
+  "Is this a pigeon?": {src:"memes/templates/is-this-a-pigeon.jpg", w:1587, h:1425, padTop:0, match:["pigeon","butterfly"], boxes:[
+    {name:"The man", x:40, y:980, w:640, h:190, style:"light"},
+    {name:"The butterfly", x:1010, y:470, w:560, h:200, style:"light"},
+    {name:"Is this...? (bottom)", x:150, y:1220, w:1290, h:190, style:"light"}]}
 };
 function layoutFor(name){
   const n = (name || "").toLowerCase();
@@ -1966,7 +2736,7 @@ function saveMemeEdit(i){
   const st = $("st"); st.className = "status"; st.textContent = "✓ Edit saved.";
 }
 function memeEditor(i, onPanelEdit){
-  const st = {key:layoutFor(i && i.template), hook:(i && i.hook) || "", texts:((i && i.panels) || []).map(p => p.text || ""),
+  const st = {key:i ? layoutFor(i.template) : "Woman yelling at cat", hook:(i && i.hook) || "", texts:((i && i.panels) || []).map(p => p.text || ""),
     size:((i && i.place) || "").startsWith("Instagram feed") ? "feed" : /Reel|Skool/.test((i && i.place) || "") ? "meme" : "story", bg:"light"};
   const key0 = st.key, box = el("div", "memeed"), prev = el("img"); prev.alt = "Meme preview"; box.appendChild(prev);
   const side = el("div", "stack"); box.appendChild(side);
@@ -2005,7 +2775,7 @@ function memeEditor(i, onPanelEdit){
     }, "image/png");
   };
   side.append(
-    sel("Template", Object.keys(MEME_LAYOUTS).map(k => [k, k]), st.key, v => { st.key = v; fields(); draw(); }),
+    sel("Template", MEME_FIRST.slice(1).concat(Object.keys(MEME_LAYOUTS).filter(k => !MEME_FIRST.includes(k) && !MEME_RETIRED.includes(k))).filter(k => MEME_LAYOUTS[k] || k === st.key).map(k => [k, k]), st.key, v => { st.key = v; fields(); draw(); }),
     hk, panels,
     sel("Size", Object.entries(MEME_SIZES).map(([k, v]) => [k, v.label]), st.size, v => { st.size = v; draw(); }),
     sel("Background", [["light", "Light"], ["dark", "Dark"]], st.bg, v => { st.bg = v; draw(); }),
@@ -2013,6 +2783,28 @@ function memeEditor(i, onPanelEdit){
     (() => { const r = el("div", "row"); r.append(save, msg); return r; })());
   // card -> editor: an edit on the card redraws the image
   box._sync = () => { st.hook = i.hook || ""; hi.value = st.hook; if (st.key === key0) st.texts = i.panels.map(p => p.text || ""); fields(); draw(); };
+  // Story calendar (Olly, 2026-10-29): memes go to the Hub's Stories calendar with the image, a title, the Meme type and
+  // 3 song ideas, the same as the Story Image Maker
+  let songs = (i && Array.isArray(i.music) && i.music.length) ? i.music.slice(0, 3) : (window.cigMemeSongs ? window.cigMemeSongs() : []);
+  const songBox = el("div", "tsm-songs");
+  const showSongs = () => {
+    songBox.textContent = "";
+    songBox.appendChild(el("span", "sub", "Song ideas · search one when you add music (use the chorus)"));
+    const ul = el("ul"); songs.forEach(x => ul.appendChild(el("li", "", x)));
+    const more = el("button", "btn small", "Other songs"); more.type = "button";
+    more.onclick = () => { if (window.cigMemeSongs) songs = window.cigMemeSongs(); showSongs(); };
+    songBox.append(ul, more);
+  };
+  const calImg = () => {
+    const cv = box._cv; if (!cv) return "";
+    let url = cv.toDataURL("image/jpeg", 0.85);
+    if (url.length > 1400000) { const c2 = document.createElement("canvas"); c2.width = Math.round(cv.width * 0.7); c2.height = Math.round(cv.height * 0.7); c2.getContext("2d").drawImage(cv, 0, 0, c2.width, c2.height); url = c2.toDataURL("image/jpeg", 0.8); }
+    return url;
+  };
+  const cal = hubButton("story", () => ({title: (st.hook || st.texts.filter(Boolean).join(" / ") || st.key).replace(/\s+/g, " ").trim().slice(0, 120), type: "Meme", image: calImg(), join: false, music: songs}));
+  cal.addEventListener("click", () => setTimeout(() => { if (window.cigMemeSongs) { songs = window.cigMemeSongs(); showSongs(); } }, 150));
+  const calRow = el("div", "row"); calRow.append(cal, el("span", "hint", "Sends the image, title and song ideas to the Hub’s Stories calendar."));
+  side.append(calRow, songBox); showSongs();
   fields(); draw();
   return box;
 }
@@ -2137,6 +2929,7 @@ function ideaButtons(card, ch, type, i, level, cover){
     add.textContent = "Saving…";
     if (i._beforeQueue) i._beforeQueue();
     const extra = typeof i.body === "string" ? {body:fullEmail(i), origBody:(i.origBody && i.origBody !== i.body) ? i.origBody : "", preview:i.preview || ""}
+      : Array.isArray(i.slides) ? {slides:crsBeats(i), caption:i.caption || ""}
       : ch === "ytpost" ? {post:ytFill(i.post, i), origPost:(i.origPost && i.origPost !== i.post) ? ytFill(i.origPost, i) : "", pinned:ytFill(i.pinned, i), poll:Array.isArray(i.poll) ? i.poll : [], image:i.image || ""}
       : typeof i.post === "string" ? {post:i.post, poll:Array.isArray(i.poll) ? i.poll : []} : {};
     // Everything (Olly, 2026-10-28; emails first): the queue holds the finished versions the generator learns from, but the
@@ -2156,11 +2949,21 @@ function ideaButtons(card, ch, type, i, level, cover){
   const cp = el("button", "btn small", "Copy"); cp.onclick = () => { if (i._beforeQueue) i._beforeQueue(); copyText(ideaText(i), cp); };
   const no = el("button", "x", "Not this one");
   no.onclick = () => rejectIdea(card, ch, type, i);
-  row.append(add, cp);
+  if (ch === "carousels") row.append(cp); else row.append(add, cp);
   if (ch === "ytpost") row.append(hubButton("ytpost", () => ytPayload(i, type)));
   if (ch === "email") row.append(hubButton("email", () => { if (i._beforeQueue) i._beforeQueue(); const h = card.querySelector(".hook"); return {subject: ((h && h.textContent) || i.hook || "").trim(), preview: i.preview || "", body: fullEmail(i), type: String(level || "").split(" · ")[1] || ""}; }));
   if (ch === "reels" || ch === "stories") row.append(hubButton(ch === "reels" ? "reel" : "story", () => { const h = card.querySelector(".hook"); return {title: ((h && h.textContent) || i.hook || "").trim(), type}; }));
-  row.append(no);
+  // Done (Olly, 2026-10-29): once it's queued and in the calendar, clear it from the ideas on screen. Unlike "Not this one",
+  // it isn't a rejection, so the generator doesn't learn to avoid it.
+  const done = el("button", "btn small", "Done · remove from ideas");
+  done.title = "Take it off this list. It stays in your queue and calendar.";
+  done.onclick = () => {
+    if (i._beforeQueue) i._beforeQueue();
+    const last = store.get("cig-ideas", null), key = i.saved !== undefined ? i.saved : i.hook;
+    if (last && Array.isArray(last.ideas)) { last.ideas = last.ideas.filter(x => x.hook !== key); store.set("cig-ideas", last); }
+    card.remove();
+  };
+  row.append(done, no);
   return row;
 }
 
@@ -2316,12 +3119,13 @@ queue.remove = async id => {
 };
 /* One queue per content type. Older items have no channel, so read it from their label ("Reel · …", "Story · …", "Skool · …"). */
 const QUEUES = {
-  reels: {name:"Reel queue", hint:"Reel headers you plan to film. Press Add to queue under an idea."},
+  reels: {name:"Reel queue", hint:"Reel hooks you plan to film. Press Add to queue under an idea."},
   stories: {name:"Story queue", hint:"Story ideas you plan to post. Press Add to queue under an idea."},
   skool: {name:"Skool post queue", hint:"Skool posts you plan to publish. Press Add to queue under an idea."},
   memes: {name:"Meme queue", hint:"Memes you plan to make. Press Add to queue under an idea."},
   email: {name:"Email queue", hint:"Emails you plan to send. Press Add to queue under an email."},
-  ytpost: {name:"YouTube community queue", hint:"Community posts you plan to publish. Press Add to queue under a post."}
+  ytpost: {name:"YouTube community queue", hint:"Community posts you plan to publish. Press Add to queue under a post."},
+  carousels: {name:"Carousel queue", hint:"Carousels you plan to post. Press Add to queue under an idea."}
 };
 function chanOf(q){
   if (q.channel) return q.channel;
@@ -2379,6 +3183,11 @@ function renderQueue(){
     if (typeof q.body === "string") { const al = el("button", "btn small", "Application link"); al.title = "Copy the tracked link to the application page for this email"; al.onclick = () => copyText(applyLink(q.title), al); const sl = el("button", "btn small", "Feeling Finder link"); sl.onclick = () => copyText(scaleLink(q.title), sl); const tl = el("button", "btn small", "Training link"); tl.onclick = () => copyText(trainingLink(q.title), tl); row.append(ob, cp, ed, sl, tl, al, hubButton("email", () => ({subject: (q.title || "").trim(), preview: q.preview || "", body: q.body || "", type: String(q.level || "").split(" · ")[1] || ""})), del); }
     else if (q.channel === "reels" || q.channel === "stories") row.append(ob, cp, ed, hubButton(q.channel === "reels" ? "reel" : "story", () => ({title: (q.title || "").trim(), type: String(q.level || "").split(" · ")[1] || ""})), del);
     else if (q.channel === "ytpost") row.append(ob, cp, ed, hubButton("ytpost", () => ({title: (q.title || "").trim(), type: String(q.level || "").split(" · ").pop(), post: q.post || "", pinned: q.pinned || "", poll: q.poll || []})), del);
+    else if (Array.isArray(q.slides)) {
+      const op = el("button", "btn small primary", "Open in Carousel maker");
+      op.onclick = () => cImg.load({hook: q.title, type: String(q.level || "").split(" · ").pop(), caption: q.caption || "", stage: q.stage || "", why: q.why || "", imgPrompts: q.imgPrompts || [], slides: JSON.parse(JSON.stringify(q.slides))}, q.per || {}, null, q.id);
+      row.append(op, cp, del);
+    }
     else row.append(ob, cp, ed, del);
     li.append(row, cov); ul.appendChild(li);
   });
@@ -2457,6 +3266,24 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   // Banks for the other Story types (Olly, 2026-10-25). Same Story rules: short, "we/most people", no manifestation words.
   var LIFESTYLE = ["A normal Sunday with my wife", "Where I did my 10 minutes today", "Me in 2019 vs me now", "Little moments I didn't think I'd have", "How I unwind after a long week", "What calm love looks like day to day"];
   var QUESTIONS = ["How do you feel when you think about dating?", "Fill in the blank: dating is ___", "What's the worst dating advice you've been given?", "Be honest: do you reread their texts?", "One word for how you want love to feel?", "Dating apps: love them or hate them?", "Do you feel like yourself on a date?", "When do you feel most like yourself?"];
+  // Questions written for Catrin's crowd (Olly, 2026-10-29): [sticker, question, what to put on the sticker]
+  var ENG_PICKS = [
+    ["Poll", "Be honest: do you believe your person is out there?", "Yes / Some days"],
+    ["Poll", "Have you ever felt \u201cthe ick\u201d with someone who was actually lovely?", "Yes, guilty / Never"],
+    ["Poll", "Steady and consistent, or exciting and unpredictable. Which one have you usually fallen for?", "Steady / Exciting"],
+    ["Poll", "How many books, podcasts or courses on relationships have you done?", "A few / Too many to count"],
+    ["Poll", "Your friends who found their person. Did they do loads of \u201cwork\u201d first?", "Not really / Yes"],
+    ["Poll", "When you think about dating right now, what do you feel?", "Hopeful / Tired"],
+    ["Poll", "Do you know exactly what you want in a partner?", "Crystal clear / Still working it out"],
+    ["Question box", "Describe your dream Sunday with your person in 3 words.", ""],
+    ["Question box", "One word for how you feel when a match goes quiet.", ""],
+    ["Question box", "What's the one dating \u201crule\u201d you're sick of hearing?", ""],
+    ["Question box", "What's the most \u201cyou\u201d thing you'd want your partner to love about you?", ""],
+    ["Question box", "When did you last feel genuinely excited about love?", ""],
+    ["Slider", "How much do you believe it'll happen for you this year?", "\ud83d\ude0d"],
+    ["Slider", "How safe do you feel being fully yourself on a first date?", "\ud83d\udc9c"]
+  ];
+  QUESTIONS = ENG_PICKS.map(function(q){ return q[1]; }).concat(QUESTIONS);
   // Belief breaking: [the old belief, the crack in it]. Cracks fit nearly everyone and tie straight back to the old belief.
   var BELIEFS = [
     ["Once I've fixed what's wrong with me, I'll meet my person.", "My friends who settled down weren't even trying."],
@@ -2745,7 +3572,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       var img = await loadImg(st.photo);
       cover(ctx, img, st.dy);
       topFade(ctx);
-      boxes(ctx, st.life, 300, 60, 42, 4);
+      TX(ctx); boxes(ctx, st.life, 300, 60, 42, 4);
     },
 
     // Opt-in page (Olly, 2026-10-28): the page itself on a phone, hook above, reply button below.
@@ -2807,7 +3634,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       var img = await loadImg(SCALE_IMG), mode = st.scStyle;
       var g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#1b0630"); g.addColorStop(1, "#0b0312");
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      var y = boxes(ctx, st.sc, 250, 58, 40, 3);
+      TX(ctx); var y = boxes(ctx, st.sc, 250, 58, 40, 3);
       var src = mode === "top" ? [0, 0, 768, 690] : mode === "bottom" ? [0, 686, 768, 690] : [0, 0, 768, 1376];
       var bottom = String(st.scBottom || "").trim(), aTop = y + 10, aBot = bottom ? 1590 : 1680;
       var k = Math.min(1000 / src[2], (aBot - aTop) / src[3]);
@@ -2837,12 +3664,12 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     science: async function(ctx){
       var sm = sciM(), a = sm.all, style = st.sciStyle, bottom = String(st.sciBottom || "").trim();
       if (style === "photo"){
-        var ph = SCI_PHOTOS[st.sciPhoto] || SCI_PHOTOS[0], img = await loadImg(ph.src);
+        var ph = SCI_PHOTOS[st.sciPhoto] || SCI_PHOTOS[0], img = await loadImg(st.sciCustom || ph.src);
         cover(ctx, img, sm.mid); ctx.fillStyle = "rgba(20,4,32,.3)"; ctx.fillRect(0, 0, W, H); topFade(ctx);
         var g = ctx.createLinearGradient(0, 1300, 0, H); g.addColorStop(0, "rgba(20,4,32,0)"); g.addColorStop(1, "rgba(20,4,32,.8)");
         if (bottom){ ctx.fillStyle = g; ctx.fillRect(0, 1300, W, H - 1300); }
       } else purpleBg(ctx);
-      var y = boxes(ctx, st.sci, 260 + a + sm.top, 58, 40, 3) - sm.top;
+      TX(ctx); var y = boxes(ctx, st.sci, 260 + a + sm.top, 58, 40, 3) - sm.top;
       var top = y + 40 + sm.mid, end = (bottom ? 1560 : 1660) + a;
       if (style === "waves"){
         var ph2 = (end - top - 40) / 2;
@@ -2909,23 +3736,26 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
         g.addColorStop(0, "rgba(20,4,32,0)"); g.addColorStop(1, "rgba(20,4,32,.7)");
         ctx.fillStyle = g; ctx.fillRect(0, 1000, W, H - 1000);
       } else topFade(ctx);
-      boxes(ctx, st.asp, top, 60, 42, 4);
+      TX(ctx); boxes(ctx, st.asp, top, 60, 42, 4);
     },
 
     // Engagement: the question up top, a clear space below for Instagram's own poll or question sticker.
     // Purple background (Olly, 2026-10-25) is a pick next to the photos, the same as Results share.
     engagement: async function(ctx){
-      if (st.engPurple){ purpleBg(ctx); boxes(ctx, st.q, 320, 66, 44, 5); return; }
-      var img = await loadImg(st.photo);
-      cover(ctx, img, st.dy);
-      ctx.fillStyle = "rgba(20,4,32,.38)"; ctx.fillRect(0, 0, W, H);
-      topFade(ctx);
-      boxes(ctx, st.q, 320, 66, 44, 5);
+      if (st.engPurple) purpleBg(ctx);
+      else {
+        var img = await loadImg(st.photo);
+        cover(ctx, img, st.dy);
+        ctx.fillStyle = "rgba(20,4,32,.38)"; ctx.fillRect(0, 0, W, H);
+        topFade(ctx);
+      }
+      var e = engPos();
+      boxes(ctx, st.q, 320 + e.y, Math.round(66 * e.s), Math.round(44 * e.s), 8, W / 2 + e.x, e.w);
     },
 
     // Belief breaking: the old belief, then the crack in it, with sticker space underneath.
     belief: async function(ctx){
-      purpleBg(ctx);
+      purpleBg(ctx); TX(ctx);
       var o = (st.stk ? 0 : 260) + M().all;
       ctx.textAlign = "center"; ctx.fillStyle = "#cbb8da"; ctx.font = font(600, 34);
       ctx.fillText(leadText(), W / 2, 330 + o + mv("lead"));
@@ -2946,7 +3776,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       // without a sticker the split moves to the middle and both halves spread out
       var split = st.stk ? 760 : 960, t = (st.stk ? 0 : 120) + M().all, u = (st.stk ? 0 : 220) + M().all;
       ctx.fillStyle = "#1a0524"; ctx.fillRect(0, 0, W, split);
-      ctx.fillStyle = "#fbf7f2"; ctx.fillRect(0, split, W, H - split);
+      ctx.fillStyle = "#fbf7f2"; ctx.fillRect(0, split, W, H - split); TX(ctx);
       pill(ctx, "MYTH", 280 + t + mv("a"), "rgba(255,255,255,.14)", "#f3eaf9");
       ctx.fillStyle = "#f3eaf9";
       var a = fit(ctx, st.oldB, 600, 58, 40, 900, 4);
@@ -2958,7 +3788,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     },
     b_crossed: async function(ctx){
       var o = (st.stk ? 0 : 260) + M().all;
-      ctx.fillStyle = "#fbf7f2"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#fbf7f2"; ctx.fillRect(0, 0, W, H); TX(ctx);
       ctx.textAlign = "center"; ctx.fillStyle = "#8a7a96"; ctx.font = font(600, 32);
       ctx.fillText(leadText(), W / 2, 320 + o + mv("lead"));
       ctx.fillStyle = "#6b5b78";
@@ -2972,7 +3802,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     b_post: async function(ctx){
       var g = ctx.createLinearGradient(0, 0, 0, H);
       g.addColorStop(0, "#efe4f7"); g.addColorStop(1, "#dccbea");
-      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); TX(ctx);
       var x = 90, cw = W - 180, pad = 56, tw = cw - pad * 2, top = (st.stk ? 300 : 500) + M().all;
       var a = fit(ctx, "“" + st.oldB.trim() + "”", 600, 50, 38, tw, 4), aS = a.size, aL = a.lines;
       var b = fit(ctx, st.crack, 800, 58, 42, tw, 4), bS = b.size;
@@ -3003,7 +3833,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
         gb.addColorStop(0, "rgba(20,4,32,0)"); gb.addColorStop(1, "rgba(20,4,32,.55)");
         ctx.fillStyle = gb; ctx.fillRect(0, 700, W, H - 700);
       }
-      ctx.textAlign = "center"; ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.font = font(600, 32);
+      TX(ctx); ctx.textAlign = "center"; ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.font = font(600, 32);
       ctx.fillText(leadText(), W / 2, 300 + o + mv("lead"));
       ctx.fillStyle = "#ffffff"; ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 14;
       var a = fit(ctx, st.oldB, 600, 54, 40, 900, 3);
@@ -3015,7 +3845,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     // (plain avatar, no name), Olly's in purple on the right. Use real messages, names hidden.
     b_dm: async function(ctx){
       var o = (st.stk ? 0 : 240) + M().all, pad = 36, maxB = 760, top = 380 + o, bottom = st.stk ? 1150 : 1700;
-      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H); TX(ctx);
       ctx.textAlign = "center"; ctx.fillStyle = "#8a7a96"; ctx.font = font(600, 32);
       ctx.fillText(leadText(), W / 2, 310 + o + mv("lead"));
       var msgs = (st.convo || []).filter(function(m){ return String(m.t || "").trim(); });
@@ -3055,7 +3885,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
 
     // Results share: a real screenshot on a clean card with a short line above it.
     results: async function(ctx){
-      purpleBg(ctx);
+      purpleBg(ctx); TX(ctx);
       ctx.fillStyle = "#fff";
       var f = fit(ctx, st.res, 800, 64, 44, 900, 3);
       var y = lines(ctx, f.lines, W / 2, 300 + f.size, f.size * 1.18);
@@ -3230,6 +4060,32 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   // positions per belief style (Olly, 2026-10-25): "all" moves everything, the rest nudge one element each
   function M(){ st.mvs = st.mvs || {}; return st.mvs[st.bstyle] || (st.mvs[st.bstyle] = { all:0, lead:0, a:0, b:0, gap:0 }); }
   function mv(p){ return M()[p] || 0; }
+  // Engagement question (Olly, 2026-10-29): drag it on the preview, plus size and width sliders. Remembered on this device.
+  // All text, every Story type without its own per-part controls (Olly, 2026-10-29): drag it, Text size, Move up or down.
+  // TX() is called in each layout once the background is drawn; everything after it is moved and scaled together.
+  function drawKey(){ return st.kind === "lead" ? st.layout : st.kind === "belief" && st.bstyle !== "told" ? "b_" + st.bstyle : st.kind; }
+  function txOn(){ return st.kind !== "lead" && st.kind !== "meme" && st.kind !== "engagement"; }
+  function txPos(k){ st.tx = st.tx || store.get("txPos") || {}; return st.tx[k || drawKey()] || (st.tx[k || drawKey()] = { x:0, y:0, s:1 }); }
+  function txSave(){ store.set("txPos", st.tx || {}); }
+  // Background photo on the Story types that don't use one by default (Olly, 2026-10-29): "No photo" keeps the design's own
+  // background. Dark designs get a dark wash over the photo, light ones a light wash, so the text stays readable.
+  var BG_DARK = { belief:1, scale:1, science:1, results:1 }, BG_LIGHT = { b_crossed:1, b_dm:1, b_post:1 };
+  function bgOn(){ var k = drawKey(); return !!(BG_DARK[k] || BG_LIGHT[k]) && !(k === "science" && st.sciStyle === "photo"); }
+  function bgSrc(){ st.bg = st.bg || store.get("bgPhoto") || {}; return st.bg[drawKey()] || ""; }
+  function bgSet(src){
+    bgSrc(); st.bg[drawKey()] = src;
+    var keep = {}; Object.keys(st.bg).forEach(function(k){ if (!/^data:/.test(st.bg[k])) keep[k] = st.bg[k]; });
+    store.set("bgPhoto", keep);
+  }
+  function TX(ctx){
+    if (st.bgImg && bgOn()){
+      cover(ctx, st.bgImg, 0);
+      ctx.fillStyle = BG_LIGHT[st.txKey] ? "rgba(251,247,242,.8)" : "rgba(20,4,32,.6)"; ctx.fillRect(0, 0, W, H);
+    }
+    var t = txPos(st.txKey);
+    ctx.translate(W / 2 + t.x, 960 + t.y); ctx.scale(t.s, t.s); ctx.translate(-W / 2, -960);
+  }
+  function engPos(){ return st.eng || (st.eng = Object.assign({ x:0, y:0, s:1, w:880 }, store.get("engPos") || {})); }
   function sciM(){ return st.sciMv[st.sciStyle] || (st.sciMv[st.sciStyle] = { all:0, top:0, mid:0, bot:0 }); }
   function leadText(){ return String(st.lead[st.bstyle] || "").trim().toUpperCase(); }
   function postLead(){ var t = String(st.lead.post || "").trim(); return t && !/[:.!?]$/.test(t) ? t + ":" : t; }
@@ -3262,14 +4118,15 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     ctx.fillStyle = "rgba(217,70,239,.16)"; ctx.beginPath(); ctx.arc(W * 0.85, 520, 420, 0, Math.PI * 2); ctx.fill();
   }
   // One white rounded box per line, the same look as the Lead gen title.
-  function boxes(ctx, text, top, size, min, maxLines){
-    var f = fit(ctx, text || " ", 800, size, min, 880, maxLines);
+  function boxes(ctx, text, top, size, min, maxLines, cx, maxW){
+    cx = cx == null ? W / 2 : cx;
+    var f = fit(ctx, text || " ", 800, size, min, maxW || 880, maxLines);
     var lh = f.size * 1.34, bh = f.size * 1.24, y = top + bh / 2;
     ctx.font = font(800, f.size); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     f.lines.forEach(function(t){
       var w = ctx.measureText(t).width + 44;
-      ctx.fillStyle = "#ffffff"; rrect(ctx, (W - w) / 2, y - bh / 2, w, bh, 16); ctx.fill();
-      ctx.fillStyle = "#1a0524"; ctx.fillText(t, W / 2, y + f.size * 0.04);
+      ctx.fillStyle = "#ffffff"; rrect(ctx, cx - w / 2, y - bh / 2, w, bh, 16); ctx.fill();
+      ctx.fillStyle = "#1a0524"; ctx.fillText(t, cx, y + f.size * 0.04);
       y += lh;
     });
     ctx.textBaseline = "alphabetic";
@@ -3283,9 +4140,12 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     var me = ++seq;
     try { await Promise.all([400, 500, 600, 700, 800].map(function(w){ return document.fonts.load(font(w, 40)); }).concat([document.fonts.load("italic " + font(800, 40))])); } catch(e){}
     var ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, W, H); ctx.textBaseline = "alphabetic"; ctx.shadowBlur = 0;
-    var key = st.kind === "lead" ? st.layout : st.kind === "belief" && st.bstyle !== "told" ? "b_" + st.bstyle : st.kind;
-    try { await DRAW[key](ctx); } catch(e){ $("tsm-status").textContent = "Couldn't load that photo. Try another."; return; }
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); ctx.textBaseline = "alphabetic"; ctx.shadowBlur = 0;
+    var key = drawKey();
+    ctx.setTransform(1, 0, 0, 1, 0, 0); st.txKey = key;
+    st.bgImg = null;
+    if (bgOn() && bgSrc()){ try { st.bgImg = await loadImg(bgSrc()); } catch(e){} }
+    try { await DRAW[key](ctx); ctx.setTransform(1, 0, 0, 1, 0, 0); } catch(e){ $("tsm-status").textContent = "Couldn't load that photo. Try another."; return; }
     if (me === seq) $("tsm-preview").src = canvas.toDataURL("image/jpeg", 0.9);
     shareFile = null;
     if (me === seq && navigator.canShare) canvas.toBlob(function(b){ if (me === seq && b) shareFile = new File([b], "story-" + st.kind + ".png", { type:"image/png" }); }, "image/png");
@@ -3393,6 +4253,11 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     $("tsm-sciGroup").hidden = st.kind !== "science";
     if (st.kind === "science") showSci();
     $("tsm-aspMoveGroup").hidden = st.kind !== "aspire";
+    $("tsm-engGroup").hidden = st.kind !== "engagement";
+    $("tsm-preview").classList.toggle("tsmdrag", st.kind === "engagement" || txOn());
+    $("tsm-txGroup").hidden = !txOn();
+    if (txOn()){ $("tsm-txSize").value = Math.round(txPos().s * 100); $("tsm-txY").value = txPos().y; }
+    if (st.kind === "engagement"){ $("tsm-engSize").value = Math.round(engPos().s * 100); $("tsm-engWidth").value = engPos().w; }
     $("tsm-aspUp").value = st.aspUp || 0;
     document.querySelectorAll("#tsm-scStyles button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.scstyle === st.scStyle)); });
     $("tsm-scRing").value = st.scRing;
@@ -3405,7 +4270,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     $("tsm-mythGroup").hidden = !pair || dmS;
     $("tsm-convoGroup").hidden = !dmS;
     if (dmS) renderConvo();
-    $("tsm-photoGroup").hidden = !((lead && st.layout === "video") || st.kind === "lifestyle" || st.kind === "aspire" || st.kind === "engagement" || (st.kind === "belief" && st.bstyle === "photo"));
+    $("tsm-photoGroup").hidden = !(bgOn() || (lead && st.layout === "video") || st.kind === "lifestyle" || st.kind === "aspire" || st.kind === "engagement" || (st.kind === "belief" && st.bstyle === "photo"));
     buildPicks();
     $("tsm-shotGroup").hidden = st.kind !== "results";
     $("tsm-thumbGroup").hidden = !(lead && st.layout === "player");
@@ -3474,6 +4339,48 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   $("tsm-addThem").addEventListener("click", function(){ addMsg("them"); });
   $("tsm-addMe").addEventListener("click", function(){ addMsg("me"); });
   $("tsm-newConvo").addEventListener("click", function(){ var p = nextFrom(BELIEFS, "beliefs"); st.convo = [{ who:"them", t:p[0] }, { who:"me", t:p[1] }]; saveConvo(); renderConvo(); render(); });
+  function engSave(){ store.set("engPos", st.eng); }
+  $("tsm-txSize").addEventListener("input", function(e){ txPos().s = Number(e.target.value) / 100; txSave(); render(); });
+  $("tsm-txY").addEventListener("input", function(e){ txPos().y = Number(e.target.value); txSave(); render(); });
+  $("tsm-txReset").addEventListener("click", function(){ var t = txPos(); t.x = 0; t.y = 0; t.s = 1; txSave(); showLayout(); render(); });
+  // Pick a question, grouped by the Instagram sticker it goes with
+  (function(){
+    var sel = $("tsm-engPick"), groups = {};
+    var all = ENG_PICKS.concat(QUESTIONS.slice(ENG_PICKS.length).map(function(q){ return ["More questions", q, ""]; }));
+    sel.innerHTML = '<option value="">Choose one\u2026</option>';
+    all.forEach(function(q, i){
+      var g = groups[q[0]];
+      if (!g){ g = groups[q[0]] = document.createElement("optgroup"); g.label = q[0] === "More questions" ? q[0] : q[0] + " sticker"; sel.appendChild(g); }
+      var o = document.createElement("option"); o.value = String(i); o.textContent = q[1]; g.appendChild(o);
+    });
+    sel.addEventListener("change", function(){
+      var q = all[Number(sel.value)]; if (!sel.value || !q) return;
+      st.q = q[1]; if (st.kind === "engagement") $("tsm-hook").value = q[1];
+      $("tsm-engStk").textContent = q[0] === "Poll" ? "Add a poll sticker. Answers: " + q[2] : q[0] === "Slider" ? "Add an emoji slider with " + q[2] : q[0] === "Question box" ? "Add a question sticker." : "";
+      render();
+    });
+  })();
+  $("tsm-engSize").addEventListener("input", function(e){ engPos().s = Number(e.target.value) / 100; engSave(); render(); });
+  $("tsm-engWidth").addEventListener("input", function(e){ engPos().w = Number(e.target.value); engSave(); render(); });
+  $("tsm-engReset").addEventListener("click", function(){ st.eng = { x:0, y:0, s:1, w:880 }; engSave(); showLayout(); render(); });
+  (function(){
+    var pv = $("tsm-preview"), drag = null, queued = false;
+    pv.addEventListener("pointerdown", function(e){
+      var p = st.kind === "engagement" ? engPos() : txOn() ? txPos() : null;
+      if (!p) return;
+      drag = { p:p, x:e.clientX, y:e.clientY, ox:p.x, oy:p.y, k:W / (pv.clientWidth || W) };
+      pv.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    pv.addEventListener("pointermove", function(e){
+      if (!drag) return;
+      var p = drag.p;
+      p.x = Math.max(-480, Math.min(480, drag.ox + (e.clientX - drag.x) * drag.k));
+      p.y = Math.max(-300, Math.min(1500, drag.oy + (e.clientY - drag.y) * drag.k));
+      if (!queued){ queued = true; requestAnimationFrame(function(){ queued = false; render(); }); }
+    });
+    function end(){ if (drag){ drag = null; engSave(); txSave(); if (txOn()) $("tsm-txY").value = txPos().y; } }
+    pv.addEventListener("pointerup", end); pv.addEventListener("pointercancel", end);
+  })();
   $("tsm-aspUp").addEventListener("input", function(e){ st.aspUp = Number(e.target.value) || 0; store.set("aspUp", st.aspUp); render(); });
   // Science controls
   function showSci(){
@@ -3485,13 +4392,19 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     ["sciW1", "sciW1s", "sciW2", "sciW2s", "sciRows", "sciBottom"].forEach(function(k){ var e = $("tsm-" + k); if (document.activeElement !== e) e.value = st[k]; });
     var box = $("tsm-sciPicks"); box.textContent = "";
     SCI_PHOTOS.forEach(function(ph, i){
-      var b = document.createElement("button"); b.type = "button"; b.title = ph.label; b.setAttribute("aria-label", ph.label); b.setAttribute("aria-pressed", String(i === st.sciPhoto));
+      var b = document.createElement("button"); b.type = "button"; b.title = ph.label; b.setAttribute("aria-label", ph.label); b.setAttribute("aria-pressed", String(!st.sciCustom && i === st.sciPhoto));
       var im = document.createElement("img"); im.src = ph.src; im.alt = ""; b.appendChild(im);
-      b.addEventListener("click", function(){ st.sciPhoto = i; showSci(); render(); }); box.appendChild(b);
+      b.addEventListener("click", function(){ st.sciPhoto = i; st.sciCustom = ""; showSci(); render(); }); box.appendChild(b);
     });
+    upPicks(box, "photo", st.sciCustom, function(src){ st.sciCustom = src; showSci(); render(); });
   }
+  $("tsm-sciUp").addEventListener("change", function(e){
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    var r = new FileReader(); r.onload = function(){ st.sciCustom = r.result; showSci(); render(); }; r.readAsDataURL(f);
+    upSave(f, "photo"); e.target.value = "";
+  });
   document.querySelectorAll("#tsm-sciStyles button").forEach(function(b){
-    b.addEventListener("click", function(){ st.sciStyle = b.dataset.sci; store.set("sciStyle", st.sciStyle); showSci(); render(); });
+    b.addEventListener("click", function(){ st.sciStyle = b.dataset.sci; store.set("sciStyle", st.sciStyle); showLayout(); render(); });
   });
   ["sciW1", "sciW1s", "sciW2", "sciW2s", "sciRows", "sciBottom"].forEach(function(k){
     $("tsm-" + k).addEventListener("input", function(e){ st[k] = e.target.value; if (k === "sciRows") store.set("sciRows", st.sciRows); render(); });
@@ -3539,8 +4452,65 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   $("tsm-thumb").addEventListener("change", function(e){
     var f = e.target.files && e.target.files[0]; if (!f) return;
     var r = new FileReader(); r.onload = function(){ st.thumb = r.result; $("tsm-status").textContent = ""; render(); }; r.readAsDataURL(f);
+    upSave(f, "thumb");
   });
-  $("tsm-thumbReset").addEventListener("click", function(){ st.thumb = THUMB; $("tsm-thumb").value = ""; render(); });
+  $("tsm-thumbReset").addEventListener("click", function(){ st.thumb = THUMB; $("tsm-thumb").value = ""; render(); buildThumbPicks(); });
+  function buildThumbPicks(){
+    var box = $("tsm-thumbPicks"); box.textContent = "";
+    upPicks(box, "thumb", st.thumb, function(src){ st.thumb = src; render(); buildThumbPicks(); });
+  }
+
+  // Uploaded photos and thumbnails stay as picks for next time (Olly, 2026-10-29). The file goes to the artifact's
+  // asset store and a row in the "uploads" collection points at it, so they show on the phone and the computer.
+  // Results screenshots are never kept: they're members' private messages.
+  var upl = { col:null, assets:null, items:[] };
+  function upSrc(it){ return "/_blob/" + it.asset; }
+  window.cigGallery = function(){ return upl.items.filter(function(it){ return it.kind === "photo"; }).map(upSrc); };
+  window.cigUpSave = function(file){ return upSave(file, "photo"); };
+  function upPicks(box, kind, cur, onPick){
+    upl.items.filter(function(it){ return it.kind === kind; }).forEach(function(it){
+      var wrap = document.createElement("span"); wrap.className = "tsmup";
+      var b = document.createElement("button"); b.type = "button"; b.title = b.ariaLabel = "Your upload";
+      b.setAttribute("aria-pressed", String(upSrc(it) === cur));
+      var im = document.createElement("img"); im.src = upSrc(it); im.alt = ""; b.appendChild(im);
+      b.addEventListener("click", function(){ onPick(upSrc(it)); });
+      wrap.appendChild(b);
+      if (upl.assets){
+        var x = document.createElement("button"); x.type = "button"; x.className = "tsmrm"; x.textContent = "\u2715"; x.title = "Remove this upload";
+        x.addEventListener("click", async function(e){
+          e.stopPropagation();
+          if (x.dataset.sure !== "1"){ x.dataset.sure = "1"; x.textContent = "?"; x.title = "Tap again to remove it for good"; return; }
+          try { await upl.col.doc(it.id).delete(); await upl.assets.delete(it.asset); } catch(err){}
+        });
+        wrap.appendChild(x);
+      }
+      box.appendChild(wrap);
+    });
+  }
+  function upStatus(t){ document.querySelectorAll(".tsmupst").forEach(function(el){ el.textContent = t; }); }
+  async function upSave(file, kind){
+    if (!upl.assets || !upl.col){ upStatus(""); return; }
+    upStatus("Saving it for next time\u2026");
+    try {
+      var r = await upl.assets.upload(file);
+      await upl.col.add({ asset:r.id, kind:kind, addedAt:Date.now() });
+      upStatus("Saved. It's in your picks now.");
+      return "/_blob/" + r.id;
+    } catch(e){
+      upStatus(e && e.code === "too_large" ? "That photo is too big to keep (20 MB max). It's still on this image." : e && e.code === "quota_or_state" ? "Storage is full. Remove an old upload to keep new ones." : "Couldn't keep it for next time. It's still on this image.");
+    }
+  }
+  if (window.claude && window.claude.use){
+    Promise.all([claude.use("db"), claude.use("assets")]).then(function(r){
+      var db = r[0]; upl.assets = r[1];
+      if (!db) return;
+      upl.col = db.collection("uploads");
+      upl.col.orderBy("addedAt", "desc").onSnapshot(function(snap){
+        upl.items = snap.docs.map(function(d){ var v = d.data(); v.id = d.id; return v; }).filter(function(v){ return v.asset; });
+        buildPicks(); buildThumbPicks(); if (st.kind === "science") showSci();
+      }, function(){});
+    }).catch(function(){});
+  }
   /* Cover names and photos (Olly, 2026-10-28): members say yes to sharing but want their name and photo hidden.
      On upload, Claude looks at the screenshot and returns boxes (fractions of the image) for every profile photo, name
      and @handle except Olly's. They're pixelated (or filled with the area's own colour); Olly drags to add a cover and
@@ -3674,15 +4644,23 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   // Aspiration has its own photos, so it keeps its own pick and slider position.
   var asp = { photo:ASPIRE_PHOTOS[0].src, dy:ASPIRE_PHOTOS[0].dy };
   function pickPhoto(src, dy, frame){
+    if (bgOn()){ bgSet(src); $("tsm-status").textContent = ""; buildPicks(); render(); return; }
     if (st.kind === "aspire"){ asp.photo = src; asp.dy = dy; }
     else { st.photo = src; st.dy = dy; st.frame = !!frame; }
     if (st.kind === "engagement") st.engPurple = false;
     $("tsm-status").textContent = ""; buildPicks(); render();
   }
   function buildPicks(){
-    var a = st.kind === "aspire", list = a ? ASPIRE_PHOTOS : PHOTOS, cur = a ? asp.photo : st.photo, box = $("tsm-photoPicks");
+    var a = st.kind === "aspire", bg = bgOn(), list = a ? ASPIRE_PHOTOS : PHOTOS, cur = bg ? bgSrc() : a ? asp.photo : st.photo, box = $("tsm-photoPicks");
     var eng = st.kind === "engagement", purple = eng && st.engPurple;
     box.textContent = "";
+    if (bg){
+      var nb = document.createElement("button"); nb.type = "button"; nb.textContent = "No photo"; nb.setAttribute("aria-label", "No photo");
+      nb.style.cssText = "font-weight:600;font-size:12px;color:var(--ink)";
+      nb.setAttribute("aria-pressed", String(!cur));
+      nb.addEventListener("click", function(){ bgSet(""); buildPicks(); render(); });
+      box.appendChild(nb);
+    }
     if (eng){
       var pb = document.createElement("button"); pb.type = "button"; pb.title = pb.textContent = "Purple"; pb.setAttribute("aria-label", "Purple background");
       pb.style.cssText = "background:linear-gradient(#2a0846,#12041f);color:#f3eaf9;font-weight:600;font-size:12px";
@@ -3697,13 +4675,15 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       b.addEventListener("click", function(){ pickPhoto(p.src, p.dy, p.frame); });
       box.appendChild(b);
     });
+    upPicks(box, "photo", purple ? null : cur, function(src){ pickPhoto(src, 0, false); });
     $("tsm-photoPos").value = a ? asp.dy : st.dy;
-    $("tsm-photoPos").disabled = (!a && st.kind === "lead" && st.frame) || purple;
+    $("tsm-photoPos").disabled = bg || (!a && st.kind === "lead" && st.frame) || purple;
   }
   $("tsm-photoPos").addEventListener("input", function(e){ var v = Number(e.target.value) || 0; if (st.kind === "aspire") asp.dy = v; else st.dy = v; render(); });
   $("tsm-photo").addEventListener("change", function(e){
     var f = e.target.files && e.target.files[0]; if (!f) return;
     var r = new FileReader(); r.onload = function(){ pickPhoto(r.result, 0, false); }; r.readAsDataURL(f);
+    upSave(f, "photo");
   });
 
   // Phone: hand the image to the share sheet (Save Image to Photos, or straight to Instagram) so nothing goes via a computer.
@@ -3765,6 +4745,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     var o = songOff[songMood()];
     return [0, 1, 2].map(function(n){ return bank[(o + n) % bank.length]; });
   }
+  window.cigMemeSongs = function(){ var bank = SONGS.upbeat, o = Math.floor(Math.random() * bank.length); return [0, 1, 2].map(function(n){ return bank[(o + n) % bank.length]; }); };
   function songsNext(){
     if (songFrom) songFrom = null;
     else { var m = songMood(); songOff[m] = ((songOff[m] || 0) + 3) % SONGS[m].length; store.set("songOff", songOff); }

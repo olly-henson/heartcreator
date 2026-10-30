@@ -19,3 +19,5 @@ Publish it with `root` = marketing folder and `files` = every `cig-assets/*` fil
 Gotcha (2026-10-28): backslashes in heredoc/JSON edit files can get eaten on the way in (a backslash-n became a real line break, a regex backslash-slash lost its backslash). For edits containing backslashes, use the Edit tool or Artifact `edits`, then run jscheck.
 
 Generator gotcha (2026-10-28): code near the top of the main script that runs at load must not use a const/let declared further down (it throws and stops the whole page). hubUrl() is a function for that reason. Local http.server serves without a charset, so non-ASCII looks mangled in tests only.
+
+Gotcha (2026-10-29): a heredoc Python edit with \u escapes failed mid-write (surrogates) and EMPTIED the generator file. For in-place Python edits, write the script with the Write tool, use raw strings, and save to a .tmp file then os.replace(). Restore source if it happens: Artifact read of the live version, then drop line 1 and the last 2 lines.

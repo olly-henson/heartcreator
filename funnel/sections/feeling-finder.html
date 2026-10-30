@@ -370,7 +370,7 @@
     if (WEBHOOK_URL) {
       var p = new URLSearchParams(location.search);
       fetch(WEBHOOK_URL, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({
-        first_name:first, last_name:last, email:mail, resonance:top.join(" + "), person:picks.who.filter(function(x){ return x; }).join(" · "), variant:"plain", // A/B test (2026-10-28): A = no phone image current_emotion:picks.now[0] || "", all_feelings:picks.feels.join(", "),
+        first_name:first, last_name:last, email:mail, resonance:top.join(" + "), person:picks.who.filter(function(x){ return x; }).join(" · "), variant:"plain", current_emotion:picks.now[0] || "", all_feelings:picks.feels.join(", "),
         utm_source:p.get("utm_source") || "", utm_medium:p.get("utm_medium") || "", utm_campaign:p.get("utm_campaign") || "", utm_content:p.get("utm_content") || ""
       }) }).catch(function(){});
     }
