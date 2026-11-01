@@ -25,6 +25,21 @@
   .lmrate button[aria-pressed="true"][data-r="good"]{ background:#22c55e; border-color:#22c55e; color:#06210f; }
   .lmrate button[aria-pressed="true"][data-r="okay"]{ background:#fbbf24; border-color:#fbbf24; color:#2a1a00; }
   .lmrate button[aria-pressed="true"][data-r="bad"]{ background:#f87171; border-color:#f87171; color:#2b0707; }
+  .lmstg{ display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+  .lmstg button, .lmstg select{ padding:5px 10px; border-radius:999px; border:1px solid var(--border-soft); background:transparent; color:inherit; font:inherit; font-size:12px; cursor:pointer; }
+  .lmstg button[aria-pressed="true"]{ background:#e04fd6; border-color:#e04fd6; color:#fff; }
+  .lmstg{ flex-direction:column; gap:5px; }
+  .lmstep{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+  .lmstep small{ min-width:118px; font-size:12px; opacity:.75; }
+  .lmboard{ display:grid; grid-template-columns:repeat(6, minmax(160px, 1fr)); gap:10px; overflow-x:auto; padding-bottom:6px; }
+  .lmcol{ background:var(--surface); border:1px solid var(--border-soft); border-radius:10px; padding:8px; min-height:140px; }
+  .lmcol h4{ margin:2px 2px 8px; font-size:13px; letter-spacing:.06em; text-transform:uppercase; }
+  .lmbc{ display:block; width:100%; text-align:left; margin-bottom:6px; padding:8px; border-radius:8px; border:1px solid var(--border-soft); background:transparent; color:inherit; font:inherit; font-size:13px; cursor:pointer; }
+  .lmbc b{ display:block; margin-bottom:3px; }
+  .lmcon{ display:flex; gap:6px; align-items:center; margin-top:6px; }
+  .lmcon .lmcopy{ flex:1; min-width:0; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; background:var(--surface); color:inherit; border:1px solid var(--border-soft); border-radius:8px; padding:7px 9px; font:inherit; font-size:13px; cursor:pointer; }
+  .lmcon a{ flex:none; padding:7px 10px; border-radius:8px; background:#25a35a; color:#fff; font-size:13px; font-weight:600; text-decoration:none; }
+  .lmcon a[href^="mailto"]{ background:#7b4fd6; }
   .lmnote{ width:100%; margin-top:7px; box-sizing:border-box; resize:vertical; background:var(--surface); color:inherit; border:1px solid var(--border-soft); border-radius:8px; padding:7px 9px; font:inherit; font-size:13px; }
   .lmtag{ display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:6px; margin-left:6px; background:rgba(125,211,252,.18); color:#7dd3fc; vertical-align:middle; }
   .lmmain{ min-width:0; display:flex; flex-direction:column; gap:10px; }
@@ -1547,7 +1562,7 @@
 
     <h2 class="bighead">Reels</h2>
     <p class="section-label" style="margin-top:20px;">Video ideas</p>
-    <span class="hint" style="display:block; margin:-6px 0 20px;">Type an idea, then choose whether it fills the next open slot or a specific date. Once it has both a title and a date it drops off this list and lives on the calendar below instead — aiming for 5 a day.</span>
+    <span class="hint" style="display:block; margin:-6px 0 20px;">Type an idea, then choose whether it fills the next open slot or a specific date. Once it has both a title and a date it drops off this list and lives on the calendar below instead — aiming for 3 a day.</span>
     <div class="tablewrap">
       <table>
         <thead>
@@ -1918,7 +1933,7 @@ I'm Olly. I help people consciously attract high-quality relationships. Happily 
 
 Instagram: @attractwitholly
 
-#shorts #attractlove #readyforlove #datingover30 #soulmate #manifestlove</textarea>
+#shorts #Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner</textarea>
       <div class="yttpl" data-yttpl="shorts"></div>
       <div style="margin-top:10px;"><button type="button" class="copybtn" id="ytShortsCopy">Copy description</button></div>
     </div>
@@ -3305,7 +3320,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // nothing to retype once the real numbers come in. `synced` stops that
   // happening twice if the date gets changed later.
   var DOW_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  var DAILY_REEL_TARGET = 5;
+  var DAILY_REEL_TARGET = 3; // 3 a day from 2026-10-30 (was 5): Perfect Reels, fewer and better
   var ideaTableBuiltForCount = -1;
   var calCursor = new Date(); // which month the calendar is showing — restored from uiLoad() in boot()
 
@@ -4853,7 +4868,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       { title:"DMs", items:[
         { name:"Free training (VIDEO)", note:"ManyChat sends it when they comment or DM VIDEO (Instagram and Facebook)", long:"https://ollyhenson.com/training?utm_source=instagram&utm_medium=dm&utm_campaign=emotional_resonance_training" },
         { name:"The Feeling Finder (FEELING)", note:"ManyChat sends it when they comment or DM FEELING (Instagram and Facebook)", long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=feeling_keyword" },
-        { name:"The Feeling Finder (DMs you send by hand)", short:"ollyhenson.com/feeling-dm", made:true, long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=manual" },
+        { name:"Free training (VIDEO typed wrong: send by hand)", short:"ollyhenson.com/video-dm", made:false, note:"When ManyChat misses a misspelled VIDEO. Tracked as a DM you sent by hand", long:"https://ollyhenson.com/training?utm_source=instagram&utm_medium=dm&utm_campaign=emotional_resonance_training&utm_content=manual" },
+        { name:"The Feeling Finder (EMOTION typed wrong on a carousel: send by hand)", short:"ollyhenson.com/emotion-dm", made:false, note:"When ManyChat misses a misspelled EMOTION. Tracked to carousels, sent by hand", long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=emotion_manual" },
+        { name:"The Feeling Finder (FEELING typed wrong: send by hand)", note:"When ManyChat misses a misspelled FEELING. Tracked as a DM you sent by hand", short:"ollyhenson.com/feeling-dm", made:true, long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=manual" },
         { name:"Application", short:"ollyhenson.com/apply-ig", made:true, long:"https://ollyhenson.com/apply?utm_source=instagram&utm_medium=dm&utm_campaign=heart_attractor" }
       ]},
       { title:"Bio", items:[
@@ -4927,7 +4944,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     else if (it.short && it.made && it.long){ var t = document.createElement("small"); t.textContent = "Goes to: " + it.long; u.appendChild(t); }
     row.appendChild(u);
     var b = document.createElement("button"); b.type = "button"; b.className = "copybtn"; b.textContent = "Copy";
-    b.addEventListener("click", function(){ copyToClipboard(send, b); });
+    // a redirect that isn't made yet never hands out the long UTM link instead (Olly, 2026-10-31): make it in GHL first
+    if (it.short && !it.made){ b.disabled = true; b.textContent = "Not made yet"; b.title = "Make " + it.short + " in GHL (redirect to the address shown), then tell Claude"; u.firstChild.textContent = it.long; }
+    else b.addEventListener("click", function(){ copyToClipboard(send, b); });
     row.appendChild(b);
     return row;
   }
@@ -4936,6 +4955,40 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var lmData = null, lmSel = null, lmFilter = "newest", lmLoading = false, lmErr = "";
   function lmStore(id){ if (!state.looms || typeof state.looms !== "object") state.looms = {}; return state.looms[id] || (state.looms[id] = { rating:"", plan:["", "", ""] }); }
   function lmEsc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
+  // Pipeline (2026-11-01): each applicant has one stage. Old records: archived = Not a fit; GHL's loomSent / joined still count.
+  // Flags in state.looms[id]: waSent, emSent, waReply, emReply, product ("monthly" | "annual").
+  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["loom", "Loom sent"], ["joined", "Joined"], ["nofit", "Not a fit"]];
+  function lmById(id){ return (lmData || []).filter(function(x){ return x.id === id; })[0]; }
+  // The stage is the furthest step ticked on the card (2026-11-01 v2), so unticking a step moves them back.
+  function lmStage(a){
+    var s = lmStore(a.id);
+    if (s.stage){ if (s.stage === "loom") s.loom = true; if (s.stage === "nofit") s.archived = true; delete s.stage; } // v1 records
+    if (s.archived) return "nofit";
+    if (s.product || (a.joined && s.product !== "")) return "joined";
+    if (s.loom || (a.loomSent && s.loom !== false)) return "loom";
+    if (s.waReply || s.emReply) return "replied";
+    if (s.waSent || s.emSent) return "contacted";
+    return "new";
+  }
+  function lmLabels(a){
+    var s = lmStore(a.id), L = [];
+    if (s.waSent) L.push("WhatsApp sent"); if (s.emSent) L.push("Email sent"); if (s.waReply) L.push("WhatsApp reply"); if (s.emReply) L.push("Email reply");
+    if (s.product) L.push(s.product === "annual" ? "Annual $2,500" : "Monthly $497");
+    return L.map(function(x){ return '<span class="lmtag">' + x + "</span>"; }).join("");
+  }
+  // Checklist on each card: tap a step to tick it, tap again to untick. Pink = done.
+  function lmStageBox(a){
+    var s = lmStore(a.id), st = lmStage(a);
+    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, loom:st === "loom" || st === "joined" && (s.loom || a.loomSent), monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived };
+    function btn(k, label){ return '<button type="button" data-act="' + k + '" aria-pressed="' + !!on[k] + '">' + label + "</button>"; }
+    function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
+    return '<div class="lmstg">' +
+      row("1", "I messaged them", btn("waSent", "WhatsApp") + btn("emSent", "Email")) +
+      row("2", "They replied", btn("waReply", "WhatsApp") + btn("emReply", "Email")) +
+      row("3", "Loom", btn("loom", "Loom sent")) +
+      row("4", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
+      '<div class="lmstep">' + btn("nofit", "Not a fit") + "</div></div>";
+  }
   // find an answer by the GHL field name (HA … / FF …), e.g. "HA Feelings About Love"
   // Love Scale fields ("Scale …") only match patterns that ask for them by name
   function lmAns(a, re, used){ var k = Object.keys(a.fields || {}).filter(function(n){ return re.test(n) && (!/^Scale /i.test(n) || /^\^Scale/.test(re.source)); })[0]; if (k && used) used[k] = 1; return k ? a.fields[k] : ""; }
@@ -4971,6 +5024,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmFit(){ var box = document.getElementById("lmBox"), st = document.getElementById("lmStage"); if (box && st) st.style.transform = "scale(" + (box.clientWidth / 1600) + ")"; }
   window.addEventListener("resize", lmFit);
   document.addEventListener("fullscreenchange", function(){ setTimeout(lmFit, 60); });
+  // Tap-to-copy WhatsApp + email on each applicant card, with buttons that open WhatsApp / a new email (2026-11-01).
+  function lmContact(a){
+    var h = "", ph = (a.phone || "").replace(/[^\d]/g, "");
+    if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + '</button><a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", it's Olly Henson here. Your application for the Heart Attractor Program was successful.\n\nPlease can you reply 'YES' to this message and I'll send you the details about how the program works and what's included.\n\nThank you,\nOlly") + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a></div>';
+    if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + '</button><a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your application was successful") + '&body=' + encodeURIComponent("Hi " + (a.firstName || "there") + ",\r\n\r\nI’m happy to say that your application for The Heart Attractor Program was successful.\r\n\r\nPlease could you reply to my WhatsApp and I’ll send you more details about how the program works and what’s included.\r\n\r\nThank you,\r\n\r\nOlly") + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a></div>';
+    return h;
+  }
+  document.addEventListener("click", function(e){
+    var l = e.target.closest && e.target.closest(".lmcon a");
+    if (l){ var a3 = lmById(l.getAttribute("data-id")); if (a3){ lmStore(a3.id)[l.getAttribute("data-k")] = true; markDirty(); if (lmFilter !== "board") lmFilter = lmStage(a3); setTimeout(renderLooms, 300); } return; }
+    var b = e.target.closest && e.target.closest(".lmcopy"); if (!b) return;
+    e.stopPropagation(); var v = b.getAttribute("data-copy"), txt = b.textContent;
+    function done(){ b.textContent = "Copied ✓"; setTimeout(function(){ b.textContent = txt; }, 1200); }
+    if (navigator.clipboard) navigator.clipboard.writeText(v).then(done, done); else done();
+  }, true);
   function renderLooms(){
     var host = document.getElementById("loomsBody"); if (!host) return;
     if (!lmData){
@@ -4979,18 +5047,31 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (!lmLoading && !lmErr) lmLoad();
       return;
     }
-    // Newest = everything not archived (lmData is already newest first). Archived ones only show under Archived.
-    var counts = { newest:0, bad:0, okay:0, good:0, archived:0 };
-    lmData.forEach(function(a){ var s1 = lmStore(a.id); if (s1.archived) { counts.archived++; return; } counts.newest++; if (counts[s1.rating] != null) counts[s1.rating]++; });
-    var F = [["newest", "Newest"], ["bad", "Not good"], ["okay", "Okay"], ["good", "Good"], ["archived", "Archived"]];
-    var shown = lmData.filter(function(a){ var s1 = lmStore(a.id); if (lmFilter === "archived") return !!s1.archived; return !s1.archived && (lmFilter === "newest" || s1.rating === lmFilter); });
+    // Stage buttons filter the list (lmData is already newest first); Board shows every stage side by side.
+    var counts = {}; LM_STAGES.forEach(function(x){ counts[x[0]] = 0; });
+    lmData.forEach(function(a){ counts[lmStage(a)]++; });
+    if (lmFilter !== "board" && !counts.hasOwnProperty(lmFilter)) lmFilter = "new";
+    var fbar = '<div class="lmfilt">' + LM_STAGES.map(function(x){ return '<button type="button" data-f="' + x[0] + '" aria-pressed="' + (lmFilter === x[0]) + '">' + x[1] + " " + counts[x[0]] + "</button>"; }).join("") + '<button type="button" data-f="board" aria-pressed="' + (lmFilter === "board") + '">Board</button></div>';
+    if (lmFilter === "board"){
+      host.innerHTML = fbar + '<div class="lmboard">' + LM_STAGES.map(function(x){
+        return '<div class="lmcol"><h4>' + x[1] + " " + counts[x[0]] + "</h4>" + lmData.filter(function(a){ return lmStage(a) === x[0]; }).map(function(a){
+          var r = lmStore(a.id).rating;
+          return '<button type="button" class="lmbc" data-id="' + a.id + '" data-st="' + x[0] + '"><b>' + lmEsc((a.firstName + " " + a.lastName).trim() || a.email) + "</b>" + (r ? '<span class="lmtag">' + { good:"Good", okay:"Okay", bad:"Not good" }[r] + "</span>" : "") + lmLabels(a) + "</button>";
+        }).join("") + "</div>";
+      }).join("") + "</div>";
+      host.querySelectorAll(".lmfilt button").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.f; renderLooms(); }); });
+      host.querySelectorAll(".lmbc").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.st; lmSel = b.dataset.id; renderLooms(); }); });
+      return;
+    }
+    var shown = lmData.filter(function(a){ return lmStage(a) === lmFilter; });
     if (!shown.some(function(a){ return a.id === lmSel; })) lmSel = shown[0] ? shown[0].id : null;
-    var html = '<div class="lmwrap"><div class="lmlist"><div class="lmfilt">' + F.map(function(x){ return '<button type="button" data-f="' + x[0] + '" aria-pressed="' + (lmFilter === x[0]) + '">' + x[1] + " " + counts[x[0]] + "</button>"; }).join("") + "</div>";
+    var html = '<div class="lmwrap"><div class="lmlist">' + fbar;
     if (!shown.length) html += '<span class="hint" style="padding:8px">No applications here.</span>';
     shown.forEach(function(a){
       var r = lmStore(a.id).rating, d = String(a.dateAdded || "").slice(0, 10);
-      html += '<div class="lmapp' + (a.id === lmSel ? " on" : "") + '" data-id="' + a.id + '"><b>' + lmEsc((a.firstName + " " + a.lastName).trim() || a.email) + (a.joined ? '<span class="lmtag">Joined</span>' : a.loomSent ? '<span class="lmtag">Loom sent</span>' : "") + '</b><span class="sub">' + lmEsc([d, [a.city, a.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")) + '</span><div class="lmrate">' +
-        [["good", "Good"], ["okay", "Okay"], ["bad", "Not good"]].map(function(x){ return '<button type="button" data-r="' + x[0] + '" aria-pressed="' + (r === x[0]) + '">' + x[1] + "</button>"; }).join("") + '<button type="button" class="lmarch">' + (lmStore(a.id).archived ? "Unarchive" : "Archive") + "</button></div>" +
+      html += '<div class="lmapp' + (a.id === lmSel ? " on" : "") + '" data-id="' + a.id + '"><b>' + lmEsc((a.firstName + " " + a.lastName).trim() || a.email) + lmLabels(a) + '</b><span class="sub">' + lmEsc([d, [a.city, a.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")) + '</span><div class="lmrate">' +
+        [["good", "Good"], ["okay", "Okay"], ["bad", "Not good"]].map(function(x){ return '<button type="button" data-r="' + x[0] + '" aria-pressed="' + (r === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</div>" + lmStageBox(a) +
+        lmContact(a) +
         '<textarea class="lmnote" rows="2" placeholder="Notes, e.g. not a fit because…" aria-label="Notes on ' + lmEsc(a.firstName || "this applicant") + '">' + lmEsc(lmStore(a.id).note || "") + "</textarea></div>";
     });
     html += '</div><div class="lmmain"><div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen for the Loom</button><button type="button" class="copybtn" id="lmRefresh">Refresh from GHL</button><button type="button" class="copybtn" id="lmClear">Clear the plan</button><span class="hint">Click a plan step to type. Enter adds a step.</span></div>';
@@ -5016,11 +5097,18 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     host.innerHTML = html;
     host.querySelectorAll(".lmfilt button").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.f; renderLooms(); }); });
     host.querySelectorAll(".lmapp").forEach(function(el){
-      el.addEventListener("click", function(e){ if (e.target.closest(".lmrate, .lmnote")) return; lmSel = el.dataset.id; renderLooms(); });
+      el.addEventListener("click", function(e){ if (e.target.closest(".lmrate, .lmnote, .lmstg, .lmcon")) return; lmSel = el.dataset.id; renderLooms(); });
       var nt = el.querySelector(".lmnote");
       nt.addEventListener("input", function(){ lmStore(el.dataset.id).note = nt.value; markDirty(); });
       el.querySelectorAll(".lmrate button").forEach(function(b){ b.addEventListener("click", function(){ var s2 = lmStore(el.dataset.id); s2.rating = s2.rating === b.dataset.r ? "" : b.dataset.r; markDirty(); renderLooms(); }); });
-      el.querySelector(".lmarch").addEventListener("click", function(){ var s3 = lmStore(el.dataset.id); s3.archived = !s3.archived; markDirty(); renderLooms(); });
+      el.querySelectorAll(".lmstg button").forEach(function(b){ b.addEventListener("click", function(){
+        var a2 = lmById(el.dataset.id), s4 = lmStore(a2.id), k = b.dataset.act;
+        if (k === "monthly" || k === "annual") s4.product = s4.product === k ? "" : k;
+        else if (k === "nofit") s4.archived = !s4.archived;
+        else if (k === "loom") s4.loom = !(b.getAttribute("aria-pressed") === "true");
+        else s4[k] = !s4[k];
+        markDirty(); lmFilter = lmStage(a2); lmSel = a2.id; renderLooms();
+      }); });
     });
     document.getElementById("lmRefresh").addEventListener("click", lmLoad);
     var full = document.getElementById("lmFull"); if (full) full.addEventListener("click", function(){ var bx = document.getElementById("lmBox"); if (bx && bx.requestFullscreen) bx.requestFullscreen().catch(function(){}); });
@@ -6169,7 +6257,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   }
 
   // hub.ollyhenson.com/#addreel=<encoded JSON {title, caption?, offer?}> (content generator's "Add to calendar", 2026-10-28).
-  // Held until the shared data has loaded, then put in the next free slot (5 a day), saved without pressing Save,
+  // Held until the shared data has loaded, then put in the next free slot (3 a day), saved without pressing Save,
   // and that day opened so Olly sees where it landed. Same title already waiting unpublished = no duplicate.
   var pendingReel = null;
   function importReelFromHash(){
@@ -6188,7 +6276,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var idea = state.content.ideas.filter(function(i){ return i.title === title && !i.posted; })[0];
     if (!idea){
       idea = { title:title, date: findNextAvailableDate(), mode:"auto", synced:false, offer: data.offer === "scale" ? "scale" : "video" };
-      if (data.caption) idea.caption = String(data.caption);
+      if (data.caption) idea.caption = outlierTags(String(data.caption));
       state.content.ideas.push(idea);
       markDirty();
       saveNow();
@@ -6691,7 +6779,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     ["socials", "Check socials: messages and DMs from people who are interested"],
     ["content", "Content: Reels, Stories, email and YouTube post"]
   ];
-  var TARGETS = [["Reels", 5, 35], ["Stories", 7, 49], ["Emails", 1, 7], ["YouTube posts", 1, 7]];
+  var TARGETS = [["Reels", 3, 21], ["Stories", 7, 49], ["Emails", 1, 7], ["YouTube posts", 1, 7]];
   var ROUTINE_START = "2026-10-29";
   var coreWeek = null;
   function coreStore(){
@@ -6726,7 +6814,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // week, month or year, without batching everything on a Monday. Out = Reels/Stories marked Published, emails/YouTube posts
   // Scheduled or Published, on the day they go out. The score only counts days up to today, so it's fair mid-period.
   var consMode = "week", consPeriod = null;
-  var CONS_DAILY = {"Reels": 5, "Stories": 7, "Emails": 1, "YouTube posts": 1};
+  var CONS_DAILY = {"Reels": 3, "Stories": 7, "Emails": 1, "YouTube posts": 1};
   function consByDay(){
     var m = {}, add = function(d, k, out){ if (!d) return; var x = m[d] || (m[d] = {}); var c = x[k] || (x[k] = {out: 0, cal: 0}); c.cal++; if (out) c.out++; };
     var sched = function(x){ return x.status === "scheduled" || x.status === "sent"; };
@@ -7410,7 +7498,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // TikTok copy (editable, saved in state.tiktokCopy). Built from the Reel caption, the YouTube Shorts description and the
   // ManyChat flow, adapted for TikTok: no comment keyword (no ManyChat), link in profile, 3 to 5 hashtags, 80-character bio.
   var TK_COPY_DEFAULTS = {
-    caption: "[The Reel's header: the hook you say first]\n\nWho you attract isn't about what you know. It's how you feel.\n\nThe free training shows you how to attract a genuine, committed relationship without more inner work or dating rules. It's linked in my profile 👆\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
+    caption: "[The Reel's header: the hook you say first]\n\nWho you attract isn't about what you know. It's how you feel.\n\nThe free training shows you how to attract a genuine, committed relationship without more inner work or dating rules. It's linked in my profile 👆\n\n#Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner",
     bio: "Helping singles attract a committed relationship ❤️ Free training 👇",
     link: "https://ollyhenson.com/training?utm_source=tiktok&utm_medium=bio&utm_campaign=emotional_resonance_training",
     dm: "VIDEO (free training): Here you go 💜 ollyhenson.com/video-tt\n\nFEELING (The Feeling Finder): Here you go 💜 ollyhenson.com/feeling-tt",
@@ -7420,24 +7508,31 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Reel captions per offer + platform (Olly, 2026-10-26). VIDEO uses the saved IG/FB templates, the TikTok tab's caption
   // and the YouTube tab's Shorts description; SCALE has built-in text. A saved template with the same name wins.
   var REEL_CAP_NAME = /^(IG|FB|TIKTOK|YOUTUBE) (VIDEO|SCALE|FEELING)$/i;
-  // FEELING captions (2026-10-28): The Feeling Finder replaced The Love Scale. The offer is still stored as "scale" on each idea.
+  // Reel captions (Olly, 2026-10-30): the caption style of his outlier Reels (Sep-Oct), the 3 steps and the outlier hashtags,
+  // with the keyword ending per platform. Instagram and TikTok: comment or DM the keyword. Facebook adds the title first.
+  // YouTube Shorts links aren't clickable: the training link or the short /feel address. Same body as the content generator.
+  var REEL_TAGS = "#Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner";
+  var REEL_BODY = "💜 Attract a genuine, committed relationship with someone you can build a life with\n\nFor people who want to meet someone special and settle down, but nothing is changing.\n\nThe 3 steps:\n\n✅ Step 1: Get clear on exactly who you want and what your life together looks like\n\n✅ Step 2: Define the emotions you’d feel with them\n\n✅ Step 3: Embody those emotions every day so the right person is drawn to you\n\n♥️ This is how I met my wife\n\n";
+  var FEELING_ASK = "👇 Comment ‘FEELING’ and I’ll send you my free tool to help with steps 1 and 2\n\n(If you’d rather keep it private, DM me ‘FEELING’)\n\n";
+  var VIDEO_ASK = "👇 Comment ‘VIDEO’ and I’ll send you my free training on how to do this\n\n(If you’d rather keep it private, DM me ‘VIDEO’)\n\n";
+  // FEELING = The Feeling Finder (the offer is still stored as "scale" on each idea)
   var SCALE_CAPTIONS = {
-    instagram: "➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
-    facebook: "VIDEO TITLE GOES HERE\n\n➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
-    tiktok: "➡️ Comment ‘FEELING’ to find the exact emotion that will attract your perfect relationship using The Feeling Finder\n\nDM me the word ‘FEELING’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
-    youtube: "➡️ Find the exact emotion that will attract your perfect relationship using The Feeling Finder. Type this into your browser: ollyhenson.com/feel\n\n#shorts #attractlove #readyforlove #datingover30 #soulmate #manifestlove"
+    instagram: REEL_BODY + FEELING_ASK + REEL_TAGS,
+    facebook: "VIDEO TITLE GOES HERE\n\n" + REEL_BODY + FEELING_ASK + REEL_TAGS,
+    tiktok: REEL_BODY + FEELING_ASK + REEL_TAGS,
+    youtube: REEL_BODY + "👇 Get my free tool to help with steps 1 and 2. Type this into your browser: ollyhenson.com/feel\n\n#shorts " + REEL_TAGS
   };
-  // VIDEO captions (Olly's new wording, 2026-10-28; saved IG/FB VIDEO templates were synced to these by videoCaptionV2)
   var VIDEO_CAPTIONS = {
-    instagram: "➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
-    facebook: "VIDEO TITLE GOES HERE\n\n➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
-    tiktok: "➡️ Comment ‘VIDEO’ below if you’d like access to my free training: ‘How To Attract A Genuine And Committed Long-Term Relationship’\n\nDM me the word ‘VIDEO’ if you want to keep it private\n\n#attractlove #readyforlove #datingover30 #soulmate #manifestlove",
-    youtube: "➡️ Watch my free training ‘How To Attract A Genuine And Committed Long-Term Relationship’ here: https://ollyhenson.com/free-video-training\n\n#shorts #attractlove #readyforlove #datingover30 #soulmate #manifestlove"
+    instagram: REEL_BODY + VIDEO_ASK + REEL_TAGS,
+    facebook: "VIDEO TITLE GOES HERE\n\n" + REEL_BODY + VIDEO_ASK + REEL_TAGS,
+    tiktok: REEL_BODY + VIDEO_ASK + REEL_TAGS,
+    youtube: REEL_BODY + "👇 Watch my free training on how to do this: https://ollyhenson.com/free-video-training\n\n#shorts " + REEL_TAGS
   };
   function reelCaption(offer, plat, saved){
     var key = { instagram:"IG", facebook:"FB", tiktok:"TIKTOK", youtube:"YOUTUBE" }[plat] + " " + (offer === "scale" ? "FEELING" : "VIDEO");
     var hit = (saved || []).filter(function(tpl){ return String(tpl.name || "").trim().toUpperCase() === key; })[0];
-    if (hit) return hit.text;
+    // 2026-10-30: the built-in Perfect Reel captions always win, so every platform matches Instagram (old saved templates were short)
+    hit = null;
     if (offer === "scale") return SCALE_CAPTIONS[plat] || "";
     if (VIDEO_CAPTIONS[plat]) return VIDEO_CAPTIONS[plat];
     if (plat === "tiktok") return tkCopy("caption");
@@ -8195,7 +8290,44 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Backward-compatible guards + repair passes over `state`. Safe to run
   // more than once (e.g. again after pullServerState swaps in the server
   // copy), so every check is "add if missing" / dedupe-safe.
+  function outlierTags(txt){
+    if (typeof txt !== "string") return txt;
+    var lines = txt.split("\n");
+    for (var k = lines.length - 1; k >= 0; k--){
+      if (!lines[k].trim()) continue;
+      if (/^\s*(#\w+\s*)+$/.test(lines[k]) && !/#LifePartner\b/.test(lines[k])) lines[k] = (/#shorts\b/i.test(lines[k]) ? "#shorts " : "") + REEL_TAGS;
+      break;
+    }
+    return lines.join("\n");
+  }
   function migrateState(){
+    // Outlier hashtags (Olly, 2026-10-30): every saved caption and every unposted Reel gets them
+    // 2026-10-30 (Olly: "in the calendar there's still the old ones"): every unposted Reel from today on gets the Perfect Reel caption,
+    // for its picked platform or Instagram, unless it already has it
+    if (!state.reelCaptionV5){
+      var v5Today = todayISO();
+      ((state.content && state.content.ideas) || []).forEach(function(i){
+        if (i.posted || !i.date || i.date < v5Today) return;
+        if (typeof i.caption === "string" && i.caption.indexOf("Attract a genuine, committed relationship") !== -1) return;
+        var pl = i.capPlat || "instagram";
+        i.caption = reelCaption(i.offer === "scale" ? "scale" : "video", pl, []).replace(/VIDEO TITLE GOES HERE/g, i.title || "VIDEO TITLE GOES HERE");
+        i.capPlat = pl;
+      });
+      state.reelCaptionV5 = true; migSave = true;
+    }
+    if (!state.reelCaptionV4){
+      ((state.content && state.content.ideas) || []).forEach(function(i){
+        if (i.capPlat && !i.posted) i.caption = reelCaption(i.offer === "scale" ? "scale" : "video", i.capPlat, []).replace(/VIDEO TITLE GOES HERE/g, i.title || "VIDEO TITLE GOES HERE");
+      });
+      state.reelCaptionV4 = true; migSave = true;
+    }
+    if (!state.reelTagsV2){
+      ((state.content && state.content.captionTemplates) || []).forEach(function(t){ if (t) t.text = outlierTags(t.text); });
+      ((state.content && state.content.ideas) || []).forEach(function(i){ if (!i.posted && i.caption) i.caption = outlierTags(i.caption); });
+      if (state.tiktokCopy && state.tiktokCopy.caption) state.tiktokCopy.caption = outlierTags(state.tiktokCopy.caption);
+      if (state.youtubeCopy && state.youtubeCopy.shorts) state.youtubeCopy.shorts = outlierTags(state.youtubeCopy.shorts);
+      state.reelTagsV2 = true; state.reelTagsV1 = true; migSave = true;
+    }
     if (!state.scaleCaptionV2){
       ((state.content && state.content.ideas) || []).forEach(function(i){
         if (i.offer === "scale" && i.capPlat && !i.posted)
@@ -8244,6 +8376,22 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       });
       state.videoCaptionV2 = true;
     }
+    // Perfect Reel captions (Olly, 2026-10-30): saved IG/FB/TIKTOK/YOUTUBE VIDEO and FEELING templates take the new text
+    // (they override the built-ins), then unpublished Reels that already had a platform caption are refilled
+    if (!state.reelCaptionV3){
+      var rTpls = (state.content && state.content.captionTemplates) || [];
+      var rPlat = { IG:"instagram", FB:"facebook", TIKTOK:"tiktok", YOUTUBE:"youtube" };
+      rTpls.forEach(function(t){
+        var m = /^(IG|FB|TIKTOK|YOUTUBE) (VIDEO|FEELING|SCALE)$/i.exec(String((t && t.name) || "").trim());
+        if (m) t.text = (m[2].toUpperCase() === "VIDEO" ? VIDEO_CAPTIONS : SCALE_CAPTIONS)[rPlat[m[1].toUpperCase()]];
+      });
+      ((state.content && state.content.ideas) || []).forEach(function(i){
+        if (i.capPlat && !i.posted)
+          i.caption = reelCaption(i.offer === "scale" ? "scale" : "video", i.capPlat, rTpls.filter(function(t){ return t && t.text; }))
+            .replace(/VIDEO TITLE GOES HERE/g, i.title || "VIDEO TITLE GOES HERE");
+      });
+      state.reelCaptionV3 = true; migSave = true;
+    }
     // Reel hashtags (Olly, 2026-10-29): the last all-hashtag line of every saved Reel caption becomes the 5 new tags (#shorts kept)
     if (!state.reelTagsV1){
       var swapTags = function(txt){
@@ -8251,7 +8399,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         var lines = txt.split("\n");
         for (var k = lines.length - 1; k >= 0; k--){
           if (!lines[k].trim()) continue;
-          if (/^\s*(#\w+\s*)+$/.test(lines[k])) lines[k] = (/#shorts\b/i.test(lines[k]) ? "#shorts " : "") + "#attractlove #readyforlove #datingover30 #soulmate #manifestlove";
+          if (/^\s*(#\w+\s*)+$/.test(lines[k]) && !/#LifePartner\b/.test(lines[k])) lines[k] = (/#shorts\b/i.test(lines[k]) ? "#shorts " : "") + "#attractlove #readyforlove #datingover30 #soulmate #manifestlove";
           break;
         }
         return lines.join("\n");

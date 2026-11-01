@@ -74,6 +74,8 @@ The whole `hub.ollyhenson.com` zone (and `hub-ollyhenson.pages.dev`) sits behind
 
 ## 3. Data model
 
+- **Looms pipeline (2026-11-01):** `state.looms[contactId]` also holds `waSent`, `emSent`, `waReply`, `emReply`, `loom` (true/false; false overrides GHL's loomSent), `product` ("monthly" | "annual" | ""; "" overrides GHL's joined) and `archived` (= Not a fit). The stage (New / Contacted / Replied / Loom sent / Joined / Not a fit) is never stored: `lmStage()` works it out from the furthest ticked step. A v1 `stage` field is converted on read.
+
 ```js
 state = {
   mrrTarget: 40000,
@@ -120,6 +122,7 @@ Notes on fields that aren't obvious:
 ## 4. House conventions (follow these, don't reinvent)
 
 ### Never
+- Never make a status button that can't be undone, or that disappears once pressed. Every step on a card stays visible and taps on/off; the stage is worked out from what's ticked (2026-11-01: Olly tapped "WhatsApp reply", the card moved to Replied, the button vanished and he couldn't untick it).
 
 - Never add autosave or auto-publish-on-change to typing — every input just calls `markDirty()` and Olly saves. **Two exceptions Olly asked for (2026-10-28):** content sent from the generator (`#addreel` / `#addstory` / `#addemail` / `#addytpost`) and the Scheduled→Published flip (`emAutoPublish` / `ytAutoPublish`) save by themselves, but only after `pullServerState()` has loaded the fresh data (they run in its final `.then`), and the flip only saves when the device has no other unsaved edits.
 - Never open Hub content (an image) in a new tab: in the home-screen app there's no back button and Olly got stuck. Open it inside the page (`openImageViewer()`).
@@ -150,6 +153,10 @@ Notes on fields that aren't obvious:
 - Never auto-pull GHL data on load: a pull calls `markDirty()`, so auto-pulling would leave the Hub permanently "unsaved". Pulls are a button press (on Overview, Sales and Email).
 
 ### Design principles from past corrections
+- **Status = a numbered checklist in plain words (2026-11-01, Olly: "I'm a bit confused about what means what").** Label each step as what happened ("1 I messaged them", "2 They replied", "3 Loom", "4 They joined"), not as an action or a stage name, and explain the buttons in one short table when handing it over.
+- **Buttons that do the obvious next thing record it too:** tapping WhatsApp or Email on an applicant card ticks "I messaged them" for that channel, so Olly never logs the same action twice.
+- **Prefilled messages use Olly's exact wording** with only the first name swapped in (fallback "there"). Applicant email: subject "Your application was successful"; WhatsApp: "Hey {name}, it's Olly Henson here. Your application for the Heart Attractor Program was successful..." Both live in `lmContact()`; change them there, never reword them.
+- **Phone-first means a filter row, not a forced Trello board:** stage buttons with counts filter the list; a Board button gives the side-by-side columns for desktop. The Loom mind map must keep working underneath any pipeline view.
 
 - **The Overview uses Olly's own words, in his order.** He asked for "Opt-in page views, Opt-in page leads, Opt-in rate, Application page views, Applicants, Application rate", so those are the labels, at the top. When he describes what he wants to see, mirror his wording rather than inventing analyst labels ("conversion", "Request → opt-in").
 - **Every rate card says what it divides by** in its subtitle (e.g. "everyone who applied ÷ everyone who viewed the page"). Olly couldn't tell "Opt-in → application" from the page rates until it was spelled out.
@@ -183,6 +190,9 @@ Notes on fields that aren't obvious:
 ---
 
 ## 5. Known pitfalls (already hit once — don't repeat)
+- **index.html has CRLF line endings.** Multi-line Python replacements must convert `\n` to `\r\n` first or the match fails (2026-11-01).
+- **Don't write patch scripts through a Bash heredoc on this machine:** backslash escapes (`\r\n`, `\d`) came out as real line breaks and broke the JS. Write the .py with the Write tool, run it, then jscheck (2026-11-01).
+- **Adding Hub data from Claude (calendar items, to-dos):** `wrangler kv key get record` → edit `state` → bump `rev` + `updatedAt` → `kv key put`. Fetch fresh right before the put, and tell Olly to refresh before he presses Save on an open tab, or his tab overwrites it.
 
 - **Core tasks tab rules (2026-10-29/30, many rounds with Olly).** Its own tab (not on the Overview); Olly sets the tab order (To-do, Core tasks, Overview, …). Content counts come only from the four calendars, by the day each item goes out, so batching ahead works. Scores must be "on track", not punishing: today counts what's planned for today, past days what went out, and tracking starts at ROUTINE_START (2026-10-29). Every number on the card must match the task lists in every view (week grid = whole week, "left to do" = today + future gaps, past gaps shown as "missed"). Task lines are the next concrete step and show both steps per type (add to the calendar ✓, then publish/schedule). He needs to go back a day to catch up.
 - **Test scripts with backslashes:** sed/heredoc edits keep mangling `\n` and regexes. Write test scripts with the Write tool, and make index.html edits that contain backslashes with the Edit tool.
@@ -385,3 +395,4 @@ Notes on fields that aren't obvious:
 - **2026-10-29: Skill review.** Known pitfalls: migrations must set migSave so they reach KV; caption/hashtag changes need both the constants and a KV migration (reelTagsV1); the Looms API filters fields by prefix (Scale fields were missing for Love Scale applicants). Why: hashtags were changed for Olly in this session and Delta/Tammy's Love Scale answers weren't on their maps.
 - 2026-10-29: Core tasks tab (renderToday, #tab-core, state.coreTasks {date: {skool, whatsapp, looms, socials, content}}; old state.routine migrated in coreStore()); content targets counted from content.ideas/stories.ideas (posted) and emailCal/ytPosts (scheduled|sent). Olly asked for it as its own tab, not on the Overview.
 - **2026-10-30: Skill review.** Added the Core tasks rules (own tab, calendar-driven counts, on-track scoring, numbers matching the task lists, fresh start, two-step tasks, go back a day) and the backslash pitfall for test scripts. Why: Olly's corrections across the Core tasks build.
+- **2026-11-01: Skill review.** Added: Looms pipeline data model (stage derived from ticked steps); Never = no one-way status buttons (Olly couldn't untick WhatsApp reply); design rules = plain-word numbered checklist (he was confused what each meant), contact buttons auto-tick, prefilled email/WhatsApp in his exact words, filter row + Board for phone; pitfalls = CRLF, no heredoc patch scripts, adding data via wrangler KV. Removed: nothing overridden (the v1 stage dropdown/Archive button were replaced in code the same day).
