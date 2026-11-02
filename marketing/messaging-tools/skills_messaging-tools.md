@@ -32,6 +32,8 @@ Use this whenever Olly asks to change, fix, rebuild or find any tool listed in `
 6. Tell Olly in plain English what changed, and give the link.
 7. **Anything that draws an image** (the meme maker, canvases): render every template or layout in headless Edge before publishing and look at the screenshot. Serve a test copy with `python -m http.server` from a scratchpad folder (canvas `toDataURL` fails on `file://`), then run `msedge --headless=new --virtual-time-budget=15000 --screenshot=...`. In a test grid, give the images `align-self:flex-start`, or flex stretches them and the text looks squashed when it isn't.
 8. **Supporting files** (the meme templates) only reach the page if they're passed in `files` on the publish. Pass them again whenever one is added or changed.
+9. **Unicode escapes don't survive the Edit tool or heredocs (2026-11-02):** `\u201c` gets written as the real character. When code must compare or split on a curly quote, use `String.fromCharCode(8220)`.
+10. **Claude calls that write several items: one item per call, side by side** (`Promise.allSettled`, like the carousel writer), and show the real error (`e.code` / `e.message`) in the status. One call for 3 memes failed with a generic "Couldn't write memes just now" and gave nothing to go on (2026-11-02, fixed in v181).
 
 ### Content Idea Generator map
 - Tabs: Socials (Reels = authority headers, Stories = connection, Story memes), Email, Skool, YouTube (community posts, 2026-10-28). Each is a `channel` in `CHANNELS` (`reels`, `stories`, `memes`, `email`, `skool`, `ytpost`), with its own prompt (`buildPrompt` / `storyPrompt` / `emailPrompt` / `skoolPrompt` / `memePrompt` / `ytPrompt`), its own queue (`QUEUES`, `chanOf()`) and its own rejections.
@@ -41,7 +43,8 @@ Use this whenever Olly asks to change, fix, rebuild or find any tool listed in `
 - YouTube: `ytFill()` swaps `[LINK]` for the tracked `utm_medium=community` link (`YT_DEST`, `ytLink()`); square 1080 × 1080 image maker `ytImg` (Purple / Photo / Light).
 - **Load order:** code near the top that runs at load must never use a `const`/`let` declared further down. It throws and the whole generator stops working (2026-10-28, `HUB_URL`; now the function `hubUrl()`).
 - Small changes: publish with Artifact `edits` (changes the file and the page in one call), then `node tools/jscheck.js`. Test over `python -m http.server` from `marketing/` (canvas images); that server sends no charset, so non-ASCII looks mangled in tests only.
-- Meme images: `MEME_LAYOUTS` (template image, text boxes) → `memeEditor()` → `composeMeme()` → `downloads.save()`.
+- Meme images: `MEME_LAYOUTS` (template image, text boxes) → `memeEditor()` → `composeMeme()` → `downloads.save()`. Since v180-181 `memeEditor()` (Story Image Maker > Meme) has **Generate meme** (3 parallel `memePrompt` calls → Version 1/2/3, optional topic, "Let it pick the templates") and the template **Your own image** (`OWN_MEME`: upload any picture, top/bottom text).
+- Story Image Maker templates (v179): `KT` (fields + banks per template, text in localStorage `tsm-kt`), `KSTY` (the Template row for Engagement / Lifestyle / Aspiration / Results), `ktShow()`; draw keys `e_*`, `b_unpop`/`b_bnotes`/`b_wish`, `l_*`, `a_*`, `s_dyk`, `r_imsg`, `comment`. New belief styles go in `#tsm-bstyles`, new Lead gen layouts in `#tsm-layouts`; add them to the restore lists at boot.
 - Capabilities: `{sample: {images: true}, db: {}, downloads: true}` (images added 2026-10-28 for the Results share name/photo cover). Omit `capabilities` on redeploys unless adding one; a non-empty object replaces the whole set.
 
 ## 3. Process: when the core message changes (the update cascade)
@@ -93,7 +96,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - "The right people start showing up", never "you'll meet someone". No time-bound guarantees ("in 30 days").
 - What to expect = tangible good things that start happening, not what stops happening.
 - **Short and simple: a couple of sentences per line at most** (Olly, 2026-10-28: "Simplify… a couple of sentences per line"). If a glance row or card needs a paragraph, it isn't decided yet.
-- **The mechanism line, word for word:** "The Attraction Formula puts you in the right emotional state around love, so that you attract a consistent, committed relationship where you feel safe being yourself." The 2 steps (find your emotional resonance, embody it every day) are saved for the Loom, not content.
+- **The mechanism line, word for word:** "The Attraction Formula puts you in the right emotional state around love, so that you attract a consistent, committed relationship where you feel safe being yourself." Since 2026-10-30 content teaches 3 steps (get clear on who you want, define the emotions, embody them daily); the named problem is intellectualization and the need is emotional resonance (the connection, never "a practice").
 - About page: lead with the promised land and positive outcomes, not a list of pains.
 - The community is about shifting into the right emotional state. The meditation is one part of it, not the whole offer.
 
@@ -149,7 +152,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - Every idea card keeps the "Done · remove from ideas" button (clears it from the feed; not a rejection).
 
 **Carousels (Olly, 2026-10-29, built over many rounds):**
-- Style is his raw inspiration (justdavidboland "belief" carousel): white text box per line over a photo of Olly, short beats, a six-slide belief shift ending on Comment EMOTION (the carousel-only keyword, tracked as utm_content=emotion_keyword). Ask for or wait for his visual reference before designing a new format: the first designed-slides version missed the raw look.
+- Since 2026-10-30 carousels follow The Perfect Reel in 8 slides (hook, who, symptom, intellectualization, emotional resonance, 3 steps, proof, Comment EMOTION) with the Perfect Reel caption, and every idea shows a slide-by-slide preview. Style is his raw inspiration (justdavidboland "belief" carousel): white text box per line over a photo of Olly, short beats, ending on Comment EMOTION (the carousel-only keyword, tracked as utm_content=emotion_keyword). Ask for or wait for his visual reference before designing a new format: the first designed-slides version missed the raw look.
 - Everything for a slide sits with that slide in the Carousel maker: live preview beside its controls, photo upload, "Another still" / "Choose a still", text size, left/right and up/down sliders, drag on the preview, and its Gemini prompt with a Copy button. Don't put per-slide tools on the idea card or at the top where he has to scroll to check.
 - "Add to queue" for carousels is the finished carousel from the maker, never the first idea.
 - Downloads are one zip of every slide, drawn fresh at that moment (an added slide was missed when saving the last drawn canvases one by one).
@@ -158,6 +161,8 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 **Before publishing a change to a tool Olly is part-way through using (2026-10-29: "don't delete what I've put right now"):** check his work is saved (read the db collection) and tell him what's safe and what isn't (e.g. stills in memory) before republishing; hold the publish until he confirms he's saved.
 
 **Every image maker that makes a Story sends it to the Hub's Stories calendar** with the image, a title, the type and 3 song ideas (the meme editor was missing this, 2026-10-29).
+
+**Reel hooks (Olly, 2026-10-30):** use only hooks proven in his outliers (the 8 in REEL_OPENERS, with their numbers), each given a slight variation in wording or order. Never add generic creator-guide openers ("Why you keep...", "The real reason...") without flagging that they are untested; he asked "were these in the outliers?" when they slipped in.
 
 **Reel wording:** the generator says "hooks", not headers; each hook comes with a second line that names something she has felt. The hook = text above his head for the first 3 to 5 seconds + his first spoken line + caption line 1.
 
@@ -169,7 +174,10 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 
 **Editing the generator file safely (2026-10-29: a failed heredoc edit emptied the 320KB file):** for scripted edits, write the Python file with the Write tool, use raw strings for anything with backslashes, write to a .tmp file and `os.replace()` it, then run jscheck. Before publishing to the artifact, the live version must have been read in this session (Artifact read, or the refusal's diff counts). To recover an emptied file: Artifact read of the live version, drop line 1 and the last 2 lines.
 
+- **Writing and image-making happen in one place (Olly, 2026-11-02):** "I just want it to create the meme and the image together with the ability to add my own within that same generator." Any image maker that needs words gets a Generate button that fills the image directly, keeps every line editable, and lets Olly use his own text or picture.
+
 ### Never
+- Never make Olly go to another tab to get the words for an image he's making (meme text lived in the hidden Memes channel while the Story maker only had a blank editor, 2026-11-02).
 
 - Never invent statistics, research findings, proof or testimonials. The "68% of relationships start as friendships" claim was wrong and had to be removed. Check research claims and say how sure you are.
 - Never add a detail and present it as if it came from source material. If something isn't in what Olly gave you, flag it. ("Being hurt before" and "brushes off compliments" weren't in Catrin's messages.)
@@ -189,7 +197,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - Never sound like "Think positive. Just change your thoughts. It's easy." It's the advice the audience finds most annoying (survey, 2026-10-22). Never call the change easy.
 - Never write "free trial" / "try it free for 7 days" calls to action any more (trial closed 2026-10-23). Reels end with "Comment 'VIDEO' (or 'FEELING', which replaced 'SCALE' on 2026-10-28) below, or DM me…" (2026-10-26), never ATTRACTION or RESONANCE.
 - Never write platform-specific spoken calls to action on Reels. Olly films each Reel once and posts it everywhere ("I'll always ask people to comment or DM, can't work around that"); only captions and how replies are handled change per platform, and the captions live in the Hub calendar.
-- Never put Reel captions in the generator. Reels = ideas and talking points; the Hub's day panel picks the caption (VIDEO/SCALE × Instagram/Facebook/TikTok/YouTube).
+- **Reels = The Perfect Reel (Olly, 2026-10-30, replaces "no captions in the generator").** Every Reel is the 8 parts from his outliers (hook, who, symptom, name = intellectualization, missing = emotional resonance, 3 steps, proof, CTA) plus the outlier-style caption with the keyword (FEELING/VIDEO switch per Reel). The caption text must match the Hub's REEL_BODY + ask exactly (curly quotes). Source: marketing/reel-stats/ultimate-reel.md; patch script in the session scratchpad (cig_perfect_reel.py + reel_module.js).
 - Never suggest breakup, heartbreak or explicit songs for Story music, and never invent a song. Real, well-known, warm and hopeful (MUSIC_TASTE).
 - Never replace part of the core message when Olly adds a point (the fear root, 2026-10-26). Add it alongside: "not to change it at all, but to add to it".
 - Never change the core messaging off one survey response.
@@ -310,3 +318,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - 2026-10-29: Carousels channel + Carousel maker (cImg, before ytImg in the file). New layout rules apply: every carousel slide uses the shared gallery for its cover photo and has a Text size control.
 - 2026-10-29: Carousels rebuilt in Olly's raw style (his inspiration screenshots): white text boxes over his photo, short beats, six-slide belief shift ending on Comment FEELING, 1080x1440. Lesson: ask for or wait for Olly's visual reference before designing a new format; the first designed-slides version missed the raw look he wanted.
 - **2026-10-29/30: Skill review 4.** Added Carousels rules (raw style from his reference, per-slide tools beside each slide, queue the finished carousel, one zip, save + autosave + wait for uploads), "check his work is saved before publishing a change to a tool he's using", Story calendar parity for every image maker, and "hooks" wording with a second line. Why: corrections across the carousel build (v156 to v174) and the meme calendar gap.
+
+- **2026-11-02 · v174-178:** Perfect Reel / carousels / Reel stills / CORE went live (v174). Carousel text = one joined Instagram-style white shape per beat (blob(), v175). Story memes channel hidden: memes are made in the Story Image Maker's Meme tab (v176). Stories channel = Story Image Maker only: form, Generate, balance line, ideas list and queue/outliers hidden on Stories, Image Maker opens itself (v178; code kept, just hidden). Next: more Story templates (plan in NEXT.md).
+
+- **2026-11-02: Skill review.** Process: unicode escapes turn into real characters through the Edit tool/heredocs (use `String.fromCharCode`); multi-item Claude writes = one item per call in parallel with the real error shown (the 3-meme call failed). Map: v179 Story templates (`KT`, `KSTY`, `ktShow`) and the v180-181 meme Generate + Your own image. Rules: writing and image-making happen in one editor (Olly's meme request). Never: send Olly to another tab for the words of an image. Nothing overridden.

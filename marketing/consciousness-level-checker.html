@@ -122,7 +122,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
 .tabs button{font:600 14px/1 var(--f-body);background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:13px 12px;cursor:pointer;margin-bottom:-1px;white-space:nowrap;flex:none}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--heart)}
-.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 @media (max-width:1000px){.seg{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.seg{grid-template-columns:1fr}}
 .seg button{font:inherit;text-align:left;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
@@ -174,6 +174,34 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .subopt{text-align:left;font:inherit;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;color:inherit}
 .subopt b{font-size:15px}.subopt span{font-size:13px;opacity:.75}.subopt[aria-pressed="true"]{border-color:var(--heart,#d946ef)}
 .idea p.post,.idea p.ebody{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.prl{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:760px){.prl{grid-template-columns:minmax(0,1fr)}}
+.prl-left{display:flex;flex-direction:column;gap:12px;position:sticky;top:12px}
+@media (max-width:760px){.prl-left{position:static}}
+.prl-phones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.prl-shot{margin:0;display:flex;flex-direction:column;gap:4px}
+.prl-shot figcaption{font:500 10px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
+.prl-phone{position:relative;width:100%;aspect-ratio:9/16;border-radius:14px;overflow:hidden;container-type:inline-size;background:#222 center/cover no-repeat;box-shadow:0 8px 20px -10px rgba(40,10,60,.45)}
+.prl-hook,.prl-live{position:absolute;left:50%;top:13%;transform:translateX(-50%);width:max-content;max-width:82%;background:#fff;color:#000;text-align:center;border-radius:2.2cqw;text-wrap:balance;white-space:pre-wrap;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.prl-hook{font-weight:800;font-size:7.4cqw;line-height:1.22;padding:2.2cqw 3.4cqw}
+.prl-live{font-weight:700;font-size:5.8cqw;line-height:1.25;padding:1.6cqw 3cqw}
+.prl-parts{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.prl-part{display:grid;grid-template-columns:30px minmax(0,1fr);gap:2px 10px}
+.prl-part .n{grid-row:span 3;font:700 14px/30px var(--f-body);text-align:center;width:30px;height:30px;border-radius:8px;background:var(--heart-soft);color:var(--heart)}
+.prl-part.key .n{background:var(--heart);color:var(--heart-fg)}
+.prl-part h4{margin:0;font-size:14px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}
+.prl-part h4 small{font:500 11px var(--f-mono);color:var(--muted)}
+.prl-part .why{font-size:12.5px;color:var(--muted)}
+.idea .prl-part .txt{white-space:pre-wrap;border-left:3px solid var(--line);padding:2px 0 2px 10px;margin-left:0;min-width:0;font:400 15px/1.55 var(--f-body)}
+.idea .prl-part .hook.txt{font-weight:700;font-size:16px}
+.idea textarea.prl-cap{width:100%;min-height:220px;font:inherit;font-size:14px;line-height:1.5;color:inherit;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
+.crp{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.crp-f{margin:0;flex:none;width:170px;container-type:inline-size;display:flex;flex-direction:column;gap:4px;scroll-snap-align:start}
+.crp-f figcaption{font:500 10px/1.2 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center}
+.crp-s{position:relative;aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:#222 center/cover no-repeat;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5cqw;padding:7cqw;box-shadow:0 6px 16px -8px rgba(40,10,60,.45)}
+.crp-s span{background:#fff;color:#000;font:600 6.4cqw/1.25 system-ui,-apple-system,"Segoe UI",sans-serif;padding:1.6cqw 2.8cqw;border-radius:1.6cqw;text-align:center;max-width:100%}
+#reelDraftsBox summary{cursor:pointer}
+#reelDraftsBox[hidden]{display:none}
 </style>
 
 <div class="wrap">
@@ -195,9 +223,9 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
     <main class="stack" style="gap:20px">
       <section class="card stack">
         <div class="seg" role="group" aria-label="What are you making?">
-          <button type="button" id="ch-reels" aria-pressed="true"><b>Reels · Authority</b><span>Your argument and philosophy: the ideas and talking points. Captions are picked in the Hub calendar.</span></button>
+          <button type="button" id="ch-reels" aria-pressed="true"><b>Reels · The Perfect Reel</b><span>The full Reel in the structure of your best performers: hook, the 8 parts and the caption, ready to film and send to the calendar.</span></button>
           <button type="button" id="ch-stories" aria-pressed="false"><b>Stories · Connection</b><span>Your life and your story, so people feel you understand them.</span></button>
-          <button type="button" id="ch-memes" aria-pressed="false"><b>Story memes · Connection</b><span>A popular meme template on a Story: the old belief next to the right emotional state.</span></button>
+          <button type="button" id="ch-memes" aria-pressed="false" hidden><b>Story memes · Connection</b><span>A popular meme template on a Story: the old belief next to the right emotional state.</span></button>
           <button type="button" id="ch-carousels" aria-pressed="false"><b>Carousels · Authority</b><span>Raw, belief-shifting feed posts: white text boxes over your photo, ending on Comment EMOTION.</span></button>
         </div>
         <div class="postbar" id="postBar">
@@ -210,7 +238,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           <div class="pbcta" id="pbCta"></div>
         </div>
         <p class="hint" id="skoolNote" hidden>Posts for members who've already joined and get it. A good week mixes about two value posts (philosophy, teaching), a few engagement and accountability posts, and one wins or recognition post. The biggest drop-off is in the first two weeks, so lean on "What's normal" and "Welcome" posts for new members.</p>
-        <p class="hint" id="carouselNote" hidden>Belief-shifting carousels in your raw style: white text boxes over a photo of you, six slides that shift one belief and end on Comment EMOTION. Generate, then press Make carousel on an idea to turn it into finished slides. The last slide asks people to comment or DM EMOTION, the carousel-only keyword, so ManyChat tracks carousel sign-ups separately from Reels (FEELING).</p>
+        <p class="hint" id="carouselNote" hidden>Belief-shifting carousels in your raw style: white text boxes over a photo of you, eight slides that follow The Perfect Reel (hook, who it's for, her symptom, intellectualization, emotional resonance, the 3 steps, proof) and end on Comment EMOTION. Generate, then press Make carousel on an idea to turn it into finished slides. The last slide asks people to comment or DM EMOTION, the carousel-only keyword, so ManyChat tracks carousel sign-ups separately from Reels (FEELING).</p>
         <p class="hint" id="memeNote" hidden>Popular meme templates that show the old belief (learn everything first) next to the new one (get into the right emotional state). Pick a template and you get the text for each panel, sized for a Story. Turn it into the finished image in the Story Image Maker below (Meme), or with "Make a meme from scratch". The joke is on the old approach, never the person.</p>
         <p class="hint" id="emailNote" hidden>Daily emails for everyone who signed up for the free training (the <b>daily email</b> tag in GHL), 3 to 7 a week. Mostly belief breaking and free value, with connection (your story, everyday moments) worked into them. Most have no ask. Every so often one invites people to apply for The Heart Attractor Program: send those mainly to your most engaged readers. Pick Mixed week and ask for a few at once to get a ready-made week.</p>
         <p class="hint" id="balance">Reels show you can help them. Stories show you understand them. Keep both going so people neither friend-zone you nor feel intimidated.</p>
@@ -274,7 +302,12 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
                 <button type="button" data-layout="notes" aria-pressed="false">Notes app</button>
                 <button type="button" data-layout="myth" aria-pressed="false">Myth-buster</button>
                 <button type="button" data-layout="scalecheck" aria-pressed="false">Feeling Finder result</button>
+                <button type="button" data-layout="comment" aria-pressed="false">Comment keyword</button>
               </div>
+            </div>
+            <div class="tsmg" id="tsm-kstyGroup" hidden>
+              <span class="label">Template</span>
+              <div class="tsmlay" id="tsm-ksty"></div>
             </div>
             <div class="tsmg" id="tsm-pgStyleGroup" hidden>
               <span class="label">Style</span>
@@ -294,6 +327,9 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
                 <button type="button" data-bstyle="post" aria-pressed="false">Text post</button>
                 <button type="button" data-bstyle="photo" aria-pressed="false">Photo</button>
                 <button type="button" data-bstyle="dm" aria-pressed="false">DM reply</button>
+                <button type="button" data-bstyle="unpop" aria-pressed="false">Unpopular opinion</button>
+                <button type="button" data-bstyle="bnotes" aria-pressed="false">Notes app</button>
+                <button type="button" data-bstyle="wish" aria-pressed="false">Things I wish I knew</button>
               </div>
               <div class="tsmg" id="tsm-leadWrap">
                 <label class="label" for="tsm-lead">Line at the top</label>
@@ -335,6 +371,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
                 <button type="button" data-sci="heart" aria-pressed="false">Heart rhythm</button>
                 <button type="button" data-sci="table" aria-pressed="false">Two states</button>
                 <button type="button" data-sci="photo" aria-pressed="false">Photo</button>
+                <button type="button" data-sci="dyk" aria-pressed="false">Did you know?</button>
               </div>
               <div class="tsmg" id="tsm-sciWaves">
                 <label class="label" for="tsm-sciW1">First wave: label</label><input type="text" id="tsm-sciW1">
@@ -362,6 +399,11 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
               <label class="label" for="tsm-sciMid" id="tsm-sciMidLbl">Chart</label><input type="range" id="tsm-sciMid" min="-300" max="300" step="10" value="0">
               <label class="label" for="tsm-sciBot">Bottom line</label><input type="range" id="tsm-sciBot" min="-300" max="300" step="10" value="0">
               <div class="row"><button type="button" class="btn small" id="tsm-sciReset">Reset positions</button></div>
+            </div>
+            <div class="tsmg" id="tsm-ktGroup" hidden>
+              <span class="label">Text</span>
+              <div class="tsmg" id="tsm-ktFields"></div>
+              <div class="row"><button type="button" class="btn small" id="tsm-ktNew">New text</button></div>
             </div>
             <div class="tsmg" id="tsm-hookGroup">
               <label class="label" for="tsm-hook" id="tsm-hookLbl">Hook</label>
@@ -450,6 +492,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           </div>
         </div>
       </details>
+      <details class="card" id="reelDraftsBox"><summary><b>Reel drafts</b> (<span id="rdN">0</span>) <span class="hint">Versions you saved with Save draft. Open one to keep editing it.</span></summary><ul class="plain" id="rdList"></ul></details>
       <div id="ideas" class="stack" style="gap:16px"></div>
     </main>
 
@@ -501,7 +544,10 @@ Analogy (use it sparingly: at most one piece in ten, and never in an email unles
 Real cause (THE problem, say it like the FitPro post says "no authority"): You don't feel it can happen for you.
 How it shows up: Every time they think about dating or relationships they feel dread, despair, frustration or impatience, and their body reacts: a shift in heartbeat, a bit of worry, tightness in the chest or throat, or trying to ignore it. Those reactions attract the wrong people and keep the right ones away.
 Why it matters: We resonate with people we emotionally connect with. That's why someone can tick every box on paper and still feel wrong when you're actually with them. You can learn about relationships until you're blue in the face, but only shifting your emotional state changes it.
-Reel flow (Olly's own example, freestyle it): 1 the problem: you don't feel it; 2 the symptoms: the emotions and what the body does; 3 you know it intellectually but don't believe it; 4 we resonate with people we emotionally connect with, so someone can tick every box and still feel wrong; 5 learning won't change it, shifting your emotional state will; 6 The Feeling Finder finds the emotion and gives a plan of action, comment FEELING.
+Reel flow: every Reel follows THE PERFECT REEL (hook, who it's for, her symptom, the problem named as intellectualization, what she needs: emotional resonance, the 3 steps, proof, call to action). The 3 steps are taught in content: get clear on exactly who you want, define the emotions you'd feel with them, embody those emotions every day.
+THE ARGUMENT IN 14 POINTS (Olly's daily reference, 2026-10-30; it adds to everything above and wins where they differ):
+1 Who: successful professional women, 30s and 40s, years of inner work. 2 Promised land: a committed relationship that's still fun, where she feels safe being herself. 3 Pain: she knows exactly what she wants, but nothing's happening while friends settle down. 4 Bleeding neck pain: she doesn't really believe it can happen for her. 5 Old belief: "If I keep learning and working on myself, it'll happen." 6 Crack: her friends met their person without doing any of the work. 7 Analogy (sparingly): reading the radio manual instead of changing the station. 8 Real cause: intellectualization, thinking about love instead of feeling it (the psychologist's term for using thinking and analysing to deal with emotional situations; her mind protecting her from getting her hopes up again, so it's kind, never blaming). 9 What's missing: emotional resonance, the emotional connection two people feel when they click (the connection, never "a practice"). 10 Solution: The Attraction Formula puts her in the right emotional state around love, in 3 steps: get clear on who you want, define the emotions, embody them every day. The Feeling Finder helps with steps 1 and 2. 11 New belief: feel it first, then the belief follows, then the relationship happens. 12 Proof: how Olly met his wife. 13 What to expect: the right people start showing up, she feels more like herself, dating is fun again. 14 No-brainer: no more books, courses or dating rules, just 10 minutes a day.
+How often: name "intellectualization" in about one piece in three, never in every piece; when you use it, explain it in one plain line. Reels and carousels always name it (their structure needs it).
 The root: it all stems from fear. Impatience, frustration, envy, exhaustion, despair and hopelessness are all low, survival-based emotions on the emotional scale, and they're all fear. In that fear people try to learn more (another book, course or attachment-styles video), but learning doesn't touch the fear, so they're still in the same emotional state every single day. Moving up the emotional scale is the practical way out, a little every day. When you move up: the quality of the people you attract goes up, you feel better about yourself, you feel more authentically you, dating becomes fun and spontaneous again rather than a chore, and things play out naturally. This adds to the message; it never replaces it.
 Successful women, the sharper who (added 2026-10-29; adds to the message, never replaces it): mostly successful, professional women in their 30s and 40s. Everything else is sorted (work, friends, health); love is the one area that hasn't worked despite all the effort. They got where they are by planning, learning and working harder, so they've done the same with love, but love doesn't respond to effort or knowledge. It responds to how they feel. The skills that built their career (planning, researching, fixing, staying in control) keep them in their heads about love. You can't out-work this one. Use "successful" as a frame ("you've got everything else sorted"), never a label they must claim, and never "high achiever".
 The opposition (be the opposite): other coaches tell successful women something's wrong with them: "you're too masculine, soften into your feminine", "treat dating like a strategy, learn the rules", "heal your wounds first". We say nothing about who you are needs to change or soften, more rules is more thinking, and there's nothing to fix first (your friends didn't). Position against the advice, never name or knock the coaches, never knock therapy.
@@ -1165,6 +1211,33 @@ const cImg = (function(){
       vidMsg.textContent = "Couldn't read that video here. Try an MP4 (iPhone: Settings, Camera, Formats, Most Compatible) or a shorter clip.";
     } finally { URL.revokeObjectURL(url); }
   }
+  // Your Reels (Olly, 2026-10-30): 12 stills from each of his best-looking Instagram Reels, captions cropped out and eyes
+  // open (tools/reel_stills.py), published next to the page in reel-stills/. Tapping one loads its stills like an uploaded video.
+  const libWrap = el("div", "stack"), libRow = el("div", "tsmpicks"), libMsg = el("span", "status", "");
+  libWrap.style.gap = "6px";
+  libWrap.append(el("span", "label", "Or use stills from one of your Reels"), el("p", "hint", "Your best-looking Reels, with the captions cropped out. Tap one to load its 12 stills, then Pick a frame for every slide or tap a still."), libRow, libMsg);
+  vidWrap.insertBefore(libWrap, vidRow);
+  const toData = b => new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = () => ok(""); r.readAsDataURL(b); });
+  fetch("reel-stills/manifest.json").then(r => r.ok ? r.json() : []).catch(() => []).then(list => {
+    if (!Array.isArray(list) || !list.length) { libWrap.hidden = true; return; }
+    list.forEach(item => {
+      const b = el("button"), im = el("img"); b.type = "button"; im.src = item.thumb; im.alt = ""; im.loading = "lazy"; b.appendChild(im);
+      b.title = (item.date || "") + (item.views ? " · " + Number(item.views).toLocaleString() + " views" : "");
+      b.setAttribute("aria-label", "Stills from your Reel " + b.title);
+      b.onclick = async () => {
+        libRow.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+        libMsg.textContent = "Loading the stills…";
+        try {
+          const got = (await Promise.all((item.stills || []).map(u => fetch(u).then(r => r.ok ? r.blob() : null).then(x => x ? toData(x) : "").catch(() => "")))).filter(Boolean);
+          if (!got.length) throw new Error("none");
+          frames = got; fromBlob = {}; idb.set("frames", frames); idb.set("fromBlob", fromBlob);
+          showFrames(); vidPick.hidden = !st.slides.length; buildEditors();
+          libMsg.textContent = got.length + " stills loaded below.";
+        } catch { libMsg.textContent = "Couldn't load those stills. Try again."; }
+      };
+      libRow.appendChild(b);
+    });
+  });
   idb.get("frames").then(f => {
     if (!Array.isArray(f) || !f.length || frames.length) return;
     frames = f; idb.get("fromBlob").then(m => { fromBlob = m || {}; showFrames(); if (st.slides.length) { sync(); buildEditors(); } });
@@ -1224,6 +1297,19 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
     String(text || "").split(/\s+/).filter(Boolean).forEach(w => { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t; });
     if (line) out.push(line); return out;
   }
+  // One white shape per beat, like Instagram's own text background (Olly, 2026-11-02: the per-line boxes left notches
+  // between lines). Lines join up, outside corners are rounded and a step to a shorter line curves inwards.
+  function blob(ctx, x, y, ws, lh, r){
+    const R = ws.slice(), n = R.length;
+    for (let i = 1; i < n; i++) if (Math.abs(R[i] - R[i - 1]) < r * 0.8) { const mx = Math.max(R[i], R[i - 1]); R[i] = mx; for (let j = i - 1; j >= 0 && Math.abs(R[j] - mx) < r * 0.8; j--) R[j] = mx; }
+    const p = [[x, y], [x + R[0], y]];
+    for (let i = 0; i < n - 1; i++) if (R[i + 1] !== R[i]) p.push([x + R[i], y + (i + 1) * lh], [x + R[i + 1], y + (i + 1) * lh]);
+    p.push([x + R[n - 1], y + n * lh], [x, y + n * lh]);
+    const d = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]), m = p.length;
+    ctx.beginPath(); ctx.moveTo((p[m - 1][0] + p[0][0]) / 2, (p[m - 1][1] + p[0][1]) / 2);
+    for (let k = 0; k < m; k++) { const a = p[(k + m - 1) % m], b = p[k], c = p[(k + 1) % m]; ctx.arcTo(b[0], b[1], c[0], c[1], Math.min(r, d(a, b) / 2, d(b, c) / 2)); }
+    ctx.closePath();
+  }
   // the biggest text size where every beat fits in the space
   function layout(ctx, beats, own){
     const k = st.size / 100 * (own || 1), maxW = W - 120;
@@ -1256,10 +1342,7 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
     const x = Math.max(16, Math.min(W - widest - 16, 56 + (Number(sl.dx) || 0)));
     let y = Math.min(H - L.h - 40, Math.max(40, H * 0.56 - L.h / 2 + st.dy + (Number(sl.dy) || 0)));
     L.blocks.forEach(ls => {
-      ls.forEach((line, i) => {
-        const w = ctx.measureText(line).width + L.pad * 2, top = y + i * L.lh;
-        ctx.fillStyle = "#ffffff"; rr(ctx, x, top, w, L.lh + 1, L.sz * 0.24); ctx.fill();
-      });
+      ctx.fillStyle = "#ffffff"; blob(ctx, x, y, ls.map(line => ctx.measureText(line).width + L.pad * 2), L.lh, L.sz * 0.3); ctx.fill();
       ls.forEach((line, i) => { ctx.fillStyle = "#111111"; ctx.fillText(line, x + L.pad, y + i * L.lh + L.lh * 0.72); });
       y += ls.length * L.lh + L.gap;
     });
@@ -1762,7 +1845,7 @@ function renderPostBar(){
     box.appendChild(el("h4", "", "Say at the end of the Reel (the same on every platform)"));
     item("Sending them to the free training", ctaFor("reel", "instagram", "video").spoken, true);
     item("Sending them to The Feeling Finder", ctaFor("reel", "instagram", "scale").spoken, true);
-    box.appendChild(el("p", "hint", "When you post, open the day in the Hub's Reels calendar: pick VIDEO or FEELING to match what you said, then the platform, and copy that caption."));
+    box.appendChild(el("p", "hint", "Each Reel comes with its caption (FEELING or VIDEO, switch it on the Reel). Add to calendar sends the caption to the Hub with it."));
     return;
   }
   const kind = "story", c = ctaFor(kind);
@@ -1789,6 +1872,8 @@ function setChannel(ch, keepType, keepFormat){
   $("ch-carousels").setAttribute("aria-pressed", String(channel === "carousels"));
   $("reelCtaWrap").hidden = true;
   $("postBar").hidden = channel !== "reels";
+  $("reelDraftsBox").hidden = channel !== "reels";
+  $("hookWrap").hidden = channel === "reels";
 
   $("storyCtaWrap").hidden = channel !== "stories";
   $("countWrap").hidden = channel === "stories";
@@ -1805,6 +1890,9 @@ function setChannel(ch, keepType, keepFormat){
   $("tab-email").setAttribute("aria-selected", String(channel === "email"));
   $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email";
   document.querySelector(".seg").hidden = !ig; $("balance").hidden = !ig;
+  // Stories (Olly, 2026-11-02): no idea writer, just the Story Image Maker
+  { const sty = channel === "stories"; if (sty) $("balance").hidden = true; document.querySelector(".form").hidden = sty; $("go").parentNode.hidden = sty;
+    $("ideas").hidden = sty; document.querySelector("aside").hidden = sty; $("panel-instagram").style.gridTemplateColumns = sty ? "minmax(0,1fr)" : ""; if (sty) $("tsmBox").open = true; }
   $("tsmBox").hidden = channel !== "stories" && channel !== "memes"; $("skoolNote").hidden = channel !== "skool"; $("memeNote").hidden = channel !== "memes"; $("memeBlank").hidden = channel !== "memes";
   if (ig) lastIg = channel;
   $("go").textContent = CHANNELS[channel].button;
@@ -1820,7 +1908,7 @@ function setChannel(ch, keepType, keepFormat){
   PARTS.forEach(([v, l]) => $("part").add(new Option(l, v)));
   const f = store.get("cig-form", null);
   if (f) {
-    setChannel(f.channel || (POST_TYPES[f.type] && POST_TYPES[f.type].group === "Connection" ? "stories" : "reels"), f.type, f.format);
+    setChannel(f.channel === "memes" ? "stories" : f.channel || (POST_TYPES[f.type] && POST_TYPES[f.type].group === "Connection" ? "stories" : "reels"), f.type, f.format);
     ["part","storyCta","emailCta","ytCta","topic","count"].forEach(k => { if (f[k] !== undefined) $(k).value = f[k]; });
     syncHooks(f.hook || "");
   } else setChannel("reels");
@@ -1865,40 +1953,7 @@ function buildPrompt(){
   if (channel === "email") return emailPrompt(type, t, fmt, n, part, topic);
   if (channel === "ytpost") return ytPrompt(type, t, fmt, n, part, topic);
   if (channel === "carousels") return carouselPrompt(type, t, fmt, n, part, topic);
-  const goal = "Stop the right person scrolling so they watch the Reel. Olly freestyles the rest and adds the call to action himself, so write the header only.";
-  return `You write Instagram Reel hooks for Olly Henson (The Attraction Formula community), who helps singles attract the right partner by shifting into the right emotional state.
-${CORE}
-
-${RULES}
-
-THIS REQUEST
-Content type: ${type} (${t.group}). ${t.desc}
-How to handle this type: ${t.rule}
-Format: ${fmt || "pick the best fit from: " + t.formats.join(" / ")}
-Part of the message to focus on: ${part}
-Goal: ${goal}
-${topic ? "Topic or angle: " + topic : ""}
-${hookBrief()}
-THE HOOK (the most important part)
-The hook is the text above Olly's head for the first 3 to 5 seconds of the Reel (and on the cover), he reads it out as his first sentence, and it's the first line of the caption. So it must:
-- read well on its own on a cover AND sound natural said out loud (a full, simple sentence, no "POV:", no colons, no fragments)
-- be 5 to 11 words, so it fits in 2 or 3 short lines on screen
-- name the exact outcome they want (your soulmate, your person, someone who wants a long-term committed relationship, the right partner) or the pain they're stuck in (time wasters, people who won't commit, being single after all the inner work)
-- add a reason to watch: a better way, a surprise or the science (scientifically, the fastest way, without more dating rules, the real reason)
-- speak straight to the viewer: "you" and "your" ("meet your person", "why you keep attracting…"), never "most people", "they" or "their person". It should feel personal, as if Olly is talking to the one person watching
-- give permission rather than tell them they're wrong, and never knock therapy or the healing work they've done ("You don't need to heal everything first to meet your person", not "Healing yourself first isn't how most people meet their person")
-- optionally end with one emoji that fits (🧪 for science, ❤️, 🧠). No dashes; use a comma if it needs a pause.
-Proven openers to work from (vary them, never copy): "How to [outcome] scientifically" · "The scientific way to [outcome]" · "The fastest way to [outcome]" · "How to [outcome] without [thing they're tired of]" · "Why you keep [pain]" · "The real reason you [pain]" · "What actually [makes the outcome happen]" · "The one thing [people who found their person] did differently" · "Stop [old habit] if you want [outcome]".
-Examples of the standard: "You don't need to heal everything first to meet your person" · "How to attract your soulmate, scientifically 🧪" · "The fastest way to find someone who wants a long-term committed relationship" · "Why you keep attracting people who won't commit".
-Give ${n} different hooks. Make each one genuinely different in angle and opener. For each hook also give the second line: the one sentence Olly says straight after it, naming something the viewer has actually felt or lived (the reread text, the friend who just got engaged, the dread before a date), so they stay. No talking points or call to action: he freestyles the rest.
-
-For each give:
-- hook: the hook
-- say: the second line
-- stage: which part of the core message it points to, in a few words${type === "Research" ? `
-- research: 3 to 5 short bullet points summarising the study this header is built on, for Olly to glance at while filming: who was studied, what they did, what was found (exact numbers from the research list only), one honest caveat (e.g. small study, run by HeartMath) and the source in brackets (authors, year). Plain words, no more than about 15 words each.` : ""}
-
-Reply as JSON: {"ideas":[{"hook":"","say":"","stage":""${type === "Research" ? ',"research":[]' : ""}}]}`;
+  return reelPrompt(type, t, fmt, n, part, topic);
 }
 function ytPrompt(type, t, fmt, n, part, topic){
   const cta = $("ytCta").value, name = type.replace("YouTube · ", "");
@@ -2033,7 +2088,7 @@ For each email give:
 
 Reply as JSON: {"ideas":[{"hook":"","preview":"","body":"","ps":"","cta":"none","technique":"","stage":"","why":""}]}`;
 }
-/* Carousel ideas: six slides of short beats, then the caption. */
+/* Carousel ideas: eight slides that follow The Perfect Reel, then the caption (2026-10-30; was six belief-shift slides). */
 function carouselTypes(){ return Object.keys(POST_TYPES).filter(k => POST_TYPES[k] && POST_TYPES[k].group === "Carousel" && POST_TYPES[k].rule !== "MIXED").map(k => k.replace("Carousel · ", "")); }
 function carouselPrompt(type, t, fmt, n, part, topic){
   const mixed = t && t.rule === "MIXED";
@@ -2047,15 +2102,18 @@ BELIEF-SHIFTING CAROUSELS (Olly's style, follow it exactly)
 - The look is raw: white text boxes over a photo of Olly, like he's talking to you. No headings, no titles, no numbered lists, no emojis, no hashtags on the slides.
 - Each slide is 2 to 5 short beats. A beat is one sentence or phrase (3 to 22 words) and gets its own text box. Beats can run on into the next with "...", can start lowercase, and can quote things people say or hear.
 - Who reads them: driven, self-aware women in their 30s and 40s who've done years of inner work and know the theory. A little provocative is good; mean or preachy never.
-- Six slides, this arc:
-  1. Cover, 2 beats: a belief or situation they recognise, then the twist that makes them swipe. Example shape (never copy it): "You know exactly what you want in a partner." / "And that's why it isn't happening."
-  2. Their world, 3 to 5 beats: things they say, hear or tell themselves, in quotes, then a beat naming what they actually want ("But you want someone who actually chooses you, right?").
-  3. The contrast, 2 to 4 beats: what they've been doing versus what actually changes it (knowing versus feeling). At most one word in CAPITALS.
-  4. The new belief, 2 to 4 beats: the reframe, said gently ("Not in a harsh way..."), so they can see it: when you embody the emotion of the relationship before it happens, it unfolds naturally with someone who feels the same.
-  5. The real cause and the cost, 3 to 5 beats: they don't feel it can happen for them, and until that shifts the same cycle continues. Name the cycle concretely.
-  6. The call to action, 2 to 4 beats: The Feeling Finder in one line (it finds the exact emotion that will attract their perfect relationship, in 2 minutes), then: Comment "EMOTION" and I'll send it to you.
+- Eight slides that follow THE PERFECT REEL, the structure of Olly's best-performing Reels, in this order:
+  1. Cover (hook), 2 beats: the outcome plus "scientific", "fastest" or "better than", then a beat that makes them swipe. Shape (never copy it): "The scientific way to attract a committed relationship." / "And why knowing more hasn't worked."
+  2. Who it's for, 2 to 3 beats: someone to settle down and build a life with (marriage, children, moving in, travelling together), and nothing's changing.
+  3. Her symptom, 3 to 5 beats: the books, podcasts, attachment styles and inner work, things she says or hears in quotes, and the friends who met their person without doing any of it.
+  4. Name the problem, 3 to 4 beats. ALWAYS intellectualization: "That's called intellectualization." / "The psychologist's term for using thinking and analysing to deal with emotional situations." Then that it's her mind protecting her from getting her hopes up again, and what it costs (dating feels exhausting and transactional).
+  5. What she needs, 3 to 4 beats. ALWAYS emotional resonance: the emotional connection two people feel when they click. We're drawn to people who match the emotions we're feeling. You can't think your way into a feeling.
+  6. The 3 steps, 4 beats: a short bridge, then "Step 1: get clear on exactly who you want." / "Step 2: define the emotions you'd feel with them." / "Step 3: embody those emotions every day, before they show up." (These numbered steps are the one place numbers are allowed.)
+  7. Proof, 1 to 2 beats: this is how Olly met his wife. Never invent other stories, clients or numbers.
+  8. The call to action, 2 to 3 beats: help with steps 1 and 2 (The Feeling Finder finds the exact emotion that will attract their perfect relationship, in 2 minutes), then: Comment "EMOTION" and I'll send it to you.
+- Every carousel keeps these eight slides, the two names and the 3 steps. Change everything else: the cover, the moments in slides 2 and 3, the wording of the explanations.
 - No em dashes. Never call the change easy. Never say the right partner feels boring. Never invent stats or studies.
-- caption: line 1 is a short hook (5 to 11 words). Then 1 to 3 short lines. Then "Comment 'EMOTION' and I'll send you The Feeling Finder." Then on its own line: #attractlove #readyforlove #datingover30 #soulmate #manifestlove. No em dashes, no hyphens as separators, no comma before "and" or "or".
+- caption: exactly this, with only the first line changed to suit the carousel (keep the 💜): "💜 [a short hook, 5 to 11 words]\n\nFor people who want to meet someone special and settle down, but nothing is changing.\n\nThe 3 steps:\n\n✅ Step 1: Get clear on exactly who you want and what your life together looks like\n\n✅ Step 2: Define the emotions you’d feel with them\n\n✅ Step 3: Embody those emotions every day so the right person is drawn to you\n\n♥️ This is how I met my wife\n\n👇 Comment ‘EMOTION’ and I’ll send you my free tool to help with steps 1 and 2\n\n(If you’d rather keep it private, DM me ‘EMOTION’)\n\n#Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner"
 
 THIS REQUEST
 Carousel type: ${type.replace("Carousel · ", "")}
@@ -2067,7 +2125,7 @@ Write ${n} different carousel${n > 1 ? "s" : ""}.
 
 For each give:
 - hook: a short name for it (the cover's first beat is fine)
-- slides: all six slides, each {"beats":["",""]}
+- slides: all eight slides, each {"beats":["",""]}
 - caption: the Instagram caption (use \\n for line breaks)
 - type: the carousel type
 - stage: which part of the core message it connects to, in a few words
@@ -2309,7 +2367,8 @@ $("go").onclick = async () => {
     const ideas = channel === "email" && (Number($("count").value) || 3) > 1
       ? await emailBatch(mine.signal)
       : channel === "carousels" && (Number($("count").value) || 3) > 1 ? await carouselBatch(mine.signal)
-      : ((await sampleFn.json(buildPrompt() + outlierBrief() + rejectBrief() + queueBrief() + (channel === "email" ? emailBrief() : postBrief()), {signal: mine.signal, cache: false})) || {}).ideas || [];
+      : channel === "reels" && (Number($("count").value) || 3) > 1 ? await reelBatch(mine.signal)
+      : ((await sampleFn.json(buildPrompt() + outlierBrief() + rejectBrief() + (channel === "reels" ? "" : queueBrief()) + (channel === "email" ? emailBrief() : channel === "reels" ? reelBrief() : postBrief()), {signal: mine.signal, cache: false})) || {}).ideas || [];
     st.textContent = ideas.length ? "" : "No ideas came back. Try again.";
     store.set("cig-ideas", {type:$("type").value, channel, ideas});
     renderIdeas($("type").value, ideas, channel);
@@ -2323,6 +2382,7 @@ function frameLines(f, n){
   return [(n + 1) + ". " + (f.show || ""), f.say ? "   Say: " + f.say : "", f.text ? "   Text: " + f.text : "", f.sticker ? "   Sticker: " + f.sticker : ""].filter(Boolean);
 }
 function ideaText(i){
+  if (isPerfectReel(i)) return reelScript(i);
   if (Array.isArray(i.slides)) return [i.hook, "", ...crsBeats(i).map((sl, n) => "Slide " + (n + 1) + ":\n" + (sl.beats || []).map(b => "   " + b).join("\n")), "", "Caption:", i.caption || ""].join("\n").trim();
   if (Array.isArray(i.research) && i.research.length && !i.say && !i.cover) return [i.hook, "", "The research:", ...i.research.map(x => "- " + x)].join("\n");
   if (typeof i.body === "string") { const u = emailLink(i); return ["Subject: " + (i.hook || ""), "Preview: " + (i.preview || ""), "", fullEmail(i), u ? "\nLink the word in [brackets] to: " + u : ""].join("\n").trim(); }
@@ -2340,14 +2400,280 @@ async function copyText(text, btn){
   setTimeout(() => { btn.textContent = old; }, 1500);
 }
 function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+/* ---------- The Perfect Reel (Olly, 2026-10-30) ----------
+   Built from his 9 outlier Reels (Sep-Oct 2026, marketing/reel-stats/ultimate-reel.md): the hook sits above his head for
+   3 to 5 seconds, then live captions take its place; 8 parts in order; the named problem is always intellectualization and
+   the need is always emotional resonance; the caption is the outlier caption style with the keyword (FEELING or VIDEO).
+   Every part is click-to-edit and saved with the idea; queue, calendar and drafts send what's on screen now. */
+const REEL_FACE = "data:image/jpeg;base64,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";
+const REEL_PARTS = [
+  ["hook", "Hook", "0–5s", "On screen: big, bold, one box above your head, 5 to 8 words. Say it as your first line."],
+  ["who", "Who it's for", "5–15s", "Her outcome in her words, inside 15 seconds."],
+  ["symptom", "Her symptom", "15–35s", "What she's doing and what she sees around her."],
+  ["name", "Name the problem: intellectualization", "35–50s", "Symptom, then what it means, then the psychologist's term in plain words."],
+  ["missing", "What she needs: emotional resonance", "50–70s", "Feeling it's possible. You can't think your way into a feeling."],
+  ["steps", "The 3 steps", "70–130s", "Numbered, in order. Steps 1 and 2 are what the call to action helps with."],
+  ["proof", "Proof", "130–140s", "One line from your own life."],
+  ["cta", "Call to action", "last 15s", "Just your live captions, but give \"Comment KEYWORD\" its own caption box so it reads with the sound off."]
+];
+const REEL_KEYS = ["who", "symptom", "name", "missing", "steps", "proof", "cta", "caption", "offer", "research"];
+// The page picks the opener and the lived moment for each Reel in a batch, so a day of Reels never sounds the same
+// The 8 hooks from his outlier Reels (Sep-Oct 2026), word for word. Each new Reel takes the next one in turn and
+// varies it slightly (a few words, the order), never a new pattern (Olly, 2026-10-30: "use the hooks that work").
+const REEL_OPENERS = [
+  "The fastest way to eliminate doubts if you're trying to attract your life partner (2 Sep, his best ever: 6,841 views)",
+  "Without a doubt, the fastest way to find someone who's fun and committed to a long-term relationship (7 Oct: 5,449 views)",
+  "The scientific way to attract your soulmate 🧪 (27 Sep: 5,564 views)",
+  "This works way better than manifestation for attracting a great relationship (25 Oct: 20 comments)",
+  "How to attract your life partner, scientifically 🧪 (25 Sep: 4,003 views)",
+  "You don't need to learn more to attract a great relationship (19 Oct: 20 comments)",
+  "You don't need a manifestation technique to attract someone, you need this (7 Sep: 3,997 views)",
+  "Before you give up trying to manifest love, watch this video (2 Sep: 2,880 views)"
+];
+const REEL_MOMENTS = ["a friend's engagement post", "rereading a text three times before sending it", "the dread before a first date", "scrolling a dating app at 11pm", "being the friend everyone asks for relationship advice", "a date who ticked every box on paper but felt flat in person", "someone who seemed perfect, then went quiet", "a family gathering where everyone asks if she's seeing anyone", "planning love the way she planned her career"];
+const REEL_STANDARD = `hook: (left out on purpose: build yours on the opener you're given)
+who: If you want someone you can settle down and build a life with, maybe marriage, children, travelling the world together, and it feels like nothing's changing...
+symptom: ...you've read the books, listened to the podcasts, learned your attachment style. You probably know more about relationships than anyone you know. Yet your friends meet their person without doing any of it.
+name: That's telling you you're stuck in something called intellectualization. It's the psychologist's term for using thinking and analysing to deal with emotional situations. It's your mind protecting you from getting your hopes up again. But it means you never actually feel that the right person is coming. So dating becomes exhausting and transactional.
+missing: What's missing is emotional resonance. It's the emotional connection two people feel when they click. We're drawn to people who match the emotions we're feeling. And you can't think your way into a feeling. When you feel like you're already in that relationship, you start to believe it can happen, you notice the right people and you can spot who isn't right for you.
+steps: Let me take you through the three steps to get into emotional resonance so that you can attract a committed relationship. / Step 1: get clear on exactly who you want and what your life together looks like. / Step 2: define the emotions you'd feel with them. Safe, wanted, excited. / Step 3: embody those emotions every day, before they show up. That's what changes who you notice and who's drawn to you.
+proof: That's exactly how I met my wife.`;
+const REEL_TAGS = "#Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner";
+function reelCta(offer){
+  const w = (OFFERS[offer] || OFFERS.video).word;
+  return offer === "scale"
+    ? `If you want help with the first two steps, comment ${w}. I'll send you my free tool. It finds your emotional resonance, shows you the exact emotions to feel and gives you a plan to embody them every day. Or DM me ${w} if you'd rather keep it private.`
+    : `If you want help with this, comment ${w}. I'll send you my free training on how to use emotional resonance to attract a committed relationship. Or DM me ${w} if you'd rather keep it private.`;
+}
+function reelCaption(offer){
+  const w = (OFFERS[offer] || OFFERS.video).word;
+  const ask = offer === "scale" ? `👇 Comment ‘${w}’ and I’ll send you my free tool to help with steps 1 and 2` : `👇 Comment ‘${w}’ and I’ll send you my free training on how to do this`;
+  return ["💜 Attract a genuine, committed relationship with someone you can build a life with",
+    "For people who want to meet someone special and settle down, but nothing is changing.",
+    "The 3 steps:",
+    "✅ Step 1: Get clear on exactly who you want and what your life together looks like",
+    "✅ Step 2: Define the emotions you’d feel with them",
+    "✅ Step 3: Embody those emotions every day so the right person is drawn to you",
+    "♥️ This is how I met my wife",
+    ask, `(If you’d rather keep it private, DM me ‘${w}’)`, REEL_TAGS].join("\n\n");
+}
+function reelRotate(key, list, n){
+  let i = Number(store.get(key, Math.floor(Math.random() * list.length))) || 0;
+  const out = []; for (let k = 0; k < n; k++) out.push(list[(i + k) % list.length]);
+  store.set(key, (i + n) % list.length); return out;
+}
+// hooks already on screen or in the queue, so the next ones open differently
+function recentReelHooks(){
+  const last = store.get("cig-ideas", null), mine = last && last.channel === "reels" && Array.isArray(last.ideas) ? last.ideas.map(x => x.hook) : [];
+  const q = (queue.items || []).filter(x => chanOf(x) === "reels").map(x => x.title);
+  return [...new Set(mine.concat(q).filter(Boolean))].slice(0, 12);
+}
+function reelPrompt(type, t, fmt, n, part, topic, pick){
+  const r = pick || {k:0, n:1, opener:reelRotate("cig-reel-op", REEL_OPENERS, 1)[0], moment:reelRotate("cig-reel-mo", REEL_MOMENTS, 1)[0], recent:recentReelHooks()};
+  const opener = r.opener, moment = r.moment, recent = r.recent || [];
+  return `You write Instagram Reels for Olly Henson (The Attraction Formula), who helps singles attract a committed relationship by shifting into the right emotional state. Olly talks to camera and freestyles from what you write, so write it the way he talks: plain, warm, direct, short spoken sentences, "you" and "your".
+${CORE}
+
+${RULES}
+
+THE PERFECT REEL (built from Olly's 9 best-performing Reels; every Reel follows these parts, in this order)
+1. hook: the text above his head for the first 3 to 5 seconds, his first spoken line and the caption's first line. 5 to 11 words (short enough for 2 or 3 lines on screen), names the outcome, speaks to "you". Use the proven hook you're given below. Hooks that opened with "Okay, so..." or talked about "these people" did badly. No dashes, no colons. Optionally one emoji at the end (🧪 for science).
+2. who: who it's for, in her words: someone to settle down and build a life with (marriage, children, moving in, travelling together) and it feels like nothing's changing.
+3. symptom: what she's been doing and what she sees: the books, podcasts, attachment styles, inner work; she knows more about relationships than anyone she knows; yet her friends meet their person without doing any of it. Paint one real moment.
+4. name: name the problem. It is ALWAYS intellectualization, introduced like this: "That's telling you you're stuck in something called intellectualization. It's the psychologist's term for using thinking and analysing to deal with emotional situations." Then that it's her mind protecting her from getting her hopes up again (kind, never blaming her), and what it costs her (she never actually feels the right person is coming; dating becomes exhausting and transactional).
+5. missing: what she needs. It is ALWAYS emotional resonance: the emotional connection two people feel when they click. We're drawn to people who match the emotions we're feeling. You can't think your way into a feeling. When she feels like she's already in that relationship, she starts to believe it can happen, notices the right people and can spot who isn't right. Emotional resonance is the connection, never "a practice".
+6. steps: one bridge line, then exactly these 3 numbered steps, each with one short line of explanation: "Step 1: get clear on exactly who you want and what your life together looks like." "Step 2: define the emotions you'd feel with them." "Step 3: embody those emotions every day, before they show up." Put a blank line between the bridge and each step (\\n\\n).
+7. proof: one short line from Olly's own life: this is how he met his wife. You may add that it came after years of nothing changing. Never invent other stories, clients, results or numbers.
+Don't write the call to action or a caption: the page adds both.
+
+KEEP EVERY REEL DIFFERENT (Olly posts 3 a day)
+The parts, the two names (intellectualization, emotional resonance) and the 3 steps stay the same in every Reel. Change everything else: the hook and its outcome, the moment in "who" and "symptom", the example emotions in step 2, the explanation lines, and the angle the content type and part of the message below give it. Each part is 1 to 3 short spoken sentences (the steps part a little longer); the whole Reel is about 2 to 3 minutes spoken.
+${r.n > 1 ? `This is Reel ${r.k + 1} of ${r.n} in a batch, so make it stand apart.` : ""} THE HOOK FOR THIS REEL: start from this proven hook from Olly's outliers and write a slight variation of it: ${opener}. Keep its pattern and its key words ("fastest", "without a doubt", "works way better than", "you don't need", "before you give up", "scientific"). Change only a few words or the order, e.g. swap the outcome (your soulmate, your person, a committed relationship, someone who wants to settle down), move the outcome to the front, or trim it. Never invent a different kind of hook. "Manifestation" may only appear as the thing this beats; never tell her to manifest (say "finding your person" instead of "manifest love").${recent.length ? " It must open differently from these recent hooks: " + recent.map(h => "\"" + h + "\"").join(" · ") + "." : ""} Open the symptom with this moment: ${moment}.
+
+THE STANDARD (Olly's approved version: match its parts, length and tone; never copy its sentences)
+${REEL_STANDARD}
+
+THIS REQUEST
+Content type: ${type} (${t.group}). ${t.desc}
+How to handle this type: ${t.rule}
+Format: ${fmt || "pick the best fit from: " + t.formats.join(" / ")}
+Part of the message to focus on: ${part}
+${topic ? "Topic or angle: " + topic : ""}
+Give ${n} Reel${n > 1 ? "s" : ""}.
+
+For each give:
+- hook, who, symptom, name, missing, steps, proof: the parts above
+- stage: which part of the core message it leans on, in a few words
+- why: one sentence on why it should do well, based on the outliers${type === "Research" ? `
+- research: 3 to 5 short bullet points on the study it's built on, for Olly to glance at while filming: who was studied, what they did, what was found (exact numbers from the research list only), one honest caveat and the source in brackets` : ""}
+
+Reply as JSON: {"ideas":[{"hook":"","who":"","symptom":"","name":"","missing":"","steps":"","proof":"","stage":"","why":""${type === "Research" ? ',"research":[]' : ""}}]}`;
+}
+// Olly's own finished Reels (queued) as the standard, so new ones start closer to how he words them
+function reelBrief(){
+  const q = (queue.items || []).filter(x => chanOf(x) === "reels" && x.script).slice(0, 2);
+  if (!q.length) return "";
+  return "\n\nREELS OLLY EDITED AND APPROVED (most recent first). Match how he words each part; never copy his lines:\n"
+    + q.map(x => REEL_PARTS.filter(([k]) => k !== "cta" && k !== "hook").map(([k]) => k + ": " + String((k === "hook" ? x.title : x.script[k]) || "").replace(/\n+/g, " / ")).join("\n")).join("\n---\n");
+}
+// One call per Reel, in parallel (several long pieces in one answer get cut short)
+async function reelBatch(signal){
+  const n = Number($("count").value) || 3, type = $("type").value, t = POST_TYPES[type], fmt = $("format").value;
+  const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1], topic = $("topic").value.trim();
+  const ops = reelRotate("cig-reel-op", REEL_OPENERS, n), mos = reelRotate("cig-reel-mo", REEL_MOMENTS, n), recent = recentReelHooks();
+  const extra = outlierBrief() + rejectBrief() + reelBrief(); // no queued titles: they pulled every hook towards the same opener
+  const jobs = Array.from({length:n}, (_, k) => sampleFn.json(reelPrompt(type, t, fmt, 1, part, topic, {k, n, opener:ops[k], moment:mos[k], recent}) + extra, {signal, cache:false})
+    .then(r => r && r.ideas && r.ideas[0]));
+  const res = await Promise.allSettled(jobs);
+  if (signal.aborted) throw new Error("aborted");
+  return res.filter(r => r.status === "fulfilled" && r.value).map(r => r.value);
+}
+function isPerfectReel(i){ return i && typeof i.who === "string" && typeof i.steps === "string"; }
+function reelLines(i){ return REEL_PARTS.map(([k, label]) => label + ": " + String((k === "hook" ? i.hook : i[k]) || "").replace(/\n+/g, " / ")); }
+function reelScript(i){
+  return REEL_PARTS.map(([k, label], n) => (n + 1) + ". " + label.toUpperCase() + "\n" + String((k === "hook" ? i.hook : i[k]) || "").trim()).join("\n\n")
+    + "\n\nCAPTION\n" + (i.caption || "");
+}
+function reelFields(i){ const o = {}; REEL_KEYS.forEach(k => { if (i[k] !== undefined) o[k] = i[k]; }); return o; }
+function saveReelEdit(i){
+  const last = store.get("cig-ideas", null);
+  if (!last || !Array.isArray(last.ideas)) return;
+  const key = i.saved !== undefined ? i.saved : i.hook;
+  last.ideas = last.ideas.map(x => x.hook === key ? {...x, ...reelFields(i)} : x);
+  store.set("cig-ideas", last);
+}
+function reelCard(type, i, ch){
+  if (!OFFERS[i.offer]) i.offer = POST.offer;
+  if (!i.cta) i.cta = reelCta(i.offer);
+  if (typeof i.caption !== "string") i.caption = reelCaption(i.offer);
+  const c = el("article", "card idea");
+  c.appendChild(el("span", "tag", ["Perfect Reel", type, i.stage].filter(Boolean).join(" · ")));
+  const wrap = el("div", "prl"), left = el("div", "prl-left"), phones = el("div", "prl-phones");
+  const shot = (cls, label) => {
+    const f = el("figure", "prl-shot"), p = el("div", "prl-phone"), t = el("div", cls);
+    p.style.backgroundImage = "url(" + REEL_FACE + ")"; p.appendChild(t); f.append(p, el("figcaption", "", label)); phones.appendChild(f); return t;
+  };
+  const hookView = shot("prl-hook", "0–5s · Hook"), liveView = shot("prl-live", "After 5s · Captions");
+  const paint = () => { hookView.textContent = (i.hook || "").trim(); liveView.textContent = String(i.who || "").trim().split(/\s+/).slice(4, 9).join(" "); };
+  left.append(phones, el("p", "hint", "When the hook disappears, your captions take its place in the same spot: one white box, 3 to 6 words at a time. Never stack them under the hook."));
+  const kw = el("div", "pbchips"), kwRow = el("div", "row");
+  Object.keys(OFFERS).forEach(o => { const b = el("button", "", OFFERS[o].word); b.type = "button"; b.dataset.offer = o; b.setAttribute("aria-pressed", String(i.offer === o)); b.onclick = () => setOffer(o); kw.appendChild(b); });
+  kwRow.append(el("span", "sub", "Keyword"), kw); left.appendChild(kwRow);
+  const capWrap = el("div", "stack"), cap = document.createElement("textarea"), capCopy = el("button", "btn small", "Copy caption");
+  capWrap.style.gap = "6px";
+  cap.className = "prl-cap"; cap.value = i.caption; cap.spellcheck = true; cap.setAttribute("aria-label", "Caption");
+  cap.oninput = () => { i.caption = cap.value; }; cap.onblur = () => saveReelEdit(i);
+  capCopy.onclick = () => copyText(cap.value, capCopy); capCopy.style.alignSelf = "flex-start";
+  capWrap.append(el("span", "sub", "Caption · goes to the Hub with the Reel"), cap, capCopy); left.appendChild(capWrap);
+  const parts = el("ol", "prl-parts"), txt = {};
+  REEL_PARTS.forEach(([k, label, time, why], n) => {
+    const li = el("li", "prl-part" + (k === "name" || k === "missing" ? " key" : "")), h = el("h4", "", label);
+    h.appendChild(el("small", "", time));
+    const t = el("div", k === "hook" ? "hook txt" : "txt", (k === "hook" ? i.hook : i[k]) || "");
+    li.append(el("span", "n", String(n + 1)), h, el("p", "why", why), t);
+    if (k === "hook") { editableHook(t, i); t.addEventListener("input", paint); }
+    else {
+      t.contentEditable = "true"; t.spellcheck = true; t.classList.add("editable"); t.title = "Click to edit";
+      t.oninput = () => { i[k] = t.innerText.replace(/\n{3,}/g, "\n\n").trim(); if (k === "who") paint(); };
+      t.onblur = () => saveReelEdit(i);
+      t.onpaste = e => { e.preventDefault(); document.execCommand("insertText", false, (e.clipboardData && e.clipboardData.getData("text/plain")) || ""); };
+    }
+    txt[k] = t; parts.appendChild(li);
+  });
+  function setOffer(o){
+    const old = i.offer; if (o === old) return;
+    if (i.cta === reelCta(old)) { i.cta = reelCta(o); txt.cta.textContent = i.cta; }
+    if (i.caption === reelCaption(old)) { i.caption = reelCaption(o); cap.value = i.caption; }
+    i.offer = o; kw.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.offer === o)));
+    saveReelEdit(i);
+  }
+  wrap.append(left, parts); c.appendChild(wrap); paint();
+  const notes = Array.isArray(i.research) ? i.research.filter(Boolean) : [];
+  if (notes.length) {
+    const rb = el("div", "research"), ul = el("ul");
+    notes.forEach(x => ul.appendChild(el("li", "", x)));
+    rb.append(el("span", "sub", "The research · for you while filming, not on screen"), ul); c.appendChild(rb);
+  }
+  if (i.why) c.appendChild(el("p", "hint", "Why it works: " + i.why));
+  i._beforeQueue = () => saveReelEdit(i);
+  c.appendChild(connectButton(c, i));
+  c.appendChild(ideaButtons(c, ch, type, i, "Reel · " + type, () => reelLines(i)));
+  return c;
+}
+/* Reel drafts (Olly, 2026-10-30): save any version of a Reel and open it again later. Kept online in db "reelDrafts". */
+const reelDrafts = {items:[], db:null};
+function initReelDrafts(){
+  if (!(window.claude && window.claude.use)) return;
+  claude.use("db").then(db => {
+    if (!db) return;
+    reelDrafts.db = db;
+    db.collection("reelDrafts").orderBy("savedAt", "desc").onSnapshot(s => { reelDrafts.items = s.docs.map(d => ({id:d.id, ...(d.data() || {})})); renderReelDrafts(); }, () => {});
+  });
+}
+function renderReelDrafts(){
+  const ul = $("rdList"); if (!ul) return;
+  ul.textContent = ""; $("rdN").textContent = String(reelDrafts.items.length);
+  if (!reelDrafts.items.length) { ul.appendChild(el("li", "hint", "No drafts yet. Press Save draft under a Reel to keep that version.")); return; }
+  reelDrafts.items.forEach(d => {
+    const li = el("li", "item"), row = el("div", "row"), op = el("button", "btn small primary", "Open"), del = el("button", "x", "Delete");
+    let when = ""; try { when = new Date(d.savedAt).toLocaleString(undefined, {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}); } catch {}
+    li.append(el("b", "", d.name || "Untitled"), el("span", "meta", when));
+    op.onclick = () => openReel(d.idea || {});
+    del.onclick = async () => {
+      if (del.dataset.sure !== "1") { del.dataset.sure = "1"; del.textContent = "Press again to delete"; setTimeout(() => { del.dataset.sure = ""; del.textContent = "Delete"; }, 3000); return; }
+      try { await reelDrafts.db.collection("reelDrafts").doc(d.id).delete(); } catch { del.textContent = "Couldn't delete"; }
+    };
+    row.append(op, del); li.appendChild(row); ul.appendChild(li);
+  });
+}
+function openReel(idea){
+  const x = JSON.parse(JSON.stringify(idea || {})); delete x.queueId; delete x.saved; delete x.orig;
+  if (!isPerfectReel(x)) return;
+  if (channel !== "reels") setChannel("reels");
+  const last = store.get("cig-ideas", null);
+  const next = last && last.channel === "reels" && Array.isArray(last.ideas) ? last : {type:$("type").value, channel:"reels", ideas:[]};
+  next.ideas = [x].concat(next.ideas.filter(y => y.hook !== x.hook));
+  store.set("cig-ideas", next); renderIdeas(next.type, next.ideas, "reels");
+  $("ideas").scrollIntoView({behavior:"smooth", block:"start"});
+  const st = $("st"); st.className = "status"; st.textContent = "✓ Opened. It's at the top of your ideas.";
+}
+async function saveReelDraft(i, btn){
+  if (i._beforeQueue) i._beforeQueue();
+  if (!reelDrafts.db) { btn.textContent = "Drafts need the page opened inside Claude"; return; }
+  btn.disabled = true; btn.textContent = "Saving…";
+  try {
+    await reelDrafts.db.collection("reelDrafts").add({name:(i.hook || "Untitled").slice(0, 120), idea:{hook:i.hook || "", stage:i.stage || "", why:i.why || "", ...reelFields(i)}, savedAt:new Date().toISOString()});
+    btn.textContent = "✓ Draft saved · save another";
+  } catch { btn.textContent = "Couldn't save. Try again"; }
+  btn.disabled = false;
+}
+// Carousel idea preview (Olly, 2026-10-30): every slide as it'll look, white boxes over the photo picked in the Carousel
+// maker (or his Reel still), so he can compare versions before pressing Make carousel. The finished slides come from the maker.
+const CRS_LABELS = ["Hook", "Who it's for", "Her symptom", "Intellectualization", "Emotional resonance", "The 3 steps", "Proof", "Comment EMOTION"];
+function crsPreview(slides){
+  const wrap = el("div", "stack"), strip = el("div", "crp");
+  wrap.style.gap = "6px";
+  const pic = store.get("crs-photo", "") || REEL_FACE;
+  slides.forEach((sl, n) => {
+    const f = el("figure", "crp-f"), s = el("div", "crp-s");
+    s.style.backgroundImage = "url(" + JSON.stringify(String(pic)) + ")";
+    (sl.beats || []).forEach(b => s.appendChild(el("span", "", b)));
+    f.append(s, el("figcaption", "", (n + 1) + ". " + (slides.length === 8 ? CRS_LABELS[n] : "Slide")));
+    strip.appendChild(f);
+  });
+  wrap.append(el("span", "sub", "Preview · swipe through, then Make carousel for the finished slides"), strip);
+  return wrap;
+}
 function renderIdeas(type, ideas, ch){
   const box = $("ideas"); box.textContent = "";
   const noun = ch === "stories" ? "Story" : ch === "skool" ? "Skool" : ch === "memes" ? "Meme" : ch === "email" ? "Email" : ch === "ytpost" ? "Community" : ch === "carousels" ? "Carousel" : "Reel";
   ideas.forEach(i => {
+    if (ch === "reels" && isPerfectReel(i)) { box.appendChild(reelCard(type, i, ch)); return; }
     if (Array.isArray(i.slides)) {
       const slides = crsBeats(i), c = el("article", "card idea");
       c.append(el("span", "tag", ["Carousel", (i.type || type).replace("Carousel · ", ""), slides.length + " slides", i.stage].filter(Boolean).join(" · ")), el("p", "hook", i.hook || ""));
       editableHook(c.querySelector(".hook"), i);
+      c.appendChild(crsPreview(slides));
       const ol = el("ol", "frames");
       slides.forEach(sl => { const li = el("li"); (sl.beats || []).forEach((b, n) => li.appendChild(n ? el("p", "", b) : el("span", "ot", b))); ol.appendChild(li); });
       c.appendChild(ol);
@@ -2735,6 +3061,10 @@ function saveMemeEdit(i){
   store.set("cig-ideas", last);
   const st = $("st"); st.className = "status"; st.textContent = "✓ Edit saved.";
 }
+/* "Your own image" (Olly, 2026-11-02): any uploaded picture with classic top and bottom meme text */
+const OWN_MEME = "Your own image";
+function ownBoxes(w, h){ const bh = Math.round(h * 0.24); return [{name:"Top text", x:0, y:0, w, h:bh, style:"light"}, {name:"Bottom text", x:0, y:h - bh, w, h:bh, style:"light"}]; }
+if (!MEME_LAYOUTS[OWN_MEME]) MEME_LAYOUTS[OWN_MEME] = {src:"", w:1080, h:1080, padTop:0, match:[], boxes:ownBoxes(1080, 1080)};
 function memeEditor(i, onPanelEdit){
   const st = {key:i ? layoutFor(i.template) : "Woman yelling at cat", hook:(i && i.hook) || "", texts:((i && i.panels) || []).map(p => p.text || ""),
     size:((i && i.place) || "").startsWith("Instagram feed") ? "feed" : /Reel|Skool/.test((i && i.place) || "") ? "meme" : "story", bg:"light"};
@@ -2757,9 +3087,66 @@ function memeEditor(i, onPanelEdit){
       l.appendChild(ta); panels.appendChild(l);
     });
   }
+  // Generator (Olly, 2026-11-02): writes 3 memes for the chosen template (or lets it pick), straight into the image.
+  let tplSel = null, versions = [];
+  const gen = el("div", "stack");
+  const topicL = el("label", "f", "Topic or angle (optional)"), topicI = el("input"); topicI.type = "text"; topicI.placeholder = "e.g. rereading his texts"; topicL.appendChild(topicI);
+  const anyL = el("label", "tsmchk"), anyC = document.createElement("input"); anyC.type = "checkbox"; anyL.append(anyC, document.createTextNode(" Let it pick the templates"));
+  const genBtn = el("button", "btn small primary", "Generate meme"); genBtn.type = "button";
+  const genSt = el("span", "status"), picks = el("div", "tsmlay");
+  const genRow = el("div", "row"); genRow.append(genBtn, genSt);
+  gen.append(topicL, anyL, genRow, picks);
+  function useVersion(n){
+    const v = versions[n]; if (!v) return;
+    st.key = v.key; st.texts = (v.panels || []).map(p => (p && p.text) || ""); st.hook = v.hook || ""; hi.value = st.hook;
+    if (tplSel) tplSel.value = st.key;
+    [...picks.children].forEach((b, k) => b.setAttribute("aria-pressed", String(k === n)));
+    showUp(); fields(); draw();
+  }
+  genBtn.onclick = async () => {
+    if (!sampleFn) { genSt.className = "status err"; genSt.textContent = "This needs the page opened inside Claude."; return; }
+    const auto = anyC.checked, key = st.key, lay = MEME_LAYOUTS[key];
+    const t = POST_TYPES[key] && POST_TYPES[key].group === "Meme" ? POST_TYPES[key]
+      : key === OWN_MEME ? {desc:"Olly's own picture with classic top and bottom meme text.", rule:"Two panels: Top text (the setup: the old belief or habit) and Bottom text (the punchline: the right emotional state)."}
+      : {desc:key, rule:"Panels in this order: " + lay.boxes.map(b => b.name).join(", ") + "."};
+    const part = ($("part") && $("part").value) || "the belief change: from learning everything first to feeling the right emotional state";
+    genBtn.disabled = true; genSt.className = "status"; genSt.textContent = "Writing 3 memes…";
+    try {
+      // 3 small requests side by side (like the carousel writer): faster, and one failing doesn't lose the others
+      const angles = ["", "Make it a different angle from the obvious one.", "Make it the funniest, most specific version."];
+      const res = await Promise.allSettled(angles.map(a => sampleFn.json(memePrompt(auto ? "Any template (tool picks)" : key, t, "Instagram Story", 1, part, topicI.value.trim()) + (a ? "\n" + a : ""), {cache:false})));
+      const ideas = [].concat(...res.filter(x => x.status === "fulfilled" && x.value && Array.isArray(x.value.ideas)).map(x => x.value.ideas));
+      if (!ideas.length) { const bad = res.find(x => x.status === "rejected"); throw (bad && bad.reason) || new Error("No memes came back"); }
+      versions = ideas.map(x => ({key: auto ? layoutFor(x.template) : key, hook: x.hook || "", panels: Array.isArray(x.panels) ? x.panels : []})).filter(v => v.panels.length);
+      if (!versions.length) throw new Error("none");
+      picks.textContent = "";
+      versions.forEach((v, n) => { const b = el("button", "", "Version " + (n + 1)); b.type = "button"; b.title = v.hook; b.onclick = () => useVersion(n); picks.appendChild(b); });
+      genSt.textContent = "Tap a version, then edit any line."; useVersion(0);
+    } catch (e) {
+      genSt.className = "status err";
+      genSt.textContent = e && e.code === "rate_limited" ? "Too many requests just now. Wait a minute and try again." : e && e.code === "not_granted" ? "Claude access wasn't allowed for this page." : "Couldn't write memes: " + ((e && (e.code || e.message)) || "unknown error") + ". Try again.";
+      console.error("meme generate", e);
+    }
+    genBtn.disabled = false;
+  };
+  // your own image: upload any picture, then top and bottom text
+  const upRow = el("div", "row"), upLab = el("label", "tsmfile", "Upload your image"), upIn = document.createElement("input");
+  upIn.type = "file"; upIn.accept = "image/*"; upLab.appendChild(upIn);
+  upRow.append(upLab, el("span", "hint", "Any picture. The text goes on the top and bottom, like a classic meme."));
+  const showUp = () => { upRow.style.display = st.key === OWN_MEME ? "" : "none"; };
+  upIn.onchange = () => {
+    const f = upIn.files && upIn.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { const im = new Image(); im.onload = () => {
+      const sc = Math.min(1, 1600 / Math.max(im.naturalWidth, im.naturalHeight)), w = Math.round(im.naturalWidth * sc), h = Math.round(im.naturalHeight * sc);
+      MEME_LAYOUTS[OWN_MEME] = {src:rd.result, w, h, padTop:0, match:[], boxes:ownBoxes(w, h)}; draw();
+    }; im.src = rd.result; };
+    rd.readAsDataURL(f); upIn.value = "";
+  };
   let seq = 0;
   async function draw(){
     const me = ++seq;
+    if (st.key === OWN_MEME && !MEME_LAYOUTS[OWN_MEME].src) { prev.removeAttribute("src"); box._cv = null; msg.className = "status"; msg.textContent = "Upload your image to start."; return; }
     try { const cv = await composeMeme(st); if (me === seq) { prev.src = cv.toDataURL("image/png"); box._cv = cv; msg.textContent = ""; } }
     catch { if (me === seq) { msg.className = "status err"; msg.textContent = "Couldn't load the template image. Try again."; } }
   }
@@ -2775,8 +3162,9 @@ function memeEditor(i, onPanelEdit){
     }, "image/png");
   };
   side.append(
-    sel("Template", MEME_FIRST.slice(1).concat(Object.keys(MEME_LAYOUTS).filter(k => !MEME_FIRST.includes(k) && !MEME_RETIRED.includes(k))).filter(k => MEME_LAYOUTS[k] || k === st.key).map(k => [k, k]), st.key, v => { st.key = v; fields(); draw(); }),
-    hk, panels,
+    gen,
+    sel("Template", MEME_FIRST.slice(1).concat(Object.keys(MEME_LAYOUTS).filter(k => !MEME_FIRST.includes(k) && !MEME_RETIRED.includes(k))).filter(k => MEME_LAYOUTS[k] || k === st.key).map(k => [k, k]), st.key, v => { st.key = v; showUp(); fields(); draw(); }),
+    upRow, hk, panels,
     sel("Size", Object.entries(MEME_SIZES).map(([k, v]) => [k, v.label]), st.size, v => { st.size = v; draw(); }),
     sel("Background", [["light", "Light"], ["dark", "Dark"]], st.bg, v => { st.bg = v; draw(); }),
     el("p", "hint", "Story size leaves room at the bottom for a poll or slider sticker."),
@@ -2805,6 +3193,7 @@ function memeEditor(i, onPanelEdit){
   cal.addEventListener("click", () => setTimeout(() => { if (window.cigMemeSongs) { songs = window.cigMemeSongs(); showSongs(); } }, 150));
   const calRow = el("div", "row"); calRow.append(cal, el("span", "hint", "Sends the image, title and song ideas to the Hub’s Stories calendar."));
   side.append(calRow, songBox); showSongs();
+  tplSel = side.querySelector("select"); showUp();
   fields(); draw();
   return box;
 }
@@ -2931,6 +3320,7 @@ function ideaButtons(card, ch, type, i, level, cover){
     const extra = typeof i.body === "string" ? {body:fullEmail(i), origBody:(i.origBody && i.origBody !== i.body) ? i.origBody : "", preview:i.preview || ""}
       : Array.isArray(i.slides) ? {slides:crsBeats(i), caption:i.caption || ""}
       : ch === "ytpost" ? {post:ytFill(i.post, i), origPost:(i.origPost && i.origPost !== i.post) ? ytFill(i.origPost, i) : "", pinned:ytFill(i.pinned, i), poll:Array.isArray(i.poll) ? i.poll : [], image:i.image || ""}
+      : isPerfectReel(i) ? {script:reelFields(i), caption:i.caption || "", offer:i.offer || ""}
       : typeof i.post === "string" ? {post:i.post, poll:Array.isArray(i.poll) ? i.poll : []} : {};
     // Everything (Olly, 2026-10-28; emails first): the queue holds the finished versions the generator learns from, but the
     // idea stays on screen so it can still go to the calendar. Pressing again after more edits updates the same queue item.
@@ -2952,7 +3342,8 @@ function ideaButtons(card, ch, type, i, level, cover){
   if (ch === "carousels") row.append(cp); else row.append(add, cp);
   if (ch === "ytpost") row.append(hubButton("ytpost", () => ytPayload(i, type)));
   if (ch === "email") row.append(hubButton("email", () => { if (i._beforeQueue) i._beforeQueue(); const h = card.querySelector(".hook"); return {subject: ((h && h.textContent) || i.hook || "").trim(), preview: i.preview || "", body: fullEmail(i), type: String(level || "").split(" · ")[1] || ""}; }));
-  if (ch === "reels" || ch === "stories") row.append(hubButton(ch === "reels" ? "reel" : "story", () => { const h = card.querySelector(".hook"); return {title: ((h && h.textContent) || i.hook || "").trim(), type}; }));
+  if (ch === "reels" || ch === "stories") row.append(hubButton(ch === "reels" ? "reel" : "story", () => { if (i._beforeQueue) i._beforeQueue(); const h = card.querySelector(".hook"); const p = {title: ((h && h.textContent) || i.hook || "").trim(), type}; if (ch === "reels" && isPerfectReel(i)) { p.caption = i.caption || ""; p.offer = i.offer || "video"; } return p; }));
+  if (ch === "reels" && isPerfectReel(i)) { const sd = el("button", "btn small", "Save draft"); sd.title = "Keep this version in Reel drafts so you can open it again"; sd.onclick = () => saveReelDraft(i, sd); row.append(sd); }
   // Done (Olly, 2026-10-29): once it's queued and in the calendar, clear it from the ideas on screen. Unlike "Not this one",
   // it isn't a rejection, so the generator doesn't learn to avoid it.
   const done = el("button", "btn small", "Done · remove from ideas");
@@ -3181,6 +3572,11 @@ function renderQueue(){
       try { await queue.remove(q.id); } catch { $("qst").textContent = "Couldn't remove that. Try again."; }
     };
     if (typeof q.body === "string") { const al = el("button", "btn small", "Application link"); al.title = "Copy the tracked link to the application page for this email"; al.onclick = () => copyText(applyLink(q.title), al); const sl = el("button", "btn small", "Feeling Finder link"); sl.onclick = () => copyText(scaleLink(q.title), sl); const tl = el("button", "btn small", "Training link"); tl.onclick = () => copyText(trainingLink(q.title), tl); row.append(ob, cp, ed, sl, tl, al, hubButton("email", () => ({subject: (q.title || "").trim(), preview: q.preview || "", body: q.body || "", type: String(q.level || "").split(" · ")[1] || ""})), del); }
+    else if (q.channel === "reels" && q.script) {
+      const op = el("button", "btn small primary", "Open"); op.title = "Open this Reel in the ideas to edit it";
+      op.onclick = () => openReel({hook:q.title || "", stage:q.stage || "", why:q.why || "", ...q.script});
+      row.append(op, cp, hubButton("reel", () => ({title:(q.title || "").trim(), type:String(q.level || "").split(" · ")[1] || "", caption:q.caption || (q.script && q.script.caption) || "", offer:q.offer || (q.script && q.script.offer) || "video"})), del);
+    }
     else if (q.channel === "reels" || q.channel === "stories") row.append(ob, cp, ed, hubButton(q.channel === "reels" ? "reel" : "story", () => ({title: (q.title || "").trim(), type: String(q.level || "").split(" · ")[1] || ""})), del);
     else if (q.channel === "ytpost") row.append(ob, cp, ed, hubButton("ytpost", () => ({title: (q.title || "").trim(), type: String(q.level || "").split(" · ").pop(), post: q.post || "", pinned: q.pinned || "", poll: q.poll || []})), del);
     else if (Array.isArray(q.slides)) {
@@ -3215,6 +3611,7 @@ function showSavedIdeas(){
 ideasReady = true;
 showSavedIdeas();
 initQueue();
+initReelDrafts();
 if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) { $("st").className = "status err"; $("st").textContent = "Claude isn't available in this view."; } });
 </script>
 
@@ -3286,6 +3683,10 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   QUESTIONS = ENG_PICKS.map(function(q){ return q[1]; }).concat(QUESTIONS);
   // Belief breaking: [the old belief, the crack in it]. Cracks fit nearly everyone and tie straight back to the old belief.
   var BELIEFS = [
+    // the argument in 14 points (2026-10-30): intellectualization, then feeling first
+    ["If I learn enough about love, I'll finally get it right.", "But you can't think your way into a feeling."],
+    ["I just need to understand why it hasn't happened yet.", "Psychologists call that intellectualization. Thinking about love instead of feeling it."],
+    ["I'll believe it when I see it.", "Feel it first. Then the belief follows. Then the relationship happens."],
     ["Once I've fixed what's wrong with me, I'll meet my person.", "My friends who settled down weren't even trying."],
     ["You have to heal everything before love finds you.", "The happy couples I know still have their baggage. They just felt a connection."],
     ["I need to fully love myself first.", "Nobody in a great relationship finished that project first."],
@@ -3345,12 +3746,12 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     "Calm isn't just a feeling. It's measurable.", "What happens in our body when we think about dating", "Overthinking has a brainwave",
     "Same heart. Two very different rhythms.", "The science behind feeling safe in love"];
   var SCI_BOTTOM = ["That's what we mean by the right emotional state.", "It's not positive thinking. It's how your body actually feels.",
-    "You can't think your way there. You can practise it.", "Slow breathing and appreciation move us towards the calm side.", "10 minutes a day trains the second one."];
+    "You can't think your way there. You can practise it.", "Slow breathing and appreciation move us towards the calm side.", "10 minutes a day trains the second one.", "It's not one good meditation. It's the state we practise every day."];
   var SCI_ROWS = "| Survival state | Elevated state\nBrainwaves | Fast, busy beta | Slower, calmer alpha\nHeart rhythm | Jagged and erratic | Smooth and coherent\nBody | Fight or flight | Rest and digest\nFeels like | Worry, frustration | Safe, joyful, free\nWho we notice | People who keep us guessing | Calm, kind people";
   var RESULTS = ["This message made my week", "Messages like this never get old", "This is why I do what I do", "Small shifts like this matter", "Look what landed in my inbox"];
 
   // the line at the top of each belief style (editable, Olly 2026-10-25) and whether to leave room for a sticker
-  var LEADS = { told:"Most of us were told", crossed:"What most of us were told", post:"Most of us were told", photo:"Most of us were told", dm:"A question I get asked a lot" };
+  var LEADS = { told:"Most of us were told", crossed:"What most of us were told", post:"Most of us were told", photo:"Most of us were told", dm:"A question I get asked a lot", unpop:"Unpopular opinion", bnotes:"Something most of us were told" };
   var st = { kind:"lead", layout:"page", bstyle:"told", lead:JSON.parse(JSON.stringify(LEADS)), stk:true, sc:"", scStyle:"full", scRing:"", scNote:"Most of us date from here", scBottom:"", sci:"", sciStyle:"waves", sciBottom:"", sciRows:SCI_ROWS, sciW1:"Stressed, overthinking", sciW1s:"Fast, busy beta waves", sciW2:"Calm, present", sciW2s:"Slower, smoother alpha waves", sciPhoto:0, sciMv:{}, thumb:THUMB,hook:"", scHook:"", mythA:"", mythB:"", life:"", asp:"",q:"", oldB:"", crack:"", res:"", shot:"", photo:PHOTOS[0].src, dy:PHOTOS[0].dy, frame:false };
   var $ = function(id){ return document.getElementById(id); };
   var store = {
@@ -4063,8 +4464,13 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   // Engagement question (Olly, 2026-10-29): drag it on the preview, plus size and width sliders. Remembered on this device.
   // All text, every Story type without its own per-part controls (Olly, 2026-10-29): drag it, Text size, Move up or down.
   // TX() is called in each layout once the background is drawn; everything after it is moved and scaled together.
-  function drawKey(){ return st.kind === "lead" ? st.layout : st.kind === "belief" && st.bstyle !== "told" ? "b_" + st.bstyle : st.kind; }
-  function txOn(){ return st.kind !== "lead" && st.kind !== "meme" && st.kind !== "engagement"; }
+  function drawKey(){
+    if (st.kind === "lead") return st.layout;
+    if (st.kind === "belief") return st.bstyle !== "told" ? "b_" + st.bstyle : "belief";
+    if (st.kind === "science" && st.sciStyle === "dyk") return "s_dyk";
+    return kst() || st.kind;
+  }
+  function txOn(){ return st.kind !== "lead" && st.kind !== "meme" && !(st.kind === "engagement" && !kst()); }
   function txPos(k){ st.tx = st.tx || store.get("txPos") || {}; return st.tx[k || drawKey()] || (st.tx[k || drawKey()] = { x:0, y:0, s:1 }); }
   function txSave(){ store.set("txPos", st.tx || {}); }
   // Background photo on the Story types that don't use one by default (Olly, 2026-10-29): "No photo" keeps the design's own
@@ -4160,10 +4566,339 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     engagement: { hint:"A question that gets replies. Add Instagram's poll or question sticker in the marked space.", text:"q", label:"Question", more:"New question", bank:QUESTIONS, key:"bank-engagement", tip:"Easy to answer with a tap or a word." },
     scale:      { hint:"The emotional scale from the training: elevated emotions attract high-quality partners, survival emotions attract low-quality ones. Use it again and again to drill the point in. Circle an emotion to point at where most of us date from.", text:"sc", label:"Top line", more:"New line", bank:SCALE_HOOKS, key:"bank-scale", tip:"Short. Let the scale do the talking." },
     science:    { hint:"The science behind the right emotional state, so it never feels vague: brainwaves, heart rhythm and what changes in the body. Stick to what's on the templates and in the core message. Never say the heart's field or your brainwaves pull a partner in.", text:"sci", label:"Top line", more:"New line", bank:SCI_HOOKS, key:"bank-science", tip:"One idea per Story. Let the chart do the explaining." },
-    meme:       { hint:"A popular meme template on a Story-sized frame: the old belief next to the right emotional state. Pick a template, fill in the panels and save. Leave the space at the bottom for a poll or slider sticker. For ready-written meme ideas, use the Memes tab and pick Instagram Story." },
+    meme:       { hint:"A popular meme template on a Story-sized frame: the old belief next to the right emotional state. Pick a template, fill in the panels and save. Leave the space at the bottom for a poll or slider sticker. Press Generate meme for 3 ready-written versions, or pick Your own image to use any picture. Every line stays editable." },
     results:    { hint:"Member wins as they come in. Use a real message, shared with permission, with names covered.", text:"res", label:"Line above the screenshot", more:"New line", bank:RESULTS, key:"bank-results", tip:"Keep it short. Let the screenshot do the talking." }
   };
   var SCALE_LEAD = { hint:"Sells The Feeling Finder, the 2-minute tool that finds the emotion that attracts their person. People reply FEELING and ManyChat sends the link (ollyhenson.com/feeling with Instagram story tracking).", text:"scHook", label:"Hook", more:"New hook", bank:SCALE_LEAD_HOOKS, key:"bank-scalelead", tip:"A question works best here. Words in (brackets) go italic." };
+  // ── More templates (Olly, 2026-11-02): popular 2026 Story formats blended with ours, one per style button inside its type.
+  // Same rules as the banks above: "we/most people", short, no manifestation words, research facts only from RESEARCH_FACTS.
+  // Text lives in st.kt[key] (remembered on this device); fields = [name, label, rows]; "New text" rotates the bank.
+  var KT = {
+    e_tot: { nophoto:1, hint:"This or that: two options side by side. Add Instagram's poll sticker in the marked space so people vote with a tap.",
+      fields:[["top", "Top line", 1], ["a", "Option 1", 2], ["b", "Option 2", 2]],
+      bank:[["Texting all day", "One long call at night"], ["Coffee date", "Dinner date"], ["Meet on an app", "Meet in real life"], ["Say “I love you” first", "Wait for them to say it"],
+        ["A big wedding", "A tiny wedding"], ["Sunday in", "Sunday out"], ["Slow burn", "Instant spark"], ["A planned date", "A spontaneous date"]]
+        .map(function(p, i){ return { top:i % 2 ? "Be honest. Which one?" : "This or that?", a:p[0], b:p[1] }; }) },
+    e_rate: { nophoto:1, hint:"Popular dating advice for people to rate. Add Instagram's emoji slider sticker in the marked space.",
+      fields:[["top", "Top line", 1], ["advice", "The advice", 2], ["note", "Line at the bottom (optional)", 1]],
+      bank:["Never text first.", "Wait three days before texting back.", "Play hard to get.", "Just stop looking and it'll happen.", "Nobody can love you until you love yourself.",
+        "Keep your options open until it's official.", "Lower your standards a bit.", "Don't talk about the future on the first few dates."]
+        .map(function(a, i){ return { top:i % 2 ? "Rate this advice out of 10" : "Rate this dating advice 1 to 10", advice:a, note:"Slide to rate it" }; }) },
+    e_flags: { nophoto:1, hint:"Red flag or green flag: two cards. Add a poll sticker in the marked space (e.g. Been there / Never).",
+      fields:[["top", "Top line", 1], ["red", "Red flag", 2], ["green", "Green flag", 2]],
+      bank:[["They keep us guessing where we stand.", "We always know where we stand."], ["Love bombing in week one.", "Steady effort, week after week."],
+        ["Hot and cold texting.", "They text when they say they will."], ["Only ever makes last-minute plans.", "Plans the date and shows up on time."],
+        ["We feel anxious after every date.", "We feel calm and like ourselves after a date."], ["Dodges any talk about the future.", "Open about wanting something long-term."]]
+        .map(function(p){ return { top:"Red flag vs green flag", red:p[0], green:p[1] }; }) },
+    b_unpop: { hint:"Unpopular opinion: one bold line that cracks an old belief. Change the label in \"Line at the top\". Add an Agree / Disagree poll in the marked space.",
+      fields:[["op", "The opinion", 3], ["note", "Small line underneath (optional)", 2]],
+      bank:[{ op:"We don't need to heal everything before love finds us.", note:"The happy couples I know still have their baggage." },
+        { op:"Another relationship book won't bring the right person any closer.", note:"How we feel around love matters more than what we know." },
+        { op:"Knowing our attachment style isn't the missing piece.", note:"Most happy couples have never heard of attachment styles." },
+        { op:"More dates won't fix dating.", note:"More dates in the same state bring more of the same people." },
+        { op:"Most of us don't need more inner work. We need a different feeling around love.", note:"" },
+        { op:"Dating rules never got anyone a great relationship.", note:"It was never the rules." }] },
+    b_wish: { hint:"Things I wish I knew: three short lessons from your own story, a line or two each.",
+      fields:[["title", "Title", 2], ["l1", "1", 2], ["l2", "2", 2], ["l3", "3", 2]],
+      bank:[{ title:"3 things I wish I knew about love sooner", l1:"It was never about knowing more.", l2:"How I felt around love decided who showed up.", l3:"Calm can be practised, like anything else." },
+        { title:"What I wish I knew after my breakup", l1:"Fixing myself wasn't the missing piece.", l2:"More books and courses didn't change who showed up.", l3:"Feeling it first is what made it real." },
+        { title:"3 things I'd tell my 2019 self", l1:"Stop studying love. Start feeling it.", l2:"The right person doesn't need convincing.", l3:"10 minutes a day changes how we show up." }] },
+    l_pov: { hint:"POV: one line over your photo, like the text on a Reel. Short and specific.",
+      fields:[["pov", "POV line", 2]],
+      bank:["POV: a normal Sunday with my wife", "POV: my 10 minutes before the day starts", "POV: I stopped reading dating books and started practising the feeling",
+        "POV: dinner where nobody's checking their phone", "POV: the life I used to think was for other people"].map(function(t){ return { pov:t }; }) },
+    l_dump: { hint:"Photo dump: the photo you pick plus two more, as tilted polaroids, with one line on top.",
+      fields:[["line", "Line on top", 2]],
+      bank:["Little moments I didn't think I'd have", "Recent moments. Nothing missing.", "A few of my favourite ordinary days", "The calm kind of love, in photos"].map(function(t){ return { line:t }; }) },
+    a_ba: { nophoto:1, hint:"Before / after: the same moment in a survival state, then in an elevated state. Keep the second one ordinary and good, never flat.",
+      fields:[["top", "Top line", 2], ["la", "First label", 1], ["a", "Survival side", 3], ["lb", "Second label", 1], ["b", "Elevated side", 3]],
+      bank:[{ top:"Same Sunday. Two different states.", la:"Survival", a:"Checking if they've seen my Story. Rereading the last text. Wondering what I did wrong.", lb:"Elevated", b:"Coffee in the sun. Phone in the other room. Excited about tonight, not anxious about it." },
+        { top:"A Sunday in survival vs a Sunday in calm", la:"Survival", a:"Scrolling the apps out of boredom. Comparing ourselves to every couple at brunch.", lb:"Elevated", b:"Brunch with friends. Happy for the couples. Quietly sure ours is on the way." },
+        { top:"Same date. Two different states.", la:"Survival", a:"Rehearsing what to say. Reading every pause as a bad sign.", lb:"Elevated", b:"Laughing, curious and fully ourselves. Whatever happens, we're fine." }] },
+    a_check: { nophoto:1, hint:"Checklist: what calm love looks like, ticked off. One item per line, 3 to 6 items.",
+      fields:[["title", "Title", 1], ["items", "Items (one per line)", 6]],
+      bank:[{ title:"Calm love checklist", items:"Always knows where we stand\nTexts back without games\nSafe to be fully ourselves\nPlans the future together\nLaughs at the kitchen table" },
+        { title:"Signs it's the right kind of love", items:"No guessing, no games\nThey show up when they say they will\nWe feel calm after every date\nWe can be silly together\nIt feels like home" },
+        { title:"What I want love to feel like", items:"Safe\nPlayful\nSteady and exciting\nCompletely ourselves\nNothing missing" }] },
+    s_dyk: { hint:"Did you know: one finding from the research list, worded carefully. Never add a number or say a study measured attracting a partner. The bottom line bridges to the daily practice.",
+      fields:[["top", "Top line", 1], ["num", "Big number", 1], ["fact", "The finding", 4], ["src", "Source line", 1]],
+      bank:[{ top:"Did you know?", num:"23%", fact:"In one small HeartMath study, cortisol (the main stress hormone) fell 23% on average after a month of practising feelings like appreciation and care.", src:"McCraty et al. 1998, 45 adults" },
+        { top:"Did you know?", num:"About 100%", fact:"In the same small study, DHEA, a hormone linked with vitality and resilience, rose about 100%.", src:"McCraty et al. 1998, 45 adults" },
+        { top:"Did you know?", num:"5 hours", fact:"In one small study, a single burst of anger went with a lower immune marker for up to about 5 hours afterwards. Feeling care boosted it.", src:"Rein, Atkinson and McCraty 1995, 30 people" },
+        { top:"Did you know?", num:"4 to 6 weeks", fact:"In a randomised trial with cancer survivors, 4 to 6 weeks of coherence training went with better sleep, stress, fatigue and mood.", src:"Elbers and McCraty 2025 review (HeartMath)" }] },
+    r_imsg: { hook:1, hint:"The screenshot as a message in an iMessage-style chat, with your reply underneath. A real message only, shared with permission, names covered.",
+      fields:[["reply", "Your reply (optional)", 1]],
+      bank:["This made my whole week", "So proud of you", "This is exactly it", "Love this so much"].map(function(t){ return { reply:t }; }) },
+    comment: { hook:1, hint:"A sticker-style card with the keyword to reply. VIDEO sends the free training, FEELING sends The Feeling Finder. Match the hook to the keyword.",
+      fields:[["kw", "Keyword", 1], ["get", "What they get", 1]],
+      bank:[{ kw:"VIDEO", get:"and I'll send you the free training" }, { kw:"FEELING", get:"and I'll send you The Feeling Finder" }] }
+  };
+  // the Template row inside each type ("" = the type's original design)
+  var KSTY = {
+    engagement:[["", "Question"], ["e_tot", "This or that"], ["e_rate", "Rate it 1-10"], ["e_flags", "Red flag / green flag"]],
+    lifestyle:[["", "Photo"], ["l_pov", "POV"], ["l_dump", "Photo dump"]],
+    aspire:[["", "Photo"], ["a_ba", "Before / after"], ["a_check", "Checklist"]],
+    results:[["", "Card"], ["r_imsg", "iMessage"]]
+  };
+  st.ks = store.get("ks") || {}; Object.keys(st.ks).forEach(function(k){ if (st.ks[k] && !KT[st.ks[k]]) st.ks[k] = ""; });
+  st.kt = store.get("kt") || {};
+  function kst(){ return typeof KSTY === "object" && KSTY && KSTY[st.kind] && st.ks ? (st.ks[st.kind] || "") : ""; }
+  function ktKey(){ var k = drawKey(); return typeof KT === "object" && KT && KT[k] ? k : ""; }
+  function ktv(k){ if (!st.kt[k] || typeof st.kt[k] !== "object") st.kt[k] = Object.assign({}, KT[k].bank[0]); return st.kt[k]; }
+  function ktSave(){ store.set("kt", st.kt); }
+  // text centred (both ways) on cx, cy in the current fill
+  function ktText(ctx, text, cx, cy, weight, size, min, maxW, maxLines, lhK){
+    var f = fit(ctx, String(text || " "), weight, size, min, maxW, maxLines), lh = f.size * (lhK || 1.2);
+    ctx.font = font(weight, f.size);
+    lines(ctx, f.lines, cx, cy - (f.lines.length - 1) * lh / 2 + f.size * 0.35, lh);
+    return f;
+  }
+  function pinkGrad(ctx, x0, y0, x1, y1){ var g = ctx.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, "#8a2be2"); g.addColorStop(1, "#d946ef"); return g; }
+  function flagIcon(ctx, x, y, color){
+    ctx.save(); ctx.fillStyle = color; rrect(ctx, x, y, 7, 52, 3); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x + 6, y + 2); ctx.lineTo(x + 46, y + 14); ctx.lineTo(x + 6, y + 30); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function tickBox(ctx, x, y, s){
+    ctx.save(); ctx.fillStyle = pinkGrad(ctx, x, y, x + s, y + s); rrect(ctx, x, y, s, s, s * 0.26); ctx.fill();
+    ctx.strokeStyle = "#ffffff"; ctx.lineWidth = s * 0.12; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath(); ctx.moveTo(x + s * 0.26, y + s * 0.52); ctx.lineTo(x + s * 0.44, y + s * 0.7); ctx.lineTo(x + s * 0.76, y + s * 0.32); ctx.stroke(); ctx.restore();
+  }
+  function shadowCard(ctx, x, y, w, h, r, fill, sh){
+    ctx.save(); ctx.shadowColor = sh || "rgba(0,0,0,.35)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 12; ctx.fillStyle = fill; rrect(ctx, x, y, w, h, r); ctx.fill(); ctx.restore();
+  }
+  function bubbleTail(ctx, x, y, right){ // y = bubble bottom, x = bubble side
+    var d = right ? -1 : 1; ctx.beginPath(); ctx.moveTo(x + 4 * d, y - 40); ctx.quadraticCurveTo(x - 4 * d, y, x - 22 * d, y);
+    ctx.quadraticCurveTo(x + 14 * d, y + 6, x + 40 * d, y - 12); ctx.closePath(); ctx.fill();
+  }
+  Object.assign(DRAW, {
+    // Engagement: This or that (two halves, OR in the middle, poll space below)
+    e_tot: async function(ctx){
+      var v = ktv("e_tot"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 290, 62, 44, 2);
+      var top = Math.max(y + 30, 470), h = 1130 - top, cw = (W - 150) / 2;
+      [[60, v.a, "#ffffff", "#1a0524"], [90 + cw, v.b, null, "#ffffff"]].forEach(function(c){
+        shadowCard(ctx, c[0], top, cw, h, 40, c[2] || pinkGrad(ctx, c[0], top, c[0] + cw, top + h));
+        ctx.fillStyle = c[3]; ktText(ctx, c[1], c[0] + cw / 2, top + h / 2, 800, 66, 34, cw - 110, 6, 1.18);
+      });
+      var cx = W / 2, cy = top + h / 2;
+      ctx.save(); ctx.fillStyle = "#1a0524"; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 8;
+      ctx.beginPath(); ctx.arc(cx, cy, 66, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#ffffff"; ctx.font = font(800, 46); ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("OR", cx, cy + 3); ctx.restore();
+    },
+    // Engagement: Rate it 1-10 (the advice in a quote card, slider space below)
+    e_rate: async function(ctx){
+      var v = ktv("e_rate"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 290, 60, 42, 3);
+      var f = fit(ctx, String(v.advice || " "), 800, 72, 42, 760, 5), lh = f.size * 1.2;
+      var ch = 170 + (f.lines.length - 1) * lh + f.size + 90, top = Math.min(Math.max(y + 50, (y + 1130 - ch) / 2), 1140 - ch);
+      shadowCard(ctx, 80, top, W - 160, ch, 44, "#ffffff");
+      ctx.fillStyle = "#d946ef"; ctx.font = font(800, 200); ctx.textAlign = "left"; ctx.fillText(String.fromCharCode(8220), 110, top + 170);
+      ctx.fillStyle = "#1a0524"; ctx.font = font(800, f.size); lines(ctx, f.lines, W / 2, top + 170 + f.size * 0.8, lh);
+      var note = String(v.note || "").trim();
+      if (note){ ctx.fillStyle = "#e9dcf3"; ctx.font = font(600, 40); ctx.textAlign = "center"; ctx.fillText(note, W / 2, 1640); }
+    },
+    // Engagement: Red flag / green flag (two stacked cards, poll space below)
+    e_flags: async function(ctx){
+      var v = ktv("e_flags"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 290, 60, 42, 2);
+      var top = y + 40, gap = 36, ch = (1140 - top - gap) / 2;
+      [["RED FLAG", v.red, "#ef4444", "rgba(239,68,68,.12)"], ["GREEN FLAG", v.green, "#16a34a", "rgba(22,163,74,.12)"]].forEach(function(c, i){
+        var cy = top + i * (ch + gap);
+        shadowCard(ctx, 70, cy, W - 140, ch, 36, "#ffffff", "rgba(0,0,0,.3)");
+        ctx.font = font(800, 34); var lw = ctx.measureText(c[0]).width + 120;
+        ctx.fillStyle = c[3]; rrect(ctx, 110, cy + 34, lw, 72, 36); ctx.fill();
+        flagIcon(ctx, 140, cy + 44, c[2]);
+        ctx.fillStyle = c[2]; ctx.textAlign = "left"; ctx.fillText(c[0], 202, cy + 82);
+        ctx.fillStyle = "#1a0524"; ktText(ctx, c[1], W / 2, cy + 106 + (ch - 106) / 2, 700, 56, 34, W - 240, 4, 1.22);
+      });
+    },
+    // Belief breaking: Unpopular opinion (bold black text on a white card)
+    b_unpop: async function(ctx){
+      var v = ktv("b_unpop"), g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#efe4f7"); g.addColorStop(1, "#dccbea"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); TX(ctx);
+      var x = 80, cw = W - 160, pad = 64, tw = cw - pad * 2, top = (st.stk ? 300 : 480) + M().all, lab = leadText() || "UNPOPULAR OPINION";
+      var f = fit(ctx, String(v.op || " "), 800, 74, 46, tw, st.stk ? 5 : 7), lh = f.size * 1.16;
+      var note = String(v.note || "").trim(), nf = note ? fit(ctx, note, 500, 40, 30, tw, 3) : null;
+      var first = top + pad + 72 + 56 + f.size * 0.8, tEnd = first + (f.lines.length - 1) * lh + f.size * 0.2;
+      var h = tEnd - top + (nf ? 44 + (nf.lines.length - 1) * nf.size * 1.3 + nf.size : 0) + pad;
+      shadowCard(ctx, x, top, cw, h, 40, "#ffffff", "rgba(60,20,90,.22)");
+      ctx.font = font(800, 32); var pw = ctx.measureText(lab).width + 56;
+      ctx.fillStyle = "#111111"; rrect(ctx, x + pad, top + pad, pw, 72, 36); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillText(lab, x + pad + 28, top + pad + 38); ctx.textBaseline = "alphabetic";
+      ctx.fillStyle = "#111111"; ctx.font = font(800, f.size); lines(ctx, f.lines, x + pad, first, lh, "left");
+      if (nf){ ctx.fillStyle = "#6b5b78"; ctx.font = font(500, nf.size); lines(ctx, nf.lines, x + pad, tEnd + 44 + nf.size * 0.8, nf.size * 1.3, "left"); }
+    },
+    // Belief breaking: Notes app (the old belief crossed out, the crack highlighted)
+    b_bnotes: async function(ctx){
+      ctx.fillStyle = "#fbfaf6"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#d9a400"; ctx.font = font(500, 46); ctx.textAlign = "left"; ctx.fillText("‹ Notes", 60, 330);
+      ctx.textAlign = "right"; ctx.fillText("Done", W - 60, 330);
+      var d = new Date(), months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      ctx.fillStyle = "#9b978c"; ctx.font = font(400, 32); ctx.textAlign = "center"; ctx.fillText(d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear(), W / 2, 420);
+      TX(ctx);
+      var o = (st.stk ? 0 : 180) + M().all, x = 70, tw = W - 140;
+      ctx.fillStyle = "#1c1c1e"; var t = fit(ctx, String(st.lead.bnotes || "").trim() || " ", 700, 62, 44, tw, 2); ctx.font = font(700, t.size);
+      var y = lines(ctx, t.lines, x, 520 + o + t.size + mv("lead"), t.size * 1.15, "left") - mv("lead");
+      var a = fit(ctx, st.oldB, 500, 54, 38, tw, 3), ay = y + 50 + a.size + mv("a");
+      ctx.fillStyle = "#8e8e93"; ctx.font = font(500, a.size); ctx.textAlign = "left";
+      a.lines.forEach(function(l, i){
+        var yy = ay + i * a.size * 1.3, w = ctx.measureText(l).width; ctx.fillText(l, x, yy);
+        ctx.save(); ctx.strokeStyle = "#8e8e93"; ctx.lineWidth = Math.max(4, a.size * 0.08); ctx.beginPath(); ctx.moveTo(x - 4, yy - a.size * 0.3); ctx.lineTo(x + w + 4, yy - a.size * 0.3); ctx.stroke(); ctx.restore();
+      });
+      y = ay + (a.lines.length - 1) * a.size * 1.3 - mv("a");
+      var b = fit(ctx, st.crack, 700, 66, 44, tw - 20, st.stk ? 3 : 5), by = y + 80 + b.size + mv("b"), blh = b.size * 1.28;
+      ctx.font = font(700, b.size);
+      b.lines.forEach(function(l, i){ var yy = by + i * blh; ctx.fillStyle = "rgba(255,214,10,.55)"; ctx.fillRect(x - 8, yy - b.size * 0.82, ctx.measureText(l).width + 16, b.size * 1.08); });
+      ctx.fillStyle = "#1c1c1e"; lines(ctx, b.lines, x, by, blh, "left");
+    },
+    // Belief breaking: Things I wish I knew (numbered list of three)
+    b_wish: async function(ctx){
+      var v = ktv("b_wish"); purpleBg(ctx); TX(ctx);
+      var o = (st.stk ? 0 : 140) + M().all;
+      var y = boxes(ctx, v.title || " ", 290 + o, 60, 42, 3);
+      var items = [v.l1, v.l2, v.l3].map(function(t){ return String(t || "").trim(); }).filter(Boolean);
+      var tx0 = 220, tw = W - tx0 - 80, bottom = (st.stk ? 1150 : 1650) + M().all, sz, L, tot;
+      for (sz = 54; ; sz -= 2){
+        ctx.font = font(700, sz);
+        L = items.map(function(t){ return balance(ctx, t, tw); });
+        tot = L.reduce(function(n, l){ return n + Math.max(l.length * sz * 1.25, 110); }, 0) + (items.length - 1) * 50;
+        if (y + 60 + tot <= bottom || sz <= 32) break;
+      }
+      var yy = y + 60;
+      L.forEach(function(l, i){
+        var hgt = Math.max(l.length * sz * 1.25, 110), cy = yy + hgt / 2;
+        ctx.fillStyle = pinkGrad(ctx, 83, cy - 52, 187, cy + 52); ctx.beginPath(); ctx.arc(135, cy, 52, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#ffffff"; ctx.font = font(800, 54); ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String(i + 1), 135, cy + 3); ctx.textBaseline = "alphabetic";
+        ctx.font = font(700, sz); lines(ctx, l, tx0, cy - (l.length - 1) * sz * 1.25 / 2 + sz * 0.35, sz * 1.25, "left");
+        yy += hgt + 50;
+      });
+    },
+    // Lifestyle: POV (plain white text over the photo)
+    l_pov: async function(ctx){
+      var v = ktv("l_pov"), img = await loadImg(st.photo);
+      cover(ctx, img, st.dy); ctx.fillStyle = "rgba(0,0,0,.28)"; ctx.fillRect(0, 0, W, H); topFade(ctx); TX(ctx);
+      ctx.save(); ctx.fillStyle = "#ffffff"; ctx.shadowColor = "rgba(0,0,0,.65)"; ctx.shadowBlur = 18; ctx.shadowOffsetY = 3;
+      ktText(ctx, v.pov, W / 2, 760, 700, 64, 42, 900, 5, 1.2); ctx.restore();
+    },
+    // Lifestyle: Photo dump (three tilted polaroids, one line on top)
+    l_dump: async function(ctx){
+      var v = ktv("l_dump"), g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#f6efe6"); g.addColorStop(1, "#eaddcf"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); TX(ctx);
+      var srcs = [st.photo].concat(PHOTOS.map(function(p){ return p.src; }).filter(function(s){ return s !== st.photo; })).slice(0, 3);
+      var imgs = await Promise.all(srcs.map(function(s){ return loadImg(s).catch(function(){ return null; }); }));
+      [[350, 760, -7], [730, 1060, 6], [390, 1380, -3]].forEach(function(p, i){
+        var im = imgs[i], pw = 520, ph = 600, ps = 460; if (!im) return;
+        ctx.save(); ctx.translate(p[0], p[1]); ctx.rotate(p[2] * Math.PI / 180);
+        ctx.shadowColor = "rgba(60,30,10,.28)"; ctx.shadowBlur = 36; ctx.shadowOffsetY = 14; ctx.fillStyle = "#ffffff"; ctx.fillRect(-pw / 2, -ph / 2, pw, ph);
+        ctx.shadowColor = "transparent"; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+        var c = Math.min(im.width, im.height);
+        ctx.drawImage(im, (im.width - c) / 2, (im.height - c) / 2, c, c, -ps / 2, -ph / 2 + 30, ps, ps);
+        ctx.restore();
+      });
+      boxes(ctx, v.line || " ", 280, 58, 42, 2);
+    },
+    // Aspiration: Before / after (survival half, then elevated half)
+    a_ba: async function(ctx){
+      var v = ktv("a_ba"), mid = 980;
+      ctx.fillStyle = "#26212c"; ctx.fillRect(0, 0, W, mid);
+      var g = ctx.createLinearGradient(0, mid, 0, H); g.addColorStop(0, "#fdf4ff"); g.addColorStop(1, "#f5d0fe"); ctx.fillStyle = g; ctx.fillRect(0, mid, W, H - mid);
+      TX(ctx);
+      var y = boxes(ctx, v.top || " ", 270, 56, 40, 2), aTop = y + 40;
+      if (String(v.la || "").trim()) pill(ctx, String(v.la).trim().toUpperCase(), aTop, "rgba(255,255,255,.14)", "#d6d0dc");
+      ctx.fillStyle = "#cfc8d6"; ktText(ctx, v.a, W / 2, (aTop + 100 + mid - 40) / 2, 600, 52, 34, 880, 5, 1.25);
+      if (String(v.lb || "").trim()) pill(ctx, String(v.lb).trim().toUpperCase(), mid + 70, "#d946ef", "#ffffff");
+      ctx.fillStyle = "#1a0524"; ktText(ctx, v.b, W / 2, (mid + 170 + 1660) / 2, 700, 56, 36, 880, 6, 1.25);
+    },
+    // Aspiration: Checklist (calm-love ticks)
+    a_check: async function(ctx){
+      var v = ktv("a_check");
+      ctx.fillStyle = "#fbf7f2"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "rgba(217,70,239,.10)"; ctx.beginPath(); ctx.arc(W * 0.9, 380, 380, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(W * 0.05, 1600, 320, 0, Math.PI * 2); ctx.fill();
+      TX(ctx);
+      ctx.fillStyle = "#1a0524"; var t = fit(ctx, String(v.title || " "), 800, 72, 48, 900, 2); ctx.font = font(800, t.size);
+      var y = lines(ctx, t.lines, W / 2, 300 + t.size, t.size * 1.15);
+      var items = String(v.items || "").split("\n").map(function(s){ return s.trim(); }).filter(Boolean).slice(0, 7);
+      var top = y + 50, rh = Math.min(170, (1680 - top) / Math.max(1, items.length)), x = 80, cw = W - 160;
+      items.forEach(function(it, i){
+        var ry = top + i * rh, bh = rh - 24, s = Math.min(76, bh - 36);
+        shadowCard(ctx, x, ry, cw, bh, 28, "#ffffff", "rgba(60,20,90,.12)");
+        tickBox(ctx, x + 32, ry + (bh - s) / 2, s);
+        ctx.fillStyle = "#1a0524"; var f = fit(ctx, it, 700, 46, 30, cw - s - 100, 2); ctx.font = font(700, f.size);
+        lines(ctx, f.lines, x + s + 64, ry + bh / 2 - (f.lines.length - 1) * f.size * 0.6 + f.size * 0.35, f.size * 1.2, "left");
+      });
+    },
+    // Science: Did you know? (one research finding, big number)
+    s_dyk: async function(ctx){
+      var v = ktv("s_dyk"), sm = sciM(), a = sm.all, bottom = String(st.sciBottom || "").trim();
+      purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 280 + a + sm.top, 60, 42, 2) - sm.top, ny = y + 60 + sm.mid;
+      var nf = fit(ctx, String(v.num || " "), 800, 230, 110, 920, 1);
+      ctx.save(); ctx.font = font(800, nf.size); ctx.fillStyle = pinkGrad(ctx, 100, 0, W - 100, 0); ctx.shadowColor = "rgba(217,70,239,.45)"; ctx.shadowBlur = 40;
+      ny = lines(ctx, nf.lines, W / 2, ny + nf.size * 0.8, nf.size * 1.05) - nf.size * 1.05; ctx.restore();
+      ctx.fillStyle = "#ffffff"; var ff = fit(ctx, String(v.fact || " "), 600, 54, 36, 900, 6); ctx.font = font(600, ff.size);
+      var fy = lines(ctx, ff.lines, W / 2, ny + 90 + ff.size, ff.size * 1.28);
+      if (String(v.src || "").trim()){ ctx.fillStyle = "#cbb8da"; ctx.font = font(500, 30); ctx.textAlign = "center"; ctx.fillText(String(v.src).trim(), W / 2, fy + 30); }
+      if (bottom){
+        ctx.save(); ctx.fillStyle = "#ffffff"; ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 12; ctx.textAlign = "center";
+        var bf = fit(ctx, bottom, 700, 44, 32, 920, 2); ctx.font = font(700, bf.size);
+        lines(ctx, bf.lines, W / 2, (bf.lines.length > 1 ? 1610 : 1640) + a + sm.bot, bf.size * 1.2); ctx.restore();
+      }
+    },
+    // Results: iMessage (the screenshot as their message, Olly's reply in blue)
+    r_imsg: async function(ctx){
+      var v = ktv("r_imsg"); purpleBg(ctx); TX(ctx);
+      ctx.fillStyle = "#ffffff"; var f = fit(ctx, st.res || " ", 800, 60, 42, 900, 3); ctx.font = font(800, f.size);
+      var y = lines(ctx, f.lines, W / 2, 290 + f.size, f.size * 1.18);
+      var x = 70, cw = W - 140, top = y + 30, maxBot = 1680, reply = String(v.reply || "").trim(), rb = null;
+      if (reply){
+        ctx.font = font(500, 42); var rl = wrap(ctx, reply, 560), rw = 0;
+        rl.forEach(function(t){ rw = Math.max(rw, ctx.measureText(t).width); });
+        rb = { l:rl, w:rw + 64, h:(rl.length - 1) * 54 + 42 + 52 };
+      }
+      var mTop = top + 250, bx = x + 50, maxW = 700, maxH = maxBot - 60 - (rb ? rb.h + 90 : 0) - mTop, img = null, iw = maxW - 24, ih = maxH - 24;
+      if (st.shot){ img = await loadImg(st.shot); var s = Math.min((maxW - 24) / img.width, (maxH - 24) / img.height, 2.5); iw = img.width * s; ih = img.height * s; }
+      var mBot = mTop + ih + 24, bot = Math.min(maxBot, mBot + (rb ? rb.h + 90 : 0) + 60);
+      shadowCard(ctx, x, top, cw, bot - top, 44, "#ffffff", "rgba(0,0,0,.45)");
+      ctx.save(); rrect(ctx, x, top, cw, bot - top, 44); ctx.clip();
+      ctx.fillStyle = "#f6f6f7"; ctx.fillRect(x, top, cw, 170); ctx.fillStyle = "#e3e3e6"; ctx.fillRect(x, top + 170, cw, 2);
+      ctx.strokeStyle = "#0a84ff"; ctx.lineWidth = 7; ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.beginPath(); ctx.moveTo(x + 62, top + 62); ctx.lineTo(x + 40, top + 85); ctx.lineTo(x + 62, top + 108); ctx.stroke();
+      ctx.fillStyle = "#a7a7ad"; ctx.beginPath(); ctx.arc(W / 2, top + 70, 42, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(W / 2, top + 60, 15, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(W / 2, top + 98, 25, Math.PI, 0); ctx.fill();
+      ctx.fillStyle = "#1c1c1e"; ctx.font = font(500, 28); ctx.textAlign = "center"; ctx.fillText("Member", W / 2, top + 148);
+      ctx.restore();
+      ctx.fillStyle = "#8e8e93"; ctx.font = font(500, 26); ctx.textAlign = "center"; ctx.fillText("Today", W / 2, top + 222);
+      ctx.fillStyle = "#e9e9eb"; rrect(ctx, bx, mTop, iw + 24, ih + 24, 40); ctx.fill(); bubbleTail(ctx, bx, mBot, false);
+      if (img){ ctx.save(); rrect(ctx, bx + 12, mTop + 12, iw, ih, 30); ctx.clip(); ctx.drawImage(img, bx + 12, mTop + 12, iw, ih); ctx.restore(); }
+      else { ctx.fillStyle = "#8e8e93"; ctx.font = font(500, 40); ctx.fillText("Upload the screenshot", bx + 12 + iw / 2, mTop + 12 + ih / 2); }
+      if (rb){
+        var ry = mBot + 50, rx = x + cw - 50 - rb.w;
+        ctx.fillStyle = "#0a84ff"; rrect(ctx, rx, ry, rb.w, rb.h, Math.min(44, rb.h / 2)); ctx.fill(); bubbleTail(ctx, rx + rb.w, ry + rb.h, true);
+        ctx.fillStyle = "#ffffff"; ctx.font = font(500, 42); lines(ctx, rb.l, rx + 32, ry + 26 + 42 * 0.8, 54, "left");
+        ctx.fillStyle = "#8e8e93"; ctx.font = font(500, 24); ctx.textAlign = "right"; ctx.fillText("Delivered", rx + rb.w, ry + rb.h + 34);
+      }
+    },
+    // Lead gen: Comment keyword (sticker-style card with the keyword pill, arrow to the reply box)
+    comment: async function(ctx){
+      var v = ktv("comment"), kw = String(v.kw || "").trim().toUpperCase() || "VIDEO";
+      purpleBg(ctx);
+      var t = titleBoxes(ctx, st.hook || " ", 290, 64, 44, 6);
+      var verb = imgCta(kw).split(String.fromCharCode(8220))[0].trim().toUpperCase(), cw = 780, chh = 440, cy = Math.min(Math.max(t.y + 300, 1000), 1240);
+      ctx.save(); ctx.translate(W / 2, cy); ctx.rotate(-4 * Math.PI / 180);
+      shadowCard(ctx, -cw / 2, -chh / 2, cw, chh, 56, "#ffffff", "rgba(0,0,0,.4)");
+      ctx.fillStyle = "#6b5b78"; ctx.font = font(700, 44); ctx.textAlign = "center"; ctx.fillText(verb, 0, -chh / 2 + 92);
+      var kf = fit(ctx, kw, 800, 130, 60, cw - 180, 1); ctx.font = font(800, kf.size);
+      var pw = Math.min(cw - 80, ctx.measureText(kw).width + 110), ph = kf.size * 1.35;
+      ctx.fillStyle = pinkGrad(ctx, -pw / 2, 0, pw / 2, 0); rrect(ctx, -pw / 2, -ph / 2 + 10, pw, ph, ph / 2); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.textBaseline = "middle"; ctx.fillText(kw, 0, 10 + kf.size * 0.04); ctx.textBaseline = "alphabetic";
+      var get = String(v.get || "").trim();
+      if (get){ ctx.fillStyle = "#6b5b78"; var gf = fit(ctx, get, 500, 36, 28, cw - 100, 2); ctx.font = font(500, gf.size); lines(ctx, gf.lines, 0, chh / 2 - 58 - (gf.lines.length - 1) * gf.size * 1.2, gf.size * 1.2); }
+      ctx.restore();
+      arrow(ctx, W / 2, Math.min(cy + chh / 2 + 50, 1580), "#f3eaf9");
+    }
+  });
   // Lead gen layouts: size (k) and up/down (dy) per part, per layout, remembered on this device; saved versions to A/B test.
   var LS_PARTS = {
     page:       [["badge", "Badge"], ["hook", "Hook"], ["media", "Phone"], ["cta", "Button"]],
@@ -4296,8 +5031,44 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       $("tsm-hookLbl").textContent = k.label; $("tsm-newHook").textContent = k.more; $("tsm-hookHint").textContent = k.tip;
       $("tsm-hook").value = st[k.text];
     }
+    ktShow();
     store.set("kind", st.kind); store.set("layout", st.layout); store.set("bstyle", st.bstyle);
   }
+  // The new templates' controls: the Template row for the type, and one box per text field.
+  function ktShow(){
+    var ks = KSTY[st.kind], kk = ktKey(), kd = KT[kk], box = $("tsm-ksty");
+    $("tsm-kstyGroup").hidden = !ks; box.textContent = "";
+    if (ks) ks.forEach(function(s){
+      var b = document.createElement("button"); b.type = "button"; b.textContent = s[1]; b.setAttribute("aria-pressed", String(s[0] === kst()));
+      b.addEventListener("click", function(){ st.ks[st.kind] = s[0]; store.set("ks", st.ks); $("tsm-status").textContent = ""; showLayout(); render(); });
+      box.appendChild(b);
+    });
+    $("tsm-ktGroup").hidden = !kd;
+    if (st.kind === "belief" && st.bstyle === "wish") $("tsm-leadWrap").hidden = true;
+    if (!kd) return;
+    $("tsm-kindHint").textContent = kd.hint;
+    if (!kd.hook) $("tsm-hookGroup").hidden = true;
+    if (st.kind === "belief"){ $("tsm-mythGroup").hidden = true; $("tsm-mvEach").hidden = true; }
+    if (kd.nophoto) $("tsm-photoGroup").hidden = true;
+    $("tsm-aspMoveGroup").hidden = true; $("tsm-engGroup").hidden = true;
+    var fb = $("tsm-ktFields");
+    if (fb.dataset.k === kk && fb.contains(document.activeElement)) return;
+    fb.textContent = ""; fb.dataset.k = kk;
+    var v = ktv(kk);
+    kd.fields.forEach(function(f){
+      var lab = document.createElement("label"); lab.className = "label"; lab.htmlFor = "tsm-kt-" + f[0]; lab.textContent = f[1];
+      var inp = document.createElement(f[2] > 1 ? "textarea" : "input"); inp.id = "tsm-kt-" + f[0];
+      if (f[2] > 1) inp.rows = f[2]; else inp.type = "text";
+      inp.value = v[f[0]] || "";
+      inp.addEventListener("input", function(){ ktv(kk)[f[0]] = inp.value; ktSave(); render(); });
+      fb.append(lab, inp);
+    });
+  }
+  $("tsm-ktNew").addEventListener("click", function(){
+    var kk = ktKey(); if (!kk) return;
+    st.kt[kk] = Object.assign({}, nextFrom(KT[kk].bank, "kt-" + kk)); ktSave();
+    $("tsm-ktFields").dataset.k = ""; ktShow(); render();
+  });
 
   // ── Wire up ──────────────────────────────────────────────────────
   document.querySelectorAll("#tsm-kinds button").forEach(function(b){
@@ -4366,7 +5137,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   (function(){
     var pv = $("tsm-preview"), drag = null, queued = false;
     pv.addEventListener("pointerdown", function(e){
-      var p = st.kind === "engagement" ? engPos() : txOn() ? txPos() : null;
+      var p = st.kind === "engagement" && !kst() ? engPos() : txOn() ? txPos() : null;
       if (!p) return;
       drag = { p:p, x:e.clientX, y:e.clientY, ox:p.x, oy:p.y, k:W / (pv.clientWidth || W) };
       pv.setPointerCapture(e.pointerId); e.preventDefault();
@@ -4387,7 +5158,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     var sty = st.sciStyle, sm = sciM();
     document.querySelectorAll("#tsm-sciStyles button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.sci === sty)); });
     $("tsm-sciWaves").hidden = sty !== "waves"; $("tsm-sciTable").hidden = sty !== "table"; $("tsm-sciPhotos").hidden = sty !== "photo";
-    $("tsm-sciMidLbl").textContent = sty === "photo" ? "Move photo" : sty === "table" ? "Table" : "Chart";
+    $("tsm-sciMidLbl").textContent = sty === "photo" ? "Move photo" : sty === "table" ? "Table" : sty === "dyk" ? "Number and finding" : "Chart";
     [["tsm-sciAll", "all"], ["tsm-sciTop", "top"], ["tsm-sciMid", "mid"], ["tsm-sciBot", "bot"]].forEach(function(q){ $(q[0]).value = sm[q[1]]; });
     ["sciW1", "sciW1s", "sciW2", "sciW2s", "sciRows", "sciBottom"].forEach(function(k){ var e = $("tsm-" + k); if (document.activeElement !== e) e.value = st[k]; });
     var box = $("tsm-sciPicks"); box.textContent = "";
@@ -4765,7 +5536,8 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     .observe($("tsm-preview"), { attributes:true, attributeFilter:["src"] });
   var calBtn = hubButton("story", function(){
     var k = KINDS[st.kind] || {};
-    var t = String(st.calTitle || (k.text ? st[k.text] : st.kind === "belief" ? st.oldB : "") || "").replace(/\s+/g, " ").trim();
+    var kk = ktKey(), kv = kk && !KT[kk].hook ? ktv(kk)[KT[kk].fields[0][0]] : "";
+    var t = String(st.calTitle || kv || (k.text ? st[k.text] : st.kind === "belief" ? st.oldB : "") || "").replace(/\s+/g, " ").trim();
     return { title: t || ("Story: " + st.kind), type: st.calType || STORY_CAL_TYPE[st.kind] || "", image: calImage(), join: !!st.calTitle, music: songsNow() };
   });
   calBtn.addEventListener("click", function(){ setTimeout(songsNext, 100); }); // next Story gets fresh songs
@@ -4777,9 +5549,9 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   // The other types start from their banks, and the page reopens on the last type used.
   var last = store.get("layout");
   if (!store.get("pageDefault")){ store.set("pageDefault", true); last = "page"; }
-  if (["page", "scalepage", "video", "player", "notes", "myth", "scalecheck"].indexOf(last) !== -1) st.layout = last;
+  if (["page", "scalepage", "video", "player", "notes", "myth", "scalecheck", "comment"].indexOf(last) !== -1) st.layout = last;
   var lastK = store.get("kind"); if (KINDS[lastK]) st.kind = lastK;
-  var lastB = store.get("bstyle"); if (["told", "mythtruth", "crossed", "post", "photo", "dm"].indexOf(lastB) !== -1) st.bstyle = lastB;
+  var lastB = store.get("bstyle"); if (["told", "mythtruth", "crossed", "post", "photo", "dm", "unpop", "bnotes", "wish"].indexOf(lastB) !== -1) st.bstyle = lastB;
   var lastL = store.get("leads"); if (lastL && typeof lastL === "object") Object.keys(LEADS).forEach(function(k){ if (typeof lastL[k] === "string") st.lead[k] = lastL[k]; });
   if (store.get("stk") === false) st.stk = false;
   st.hook = TITLE;
@@ -4789,7 +5561,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   if (!st.lsBy.scalecheck && store.get("ls") && typeof store.get("ls") === "object") st.lsBy.scalecheck = store.get("ls");
   st.aspUp = Number(store.get("aspUp")) || 0;
   st.sci = nextFrom(SCI_HOOKS, "bank-science"); st.sciBottom = SCI_BOTTOM[0];
-  if (["waves", "heart", "table", "photo"].indexOf(store.get("sciStyle")) !== -1) st.sciStyle = store.get("sciStyle");
+  if (["waves", "heart", "table", "photo", "dyk"].indexOf(store.get("sciStyle")) !== -1) st.sciStyle = store.get("sciStyle");
   if (typeof store.get("sciRows") === "string" && store.get("sciRows").trim()) st.sciRows = store.get("sciRows");
   st.sc = nextFrom(SCALE_HOOKS, "bank-scale"); st.scBottom = SCALE_BOTTOM[0];
   if (["full", "top", "bottom"].indexOf(store.get("scStyle")) !== -1) st.scStyle = store.get("scStyle");

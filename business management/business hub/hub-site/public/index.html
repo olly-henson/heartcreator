@@ -739,6 +739,13 @@
   .audtable{ min-width:420px; }
   .audbase{ flex-wrap:wrap; }
   .audbase input{ width:90px; }
+  .lmnotify{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:0 0 14px; }
+  .lmnotify:empty{ display:none; }
+  .lmnon{ font-size:13px; font-weight:600; color: var(--good); }
+  .calbox .audname{ font-size:17px; }
+  .calbody{ padding:8px 18px 22px; }
+  .calbody > .section-label:first-child, .calbody > .hint:first-child{ margin-top:12px !important; }
+  @media (max-width:600px){ .calbody{ padding:6px 10px 18px; } }
   @media (max-width:600px){ .audsub{ min-width:0; } .audhead{ flex-wrap:wrap; } }
   .audtable td{ vertical-align:top; }
   .audtable input{ width:100%; max-width:120px; box-sizing:border-box; }
@@ -1560,7 +1567,11 @@
 
   <div id="tab-content" class="tabpanel">
 
-    <h2 class="bighead">Reels</h2>
+    <span class="hint" style="display:block; margin:0 0 16px;">Tap a calendar to open it. The ones you leave open stay open next time.</span>
+    <div class="audboxes calboxes">
+    <div class="audbox calbox" data-cal="reels">
+      <button type="button" class="audhead" aria-expanded="false"><span class="audname">Reels</span><span class="audsub">Ideas and calendar</span><span class="audchev">▾</span></button>
+      <div class="audbody calbody" hidden>
     <p class="section-label" style="margin-top:20px;">Video ideas</p>
     <span class="hint" style="display:block; margin:-6px 0 20px;">Type an idea, then choose whether it fills the next open slot or a specific date. Once it has both a title and a date it drops off this list and lives on the calendar below instead — aiming for 3 a day.</span>
     <div class="tablewrap">
@@ -1709,7 +1720,11 @@
     <button class="addbtn" id="captionTemplateAdd" style="margin-top:10px;">+ Add caption template</button>
     </div>
 
-    <h2 class="bighead" style="margin-top:56px;">Stories</h2>
+      </div>
+    </div>
+    <div class="audbox calbox" data-cal="stories">
+      <button type="button" class="audhead" aria-expanded="false"><span class="audname">Stories</span><span class="audsub">Ideas and calendar</span><span class="audchev">▾</span></button>
+      <div class="audbody calbody" hidden>
     <p class="section-label" style="margin-top:20px;">Story ideas</p>
     <span class="hint" style="display:block; margin:-6px 0 20px;">Type an idea, then choose whether it fills the next open slot or a specific date. Once it has both a title and a date it drops off this list and lives on the calendar below instead — there's no limit on how many go on one day, so "next available slot" just means today.</span>
     <div class="tablewrap">
@@ -1743,7 +1758,11 @@
     <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot published"></span>Posted</span></div>
     <div class="calendar" id="storyCalendar"></div>
 
-    <h2 class="bighead" style="margin-top:56px;">Email</h2>
+      </div>
+    </div>
+    <div class="audbox calbox" data-cal="email">
+      <button type="button" class="audhead" aria-expanded="false"><span class="audname">Email</span><span class="audsub">Calendar</span><span class="audchev">▾</span></button>
+      <div class="audbody calbody" hidden>
     <span class="hint" style="display:block; margin:0 0 14px;">Plan your emails ahead. Add one here, or use "Send to Hub calendar" in the content generator's Email tab and it lands on the next free day as a Draft. Tap a day to edit an email, copy it or mark it Scheduled or Published. Scheduled emails turn Published once their day has passed.</span>
     <div class="emadd">
       <input type="text" id="emCalSubject" placeholder="Email subject line" autocomplete="off">
@@ -1763,7 +1782,11 @@
     <div class="calendar" id="emCalendar"></div>
     <div id="emCalDay" class="emday" hidden></div>
 
-    <h2 class="bighead" style="margin-top:56px;">YouTube community</h2>
+      </div>
+    </div>
+    <div class="audbox calbox" data-cal="yt">
+      <button type="button" class="audhead" aria-expanded="false"><span class="audname">YouTube community</span><span class="audsub">Calendar</span><span class="audchev">▾</span></button>
+      <div class="audbody calbody" hidden>
     <span class="hint" style="display:block; margin:0 0 14px;">One community post a day. Add one here, or use "Add to calendar" in the content generator and it lands on the next free day with its image. Tap a day to edit the post and pinned comment, save the image, copy them or mark it Scheduled or Published. Scheduled posts turn Published once their day has passed.</span>
     <div class="emadd">
       <input type="text" id="ytCalTitle" placeholder="Post idea" autocomplete="off">
@@ -1782,6 +1805,9 @@
     <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot recorded"></span>Scheduled</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
     <div class="calendar" id="ytCalendar"></div>
     <div id="ytCalDay" class="emday" hidden></div>
+      </div>
+    </div>
+    </div>
 
   </div>
 
@@ -2356,6 +2382,7 @@ https://www.instagram.com/attractwitholly
 
   <div id="tab-looms" class="tabpanel" hidden="">
     <span class="hint" style="display:block; margin:0 0 14px;">Everyone who's applied, newest first. Rate each one, open their mind map, go full screen and record your Loom over it. Your rating and plan of action save in the Hub.</span>
+    <div id="lmNotify" class="lmnotify"></div>
     <div id="loomsBody"></div>
   </div>
 
@@ -3478,7 +3505,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var v = state.content.outliers[i];
     var hasStats = (Number(v.views)||0) > 0 || (Number(v.likes)||0) > 0 || (Number(v.comments)||0) > 0;
     if (hasStats && !window.confirm('"'+idea.title+'" already has stats logged in Video stats tracking. Untick it anyway and remove it?')){
-      idea.posted = true;
+      idea.posted = true; idea.recorded = true;
       return;
     }
     idea.synced = false;
@@ -3855,7 +3882,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
       function setStatus(published, recorded){
         if (published === idea.posted && !!recorded === !!idea.recorded) return;
-        idea.recorded = !!recorded || (published && !!idea.recorded);
+        idea.recorded = !!recorded || !!published;   // published means it was recorded (Olly, 2026-11-02)
         if (published === idea.posted){ markDirty(); renderDayModal(); renderCalendar(); return; }
         idea.posted = published;
         row.className = "dayitem" + (idea.posted ? " posted" : "");
@@ -4957,7 +4984,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmEsc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
   // Pipeline (2026-11-01): each applicant has one stage. Old records: archived = Not a fit; GHL's loomSent / joined still count.
   // Flags in state.looms[id]: waSent, emSent, waReply, emReply, product ("monthly" | "annual").
-  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["loom", "Loom sent"], ["joined", "Joined"], ["nofit", "Not a fit"]];
+  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["recorded", "Loom recorded"], ["loom", "Loom sent"], ["joined", "Joined"], ["nofit", "Not a fit"]];
   function lmById(id){ return (lmData || []).filter(function(x){ return x.id === id; })[0]; }
   // The stage is the furthest step ticked on the card (2026-11-01 v2), so unticking a step moves them back.
   function lmStage(a){
@@ -4966,6 +4993,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (s.archived) return "nofit";
     if (s.product || (a.joined && s.product !== "")) return "joined";
     if (s.loom || (a.loomSent && s.loom !== false)) return "loom";
+    if (s.recorded) return "recorded";   // Loom recorded, not sent yet (2026-11-02)
     if (s.waReply || s.emReply) return "replied";
     if (s.waSent || s.emSent) return "contacted";
     return "new";
@@ -4979,13 +5007,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Checklist on each card: tap a step to tick it, tap again to untick. Pink = done.
   function lmStageBox(a){
     var s = lmStore(a.id), st = lmStage(a);
-    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, loom:st === "loom" || st === "joined" && (s.loom || a.loomSent), monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived };
+    var on = { recorded:!!s.recorded, waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, loom:st === "loom" || st === "joined" && (s.loom || a.loomSent), monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived };
     function btn(k, label){ return '<button type="button" data-act="' + k + '" aria-pressed="' + !!on[k] + '">' + label + "</button>"; }
     function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
     return '<div class="lmstg">' +
       row("1", "I messaged them", btn("waSent", "WhatsApp") + btn("emSent", "Email")) +
       row("2", "They replied", btn("waReply", "WhatsApp") + btn("emReply", "Email")) +
-      row("3", "Loom", btn("loom", "Loom sent")) +
+      row("3", "Loom", btn("recorded", "Recorded") + btn("loom", "Loom sent")) +
       row("4", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
       '<div class="lmstep">' + btn("nofit", "Not a fit") + "</div></div>";
   }
@@ -4997,7 +5025,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     fetch("/api/applicants", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){
       lmLoading = false;
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
-      lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id; renderLooms();
+      lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
+      // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
+      if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmFilter = lmStage(w); lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
+      renderLooms();
     }).catch(function(){ lmLoading = false; lmErr = "Couldn't reach GHL. If you've been away a while, reload the Hub to log in again."; renderLooms(); });
   }
   function lmBranches(a){
@@ -5039,6 +5070,76 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     function done(){ b.textContent = "Copied ✓"; setTimeout(function(){ b.textContent = txt; }, 1200); }
     if (navigator.clipboard) navigator.clipboard.writeText(v).then(done, done); else done();
   }, true);
+  // New-application notifications (Olly, 2026-11-02). GHL's application workflow calls /api/track/new-application,
+  // the Hub pushes "New application: Name" to every device that tapped "Notify me", and tapping it opens
+  // /#looms=<contactId>: the Looms tab, refreshed from GHL, on that person. sw.js shows the notification.
+  var lmWant = null, lmTries = 0, pushKey = "";
+  // the Refresh button sits at the top of the Looms tab (easy to reach on the phone) and says when it's updating
+  function lmTop(){
+    return '<div class="lmbar" style="margin:0 0 10px"><button type="button" class="copybtn" id="lmRefresh">' + (lmLoading ? "Updating from GHL…" : "Refresh from GHL") + "</button>" +
+      (lmWant ? '<span class="hint">Waiting for GHL to finish saving the new application…</span>' : "") + (lmErr ? '<span class="hint">' + lmEsc(lmErr) + "</span>" : "") + "</div>";
+  }
+  // coming back to the Hub with the Looms tab open fetches the latest applicants
+  document.addEventListener("visibilitychange", function(){ var t = document.getElementById("tab-looms"); if (!document.hidden && t && !t.hidden && lmData && !lmLoading) lmLoad(); });
+  function openLoomsFor(id){
+    lmWant = id || null;
+    goTab("looms");
+    if (!lmLoading) lmLoad();
+  }
+  function loomsFromHash(){
+    var m = /^#looms(?:=([A-Za-z0-9_-]+))?$/.exec(location.hash || "");
+    if (!m) return;
+    try { history.replaceState(null, "", location.pathname + location.search); } catch(e){}
+    openLoomsFor(m[1]);
+  }
+  window.addEventListener("hashchange", loomsFromHash);
+  function pushOk(){ return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window; }
+  function pushBytes(s){ s = String(s).replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; var r = atob(s), a = new Uint8Array(r.length); for (var i = 0; i < r.length; i++) a[i] = r.charCodeAt(i); return a; }
+  function pushPost(body){ return fetch("/api/push", { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(body), cache:"no-store" }).then(function(r){ return r.json(); }); }
+  function pushUI(){
+    var host = document.getElementById("lmNotify"); if (!host) return;
+    if (!pushOk()){
+      var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) && !navigator.standalone;
+      host.innerHTML = '<span class="hint">' + (ios ? "To get a notification when someone applies, open the Hub from its Home Screen icon (not Safari), then come back to this tab." : "This browser can't show notifications. Use the Hub's Home Screen app on your iPhone.") + "</span>";
+      return;
+    }
+    if (Notification.permission === "denied"){ host.innerHTML = '<span class="hint">Notifications are blocked for the Hub. On iPhone: Settings, Notifications, Business Hub, then switch on Allow Notifications.</span>'; return; }
+    navigator.serviceWorker.ready.then(function(reg){ return reg.pushManager.getSubscription(); }).then(function(sub){
+      if (sub && Notification.permission === "granted"){
+        host.innerHTML = '<span class="lmnon">Notifications are on for this device</span><button type="button" class="copybtn" id="pushTest">Send a test</button><button type="button" class="copybtn" id="pushOff">Turn off</button><span class="hint" id="pushSt"></span>';
+        document.getElementById("pushTest").addEventListener("click", function(){
+          var st = document.getElementById("pushSt"); st.textContent = "Sending…";
+          pushPost({ action:"test" }).then(function(d){ st.textContent = d && d.ok ? "Lock your phone now. The test arrives in about 10 seconds." : "Couldn't send: " + ((d && d.error) || "try again"); }).catch(function(){ st.textContent = "Couldn't send. Reload the Hub and try again."; });
+        });
+        document.getElementById("pushOff").addEventListener("click", function(){
+          var ep = sub.endpoint;
+          sub.unsubscribe().catch(function(){}).then(function(){ return pushPost({ action:"off", endpoint:ep }); }).catch(function(){}).then(pushUI);
+        });
+      } else {
+        host.innerHTML = '<button type="button" class="copybtn" id="pushOn">Notify me when someone applies</button><span class="hint" id="pushSt"></span>';
+        document.getElementById("pushOn").addEventListener("click", function(){
+          var st = document.getElementById("pushSt");
+          // ask first, straight from the tap (iPhone only allows it from a tap)
+          Notification.requestPermission().then(function(p){
+            if (p !== "granted"){ pushUI(); return; }
+            st.textContent = "Turning on…";
+            var key = pushKey ? Promise.resolve(pushKey) : fetch("/api/push", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ return d.publicKey; });
+            return Promise.all([navigator.serviceWorker.ready, key]).then(function(x){
+              return x[0].pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:pushBytes(x[1]) });
+            }).then(function(s){ return pushPost({ sub:s.toJSON(), ua:navigator.userAgent }); }).then(function(d){ if (!d || !d.ok) throw new Error("save"); pushUI(); });
+          }).catch(function(){ st.textContent = "Couldn't turn them on. Reload the Hub and try again."; });
+        });
+      }
+    });
+  }
+  function pushInit(){
+    pushUI();
+    if (!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker.register("/sw.js").catch(function(){});
+    // the service worker asks an already-open Hub to show the applicant that was tapped
+    navigator.serviceWorker.addEventListener("message", function(e){ var u = e.data && e.data.open, h = u ? u.indexOf("#") : -1; if (h > -1){ location.hash = u.slice(h); loomsFromHash(); } });
+    if (pushOk()) fetch("/api/push", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ pushKey = (d && d.publicKey) || ""; }).catch(function(){});
+  }
   function renderLooms(){
     var host = document.getElementById("loomsBody"); if (!host) return;
     if (!lmData){
@@ -5053,7 +5154,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (lmFilter !== "board" && !counts.hasOwnProperty(lmFilter)) lmFilter = "new";
     var fbar = '<div class="lmfilt">' + LM_STAGES.map(function(x){ return '<button type="button" data-f="' + x[0] + '" aria-pressed="' + (lmFilter === x[0]) + '">' + x[1] + " " + counts[x[0]] + "</button>"; }).join("") + '<button type="button" data-f="board" aria-pressed="' + (lmFilter === "board") + '">Board</button></div>';
     if (lmFilter === "board"){
-      host.innerHTML = fbar + '<div class="lmboard">' + LM_STAGES.map(function(x){
+      host.innerHTML = lmTop() + fbar + '<div class="lmboard">' + LM_STAGES.map(function(x){
         return '<div class="lmcol"><h4>' + x[1] + " " + counts[x[0]] + "</h4>" + lmData.filter(function(a){ return lmStage(a) === x[0]; }).map(function(a){
           var r = lmStore(a.id).rating;
           return '<button type="button" class="lmbc" data-id="' + a.id + '" data-st="' + x[0] + '"><b>' + lmEsc((a.firstName + " " + a.lastName).trim() || a.email) + "</b>" + (r ? '<span class="lmtag">' + { good:"Good", okay:"Okay", bad:"Not good" }[r] + "</span>" : "") + lmLabels(a) + "</button>";
@@ -5061,11 +5162,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       }).join("") + "</div>";
       host.querySelectorAll(".lmfilt button").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.f; renderLooms(); }); });
       host.querySelectorAll(".lmbc").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.st; lmSel = b.dataset.id; renderLooms(); }); });
+      document.getElementById("lmRefresh").addEventListener("click", lmLoad);
       return;
     }
     var shown = lmData.filter(function(a){ return lmStage(a) === lmFilter; });
     if (!shown.some(function(a){ return a.id === lmSel; })) lmSel = shown[0] ? shown[0].id : null;
-    var html = '<div class="lmwrap"><div class="lmlist">' + fbar;
+    var html = lmTop() + '<div class="lmwrap"><div class="lmlist">' + fbar;
     if (!shown.length) html += '<span class="hint" style="padding:8px">No applications here.</span>';
     shown.forEach(function(a){
       var r = lmStore(a.id).rating, d = String(a.dateAdded || "").slice(0, 10);
@@ -5074,7 +5176,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         lmContact(a) +
         '<textarea class="lmnote" rows="2" placeholder="Notes, e.g. not a fit because…" aria-label="Notes on ' + lmEsc(a.firstName || "this applicant") + '">' + lmEsc(lmStore(a.id).note || "") + "</textarea></div>";
     });
-    html += '</div><div class="lmmain"><div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen for the Loom</button><button type="button" class="copybtn" id="lmRefresh">Refresh from GHL</button><button type="button" class="copybtn" id="lmClear">Clear the plan</button><span class="hint">Click a plan step to type. Enter adds a step.</span></div>';
+    html += '</div><div class="lmmain"><div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen for the Loom</button><button type="button" class="copybtn" id="lmClear">Clear the plan</button><span class="hint">Click a plan step to type. Enter adds a step.</span></div>';
     var a = lmData.filter(function(x){ return x.id === lmSel; })[0];
     if (a){
       var B = lmBranches(a), name = (a.firstName + " " + a.lastName).trim() || a.email, want = lmAns(a, /want/i), place = [a.city, a.country].filter(Boolean).join(", ");
@@ -6742,6 +6844,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var fu = ((state.sales && state.sales.leads) || []).filter(function(l){ return l.followUp && l.followUp <= today && !LEAD_CLOSED[l.stage] && (l.name || "").trim(); }).length;
     return out;
   }
+  // Content calendar boxes (Olly, 2026-11-02): each calendar folds away like the Audience tab to save scrolling.
+  // Open ones are remembered on this device; a link from the content generator (#addreel etc.) opens its own box.
+  (function(){
+    var KEY = "hubCalOpen", open = {};
+    try { open = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){}
+    var hm = /^#add(reel|story|email|ytpost)=/.exec(location.hash || "");
+    if (hm) open[{ reel:"reels", story:"stories", email:"email", ytpost:"yt" }[hm[1]]] = true;
+    document.querySelectorAll(".calbox").forEach(function(box){
+      var k = box.dataset.cal, head = box.querySelector(".audhead"), body = box.querySelector(".calbody"), ch = box.querySelector(".audchev");
+      function set(on){ open[k] = on; body.hidden = !on; head.setAttribute("aria-expanded", String(on)); ch.textContent = on ? "▴" : "▾"; }
+      set(!!open[k]);
+      head.addEventListener("click", function(){ set(!open[k]); try { localStorage.setItem(KEY, JSON.stringify(open)); } catch(e){} });
+    });
+  })();
   function goTab(tab){ var b = document.querySelector('.tabbtn[data-tab="' + tab + '"]'); if (b) { b.click(); window.scrollTo(0, 0); } }
   function renderDue(host, withTitle){
     if (!host) return;
@@ -6777,7 +6893,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     ["whatsapp", "Reply to WhatsApps (people you've sent Looms or messages to)"],
     ["looms", "Check applications and send the Looms with the offer", "looms"],
     ["socials", "Check socials: messages and DMs from people who are interested"],
-    ["content", "Content: Reels, Stories, email and YouTube post"]
+    // content split into its own tick boxes (Olly, 2026-11-02); old "content" ticks become all four (coreStore)
+    ["c_reels", "Reels: record and publish today's Reels"],
+    ["c_stories", "Stories: post today's Stories"],
+    ["c_email", "Email: write and schedule today's email"],
+    ["c_yt", "YouTube: write and schedule today's community post"]
   ];
   var TARGETS = [["Reels", 3, 21], ["Stories", 7, 49], ["Emails", 1, 7], ["YouTube posts", 1, 7]];
   var ROUTINE_START = "2026-10-29";
@@ -6785,6 +6905,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function coreStore(){
     if (!state.coreTasks || typeof state.coreTasks !== "object") state.coreTasks = {};
     if (state.routine && state.routine.date) { state.coreTasks[state.routine.date] = state.routine.done || {}; delete state.routine; }
+    Object.keys(state.coreTasks).forEach(function(d){ var x = state.coreTasks[d]; if (x && "content" in x) { if (x.content) { x.c_reels = x.c_stories = x.c_email = x.c_yt = true; } delete x.content; } });
     return state.coreTasks;
   }
   function contentCounts(from, to){
@@ -6813,12 +6934,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Content consistency (Olly, 2026-10-29): "pull the data in from the calendars and see if I'm against my target", by day,
   // week, month or year, without batching everything on a Monday. Out = Reels/Stories marked Published, emails/YouTube posts
   // Scheduled or Published, on the day they go out. The score only counts days up to today, so it's fair mid-period.
-  var consMode = "week", consPeriod = null;
+  var consMode = "day", consPeriod = null;   // opens on today (Olly, 2026-11-02; was week)
   var CONS_DAILY = {"Reels": 3, "Stories": 7, "Emails": 1, "YouTube posts": 1};
   function consByDay(){
-    var m = {}, add = function(d, k, out){ if (!d) return; var x = m[d] || (m[d] = {}); var c = x[k] || (x[k] = {out: 0, cal: 0}); c.cal++; if (out) c.out++; };
+    // rec = recorded or published (Reels only, Olly 2026-11-02: calendar, recorded and published are 3 separate steps)
+    var m = {}, add = function(d, k, out, rec){ if (!d) return; var x = m[d] || (m[d] = {}); var c = x[k] || (x[k] = {out: 0, cal: 0, rec: 0}); c.cal++; if (out) c.out++; if (out || rec) c.rec++; };
     var sched = function(x){ return x.status === "scheduled" || x.status === "sent"; };
-    ((state.content && state.content.ideas) || []).forEach(function(i){ if (i.title) add(i.date, "Reels", !!i.posted); });
+    ((state.content && state.content.ideas) || []).forEach(function(i){ if (i.title) add(i.date, "Reels", !!i.posted, !!i.recorded); });
     ((state.stories && state.stories.ideas) || []).forEach(function(i){ add(i.date, "Stories", !!i.posted); });
     emList().forEach(function(e){ add(e.date, "Emails", sched(e)); });
     ytList().forEach(function(x){ add(x.date, "YouTube posts", sched(x)); });
@@ -6850,7 +6972,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     for (var d = r[0]; d <= r[1]; d = addDaysISO(d, 1)) days.push(d);
     var first = ROUTINE_START;   // a fresh start on 29 Oct 2026 (Olly): earlier days aren't scored
     var done = days.filter(function(x){ return x < t && x >= first; }), hasToday = days.indexOf(t) !== -1, future = days.filter(function(x){ return x > t; });
-    var cnt = function(x, k){ var c = byDay[x] && byDay[x][k]; return c || {out: 0, cal: 0}; };
+    var cnt = function(x, k){ var c = byDay[x] && byDay[x][k]; return c || {out: 0, cal: 0, rec: 0}; };
     var sum = function(list, k, f){ return list.reduce(function(a, x){ return a + cnt(x, k)[f]; }, 0); };
     var hit = function(x){ return kinds.every(function(k){ return cnt(x, k).out >= CONS_DAILY[k]; }); };
     var ready = function(x){ return kinds.every(function(k){ return Math.max(cnt(x, k).out, cnt(x, k).cal) >= CONS_DAILY[k]; }); };
@@ -6886,6 +7008,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       todayList.push(toAdd > 0
         ? {text: (sched ? "Write " : "Add ") + toAdd + " more " + nm(k, toAdd) + (sched ? " and put " + (toAdd === 1 ? "it" : "them") + " on " + dayWord + "s calendar" : " to " + dayWord + "s calendar")}
         : {text: (n === 1 ? "The " + nm(k, 1) + " is" : "All " + n + " " + nm(k, n) + " are") + " on " + dayWord + "s calendar", done: true});
+      // Reels: recording is its own step between the calendar and publishing
+      if (k === "Reels") { var toRec = n - Math.min(n, c.rec); todayList.push(toRec > 0 ? {text: "Record " + toRec + " " + nm(k, toRec) + ", then mark " + (toRec === 1 ? "it" : "them") + " Recorded"} : {text: "All " + n + " Reels recorded", done: true}); }
       todayList.push({text: sched
         ? (isPast ? "Mark " : "Schedule ") + (n === 1 ? dayWord + "s " + nm(k, 1) + (isPast ? " as Scheduled or Published" : "") : toOut + " " + nm(k, toOut))
         : isPast ? "Mark " + toOut + " " + nm(k, toOut) + " Published if you posted " + (toOut === 1 ? "it" : "them") : "Publish " + toOut + " " + nm(k, toOut) + ": post " + (toOut === 1 ? "it" : "them") + " " + WHERE[k] + ", then mark " + (toOut === 1 ? "it" : "them") + " Published"});
@@ -6942,6 +7066,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var leftTxt = !target ? "<em>\u2013</em>" : left ? "<b>" + left + "</b> " + (sched ? "to write and schedule" : "to add to the calendar") : missed ? "Nothing left to add" : "\u2713 All covered";
       if (missed) leftTxt += ' <em>· ' + missed + ' missed on past days (go back a day if you posted them)</em>';
       if (target && !left && !missed && !sched && planned) leftTxt = "\u2713 All on the calendar <em>\u00b7 " + planned + " to publish</em>";
+      // Reels (Olly, 2026-11-02): only published counts as done; recorded and on-the-calendar are shown as their own steps
+      if (k === "Reels") {
+        var rec = 0, cal = 0, toR = 0, toP = 0;
+        span.forEach(function(x){ var c = cnt(x, k), o = Math.min(n, c.out), r = Math.min(n, c.rec), cl = Math.min(n, Math.max(c.cal, c.out));
+          rec += Math.max(0, r - o); cal += Math.max(0, cl - r); if (x >= t) { toR += Math.max(0, cl - r); toP += Math.max(0, r - o); } });
+        covered = out; pct = target ? Math.min(100, Math.round(out / target * 100)) : 0;
+        detail = " published <em>\u00b7 " + (out + rec) + " recorded (" + rec + " waiting to publish), " + cal + " only on the calendar</em>";
+        var parts = []; if (left) parts.push("<b>" + left + "</b> to add to the calendar"); if (toR) parts.push("<b>" + toR + "</b> to record"); if (toP) parts.push("<b>" + toP + "</b> to publish");
+        leftTxt = !target ? "<em>\u2013</em>" : parts.length ? parts.join(" \u00b7 ") : missed ? "Nothing left to do" : "\u2713 All published";
+        if (missed) leftTxt += ' <em>\u00b7 ' + missed + ' missed on past days (go back a day if you posted them)</em>';
+      }
       grid.insertAdjacentHTML("beforeend", "<span>" + k + "</span>"
         + '<div class="tcell"><span class="tnum"><b>' + covered + "</b> of " + target + detail + '</span><div class="tbar"><i class="' + (target && covered >= target ? "full" : "") + '" style="width:' + pct + '%"></i></div></div>'
         + '<div class="tcell"><span class="tnum">' + leftTxt + "</span></div>");
@@ -8232,7 +8367,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (btn.dataset.tab === "core") renderToday();
       if (btn.dataset.tab === "audience") renderAudience();
       if (btn.dataset.tab === "links") renderLinks();
-      if (btn.dataset.tab === "looms") { lmFilter = "newest"; renderLooms(); }
+      if (btn.dataset.tab === "looms") { lmFilter = "newest"; if (lmData && !lmLoading) lmLoad(); else renderLooms(); }
       uiSave({ tab: btn.dataset.tab });
     });
   });
@@ -8548,6 +8683,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     importEmailFromHash();
     importReelFromHash();
     importStoryFromHash();
+    loomsFromHash();
+    pushInit();
+    // the Hub reopens on the last tab used: if that's Looms, load it (it used to stay blank until the tab was tapped)
+    var lmTab = document.getElementById("tab-looms");
+    if (lmTab && !lmTab.hidden && !lmData && !lmLoading) renderLooms();
     importYtFromHash();
     // Page views are the Hub's own counter, not GHL, so they refresh on every open (Olly, 2026-10-26:
     // the Overview showed yesterday's numbers until the next Pull from GHL). Not marked dirty: it's live data.
