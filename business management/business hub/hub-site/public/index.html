@@ -6123,7 +6123,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Cold List. Every other day the daily email goes to the Daily Email List. Weekly, Thursdays, from 12 Nov 2026
   // (offer every 7th email). Pitch emails never take the daily email's slot.
   function emIsPitchDay(iso){ return emList().some(function(e){ return e.pitch && e.date === iso; }); }
-  function emAudience(e){ return e.pitch ? "Warm List" : emIsPitchDay(e.date) ? "Cold List" : "Daily Email List"; }
+  function emAudience(e){ return e.pitch ? "Warm List" : emIsPitchDay(e.date) ? "Cold List" : "Engaged"; }   // Engaged smart list (2026-11-04): daily email list + engaged recently
   function emSeedPitchDays(){
     var days = [], d = new Date(2026, 10, 12);
     while (d <= new Date(2027, 1, 25)) {
