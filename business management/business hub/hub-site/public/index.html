@@ -30,7 +30,7 @@
   .lmstg button[aria-pressed="true"]{ background:#e04fd6; border-color:#e04fd6; color:#fff; }
   .lmstg{ flex-direction:column; gap:5px; }
   .lmstep{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
-  .lmstep small{ min-width:118px; font-size:12px; opacity:.75; }
+  .lmstep small{ flex-basis:100%; font-size:12px; opacity:.75; margin-top:2px; }   /* label on its own line: the narrow desktop card wrapped buttons under it unevenly (2026-11-04) */
   .lmboard{ display:grid; grid-template-columns:repeat(6, minmax(160px, 1fr)); gap:10px; overflow-x:auto; padding-bottom:6px; }
   .lmcol{ background:var(--surface); border:1px solid var(--border-soft); border-radius:10px; padding:8px; min-height:140px; }
   .lmcol h4{ margin:2px 2px 8px; font-size:13px; letter-spacing:.06em; text-transform:uppercase; }
@@ -40,6 +40,10 @@
   .lmcon .lmcopy{ flex:1; min-width:0; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; background:var(--surface); color:inherit; border:1px solid var(--border-soft); border-radius:8px; padding:7px 9px; font:inherit; font-size:13px; cursor:pointer; }
   .lmcon a{ flex:none; padding:7px 10px; border-radius:8px; background:#25a35a; color:#fff; font-size:13px; font-weight:600; text-decoration:none; }
   .lmcon a[href^="mailto"]{ background:#7b4fd6; }
+  /* message rows (2026-11-04): name full width, the two send buttons share the line under it */
+  .lmcon.lmmsg{ flex-wrap:wrap; }
+  .lmcon.lmmsg .lmcopy{ flex-basis:100%; }
+  .lmcon.lmmsg a{ flex:1; text-align:center; white-space:nowrap; }
   .lmnote{ width:100%; margin-top:7px; box-sizing:border-box; resize:vertical; background:var(--surface); color:inherit; border:1px solid var(--border-soft); border-radius:8px; padding:7px 9px; font:inherit; font-size:13px; }
   .lmtag{ display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:6px; margin-left:6px; background:rgba(125,211,252,.18); color:#7dd3fc; vertical-align:middle; }
   .lmmain{ min-width:0; display:flex; flex-direction:column; gap:10px; }
@@ -1031,6 +1035,8 @@
   .statustoggle.three .statusbtn{ padding:4px 8px; font-size:10px; letter-spacing:.02em; }
   .statusbtn.recorded.active{ background: rgba(140,170,240,.16); color: #8fb0f0; border-color: rgba(140,170,240,.45); }
   .calitem.recorded .calitem-dot, .calitem-dot.recorded{ background: #8fb0f0; }
+  .statusbtn.scheduled.active{ background: rgba(200,150,255,.16); color: #c896ff; border-color: rgba(200,150,255,.45); }
+  .calitem.scheduled .calitem-dot, .calitem-dot.scheduled{ background: #c896ff; }
   .storytype{
     font-size:13px; padding:6px 8px; border-radius:6px;
     border:1px solid var(--border-soft); background: var(--surface-2);
@@ -1430,6 +1436,22 @@
     .dayitem-statusrow{ flex-wrap:wrap; }
     .dayitem-caption{ margin-left:0; }
   }
+
+  /* Today's Reels record view (2026-11-04): phone-first, one Reel at a time, hook big + CTA */
+  .recov{ display:flex; flex-direction:column; color:var(--text); padding:8px 0 24px; }
+  .rectop{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:14px; color:var(--text-muted); }
+  .rectop button{ background:var(--surface-2); color:var(--text); border:1px solid var(--border-soft); border-radius:10px; padding:8px 12px; font:inherit; font-size:14px; cursor:pointer; }
+  .recmain{ display:flex; flex-direction:column; gap:18px; max-width:720px; width:100%; margin:0 auto; padding:28px 0 32px; }
+  .rechook{ font-size:clamp(30px, 8.5vw, 52px); line-height:1.12; font-weight:800; color:#fff; margin:0; }
+  .recday{ font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2); }
+  .recday.late{ color:var(--warn); }
+  .recnone{ font-size:16px; color:var(--text-muted); }
+  .reccta{ font-size:17px; color:var(--text-body); }
+  .reccta b{ color:var(--good); }
+  .recbtns{ display:grid; grid-template-columns:1fr 2fr 1fr; gap:10px; max-width:720px; width:100%; margin:0 auto; }
+  .recbtns button{ padding:16px 8px; border-radius:14px; border:1px solid var(--border-soft); background:var(--surface-2); color:var(--text); font:inherit; font-size:16px; font-weight:600; cursor:pointer; }
+  .recbtns button.recdone{ background:var(--good); color:#08210f; border-color:transparent; font-weight:800; }
+  .recbtns button:disabled{ opacity:.35; cursor:default; }
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 </head>
@@ -1463,6 +1485,7 @@
     <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false" hidden>MRR</button>
     <button class="tabbtn" data-tab="sales" role="tab" aria-selected="false" hidden>Sales</button>
     <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Content calendar</button>
+    <button class="tabbtn" data-tab="record" role="tab" aria-selected="false">Record</button>
     <a class="tabbtn tablink" href="https://claude.ai/artifact/WsnecJvYahvCKVDevtrUqc" target="_blank" rel="noopener" title="Opens the content generator in a new tab">Content generator ↗</a>
     <button class="tabbtn" data-tab="stories" role="tab" aria-selected="false" hidden>Stories</button>
     <button class="tabbtn" data-tab="audience" role="tab" aria-selected="false">Audience</button>
@@ -1609,7 +1632,7 @@
         <button class="calnavbtn calToday" id="calToday">Today</button>
       </div>
     </div>
-    <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot recorded"></span>Recorded</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
+    <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot recorded"></span>Recorded</span><span class="legenditem"><span class="calitem-dot scheduled"></span>Scheduled</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
     <div class="calendar" id="calendar"><div class="caldow">Mon</div><div class="caldow">Tue</div><div class="caldow">Wed</div><div class="caldow">Thu</div><div class="caldow">Fri</div><div class="caldow">Sat</div><div class="caldow">Sun</div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">31</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">1</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">2</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">3</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="Why you can't stop doubting if you're going to manifest love ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">Why you can't stop doubting if you're going to manifest love ♥️</span></div><div class="calitem published" title="How long should you wait before giving up on manifesting love? ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How long should you wait before giving up on manifesting love? ♥️</span></div><div class="calitem published" title="If you're still doubting that you can manifest love - you MUST change this today ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you're still doubting that you can manifest love - you MUST change this today ♥️</span></div><div class="calitem published" title="How manifest love in your life - without the doubts ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How manifest love in your life - without the doubts ♥️</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">4</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="If you are worried time is running out to manifest love - do this today ❤️ — Published"><span class="calitem-dot"></span><span class="calitem-label">If you are worried time is running out to manifest love - do this today ❤️</span></div><div class="calitem published" title="How to manifest love into your life - scientifically 🧪  — Published"><span class="calitem-dot"></span><span class="calitem-label">How to manifest love into your life - scientifically 🧪 </span></div><div class="calitem published" title="6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔 — Published"><span class="calitem-dot"></span><span class="calitem-label">6 months of trying to manifest love and nothing is happening - what can you do? 💔🤔</span></div><div class="calitem published" title="How to attract a really great partner ♥️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">How to attract a really great partner ♥️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">5</span><span class="calcount met">3/3</span></div><div class="calitems"><div class="calitem published" title="How I manifested my dream partner ♥️ — Published"><span class="calitem-dot"></span><span class="calitem-label">How I manifested my dream partner ♥️</span></div><div class="calitem published" title="Two REALLY important steps for meeting and attracting your special person ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">Two REALLY important steps for meeting and attracting your special person ❤️✅</span></div><div class="calitem published" title="This type of person always attracts the partner that they want ❤️✅ — Published"><span class="calitem-dot"></span><span class="calitem-label">This type of person always attracts the partner that they want ❤️✅</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">6</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem published" title="The real reason that you haven’t manifested love yet 💔 — Published"><span class="calitem-dot"></span><span class="calitem-label">The real reason that you haven’t manifested love yet 💔</span></div><div class="calitem published" title="Manifesting harder pushes love away - 👉here's why  — Published"><span class="calitem-dot"></span><span class="calitem-label">Manifesting harder pushes love away - 👉here's why </span></div><div class="calitem published" title="It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this — Published"><span class="calitem-dot"></span><span class="calitem-label">It’s not that I’m against manifesting a partner, I’m just against trying to manifest a partner like this</span></div><div class="calitem published" title="A guaranteed system for attracting the relationship that you want  — Published"><span class="calitem-dot"></span><span class="calitem-label">A guaranteed system for attracting the relationship that you want </span></div></div></div><div class="calcell today"><div class="caldatehead"><span class="caldatenum">7</span><span class="calcount met">4/3</span></div><div class="calitems"><div class="calitem draft" title="I can only help these people manifest a great relationship — Draft"><span class="calitem-dot"></span><span class="calitem-label">I can only help these people manifest a great relationship</span></div><div class="calitem draft" title="You don’t need a manifestation technique to attract someone you love - you need this — Draft"><span class="calitem-dot"></span><span class="calitem-label">You don’t need a manifestation technique to attract someone you love - you need this</span></div><div class="calitem draft" title="How to use your nervous system to attract your dream partner ♥️✅ — Draft"><span class="calitem-dot"></span><span class="calitem-label">How to use your nervous system to attract your dream partner ♥️✅</span></div><div class="calitem draft" title="The 3-Step System That Will Attract Your Dream Partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">The 3-Step System That Will Attract Your Dream Partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">8</span><span class="calcount short">1/3</span></div><div class="calitems"><div class="calitem draft" title="Why you need to regulate your nervous system to attract your partner — Draft"><span class="calitem-dot"></span><span class="calitem-label">Why you need to regulate your nervous system to attract your partner</span></div></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">9</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">10</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">11</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">12</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">13</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">14</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">15</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">16</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">17</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">18</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">19</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">20</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">21</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">22</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">23</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">24</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">25</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">26</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">27</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">28</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">29</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell"><div class="caldatehead"><span class="caldatenum">30</span><span class="calcount short">0/3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">1</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">2</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">3</span></div><div class="calitems"></div></div><div class="calcell outside"><div class="caldatehead"><span class="caldatenum">4</span></div><div class="calitems"></div></div></div>
 
     <!-- Outliers, video stats and leaderboard: hidden 2026-10-27 (they live in the content generator now) -->
@@ -2361,6 +2384,15 @@ https://www.instagram.com/attractwitholly
     </div>
 
   </div>
+
+  <!-- Record tab (Olly, 2026-11-04: "make that a tab ... to save having too many apps"): today's hooks, one at a time -->
+<div id="tab-record" class="tabpanel" hidden="">
+<div class="recov" id="recOverlay">
+  <div class="rectop"><span id="recCount"></span></div>
+  <div class="recmain" id="recMain"></div>
+  <div class="recbtns"><button type="button" id="recPrev">← Back</button><button type="button" class="recdone" id="recDone">✓ Recorded</button><button type="button" id="recSkip">Skip →</button></div>
+</div>
+</div>
 
   <!-- Core tasks tab (Olly, 2026-10-29): the daily routine, a card for each day, and the content targets -->
   <div id="tab-core" class="tabpanel" hidden="">
@@ -3381,7 +3413,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // nothing to retype once the real numbers come in. `synced` stops that
   // happening twice if the date gets changed later.
   var DOW_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  var DAILY_REEL_TARGET = 3; // 3 a day from 2026-10-30 (was 5): Perfect Reels, fewer and better
+  var DAILY_REEL_TARGET = 10; // most a day fills to (2026-11-04, was 3): Reel auto-editor makes recording the only job
+  var DAILY_REEL_MIN = 4;
+  // Per-day Reel number (Olly 2026-11-04: "for each day ... a drop-down of how many, 0 up to 10"): state.reelDayTarget
+  // = { "YYYY-MM-DD": n }. Unset days = DAILY_REEL_MIN. Drives the calendar count, auto-slotting, the consistency score
+  // and (via /api/track/reels) which days the laptop tops up with late Reels. 0 = a rest day.
+  function reelTarget(iso){
+    var m = state.reelDayTarget || {};
+    return Object.prototype.hasOwnProperty.call(m, iso) ? Number(m[iso]) : DAILY_REEL_MIN;
+  }     // Olly 2026-11-04: minimum 4, maximum 10 a day; 4 = the score target (weekends / busy days), 10 = a great day
   var ideaTableBuiltForCount = -1;
   var calCursor = new Date(); // which month the calendar is showing — restored from uiLoad() in boot()
 
@@ -3433,6 +3473,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
   function wireIdeaEvents(tbody){
     tbody.querySelectorAll("input[type=text]").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var idea = state.content.ideas[Number(inp.dataset.idi)];
+        var t = withHookEmoji(inp.value);
+        if (!idea || !t || t === idea.title) return;
+        idea.title = t; inp.value = t; markDirty(); renderCalendar();
+      });
       inp.addEventListener("input", function(){
         var i = Number(inp.dataset.idi);
         var idea = state.content.ideas[i];
@@ -3553,6 +3599,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // to rename it everywhere at once, or the link silently breaks: the
   // Date column stops finding its idea, and a second, orphaned row can
   // get created next time something re-syncs.
+  // Reel hooks carry their end emoji (Olly, 2026-11-04: the emoji drives the first-3-second click). Same rule as his
+  // posted Reels and the laptop editor: test tube when the hook says "scientifically"/"science", else red heart. A hook
+  // that already ends in an emoji keeps it (Olly can type his own); the editor puts that exact emoji on the video.
+  var HOOK_EMOJI_END = /\p{Extended_Pictographic}️?\s*$/u;
+  function withHookEmoji(t){
+    t = String(t || "").trim();
+    if (!t || HOOK_EMOJI_END.test(t)) return t;
+    return t + " " + (/scien/i.test(t) ? "🧪" : "❤️");
+  }
+  // Unposted Reels without one get it once (the same title everywhere, so Video stats keeps matching).
+  function addHookEmojis(){
+    var changed = false;
+    (state.content && state.content.ideas || []).forEach(function(idea){
+      if (!idea.title || idea.posted) return;
+      var t = withHookEmoji(idea.title);
+      if (t !== idea.title) { renameVideoTitle(idea.title, t); changed = true; }
+    });
+    return changed;
+  }
   function renameVideoTitle(oldTitle, newTitle){
     if (!oldTitle || !newTitle || oldTitle === newTitle) return;
     (state.content.ideas || []).forEach(function(idea){
@@ -3586,7 +3651,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         var count = state.content.ideas.filter(function(idea, idx){
           return idea.date === iso && idea.title && idx !== excludeIndex;
         }).length;
-        if (count < DAILY_REEL_TARGET) return iso;
+        if (count < Math.min(DAILY_REEL_TARGET, reelTarget(iso))) return iso;
       }
       d.setDate(d.getDate() + 1);
     }
@@ -3626,8 +3691,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
       var countHTML = "";
       if (!outside){
-        var metClass = dayIdeas.length >= DAILY_REEL_TARGET ? "met" : "short";
-        countHTML = '<span class="calcount '+metClass+'">'+dayIdeas.length+'/'+DAILY_REEL_TARGET+'</span>';
+        var dayTgt = reelTarget(cellISO);
+        var metClass = dayIdeas.length >= dayTgt ? "met" : "short";
+        countHTML = dayTgt === 0 && !dayIdeas.length ? '<span class="calcount met" title="Rest day (0 Reels)">rest</span>'
+          : '<span class="calcount '+metClass+'" title="'+dayTgt+' Reels planned for this day (change it in the day panel)">'+dayIdeas.length+'/'+dayTgt+'</span>';
       }
       cell.innerHTML = '<div class="caldatehead"><span class="caldatenum">'+cellDate.getDate()+'</span>'+countHTML+'</div>';
 
@@ -3635,8 +3702,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       itemsWrap.className = "calitems";
       dayIdeas.slice(0, 4).forEach(function(idea){
         var it = document.createElement("div");
-        it.className = "calitem " + (idea.posted ? "published" : idea.recorded ? "recorded" : "draft");
-        it.title = idea.title + " — " + (idea.posted ? "Published" : idea.recorded ? "Recorded" : "Draft");
+        var rst = reelState(idea);
+        it.className = "calitem " + rst;
+        it.title = idea.title + " — " + rst.charAt(0).toUpperCase() + rst.slice(1);
         var dot = document.createElement("span");
         dot.className = "calitem-dot";
         var label = document.createElement("span");
@@ -3697,6 +3765,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (idea.date === dayModalDate && idea.title) dayIdeas.push(i);
     });
 
+    var tgtRow = document.createElement("div");
+    tgtRow.className = "dayadd";
+    var tgtLbl = document.createElement("span"); tgtLbl.className = "hint"; tgtLbl.style.margin = "0";
+    tgtLbl.textContent = "Reels to post this day:";
+    var tgtSel = document.createElement("select");
+    for (var tn = 0; tn <= DAILY_REEL_TARGET; tn++) tgtSel.add(new Option(tn === 0 ? "0 (rest day)" : String(tn), String(tn)));
+    tgtSel.value = String(reelTarget(dayModalDate));
+    tgtSel.addEventListener("change", function(){
+      if (!state.reelDayTarget) state.reelDayTarget = {};
+      state.reelDayTarget[dayModalDate] = Number(tgtSel.value);
+      markDirty(); renderCalendar(); if (typeof renderToday === "function") renderToday();
+    });
+    tgtRow.appendChild(tgtLbl); tgtRow.appendChild(tgtSel);
+    body.appendChild(tgtRow);
+
     // Add a Reel straight onto this day (2026-10-28): pinned to the date like "Add to specific date".
     var addRow = document.createElement("div");
     addRow.className = "dayadd";
@@ -3705,7 +3788,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var addBtn = document.createElement("button");
     addBtn.type = "button"; addBtn.className = "addbtn"; addBtn.textContent = "+ Add";
     function addToDay(){
-      var t = addIn.value.trim();
+      var t = withHookEmoji(addIn.value);
       if (!t) { addIn.focus(); return; }
       state.content.ideas.push({ title:t, date: dayModalDate, mode:"specific", synced:false });
       markDirty();
@@ -3765,12 +3848,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       recBtn.type = "button";
       recBtn.className = "statusbtn recorded" + (!idea.posted && idea.recorded ? " active" : "");
       recBtn.textContent = "Recorded";
+      var schBtn = document.createElement("button");
+      schBtn.type = "button";
+      schBtn.className = "statusbtn scheduled";
+      schBtn.textContent = "Scheduled";
       var pubBtn = document.createElement("button");
       pubBtn.type = "button";
-      pubBtn.className = "statusbtn published" + (idea.posted ? " active" : "");
+      pubBtn.className = "statusbtn published";
       pubBtn.textContent = "Published";
+      var rst0 = reelState(idea);
+      [[draftBtn, "draft"], [recBtn, "recorded"], [schBtn, "scheduled"], [pubBtn, "published"]].forEach(function(x){
+        x[0].className = "statusbtn " + x[1] + (rst0 === x[1] ? " active" : "");
+      });
       toggle.appendChild(draftBtn);
       toggle.appendChild(recBtn);
+      toggle.appendChild(schBtn);
       toggle.appendChild(pubBtn);
 
       var moveInput = document.createElement("input");
@@ -3783,6 +3875,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       statusRow.appendChild(toggle);
       statusRow.appendChild(moveInput);
       row.appendChild(statusRow);
+      var lapStage = idea.posted ? "" : reelStage(idea);
+      if (lapStage) row.insertAdjacentHTML("beforeend", '<span class="hint" style="display:block; margin-top:6px;">Updated by the Reel upload app: ' + STAGE_LABEL[lapStage].toLowerCase() + '</span>');
 
       // Caption lives here, not in the ideas list — it's only useful once
       // something's actually scheduled, and this is the screen you're on
@@ -3894,7 +3988,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       // Video stats tracking row (matched by the old title) so it
       // doesn't get orphaned by the rename.
       titleIn.addEventListener("blur", function(){
-        var newTitle = titleIn.value.trim();
+        var newTitle = withHookEmoji(titleIn.value);
+        titleIn.value = newTitle || idea.title;
         if (!newTitle || newTitle === idea.title) { titleIn.value = idea.title; return; }
         renameVideoTitle(idea.title, newTitle);
         markDirty();
@@ -3914,9 +4009,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         copyToClipboard(idea.caption || "", copyCaptionBtn);
       });
 
-      function setStatus(published, recorded){
-        if (published === idea.posted && !!recorded === !!idea.recorded) return;
-        idea.recorded = !!recorded || !!published;   // published means it was recorded (Olly, 2026-11-02)
+      function setStatus(published, recorded, scheduled){
+        // Moving a Reel back by hand clears the laptop's stage too, or it would push it forward again (2026-11-04)
+        var order = ["draft", "recorded", "scheduled", "published"], want = published ? "published" : scheduled ? "scheduled" : recorded ? "recorded" : "draft";
+        if (reelStage(idea) && order.indexOf(want) < order.indexOf(reelState(idea))) clearReelStage(idea);
+        var newSch = !!scheduled && !published;
+        if (published === idea.posted && !!recorded === !!idea.recorded && newSch === !!idea.scheduled) return;
+        idea.scheduled = newSch;
+        idea.recorded = !!recorded || !!published || newSch;   // published / scheduled means it was recorded (Olly, 2026-11-02)
         if (published === idea.posted){ markDirty(); renderDayModal(); renderCalendar(); return; }
         idea.posted = published;
         row.className = "dayitem" + (idea.posted ? " posted" : "");
@@ -3934,9 +4034,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         renderCalendar();
         renderOutliers();
       }
-      draftBtn.addEventListener("click", function(){ setStatus(false, false); });
-      recBtn.addEventListener("click", function(){ setStatus(false, true); });
-      pubBtn.addEventListener("click", function(){ setStatus(true, true); });
+      draftBtn.addEventListener("click", function(){ setStatus(false, false, false); });
+      recBtn.addEventListener("click", function(){ setStatus(false, true, false); });
+      schBtn.addEventListener("click", function(){ setStatus(false, true, true); });
+      pubBtn.addEventListener("click", function(){ setStatus(true, true, false); });
 
       // Once an idea has a title+date it disappears from the Video ideas
       // list (it lives on the calendar instead), so this is the only
@@ -5117,11 +5218,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var h = "", ph = (a.phone || "").replace(/[^\d]/g, "");
     if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + '</button><a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", it's Olly Henson here. Your application for the Heart Attractor Program was successful.\n\nPlease can you reply 'YES' to this message and I'll send you the details about how the program works and what's included.\n\nThank you,\nOlly") + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a></div>';
     if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + '</button><a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your application was successful") + '&body=' + encodeURIComponent("Hi " + (a.firstName || "there") + ",\r\n\r\nI’m happy to say that your application for The Heart Attractor Program was successful.\r\n\r\nPlease could you reply to my WhatsApp and I’ll send you more details about how the program works and what’s included.\r\n\r\nThank you,\r\n\r\nOlly") + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a></div>';
+    // Price check (Olly, 2026-11-04): for an application that doesn't look like it can afford it (income / budget answers).
+    // His exact WhatsApp wording, sent BEFORE any Loom: if they reply still interested, carry on; if not, it saves everyone time.
+    var price = "Hey " + (a.firstName || "there") + ",\n\nJust got your application through for the Heart Attractor Program.\n\nLooks like you really need some help with this.\n\nGoing to be honest, this program is not super cheap because it’s for people who really want to make this work.\n\nThe price options if you’re accepted are either $497 per month or $2500 for the year.\n\nJust wanted to be up front and not waste your time.\n\nIf this is within reach for you, it’s definitely worth having a conversation - let me know.";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(price) + '">💲 Price check message</button>'
+      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(price) + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
+      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your Heart Attractor Program application") + '&body=' + encodeURIComponent((price + "\n\nOlly Henson").replace(/\n/g, "\r\n")) + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
+      + "</div>";
+    // Application pending (Olly, 2026-11-04): for applications he likes. His exact wording, same on WhatsApp and email
+    // (email subject "Application pending"). If they reply, he sends the Loom ("full video breakdown").
+    var pend = "Hey " + (a.firstName || "there") + ",\n\nIt’s Olly Henson here.\n\nThanks for your application for The Heart Attractor Program.\n\nLooks like you need some help with this.\n\nTo be up front, I don’t do sales calls or anything pressurised.\n\nThe price for this program is either $497 per month or $2500 per year - if you’re accepted.\n\nThis is for people who really want to commit to this and make it actually happen.\n\nIf that’s you and within range, let me know by replying to this message and I’ll send you a full video breakdown of how we’ll make this work for you and we can go from there.\n\nCheers,\n\nOlly";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(pend) + '">✅ Application pending</button>'
+      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(pend) + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
+      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Application pending") + '&body=' + encodeURIComponent(pend.replace(/\n/g, "\r\n")) + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
+      + "</div>";
     // Checkout link to send after the Loom (2026-11-03): ollyhenson.com/join redirects to the Skool group, so the target can change later.
     var JOIN = "https://ollyhenson.com/join", joinMail = "Hey " + (a.firstName || "there") + ", great - here's the link to join:\r\n\r\n" + JOIN;
-    h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + JOIN + '">🔗 Checkout link</button>'
-      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", great - here's the link to join: " + JOIN) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Send on WhatsApp</a>' : "")
-      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your link to join The Heart Attractor Program") + '&body=' + encodeURIComponent(joinMail) + '" onclick="event.stopPropagation()">Send by email</a>' : "")
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + JOIN + '">🔗 Checkout link</button>'
+      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", great - here's the link to join: " + JOIN) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a>' : "")
+      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your link to join The Heart Attractor Program") + '&body=' + encodeURIComponent(joinMail) + '" onclick="event.stopPropagation()">Email</a>' : "")
       + "</div>";
     return h;
   }
@@ -6687,8 +6802,114 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     }, Promise.resolve()).then(show);
   }
 
+  // Laptop Reel pipeline (2026-11-04): reels\upload_server.py matches each uploaded video to a calendar Reel by its first
+  // spoken sentence and reports Edited / Scheduled / Posted through /api/track/reels. Those stages live in their own KV
+  // key (read here via /api/reelstatus) so the laptop never clashes with this page's Save. Keyed by lower-case title.
+  var reelStatus = {};
+  var STAGE_LABEL = { edited:"Edited", scheduled:"Scheduled", posted:"Posted" };
+  function reelState(idea){
+    var stg = idea.posted ? "" : reelStage(idea);
+    if (idea.posted || stg === "posted") return "published";
+    if (idea.scheduled || stg === "scheduled") return "scheduled";
+    if (idea.recorded || stg === "edited") return "recorded";
+    return "draft";
+  }
+  function reelStage(idea){ var k = String(idea.title || "").trim().toLowerCase().replace(/\s+/g, " "); return (reelStatus[k] || {}).stage || ""; }
+  function clearReelStage(idea){
+    var k = String(idea.title || "").trim().toLowerCase().replace(/\s+/g, " ");
+    delete reelStatus[k];
+    fetch("/api/reelstatus", { method:"POST", credentials:"same-origin", headers:{ "content-type":"application/json" }, body: JSON.stringify({ clear: idea.title }) }).catch(function(){});
+  }
+  function pullReelStatus(){
+    fetch("/api/reelstatus", { cache:"no-store", credentials:"same-origin" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ if (d && d.ok) { reelStatus = d.status || {}; applyReelStatus(); renderCalendar(); renderDayModal(); renderRecord(); } })
+      .catch(function(){});
+  }
+  // Olly 2026-11-04: "rather than me having to manually keep going in and updating it". The laptop's stages set the
+  // Reel's own flags, so Content consistency + Video stats count them: edited/scheduled = Recorded, posted = Published
+  // (same as pressing Published in the day panel: it joins Video stats). Only ever moves a Reel forward, never back.
+  function applyReelStatus(){
+    if (!serverRev) return;   // wait for the shared data, or this would save over it
+    var changed = false;
+    ((state.content && state.content.ideas) || []).forEach(function(idea){
+      var stg = reelStage(idea);
+      if (!stg || idea.posted) return;
+      if (!idea.recorded) { idea.recorded = true; changed = true; }
+      if (stg === "scheduled" && !idea.scheduled) { idea.scheduled = true; changed = true; }
+      if (stg === "posted") { idea.posted = true; idea.scheduled = false; changed = true; if (idea.title) syncIdeaToOutliers(idea); }
+    });
+    if (changed) { markDirty(); saveNow(); renderOutliers(); renderContentTab(); }
+  }
+
+  // The laptop fills the same Perfect Reel captions the day panel uses: mirror the templates whenever they change.
+  function mirrorReelCaptions(){
+    try {
+      var c = {};
+      ["video", "scale", "attract"].forEach(function(o){ c[o] = {}; ["instagram", "facebook", "tiktok", "youtube"].forEach(function(pl){ c[o][pl] = reelCaption(o, pl, []); }); });
+      var j = JSON.stringify(c), last = null;
+      try { last = localStorage.getItem("hubCapMirror"); } catch (e) {}
+      if (last === j) return;
+      fetch("/api/reelstatus", { method:"POST", credentials:"same-origin", headers:{ "content-type":"application/json" }, body: JSON.stringify({ captions:c }) })
+        .then(function(r){ if (r.ok) { try { localStorage.setItem("hubCapMirror", j); } catch (e) {} } }).catch(function(){});
+    } catch (e) {}
+  }
+
+  // Record today's Reels (2026-11-04, Reel pipeline step b). Phone view: every Reel dated today or earlier that isn't
+  // recorded yet (oldest first), one at a time: the hook big + the CTA to end on (hooks only, Olly 2026-11-04). "Recorded" sets
+  // idea.recorded and saves straight away. Open with the button on the Content calendar tab or hub.ollyhenson.com/#record.
+  var recIdx = 0, recList = [];
+  var REC_CTA = { video:"VIDEO", scale:"FEELING", attract:"ATTRACT" };
+  function recToday(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+  function recBuildList(){
+    var today = recToday();
+    var ideas = (state.content && state.content.ideas) || [];
+    var due = ideas.filter(function(i){ return i.title && i.date && i.date <= today && !i.recorded && !i.posted && !i.skipped && !reelStage(i); });
+    due.sort(function(a, b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    return due;
+  }
+  function recEsc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function renderRecord(){
+    var recTab = document.getElementById("tab-record");
+    if (!recTab || recTab.hidden) return;
+    var main = document.getElementById("recMain");
+    var keep = recList[recIdx];
+    recList = recBuildList();
+    if (keep && recList.indexOf(keep) !== -1) recIdx = recList.indexOf(keep);
+    if (recIdx >= recList.length) recIdx = Math.max(0, recList.length - 1);
+    var prev = document.getElementById("recPrev"), done = document.getElementById("recDone"), skip = document.getElementById("recSkip");
+    if (!recList.length){
+      document.getElementById("recCount").textContent = "Today's Reels";
+      main.innerHTML = '<p class="rechook">All recorded ✓</p><p class="recnone">Nothing left to record for today. Add Reels in the Content calendar and they show up here on their day.</p>';
+      prev.disabled = done.disabled = skip.disabled = true;
+      return;
+    }
+    var idea = recList[recIdx], today = recToday();
+    document.getElementById("recCount").textContent = "Reel " + (recIdx + 1) + " of " + recList.length + " to record";
+    var dayTxt = idea.date === today ? "Today" : "From " + new Date(idea.date + "T00:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"short" });
+    main.innerHTML = '<span class="recday' + (idea.date === today ? "" : " late") + '">' + recEsc(dayTxt) + '</span>' +
+      '<p class="rechook">' + recEsc(idea.title) + '</p>' +
+      '<p class="reccta">End on: comment <b>' + (REC_CTA[idea.offer || "video"] || "VIDEO") + '</b></p>';
+    prev.disabled = recIdx === 0;
+    skip.disabled = recIdx >= recList.length - 1;
+    done.disabled = false;
+  }
+  function openRecord(){ recIdx = 0; recList = []; goTab("record"); renderRecord(); }
+  document.getElementById("recPrev").addEventListener("click", function(){ if (recIdx > 0) { recIdx--; renderRecord(); } });
+  document.getElementById("recSkip").addEventListener("click", function(){ if (recIdx < recList.length - 1) { recIdx++; renderRecord(); } });
+  document.getElementById("recDone").addEventListener("click", function(){
+    var idea = recList[recIdx];
+    if (!idea) return;
+    idea.recorded = true;
+    recList.splice(recIdx, 1);   // stays on the same position = the next Reel
+    markDirty(); saveNow();
+    renderCalendar();
+    renderRecord();
+  });
+  function recordFromHash(){ if (/^#record$/i.test(location.hash || "")) { try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {} openRecord(); } }
+
   // hub.ollyhenson.com/#addreel=<encoded JSON {title, caption?, offer?}> (content generator's "Add to calendar", 2026-10-28).
-  // Held until the shared data has loaded, then put in the next free slot (3 a day), saved without pressing Save,
+  // Held until the shared data has loaded, then put in the next free slot (10 a day), saved without pressing Save,
   // and that day opened so Olly sees where it landed. Same title already waiting unpublished = no duplicate.
   var pendingReel = null;
   function importReelFromHash(){
@@ -6702,7 +6923,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function placePendingReel(){
     if (!pendingReel) return;
     var data = pendingReel; pendingReel = null;
-    var title = String(data.title).trim();
+    var title = withHookEmoji(data.title);
     if (!state.content.ideas) state.content.ideas = [];
     var idea = state.content.ideas.filter(function(i){ return i.title === title && !i.posted; })[0];
     if (!idea){
@@ -7228,7 +7449,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     ["c_email", "Email: write and schedule today's email"],
     ["c_yt", "YouTube: write and schedule today's community post"]
   ];
-  var TARGETS = [["Reels", 3, 21], ["Stories", 7, 49], ["Emails", 1, 7], ["YouTube posts", 1, 7]];
+  var TARGETS = [["Reels", 4, 28], ["Stories", 7, 49], ["Emails", 1, 7], ["YouTube posts", 1, 7]];
   var ROUTINE_START = "2026-10-29";
   var coreWeek = null;
   function coreStore(){
@@ -7271,7 +7492,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // week, month or year, without batching everything on a Monday. Out = Reels/Stories marked Published, emails/YouTube posts
   // Scheduled or Published, on the day they go out. The score only counts days up to today, so it's fair mid-period.
   var consMode = "day", consPeriod = null;   // opens on today (Olly, 2026-11-02; was week)
-  var CONS_DAILY = {"Reels": 3, "Stories": 7, "Emails": 1, "YouTube posts": 1};
+  var CONS_DAILY = {"Reels": 4, "Stories": 7, "Emails": 1, "YouTube posts": 1};
+  function tgt(k, x){ return k === "Reels" ? reelTarget(x) : CONS_DAILY[k]; }   // Reels: that day's own number (2026-11-04)
   function consByDay(){
     // rec = recorded or published (Reels only, Olly 2026-11-02: calendar, recorded and published are 3 separate steps)
     var m = {}, add = function(d, k, out, rec){ if (!d) return; var x = m[d] || (m[d] = {}); var c = x[k] || (x[k] = {out: 0, cal: 0, rec: 0}); c.cal++; if (out) c.out++; if (out || rec) c.rec++; };
@@ -7316,14 +7538,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var done = days.filter(function(x){ return x < t && x >= first; }), hasToday = days.indexOf(t) !== -1, future = days.filter(function(x){ return x > t; });
     var cnt = function(x, k){ var c = byDay[x] && byDay[x][k]; return c || {out: 0, cal: 0, rec: 0}; };
     var sum = function(list, k, f){ return list.reduce(function(a, x){ return a + cnt(x, k)[f]; }, 0); };
-    var hit = function(x){ return kinds.every(function(k){ return cnt(x, k).out >= CONS_DAILY[k]; }); };
-    var ready = function(x){ return kinds.every(function(k){ return Math.max(cnt(x, k).out, cnt(x, k).cal) >= CONS_DAILY[k]; }); };
+    var hit = function(x){ return kinds.every(function(k){ return cnt(x, k).out >= tgt(k, x); }); };
+    var ready = function(x){ return kinds.every(function(k){ return Math.max(cnt(x, k).out, cnt(x, k).cal) >= tgt(k, x); }); };
     var counted = done.length + (hasToday ? 1 : 0);
     var perKind = {};
     kinds.forEach(function(k){
-      var n = CONS_DAILY[k], todayGot = hasToday ? Math.min(n, Math.max(cnt(t, k).out, cnt(t, k).cal)) : 0;
-      var got = done.reduce(function(a, x){ return a + Math.min(n, cnt(x, k).out); }, 0) + todayGot;
-      perKind[k] = {got: got, of: n * counted, out: sum(done, k, "out") + (hasToday ? cnt(t, k).out : 0)};
+      var todayGot = hasToday ? Math.min(tgt(k, t), Math.max(cnt(t, k).out, cnt(t, k).cal)) : 0;
+      var got = done.reduce(function(a, x){ return a + Math.min(tgt(k, x), cnt(x, k).out); }, 0) + todayGot;
+      var of = done.reduce(function(a, x){ return a + tgt(k, x); }, 0) + (hasToday ? tgt(k, t) : 0);
+      perKind[k] = {got: got, of: of, out: sum(done, k, "out") + (hasToday ? cnt(t, k).out : 0)};
     });
     var score = counted ? Math.round(kinds.reduce(function(a, k){ return a + (perKind[k].of ? perKind[k].got / perKind[k].of : 1); }, 0) / kinds.length * 100) : null;
     var full = done.filter(hit).length;
@@ -7344,7 +7567,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var dayWord = isPast ? dayLabel(f).split(" ")[0] + Q : "today" + Q;
     // each type shows both steps while it isn't finished: 1 get it on the calendar (ticks itself off), 2 publish / schedule it
     kinds.forEach(function(k){
-      var c = cnt(f, k), n = CONS_DAILY[k], onCal = Math.max(c.out, c.cal), toAdd = n - onCal, toOut = n - c.out;
+      var c = cnt(f, k), n = tgt(k, f), onCal = Math.max(c.out, c.cal), toAdd = n - onCal, toOut = n - c.out;
       var sched = k === "Emails" || k === "YouTube posts";
       if (toOut <= 0) return;
       todayList.push(toAdd > 0
@@ -7360,8 +7583,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     for (var wd = addDaysISO(t, 1); wd <= addDaysISO(wkStart, 6); wd = addDaysISO(wd, 1)) rest.push(wd);
     kinds.forEach(function(k){
       var n = CONS_DAILY[k], sched = k === "Emails" || k === "YouTube posts", missing = 0, drafts = 0, gapDays = [];
-      rest.forEach(function(x){ var c = cnt(x, k), m = n - c.cal; if (m > 0) { missing += m; gapDays.push(dayLabel(x).split(" ")[0]); } if (sched) drafts += Math.max(0, Math.min(n, c.cal) - c.out); });
-      if (missing > 0) weekList.push(k + ": " + (sched ? "write and schedule " : "add ") + missing + " more " + (sched ? "" : "to the calendar ") + "for " + gapDays.join(", ") + (n > 1 ? " (" + n + " a day)" : ""));
+      rest.forEach(function(x){ var c = cnt(x, k), m = tgt(k, x) - c.cal; if (m > 0) { missing += m; gapDays.push(dayLabel(x).split(" ")[0]); } if (sched) drafts += Math.max(0, Math.min(n, c.cal) - c.out); });
+      if (missing > 0) weekList.push(k + ": " + (sched ? "write and schedule " : "add ") + missing + " more " + (sched ? "" : "to the calendar ") + "for " + gapDays.join(", ") + (n > 1 && k !== "Reels" ? " (" + n + " a day)" : ""));
       if (drafts > 0) weekList.push(k + ": schedule the " + drafts + " still in draft");
     });
 
@@ -7397,9 +7620,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var grid = document.createElement("div"); grid.className = "tgrid";
     grid.innerHTML = '<span class="th">Content</span><span class="th">' + (consMode === "day" ? "This day" : consMode === "week" ? "This week" : consMode === "month" ? "This month" : "This year") + ' \u00b7 done + planned</span><span class="th">Left to do</span>';
     kinds.forEach(function(k){
-      var n = CONS_DAILY[k], sched = k === "Emails" || k === "YouTube posts", target = n * span.length, covered = 0, out = 0, planned = 0, missed = 0;
+      var sched = k === "Emails" || k === "YouTube posts", target = span.reduce(function(a, x){ return a + tgt(k, x); }, 0), covered = 0, out = 0, planned = 0, missed = 0;
       span.forEach(function(x){
-        var c = cnt(x, k), got = x < t ? c.out : Math.max(c.out, c.cal);
+        var n = tgt(k, x), c = cnt(x, k), got = x < t ? c.out : Math.max(c.out, c.cal);
         covered += Math.min(n, got); out += Math.min(n, c.out); planned += Math.max(0, Math.min(n, got) - Math.min(n, c.out));
         if (x < t) missed += Math.max(0, n - Math.min(n, got));
       });
@@ -7411,7 +7634,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       // Reels (Olly, 2026-11-02): only published counts as done; recorded and on-the-calendar are shown as their own steps
       if (k === "Reels") {
         var rec = 0, cal = 0, toR = 0, toP = 0;
-        span.forEach(function(x){ var c = cnt(x, k), o = Math.min(n, c.out), r = Math.min(n, c.rec), cl = Math.min(n, Math.max(c.cal, c.out));
+        span.forEach(function(x){ var n = tgt(k, x), c = cnt(x, k), o = Math.min(n, c.out), r = Math.min(n, c.rec), cl = Math.min(n, Math.max(c.cal, c.out));
           rec += Math.max(0, r - o); cal += Math.max(0, cl - r); if (x >= t) { toR += Math.max(0, cl - r); toP += Math.max(0, r - o); } });
         covered = out; pct = target ? Math.min(100, Math.round(out / target * 100)) : 0;
         detail = " published <em>\u00b7 " + (out + rec) + " recorded (" + rec + " waiting to publish), " + cal + " only on the calendar</em>";
@@ -7450,7 +7673,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
           var mr = consRange("month", key), md = [];
           for (var x = mr[0]; x <= mr[1]; x = addDaysISO(x, 1)) if (x <= t && x >= first) md.push(x);
           if (!md.length) return;
-          row(monthLabel(key), kinds.map(function(k){ var o = sum(md, k, "out"), tg2 = CONS_DAILY[k] * md.length; return '<span class="' + (o >= tg2 ? "ok" : "") + '">' + o + " / " + tg2 + "</span>"; }).join(""),
+          row(monthLabel(key), kinds.map(function(k){ var o = sum(md, k, "out"), tg2 = md.reduce(function(a, x){ return a + tgt(k, x); }, 0); return '<span class="' + (o >= tg2 ? "ok" : "") + '">' + o + " / " + tg2 + "</span>"; }).join(""),
             md.filter(hit).length + "/" + md.length + " days", "", function(){ consMode = "month"; consPeriod = key; renderToday(); });
         })(consPeriod + "-" + String(mm).padStart(2, "0"));
       } else {
@@ -7458,7 +7681,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
           var fut = x > t, isT = x === t;
           if (x < first) { row(dayLabel(x), kinds.map(function(){ return "<span>–</span>"; }).join(""), "not tracked", "fut", function(){}); return; }
           row(dayLabel(x), kinds.map(function(k){
-            var c = cnt(x, k), n = CONS_DAILY[k];
+            var c = cnt(x, k), n = tgt(k, x);
             if (fut) return '<span class="' + (c.cal >= n ? "ok" : "") + '">' + c.cal + " / " + n + " ready</span>";
             if (isT) return '<span class="' + (c.out >= n ? "ok" : Math.max(c.out, c.cal) >= n ? "plan" : "") + '">' + c.out + " / " + n + (c.cal > c.out ? " (+" + (c.cal - c.out) + ")" : "") + "</span>";
             return '<span class="' + (c.out >= n ? "ok" : "") + '">' + c.out + " / " + n + "</span>";
@@ -7548,7 +7771,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       });
       c.appendChild(ul);
       var dc = contentCounts(date, date), g = '<div class="tgrid tgrid2">';
-      TARGETS.forEach(function(tg){ g += "<span>" + tg[0] + "</span>" + coreCell(dc[tg[0]], tg[1]); });
+      TARGETS.forEach(function(tg){ g += "<span>" + tg[0] + "</span>" + coreCell(dc[tg[0]], tg[0] === "Reels" ? reelTarget(date) : tg[1]); });
       c.insertAdjacentHTML("beforeend", g + "</div>");
       days.appendChild(c);
     })(addDaysISO(wk, n));
@@ -8718,6 +8941,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (btn.dataset.tab === "core") renderToday();
       if (btn.dataset.tab === "audience") renderAudience();
       if (btn.dataset.tab === "links") renderLinks();
+      if (btn.dataset.tab === "record") { recIdx = 0; recList = []; renderRecord(); }
       if (btn.dataset.tab === "looms") { lmFilter = "newest"; if (lmData && !lmLoading) lmLoad(); else renderLooms(); }
       uiSave({ tab: btn.dataset.tab });
     });
@@ -8963,6 +9187,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // (Olly, 2026-10-28: songs pasted after switching apps were lost, because coming back reloads the shared data).
     renderDayModal();
     renderStoryModal();
+    renderRecord();
+    if (serverRev) pullReelStatus();
+    // Olly 2026-11-04: "skip all of the ones from Saturday 19th of September all the way up to yesterday". One-off: unposted
+    // Reels dated 2026-09-19..2026-11-03 get skipped:true, so they leave the Record tab and the laptop's upload list
+    // (kept on the calendar, nothing deleted). state.reelSkip1 marks it done so later Reels in that range aren't touched.
+    if (serverRev && !state.reelSkip1) {
+      (state.content.ideas || []).forEach(function(i){ if (i.title && !i.posted && i.date >= "2026-09-19" && i.date <= "2026-11-03") i.skipped = true; });
+      state.reelSkip1 = true; markDirty(); saveNow(); renderRecord();
+    }
+    if (serverRev && addHookEmojis()) { markDirty(); saveNow(); renderCalendar(); renderDayModal(); renderRecord(); }
     renderEmailCalendar();
     renderYtCalendar();
     renderCarCalendar();
@@ -9034,6 +9268,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     closeStoryModal();
     importEmailFromHash();
     importReelFromHash();
+    recordFromHash();
+    pullReelStatus();
+    mirrorReelCaptions();
     importStoryFromHash();
     loomsFromHash();
     pushInit();

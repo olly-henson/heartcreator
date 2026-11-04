@@ -30,7 +30,7 @@ MAX_CHARS = 22         # caption chunk length
 PAUSE_SPLIT = 0.35     # a pause this long starts a new caption
 HIDE_GAP = 0.6         # a pause this long hides the caption
 TERMS = ["intellectualization", "emotional resonance"]
-CTA_WORDS = {"feeling"}  # green when right after DM / comment
+CTA_WORDS = {"feeling", "emotion", "video", "attract", "scale"}  # keywords: green when comment / DM / message is up to 3 words before
 
 
 def font(px):
@@ -73,14 +73,21 @@ def transcribe(audio):
 
 
 def speech_onset(audio, sr, near):
-    """First moment of real voice within ±0.7s of whisper's first word."""
+    """First moment of real voice near whisper's first word, measured against THIS clip's background noise.
+    (2026-11-04: outdoors the wind/traffic sat above the old fixed level, so 1s of noise was kept before the hook.
+    Olly: the hook must be heard the instant the video starts.) Needs 60ms above the level, so a click or gust
+    isn't taken for speech; starts 50ms before it so the first consonant isn't clipped."""
     hop = int(sr * 0.01)
-    a, b = max(0, int((near - 0.7) * sr)), int((near + 0.5) * sr)
+    a, b = max(0, int((near - 1.5) * sr)), int((near + 0.6) * sr)
     seg = audio[a:b]
     rms = np.sqrt(np.convolve(seg ** 2, np.ones(hop) / hop, "same"))[::hop]
-    thr = max(0.02, rms.max() * 0.12)
-    idx = np.argmax(rms > thr)
-    return max(0.0, (a / sr) + idx * 0.01 - 0.06)
+    noise, peak = np.percentile(rms, 20), rms.max()
+    thr = max(0.02, noise * 3, noise + (peak - noise) * 0.25)
+    above = rms > thr
+    for k in range(len(above) - 6):
+        if above[k:k + 6].all():
+            return max(0.0, a / sr + k * 0.01 - 0.05)
+    return max(0.0, near - 0.1)
 
 
 # ---------- caption plan ----------
@@ -106,11 +113,14 @@ def plan(words):
     # mark terms that get their own green caption
     low = [re.sub(r"[^a-z]", "", w["w"].lower()) for w in rest]
     solo = {}  # start index -> length
+    terms_at = {}  # start index -> the term in Olly's spelling (US z: "intellectualization")
+    zs = lambda ws: [x.replace("z", "s") for x in ws]  # whisper writes "intellectualisation" too (2026-11-04)
     for term in TERMS:
         tw = term.split()
         for j in range(len(rest) - len(tw) + 1):
-            if low[j:j + len(tw)] != tw:
+            if zs(low[j:j + len(tw)]) != zs(tw):
                 continue
+            terms_at[j] = term
             prev = rest[j - 1]["w"] if j else "."
             named = low[j - 1] == "called" if j else False
             own_sentence = re.search(r"[.!?]$", prev) and re.search(r"[.!?]$", rest[j + len(tw) - 1]["w"])
@@ -128,7 +138,7 @@ def plan(words):
     while j < len(rest):
         if j in solo:
             flush()
-            caps.append([("solo", rest[j:j + solo[j]])])
+            caps.append([(terms_at[j], rest[j:j + solo[j]])])
             j += solo[j]
             continue
         w = rest[j]
@@ -141,18 +151,32 @@ def plan(words):
         j += 1
     flush()
 
+    # Keyword CTA words go green when "comment" / "DM" / "message" came up to 3 words before, across caption boxes
+    # (2026-11-04: "just comment | feeling" split over two boxes, and "DM me feeling" has a word between, so neither went green)
+    green = set()
+    for j, x in enumerate(rest):
+        if low[j] in CTA_WORDS and any(low[k] in ("dm", "comment", "message") for k in range(max(0, j - 3), j)):
+            green.add(id(x))
+    # Every mention of a TERM is green too (Olly 2026-11-04: "always highlighted even if mentioned more than once"):
+    # "something called X" / its own sentence gets its own caption box (solo, above); any other mention is green in line
+    for j, term in terms_at.items():
+        for x in rest[j:j + len(term.split())]:
+            green.add(id(x))
+
     out = []
     for c in caps:
         if isinstance(c[0], tuple):
             ws = c[0][1]
-            parts = [(clean(" ".join(x["w"] for x in ws)).rstrip(",").lower(), True)]
+            parts = [(c[0][0], True)]   # the term in Olly's spelling, not whisper's
         else:
             ws = c
             parts = []
             for k, x in enumerate(ws):
                 t = clean(x["w"]) if k == len(ws) - 1 else x["w"]
-                prevw = re.sub(r"[^a-z]", "", ws[k - 1]["w"].lower()) if k else ""
-                g = re.sub(r"[^a-z]", "", x["w"].lower()) in CTA_WORDS and prevw in ("dm", "comment")
+                g = id(x) in green
+                if g:
+                    t = t.rstrip(",")
+                    t = re.sub(r"(?i)intellectualisation", lambda m: m.group(0).replace("s", "z").replace("S", "Z"), t)  # Olly's US spelling
                 if g and parts:
                     parts[-1] = (parts[-1][0].rstrip(","), parts[-1][1])
                 parts.append((t, g))
@@ -173,14 +197,16 @@ def emoji_img(ch, size):
     return im.resize((int(im.width * r), size), Image.LANCZOS)
 
 
-def draw_line(canvas, y, parts, heart=False, box=True, text=True):
-    """One caption line centred at y (box top). parts = [(text, green)]."""
+def draw_line(canvas, y, parts, heart=False, box=True, text=True, f=None):
+    """One caption line centred at y (box top). parts = [(text, green)]. f = a smaller font for a long hook."""
+    f = f or F
+    tw_ = lambda t: f.getlength(t)
     d = ImageDraw.Draw(canvas)
-    sp = text_w(" ")
-    tw = sum(text_w(t) for t, _ in parts) + sp * (len(parts) - 1)
+    sp = tw_(" ")
+    tw = sum(tw_(t) for t, _ in parts) + sp * (len(parts) - 1)
     hw = 0
     if heart:
-        heart_im = emoji_img(heart if isinstance(heart, str) else "\u2764\ufe0f", 46)
+        heart_im = emoji_img(heart if isinstance(heart, str) else "\u2764\ufe0f", round(46 * f.size / FONT_PX))
         hw = sp + heart_im.width
     bw = tw + hw + PAD_X * 2
     x0 = (W - bw) / 2
@@ -188,12 +214,12 @@ def draw_line(canvas, y, parts, heart=False, box=True, text=True):
         d.rounded_rectangle([x0, y, x0 + bw, y + BOX_H], RADIUS, fill="white")
     if not text:
         return x0, bw
-    asc, desc = F.getmetrics()
+    asc, desc = f.getmetrics()
     ty = y + BOX_H / 2 - (asc + desc) / 2 + 4
     x = x0 + PAD_X
     for t, g in parts:
-        d.text((x, ty), t, font=F, fill=GREEN if g else "black")
-        x += text_w(t) + sp
+        d.text((x, ty), t, font=f, fill=GREEN if g else "black")
+        x += tw_(t) + sp
     if heart:
         canvas.alpha_composite(heart_im, (int(x), int(y + BOX_H / 2 - heart_im.height / 2 + 2)))
     return x0, bw
@@ -205,20 +231,131 @@ def caption_png(parts, path):
     im.crop((0, STRIP_Y, W, STRIP_Y + STRIP_H)).save(path)
 
 
+MAX_LEN = 179.0     # every Reel fits YouTube Shorts + Instagram Reels (3:00) with a second spare (Olly 2026-11-04)
+KEEP_PAUSE = 0.25   # a shortened pause keeps this much silence
+
+
+def fit_length(words, length):
+    """Over MAX_LEN: shorten the longest pauses (never words; not in the first 4s = the hook, nor the last 8s = the CTA)
+    down to KEEP_PAUSE, longest first, only until it fits. Still over: a tiny even speed-up. Returns (keep segments, speed)
+    or (None, 1.0) when it already fits. Olly: "always make sure it's cut within the time limit ... even a 'tiny' cut"."""
+    if length <= MAX_LEN:
+        return None, 1.0
+    need = length - MAX_LEN + 0.05
+    gaps = sorted(((words[i + 1]["s"] - words[i]["e"], i) for i in range(len(words) - 1)
+                   if words[i]["e"] > 4.0 and words[i + 1]["s"] < length - 8), reverse=True)
+    cuts = []
+    for g, i in gaps:
+        if need <= 0 or g <= KEEP_PAUSE + 0.05:
+            break
+        rem = min(g - KEEP_PAUSE, need)
+        a = words[i]["e"] + KEEP_PAUSE / 2
+        cuts.append((a, a + rem))
+        need -= rem
+    keep, t = [], 0.0
+    for a, b in sorted(cuts):
+        keep.append((t, a))
+        t = b
+    keep.append((t, length))
+    return keep, max(1.0, sum(b - a for a, b in keep) / MAX_LEN)
+
+
+def remap(t, keep, speed):
+    """A time on the original timeline -> the shortened one (a time inside a cut snaps to the cut)."""
+    out = 0.0
+    for a, b in keep:
+        if t < a:
+            return out / speed
+        if t <= b:
+            return (out + t - a) / speed
+        out += b - a
+    return out / speed
+
+
+def merge_hook(spoken, calendar):
+    """On-screen hook = the words he actually said (he sometimes skips or adds a word), but each word the transcript
+    heard slightly differently ("While" for "Why") takes the calendar's spelling, and the calendar's end emoji is kept.
+    Olly 2026-11-04: "the hook always needs to default to what's said in the video ... sometimes I miss a word"."""
+    import difflib
+    own = END_EMOJI.search(calendar)
+    emo = own.group(1) if own else ""
+    cal_text = calendar[:own.start()].rstrip() if own else calendar.strip()
+    sw, cw = spoken.split(), cal_text.split()
+    key = lambda w: re.sub(r"[^a-z0-9]", "", w.lower().replace("’", "'"))
+    out = []
+    for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, [key(w) for w in sw], [key(w) for w in cw], autojunk=False).get_opcodes():
+        if op == "equal":
+            out += cw[j1:j2]
+        elif op == "replace" and i2 - i1 == j2 - j1:
+            out += [c if difflib.SequenceMatcher(None, key(s), key(c)).ratio() >= 0.5 else s for s, c in zip(sw[i1:i2], cw[j1:j2])]
+        elif op in ("replace", "delete"):
+            out += sw[i1:i2]   # extra / different words he said stay ("delete" = only in the spoken words)
+        # "insert" = calendar words he didn't say: left out
+    text = " ".join(out).strip().rstrip(",;:.-–— ")
+    text = text[:1].upper() + text[1:]
+    return text + (" " + emo if emo else "")
+
+
+END_EMOJI = re.compile(r"\s*((?:[☀-➿\U0001F000-\U0001FAFF][️‍]?)+)\s*$")
+
+
 def hook_png(text, path):
+    # a calendar hook can carry its own end emoji (Olly 2026-11-04: the emoji drives the first-3-second click):
+    # use it as the box's end emoji instead of the default rule below
+    own = END_EMOJI.search(text)
+    if own:
+        text = text[:own.start()].rstrip()
     words = text.replace("'", "’").split()
-    best = 1  # fill line 1 like Instagram does (greedy, max ~760px of text)
-    while best < len(words) - 1 and text_w(" ".join(words[:best + 1])) <= 760:
-        best += 1
-    l1, l2 = " ".join(words[:best]), " ".join(words[best:])
+    lines, f = hook_fit(words)
     # end emoji, as on Olly's posted Reels: test tube when the hook says "scientifically"/"science", else red heart
-    emo = "\U0001F9EA" if re.search(r"scien", text, re.I) else "❤️"
+    emo = own.group(1) if own else "🧪" if re.search(r"scien", text, re.I) else "❤️"
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     step = 75
     for box, text in ((True, False), (False, True)):
-        draw_line(im, BOX_TOP - 4, [(l1, False)], box=box, text=text)
-        draw_line(im, BOX_TOP - 4 + step, [(l2, False)], heart=emo, box=box, text=text)
+        for n, ln in enumerate(lines):
+            draw_line(im, BOX_TOP - 4 + step * n, [(ln, False)], heart=emo if n == len(lines) - 1 else False, box=box, text=text, f=f)
     im.crop((0, STRIP_Y, W, STRIP_Y + STRIP_H)).save(path)
+
+
+HOOK_MAX = 780   # widest hook line incl. the end emoji. Instagram/TikTok crop ~100px off each side on tall phones
+                 # (Olly 2026-11-04: 940 sat "right tight on the edge"), so the box keeps ~125px clear of each edge
+HOOK_MIN_PX = 54  # a long hook's text may shrink to this (from 66) to stay two lines inside the safe width
+
+
+def hook_lines(words, f=None):
+    """ALWAYS two lines (Olly 2026-11-04: three starts covering his head). Returns (lines, is_pyramid, fits).
+    Inverted pyramid where it fits: top line at least as wide as the bottom one (which counts its end emoji), both
+    within HOOK_MAX, most balanced split wins. Else the fitting split with the least extra width at the bottom."""
+    f = f or F
+    ew = f.getlength(" ") + 46 * f.size / FONT_PX   # the end emoji
+    wd = lambda ws, last: f.getlength(" ".join(ws)) + (ew if last else 0)
+    if len(words) < 2:
+        return [" ".join(words)], True, wd(words, True) <= HOOK_MAX
+    best, near = None, None
+    for k in range(1, len(words)):
+        a, b = wd(words[:k], False), wd(words[k:], True)
+        if a > HOOK_MAX or b > HOOK_MAX:
+            continue
+        if a >= b and (best is None or a - b < best[0]):
+            best = (a - b, k)
+        if near is None or b - a < near[0]:
+            near = (b - a, k)
+    k = (best or near or (0, len(words) // 2))[1]
+    return [" ".join(words[:k]), " ".join(words[k:])], best is not None, (best or near) is not None
+
+
+def hook_fit(words):
+    """Full size if a two-line pyramid fits; otherwise shrink the text a step at a time (to HOOK_MIN_PX) until one does.
+    No pyramid at any size: the largest size where two lines fit at all (same idea as Olly squeezing it by hand)."""
+    fallback = None
+    for px in range(FONT_PX, HOOK_MIN_PX - 1, -2):
+        f = F if px == FONT_PX else font(px)
+        lines, pyramid, fits = hook_lines(words, f)
+        if pyramid:
+            return lines, f
+        if fits and fallback is None:
+            fallback = (lines, f)
+    return fallback or (lines, f)
 
 
 # ---------- main ----------
@@ -231,7 +368,7 @@ def encoder():
         return ["-c:v", "libx264", "-preset", "veryfast", "-crf", "18"]
 
 
-def main(src, out):
+def main(src, out, hook_text=None, words_only=False):
     ENC = encoder()
     tmp = tempfile.mkdtemp(prefix="reel_")
     wav = os.path.join(tmp, "a.wav")
@@ -246,6 +383,9 @@ def main(src, out):
         json.dump(words, open(cache, "w"))
     if not words:
         sys.exit("No speech found")
+    if words_only:  # upload_server.py matches the video to a Hub calendar hook from its opening words
+        print("FIRSTWORDS " + json.dumps(" ".join(w["w"] for w in words[:30])))
+        return
     t0 = speech_onset(audio, 16000, words[0]["s"])
     t1 = min(dur, words[-1]["e"] + 0.35)
     for w in words:
@@ -253,8 +393,17 @@ def main(src, out):
     for w in words:
         w["s"] = max(0.0, w["s"])
     length = t1 - t0
+    src_len = length
+    keep, speed = fit_length(words, length)
+    if keep:  # over the limit: words move to the shortened timeline so captions stay in sync
+        for w in words:
+            w["s"], w["e"] = remap(w["s"], keep, speed), remap(w["e"], keep, speed)
+        length = sum(b - a for a, b in keep) / speed
+        print(f"fit to {MAX_LEN}s: {src_len:.2f}s -> {length:.2f}s ({len(keep) - 1} pauses shortened, speed x{speed:.3f})")
     hook, caps = plan(words)
-    json.dump({"trim": [t0, t1], "hook": hook, "captions": caps}, open(out + ".plan.json", "w"), indent=1)
+    if hook_text:  # what he SAID, spelled like the calendar where it's the same word (Olly 2026-11-04), + calendar emoji
+        hook = (merge_hook(hook[0], hook_text), hook[1], hook[2])
+    json.dump({"trim": [t0, t1], "length": length, "speed": speed, "hook": hook, "captions": caps}, open(out + ".plan.json", "w"), indent=1)
 
     blank = os.path.join(tmp, "blank.png")
     Image.new("RGBA", (W, STRIP_H), (0, 0, 0, 0)).save(blank)
@@ -280,17 +429,44 @@ def main(src, out):
     lst = os.path.join(tmp, "caps.ffconcat")
     open(lst, "w").write("\n".join(l.replace("\\", "/") for l in lines))
 
-    run(["ffmpeg", "-y", "-ss", f"{t0:.3f}", "-t", f"{length:.3f}", "-i", src,
+    pre, vin, ain = "", "[0:v]", "0:a"
+    if keep:  # keep-segments joined back together (+ a tiny speed-up only if the pauses weren't enough)
+        for i, (a, b) in enumerate(keep):
+            pre += (f"[0:v]trim=start={a:.3f}:end={b:.3f},setpts=PTS-STARTPTS[v{i}];"
+                    f"[0:a]atrim=start={a:.3f}:end={b:.3f},asetpts=PTS-STARTPTS[a{i}];")
+        pre += "".join(f"[v{i}][a{i}]" for i in range(len(keep))) + f"concat=n={len(keep)}:v=1:a=1[vk][ak];"
+        if speed > 1.0005:
+            pre += f"[vk]setpts=PTS/{speed:.5f}[vs];[ak]atempo={speed:.5f}[as];"
+            vin, ain = "[vs]", "[as]"
+        else:
+            vin, ain = "[vk]", "[ak]"
+    run(["ffmpeg", "-y", "-ss", f"{t0:.3f}", "-t", f"{src_len:.3f}", "-i", src,
          "-f", "concat", "-safe", "0", "-i", lst,
-         "-filter_complex", f"[0:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30[v];"
+         "-filter_complex", pre + f"{vin}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30[v];"
                             f"[1:v]fps=30,format=rgba[c];[v][c]overlay=0:{STRIP_Y}:shortest=0:eof_action=pass,format=nv12[o]",
-         "-map", "[o]", "-map", "0:a", "-t", f"{length:.3f}",
+         "-map", "[o]", "-map", ain, "-t", f"{length:.3f}",
          *ENC, "-c:a", "aac", "-b:a", "192k",
          "-movflags", "+faststart", out])
     print(f"done: {out}  trim {t0:.2f}s -> {t1:.2f}s  hook '{hook[0]}'  {len(caps)} captions")
 
 
 if __name__ == "__main__":
-    src = sys.argv[1]
-    out = sys.argv[2] if len(sys.argv) > 2 else os.path.splitext(src)[0] + " - edited.mp4"
-    main(src, out)
+    for _s in (sys.stdout, sys.stderr):  # emoji in calendar hooks: Windows' cp1252 console encoding crashed the final print
+        try:
+            _s.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+    # reel_editor.py RAW [OUT] [--hook "calendar hook"] [--words-only]
+    args, hook_text, words_only = [], None, False
+    a = sys.argv[1:]
+    while a:
+        x = a.pop(0)
+        if x == "--hook":
+            hook_text = a.pop(0)
+        elif x == "--words-only":
+            words_only = True
+        else:
+            args.append(x)
+    src = args[0]
+    out = args[1] if len(args) > 1 else os.path.splitext(src)[0] + " - edited.mp4"
+    main(src, out, hook_text, words_only)

@@ -1,91 +1,84 @@
-# Skill: Reel Auto-Editor
+# Skill: Reel Auto-Editor + Poster
 
-Turns Olly's raw iPhone Reel recordings into finished Reels in his exact on-screen style. He uploads them from his phone over home Wi-Fi, and the laptop edits them and lists them ready to post.
-Tool: `reels\reel_editor.py`. Usage: `py reels\reel_editor.py "<raw video>" ["<output.mp4>"]`. Upload page: `reels\upload_server.py` (see "Upload page" below).
+Turns Olly's raw iPhone Reel recordings into finished Reels in his exact on-screen style, matches each to its Hub calendar hook, and (after his one approval) schedules it on Instagram, Facebook, TikTok and YouTube Shorts through GHL.
+Tools: `reels\reel_editor.py` (the edit), `reels\upload_server.py` (phone upload + review page, port 8800, plus the GHL poster thread), `reels\ghl_poster.py` (slots, GHL upload, posts, posted check).
 Reference pair (the style to match): `reels\sample\Raw.MOV` (raw) and `reels\sample\Final.mp4` (Olly's own edit). Both stay local and are never committed.
 
 ## Goal
-Olly only records. Editing and distribution happen without him. His part: record a batch, upload from his phone and wait for "Sent", then carry on with his day. Next build (agreed 2026-11-04, plan in NEXT.md): the upload page matches each video to its Hub calendar Reel, statuses flow back to the Hub (Recorded > Edited > Scheduled > Posted), and GHL posts to Instagram, TikTok, YouTube Shorts and Facebook every 2 hours, with a Scheduled list he can check.
+Olly only records. His day: push hooks from the content generator to the Hub calendar → set each day's Reel number in the day panel (0-10, default 4) → record from the Hub **Record** tab (hook + CTA keyword, nothing else) → bulk upload every raw video in any order on the upload page → review each under **To approve** and tap **✓ Approve and schedule** once. Everything else is automatic: matching, editing, captions per platform, scheduling, and the statuses Draft → Recorded → Scheduled → Published on the Hub calendar.
 
 ## Process / Steps
-1. **Study the reference first.** Before changing the look, pull frames from `Final.mp4` at the same timestamps as the test render and compare them side by side (crop the caption band, y 240 to 560 on 1080x1920). Match measurements, don't guess them.
-2. **Transcribe** with faster-whisper `small.en` on the CPU. Feed the audio as a numpy array (the PyAV loader breaks on this PC). The transcript is cached as `<raw>.words.json`, so re-renders skip this step (~5 min for a 3-min clip). If the result has almost no punctuation, transcribe() retries once with a punctuated `initial_prompt` (small.en sometimes returns lowercase run-on text).
-3. **Trim the start and end only.** Start = the real voice onset near the first word, minus 0.06s (this matched Olly's own cut, 1.23s, exactly). End = the last word plus 0.35s.
-4. **Hook** = the first spoken sentence, shown while he says it. Two-line white box, curly apostrophes, first word capitalised, no trailing comma, full stop or colon. End emoji: 🧪 if the hook says "scientifically"/"science", otherwise ❤️. Fill line 1 greedily, like Instagram does (up to ~760px of text). Don't balance the two lines. If no sentence end comes within 14 words, cut at the longest pause in words 4 to 14 (his natural pause after the hook).
-5. **Captions:** a white rounded box with bold black text, 2 to 4 words (22 characters max). Start a new caption at a sentence end or at a pause of 0.35s or more. Hide the caption during pauses of 0.6s or more. Strip full stops at the end and keep commas inside.
-6. **Green highlights (#10D05D):**
-   - "intellectualization" and "emotional resonance": on their own caption, in green, when he names the term ("called X") or says it as its own sentence. Other mentions stay black inside the normal caption.
-   - "feeling": green only right after "DM" or "comment" (the CTA). Remove the comma Whisper puts between them ("DM feeling", not "DM, feeling"). Leave "the feeling finder" black.
-7. **Render:** draw the captions as PIL PNGs of the caption strip only, then do a single ffmpeg overlay at y=240. Output 1080x1920, 30fps, H.264 with Intel Quick Sync (falls back to x264), AAC audio.
-8. **Check before showing Olly:** compare frames of the hook, a normal caption, a green term and the CTA against `Final.mp4`. Read the hook word by word: a misheard first word ("While" for "Why") is the most visible mistake.
-9. **Fixing a misheard word** (until the calendar match is built): edit the word in `reels\inbox\<id>.words.json`, then POST `/retry/<id>` (or Olly taps Try again). The cached transcript makes the re-edit ~2 min. Grab the hook frame and look at it before telling him it's fixed.
+1. **Study the reference first** when changing the look: pull frames from `Final.mp4` at the same timestamps as the test render (caption band y 240-560 on 1080x1920). Match measurements, don't guess them.
+2. **Transcribe** with faster-whisper `small.en` on the CPU (numpy audio; PyAV breaks on this PC). Cached as `<raw>.words.json` (~5 min for a 3-min clip, re-edits skip it). Punctuation retry with an `initial_prompt` if the result is a run-on.
+3. **Match to the calendar:** `reel_editor.py RAW OUT --words-only` prints `FIRSTWORDS "<first 30 words>"`; `match_score()` = share of the hook's words said in order at the start; 0.5+ = match (tested 1.0 right vs 0.17 wrong). Candidates = unpublished calendar Reels (Hub GET, -21..+14 days, skipped ones excluded) not already taken. Olly can pick/change the hook from the card's dropdown (re-edit ~2 min).
+4. **Trim the start and end only.** Start = `speech_onset()`: first 60ms run above THIS clip's own noise floor (3x the 20th-percentile level, or 25% of the way to the peak) near whisper's first word, minus 0.05s. The hook must be heard in the very first moment. End = last word + 0.35s.
+5. **Fit the length:** every Reel ≤ 179s (YouTube Shorts + Instagram Reels limit is 3:00). `fit_length()` shortens the longest pauses down to 0.25s, longest first, only until it fits; never words, never the first 4s (hook) or last 8s (CTA). Still over: an even speed-up (≤ a few %). `remap()` moves word times so captions stay in sync. Result length is saved in the plan (`length`, `speed`).
+6. **Hook text** = the words he actually SAID (`merge_hook()`): misheard words take the calendar's spelling ("While" → "Why"), words he skipped or added follow his speech, the calendar's end emoji is kept, trailing punctuation dropped, first word capitalised.
+7. **Hook layout** = ALWAYS two lines (`hook_lines()`): inverted pyramid (top line at least as wide as the bottom, which counts its end emoji), both within HOOK_MAX 780px incl. emoji (Instagram/TikTok crop ~100px off each side on tall phones, so the box keeps ~125px clear of each edge); most balanced pyramid wins. No pyramid at 66px: `hook_fit()` shrinks the hook text 2px at a time (to 54px) until one fits; still none: the largest size where two lines fit. On screen from 0s, so the first frame (= the cover) shows it.
+8. **Captions:** white rounded box, bold black, 2-4 words (22 chars max); new caption at a sentence end or a 0.35s pause; hidden during 0.6s+ pauses; final full stops stripped.
+9. **Green (#10D05D):**
+   - Every mention of "intellectualization" and "emotional resonance" (s/z spellings both match, always shown as Olly's US "intellectualization"). Own caption box when he names it ("called X") or says it as its own sentence; green in line otherwise.
+   - CTA keywords (feeling, emotion, video, attract, scale) when "comment" / "DM" / "message" came up to 3 words before, across caption boxes; comma after them removed.
+10. **Render:** PIL PNGs of the caption strip only, one ffmpeg overlay at y=240 (keep-segments trimmed + concatenated when pauses were shortened). 1080x1920, 30fps, H.264 Quick Sync, AAC.
+11. **Captions per platform:** the Hub's built-in Perfect Reel captions (mirrored to KV `reelcaptions`), exactly as laid out per platform. Only the set changes: it follows the keyword he SAYS at the end (`spoken_offer()`: ATTRACT → attract, FEELING/EMOTION → scale, VIDEO → video), else the calendar's CTA. `VIDEO TITLE GOES HERE` (Facebook line 1) = the on-screen hook.
+12. **Check before telling Olly it's ready:** read the hook word by word, grab frame 0 (hook + emoji), a frame at each green word, and the first 1s of audio (voice from ~0.0s). Confirm length ≤ 179s.
+13. **Schedule on approval** (`gp.schedule()`): book the slot, upload the mp4 to GHL `/medias/upload-file`, create one `scheduled` post per platform (IG reel, FB reel, TikTok post PUBLIC_TO_EVERYONE, YouTube `youtubePostDetails {title: hook ≤100, privacyLevel public, type short}`), Hub stage → scheduled. Unschedule deletes the unpublished posts and keeps the upload.
+14. **Slots** (`SPREAD` in ghl_poster.py, Windhoek UTC+2, posting day 06:00 → 06:00, US emphasis: Windhoek = ET+7): a timetable per day count, e.g. 4 = 15:00, 19:00, 23:00, 02:00. Count = max(the day's Hub number, Reels on that calendar day). A matched Reel books its own calendar day, earliest free slot ≥ 20 min ahead; a late or unmatched Reel tops up the first day below its number (rest days skipped).
+15. **Posted check** every 10 min after the slot (`gp.check()`): GHL replaces a scheduled post when it publishes: the old one goes `deleted: true` (status still "scheduled") and a new post appears with `parentPostId` = old `_id`, its own status and the live link in `previewLink`. Follow the child; save links; Hub stage → posted (the Hub then sets Published + Video stats by itself).
 
 ## Rules and Constraints
-- Style spec: Figtree (`reels\fonts\Figtree.ttf`) weight 850 at 66px. Box top y=289, box height 120, 24px side padding, corner radius 18. Text black; highlight #10D05D.
-- Keep it human: the middle of the video is untouched. Olly edits only the start and the end himself, so the tool does the same.
-- Match Olly's finished Reel, not a generic caption style. He has approved the current look ("absolutely perfect", 2026-11-04), so treat it as locked unless he asks for a change.
-- Speed matters on this laptop (i5-10310U, Intel UHD graphics, no NVIDIA card). Overlay only the caption strip (full-frame overlay took ~6 min, the strip takes ~1m40) and use Quick Sync.
-- Getting videos from the phone to the laptop goes over home Wi-Fi through the upload page on the laptop. Olly's iCloud is full, so iCloud is not used.
-- Posting: for now Olly posts from the page (Save to Photos + Copy caption). Planned: GHL Social Planner posts all four channels, Instagram included. Olly asked whether schedulers cut reach: research found no evidence either way that holds up (Mosseri reportedly says no; small vendor tests show no difference). Agreed check: compare GHL-posted Reels with his previous 2 weeks of Edits posts in the Hub, and switch Instagram back to manual if it's clearly lower. The GHL key currently lacks Social Planner scope (401 on get-account), so that's the first setup step.
-- Raw and finished videos, transcripts (`*.words.json`), plans (`*.plan.json`), `reels\reference\` and `reels\ready\reels.json` are kept out of git (the repo is public).
-- **Explaining it to Olly:** say plainly where things live. The page runs on his laptop: not in the Hub, not online. Nothing is sent to his phone by itself; he taps Save to Photos when he's home. His phone only needs the page open while a video is sending, until "Sent". After that he can leave, and the laptop edits regardless. Settings walkthroughs: one click per message, wait for "done", and check the result yourself where you can (powercfg, Test-Path).
-
-### Continuity rule (Olly, 2026-11-04): every Reel matches his recent posted Reels
-Checked against the covers of his last 10 posted Reels (instagram.com/attractwitholly, 30 Oct to 4 Nov 2026; logged-out view shows 10 Reels + 2 carousels, no view counts):
-- Hook: one white rounded box, bold black text, 2 lines (3 only if it won't fit), centred, sitting just above his head (box top y=289 on 1080x1920, about 15% down). Same look across the whole series.
-- End emoji: 🧪 for "scientifically"/"science", otherwise ❤️. He used 😍 once; not a rule.
-- Hook wording = the outcome-led header he reads out, 4-7 words (see memory feedback_reel_header_is_hook).
-- Captions: same white box, same y, as in his approved "You don't need a plan" Reel (sample\Final.mp4). The covers don't show captions, so Final.mp4 is the caption reference.
-- To re-check the style: WebFetch https://www.instagram.com/attractwitholly asking for the full thumbnail URLs (with query string), curl them, tile them with PIL and compare. Plain curl of the profile gets an empty shell. Or use his uploads in `reels\reference\` (the page's "Upload a reference Reel" button).
+- Style spec: Figtree (`reels\fonts\Figtree.ttf`) weight 850 at 66px. Box top y=289, box height 120, 24px side padding, corner radius 18. Text black; highlight #10D05D. Approved by Olly ("absolutely perfect"): treat as locked unless he asks.
+- Keep it human: never cut words, misspeaks or retakes. The only middle edit allowed is shortening pauses, and only when a Reel is over 2:59.
+- One approval only, on the upload page (one card per Reel: video + all four captions). Never move approval into GHL (4 posts per Reel to tick).
+- Instagram is posted by GHL too (Olly: "otherwise what's the point? I'm still stuck on my phone all day").
+- Laptop is needed for receiving, editing, scheduling and status updates; NOT for posting (GHL posts from its own servers). Statuses catch up when it's back on.
+- Upload page on the phone: iOS stops a web page's upload when he leaves it or the phone locks. The page keeps the screen awake while sending, tells him to pick **Options → Current** in the photo picker (skips the HEVC conversion), and a 20s no-progress watchdog marks a dead upload "stopped, pick it again". He must stay on the page until the bars finish; review can happen any time later (home Wi-Fi only).
+- GHL key = `marketing\.env` 'Claude agent' Private Integration (socialplanner post+account, medias). userId = `bHBaRQ4MROqMcbSUeKXm` (the key can't list users; it's the createdBy on files he uploads).
+- Hub link: `https://hub.ollyhenson.com/api/track/reels?key=<reels\.hubkey>` (Pages secret REELS_KEY; `.hubkey` is git-ignored). Send `User-Agent: ReelUpload/1.0` (Cloudflare 403s Python's default). Stages live in KV `reelstatus`, never in the Hub record (would cause "changed on another device" popups).
+- After changing upload_server.py or ghl_poster.py: restart via PowerShell (Stop-Process the pyw upload_server, Start-Process pyw). Check no upload is mid-transfer first (`inbox\*.part`). reel_editor.py changes apply to the next edit without a restart.
+- Raw and finished videos, transcripts, plans, `reels\reference\`, `reels\ready\` and `.hubkey` stay out of git (the repo is public).
+- **Explaining it to Olly:** say plainly where things live (the page runs on his laptop, not in the Hub). Walkthroughs: one click per message, wait for "done", and check the result yourself where you can.
 
 ### Never
-- Never cut silences, pauses, misspeaks or retakes from the middle of a Reel.
-- Never state video specs without checking with ffprobe. The raw clip is 1080p 60fps HEVC recorded sideways (rotation flag), not 4K.
-- Never use ffmpeg `drawtext` or `subtitles`/ASS on this PC: fontconfig is broken and drawtext crashes. Draw text with PIL.
-- Never highlight every "feeling", only the CTA one after DM/comment.
-- Never add a pass that needs a Claude call for each video. Per-video editing costs zero tokens.
-- Never let a hook end in a comma or start lowercase.
-- Never say you can't see his Instagram before trying it. The profile is public and WebFetch reads it (Olly: "it's public though my profile").
-- Never run the upload server as a Claude background task. TaskStop kills the shell, not python, and leftover copies answer at random. Use Stop/Start Reel Upload.bat through PowerShell Start-Process.
-- Never write Python containing Windows paths or `\u` escapes through a bash heredoc. Backslashes get mangled (it failed twice this session). Use the Write/Edit tools or raw strings in a .py file.
-- Never add a Startup shortcut or other auto-run item yourself. The permission system blocks it as persistence. Walk Olly through `shell:startup` > New > Shortcut instead.
+- Never cut silences, pauses, misspeaks or retakes from the middle, except shortening pauses to fit 2:59.
+- Never put the hook on three lines (it covers his head).
+- Never add a hook line or anything else to the platform captions; never change their layout.
+- Never green a keyword that isn't a CTA (comment/DM/message within 3 words); never leave a mention of a TERM black.
+- Never state video specs without ffprobe (raw = 1080p 60fps HEVC, rotated).
+- Never use ffmpeg `drawtext` / ASS on this PC (fontconfig broken). Draw text with PIL.
+- Never print emoji to a cp1252 console: reel_editor reconfigures stdout to UTF-8; test scripts use `PYTHONIOENCODING=utf-8`. Windows `json.load(sys.stdin)` shows UTF-8 as mojibake: check raw bytes before believing GHL garbled an emoji.
+- Never send cover settings to GHL: `media.thumbnail` is dropped; `instagramPostDetails.coverUrl/thumbOffset` and `youtubePostDetails.thumbnail` are REJECTED (422) on scheduled posts even though drafts accept them. Test API shapes on a `scheduled` post far in the future, not only on drafts.
+- Never trust a scheduled post's own status after its slot: follow `parentPostId` (step 15).
+- Never assume a passed check means Olly saw it: his phone caches the video; the page busts it with `?v=<finished>` + no-store.
+- Never add a pass that needs a Claude call per video.
+- Never run the upload server as a Claude background task; never add Startup/auto-run items yourself.
+- Never write Python containing backslashes, `\n` or `\u` through a bash heredoc patch: it mangled strings four times this session. Use the Edit/Write tools, or a .py patch file written with Write.
+- Never say you can't see his Instagram before trying (it's public; WebFetch reads it).
 
 ## Examples
-Olly's finished Reel, matched by the tool:
-- Hook (0 to ~2.2s): "You don’t need a plan to / find your person ❤️"
-- Captions: "Here's what you need" → "instead" → "If it's a massive" → …
-- Named term: "...something called **intellectualization**." → caption is just "intellectualization" in green
-- Later mention: "...struggling with intellectualization" → "with intellectualization" in black
-- CTA: "or DM **feeling**" (feeling in green)
-
-First real upload (2026-11-04), corrected by Olly:
-- Whisper heard "While your friends have found love and you haven't," → shipped hook "Why your friends have / found love and you haven’t ❤️" (word fixed, trailing comma dropped).
-- Science hook: "How to attract your / person, scientifically 🧪".
-- Copy caption: "Why your friends have found love and you haven’t" + blank line + "Just comment FEELING or DM FEELING."
-
-## Upload page (built 2026-11-04)
-Tool: `reels\upload_server.py` (standard library only), port 8800. Phone on home Wi-Fi opens `http://192.168.0.12:8800` (saved to his Home Screen).
-- **Runs hidden:** `reels\Start Reel Upload.bat` starts it with pyw (no window to keep open; log in `reels\ready\server.log`; editor and ffmpeg run with CREATE_NO_WINDOW). `reels\Stop Reel Upload.bat` turns it off. It starts at login from a shortcut in his Startup folder, which Olly made. The server binds the port exclusively, so a second copy exits with "already running".
-- **Laptop power (set 2026-11-04):** plugged in = never sleeps, and closing the lid does nothing. On battery it sleeps as normal. Locked screen is fine. Warn him: no closed laptop in a bag while plugged in.
-- Flow: upload (several at once, progress bar) → `reels\inbox\` → edited one at a time → `reels\ready\<id>.mp4`. State in `reels\ready\reels.json`; a restart re-queues anything mid-edit. Each finished Reel: preview, editable caption, Save to Photos (share sheet → Save Video), Copy caption, Mark posted. Failed edits show the error + Try again. "Upload a reference Reel" saves style examples to `reels\reference\` without editing.
-- Caption = hook (line 1) + the closing CTA sentence from the full transcript ("Just comment FEELING or DM FEELING."), FEELING in caps, no comma before FEELING / and / or. No Claude call.
-- iPhone: the file input is visually hidden, not display:none (a Home Screen web app can stop opening the picker otherwise). The page shows "Opening Photos..." / "Sending..." / "Sent" because iOS takes a while to prepare a video after Add.
-- Gotchas: Windows Firewall asks the first time (Private networks, Allow). NordVPN on either device can block home-network access.
+- Hook from speech + calendar: heard "While your friends have found love and you haven't" + calendar "Why your friends found love and you haven't 💔" → on screen "Why your friends have found / love and you haven't 💔".
+- Two-line pyramid: "You don't need a plan / to find your person ❤️"; "How to attract your person, / scientifically 🧪". No pyramid fits: "The fastest way to a / committed relationship ♥️" (never three lines).
+- Green: "...something called **intellectualization**." (own box); "...struggling with **intellectualization**" (green in line); "Just comment **feeling** / or DM me **feeling**".
+- Length: forced test 179.4s → 170.0s by shortening 35 pauses + x1.013; captions stayed within ~0.25s.
+- First live post (2026-11-04, 19:30 slot): YouTube 19:31 (a /shorts/ link), Instagram + Facebook 19:34, TikTok 19:37.
 
 <!-- Changelog
-2026-11-04: Created from the first build session. Lessons from Olly's feedback:
-- He doesn't want silences or misspeaks removed ("keep it human"), so trimming is start/end only and that's in Never.
-- He named the 3 highlight terms, so the highlight rules were added, and the comma before "feeling" is removed after the first test.
-- First test: the hook dropped "You", so words before the trim point are clamped, not deleted. Text was smaller and lighter than his, so the font is now 66px weight 850. The hook line break differed from his, so line 1 is filled greedily like Instagram.
-- He asked whether the clip was really 4K, which corrected a wrong claim. Now: check specs with ffprobe before stating them.
-- His iCloud is full, so phone transfer goes over a home Wi-Fi page and finished Reels are saved to Photos from it.
-- Speed: render went from 10m45 to ~1m40 (cached transcript, strip overlay, Quick Sync).
-2026-11-04 (review 2, upload page session):
-- First real Reel: "While" for "Why" in the hook and a trailing comma. Added the word-by-word hook check (step 8), the fix-and-retry path (step 9), no trailing punctuation, a capitalised first word and an Example. Root fix planned: hook wording from the Hub calendar.
-- A 20s test came back with no punctuation, so the whole clip became the hook. Added the punctuation retry (step 2) and the longest-pause fallback (step 4).
-- "Is this in the Hub? I'm confused" / "do I have to keep the window open?" / "does the laptop send them to my phone?": added the "Explaining it to Olly" rule. The server now runs hidden, starts at login, and the laptop stays awake when plugged in.
-- The upload button died after the first try because 3 server copies were running. Added the exclusive bind and the Never on Claude background tasks.
-- "It's public though my profile": added a Never on claiming no access without trying, plus the WebFetch method. His 10 latest covers gave the continuity rule and the 🧪 emoji.
-- Overridden: "Olly posts Instagram himself from the Edits app (split test)" is replaced by the planned GHL posting for all four channels, with a 2-week reach comparison.
-- Process lessons: heredoc backslash failures (Never), Startup shortcut blocked as persistence (Never; Olly does it).
+2026-11-04: Created from the first build session (style matched to Final.mp4, start/end trim only, highlight terms, upload page).
+2026-11-04 (review 2): hook word check, punctuation retry, explaining-it rule, exclusive bind, continuity rule from his 10 latest covers.
+2026-11-04 (review 3, calendar link + GHL poster session). Lessons from Olly's feedback:
+- "What I need really is the hook title": talking points removed; Record tab = hook + CTA only.
+- "Keep the captions exactly as they are ... it just needs to match up with the keyword": captions = Hub templates untouched, set chosen by the spoken keyword. Overridden: "hook as caption line 1".
+- "The hook always needs to default to what's said ... sometimes I miss a word": on-screen hook = speech with calendar spelling. Overridden: "calendar wording on screen".
+- "Make sure it's got the correct emoji": calendar hooks carry the emoji; editor uses it.
+- "Keywords weren't highlighted" (x3): look-back across caption boxes; British "intellectualisation"; then "always highlighted even if mentioned more than once". Overridden: "other mentions stay black", "feeling only".
+- "The intro hook needs to be as soon as the video starts": noise-floor onset (outdoor wind fooled the fixed level).
+- "Always make sure it's cut within the time limit ... even a tiny cut": fit_length. Overridden: "the middle is never touched" (now: only pauses, only when over).
+- "Inverted pyramid", then "can just be two lines ... starts to cover my head": always two lines. Overridden: greedy line fill and 3-line hooks.
+- "Space out the reels ... emphasis on US time zones": SPREAD timetables. Overridden: the fixed 10-slot list.
+- "Some days 4, other days 8-10": per-day Reel number in the Hub. "Keep posting using GHL": Instagram via GHL; split test dropped.
+- "It keeps crashing" (playback): the page redrew lists every 8s; now only on change. "Keywords still not highlighted": phone played a cached copy; cache-busting added.
+- Closing the app stopped the upload; picking again did nothing: wake lock + Options→Current tip + 20s watchdog.
+- Process lessons: GHL rejects cover fields on scheduled posts (test with real scheduled posts); GHL swaps posts on publish (parentPostId); Cloudflare 403s Python's UA; emoji crashed the cp1252 print; heredoc backslashes.
+- "A tad wide ... right tight on the edge of the screen": HOOK_MAX 940 -> 780 (phones crop the sides) + shrink-to-fit. Overridden: 940px.
+- Dropped by Olly: mid-blink first frame is fine (the hook matters more); no YouTube cover work.
 -->

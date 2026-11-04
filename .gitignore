@@ -11,3 +11,4 @@ reels/reference/
 *.words.json
 *.plan.json
 __pycache__/
+reels/.hubkey
