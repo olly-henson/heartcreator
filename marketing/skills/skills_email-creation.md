@@ -198,7 +198,24 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 - **Weekly email** = subscribers with no opens/clicks for 14+ days. Sundays: the week's best email goes here. Nothing else.
 - **All subscribers** = everyone with tag `daily email list`. Never send to it; it's only the total.
 - **Applicants**, **Members**, **Old Clients**: not part of the daily system. Never pitch Applicants.
-- The first pitch waits 14 days from the list start (29 Oct) so scores can build; only pitch if the Warm List has 15+, else move it a week.
+- The first pitch waits 14 days from the list start (29 Oct) so scores can build; only pitch if the **Pitch** list has 15+, else move it a week.
+- **Weekly email = a rotating set, never one email repeated** (Olly asked 2026-11-04 about repeating the same one): ~11 evergreen best emails (no dates, no "this week") in a 'Weekly email' workflow, Sundays, exits on the first open (goal: `engaged recently` added), week 12 = "still want these?", no open in 7 days -> remove `daily email list`. Why: the same subject every week reads as spam and hurts delivery.
+
+### How the list setup works in GHL (built 2026-10-29 + 2026-11-04)
+- `engaged recently` = opened/clicked in the last 14 days. 'Email engagement' workflow (open +1, click +3, Last Engaged = today) removes + re-adds the contact to 'Engaged recently timer' (add tag, wait 14 days, remove tag). 'Start engaged timer for new subscribers' starts the timer when `daily email list` is added (skips `attract with olly`).
+- Claude agent key (marketing\.env) has contacts.write + workflows.readonly since 2026-11-04, so Claude adds/removes tags itself. New scopes take ~1 minute to work.
+
+### Process for any change to lists, tags or workflows
+1. Read the record of what's already built (this section + NEXT.md) and check live tag counts through the API BEFORE proposing anything. State back what exists first.
+2. Recency = a tag + a timer workflow. GHL smart-list date filters only offer is / is not / empty: never plan "within the last N days".
+3. Every workflow = one copy-ready AI builder prompt FIRST (never click-by-click), then a short check list, then Draft -> Publish + Save.
+4. Smart lists: one action per message ("step by step"), filters joined by AND go in ONE box (Add nested filter); separate boxes = OR.
+5. Count check after every list change: the lists must add up (e.g. Daily email = Pitch + Daily email (pitch day) + engaged members).
+
+### Never (lists)
+- Never use the old list names (Engaged / Warm List / Cold List / Dormant / Daily Email List). Olly: "Use the new names please from now on."
+- Never remove a condition from an OR box by deleting only its filter: what's left can match everyone (2026-11-04: the leftover "daily email list + not joined" box would have sent pitch-day email to the whole list). Delete the WHOLE box (Remove Filter), then re-check every remaining box.
+- Never send to All subscribers.
 - Resend winning emails every **90 days** with a new subject line, body unchanged (Olly 2026-11-04: "definitely with emails for sure especially every 90 days").
 
 Separate from the nurture sequence. Broadcast emails are one-off sends to a wider list — old clients, old leads, people who downloaded the meditation but did not join, people who finished the nurture sequence but haven't joined the Community. Written fresh for email, not repurposed from another channel. Stored in the **Email Broadcast Campaigns** Notion database (`36e30e58-6a0d-811c-b455-ce8fe3da15be`).
@@ -906,3 +923,5 @@ Merged `skills_email-marketing.md`, `skills_email-player-secrets.md` and `memory
 Extracted from ~40 pages of screenshots of "The Email Player's Playbook" by Ben Settle. Confirmed as a standing default for all email subject lines, preview text and content ideas — not just applied when asked.
 
 **2026-11-04 — Pitch days + resends.** Added who-gets-what on pitch days, the 14-day wait before the first pitch, and the 90-day resend rule (Olly). Why: pitch routing was only in NEXT.md and Olly had to ask how long to wait before pitching.
+
+**2026-11-04 (late) — List tiers + names.** Lessons: Olly renamed the smart lists ("use the new names") -> names table + Never rule (overrides Warm/Cold/Engaged wording above). "You've missed a lot of what you've done before" -> Process step 1 (read the build + check live tags first) after I proposed a new tag + timer that already existed. Date filters can't do "last N days" -> recency tags. "Give me the AI prompt ... this is how we build these" -> prompt first. "Step by step" -> one action per message for list edits too. Leftover OR box nearly matched everyone -> delete whole boxes. Weekly email = rotating evergreen set, not one repeated email.
