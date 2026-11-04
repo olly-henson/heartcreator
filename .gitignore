@@ -2,3 +2,10 @@
 marketing/assets/Heart Activation Meditation/
 delivery/attraction formula meditation/
 delivery/*.aup3
+
+# Reel editor: raw/finished videos and transcripts stay local
+reels/sample/
+reels/inbox/
+reels/ready/
+*.words.json
+*.plan.json
