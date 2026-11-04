@@ -6123,7 +6123,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Cold List. Every other day the daily email goes to the Daily Email List. Weekly, Thursdays, from 12 Nov 2026
   // (offer every 7th email). Pitch emails never take the daily email's slot.
   function emIsPitchDay(iso){ return emList().some(function(e){ return e.pitch && e.date === iso; }); }
-  function emAudience(e){ return e.pitch ? "Warm List" : emIsPitchDay(e.date) ? "Cold List" : "Engaged"; }   // Engaged smart list (2026-11-04): daily email list + engaged recently
+  function emAudience(e){ return e.pitch ? "Pitch" : emIsPitchDay(e.date) ? "Daily email (pitch day)" : "Daily email"; }   // GHL smart list names (renamed by Olly 2026-11-04)
   function emSeedPitchDays(){
     var days = [], d = new Date(2026, 10, 12);
     while (d <= new Date(2027, 1, 25)) {
@@ -6271,7 +6271,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var dayEm = emList().filter(function(e){ return e.date === emCalSel; }).sort(function(a, b){ return (b.pitch ? 1 : 0) - (a.pitch ? 1 : 0); });
     if (emIsPitchDay(emCalSel)) {
       var pb = document.createElement("div"); pb.className = "pitchbanner";
-      pb.innerHTML = "<b>💰 Pitch day</b><br>Pitch email → <b>Warm List</b> (engaged, not applied, not joined)<br>Daily email → <b>Cold List</b> (everyone else, applicants included)<br><span>Check the Warm List has 15+ people first. Fewer? Move the pitch to next week.</span>";
+      pb.innerHTML = "<b>💰 Pitch day</b><br>Pitch email → smart list <b>Pitch</b> (engaged, score 6+, not applied, not joined)<br>Normal email → smart list <b>Daily email (pitch day)</b> (other engaged people, applicants included)<br><span>Check the Pitch list has 15+ people first. Fewer? Move the pitch to next week.</span>";
       box.appendChild(pb);
     }
     if (!dayEm.length){ var n = document.createElement("p"); n.className = "hint"; n.textContent = "No emails planned for this day."; box.appendChild(n); }

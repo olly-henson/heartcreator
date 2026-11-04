@@ -191,8 +191,13 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 
 ## 6. Broadcast Campaigns
 
-### Pitch days and who gets what (2026-11-04)
-- Pitch day = every Thursday from 12 Nov 2026 (on the Hub Email calendar, gold outline). Pitch email -> **Warm List** (daily email list + score 6+ + engaged in the last 14 days + not applied + not joined). That day's normal daily email -> **Cold List** (everyone else, applicants included: never pitch someone who already applied). Every other day -> Daily Email List.
+### Which GHL smart list gets which email (names renamed by Olly 2026-11-04: ALWAYS use these names)
+- **Daily email** = all subscribers who opened/clicked in the last 14 days (tag `engaged recently`). Normal days: the daily email goes here.
+- **Pitch** = Daily email people with score 6+, not applied, not members. Pitch days (every Thursday from 12 Nov 2026): the pitch goes here.
+- **Daily email (pitch day)** = the other Daily email people, applicants included. Pitch days: the normal email goes here.
+- **Weekly email** = subscribers with no opens/clicks for 14+ days. Sundays: the week's best email goes here. Nothing else.
+- **All subscribers** = everyone with tag `daily email list`. Never send to it; it's only the total.
+- **Applicants**, **Members**, **Old Clients**: not part of the daily system. Never pitch Applicants.
 - The first pitch waits 14 days from the list start (29 Oct) so scores can build; only pitch if the Warm List has 15+, else move it a week.
 - Resend winning emails every **90 days** with a new subject line, body unchanged (Olly 2026-11-04: "definitely with emails for sure especially every 90 days").
 
