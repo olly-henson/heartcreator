@@ -960,6 +960,18 @@
   }
   .daymodal-headactions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
   .dayadd{ display:flex; gap:8px; margin-bottom:12px; }
+  .calcell.pitchday{ box-shadow: inset 0 0 0 2px #d9a400; }
+  .calitem.pitch .emcal-type, .calitem.pitch .emcal-short{ color:#d9a400 !important; font-weight:700; }
+  .pitchbanner{ margin:8px 0 10px; padding:10px 12px; border-radius:10px; border:1px solid #d9a400; background: rgba(217,164,0,.08); font-size:13px; line-height:1.5; color: var(--text-body); }
+  .pitchbanner span{ color: var(--text-muted); font-size:12px; }
+  .emaudience{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color: var(--text-muted); margin-bottom:4px; }
+  .emaudience.warm{ color:#d9a400; }
+  .storyauto{ margin-top:10px; padding:10px; border:1px solid var(--border-soft); border-radius:10px; background: var(--surface-2); display:flex; flex-direction:column; gap:6px; }
+  .storyauto .hint{ margin:0; }
+  .storyauto-line{ font-size:13px; font-weight:600; color: var(--text-body); }
+  .storyauto-line.scheduled{ color:#d9a400; } .storyauto-line.published{ color:#10b06a; } .storyauto-line.failed, .storyauto-line.partial{ color:#e0525a; }
+  .storyauto-link{ font-size:13px; color: var(--accent); }
+  .storyauto-err{ color:#e0525a !important; }
   .storysongs{ display:flex; flex-direction:column; gap:4px; margin-top:8px; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color: var(--text-muted); }
   .storysongs textarea{ background: var(--surface-2); border:1px solid var(--border-soft); border-radius:10px; color: var(--text-body); font-family:'Poppins',sans-serif; font-size:13px; letter-spacing:0; text-transform:none; padding:8px 10px; resize:vertical; }
   .storysongs textarea:focus{ outline:none; border-color: var(--accent); }
@@ -6011,6 +6023,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       imgActions.appendChild(fileIn);
       row.appendChild(imgWrap);
       row.appendChild(imgActions);
+      // Story auto-post button PARKED 2026-11-04 (Olly wants trending music on Stories, which the API can't add). Code kept.
+      // row.appendChild(storyAutopostBox(idea));
 
       var copyRow = document.createElement("div");
       copyRow.className = "dayitem-copyrow";
@@ -6105,12 +6119,31 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // one-word names for the phone calendar, where full names don't fit a day cell
   var EM_TYPE_SHORT = { "Free value":"Value", "Mechanism":"How", "Personal story":"Story", "Belief breaking":"Belief", "The vision":"Vision", "Science":"Science", "Q&A":"Q&A", "What it's not":"Not", "List":"List", "Challenge the dogma":"Dogma", "Ask them to reply":"Reply", "Results share":"Results", "Invitation":"Invite" };
   function emList(){ if (!Array.isArray(state.emailCal)) state.emailCal = []; return state.emailCal; }
+  // Pitch days (Olly 2026-11-04): a pitch email (pitch:true) goes to the Warm List; that day's daily email goes to the
+  // Cold List. Every other day the daily email goes to the Daily Email List. Weekly, Thursdays, from 12 Nov 2026
+  // (offer every 7th email). Pitch emails never take the daily email's slot.
+  function emIsPitchDay(iso){ return emList().some(function(e){ return e.pitch && e.date === iso; }); }
+  function emAudience(e){ return e.pitch ? "Warm List" : emIsPitchDay(e.date) ? "Cold List" : "Daily Email List"; }
+  function emSeedPitchDays(){
+    var days = [], d = new Date(2026, 10, 12);
+    while (d <= new Date(2027, 1, 25)) {
+      var iso = isoDate(d);
+      // Christmas Eve + New Year's Eve are Thursdays: pitch on the Tuesday before instead
+      if (iso === "2026-12-24") iso = "2026-12-22";
+      if (iso === "2026-12-31") iso = "2026-12-29";
+      days.push(iso); d.setDate(d.getDate() + 7);
+    }
+    days.forEach(function(iso){
+      if (emIsPitchDay(iso)) return;
+      emList().push({ subject:"Pitch: The Heart Attractor Program", date:iso, status:"draft", body:"", type:"Invitation", pitch:true });
+    });
+  }
   // 1 email a day (Olly, 2026-10-28): the first day from today with no email planned
   function emNextDate(){
     var d = new Date();
     for (var n = 0; n < 365; n++){
       var iso = isoDate(d);
-      if (!emList().some(function(e){ return e.date === iso; })) return iso;
+      if (!emList().some(function(e){ return e.date === iso && !e.pitch; })) return iso;
       d.setDate(d.getDate() + 1);
     }
     return todayISO();
@@ -6186,9 +6219,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       let cellDate = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
       let cellISO = isoDate(cellDate);
       var outside = cellDate.getMonth() !== month;
-      var dayEm = list.filter(function(e){ return e.date === cellISO; });
+      var dayEm = list.filter(function(e){ return e.date === cellISO; }).sort(function(a, b){ return (b.pitch ? 1 : 0) - (a.pitch ? 1 : 0); });
       var cell = document.createElement("div");
-      cell.className = "calcell" + (outside ? " outside" : "") + (cellISO === today ? " today" : "") + (cellISO === emCalSel ? " today" : "");
+      cell.className = "calcell" + (outside ? " outside" : "") + (cellISO === today ? " today" : "") + (cellISO === emCalSel ? " today" : "") + (dayEm.some(function(e){ return e.pitch; }) ? " pitchday" : "");
       cell.innerHTML = '<div class="caldatehead"><span class="caldatenum">' + cellDate.getDate() + '</span>' + (outside || !dayEm.length ? "" : '<span class="calcount met">' + dayEm.length + '</span>') + '</div>';
       var wrap = document.createElement("div"); wrap.className = "calitems";
       dayEm.slice(0, 3).forEach(function(e){
@@ -6197,8 +6230,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         // At-a-glance overview (Olly, 2026-10-28): the type in full on its own line, the subject under it (hidden on phones)
         it.className += " emcal";
         var lb = document.createElement("span"); lb.className = "calitem-label";
-        var tg = document.createElement("span"); tg.className = "emcal-type" + (e.type ? "" : " none"); tg.textContent = e.type || "No type";
-        var ts = document.createElement("span"); ts.className = "emcal-short" + (e.type ? "" : " none"); ts.textContent = e.type ? (EM_TYPE_SHORT[e.type] || e.type.split(" ")[0]) : "?";
+        var tg = document.createElement("span"); tg.className = "emcal-type" + (e.type ? "" : " none"); tg.textContent = e.pitch ? "💰 Pitch → Warm" : (e.type || "No type") + (emIsPitchDay(e.date) ? " → Cold" : "");
+        var ts = document.createElement("span"); ts.className = "emcal-short" + (e.type ? "" : " none"); ts.textContent = e.pitch ? "💰 Pitch" : e.type ? (EM_TYPE_SHORT[e.type] || e.type.split(" ")[0]) : "?";
+        if (e.pitch) it.className += " pitch";
         var sj = document.createElement("span"); sj.className = "emcal-subj"; sj.textContent = e.subject;
         lb.append(tg, ts, sj);
         it.title = (e.type ? e.type + ": " : "") + e.subject; it.append(dot, lb); wrap.appendChild(it);
@@ -6234,7 +6268,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var acts0 = document.createElement("div"); acts0.className = "daymodal-headactions"; acts0.append.apply(acts0, saveButton());
     head.append(h, acts0);
     box.appendChild(head);
-    var dayEm = emList().filter(function(e){ return e.date === emCalSel; });
+    var dayEm = emList().filter(function(e){ return e.date === emCalSel; }).sort(function(a, b){ return (b.pitch ? 1 : 0) - (a.pitch ? 1 : 0); });
+    if (emIsPitchDay(emCalSel)) {
+      var pb = document.createElement("div"); pb.className = "pitchbanner";
+      pb.innerHTML = "<b>💰 Pitch day</b><br>Pitch email → <b>Warm List</b> (engaged, not applied, not joined)<br>Daily email → <b>Cold List</b> (everyone else, applicants included)<br><span>Check the Warm List has 15+ people first. Fewer? Move the pitch to next week.</span>";
+      box.appendChild(pb);
+    }
     if (!dayEm.length){ var n = document.createElement("p"); n.className = "hint"; n.textContent = "No emails planned for this day."; box.appendChild(n); }
     dayEm.forEach(function(e){
       var item = document.createElement("div"); item.className = "emitem";
@@ -6244,7 +6283,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       subj.addEventListener("change", function(){ renderEmailCalendar(); });
       var dt = document.createElement("input"); dt.type = "date"; dt.value = e.date; dt.setAttribute("aria-label", "Move to date");
       dt.addEventListener("change", function(){ if (!dt.value) return; e.date = dt.value; emCalSel = dt.value; var d = new Date(dt.value + "T00:00:00"); emCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); markDirty(); renderEmailCalendar(); });
-      row.append(subj, dt); item.appendChild(row);
+      row.append(subj, dt);
+      var aud = document.createElement("div"); aud.className = "emaudience" + (e.pitch ? " warm" : ""); aud.textContent = "Send to: " + emAudience(e);
+      item.appendChild(aud); item.appendChild(row);
       // Draft / Scheduled / Published buttons (like the Reels panel) and the email's type
       var row2 = document.createElement("div"); row2.className = "emrow";
       var tog = document.createElement("div"); tog.className = "statustoggle";
@@ -6842,6 +6883,96 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (changed) { markDirty(); saveNow(); renderOutliers(); renderContentTab(); }
   }
 
+  // Story auto-posting (2026-11-04): "Schedule to Instagram + Facebook" in the Story day panel = Olly's approval.
+  // /api/stories copies the images to GHL and books 'story' posts at the Story's slot (lib/stories.js). Stages live in
+  // KV "storystatus" keyed by idea.sid, so they never clash with this page's Save. Published -> the Story is Posted.
+  var storyStatus = {};
+  var STORY_STAGE = { scheduled:"Scheduled", published:"Posted", failed:"Failed", partial:"Partly posted" };
+  function storySid(idea){
+    if (!idea.sid) { idea.sid = "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); markDirty(); }
+    return idea.sid;
+  }
+  function niceStorySlot(iso){
+    var d = new Date(Date.parse(iso) + 2 * 3600e3);
+    return d.toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"short", timeZone:"UTC" }) + " " + d.toISOString().slice(11, 16);
+  }
+  function pullStoryStatus(){
+    fetch("/api/stories", { cache:"no-store", credentials:"same-origin" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ if (d && d.ok) { storyStatus = d.status || {}; applyStoryStatus(); renderStoryModal(); renderStoryCalendar(); } })
+      .catch(function(){});
+  }
+  function applyStoryStatus(){
+    if (!serverRev) return;
+    var changed = false;
+    storyIdeas().forEach(function(idea){
+      var s = idea.sid && storyStatus[idea.sid];
+      if (s && s.stage === "published" && !idea.posted) { idea.posted = true; changed = true; }
+    });
+    if (changed) { markDirty(); saveNow(); }
+  }
+  function scheduleStory(idea, msgEl){
+    if (!(idea.images || []).length) return Promise.resolve();
+    var sid = storySid(idea);
+    if (msgEl) msgEl.textContent = "Sending to GHL…";
+    var dayCount = storyIdeas().filter(function(i){ return i.date === idea.date && (i.images || []).length; }).length;
+    saveNow();
+    return fetch("/api/stories", { method:"POST", credentials:"same-origin", headers:{ "content-type":"application/json" },
+      body: JSON.stringify({ action:"schedule", sid:sid, title:idea.title, images:idea.images, date:idea.date, dayCount:dayCount }) })
+      .then(function(r){ return r.json().catch(function(){ return { ok:false, error:"HTTP " + r.status + " (if you've been away, open the Hub in a new tab to log in again)" }; }); })
+      .then(function(d){
+        if (!d.ok) throw new Error(d.error || "failed");
+        storyStatus[sid] = d.story;
+        renderStoryModal(); renderStoryCalendar();
+      })
+      .catch(function(e){ if (msgEl) msgEl.textContent = ""; window.alert("Couldn't schedule this Story: " + e.message); });
+  }
+  function cancelStory(idea){
+    if (!idea.sid || !window.confirm("Take this Story off the GHL schedule?")) return;
+    fetch("/api/stories", { method:"POST", credentials:"same-origin", headers:{ "content-type":"application/json" }, body: JSON.stringify({ action:"cancel", sid:idea.sid }) })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (!d.ok) throw new Error(d.error || "failed"); if (d.story && d.story.stage) storyStatus[idea.sid] = d.story; else delete storyStatus[idea.sid]; renderStoryModal(); renderStoryCalendar(); })
+      .catch(function(e){ window.alert("Couldn't cancel: " + e.message); });
+  }
+  function storyAutopostBox(idea){
+    var box = document.createElement("div");
+    box.className = "storyauto";
+    var s = idea.sid && storyStatus[idea.sid];
+    var msg = document.createElement("span");
+    msg.className = "daymodal-savestatus";
+    if (!(idea.images || []).length) { box.innerHTML = '<p class="hint">Attach the Story image to auto-post it to Instagram + Facebook.</p>'; return box; }
+    if (s && s.stage) {
+      var line = document.createElement("div");
+      line.className = "storyauto-line " + s.stage;
+      line.textContent = (STORY_STAGE[s.stage] || s.stage) + (s.slot ? " · " + niceStorySlot(s.slot) + " (Instagram + Facebook)" : "");
+      box.appendChild(line);
+      (s.posts || []).filter(function(p){ return p.link; }).forEach(function(p){
+        var a = document.createElement("a"); a.href = p.link; a.target = "_blank"; a.rel = "noopener"; a.className = "storyauto-link";
+        a.textContent = "Open on " + (p.pl === "instagram" ? "Instagram" : "Facebook"); box.appendChild(a);
+      });
+      if (s.error) { var er = document.createElement("p"); er.className = "hint storyauto-err"; er.textContent = s.error; box.appendChild(er); }
+    }
+    var acts = document.createElement("div");
+    acts.className = "dayitem-copyrow";
+    if (!s || !s.stage || s.stage === "failed" || (s.stage === "scheduled" && s.error)) {
+      var go = document.createElement("button");
+      go.type = "button"; go.className = "copybtn storyauto-go";
+      go.textContent = s && s.stage ? "Try again" : "📤 Schedule to Instagram + Facebook";
+      go.addEventListener("click", function(){ go.disabled = true; scheduleStory(idea, msg); });
+      acts.appendChild(go);
+    }
+    if (s && (s.stage === "scheduled" || s.stage === "failed")) {
+      var cx = document.createElement("button");
+      cx.type = "button"; cx.className = "copybtn"; cx.textContent = "Cancel";
+      cx.addEventListener("click", function(){ cancelStory(idea); });
+      acts.appendChild(cx);
+    }
+    acts.appendChild(msg);
+    box.appendChild(acts);
+    if (!s || !s.stage) { var h = document.createElement("p"); h.className = "hint"; h.textContent = "Plain image Story. Stickers (links, polls, questions) and music still go on by hand."; box.appendChild(h); }
+    return box;
+  }
+
   // The laptop fills the same Perfect Reel captions the day panel uses: mirror the templates whenever they change.
   function mirrorReelCaptions(){
     try {
@@ -6970,6 +7101,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       renderStories();
       var d = new Date(idea.date + "T00:00:00"); storyCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); renderStoryCalendar();
       openStoryModal(idea.date);
+      // Story Image Maker 'Schedule' (schedule:true): the tap in the maker is the approval, so book it with GHL now
+      if (data.schedule && (idea.images || []).length) scheduleStory(idea);
     };
     var img = /^data:image\/(jpeg|png);base64,/.test(data.image || "") ? data.image : "";
     if (!img) return show();
@@ -9189,6 +9322,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderStoryModal();
     renderRecord();
     if (serverRev) pullReelStatus();
+    if (serverRev) pullStoryStatus();
     // Olly 2026-11-04: "skip all of the ones from Saturday 19th of September all the way up to yesterday". One-off: unposted
     // Reels dated 2026-09-19..2026-11-03 get skipped:true, so they leave the Record tab and the laptop's upload list
     // (kept on the calendar, nothing deleted). state.reelSkip1 marks it done so later Reels in that range aren't touched.
@@ -9196,6 +9330,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       (state.content.ideas || []).forEach(function(i){ if (i.title && !i.posted && i.date >= "2026-09-19" && i.date <= "2026-11-03") i.skipped = true; });
       state.reelSkip1 = true; markDirty(); saveNow(); renderRecord();
     }
+    if (serverRev && !state.pitchSeed1) { emSeedPitchDays(); state.pitchSeed1 = true; markDirty(); saveNow(); }
     if (serverRev && addHookEmojis()) { markDirty(); saveNow(); renderCalendar(); renderDayModal(); renderRecord(); }
     renderEmailCalendar();
     renderYtCalendar();
@@ -9271,6 +9406,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     recordFromHash();
     pullReelStatus();
     mirrorReelCaptions();
+    pullStoryStatus();
     importStoryFromHash();
     loomsFromHash();
     pushInit();

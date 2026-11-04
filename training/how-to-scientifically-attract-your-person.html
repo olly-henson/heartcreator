@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How To Scientifically Attract Your Person (Without Having To Fix Yourself)</title>
+<!--
+  Free video training (lead magnet) for The Heart Attractor Program. v2 built 2026-11-03,
+  restructured to THE PERFECT REEL: hook, who it's for, her symptom, intellectualization,
+  emotional resonance, the 3 steps, proof, call to action. Replaces how-to-use-emotional-resonance.html
+  (v1, 2026-10-23) once Olly records it. Audience data from 3 Nov (tired, "still hope?", tried everything, safety) is woven in.
+  Olly records it, uploads to YouTube; the landing page delivers it.
+  Same format as how-to-attract-a-committed-relationship.html: purple text slides,
+  one short line each, everything inside the 820px recording area.
+  Gives away the full method (the what and the how); the last slides invite a call.
+  Images reuse "how to attract a committed relationship images/".
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#4B1466;
+    --navy-deep:#150818;
+    --ink:#150818;
+    --orange:#d946ef;
+    --lilac:#E1A6FF;
+    --line:#E1D3F0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ font-family:'Poppins', sans-serif; color:var(--ink); background:#0A0510; overflow-x:hidden; }
+
+  /* ---------- steps container ---------- */
+  .steps{ height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scrollbar-gutter:stable both-edges; }
+  .step{
+    height:100vh;
+    scroll-snap-align:start;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    padding:40px 32px;
+    background:radial-gradient(120% 100% at 20% 0%, #4B1466 0%, var(--navy-deep) 55%, #0A0510 100%);
+  }
+  .step:nth-child(odd){
+    background:radial-gradient(120% 100% at 80% 100%, #4B1466 0%, var(--navy-deep) 55%, #0A0510 100%);
+  }
+
+  /* ---------- text slide ---------- */
+  .step-inner{ max-width:820px; width:100%; color:#fff; text-align:center; }
+  .eyebrow{
+    display:inline-block;
+    font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--lilac);
+    margin-bottom:18px;
+  }
+  .step-title{ font-size:clamp(30px,4vw,46px); font-weight:700; line-height:1.2; margin-bottom:22px; color:#fff; text-wrap:balance; }
+  h1.step-title{ font-size:clamp(32px,4.4vw,52px); }
+  .step-body{
+    font-size:clamp(16px,1.8vw,20px);
+    line-height:1.7;
+    color:#E6DCF2;
+    max-width:60ch;
+    margin:0 auto;
+    text-wrap:balance;
+  }
+  .quote{
+    font-size:clamp(19px,2.2vw,26px);
+    font-style:italic;
+    font-weight:500;
+    color:#fff;
+    max-width:44ch;
+    margin:6px auto 22px;
+    text-wrap:balance;
+  }
+  .grad{
+    background:linear-gradient(135deg, var(--lilac), var(--orange));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* ---------- three parts ---------- */
+  .parts{ display:grid; grid-template-columns:repeat(3, 1fr); gap:28px; margin-top:30px; }
+  .num{
+    font-size:clamp(40px,4.5vw,60px); font-weight:800; line-height:1; margin-bottom:10px;
+    background:linear-gradient(135deg, var(--lilac), var(--orange));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .parts--two{ grid-template-columns:repeat(2, 1fr); max-width:600px; margin-left:auto; margin-right:auto; }
+  .part-name{ font-size:clamp(20px,2.2vw,28px); font-weight:800; color:#fff; margin-bottom:10px; }
+  .part-body{ font-size:clamp(14px,1.4vw,17px); line-height:1.55; color:#E6DCF2; text-wrap:balance; }
+
+  /* ---------- big step number on the "find yours" slides ---------- */
+  .big-num{
+    font-size:clamp(56px,6vw,84px); font-weight:800; line-height:1; margin-bottom:12px;
+    background:linear-gradient(135deg, var(--lilac), var(--orange));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* ---------- emotion tags (same as find-your-emotional-resonance.html) ---------- */
+  .example-tags{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+    margin-top:28px; max-width:56ch; margin-left:auto; margin-right:auto;
+  }
+  .example-tags span{
+    font-size:14px; color:var(--lilac);
+    border:1px solid rgba(217,70,239,.45); background:rgba(217,70,239,.12);
+    border-radius:999px; padding:8px 16px; font-weight:600;
+  }
+  .example-tags span.picked{
+    color:#fff; border-color:rgba(217,70,239,.9); background:rgba(217,70,239,.38);
+    box-shadow:0 0 0 3px rgba(217,70,239,.25);
+  }
+
+  /* ---------- ticks ---------- */
+  .ticks{ list-style:none; max-width:560px; margin:24px auto 0; text-align:left; display:flex; flex-direction:column; gap:16px; }
+  .ticks li{ display:flex; gap:14px; align-items:flex-start; font-size:clamp(16px,1.7vw,19px); line-height:1.55; color:#E6DCF2; }
+  .tick{
+    flex:0 0 30px; width:30px; height:30px; border-radius:50%;
+    background:linear-gradient(135deg, var(--lilac), var(--orange));
+    color:#150818; font-weight:800; font-size:14px;
+    display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+
+  .tick--no{ background:rgba(255,255,255,.12); color:#E6DCF2; border:1px solid rgba(255,255,255,.25); }
+  /* ---------- "find out more in the description" line on the last slide ---------- */
+  .desc-note{
+    display:inline-block; margin-top:28px;
+    font-size:clamp(14px,1.5vw,17px); font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--lilac);
+  }
+  /* ---------- call to action ---------- */
+  .cta-pill{
+    display:inline-block; margin-top:30px;
+    padding:16px 34px; border-radius:999px;
+    background:linear-gradient(135deg, var(--lilac), var(--orange));
+    color:#150818; font-weight:800; font-size:clamp(15px,1.6vw,18px); letter-spacing:.06em; text-transform:uppercase;
+    text-decoration:none;
+  }
+
+  /* ---------- small photo frame (How I Met My Wife) ---------- */
+  .photo-frame{ width:min(clamp(150px,18vw,240px), 26vh); aspect-ratio:3/4; margin:0 auto 22px; border-radius:20px; overflow:hidden; border:3px solid rgba(255,255,255,.15); box-shadow:0 20px 50px rgba(0,0,0,.45); background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; transform:rotate(-2deg); }
+  /* landscape frame for graphs (heart coherence) */
+  .photo-frame--wide{ width:min(clamp(300px,40vw,560px), 56vh); aspect-ratio:16/9; transform:rotate(-1.5deg); }
+  .photo-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+  /* photo carousel (Who I Am, 2026-10-24): photos stacked in one frame, cross-fading */
+  .photo-frame--carousel{ position:relative; cursor:pointer; user-select:none; }
+  .photo-frame--carousel .car-item{ position:absolute; inset:0; opacity:0; transition:opacity 1.2s ease; display:flex; align-items:center; justify-content:center; }
+  .photo-frame--carousel .car-item.is-on{ opacity:1; }
+  .car-caption{ transition:opacity .45s ease; min-height:3.2em; }
+  .car-wrap{ display:flex; align-items:center; justify-content:center; gap:22px; margin:0 auto 22px; }
+  .car-wrap .photo-frame{ margin:0; }
+  .car-btn{ width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.06);
+    color:#f8f4ff; font-size:28px; line-height:1; padding:0 0 4px; cursor:pointer; font-family:inherit; transition:background .2s, border-color .2s; flex:0 0 auto; }
+  .car-btn:hover{ background:rgba(225,166,255,.18); border-color:rgba(225,166,255,.6); }
+  .car-caption.is-fading{ opacity:0; }
+  .photo-frame .placeholder{ color:rgba(255,255,255,.35); font-size:12px; letter-spacing:.08em; text-transform:uppercase; padding:14px; text-align:center; }
+  /* ---------- emotional scale image (9:16) ---------- */
+  .scale-img{ height:min(86vh, 800px); aspect-ratio:9/16; margin:0 auto; border-radius:18px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.45); background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; }
+  .scale-img img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .scale-img .placeholder{ color:rgba(255,255,255,.35); font-size:13px; letter-spacing:.08em; text-transform:uppercase; padding:20px; text-align:center; }
+
+  @media (max-width:820px){
+    .parts{ grid-template-columns:1fr; gap:22px; }
+  }
+
+  /* ---------- side nav dots ---------- */
+  .dots{ position:fixed; right:26px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:14px; z-index:10; }
+  .dot{ width:11px; height:11px; border-radius:50%; background:rgba(255,255,255,.25); cursor:pointer; border:none; transition:background .2s; }
+  .dot.active{ background:var(--orange); }
+
+  /* ---------- progress label ---------- */
+  .progress-label{ position:fixed; top:24px; left:32px; color:rgba(255,255,255,.55); font-size:13px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; z-index:10; }
+  @media (max-width:640px){
+    .dots{ right:14px; }
+    .progress-label{ left:16px; top:16px; }
+  }
+  h1.step-title .pyr-line, .step-title[data-lines] .pyr-line{ display:block; white-space:nowrap; }
+  /* one-line subheading, smaller so it sits narrower than the title above (inverted pyramid) */
+  .step-body--one{ white-space:nowrap; max-width:none; font-size:clamp(13px,1.15vw,16px); }
+  @media (max-width:820px){ .step-body--one{ white-space:normal; } }
+</style>
+</head>
+<body>
+
+<div class="progress-label" id="progressLabel">Step 1</div>
+<div class="dots" id="dots"></div>
+
+<div class="steps" id="steps">
+
+  <!-- ===== PART 1 · THE HOOK ===== -->
+  <section class="step" data-title="How To Scientifically Attract Your Person">
+    <div class="step-inner">
+      <span class="eyebrow">Free Training</span>
+      <h1 class="step-title" data-lines="How To Scientifically|Attract Your Person" data-grad-last="1">How To Scientifically Attract Your Person</h1>
+      <div class="step-body">Without having to fix yourself.</div>
+    </div>
+  </section>
+
+  <!-- ===== PART 2 · WHO IT'S FOR ===== -->
+  <section class="step" data-title="Someone To Settle Down And Build A Life With">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to use emotional resonance images/Settled Family Life.jpg" alt="A couple settled down, enjoying family life" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Settled Family Life.jpg</div>
+      </div>
+      <span class="eyebrow">Who This Is For</span>
+      <h2 class="step-title" data-lines="Someone To Settle Down|And Build A Life With">Someone To Settle Down And Build A Life With</h2>
+      <div class="step-body">Marriage. Children. Travelling the world together.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="But It Feels Like Nothing's Changing">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to use emotional resonance images/Woman alone on sofa.jpg" alt="A woman alone, frustrated with dating" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Woman alone on sofa.jpg</div>
+      </div>
+      <span class="eyebrow">But</span>
+      <h2 class="step-title">It Feels Like Nothing's Changing</h2>
+      <div class="step-body step-body--one">Work, friends, health. All sorted. Love is the one area that won't move.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Who I Am">
+    <div class="step-inner">
+      <!-- Carousel: click the photo to fade to the next one. Each slot is a .car-item
+           (img + placeholder shown until the photo exists). Order follows Olly's
+           talking points: you, Cape Town, Gherkin talk, podcast, wedding, everyday life. -->
+      <div class="car-wrap">
+      <button type="button" class="car-btn car-prev" aria-label="Previous photo">&#8249;</button>
+      <div class="photo-frame photo-frame--carousel">
+        <div class="car-item is-on" data-caption="I help people consciously attract high-quality relationships.">
+          <img src="who am i images/Olly About Page Tile Profile Photo.png" alt="Olly" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">1 · You</div>
+        </div>
+        <div class="car-item" data-caption="Currently living in Cape Town, South Africa after moving from the UK in October 2025.">
+          <img src="who am i images/Cape Town.jpg" alt="Olly and his wife in Cape Town" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">2 · Cape Town</div>
+        </div>
+        <div class="car-item" data-caption="I&#39;ve coached over 1,000 people full-time since 2016 across fitness, health,|nervous system regulation and conscious lifestyle transformation.">
+          <img src="who am i images/Gherkin.JPG" style="object-position:8% 50%;" alt="Olly speaking at the Gherkin in London" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">3 · Gherkin talk</div>
+        </div>
+        <div class="car-item" data-caption="I&#39;ve always had a keen interest in neuroscience, physiology and conscious transformation.">
+          <img src="who am i images/Podcast.jpg" alt="Olly on a podcast" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">4 · Podcast</div>
+        </div>
+        <div class="car-item" data-caption="Happily married husband who wants people to experience the same joy|after meeting someone in a natural way.">
+          <img src="who am i images/wife.JPG" alt="Olly and his wife on their wedding day" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">5 · Wedding</div>
+        </div>
+        <div class="car-item" data-caption="This system is built as a result of all my coaching, professional and personal experience.">
+          <img src="how to attract a committed relationship images/Wife.png" alt="Olly and his wife together" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="placeholder" style="display:none;">6 · You two, everyday life</div>
+        </div>
+      </div>
+      <button type="button" class="car-btn car-next" aria-label="Next photo">&#8250;</button>
+      </div>
+      <span class="eyebrow">Who I Am</span>
+      <h2 class="step-title">Hi, I'm Olly</h2>
+      <!-- This line changes with each photo: it shows the current photo's data-caption. -->
+      <div class="step-body step-body--one car-caption" id="whoCaption">I help people consciously attract high-quality relationships.</div>
+    </div>
+  </section>
+
+  <!-- ===== PART 3 · HER SYMPTOM ===== -->
+  <section class="step" data-title="You've Done The Work">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Done The Work.jpg" alt="Self-help books, a phone with a podcast and a notebook on a table" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Done The Work.jpg</div>
+      </div>
+      <span class="eyebrow">Sound Familiar?</span>
+      <h2 class="step-title">You've Done The Work</h2>
+      <div class="example-tags">
+        <span>The books</span>
+        <span>The podcasts</span>
+        <span>Attachment styles</span>
+        <span>Therapy</span>
+        <span>Inner child work</span>
+        <span>Manifestation</span>
+        <span>Dating rules</span>
+        <span>Dating apps</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="You Know More About Relationships Than Anyone You Know">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Knows More.jpg" alt="A woman reading a relationship book on the sofa" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Knows More.jpg</div>
+      </div>
+      <span class="eyebrow">If You're Honest</span>
+      <h2 class="step-title" data-lines="You Know More About Relationships|Than Anyone You Know">You Know More About Relationships Than Anyone You Know</h2>
+      <div class="step-body">Probably more than your married friends.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Yet Your Friends Met Their Person">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to use emotional resonance images/Family get together.jpg" alt="Friends and family in happy relationships" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Family get together.jpg</div>
+      </div>
+      <span class="eyebrow">Yet</span>
+      <h2 class="step-title">Your Friends Met Their Person</h2>
+      <div class="step-body">Without doing any of it. And they're not flawless either.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="They Just Felt A Connection">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to use emotional resonance images/Couple at coffee shop.jpg" alt="A couple sharing a warm moment" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Couple at coffee shop.jpg</div>
+      </div>
+      <span class="eyebrow">What They Had</span>
+      <h2 class="step-title">They Just Felt A Connection</h2>
+      <div class="step-body">An emotional connection with the person they met.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="What You've Been Told">
+    <div class="step-inner">
+      <span class="eyebrow">The Old Belief</span>
+      <h2 class="step-title">What You've Been Told</h2>
+      <div class="quote">"Once I've learned what's wrong with me and fixed it, I'll meet my person."</div>
+    </div>
+  </section>
+
+  <!-- ===== PART 4 · NAME THE PROBLEM: INTELLECTUALIZATION ===== -->
+  <section class="step" data-title="You're Stuck In Intellectualization">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Overthinking.jpg" alt="A woman overthinking at her kitchen table" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Overthinking.jpg</div>
+      </div>
+      <span class="eyebrow">The Real Problem</span>
+      <h2 class="step-title">It's Called <span class="grad">Intellectualization</span></h2>
+      <div class="step-body">The psychiatrist's term for using thinking and analysing to deal with emotional situations.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Stuck In Your Head">
+    <div class="step-inner">
+      <div class="photo-frame photo-frame--wide">
+        <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Brainwaves: alpha is slow and smooth, beta is faster, high beta is fast and jagged" style="width:100%;height:100%;display:block"><rect width="640" height="360" fill="#1B0B26"/><text x="40" y="72" fill="#FFFFFF" font-family="Poppins,sans-serif" font-size="21" font-weight="700">Alpha<tspan fill="#E6DCF2" font-weight="400" font-size="18" dx="12">Calm, present, open</tspan></text><path d="M40.0,110.0 L40.9,109.2 L41.9,108.4 L42.8,107.6 L43.7,106.8 L44.7,106.0 L45.6,105.2 L46.5,104.5 L47.5,103.7 L48.4,103.0 L49.3,102.3 L50.3,101.6 L51.2,100.9 L52.1,100.3 L53.1,99.7 L54.0,99.1 L54.9,98.6 L55.9,98.0 L56.8,97.5 L57.7,97.1 L58.7,96.7 L59.6,96.3 L60.5,95.9 L61.5,95.6 L62.4,95.4 L63.3,95.1 L64.3,94.9 L65.2,94.8 L66.1,94.7 L67.1,94.6 L68.0,94.6 L68.9,94.6 L69.9,94.7 L70.8,94.8 L71.7,94.9 L72.7,95.1 L73.6,95.4 L74.5,95.6 L75.5,95.9 L76.4,96.3 L77.3,96.7 L78.3,97.1 L79.2,97.5 L80.1,98.0 L81.1,98.6 L82.0,99.1 L82.9,99.7 L83.9,100.3 L84.8,100.9 L85.7,101.6 L86.7,102.3 L87.6,103.0 L88.5,103.7 L89.5,104.5 L90.4,105.2 L91.3,106.0 L92.3,106.8 L93.2,107.6 L94.1,108.4 L95.1,109.2 L96.0,110.0 L96.9,110.8 L97.9,111.6 L98.8,112.4 L99.7,113.2 L100.7,114.0 L101.6,114.8 L102.5,115.5 L103.5,116.3 L104.4,117.0 L105.3,117.7 L106.3,118.4 L107.2,119.1 L108.1,119.7 L109.1,120.3 L110.0,120.9 L110.9,121.4 L111.9,122.0 L112.8,122.5 L113.7,122.9 L114.7,123.3 L115.6,123.7 L116.5,124.1 L117.5,124.4 L118.4,124.6 L119.3,124.9 L120.3,125.1 L121.2,125.2 L122.1,125.3 L123.1,125.4 L124.0,125.4 L124.9,125.4 L125.9,125.3 L126.8,125.2 L127.7,125.1 L128.7,124.9 L129.6,124.6 L130.5,124.4 L131.5,124.1 L132.4,123.7 L133.3,123.3 L134.3,122.9 L135.2,122.5 L136.1,122.0 L137.1,121.4 L138.0,120.9 L138.9,120.3 L139.9,119.7 L140.8,119.1 L141.7,118.4 L142.7,117.7 L143.6,117.0 L144.5,116.3 L145.5,115.5 L146.4,114.8 L147.3,114.0 L148.3,113.2 L149.2,112.4 L150.1,111.6 L151.1,110.8 L152.0,110.0 L152.9,109.2 L153.9,108.4 L154.8,107.6 L155.7,106.8 L156.7,106.0 L157.6,105.2 L158.5,104.5 L159.5,103.7 L160.4,103.0 L161.3,102.3 L162.3,101.6 L163.2,100.9 L164.1,100.3 L165.1,99.7 L166.0,99.1 L166.9,98.6 L167.9,98.0 L168.8,97.5 L169.7,97.1 L170.7,96.7 L171.6,96.3 L172.5,95.9 L173.5,95.6 L174.4,95.4 L175.3,95.1 L176.3,94.9 L177.2,94.8 L178.1,94.7 L179.1,94.6 L180.0,94.6 L180.9,94.6 L181.9,94.7 L182.8,94.8 L183.7,94.9 L184.7,95.1 L185.6,95.4 L186.5,95.6 L187.5,95.9 L188.4,96.3 L189.3,96.7 L190.3,97.1 L191.2,97.5 L192.1,98.0 L193.1,98.6 L194.0,99.1 L194.9,99.7 L195.9,100.3 L196.8,100.9 L197.7,101.6 L198.7,102.3 L199.6,103.0 L200.5,103.7 L201.5,104.5 L202.4,105.2 L203.3,106.0 L204.3,106.8 L205.2,107.6 L206.1,108.4 L207.1,109.2 L208.0,110.0 L208.9,110.8 L209.9,111.6 L210.8,112.4 L211.7,113.2 L212.7,114.0 L213.6,114.8 L214.5,115.5 L215.5,116.3 L216.4,117.0 L217.3,117.7 L218.3,118.4 L219.2,119.1 L220.1,119.7 L221.1,120.3 L222.0,120.9 L222.9,121.4 L223.9,122.0 L224.8,122.5 L225.7,122.9 L226.7,123.3 L227.6,123.7 L228.5,124.1 L229.5,124.4 L230.4,124.6 L231.3,124.9 L232.3,125.1 L233.2,125.2 L234.1,125.3 L235.1,125.4 L236.0,125.4 L236.9,125.4 L237.9,125.3 L238.8,125.2 L239.7,125.1 L240.7,124.9 L241.6,124.6 L242.5,124.4 L243.5,124.1 L244.4,123.7 L245.3,123.3 L246.3,122.9 L247.2,122.5 L248.1,122.0 L249.1,121.4 L250.0,120.9 L250.9,120.3 L251.9,119.7 L252.8,119.1 L253.7,118.4 L254.7,117.7 L255.6,117.0 L256.5,116.3 L257.5,115.5 L258.4,114.8 L259.3,114.0 L260.3,113.2 L261.2,112.4 L262.1,111.6 L263.1,110.8 L264.0,110.0 L264.9,109.2 L265.9,108.4 L266.8,107.6 L267.7,106.8 L268.7,106.0 L269.6,105.2 L270.5,104.5 L271.5,103.7 L272.4,103.0 L273.3,102.3 L274.3,101.6 L275.2,100.9 L276.1,100.3 L277.1,99.7 L278.0,99.1 L278.9,98.6 L279.9,98.0 L280.8,97.5 L281.7,97.1 L282.7,96.7 L283.6,96.3 L284.5,95.9 L285.5,95.6 L286.4,95.4 L287.3,95.1 L288.3,94.9 L289.2,94.8 L290.1,94.7 L291.1,94.6 L292.0,94.6 L292.9,94.6 L293.9,94.7 L294.8,94.8 L295.7,94.9 L296.7,95.1 L297.6,95.4 L298.5,95.6 L299.5,95.9 L300.4,96.3 L301.3,96.7 L302.3,97.1 L303.2,97.5 L304.1,98.0 L305.1,98.6 L306.0,99.1 L306.9,99.7 L307.9,100.3 L308.8,100.9 L309.7,101.6 L310.7,102.3 L311.6,103.0 L312.5,103.7 L313.5,104.5 L314.4,105.2 L315.3,106.0 L316.3,106.8 L317.2,107.6 L318.1,108.4 L319.1,109.2 L320.0,110.0 L320.9,110.8 L321.9,111.6 L322.8,112.4 L323.7,113.2 L324.7,114.0 L325.6,114.8 L326.5,115.5 L327.5,116.3 L328.4,117.0 L329.3,117.7 L330.3,118.4 L331.2,119.1 L332.1,119.7 L333.1,120.3 L334.0,120.9 L334.9,121.4 L335.9,122.0 L336.8,122.5 L337.7,122.9 L338.7,123.3 L339.6,123.7 L340.5,124.1 L341.5,124.4 L342.4,124.6 L343.3,124.9 L344.3,125.1 L345.2,125.2 L346.1,125.3 L347.1,125.4 L348.0,125.4 L348.9,125.4 L349.9,125.3 L350.8,125.2 L351.7,125.1 L352.7,124.9 L353.6,124.6 L354.5,124.4 L355.5,124.1 L356.4,123.7 L357.3,123.3 L358.3,122.9 L359.2,122.5 L360.1,122.0 L361.1,121.4 L362.0,120.9 L362.9,120.3 L363.9,119.7 L364.8,119.1 L365.7,118.4 L366.7,117.7 L367.6,117.0 L368.5,116.3 L369.5,115.5 L370.4,114.8 L371.3,114.0 L372.3,113.2 L373.2,112.4 L374.1,111.6 L375.1,110.8 L376.0,110.0 L376.9,109.2 L377.9,108.4 L378.8,107.6 L379.7,106.8 L380.7,106.0 L381.6,105.2 L382.5,104.5 L383.5,103.7 L384.4,103.0 L385.3,102.3 L386.3,101.6 L387.2,100.9 L388.1,100.3 L389.1,99.7 L390.0,99.1 L390.9,98.6 L391.9,98.0 L392.8,97.5 L393.7,97.1 L394.7,96.7 L395.6,96.3 L396.5,95.9 L397.5,95.6 L398.4,95.4 L399.3,95.1 L400.3,94.9 L401.2,94.8 L402.1,94.7 L403.1,94.6 L404.0,94.6 L404.9,94.6 L405.9,94.7 L406.8,94.8 L407.7,94.9 L408.7,95.1 L409.6,95.4 L410.5,95.6 L411.5,95.9 L412.4,96.3 L413.3,96.7 L414.3,97.1 L415.2,97.5 L416.1,98.0 L417.1,98.6 L418.0,99.1 L418.9,99.7 L419.9,100.3 L420.8,100.9 L421.7,101.6 L422.7,102.3 L423.6,103.0 L424.5,103.7 L425.5,104.5 L426.4,105.2 L427.3,106.0 L428.3,106.8 L429.2,107.6 L430.1,108.4 L431.1,109.2 L432.0,110.0 L432.9,110.8 L433.9,111.6 L434.8,112.4 L435.7,113.2 L436.7,114.0 L437.6,114.8 L438.5,115.5 L439.5,116.3 L440.4,117.0 L441.3,117.7 L442.3,118.4 L443.2,119.1 L444.1,119.7 L445.1,120.3 L446.0,120.9 L446.9,121.4 L447.9,122.0 L448.8,122.5 L449.7,122.9 L450.7,123.3 L451.6,123.7 L452.5,124.1 L453.5,124.4 L454.4,124.6 L455.3,124.9 L456.3,125.1 L457.2,125.2 L458.1,125.3 L459.1,125.4 L460.0,125.4 L460.9,125.4 L461.9,125.3 L462.8,125.2 L463.7,125.1 L464.7,124.9 L465.6,124.6 L466.5,124.4 L467.5,124.1 L468.4,123.7 L469.3,123.3 L470.3,122.9 L471.2,122.5 L472.1,122.0 L473.1,121.4 L474.0,120.9 L474.9,120.3 L475.9,119.7 L476.8,119.1 L477.7,118.4 L478.7,117.7 L479.6,117.0 L480.5,116.3 L481.5,115.5 L482.4,114.8 L483.3,114.0 L484.3,113.2 L485.2,112.4 L486.1,111.6 L487.1,110.8 L488.0,110.0 L488.9,109.2 L489.9,108.4 L490.8,107.6 L491.7,106.8 L492.7,106.0 L493.6,105.2 L494.5,104.5 L495.5,103.7 L496.4,103.0 L497.3,102.3 L498.3,101.6 L499.2,100.9 L500.1,100.3 L501.1,99.7 L502.0,99.1 L502.9,98.6 L503.9,98.0 L504.8,97.5 L505.7,97.1 L506.7,96.7 L507.6,96.3 L508.5,95.9 L509.5,95.6 L510.4,95.4 L511.3,95.1 L512.3,94.9 L513.2,94.8 L514.1,94.7 L515.1,94.6 L516.0,94.6 L516.9,94.6 L517.9,94.7 L518.8,94.8 L519.7,94.9 L520.7,95.1 L521.6,95.4 L522.5,95.6 L523.5,95.9 L524.4,96.3 L525.3,96.7 L526.3,97.1 L527.2,97.5 L528.1,98.0 L529.1,98.6 L530.0,99.1 L530.9,99.7 L531.9,100.3 L532.8,100.9 L533.7,101.6 L534.7,102.3 L535.6,103.0 L536.5,103.7 L537.5,104.5 L538.4,105.2 L539.3,106.0 L540.3,106.8 L541.2,107.6 L542.1,108.4 L543.1,109.2 L544.0,110.0 L544.9,110.8 L545.9,111.6 L546.8,112.4 L547.7,113.2 L548.7,114.0 L549.6,114.8 L550.5,115.5 L551.5,116.3 L552.4,117.0 L553.3,117.7 L554.3,118.4 L555.2,119.1 L556.1,119.7 L557.1,120.3 L558.0,120.9 L558.9,121.4 L559.9,122.0 L560.8,122.5 L561.7,122.9 L562.7,123.3 L563.6,123.7 L564.5,124.1 L565.5,124.4 L566.4,124.6 L567.3,124.9 L568.3,125.1 L569.2,125.2 L570.1,125.3 L571.1,125.4 L572.0,125.4 L572.9,125.4 L573.9,125.3 L574.8,125.2 L575.7,125.1 L576.7,124.9 L577.6,124.6 L578.5,124.4 L579.5,124.1 L580.4,123.7 L581.3,123.3 L582.3,122.9 L583.2,122.5 L584.1,122.0 L585.1,121.4 L586.0,120.9 L586.9,120.3 L587.9,119.7 L588.8,119.1 L589.7,118.4 L590.7,117.7 L591.6,117.0 L592.5,116.3 L593.5,115.5 L594.4,114.8 L595.3,114.0 L596.3,113.2 L597.2,112.4 L598.1,111.6 L599.1,110.8 L600.0,110.0" fill="none" stroke="#E1A6FF" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="40" y="172" fill="#FFFFFF" font-family="Poppins,sans-serif" font-size="21" font-weight="700">Beta<tspan fill="#E6DCF2" font-weight="400" font-size="18" dx="12">Thinking and problem-solving</tspan></text><path d="M40.0,206.3 L40.9,202.7 L41.9,200.8 L42.8,201.1 L43.7,203.0 L44.7,205.2 L45.6,206.4 L46.5,205.9 L47.5,204.0 L48.4,201.6 L49.3,199.8 L50.3,199.4 L51.2,200.0 L52.1,200.9 L53.1,201.2 L54.0,200.3 L54.9,198.9 L55.9,198.0 L56.8,198.8 L57.7,201.8 L58.7,206.5 L59.6,211.6 L60.5,215.7 L61.5,218.0 L62.4,218.3 L63.3,217.7 L64.3,217.2 L65.2,217.6 L66.1,218.9 L67.1,220.3 L68.0,220.7 L68.9,219.8 L69.9,217.7 L70.8,215.6 L71.7,214.6 L72.7,215.4 L73.6,217.7 L74.5,220.3 L75.5,222.0 L76.4,221.6 L77.3,219.1 L78.3,215.4 L79.2,211.8 L80.1,209.2 L81.1,207.7 L82.0,206.8 L82.9,205.4 L83.9,203.1 L84.8,199.9 L85.7,196.8 L86.7,195.1 L87.6,195.5 L88.5,197.9 L89.5,201.3 L90.4,204.2 L91.3,205.5 L92.3,205.0 L93.2,203.4 L94.1,201.9 L95.1,201.6 L96.0,202.6 L96.9,204.6 L97.9,206.4 L98.8,207.2 L99.7,207.1 L100.7,206.8 L101.6,207.4 L102.5,209.8 L103.5,213.9 L104.4,218.7 L105.3,222.9 L106.3,225.2 L107.2,225.2 L108.1,223.5 L109.1,221.2 L110.0,219.6 L110.9,219.1 L111.9,219.3 L112.8,219.3 L113.7,218.2 L114.7,215.9 L115.6,213.0 L116.5,210.7 L117.5,209.9 L118.4,210.9 L119.3,212.8 L120.3,214.4 L121.2,214.3 L122.1,212.2 L123.1,208.4 L124.0,204.3 L124.9,201.1 L125.9,199.4 L126.8,199.0 L127.7,199.1 L128.7,198.6 L129.6,197.4 L130.5,195.8 L131.5,195.0 L132.4,195.9 L133.3,198.8 L134.3,203.0 L135.2,207.3 L136.1,210.2 L137.1,211.2 L138.0,210.4 L138.9,209.0 L139.9,208.3 L140.8,208.9 L141.7,210.8 L142.7,213.1 L143.6,214.9 L144.5,215.4 L145.5,215.2 L146.4,215.0 L147.3,216.0 L148.3,218.5 L149.2,222.0 L150.1,225.3 L151.1,227.0 L152.0,226.4 L152.9,223.7 L153.9,219.8 L154.8,216.2 L155.7,213.9 L156.7,212.8 L157.6,212.3 L158.5,211.4 L159.5,209.5 L160.4,206.8 L161.3,204.2 L162.3,202.6 L163.2,202.9 L164.1,204.6 L165.1,206.6 L166.0,207.6 L166.9,206.8 L167.9,204.1 L168.8,200.5 L169.7,197.5 L170.7,196.1 L171.6,196.4 L172.5,197.9 L173.5,199.6 L174.4,200.5 L175.3,200.7 L176.3,200.9 L177.2,202.1 L178.1,205.0 L179.1,209.3 L180.0,214.1 L180.9,217.8 L181.9,219.5 L182.8,219.1 L183.7,217.3 L184.7,215.5 L185.6,214.8 L186.5,215.6 L187.5,217.4 L188.4,219.0 L189.3,219.7 L190.3,219.1 L191.2,218.0 L192.1,217.3 L193.1,217.8 L194.0,219.5 L194.9,221.5 L195.9,222.6 L196.8,221.7 L197.7,218.4 L198.7,213.8 L199.6,209.0 L200.5,205.3 L201.5,203.5 L202.4,203.0 L203.3,202.9 L204.3,202.4 L205.2,200.9 L206.1,199.1 L207.1,197.9 L208.0,198.1 L208.9,200.0 L209.9,202.8 L210.8,205.2 L211.7,206.1 L212.7,205.0 L213.6,202.6 L214.5,200.2 L215.5,199.0 L216.4,199.7 L217.3,202.1 L218.3,205.2 L219.2,207.8 L220.1,209.4 L221.1,210.3 L222.0,211.3 L222.9,213.3 L223.9,216.6 L224.8,220.6 L225.7,224.1 L226.7,225.7 L227.6,225.0 L228.5,222.4 L229.5,219.2 L230.4,216.6 L231.3,215.7 L232.3,216.1 L233.2,217.2 L234.1,217.7 L235.1,217.1 L236.0,215.4 L236.9,213.5 L237.9,212.3 L238.8,212.4 L239.7,213.4 L240.7,214.2 L241.6,213.5 L242.5,210.9 L243.5,206.5 L244.4,201.7 L245.3,197.7 L246.3,195.8 L247.2,195.9 L248.1,197.1 L249.1,198.5 L250.0,199.1 L250.9,198.9 L251.9,198.7 L252.8,199.3 L253.7,201.4 L254.7,204.7 L255.6,208.1 L256.5,210.5 L257.5,210.9 L258.4,209.6 L259.3,207.5 L260.3,206.2 L261.2,206.5 L262.1,208.7 L263.1,212.1 L264.0,215.4 L264.9,217.7 L265.9,218.7 L266.8,219.0 L267.7,219.5 L268.7,220.9 L269.6,223.2 L270.5,225.4 L271.5,226.3 L272.4,225.1 L273.3,221.8 L274.3,217.3 L275.2,213.1 L276.1,210.4 L277.1,209.6 L278.0,210.1 L278.9,210.8 L279.9,210.6 L280.8,209.3 L281.7,207.2 L282.7,205.3 L283.6,204.6 L284.5,205.1 L285.5,206.1 L286.4,206.4 L287.3,205.1 L288.3,202.2 L289.2,198.3 L290.1,195.0 L291.1,193.4 L292.0,194.2 L292.9,196.8 L293.9,200.0 L294.8,202.8 L295.7,204.4 L296.7,205.2 L297.6,206.1 L298.5,208.0 L299.5,211.0 L300.4,214.5 L301.3,217.4 L302.3,218.6 L303.2,217.8 L304.1,215.7 L305.1,213.5 L306.0,212.7 L306.9,213.7 L307.9,216.3 L308.8,219.3 L309.7,221.6 L310.7,222.3 L311.6,221.6 L312.5,220.5 L313.5,219.8 L314.4,220.0 L315.3,220.6 L316.3,220.7 L317.2,219.2 L318.1,215.8 L319.1,210.9 L320.0,206.0 L320.9,202.3 L321.9,200.8 L322.8,201.2 L323.7,202.6 L324.7,203.7 L325.6,203.7 L326.5,202.5 L327.5,201.1 L328.4,200.3 L329.3,200.7 L330.3,202.2 L331.2,203.7 L332.1,204.2 L333.1,203.1 L334.0,200.8 L334.9,198.4 L335.9,197.4 L336.8,198.5 L337.7,201.7 L338.7,206.1 L339.6,210.3 L340.5,213.2 L341.5,214.7 L342.4,215.4 L343.3,216.3 L344.3,218.0 L345.2,220.4 L346.1,222.7 L347.1,223.8 L348.0,222.9 L348.9,220.3 L349.9,217.1 L350.8,214.6 L351.7,213.9 L352.7,215.1 L353.6,217.3 L354.5,219.2 L355.5,219.7 L356.4,218.6 L357.3,216.3 L358.3,214.0 L359.2,212.5 L360.1,211.9 L361.1,211.6 L362.0,210.4 L362.9,207.8 L363.9,203.7 L364.8,199.2 L365.7,195.6 L366.7,194.1 L367.6,195.0 L368.5,197.5 L369.5,200.3 L370.4,202.2 L371.3,202.7 L372.3,202.3 L373.2,202.0 L374.1,202.5 L375.1,204.2 L376.0,206.5 L376.9,208.4 L377.9,208.9 L378.8,208.0 L379.7,206.3 L380.7,205.3 L381.6,206.1 L382.5,209.0 L383.5,213.3 L384.4,217.8 L385.3,221.2 L386.3,222.7 L387.2,222.7 L388.1,222.0 L389.1,221.7 L390.0,222.2 L390.9,223.0 L391.9,223.3 L392.8,222.0 L393.7,219.1 L394.7,215.1 L395.6,211.3 L396.5,209.0 L397.5,208.8 L398.4,210.2 L399.3,212.0 L400.3,212.9 L401.2,212.1 L402.1,209.9 L403.1,207.0 L404.0,204.7 L404.9,203.5 L405.9,203.2 L406.8,203.0 L407.7,201.9 L408.7,199.6 L409.6,196.5 L410.5,193.9 L411.5,193.0 L412.4,194.5 L413.3,198.0 L414.3,202.3 L415.2,206.1 L416.1,208.4 L417.1,209.1 L418.0,209.0 L418.9,209.3 L419.9,210.5 L420.8,212.6 L421.7,214.9 L422.7,216.2 L423.6,216.0 L424.5,214.6 L425.5,213.1 L426.4,212.7 L427.3,214.3 L428.3,217.5 L429.2,221.3 L430.1,224.4 L431.1,225.5 L432.0,224.6 L432.9,222.4 L433.9,220.0 L434.8,218.3 L435.7,217.5 L436.7,216.8 L437.6,215.4 L438.5,212.7 L439.5,208.7 L440.4,204.6 L441.3,201.6 L442.3,200.6 L443.2,201.7 L444.1,204.0 L445.1,205.9 L446.0,206.4 L446.9,205.2 L447.9,202.9 L448.8,200.7 L449.7,199.4 L450.7,199.5 L451.6,200.4 L452.5,201.2 L453.5,200.9 L454.4,199.7 L455.3,198.4 L456.3,198.1 L457.2,199.8 L458.1,203.7 L459.1,208.7 L460.0,213.6 L460.9,216.9 L461.9,218.3 L462.8,218.1 L463.7,217.4 L464.7,217.2 L465.6,218.1 L466.5,219.5 L467.5,220.6 L468.4,220.5 L469.3,219.0 L470.3,216.7 L471.2,215.0 L472.1,214.7 L473.1,216.2 L474.0,218.9 L474.9,221.2 L475.9,222.1 L476.8,220.7 L477.7,217.6 L478.7,213.8 L479.6,210.5 L480.5,208.4 L481.5,207.3 L482.4,206.3 L483.3,204.5 L484.3,201.8 L485.2,198.5 L486.1,195.9 L487.1,195.0 L488.0,196.4 L488.9,199.3 L489.9,202.7 L490.8,205.0 L491.7,205.5 L492.7,204.4 L493.6,202.7 L494.5,201.6 L495.5,201.9 L496.4,203.4 L497.3,205.4 L498.3,206.9 L499.2,207.3 L500.1,207.0 L501.1,206.9 L502.0,208.2 L502.9,211.4 L503.9,215.9 L504.8,220.7 L505.7,224.2 L506.7,225.4 L507.6,224.6 L508.5,222.5 L509.5,220.4 L510.4,219.3 L511.3,219.2 L512.3,219.4 L513.2,219.0 L514.1,217.3 L515.1,214.7 L516.0,211.9 L516.9,210.1 L517.9,210.1 L518.8,211.6 L519.7,213.6 L520.7,214.6 L521.6,213.6 L522.5,210.7 L523.5,206.6 L524.4,202.8 L525.3,200.2 L526.3,199.1 L527.2,199.0 L528.1,199.0 L529.1,198.2 L530.0,196.7 L530.9,195.3 L531.9,195.1 L532.8,196.9 L533.7,200.5 L534.7,204.9 L535.6,208.8 L536.5,210.9 L537.5,211.0 L538.4,209.8 L539.3,208.5 L540.3,208.4 L541.2,209.6 L542.1,211.8 L543.1,214.0 L544.0,215.2 L544.9,215.4 L545.9,215.0 L546.8,215.3 L547.7,216.9 L548.7,219.9 L549.6,223.5 L550.5,226.3 L551.5,227.1 L552.4,225.5 L553.3,222.1 L554.3,218.2 L555.2,215.0 L556.1,213.3 L557.1,212.6 L558.0,212.0 L558.9,210.7 L559.9,208.4 L560.8,205.6 L561.7,203.3 L562.7,202.5 L563.6,203.5 L564.5,205.5 L565.5,207.2 L566.4,207.5 L567.3,205.8 L568.3,202.6 L569.2,199.1 L570.1,196.7 L571.1,196.0 L572.0,197.0 L572.9,198.7 L573.9,200.1 L574.8,200.7 L575.7,200.7 L576.7,201.3 L577.6,203.2 L578.5,206.7 L579.5,211.4 L580.4,215.9 L581.3,218.8 L582.3,219.6 L583.2,218.4 L584.1,216.4 L585.1,215.0 L586.0,215.0 L586.9,216.3 L587.9,218.1 L588.8,219.4 L589.7,219.6 L590.7,218.7 L591.6,217.6 L592.5,217.3 L593.5,218.4 L594.4,220.4 L595.3,222.2 L596.3,222.5 L597.2,220.5 L598.1,216.5 L599.1,211.6 L600.0,207.2" fill="none" stroke="#C77DEB" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="40" y="272" fill="#FFFFFF" font-family="Poppins,sans-serif" font-size="21" font-weight="700">High beta<tspan fill="#E6DCF2" font-weight="400" font-size="18" dx="12">Overthinking, worry, on alert</tspan></text><path d="M40.0,302.7 L40.9,297.1 L41.9,300.4 L42.8,306.9 L43.7,307.8 L44.7,303.4 L45.6,300.3 L46.5,299.6 L47.5,297.0 L48.4,293.7 L49.3,297.0 L50.3,308.5 L51.2,319.3 L52.1,322.3 L53.1,320.6 L54.0,320.3 L54.9,320.1 L55.9,316.3 L56.8,312.3 L57.7,315.0 L58.7,322.6 L59.6,325.5 L60.5,319.8 L61.5,311.8 L62.4,306.6 L63.3,301.6 L64.3,294.6 L65.2,291.2 L66.1,296.5 L67.1,305.2 L68.0,308.1 L68.9,304.7 L69.9,302.2 L70.8,303.3 L71.7,303.9 L72.7,303.3 L73.6,307.6 L74.5,318.8 L75.5,328.6 L76.4,329.2 L77.3,323.8 L78.3,319.9 L79.2,317.8 L80.1,313.5 L81.1,308.7 L82.0,309.7 L82.9,315.7 L83.9,317.5 L84.8,310.7 L85.7,301.5 L86.7,296.9 L87.6,294.8 L88.5,292.0 L89.5,291.9 L90.4,299.5 L91.3,310.2 L92.3,314.6 L93.2,311.5 L94.1,308.6 L95.1,310.2 L96.0,312.4 L96.9,312.8 L97.9,316.0 L98.8,324.6 L99.7,331.6 L100.7,329.1 L101.6,319.8 L102.5,312.6 L103.5,309.4 L104.4,305.8 L105.3,301.6 L106.3,302.4 L107.2,308.2 L108.1,310.5 L109.1,304.4 L110.0,296.1 L110.9,293.4 L111.9,295.3 L112.8,296.9 L113.7,299.8 L114.7,308.5 L115.6,319.5 L116.5,323.7 L117.5,319.3 L118.4,314.5 L119.3,315.0 L120.3,317.2 L121.2,317.1 L122.1,318.0 L123.1,323.3 L124.0,327.1 L124.9,321.9 L125.9,310.2 L126.8,301.5 L127.7,299.1 L128.7,298.1 L129.6,296.3 L130.5,298.4 L131.5,305.1 L132.4,308.9 L133.3,304.6 L134.3,297.8 L135.2,297.1 L136.1,302.3 L137.1,307.1 L138.0,311.2 L138.9,318.8 L139.9,327.7 L140.8,329.8 L141.7,322.8 L142.7,315.2 L143.6,313.7 L144.5,315.3 L145.5,314.7 L146.4,313.7 L147.3,316.1 L148.3,317.8 L149.2,311.8 L150.1,299.9 L151.1,292.1 L152.0,292.4 L152.9,295.5 L153.9,297.3 L154.8,301.0 L155.7,308.6 L156.7,313.6 L157.6,310.6 L158.5,304.6 L159.5,304.7 L160.4,311.3 L161.3,317.3 L162.3,320.6 L163.2,324.9 L164.1,330.1 L165.1,329.0 L166.0,319.3 L166.9,309.2 L167.9,306.4 L168.8,308.3 L169.7,308.3 L170.7,306.7 L171.6,307.7 L172.5,309.1 L173.5,304.3 L174.4,294.4 L175.3,289.0 L176.3,292.8 L177.2,300.2 L178.1,305.2 L179.1,309.7 L180.0,316.6 L180.9,321.3 L181.9,318.2 L182.8,311.5 L183.7,310.7 L184.7,316.9 L185.6,322.5 L186.5,323.5 L187.5,323.8 L188.4,324.8 L189.3,321.2 L190.3,310.1 L191.2,299.2 L192.1,296.8 L193.1,300.7 L194.0,302.9 L194.9,302.3 L195.9,303.4 L196.8,305.7 L197.7,303.2 L198.7,296.1 L199.6,293.3 L200.5,300.0 L201.5,310.3 L202.4,316.6 L203.3,319.9 L204.3,324.2 L205.2,326.6 L206.1,322.0 L207.1,313.7 L208.0,311.1 L208.9,316.0 L209.9,320.6 L210.8,319.6 L211.7,316.5 L212.7,314.6 L213.6,310.1 L214.5,300.0 L215.5,290.7 L216.4,290.6 L217.3,297.7 L218.3,303.2 L219.2,304.3 L220.1,305.8 L221.1,308.8 L222.0,308.3 L222.9,303.4 L223.9,302.1 L224.8,309.8 L225.7,320.6 L226.7,326.1 L227.6,326.3 L228.5,326.2 L229.5,325.3 L230.4,318.9 L231.3,309.3 L232.3,305.4 L233.2,309.6 L234.1,314.0 L235.1,312.3 L236.0,307.5 L236.9,304.7 L237.9,301.4 L238.8,294.4 L239.7,288.4 L240.7,291.4 L241.6,301.8 L242.5,310.1 L243.5,312.2 L244.4,313.0 L245.3,315.4 L246.3,315.5 L247.2,311.5 L248.1,309.9 L249.1,316.5 L250.0,326.0 L250.9,329.1 L251.9,325.3 L252.8,320.8 L253.7,317.1 L254.7,310.1 L255.6,300.8 L256.5,297.1 L257.5,302.0 L258.4,307.8 L259.3,307.0 L260.3,302.3 L261.2,300.0 L262.1,299.3 L263.1,296.1 L264.0,293.7 L264.9,299.2 L265.9,311.5 L266.8,320.8 L267.7,322.1 L268.7,320.3 L269.6,320.4 L270.5,319.6 L271.5,315.1 L272.4,312.2 L273.3,316.7 L274.3,324.0 L275.2,324.8 L276.1,317.9 L277.1,310.3 L278.0,305.6 L278.9,300.0 L279.9,293.2 L280.8,291.6 L281.7,298.6 L282.7,306.7 L283.6,307.7 L284.5,303.8 L285.5,302.2 L286.4,303.7 L287.3,303.7 L288.3,303.7 L289.2,309.8 L290.1,321.5 L291.1,329.6 L292.0,328.2 L292.9,322.6 L293.9,319.4 L294.8,317.1 L295.7,312.2 L296.7,308.2 L297.6,310.9 L298.5,316.8 L299.5,316.6 L300.4,308.4 L301.3,300.0 L302.3,296.3 L303.2,294.3 L304.1,291.5 L305.1,293.0 L306.0,302.1 L306.9,312.1 L307.9,314.4 L308.8,310.5 L309.7,308.6 L310.7,310.9 L311.6,312.6 L312.5,313.0 L313.5,317.6 L314.4,326.8 L315.3,332.0 L316.3,327.2 L317.2,317.7 L318.1,311.6 L319.1,308.8 L320.0,304.7 L320.9,301.2 L321.9,303.5 L322.8,309.4 L323.7,309.8 L324.7,302.3 L325.6,294.9 L326.5,293.7 L327.5,295.8 L328.4,297.3 L329.3,301.3 L330.3,311.1 L331.2,321.3 L332.1,323.2 L333.1,317.9 L334.0,314.1 L334.9,315.6 L335.9,317.3 L336.8,317.0 L337.7,318.9 L338.7,324.6 L339.6,326.8 L340.5,319.4 L341.5,307.6 L342.4,300.5 L343.3,299.0 L344.3,297.6 L345.2,296.3 L346.1,299.7 L347.1,306.6 L348.0,308.6 L348.9,302.9 L349.9,296.9 L350.8,298.0 L351.7,303.6 L352.7,308.0 L353.6,312.6 L354.5,321.0 L355.5,329.1 L356.4,328.8 L357.3,320.8 L358.3,314.2 L359.2,314.1 L360.1,315.5 L361.1,314.3 L362.0,313.9 L362.9,316.8 L363.9,317.3 L364.8,309.2 L365.7,297.4 L366.7,291.5 L367.6,293.1 L368.5,296.0 L369.5,297.8 L370.4,302.5 L371.3,310.3 L372.3,313.6 L373.2,309.1 L374.1,303.8 L375.1,305.8 L376.0,313.0 L376.9,318.2 L377.9,321.3 L378.8,326.2 L379.7,330.7 L380.7,327.4 L381.6,316.6 L382.5,307.8 L383.5,306.7 L384.4,308.6 L385.3,307.8 L386.3,306.6 L387.2,308.3 L388.1,308.7 L389.1,302.2 L390.0,292.4 L390.9,289.1 L391.9,294.5 L392.8,301.6 L393.7,306.1 L394.7,311.1 L395.6,318.2 L396.5,321.3 L397.5,316.6 L398.4,310.6 L399.3,311.8 L400.3,318.5 L401.2,323.1 L402.1,323.5 L403.1,324.1 L404.0,324.7 L404.9,319.1 L405.9,307.2 L406.8,297.8 L407.7,297.4 L408.7,301.5 L409.6,302.9 L410.5,302.3 L411.5,304.1 L412.4,305.7 L413.3,301.7 L414.3,294.7 L415.2,294.1 L416.1,302.5 L417.1,312.3 L418.0,317.5 L418.9,320.8 L419.9,325.1 L420.8,326.2 L421.7,320.0 L422.7,312.3 L423.6,311.8 L424.5,317.5 L425.5,320.8 L426.4,318.8 L427.3,316.0 L428.3,314.0 L429.2,308.2 L430.1,297.4 L431.1,289.7 L432.0,291.9 L432.9,299.4 L433.9,303.7 L434.8,304.4 L435.7,306.4 L436.7,309.2 L437.6,307.4 L438.5,302.5 L439.5,303.1 L440.4,312.4 L441.3,322.6 L442.3,326.4 L443.2,326.2 L444.1,326.3 L445.1,324.4 L446.0,316.7 L446.9,307.6 L447.9,305.8 L448.8,311.0 L449.7,314.2 L450.7,311.2 L451.6,306.7 L452.5,304.2 L453.5,300.1 L454.4,292.5 L455.3,288.1 L456.3,293.5 L457.2,304.3 L458.1,311.1 L459.1,312.3 L460.0,313.5 L460.9,315.8 L461.9,314.8 L462.8,310.5 L463.7,310.7 L464.7,318.8 L465.6,327.5 L466.5,328.7 L467.5,324.2 L468.4,320.0 L469.3,315.9 L470.3,307.9 L471.2,299.1 L472.1,297.6 L473.1,303.7 L474.0,308.3 L474.9,306.0 L475.9,301.5 L476.8,299.9 L477.7,298.8 L478.7,295.2 L479.6,294.1 L480.5,301.7 L481.5,314.2 L482.4,321.7 L483.3,321.6 L484.3,320.2 L485.2,320.5 L486.1,318.8 L487.1,314.0 L488.0,312.6 L488.9,318.5 L489.9,325.0 L490.8,323.7 L491.7,315.9 L492.7,309.1 L493.6,304.5 L494.5,298.4 L495.5,292.1 L496.4,292.6 L497.3,300.7 L498.3,307.6 L499.2,306.9 L500.1,303.0 L501.1,302.4 L502.0,303.9 L502.9,303.5 L503.9,304.4 L504.8,312.2 L505.7,324.1 L506.7,330.1 L507.6,327.0 L508.5,321.6 L509.5,319.0 L510.4,316.2 L511.3,310.9 L512.3,308.2 L513.2,312.3 L514.1,317.6 L515.1,315.2 L516.0,306.2 L516.9,298.7 L517.9,295.9 L518.8,293.6 L519.7,291.2 L520.7,294.5 L521.6,304.7 L522.5,313.4 L523.5,313.7 L524.4,309.6 L525.3,308.9 L526.3,311.5 L527.2,312.6 L528.1,313.5 L529.1,319.5 L530.0,328.7 L530.9,331.7 L531.9,325.1 L532.8,315.8 L533.7,310.9 L534.7,308.0 L535.6,303.6 L536.5,301.1 L537.5,304.8 L538.4,310.2 L539.3,308.6 L540.3,300.3 L541.2,294.0 L542.1,294.1 L543.1,296.2 L544.0,297.8 L544.9,303.1 L545.9,313.8 L546.8,322.7 L547.7,322.3 L548.7,316.6 L549.6,314.1 L550.5,316.2 L551.5,317.3 L552.4,317.0 L553.3,320.1 L554.3,325.8 L555.2,326.0 L556.1,316.7 L557.1,305.3 L558.0,299.8 L558.9,298.8 L559.9,297.2 L560.8,296.5 L561.7,301.2 L562.7,307.8 L563.6,307.9 L564.5,301.1 L565.5,296.5 L566.4,299.2 L567.3,304.8 L568.3,308.9 L569.2,314.2 L570.1,323.2 L571.1,330.0 L572.0,327.4 L572.9,318.8 L573.9,313.7 L574.8,314.5 L575.7,315.4 L576.7,313.9 L577.6,314.4 L578.5,317.5 L579.5,316.2 L580.4,306.5 L581.3,295.3 L582.3,291.4 L583.2,293.9 L584.1,296.4 L585.1,298.5 L586.0,304.3 L586.9,311.7 L587.9,313.2 L588.8,307.6 L589.7,303.6 L590.7,307.3 L591.6,314.5 L592.5,319.0 L593.5,322.2 L594.4,327.6 L595.3,330.8 L596.3,325.3 L597.2,314.0 L598.1,306.9 L599.1,307.1 L600.0,308.7" fill="none" stroke="#D946EF" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      </div>
+      <span class="eyebrow">The Science</span>
+      <h2 class="step-title">Stuck In Your Head</h2>
+      <div class="step-body">Your brainwaves move into beta and high beta, the state your brain uses to solve problems.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="You Never Feel The Right Person Is Coming">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Dating App.jpg" alt="A woman scrolling a dating app, unconvinced" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Dating App.jpg</div>
+      </div>
+      <span class="eyebrow">What It Costs</span>
+      <h2 class="step-title" data-lines="You Never Actually Feel The|Right Person Is Coming">You Never Actually Feel The Right Person Is Coming</h2>
+      <div class="step-body">So dating becomes exhausting and transactional.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="And Now You're Tired">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Tired Of Waiting.jpg" alt="A woman tired of waiting, looking out of a window" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Tired Of Waiting.jpg</div>
+      </div>
+      <span class="eyebrow">And Over Time</span>
+      <h2 class="step-title">You Get Tired</h2>
+      <div class="step-body">Tired of waiting. Wondering if there's still hope for you.</div>
+    </div>
+  </section>
+
+  <!-- ===== PART 5 · WHAT'S MISSING: EMOTIONAL RESONANCE ===== -->
+  <section class="step" data-title="What's Missing Is Emotional Resonance">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Emotional Resonance.jpg" alt="A couple clicking, laughing together" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Emotional Resonance.jpg</div>
+      </div>
+      <span class="eyebrow">What's Missing</span>
+      <h2 class="step-title"><span class="grad">Emotional Resonance</span></h2>
+      <div class="step-body">The emotional connection two people feel when they click.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="We're Drawn To People Who Match How We Feel">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Drawn Together.jpg" alt="Two people noticing each other across a cafe" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Drawn Together.jpg</div>
+      </div>
+      <span class="eyebrow">Why It Works</span>
+      <h2 class="step-title" data-lines="We're Drawn To People Who|Match How We Feel">We're Drawn To People Who Match How We Feel</h2>
+      <div class="step-body">Feel anxious about love and you notice people who match it.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Emotional Scale">
+    <div class="step-inner">
+      <div class="scale-img">
+        <img src="how to attract a committed relationship images/Emotional Scale.jpg" alt="Emotional scale: high-quality partners at the top, low-quality partners at the bottom" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Emotional Scale.jpg</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="You Can't Think Your Way Into A Feeling">
+    <div class="step-inner">
+      <span class="eyebrow">The Catch</span>
+      <h2 class="step-title" data-lines="You Can't Think Your Way|Into A Feeling">You Can't Think Your Way Into A Feeling</h2>
+      <div class="step-body">That's why knowing more hasn't worked.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Feeling, Not Thinking">
+    <div class="step-inner">
+      <div class="photo-frame photo-frame--wide">
+        <img src="regulate images/Heart Coherence.png" alt="Heart coherence: a smooth, steady heart rhythm" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Heart Coherence.png</div>
+      </div>
+      <span class="eyebrow">The Science</span>
+      <h2 class="step-title">Feeling, Not Thinking</h2>
+      <div class="step-body">Getting out of your head and survival mode, and into your heart.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="When You Feel It First">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Feel It First.jpg" alt="A woman walking, relaxed and smiling" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Feel It First.jpg</div>
+      </div>
+      <span class="eyebrow">What Changes</span>
+      <h2 class="step-title" data-lines="When You Feel Like You're Already|In That Relationship">When You Feel Like You're Already In That Relationship</h2>
+      <ul class="ticks">
+        <li><span class="tick">&#10003;</span><span>You start to believe it can happen.</span></li>
+        <li><span class="tick">&#10003;</span><span>You notice the right people.</span></li>
+        <li><span class="tick">&#10003;</span><span>You can spot who isn't right for you.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== PART 6 · THE 3 STEPS ===== -->
+  <section class="step" data-title="The 3 Steps">
+    <div class="step-inner">
+      <span class="eyebrow">How To Get Into Emotional Resonance</span>
+      <h2 class="step-title">The 3 Steps</h2>
+      <div class="parts">
+        <div>
+          <div class="num">1</div>
+          <div class="part-name">Get Clear</div>
+          <div class="part-body">Get clear on exactly who you want.</div>
+        </div>
+        <div>
+          <div class="num">2</div>
+          <div class="part-name">Define It</div>
+          <div class="part-body">Define the emotions you'd feel with them.</div>
+        </div>
+        <div>
+          <div class="num">3</div>
+          <div class="part-name">Embody It</div>
+          <div class="part-body">Embody those emotions every day, before they show up.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Step 1: Get Clear On Exactly Who You Want">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Get Clear.jpg" alt="A woman writing in a journal" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Get Clear.jpg</div>
+      </div>
+      <div class="big-num">1</div>
+      <h2 class="step-title" data-lines="Get Clear On Exactly|Who You Want">Get Clear On Exactly Who You Want</h2>
+      <div class="step-body">And what your life together looks like.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="An Ordinary Sunday">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to use emotional resonance images/Couple having breakfast at table.jpg" alt="A couple having breakfast together on a Sunday" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Couple having breakfast at table.jpg</div>
+      </div>
+      <span class="eyebrow">Picture This</span>
+      <h2 class="step-title">An Ordinary Sunday</h2>
+      <div class="step-body">A year from now, with your person.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="What Are You Doing Together?">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Cooking Together.jpg" alt="A couple cooking together at home" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Cooking Together.jpg</div>
+      </div>
+      <span class="eyebrow">Picture This</span>
+      <h2 class="step-title">What Are You Doing Together?</h2>
+      <div class="step-body">Breakfast. A walk. Cooking. Seeing friends and family.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Step 2: Define The Emotions You'd Feel With Them">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Define The Emotions.jpg" alt="A woman with her hand on her heart, eyes closed, smiling" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Define The Emotions.jpg</div>
+      </div>
+      <div class="big-num">2</div>
+      <h2 class="step-title" data-lines="Define The Emotions You'd|Feel With Them">Define The Emotions You'd Feel With Them</h2>
+      <div class="step-body">Not what they're like. How you feel with them.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="How Does It Feel?">
+    <div class="step-inner">
+      <span class="eyebrow">Notice</span>
+      <h2 class="step-title">How Does It Feel?</h2>
+      <div class="example-tags">
+        <span>Love</span>
+        <span>Joy</span>
+        <span>Peace</span>
+        <span>Gratitude</span>
+        <span>Excitement</span>
+        <span>Appreciation</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" data-title="That Feeling Is Your Emotional Resonance">
+    <div class="step-inner">
+      <span class="eyebrow">That's It</span>
+      <h2 class="step-title" style="white-space:nowrap; font-size:clamp(22px,2.7vw,34px);">That Feeling Is Your <span class="grad">Emotional Resonance</span></h2>
+      <div class="step-body">And it's what attracts the right person.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Step 3: Embody Those Emotions Every Day">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to scientifically attract your person images/Embody It.jpg" alt="A woman meditating in morning light" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Embody It.jpg</div>
+      </div>
+      <div class="big-num">3</div>
+      <h2 class="step-title" data-lines="Embody Those Emotions|Every Day">Embody Those Emotions Every Day</h2>
+      <div class="step-body">Before they show up.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="See Love Through This Lens">
+    <div class="step-inner">
+      <div class="photo-frame photo-frame--wide">
+        <img src="how to use emotional resonance images/Lens.jpg" alt="Two ways of seeing love: through fear, and through joy and appreciation" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Lens.jpg</div>
+      </div>
+      <span class="eyebrow">That's What Changes</span>
+      <h2 class="step-title">Who You Notice And Who's Drawn To You</h2>
+      <div class="step-body">You see love through a different lens.</div>
+    </div>
+  </section>
+
+  <!-- ===== PART 7 · PROOF ===== -->
+  <section class="step" data-title="That's Exactly How I Met My Wife">
+    <div class="step-inner">
+      <div class="photo-frame">
+        <img src="how to attract a committed relationship images/Wife.png" alt="Olly and his wife" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none;">Image: Wife.png</div>
+      </div>
+      <span class="eyebrow">My Story</span>
+      <h2 class="step-title">That's Exactly How I Met My Wife</h2>
+      <div class="step-body">I focused on how I felt every day, not on learning more.</div>
+    </div>
+  </section>
+
+  <!-- ===== PART 8 · CALL TO ACTION ===== -->
+  <section class="step" data-title="Inside The Heart Attractor Program">
+    <div class="step-inner">
+      <span class="eyebrow">How We Do It</span>
+      <h2 class="step-title" data-lines="Inside The Heart Attractor Program">Inside The Heart Attractor Program</h2>
+      <div class="step-body">We use something called <span class="grad" style="font-weight:700;">The Attraction Formula</span>.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Attraction Formula">
+    <div class="step-inner">
+      <span class="eyebrow">Inside The Program</span>
+      <h2 class="step-title">The Attraction Formula</h2>
+      <div class="parts parts--two">
+        <div>
+          <div class="num">1</div>
+          <div class="part-name">Find It</div>
+          <div class="part-body">Find your specific emotional resonance.</div>
+        </div>
+        <div>
+          <div class="num">2</div>
+          <div class="part-name">Embody It</div>
+          <div class="part-body">Learn to embody that exact state, every single day.</div>
+        </div>
+      </div>
+      <div class="step-body" style="margin-top:30px;">So you attract a high-quality relationship naturally.</div>
+    </div>
+  </section>
+
+  <section class="step" data-title="Small Shifts, Every Day">
+    <div class="step-inner">
+      <span class="eyebrow">The Heart Attractor Program</span>
+      <h2 class="step-title">Small Shifts, Every Day</h2>
+      <ul class="ticks">
+        <li><span class="tick tick--no">&#10005;</span><span>Not fixing yourself.</span></li>
+        <li><span class="tick tick--no">&#10005;</span><span>Not more information.</span></li>
+        <li><span class="tick">&#10003;</span><span>A gradual change and improvement every day, to attract the relationship that you want.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step" data-title="The Heart Attractor Program">
+    <div class="step-inner">
+      <span class="eyebrow">Want My Help?</span>
+      <h2 class="step-title">The <span class="grad">Heart Attractor</span> Program</h2>
+      <div class="step-body">Attract a genuine, committed long-term relationship, with my support every day.</div>
+      <div class="desc-note">Find out more in the description &#8595;</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Photo carousels: click the photo to cross-fade to the next one (Olly
+  // moves through them himself while talking, so no auto-play). Loops back
+  // to the first after the last.
+  document.querySelectorAll('.photo-frame--carousel').forEach(frame => {
+    const imgs = frame.querySelectorAll('.car-item');
+    if (imgs.length < 2) return;
+    let i = 0;
+    // The caption under the title (same slide) follows the photo.
+    const inner = frame.closest('.step-inner');
+    const cap = inner.querySelector('.car-caption');
+    function show(n){
+      imgs[i].classList.remove('is-on');
+      i = (n + imgs.length) % imgs.length;
+      imgs[i].classList.add('is-on');
+      if (cap && imgs[i].dataset.caption){
+        cap.classList.add('is-fading');
+        const text = imgs[i].dataset.caption;
+        setTimeout(() => {
+          // "|" in a caption = a line break (hand-set lines, each narrower than the one above)
+          cap.innerHTML = '';
+          text.split('|').forEach(t => {
+            const line = document.createElement('span');
+            line.style.display = 'block';
+            line.textContent = t;
+            cap.appendChild(line);
+          });
+          cap.classList.remove('is-fading');
+        }, 450);
+      }
+    }
+    // Arrows either side, and the photo itself still moves forward.
+    frame.addEventListener('click', () => show(i + 1));
+    const prev = inner.querySelector('.car-prev'), next = inner.querySelector('.car-next');
+    if (prev) prev.addEventListener('click', () => show(i - 1));
+    if (next) next.addEventListener('click', () => show(i + 1));
+  });
+
+  const stepsEl = document.getElementById('steps');
+  const steps = document.querySelectorAll('.step');
+  const dotsEl = document.getElementById('dots');
+  const progressLabel = document.getElementById('progressLabel');
+
+  steps.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.addEventListener('click', () => steps[i].scrollIntoView({behavior:'smooth'}));
+    dotsEl.appendChild(dot);
+  });
+  const dots = document.querySelectorAll('.dot');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(steps).indexOf(entry.target);
+        dots.forEach(d => d.classList.remove('active'));
+        dots[idx].classList.add('active');
+        progressLabel.textContent = `Step ${idx + 1} / ${steps.length}`;
+      }
+    });
+  }, { root: stepsEl, threshold: 0.6 });
+  steps.forEach(s => observer.observe(s));
+
+  document.addEventListener('keydown', (e) => {
+    const active = document.querySelector('.dot.active');
+    const idx = Array.from(dots).indexOf(active);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { if (steps[idx + 1]) steps[idx + 1].scrollIntoView({behavior:'smooth'}); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { if (steps[idx - 1]) steps[idx - 1].scrollIntoView({behavior:'smooth'}); }
+  });
+
+  // ---------- reverse-pyramid title (copied verbatim from how-to-attract-a-committed-relationship.html) ----------
+  function buildTitlePyramid(){
+    document.querySelectorAll('h1.step-title, .step-title[data-lines]').forEach(function(el){
+      // Long titles: lines set by hand in data-lines (each narrower than the one above), font shrunk until the widest line fits.
+      if (el.dataset.lines){
+        var set = el.dataset.lines.split('|');
+        el.style.fontSize = '';
+        var cs0 = getComputedStyle(el), size = parseFloat(cs0.fontSize);
+        var c0 = document.createElement('canvas').getContext('2d');
+        var avail = el.parentElement.clientWidth;
+        for (var n = 0; n < 40; n++){
+          c0.font = cs0.fontStyle + ' ' + cs0.fontWeight + ' ' + size + 'px ' + cs0.fontFamily;
+          var widest = Math.max.apply(null, set.map(function(t){ return c0.measureText(t).width; }));
+          if (widest <= avail * 0.98) break;
+          size *= 0.96;
+        }
+        el.style.fontSize = size + 'px';
+        el.textContent = '';
+        set.forEach(function(t, n){ var sp = document.createElement('span'); sp.className = 'pyr-line' + (el.dataset.gradLast && n === set.length - 1 ? ' grad' : ''); sp.textContent = t; el.appendChild(sp); });
+        return;
+      }
+      if (!el.dataset.originalText) el.dataset.originalText = el.textContent.replace(/\s+/g, ' ').trim();
+      var words = el.dataset.originalText.split(' ');
+      var cs = getComputedStyle(el);
+      var ctx = document.createElement('canvas').getContext('2d');
+      ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+      var space = ctx.measureText(' ').width;
+      var full = el.parentElement.offsetWidth - parseFloat(getComputedStyle(el.parentElement).paddingLeft) - parseFloat(getComputedStyle(el.parentElement).paddingRight);
+      function pack(budget){
+        var lines = [], cur = [], w = 0;
+        for (var i = 0; i < words.length; ){
+          var ww = ctx.measureText(words[i]).width, add = cur.length ? w + space + ww : ww;
+          if (!cur.length || add <= budget){ cur.push(words[i]); w = add; i++; }
+          else { lines.push({t:cur.join(' '), w:w}); budget = w - 4; cur = []; w = 0; }
+        }
+        if (cur.length) lines.push({t:cur.join(' '), w:w});
+        return lines;
+      }
+      function valid(lines){ for (var k = 1; k < lines.length; k++) if (lines[k].w >= lines[k-1].w) return false; return true; }
+      var base = pack(full), best = base;
+      for (var p = 0.99; p >= 0.55; p -= 0.01){
+        var l = pack(full * p);
+        if (l.length !== base.length || !valid(l)) break;
+        best = l;
+      }
+      el.textContent = '';
+      best.forEach(function(line){
+        var s = document.createElement('span');
+        s.className = 'pyr-line'; s.textContent = line.t;
+        el.appendChild(s);
+      });
+    });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(buildTitlePyramid);
+  window.addEventListener('load', buildTitlePyramid);
+  window.addEventListener('resize', buildTitlePyramid);
+  buildTitlePyramid();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<title>Email: Know More Than Friends</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root{--bg:#f6f3f8;--card:#fff;--fg:#211b2a;--muted:#625a6e;--line:#ded8e5;--accent:#a3245f;--on:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15121a;--card:#1e1a25;--fg:#ece8f1;--muted:#a79fb3;--line:#332d3d;--accent:#f08db8;--on:#1e0e16;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15121a;--card:#1e1a25;--fg:#ece8f1;--muted:#a79fb3;--line:#332d3d;--accent:#f08db8;--on:#1e0e16;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1{font-size:24px;margin:0}
+.hint{color:var(--muted);font-size:14px;margin:0}
+label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+input,textarea{font:inherit;font-weight:400;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;box-sizing:border-box}
+textarea{min-height:900px;line-height:1.6;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:600 14px system-ui,sans-serif;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on)}
+#st{font-size:14px;color:var(--muted)}
+</style>
+<div class="wrap">
+  <h1>Daily email draft</h1>
+  <p class="hint">Edit anything, then press Save. Copy all gives you subject, preview and body to paste into GHL. Link the word in [brackets] to the Feeling Finder.</p>
+  <label for="subj">Subject<input id="subj" type="text"></label>
+  <label for="prev">Preview text<input id="prev" type="text"></label>
+  <label for="body">Email<textarea id="body" spellcheck="true"></textarea></label>
+  <div class="row"><button id="save" class="primary" type="button">Save</button><button id="copy" type="button">Copy all</button><span id="st" role="status"></span></div>
+</div>
+<script>
+const D = {subj:"You know more about love than your married friends", prev:"So why hasn't it happened yet?", body:`{{contact.first_name}}, quick question...
+
+How many books on relationships have you read?
+
+The podcasts. The attachment style quizzes. The inner work.
+
+You probably know more about love than anyone you know.
+
+And yet...
+
+Your friends who never read a single one of those books met their person.
+
+Without even trying.
+
+Here's what I think is going on.
+
+Psychologists call it intellectualization.
+
+It's using thinking and analysing to deal with emotional situations.
+
+It's actually your mind protecting you... from getting your hopes up again.
+
+But it means you never actually feel that the right person is coming.
+
+And you can't think your way into a feeling.
+
+What's missing is emotional resonance.
+
+That's the connection two people feel when they click. We're drawn to people who match the emotions we're feeling.
+
+So here's the simple version:
+
+1. Get clear on exactly who you want
+2. Define the emotions you'd feel with them
+3. Embody those emotions every day, before they show up
+
+That's exactly how I met my wife.
+
+If you'd like help with the first two steps, The Feeling Finder does it in 2 minutes. Use it [here].
+
+Talk soon,
+
+Olly`};
+const ids = ["subj", "prev", "body"], st = document.getElementById("st"), KEY = "email-know-more";
+let local = null; try { local = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+const fill = o => ids.forEach(k => { document.getElementById(k).value = o[k] != null ? o[k] : D[k]; });
+fill(local || D);
+const cur = () => { const o = {}; ids.forEach(k => o[k] = document.getElementById(k).value); return o; };
+ids.forEach(k => document.getElementById(k).addEventListener("input", () => { try { localStorage.setItem(KEY, JSON.stringify(cur())); } catch (e) {} st.textContent = "Not saved yet"; }));
+const dbp = window.claude && window.claude.use ? window.claude.use("db") : Promise.resolve(null);
+dbp.then(async db => { if (!db || local) return; try { const s = await db.doc("emails/know-more").get(); if (s.exists) fill(s.data()); } catch (e) {} });
+document.getElementById("save").onclick = async () => {
+  const db = await dbp; if (!db) { st.textContent = "Saved on this device only"; return; }
+  try { await db.doc("emails/know-more").set({...cur(), savedAt: new Date().toISOString()}); st.textContent = "✓ Saved"; } catch (e) { st.textContent = "Couldn't save. Try again."; }
+};
+document.getElementById("copy").onclick = () => {
+  const o = cur(), t = "Subject: " + o.subj + "\nPreview: " + o.prev + "\n\n" + o.body;
+  navigator.clipboard.writeText(t).then(() => st.textContent = "✓ Copied", () => { document.getElementById("body").select(); st.textContent = "Press Ctrl+C to copy"; });
+};
+</script>

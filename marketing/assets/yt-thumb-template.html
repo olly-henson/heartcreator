@@ -1,0 +1,20 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;box-sizing:border-box}
+html,body{width:1280px;height:720px;overflow:hidden;background:#0a0510}
+.c{position:relative;width:1280px;height:720px;background:radial-gradient(ellipse 70% 90% at 15% 45%,#4a1677 0%,#1d0a2e 55%,#0a0510 100%)}
+.ph{position:absolute;right:-40px;top:0;width:760px;height:760px;background:url("PFP.png") center/cover;
+ -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34%);filter:saturate(1.05) contrast(1.05)}
+.vig{position:absolute;right:-40px;top:0;width:760px;height:720px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34%);background:radial-gradient(ellipse 48% 62% at 55% 48%,transparent 55%,rgba(10,5,16,.75) 100%)}
+.glow{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,5,16,.55) 0,transparent 45%)}
+.t{position:absolute;left:56px;top:50%;transform:translateY(-50%);font-family:Poppins;font-weight:900;line-height:.98;letter-spacing:-1px;text-transform:uppercase}
+.t div{font-size:var(--s,118px);text-shadow:0 6px 30px rgba(0,0,0,.55)}
+.w{color:#fff}.l{background:linear-gradient(180deg,#f6d2ff,#d36bff);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px rgba(0,0,0,.5))}
+</style></head><body><div class="c"><div class="ph"></div><div class="vig"></div><div class="glow"></div>
+<div class="t" id="t"></div></div>
+<script>
+var q=new URLSearchParams(location.search),t=document.getElementById('t');
+(q.get('l')||'STOP|FIXING|YOURSELF').split('|').forEach(function(s,i){var d=document.createElement('div');var st=(q.get('c')||'lwl')[i];d.className=st;d.textContent=s;t.appendChild(d)});
+if(q.get('s'))t.style.setProperty('--s',q.get('s')+'px');
+</script></body></html>

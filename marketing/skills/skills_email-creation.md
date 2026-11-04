@@ -191,6 +191,11 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 
 ## 6. Broadcast Campaigns
 
+### Pitch days and who gets what (2026-11-04)
+- Pitch day = every Thursday from 12 Nov 2026 (on the Hub Email calendar, gold outline). Pitch email -> **Warm List** (daily email list + score 6+ + engaged in the last 14 days + not applied + not joined). That day's normal daily email -> **Cold List** (everyone else, applicants included: never pitch someone who already applied). Every other day -> Daily Email List.
+- The first pitch waits 14 days from the list start (29 Oct) so scores can build; only pitch if the Warm List has 15+, else move it a week.
+- Resend winning emails every **90 days** with a new subject line, body unchanged (Olly 2026-11-04: "definitely with emails for sure especially every 90 days").
+
 Separate from the nurture sequence. Broadcast emails are one-off sends to a wider list — old clients, old leads, people who downloaded the meditation but did not join, people who finished the nurture sequence but haven't joined the Community. Written fresh for email, not repurposed from another channel. Stored in the **Email Broadcast Campaigns** Notion database (`36e30e58-6a0d-811c-b455-ce8fe3da15be`).
 
 Before writing, check Section 7 (live nurture sequence) to confirm the content angle isn't duplicating what prospects in the active nurture sequence are already receiving. Also always apply Section 8 (Email Player Secrets) for subject line and content-type variety.
@@ -894,3 +899,5 @@ Merged `skills_email-marketing.md`, `skills_email-player-secrets.md` and `memory
 
 **2026-07-03 — Email Player Secrets created**
 Extracted from ~40 pages of screenshots of "The Email Player's Playbook" by Ben Settle. Confirmed as a standing default for all email subject lines, preview text and content ideas — not just applied when asked.
+
+**2026-11-04 — Pitch days + resends.** Added who-gets-what on pitch days, the 14-day wait before the first pitch, and the 90-day resend rule (Olly). Why: pitch routing was only in NEXT.md and Olly had to ask how long to wait before pitching.

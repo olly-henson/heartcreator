@@ -39,7 +39,10 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 - Raw and finished videos, transcripts, plans, `reels\reference\`, `reels\ready\` and `.hubkey` stay out of git (the repo is public).
 - **Explaining it to Olly:** say plainly where things live (the page runs on his laptop, not in the Hub). Walkthroughs: one click per message, wait for "done", and check the result yourself where you can.
 
+- **Recycling (Olly decided 2026-11-04, build after Meta Ads + auto Reel stats):** now and then repost a TOP Reel unchanged after 90+ days, new caption + different time, on top of new Reels (not instead). Source = `reels\ready\` or the GHL media url; same GHL schedule path. Keep finished files for winners.
+
 ### Never
+- Never put a new hook over old footage or splice a new opener on to "freshen" a Reel. Olly: "I tie my content into the hook itself throughout": the hook and the whole video are one piece. Recycle = the same video unchanged.
 - Never cut silences, pauses, misspeaks or retakes from the middle, except shortening pauses to fit 2:59.
 - Never put the hook on three lines (it covers his head).
 - Never add a hook line or anything else to the platform captions; never change their layout.
@@ -82,3 +85,4 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 - "A tad wide ... right tight on the edge of the screen": HOOK_MAX 940 -> 780 (phones crop the sides) + shrink-to-fit. Overridden: 940px.
 - Dropped by Olly: mid-blink first frame is fine (the hook matters more); no YouTube cover work.
 -->
+<!-- 2026-11-04 (review 4, recycling talk): "I tie my content into the hook itself throughout" -> Never rule: no new hooks / spliced openers on old footage. Overridden: my suggestions "new hook text", "record a 5-second new opener", "start from a later sentence". Olly's call: occasional unchanged repost after 90+ days. -->

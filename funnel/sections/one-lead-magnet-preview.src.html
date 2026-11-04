@@ -1,0 +1,59 @@
+<title>The Feeling Finder Opt-in</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one screen, no scrolling needed: headline, what you get (stacked, with values), one form, no-risk line */
+:root{
+  --bg:#fbf7fa; --surface:#ffffff; --ink:#24182c; --muted:#6a5c72; --line:#eadfe9;
+  --plum:#4b1d5e; --rose:#c2346f; --rose-soft:#fbe6ef; --ok:#1e6a5a; --on:#ffffff;
+  --display:"Instrument Serif",Georgia,serif; --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#160f1a; --surface:#21182a; --ink:#f3ecf6; --muted:#b4a6bd; --line:#382b42;
+  --plum:#d9b8ea; --rose:#f08db8; --rose-soft:#3a1e2c; --ok:#62c7ac; --on:#1e0e16; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#160f1a; --surface:#21182a; --ink:#f3ecf6; --muted:#b4a6bd; --line:#382b42;
+  --plum:#d9b8ea; --rose:#f08db8; --rose-soft:#3a1e2c; --ok:#62c7ac; --on:#1e0e16; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 var(--body);margin:0;padding-block:28px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.page{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:18px;text-align:center}
+.who{display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;color:var(--muted)}
+.who img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+h1{font:400 clamp(36px,8vw,52px)/1.04 var(--display);color:var(--plum);margin:0;text-wrap:balance}
+h1 em{color:var(--rose)}
+.sub{margin:0;color:var(--muted);font-size:18px}
+.stack{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;text-align:left;display:flex;flex-direction:column;gap:10px}
+.stack .row{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:baseline;font-size:16px}
+.stack .tick{color:var(--ok);font-weight:800}
+.stack .val{color:var(--muted);font-size:14px;text-decoration:line-through;white-space:nowrap}
+.stack .total{border-top:1px solid var(--line);padding-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:17px}
+.stack .total span:last-child{color:var(--rose)}
+form{display:flex;flex-direction:column;gap:10px}
+input{font:17px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;width:100%}
+input:focus-visible,button:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+.go{display:block;font:800 20px var(--body);background:var(--rose);color:var(--on);border-radius:14px;padding:19px 18px;text-decoration:none}
+.go:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+.facts{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted);margin:0}
+.facts b{color:var(--ink)}
+.risk{margin:0;font-size:14px;color:var(--muted)}
+.done{background:var(--rose-soft);border-radius:12px;padding:12px;font-size:15px;margin:0}
+</style>
+
+<main class="page">
+  <div class="who"><img src="__FACE__" alt="">Olly Henson · how I met my wife</div>
+  <h1>Find the exact emotion that attracts <em>your committed relationship</em></h1>
+  <p class="sub">You know more about love than your married friends. This shows you the one thing they have that you're missing.</p>
+
+  <div class="stack" aria-label="What you get, free">
+    <div class="row"><span class="tick">✓</span><span>Your exact emotion: the one that attracts your person</span></div>
+    <div class="row"><span class="tick">✓</span><span>Where you are right now on the emotional scale</span></div>
+    <div class="row"><span class="tick">✓</span><span>A simple daily plan to embody it</span></div>
+    <div class="row"><span class="tick">✓</span><span>Bonus: my free training on emotional resonance</span></div>
+    <div class="total"><span>All of it</span><span>Free</span></div>
+  </div>
+
+  <a class="go" id="go" href="https://ollyhenson.com/feeling">Start (2 minutes)</a>
+  <p class="facts"><span><b>No email needed</b> to start</span><span><b>A few taps</b></span><span><b>Result on screen</b> instantly</span></p>
+  <p class="risk">Free. No pitch, no card, nothing to buy.</p>
+</main>
+

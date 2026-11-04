@@ -1,0 +1,167 @@
+<title>Attract Story Maker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap">
+<!-- Lead gen Story maker for the "How To Attract Your Person Scientifically" training (2026-11-03).
+     The Story is a copy of the opt-in page (ollyhenson.com/attract): eyebrow pill, headline, video player, button.
+     CTA = Reply ATTRACT (ManyChat story-reply flow, utm_medium story_reply).
+     Build: the thumbnail (attract-thumbnail.jpg) is injected as __THUMB__ into attract-story-maker.html. -->
+<style>
+:root{ --bg:#f6f2f9; --panel:#fff; --fg:#22102e; --muted:#6d5b78; --line:#e4d9ec; --accent:#8a2be2; --accent-fg:#fff; --soft:#f1e6fa;
+  --font:'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#130a1a; --panel:#1d1127; --fg:#f3eaf9; --muted:#b4a3c2; --line:#33233f; --accent:#b46cf2; --accent-fg:#1a0524; --soft:#2a1838; color-scheme:dark; } }
+:root[data-theme="dark"]{ --bg:#130a1a; --panel:#1d1127; --fg:#f3eaf9; --muted:#b4a3c2; --line:#33233f; --accent:#b46cf2; --accent-fg:#1a0524; --soft:#2a1838; color-scheme:dark; }
+body{ background:var(--bg); color:var(--fg); font-family:var(--font); font-size:15px; }
+.wrap{ max-width:1000px; margin:0 auto; padding-block:28px 48px; padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px)); }
+h1{ font-size:24px; font-weight:800; margin:0 0 4px; text-wrap:balance; }
+.lede{ color:var(--muted); margin:0 0 24px; max-width:62ch; line-height:1.5; }
+.grid{ display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:28px; align-items:start; }
+@media (max-width:720px){ .grid{ grid-template-columns:minmax(0,1fr); } .preview{ max-width:320px; margin:0 auto; } }
+.preview img{ width:100%; aspect-ratio:9/16; border-radius:18px; display:block; background:var(--soft); box-shadow:0 10px 30px rgba(40,10,60,.18); }
+.controls{ display:flex; flex-direction:column; gap:20px; min-width:0; }
+.group{ display:flex; flex-direction:column; gap:8px; }
+.label{ font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+input[type="text"]{ font:inherit; font-size:16px; width:100%; box-sizing:border-box; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--fg); }
+.row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.btn{ font:inherit; font-weight:600; font-size:14px; padding:10px 16px; border-radius:10px; cursor:pointer; border:1px solid var(--line); background:var(--panel); color:var(--fg); }
+.btn.primary{ background:var(--accent); color:var(--accent-fg); border-color:var(--accent); font-size:15px; padding:12px 20px; }
+.btn:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.hint{ font-size:13px; color:var(--muted); line-height:1.5; }
+.status{ font-size:14px; color:var(--muted); min-height:20px; }
+</style>
+<div class="wrap">
+  <h1>Attract Story Maker</h1>
+  <p class="lede">A lead gen Story that looks just like the opt-in page for "How To Attract Your Person Scientifically". People reply ATTRACT and ManyChat sends them the link.</p>
+  <div class="grid">
+    <div class="preview"><img id="preview" alt="Story preview"></div>
+    <div class="controls">
+      <div class="group">
+        <label class="label" for="hook">Hook above the page (optional)</label>
+        <input type="text" id="hook" placeholder="Leave empty for the page look only">
+        <div class="row"><button type="button" class="btn" id="newHook">New hook</button><button type="button" class="btn" id="noHook">No hook</button></div>
+        <span class="hint">5 to 8 words, "most people" or "we", never "you".</span>
+      </div>
+      <div class="group">
+        <label class="label" for="button">Button</label>
+        <input type="text" id="button">
+      </div>
+      <div class="group">
+        <label class="label" for="cta">Line under the button</label>
+        <input type="text" id="cta">
+      </div>
+      <div class="row"><button type="button" class="btn primary" id="save">Save image</button></div>
+      <div class="status" id="status" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+<canvas id="c" width="1080" height="1920" hidden></canvas>
+<script>
+(function(){
+  var THUMB = "data:image/jpeg;base64,__THUMB__";
+  var HOOKS = [
+    "Most people think they need fixing first",
+    "Why knowing more hasn't brought love in",
+    "We're drawn to people who match how we feel",
+    "Most people try to think their way into love",
+    "The science of attracting your person",
+    "Years of inner work and still single?",
+    "Most people skip the one step that matters",
+    "Attraction doesn't happen in your head"
+  ];
+  var DEF = { hook:"", button:"WATCH THE FREE TRAINING", cta:"Reply ATTRACT and I'll send it to you" };
+  var store = { get:function(k){ try { return localStorage.getItem("attractStory." + k); } catch(e){ return null; } },
+                set:function(k,v){ try { localStorage.setItem("attractStory." + k, v); } catch(e){} } };
+  function $(id){ return document.getElementById(id); }
+  var canvas = $("c"), ctx = canvas.getContext("2d"), W = 1080, H = 1920;
+  var st = { hook:DEF.hook, button:DEF.button, cta:DEF.cta };
+  var img = new Image(), imgOk = false;
+  img.onload = function(){ imgOk = true; render(); }; img.src = THUMB;
+
+  function font(w, px){ return w + " " + px + "px Poppins, sans-serif"; }
+  function fit(text, w, max, maxW){ var px = max; ctx.font = font(w, px); while (ctx.measureText(text).width > maxW && px > 20){ px -= 2; ctx.font = font(w, px); } return px; }
+  function rr(x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x+r, y); ctx.arcTo(x+w, y, x+w, y+h, r); ctx.arcTo(x+w, y+h, x, y+h, r); ctx.arcTo(x, y+h, x, y, r); ctx.arcTo(x, y, x+w, y, r); ctx.closePath(); }
+  function wrap(text, maxW){ var words = text.split(/\s+/), lines = [], cur = ""; words.forEach(function(w){ var t = cur ? cur + " " + w : w; if (ctx.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else cur = t; }); if (cur) lines.push(cur); return lines; }
+
+  function render(){
+    // background: the page's dark purple with the glow at the top left
+    ctx.fillStyle = "#0a0510"; ctx.fillRect(0, 0, W, H);
+    var g = ctx.createRadialGradient(150, 120, 0, 150, 120, 1500);
+    g.addColorStop(0, "rgba(107,33,168,.75)"); g.addColorStop(.45, "rgba(60,16,90,.45)"); g.addColorStop(1, "rgba(10,5,16,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+    var M = 80, CW = W - 2*M;
+    var hookLines = [];
+    if (st.hook.trim()){ ctx.font = font(700, 60); hookLines = wrap(st.hook.trim(), CW); }
+    var hookH = hookLines.length ? hookLines.length * 76 + 70 : 0;
+    var pillH = 84, h1a = fit("How To Attract Your Person", 800, 80, CW), h1b = fit("Scientifically", 800, 150, CW - 40), noteH = 50, vidW = CW, vidH = Math.round(vidW * 9/16), btnH = 140, ctaH = 50;
+    var total = hookH + pillH + 44 + h1a + h1b*1.08 + 30 + noteH + 56 + vidH + 64 + btnH + 40 + ctaH;
+    var y = Math.max(250, Math.round((H - total) / 2));
+
+    ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+    if (hookLines.length){
+      ctx.font = font(700, 60); ctx.fillStyle = "#ffffff";
+      hookLines.forEach(function(l, i){ ctx.fillText(l, W/2, y + 60 + i*76); });
+      y += hookH;
+    }
+    // eyebrow pill
+    ctx.font = font(700, 30); var pt = "FREE IN-DEPTH VIDEO TRAINING";
+    ctx.save(); ctx.letterSpacing = "4px"; var pw = ctx.measureText(pt).width + 90; ctx.restore();
+    rr(W/2 - pw/2, y, pw, pillH, pillH/2); ctx.fillStyle = "rgba(217,70,239,.14)"; ctx.fill(); ctx.strokeStyle = "rgba(225,166,255,.45)"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.letterSpacing = "4px"; ctx.fillStyle = "#e1a6ff"; ctx.fillText(pt, W/2 + 2, y + pillH/2 + 11); ctx.restore();
+    y += pillH + 44;
+    // headline: white line, then "Scientifically" in the lilac to pink gradient
+    ctx.font = font(800, h1a); ctx.fillStyle = "#ffffff"; y += h1a; ctx.fillText("How To Attract Your Person", W/2, y);
+    ctx.font = font(800, h1b); y += h1b * 1.08;
+    var tw = ctx.measureText("Scientifically").width, gg = ctx.createLinearGradient(W/2 - tw/2, 0, W/2 + tw/2, 0);
+    gg.addColorStop(0, "#e9b8ff"); gg.addColorStop(1, "#d946ef");
+    ctx.save(); ctx.shadowColor = "rgba(217,70,239,.45)"; ctx.shadowBlur = 40; ctx.fillStyle = gg; ctx.fillText("Scientifically", W/2, y); ctx.restore();
+    y += 30;
+    ctx.font = font(600, 42); ctx.fillStyle = "#E6DCF2"; y += noteH; ctx.fillText("(Without Having To Fix Yourself)", W/2, y);
+    y += 56;
+    // video player
+    var vx = M;
+    ctx.save(); ctx.shadowColor = "rgba(217,70,239,.35)"; ctx.shadowBlur = 90; rr(vx, y, vidW, vidH, 36); ctx.fillStyle = "#000"; ctx.fill(); ctx.restore();
+    ctx.save(); rr(vx, y, vidW, vidH, 36); ctx.clip();
+    if (imgOk) ctx.drawImage(img, vx, y, vidW, vidH);
+    var sh = ctx.createLinearGradient(0, y + vidH*.7, 0, y + vidH); sh.addColorStop(0, "rgba(0,0,0,0)"); sh.addColorStop(1, "rgba(0,0,0,.6)"); ctx.fillStyle = sh; ctx.fillRect(vx, y, vidW, vidH);
+    ctx.restore();
+    rr(vx, y, vidW, vidH, 36); ctx.strokeStyle = "rgba(225,166,255,.3)"; ctx.lineWidth = 2; ctx.stroke();
+    var cx = W/2, cy = y + vidH/2, R = 74;
+    ctx.beginPath(); ctx.arc(cx, cy, R + 22, 0, Math.PI*2); ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2); ctx.fillStyle = "rgba(255,255,255,.95)"; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx - 20, cy - 34); ctx.lineTo(cx + 36, cy); ctx.lineTo(cx - 20, cy + 34); ctx.closePath(); ctx.fillStyle = "#d946ef"; ctx.fill();
+    rr(vx + 40, y + vidH - 40, vidW - 80, 10, 5); ctx.fillStyle = "rgba(255,255,255,.35)"; ctx.fill();
+    rr(vx + 40, y + vidH - 40, (vidW - 80) * .12, 10, 5); ctx.fillStyle = "#d946ef"; ctx.fill();
+    y += vidH + 64;
+    // button
+    var bw = CW, bg = ctx.createLinearGradient(M, 0, M + bw, 0); bg.addColorStop(0, "#e1a6ff"); bg.addColorStop(1, "#d946ef");
+    ctx.save(); ctx.shadowColor = "rgba(217,70,239,.5)"; ctx.shadowBlur = 50; rr(M, y, bw, btnH, btnH/2); ctx.fillStyle = bg; ctx.fill(); ctx.restore();
+    var bpx = fit(st.button, 800, 44, bw - 100); ctx.fillStyle = "#1a0524";
+    ctx.save(); ctx.letterSpacing = "2px"; ctx.fillText(st.button, W/2, y + btnH/2 + bpx*.36); ctx.restore();
+    y += btnH + 40;
+    var cpx = fit(st.cta, 600, 40, CW); ctx.fillStyle = "#E6DCF2"; ctx.fillText(st.cta, W/2, y + cpx);
+    $("preview").src = canvas.toDataURL("image/jpeg", 0.9);
+  }
+
+  function bind(id, key){ var el = $(id); el.value = st[key]; el.addEventListener("input", function(){ st[key] = el.value; store.set(key, el.value); render(); }); }
+  ["hook","button","cta"].forEach(function(k){ var v = store.get(k); if (v !== null) st[k] = v; });
+  bind("hook","hook"); bind("button","button"); bind("cta","cta");
+  $("newHook").addEventListener("click", function(){
+    var i = (Number(store.get("hookIdx")) || 0) % HOOKS.length; store.set("hookIdx", String(i + 1));
+    st.hook = HOOKS[i]; $("hook").value = st.hook; store.set("hook", st.hook); render();
+  });
+  $("noHook").addEventListener("click", function(){ st.hook = ""; $("hook").value = ""; store.set("hook", ""); render(); });
+  $("save").addEventListener("click", async function(){
+    var status = $("status");
+    var dl = window.claude && window.claude.use ? await claude.use("downloads").catch(function(){ return null; }) : null;
+    if (!dl){ status.textContent = "Saving isn't available here. Long-press or right-click the preview to save it."; return; }
+    var name = "attract-story-" + new Date().toISOString().slice(0, 10) + ".png";
+    canvas.toBlob(async function(blob){
+      try { await dl.save({ filename:name, data:blob }); status.textContent = "✓ Saved"; }
+      catch(e){ status.textContent = e && e.code === "declined" ? "" : "Couldn't save. Long-press or right-click the preview instead."; }
+    }, "image/png");
+  });
+  render();
+  if (document.fonts && document.fonts.load) Promise.all([document.fonts.load(font(800, 80)), document.fonts.load(font(700, 30)), document.fonts.load(font(600, 40))]).then(render, render);
+})();
+</script>
