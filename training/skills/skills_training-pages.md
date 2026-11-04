@@ -772,3 +772,8 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 - `data-lines` support extended: selector now `h1.step-title, .step-title[data-lines]`, plus `data-grad-last="1"` to put the last line in the gradient.
 - Nothing overridden.
 
+### 2026-11-03 — Free training v2 (`how-to-scientifically-attract-your-person.html`)
+- "How To Scientifically Attract Your Person (Without Having To Fix Yourself)": 33 slides in THE PERFECT REEL order (hook, who it's for, her symptom, intellectualization, emotional resonance, the 3 steps, proof, call to action), same CSS/JS and images as v1 (`how-to-use-emotional-resonance.html`, kept until v2 is recorded). Weaves in the 3 Nov Feeling Finder/application data (tired, "still hope?", tried everything, safety first).
+- The 3 steps are the *what* (as in the Reels); the meditation's how stays inside the program (rule 24).
+- Checked with a per-slide script at 1280x640 and 1440x900: fits the slide, inside 820px, titles inverted pyramids. A title that can't split as a pyramid without a lone word goes on one line (slide 25, nowrap + smaller clamp).
+- Olly 2026-11-03: emotion lists on slides use emotions only (Love, Joy, Peace, Gratitude, Excitement, Appreciation), never feelings like "safe" or "wanted". Removed the "Step 3 Is Where Most People Get Stuck" slide (35 slides now).

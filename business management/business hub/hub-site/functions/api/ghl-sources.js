@@ -17,6 +17,7 @@
 const API = "https://services.leadconnectorhq.com";
 const LOCATION_ID = "LRqVZmxns8f3xcJLHzBK";
 const TAG_OPTIN = "emotional resonance training";
+const TAG_OPTIN2 = "scientifically attract training";   // training v2 opt-in, same /training page (2026-11-03); counted as opt-ins too
 const TAG_SCALE = "emotional scale check";
 const TAG_FEELING = "feeling finder";   // The Feeling Finder (2026-10-28)
 const TAG_LOOM = "loom video sent";
@@ -153,8 +154,9 @@ export async function onRequestGet({ env }) {
   allCache = null;
   try {
     const { ids, ha, dates } = await utmFieldIds(env);
-    const [optins, applied, scale, feeling, loom, joined] = await Promise.all([contactsWithTag(env, TAG_OPTIN), contactsWithTag(env, TAG_APPLIED), contactsWithTag(env, TAG_SCALE), contactsWithTag(env, TAG_FEELING), contactsWithTag(env, TAG_LOOM), contactsWithTag(env, TAG_JOINED)]);
+    const [optins1, optins2, applied, scale, feeling, loom, joined] = await Promise.all([contactsWithTag(env, TAG_OPTIN), contactsWithTag(env, TAG_OPTIN2), contactsWithTag(env, TAG_APPLIED), contactsWithTag(env, TAG_SCALE), contactsWithTag(env, TAG_FEELING), contactsWithTag(env, TAG_LOOM), contactsWithTag(env, TAG_JOINED)]);
 
+    const optins = optins1.concat(optins2);
     const byId = {};
     optins.concat(applied, scale, feeling, loom, joined).forEach(function (c) { byId[c.id] = c; });
 
@@ -174,7 +176,7 @@ export async function onRequestGet({ env }) {
       groups[k][what]++;
     }
     Object.values(byId).forEach(function (c) {
-      if (hasTag(c, TAG_OPTIN)) bump(c, ids, "optins");
+      if (hasTag(c, TAG_OPTIN) || hasTag(c, TAG_OPTIN2)) bump(c, ids, "optins");
       if (hasTag(c, TAG_SCALE)) bump(c, ids, "scale");
       if (hasTag(c, TAG_FEELING)) bump(c, ids, "feeling");
       if (hasTag(c, TAG_APPLIED)) {

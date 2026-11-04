@@ -23,6 +23,7 @@ Current lead magnets (keep this table updated):
 | Lead magnet | Page | Source tag | Webhook (GHL workflow) | Next step on the page |
 |---|---|---|---|---|
 | Free video training (Emotional Resonance) | ollyhenson.com/training (`sections/emotional-resonance-optin.html`) | `emotional resonance training` | `.../webhook-trigger/aaa6a82e-9714-4f85-9e07-e1ddb13f77a2` ("Emotional Resonance Training Opt-in") | Redirects to the YouTube video |
+| Free video training v2 "How To Attract Your Person Scientifically" (2026-11-03, alongside the old one) | ollyhenson.com/attract (`sections/scientifically-attract-optin.html`) | `scientifically attract training` | `.../webhook-trigger/mUGZ0Ey3v3Vbq2vLX9Am` ("Scientifically Attract Training Opt-in") | Redirects to the YouTube video youtu.be/PPiqFhUhypo |
 | **The Feeling Finder** (main lead magnet from 2026-10-28, keyword FEELING; A/B variant B = `sections/feeling-finder-image-variant.html`) | ollyhenson.com/feeling (`sections/feeling-finder.html`) | `feeling finder` | `.../webhook-trigger/27fecd84-c766-4400-81f4-d420327376ad` ("Feeling Finder") | Result page → Find Out More (apply) |
 | The Love Scale (RETIRED 2026-10-28: page stays live, not promoted, not in content) | ollyhenson.com/scale (`sections/emotional-scale-check.html`) | `emotional scale check` | `.../webhook-trigger/d2d567ec-81e9-4b28-9e5a-151273a0c42a` ("Emotional Scale Check") | Result page → Apply button |
 
@@ -92,7 +93,6 @@ After the "<delivery email>" step, add an If/Else with branches in this order:
 
 Email "<cross-promo email name>":
 Subject: <short lowercase subject>
-Preview text: <preview>
 Body (each line its own short paragraph, blank line between):
 <body>
 Make the word "here" a link to: <tracked link>
@@ -115,6 +115,7 @@ Make the word "here" a link to: <tracked link>
 
 ## 4. Emails
 
+- **No preview text and one call to action per email (no P.S. when the email has a link)** (Olly, 2026-11-03).
 - Olly's broadcast style: short lowercase subjects (1-4 words), one line per paragraph, blank lines between, "===> here" linked, sign-off "Speak soon, / Olly". ➡️ for bullet lists. No em dashes.
 - Olly pastes emails into GHL formatted as **Arial, 18px, 1.5 line spacing**. Give him a copy page (Artifact) with a "Copy email" button that writes `text/html` (inline styles, linked "here") plus subject/preview copy buttons. Example: `marketing/email-sequences/scale-check-emails-copy.html`.
 - Never claim results that aren't known ("most people are surprised…").
@@ -124,7 +125,8 @@ Make the word "here" a link to: <tracked link>
 - **Links on the page:** apply buttons use `https://ollyhenson.com/apply?utm_source=<lead magnet slug>&utm_medium=result&utm_campaign=heart_attractor` (applications record it in the HA UTM fields).
 - **Email links:** `utm_source=email&utm_medium=<email name slug>&utm_campaign=<lead magnet campaign>`.
 - **Traffic links to the new page**, one per placement: `https://ollyhenson.com/<path>?utm_source=<youtube|instagram|tiktok|facebook>&utm_medium=<description|shorts|bio|story|dm>&utm_campaign=<lead magnet campaign>`. Log every link in `marketing/memory/utm-link-log.md` (newest at top).
-- **Manual DMs:** Olly makes short GHL redirects (Sites → Settings → URL Redirects, e.g. `/scale-tt` → the long UTM link). Once he confirms they work (UTMs survive the redirect), put copy buttons for them in the Hub Overview ("Application links to send" box pattern).
+- **Short redirects: I make them myself** with `tools/ghl-redirect.sh` (GHL API, 2026-11-03; Olly: making them by hand "takes me forever"). Never hand Olly a list of redirects to make.
+- **Manual DMs:** short GHL redirects (Sites → Settings → URL Redirects, e.g. `/scale-tt` → the long UTM link). Once he confirms they work (UTMs survive the redirect), put copy buttons for them in the Hub Overview ("Application links to send" box pattern).
 - **Short links for anything typed or sent by hand** ("if I send someone a massive long UTM link, they'll be confused and won't click"). One redirect = one tracked link: check a path isn't already used for another medium (/lovescale = description, so Shorts got /love).
 - **One full table of short links, every placement, in one go** (Olly: "create a full table… everywhere"): Instagram, DM, Facebook, TikTok, YouTube description, Shorts, community posts (`/<path>-yc`) and a sayable one (`/feel`). Typed or spoken places (Shorts captions, community posts) always get the short address, never a UTM link.
 - **Once Olly says the redirects work, put them in the Hub** (Links tab, and the community-post row in the YouTube calendar), one copy button per link ("can't copy… put them separate").

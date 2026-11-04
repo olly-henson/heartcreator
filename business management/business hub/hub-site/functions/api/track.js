@@ -14,7 +14,7 @@
 //
 // GHL has no API for its own funnel stats (2026-10-24), hence this.
 
-const PAGES = { optin: true, apply: true, scale: true, feeling: true, feelingb: true };   // feelingb = The Feeling Finder A/B variant B (phone image), 2026-10-28   // scale = The Love Scale (2026-10-26), feeling = The Feeling Finder (2026-10-28)
+const PAGES = { optin: true, apply: true, scale: true, feeling: true, feelingb: true, attract: true };   // attract = training v2 opt-in at /attract (2026-11-03)   // feelingb = The Feeling Finder A/B variant B (phone image), 2026-10-28   // scale = The Love Scale (2026-10-26), feeling = The Feeling Finder (2026-10-28)
 const BOT_RE = /bot|crawl|spider|preview|facebookexternalhit|headless/i;
 
 // Keep source labels short and safe for a KV key.

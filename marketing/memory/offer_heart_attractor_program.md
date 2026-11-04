@@ -122,7 +122,7 @@ If they do the meditation and the trainings every day, and reach out to Olly eve
 ## How people join
 
 - Through a **sales call** with Olly.
-- Later goal: sell through **personal Loom videos** instead of calls. Keep a short note after each call (main doubt, what convinced them, did they join) to build towards this.
+- **Now (2026-11-01): no calls. Sold through a personal Loom** after the application. Full framework: `funnel/skills/skills_applicant-looms.md`. After each Loom log: main doubt, what they asked, did they join.
 
 ## The funnel
 

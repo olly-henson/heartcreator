@@ -72,7 +72,7 @@ Before writing, read:
 Decide which type this email is and what single belief, emotion, or idea it will land. One email, one job.
 
 ### Step 3 — Write the email
-Follow the voice and structure rules in Section 4. Draft the full email including subject line and preview text.
+Follow the voice and structure rules in Section 4. Draft the full email including the subject line. No preview text (Olly, 2026-11-03).
 
 ### Step 4 — Choose the CTA (or no CTA)
 Select the appropriate CTA from Section 5. Not every email needs one.
@@ -112,10 +112,11 @@ Before finalising, ask:
 - Always use one of the 13 techniques in Section 8 — rotate, never repeat the same technique twice in a row
 - Examples: *"This is not your fault"* / *"Why it keeps crashing back"* / *"I know you've tried everything"* / *"The missing piece isn't more information"*
 
-### Preview text
-- Continues the subject line's thought without repeating it or giving away the punchline
-- Should read as one continuous hook alongside the subject line, not a restatement
-- Keep short — roughly 40–90 characters
+### Preview text: none
+- Olly doesn't use preview text (2026-11-03): subject, then straight into the email. Never write one.
+
+### One call to action
+- One CTA per email. If the email has a link, NO P.S. (two CTAs confuse). A P.S. only in an email with no link (2026-11-03).
 
 ### Length
 - **150–300 words** — every line earns its place

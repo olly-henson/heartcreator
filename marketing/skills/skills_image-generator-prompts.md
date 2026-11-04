@@ -55,7 +55,7 @@ For slide images that carry text on purpose (like `Emotional Scale.jpg`):
 
 ## 6. Who's in the pictures
 
-- The audience is driven, growth-minded singles, mostly women aged 30–45 (avatar: Catrin, `marketing\memory\avatar-catrin.md`). Show **ordinary, real-looking people in their late 30s**, not models or glamour shots.
+- The audience is driven, growth-minded singles, mostly women aged 30–45 (avatar: Catrin, `marketing\memory\avatar-catrin.md`). Show **ordinary, real-looking people in their early 30s, youthful and fresh-faced** (Olly, 2026-11-03: he asked twice for younger, then made it the default), not models or glamour shots.
 - Couples: warm, genuine, unposed connection. The promised land is calm, ordinary life together (breakfast, walks, cooking, seeing friends and family), not fireworks.
 - "Before" images (the stuck state): thoughtful, a little deflated, never crying, mocked or pitiful. Never make fun of being single.
 - Write the scene concretely: who, where, what they're doing, the feeling, the light.
@@ -88,3 +88,5 @@ A couple in their late 30s having a slow Sunday breakfast together at home, stil
 - **2026-10-23:** Created from the emotional resonance training session. Rules: one copy-ready prompt per image with the full style line repeated; every prompt ends with "Do not add any text, symbols, or anything else to the image." and the file name; Gemini may ignore the file name, so Claude identifies and renames dropped-in images; sizes per slot; check images for stray text before use; copyright caution on recreated charts.
 
 - 2026-10-29: Carousel slides (content generator) get prompts built in the page: 3:4, 1080x1440, subject in the top half and the middle/lower part calm because white text boxes sit there; real-people mode keeps one woman across slides ("same woman as the earlier images in this chat", pasted in order in one Gemini chat); colour mode = brand purples with lilac/magenta glows, no objects.
+- **Meditation images: never the cross-legged meditation pose, cushions or yoga settings** (Olly, 2026-11-03: "It needs to feel doable for anyone and this might put them off"). Show an ordinary person sitting comfortably in an armchair, on a sofa or on the edge of the bed, feet on the floor, eyes closed, part of a normal morning.
+- **Age: default to early 30s, youthful** (Olly, 2026-11-03, replaces the earlier "mix early 30s to mid 40s" note). Write "a youthful woman in her early 30s" in every prompt.

@@ -5,6 +5,7 @@ Use these instead of writing one-off scripts. All run from Git Bash.
 | Tool | What it does | Command |
 |---|---|---|
 | `patch.py` | Safe find-and-replace (all or nothing, keeps CRLF/LF, never half-writes) | `python tools/patch.py FILE edits.json` (edits = `[["old","new"],...]`, write edits.json in the scratchpad with the Write tool) |
+| `sync_calendar.mjs` | Copy the Hub calendars (Reels, Stories, Email, YouTube; last 60 days + scheduled) into the content generator so new ideas don't repeat what's posted | `node tools/sync_calendar.mjs <scratchpad>/calendar.json`, then ArtifactData `set` collection `calendar`, doc `recent`, file_path = that JSON, url WsnecJvYahvCKVDevtrUqc (pass `if_version` from a `get` once it exists) |
 | `jscheck.js` | Syntax-check every inline script in an HTML file | `node tools/jscheck.js FILE.html` |
 | `deploy-hub.sh` | Check + deploy the Business Hub (hub.ollyhenson.com) | `bash tools/deploy-hub.sh` |
 | `preview_wrap.py` | Desktop + phone preview page for any funnel page (webhooks blanked, thumbnails embedded) | `python tools/preview_wrap.py PAGE.html OUT.html "Title"`, then publish OUT.html as an Artifact |
@@ -21,3 +22,4 @@ Gotcha (2026-10-28): backslashes in heredoc/JSON edit files can get eaten on the
 Generator gotcha (2026-10-28): code near the top of the main script that runs at load must not use a const/let declared further down (it throws and stops the whole page). hubUrl() is a function for that reason. Local http.server serves without a charset, so non-ASCII looks mangled in tests only.
 
 Gotcha (2026-10-29): a heredoc Python edit with \u escapes failed mid-write (surrogates) and EMPTIED the generator file. For in-place Python edits, write the script with the Write tool, use raw strings, and save to a .tmp file then os.replace(). Restore source if it happens: Artifact read of the live version, then drop line 1 and the last 2 lines.
+| `ghl-redirect.sh` | Creates a GHL URL redirect on ollyhenson.com via the API and tests it: `bash tools/ghl-redirect.sh /path "https://target"`. Use it instead of asking Olly to make redirects (2026-11-03). |

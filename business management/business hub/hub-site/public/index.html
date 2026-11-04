@@ -683,6 +683,13 @@
   .bighead{ font-size:28px; font-weight:800; letter-spacing:-.01em; margin:8px 0 4px; color: var(--text); padding-bottom:10px; border-bottom:1px solid var(--border-soft); }
   .emadd{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
   .emadd input[type=text]{ flex:1 1 260px; min-width:0; }
+  .carslides{ display:flex; gap:10px; overflow-x:auto; padding:4px 0 8px; }
+  .carslide{ position:relative; flex:none; width:120px; display:flex; flex-direction:column; gap:4px; }
+  .carslide img{ width:120px; aspect-ratio:3/4; object-fit:cover; border-radius:10px; border:1px solid var(--border-soft); cursor:pointer; display:block; background:var(--surface-2); }
+  .carslide .carnum{ position:absolute; top:6px; left:6px; background:rgba(0,0,0,.7); color:#fff; font-size:11px; font-weight:700; border-radius:20px; padding:2px 7px; }
+  .carslide .carctl{ display:flex; gap:4px; justify-content:center; }
+  .carslide .carctl button{ background:var(--surface-2); color:var(--text); border:1px solid var(--border-soft); border-radius:6px; font-size:12px; padding:3px 8px; cursor:pointer; }
+  .emitem textarea.carcap{ min-height:200px; }
   .emday{ margin-top:18px; background: var(--surface); border:1px solid var(--border-soft); border-radius:14px; padding:16px 18px; }
   .emday h3{ margin:0 0 12px; font-size:16px; }
   .emitem{ border-top:1px solid var(--border-soft); padding:14px 0; display:flex; flex-direction:column; gap:8px; }
@@ -716,6 +723,7 @@
   .emitem textarea.embody{ font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:1.5; min-height:260px; } /* how it will look in GHL */
   .emitem .empreview{ width:100%; box-sizing:border-box; background:var(--surface-2); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:9px 12px; font:inherit; font-size:13.5px; }
   .ovcontent th:nth-child(2), .ovcontent td:nth-child(2){ text-align:left; }
+  .lkblurb{ display:block; font-weight:400; font-size:12.5px; color: var(--text-muted); margin-top:3px; }
   .lksec{ margin:16px 0 2px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color: var(--text-muted); }
   .lksec + .lkrow{ border-top:0; }
   .lkrow{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; padding:10px 0; border-top:1px solid var(--border-soft); }
@@ -1807,6 +1815,29 @@
     <div id="ytCalDay" class="emday" hidden></div>
       </div>
     </div>
+    <div class="audbox calbox" data-cal="carousel">
+      <button type="button" class="audhead" aria-expanded="false"><span class="audname">Carousels</span><span class="audsub">Calendar</span><span class="audchev">▾</span></button>
+      <div class="audbody calbody" hidden>
+    <span class="hint" style="display:block; margin:0 0 14px;">One carousel a day. Press "Add to calendar" under the slides in the content generator's Carousel maker and it lands on the next free day with every slide, in order, and its caption. Tap a day to save all the slides to your phone, copy the caption and mark it Scheduled or Published.</span>
+    <div class="emadd">
+      <input type="text" id="carCalTitle" placeholder="Carousel idea" autocomplete="off">
+      <input type="date" id="carCalDate" aria-label="Date (leave empty for the next free day)">
+      <button class="addbtn" id="carCalAdd" type="button">+ Add carousel</button>
+    </div>
+    <div class="calhead">
+      <p class="section-label" style="margin:28px 0 0;">Calendar</p>
+      <div class="calnav">
+        <button class="calnavbtn" id="carCalPrev" title="Previous month">‹</button>
+        <span class="calmonth" id="carCalMonthLabel"></span>
+        <button class="calnavbtn" id="carCalNext" title="Next month">›</button>
+        <button class="calnavbtn calToday" id="carCalToday">Today</button>
+      </div>
+    </div>
+    <div class="callegend"><span class="legenditem"><span class="calitem-dot draft"></span>Draft</span><span class="legenditem"><span class="calitem-dot recorded"></span>Scheduled</span><span class="legenditem"><span class="calitem-dot published"></span>Published</span></div>
+    <div class="calendar" id="carCalendar"></div>
+    <div id="carCalDay" class="emday" hidden></div>
+      </div>
+    </div>
     </div>
 
   </div>
@@ -1968,21 +1999,24 @@ Instagram: @attractwitholly
     <p class="section-label">Training video description</p>
     <span class="hint" style="display:block; margin:-6px 0 12px;">For the full training video (and future long videos). Links work here, so line 2 goes straight to The Feeling Finder.</span>
     <div class="chartcard" style="margin-bottom:20px;">
-      <textarea id="ytLongDesc" data-ytcopy="long" rows="16" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;">➡️ Apply for The Heart Attractor Program here: https://ollyhenson.com/heartattractor
-💜 Which emotion attracts your person? Use The Feeling Finder, free in 2 minutes: https://ollyhenson.com/feelingfinder
+      <textarea id="ytLongDesc" data-ytcopy="long" rows="16" style="width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:14px; line-height:1.5;">➡️ Apply for The Heart Attractor Program here: https://ollyhenson.com/attract-apply
+💜 Which emotion attracts your person? Use The Feeling Finder, free in 2 minutes: https://ollyhenson.com/attract-feeling
 
-You've done the inner work.
+You've done the work.
+You know more about relationships than anyone you know.
 And you still can't seem to find the right person.
 
-This in-depth training explains why.
-And what you need to do to turn things around (without more inner work or learning a million different dating rules). 💜
+This training explains why.
+And the 3 simple steps to attract someone genuine and committed (without having to fix yourself, do more inner work or learn a million different dating rules). 💜
 
 In this video you'll learn:
 
-• Why more inner work hasn't brought the right person in
-• What Emotional Resonance is and why it matters
-• How to find the emotional state that attracts a high-quality relationship
-• How to use it every day to attract the perfect person into your world
+• Why knowing more about relationships hasn't brought the right person in
+• What intellectualization is and how it keeps you stuck in your head
+• Why we're drawn to people who match how we feel
+• What Emotional Resonance is and why you can't think your way into it
+• The 3 steps to attract your person: get clear on who you want, define the emotions you'd feel with them and embody those emotions every day
+• How I used the same steps to meet my wife
 
 This is for people who want to find someone to settle down and build a life with.
 
@@ -1990,11 +2024,11 @@ This is for people who want to find someone to settle down and build a life with
 
 The Heart Attractor Program will help you attract a high-quality long-term relationship with someone who's genuine and committed.
 
-➡️ Apply here: https://ollyhenson.com/heartattractor
+➡️ Apply here: https://ollyhenson.com/attract-apply
 
 💜 FIND YOUR EMOTION
 
-Use The Feeling Finder, a free 2-minute tool that finds the exact emotion that will attract your perfect relationship: https://ollyhenson.com/feelingfinder
+Use The Feeling Finder, a free 2-minute tool that finds the exact emotion that will attract your perfect relationship: https://ollyhenson.com/attract-feeling
 
 👋 ABOUT ME
 
@@ -2009,7 +2043,7 @@ I'm happily married and want everyone to experience the same joy after meeting s
 Instagram: @attractwitholly
 https://www.instagram.com/attractwitholly
 
-#attractlove #longtermrelationship #lifepartner #soulmate</textarea>
+#attractlove #soulmate #longtermrelationship #lifepartner</textarea>
       <div class="yttpl" data-yttpl="long"></div>
       <div style="margin-top:10px;"><button type="button" class="copybtn" id="ytLongCopy">Copy description</button></div>
     </div>
@@ -2376,7 +2410,7 @@ https://www.instagram.com/attractwitholly
   </div>
 
   <div id="tab-links" class="tabpanel" hidden="">
-    <span class="hint" style="display:block; margin:0 0 18px;">Every link in one place: tap Copy and send. Short links (ollyhenson.com/…) redirect to a tracked link, so the Hub knows where people came from. Where the short link isn't made yet in GHL, Copy gives the full tracked link instead.</span>
+    <span class="hint" style="display:block; margin:0 0 18px;">Open what you want to send, find where you're sending it, tap Copy. Every link is tracked, so the Hub knows where people came from.</span>
     <div id="linksBody"></div>
   </div>
 
@@ -2678,7 +2712,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         if (migSave){ migSave = false; markDirty(); saveNow(); } // a one-off data migration ran: store it
       })
       .catch(function(){ /* offline — local copy is fine */ })
-      .then(function(){ placePendingReel(); placePendingStory(); placePendingEmail(); placePendingYt(); emAutoPublish(); ytAutoPublish(); }); // content sent from the generator lands on the freshest data
+      .then(function(){ placePendingReel(); placePendingStory(); placePendingEmail(); placePendingYt(); placePendingCar(); emAutoPublish(); ytAutoPublish(); carAutoPublish(); }); // content sent from the generator lands on the freshest data
   }
 
   // Refresh (2026-10-24): the phone app often resumes without reloading, and
@@ -3771,7 +3805,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var platLbl = document.createElement("span"); platLbl.className = "capline-label"; platLbl.textContent = "Caption for";
       platLine.appendChild(platLbl);
       var offerBtns = [], platBtns = [];
-      [["video", "VIDEO"], ["scale", "FEELING"]].forEach(function(o){
+      [["video", "VIDEO"], ["scale", "FEELING"], ["attract", "ATTRACT"]].forEach(function(o){
         var bt = document.createElement("button"); bt.type = "button"; bt.className = "captionchip"; bt.textContent = o[1];
         bt.setAttribute("aria-pressed", String((idea.offer || "video") === o[0]));
         bt.addEventListener("click", function(){
@@ -4891,72 +4925,95 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
   // ── Links tab (2026-10-27) ── Every link Olly copies and sends. When a GHL redirect gets made, set made:true.
   var LINK_GROUPS = [
-    { title:"Instagram", sections:[
-      { title:"DMs", items:[
-        { name:"Free training (VIDEO)", note:"ManyChat sends it when they comment or DM VIDEO (Instagram and Facebook)", long:"https://ollyhenson.com/training?utm_source=instagram&utm_medium=dm&utm_campaign=emotional_resonance_training" },
-        { name:"The Feeling Finder (FEELING)", note:"ManyChat sends it when they comment or DM FEELING (Instagram and Facebook)", long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=feeling_keyword" },
-        { name:"Free training (VIDEO typed wrong: send by hand)", short:"ollyhenson.com/video-dm", made:false, note:"When ManyChat misses a misspelled VIDEO. Tracked as a DM you sent by hand", long:"https://ollyhenson.com/training?utm_source=instagram&utm_medium=dm&utm_campaign=emotional_resonance_training&utm_content=manual" },
-        { name:"The Feeling Finder (EMOTION typed wrong on a carousel: send by hand)", short:"ollyhenson.com/emotion-dm", made:false, note:"When ManyChat misses a misspelled EMOTION. Tracked to carousels, sent by hand", long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=emotion_manual" },
-        { name:"The Feeling Finder (FEELING typed wrong: send by hand)", note:"When ManyChat misses a misspelled FEELING. Tracked as a DM you sent by hand", short:"ollyhenson.com/feeling-dm", made:true, long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=manual" },
-        { name:"Application", short:"ollyhenson.com/apply-ig", made:true, long:"https://ollyhenson.com/apply?utm_source=instagram&utm_medium=dm&utm_campaign=heart_attractor" }
+    { title:"Attract training", blurb:"The newest free training. Keyword ATTRACT.", sections:[
+      { title:"Instagram", items:[
+        { name:"DM (ManyChat)", note:"Sent automatically for ATTRACT. Covers Facebook too.", long:"https://ollyhenson.com/attract?utm_source=instagram&utm_medium=dm&utm_campaign=scientifically_attract_training&utm_content=attract_keyword" },
+        { name:"DM (by hand)", note:"When someone misspells ATTRACT.", short:"ollyhenson.com/attract-dm", made:true, long:"https://ollyhenson.com/attract?utm_source=instagram&utm_medium=dm&utm_campaign=scientifically_attract_training&utm_content=manual" },
+        { name:"Bio", note:"Your Instagram bio link.", short:"ollyhenson.com/attract-ig", made:true, long:"https://ollyhenson.com/attract?utm_source=instagram&utm_medium=bio&utm_campaign=scientifically_attract_training" }
       ]},
-      { title:"Bio", items:[
-        { name:"The Feeling Finder", short:"ollyhenson.com/feeling-ig", made:true, long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=bio&utm_campaign=feeling_finder" }
+      { title:"Facebook", items:[
+        { name:"Page", note:"Your Facebook page links.", short:"ollyhenson.com/attract-fb", made:true, long:"https://ollyhenson.com/attract?utm_source=facebook&utm_medium=bio&utm_campaign=scientifically_attract_training" }
+      ]},
+      { title:"YouTube", items:[
+        { name:"Shorts", note:"Say it or type it in a Short.", short:"ollyhenson.com/attract-shorts", made:true, long:"https://ollyhenson.com/attract?utm_source=youtube&utm_medium=shorts&utm_campaign=scientifically_attract_training" },
+        { name:"Community posts", note:"In YouTube community posts.", short:"ollyhenson.com/attract-yc", made:true, long:"https://ollyhenson.com/attract?utm_source=youtube&utm_medium=community&utm_campaign=scientifically_attract_training" },
+        { name:"Channel links", note:"Your YouTube channel links.", short:"ollyhenson.com/attract-yt", made:true, long:"https://ollyhenson.com/attract?utm_source=youtube&utm_medium=bio&utm_campaign=scientifically_attract_training" }
+      ]},
+      { title:"TikTok", items:[
+        { name:"DM", note:"Send when someone DMs ATTRACT.", short:"ollyhenson.com/attract-tt", made:true, long:"https://ollyhenson.com/attract?utm_source=tiktok&utm_medium=dm&utm_campaign=scientifically_attract_training" }
       ]}
     ]},
-    { title:"Facebook", sections:[
-      { title:"Messages", items:[
-        { name:"Application", short:"ollyhenson.com/apply-fb", made:true, long:"https://ollyhenson.com/apply?utm_source=facebook&utm_medium=dm&utm_campaign=heart_attractor" }
+    { title:"The Feeling Finder", blurb:"The 2-minute quiz. Keywords FEELING and EMOTION.", sections:[
+      { title:"Instagram", items:[
+        { name:"DM (ManyChat)", note:"Sent automatically for FEELING. Covers Facebook too.", long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=feeling_keyword" },
+        { name:"DM (by hand, FEELING)", note:"When someone misspells FEELING.", short:"ollyhenson.com/feeling-dm", made:true, long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=manual" },
+        { name:"DM (by hand, EMOTION)", note:"When someone misspells EMOTION on a carousel.", short:"ollyhenson.com/emotion-dm", made:false, long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=dm&utm_campaign=feeling_finder&utm_content=emotion_manual" },
+        { name:"Bio", note:"Your Instagram bio link.", short:"ollyhenson.com/feeling-ig", made:true, long:"https://ollyhenson.com/feeling?utm_source=instagram&utm_medium=bio&utm_campaign=feeling_finder" }
       ]},
-      { title:"Page links", items:[
-        { name:"Free training", short:"ollyhenson.com/training-fb", made:true, long:"https://ollyhenson.com/training?utm_source=facebook&utm_medium=bio&utm_campaign=emotional_resonance_training" },
-        { name:"The Feeling Finder", short:"ollyhenson.com/feeling-fb", made:true, long:"https://ollyhenson.com/feeling?utm_source=facebook&utm_medium=bio&utm_campaign=feeling_finder" },
-        { name:"Heart Attractor Program", short:"ollyhenson.com/heartattractor-fb", made:true, long:"https://ollyhenson.com/apply?utm_source=facebook&utm_medium=bio&utm_campaign=heart_attractor" }
+      { title:"Facebook", items:[
+        { name:"Page", note:"Your Facebook page links.", short:"ollyhenson.com/feeling-fb", made:true, long:"https://ollyhenson.com/feeling?utm_source=facebook&utm_medium=bio&utm_campaign=feeling_finder" }
+      ]},
+      { title:"YouTube", items:[
+        { name:"Video descriptions", note:"In every long video description.", short:"https://ollyhenson.com/feelingfinder", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=description&utm_campaign=feeling_finder" },
+        { name:"Attract video description", note:"Only in the Attract training video.", short:"https://ollyhenson.com/attract-feeling", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=description&utm_campaign=feeling_finder&utm_content=scientifically_attract_training" },
+        { name:"Shorts", note:"Say it or type it in a Short.", short:"ollyhenson.com/feel", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=shorts&utm_campaign=feeling_finder" },
+        { name:"Community posts", note:"In YouTube community posts.", short:"ollyhenson.com/feeling-yc", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=community&utm_campaign=feeling_finder" },
+        { name:"Channel links", note:"Your YouTube channel links.", short:"ollyhenson.com/feeling-yt", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=bio&utm_campaign=feeling_finder" }
+      ]},
+      { title:"TikTok", items:[
+        { name:"DM", note:"Send when someone DMs FEELING.", short:"ollyhenson.com/feeling-tt", made:true, long:"https://ollyhenson.com/feeling?utm_source=tiktok&utm_medium=dm&utm_campaign=feeling_finder" },
+        { name:"Bio", note:"Your TikTok bio link. Also say it in videos.", short:"ollyhenson.com/feeling-tiktok", made:true, long:"https://ollyhenson.com/feeling?utm_source=tiktok&utm_medium=bio&utm_campaign=feeling_finder" }
       ]}
     ]},
-    { title:"YouTube", ytDescription:true, sections:[
-      { title:"Long video descriptions", items:[
-        { name:"The Feeling Finder", short:"https://ollyhenson.com/feelingfinder", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=description&utm_campaign=feeling_finder" },
-        { name:"Application", short:"https://ollyhenson.com/heartattractor", made:true, long:"" }
+    { title:"Free training", blurb:"The original free training. Keyword VIDEO.", sections:[
+      { title:"Instagram", items:[
+        { name:"DM (ManyChat)", note:"Sent automatically for VIDEO. Covers Facebook too.", long:"https://ollyhenson.com/training?utm_source=instagram&utm_medium=dm&utm_campaign=emotional_resonance_training" },
+        { name:"DM (by hand)", note:"When someone misspells VIDEO.", short:"ollyhenson.com/video-dm", made:false, long:"https://ollyhenson.com/training?utm_source=instagram&utm_medium=dm&utm_campaign=emotional_resonance_training&utm_content=manual" }
       ]},
-      { title:"Shorts (said or typed)", items:[
-        { name:"The Feeling Finder", short:"ollyhenson.com/feel", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=shorts&utm_campaign=feeling_finder" },
-        { name:"Free training", short:"ollyhenson.com/free-video-training", made:true, long:"" }
+      { title:"Facebook", items:[
+        { name:"Page", note:"Your Facebook page links.", short:"ollyhenson.com/training-fb", made:true, long:"https://ollyhenson.com/training?utm_source=facebook&utm_medium=bio&utm_campaign=emotional_resonance_training" }
       ]},
-      { title:"Community posts", items:[
-        { name:"The Feeling Finder", short:"ollyhenson.com/feeling-yc", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=community&utm_campaign=feeling_finder" },
-        { name:"Free training", short:"ollyhenson.com/training-yc", made:true, long:"https://ollyhenson.com/training?utm_source=youtube&utm_medium=community&utm_campaign=emotional_resonance_training" },
-        { name:"Application", short:"ollyhenson.com/apply-yc", made:true, long:"https://ollyhenson.com/apply?utm_source=youtube&utm_medium=community&utm_campaign=heart_attractor" }
+      { title:"YouTube", items:[
+        { name:"Shorts", note:"Say it or type it in a Short.", short:"ollyhenson.com/free-video-training", made:true, long:"" },
+        { name:"Community posts", note:"In YouTube community posts.", short:"ollyhenson.com/training-yc", made:true, long:"https://ollyhenson.com/training?utm_source=youtube&utm_medium=community&utm_campaign=emotional_resonance_training" },
+        { name:"Channel links", note:"Your YouTube channel links.", short:"ollyhenson.com/training-yt", made:true, long:"https://ollyhenson.com/training?utm_source=youtube&utm_medium=bio&utm_campaign=emotional_resonance_training" }
       ]},
-      { title:"Channel links", items:[
-        { name:"Free training", short:"ollyhenson.com/training-yt", made:true, long:"https://ollyhenson.com/training?utm_source=youtube&utm_medium=bio&utm_campaign=emotional_resonance_training" },
-        { name:"The Feeling Finder", short:"ollyhenson.com/feeling-yt", made:true, long:"https://ollyhenson.com/feeling?utm_source=youtube&utm_medium=bio&utm_campaign=feeling_finder" },
-        { name:"Heart Attractor Program", short:"ollyhenson.com/heartattractor-yt", made:true, long:"https://ollyhenson.com/apply?utm_source=youtube&utm_medium=bio&utm_campaign=heart_attractor" }
+      { title:"TikTok", items:[
+        { name:"DM", note:"Send when someone DMs VIDEO.", short:"ollyhenson.com/video-tt", made:true, long:"https://ollyhenson.com/training?utm_source=tiktok&utm_medium=dm&utm_campaign=emotional_resonance_training" },
+        { name:"Bio (from 1,000 followers)", note:"Goes in your TikTok bio once you pass 1,000 followers.", short:"ollyhenson.com/training-tt", made:false, long:"https://ollyhenson.com/training?utm_source=tiktok&utm_medium=bio&utm_campaign=emotional_resonance_training" }
       ]}
     ]},
-    { title:"TikTok", sections:[
-      { title:"DMs", items:[
-        { name:"Free training (VIDEO)", short:"ollyhenson.com/video-tt", made:true, long:"https://ollyhenson.com/training?utm_source=tiktok&utm_medium=dm&utm_campaign=emotional_resonance_training" },
-        { name:"The Feeling Finder (FEELING)", short:"ollyhenson.com/feeling-tt", made:true, long:"https://ollyhenson.com/feeling?utm_source=tiktok&utm_medium=dm&utm_campaign=feeling_finder" },
-        { name:"Application", short:"ollyhenson.com/apply-tt", made:true, long:"https://ollyhenson.com/apply?utm_source=tiktok&utm_medium=dm&utm_campaign=heart_attractor" }
+    { title:"Application", blurb:"The Heart Attractor Program application.", sections:[
+      { title:"Instagram", items:[
+        { name:"DM", note:"Send to anyone ready to apply.", short:"ollyhenson.com/apply-ig", made:true, long:"https://ollyhenson.com/apply?utm_source=instagram&utm_medium=dm&utm_campaign=heart_attractor" }
       ]},
-      { title:"Bio link", items:[
-        { name:"The Feeling Finder (bio, and said in videos)", short:"ollyhenson.com/feeling-tiktok", made:true, long:"https://ollyhenson.com/feeling?utm_source=tiktok&utm_medium=bio&utm_campaign=feeling_finder" },
-        { name:"Free training (from 1,000 followers)", short:"ollyhenson.com/training-tt", made:false, long:"https://ollyhenson.com/training?utm_source=tiktok&utm_medium=bio&utm_campaign=emotional_resonance_training" }
+      { title:"Facebook", items:[
+        { name:"Messages", note:"Send to anyone ready to apply.", short:"ollyhenson.com/apply-fb", made:true, long:"https://ollyhenson.com/apply?utm_source=facebook&utm_medium=dm&utm_campaign=heart_attractor" },
+        { name:"Page", note:"Your Facebook page links.", short:"ollyhenson.com/heartattractor-fb", made:true, long:"https://ollyhenson.com/apply?utm_source=facebook&utm_medium=bio&utm_campaign=heart_attractor" }
+      ]},
+      { title:"YouTube", items:[
+        { name:"Video descriptions", note:"In every long video description.", short:"https://ollyhenson.com/heartattractor", made:true, long:"" },
+        { name:"Attract video description", note:"Only in the Attract training video.", short:"https://ollyhenson.com/attract-apply", made:true, long:"https://ollyhenson.com/apply?utm_source=youtube&utm_medium=description&utm_campaign=heart_attractor&utm_content=scientifically_attract_training" },
+        { name:"Community posts", note:"In YouTube community posts.", short:"ollyhenson.com/apply-yc", made:true, long:"https://ollyhenson.com/apply?utm_source=youtube&utm_medium=community&utm_campaign=heart_attractor" },
+        { name:"Channel links", note:"Your YouTube channel links.", short:"ollyhenson.com/heartattractor-yt", made:true, long:"https://ollyhenson.com/apply?utm_source=youtube&utm_medium=bio&utm_campaign=heart_attractor" }
+      ]},
+      { title:"TikTok", items:[
+        { name:"DM", note:"Send to anyone ready to apply.", short:"ollyhenson.com/apply-tt", made:true, long:"https://ollyhenson.com/apply?utm_source=tiktok&utm_medium=dm&utm_campaign=heart_attractor" }
+      ]},
+      { title:"Email", items:[
+        { name:"Reply", note:"When someone replies to one of your emails.", short:"ollyhenson.com/apply-email", made:true, long:"https://ollyhenson.com/apply?utm_source=email&utm_medium=reply&utm_campaign=heart_attractor" }
       ]}
     ]},
-    { title:"Email", sections:[
-      { title:"Replies", items:[
-        { name:"Application", short:"ollyhenson.com/apply-email", made:true, long:"https://ollyhenson.com/apply?utm_source=email&utm_medium=reply&utm_campaign=heart_attractor" }
-      ]}
-    ]},
-    { title:"The pages themselves (untracked)", sections:[
+    { title:"YouTube video description", blurb:"The full description to paste under the training video.", ytDescription:true, sections:[] },
+    { title:"Plain pages", blurb:"For checking a page. Don't send these: they aren't tracked.", sections:[
       { title:"", items:[
-        { name:"Free training opt-in", long:"https://ollyhenson.com/training" },
+        { name:"Attract training opt-in", long:"https://ollyhenson.com/attract" },
+        { name:"Attract training video", long:"https://youtu.be/PPiqFhUhypo" },
         { name:"The Feeling Finder", long:"https://ollyhenson.com/feeling" },
-        { name:"The Love Scale (old, still live)", long:"https://ollyhenson.com/scale" },
+        { name:"Free training opt-in", long:"https://ollyhenson.com/training" },
+        { name:"Free training video", long:"https://youtu.be/IneemXUd7Nw" },
         { name:"Application", long:"https://ollyhenson.com/apply" },
-        { name:"Training video (YouTube)", long:"https://youtu.be/IneemXUd7Nw" }
+        { name:"The Love Scale (old, still live)", long:"https://ollyhenson.com/scale" }
       ]}
     ]}
   ];
@@ -5060,6 +5117,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var h = "", ph = (a.phone || "").replace(/[^\d]/g, "");
     if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + '</button><a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", it's Olly Henson here. Your application for the Heart Attractor Program was successful.\n\nPlease can you reply 'YES' to this message and I'll send you the details about how the program works and what's included.\n\nThank you,\nOlly") + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a></div>';
     if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + '</button><a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your application was successful") + '&body=' + encodeURIComponent("Hi " + (a.firstName || "there") + ",\r\n\r\nI’m happy to say that your application for The Heart Attractor Program was successful.\r\n\r\nPlease could you reply to my WhatsApp and I’ll send you more details about how the program works and what’s included.\r\n\r\nThank you,\r\n\r\nOlly") + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a></div>';
+    // Checkout link to send after the Loom (2026-11-03): ollyhenson.com/join redirects to the Skool group, so the target can change later.
+    var JOIN = "https://ollyhenson.com/join", joinMail = "Hey " + (a.firstName || "there") + ", great - here's the link to join:\r\n\r\n" + JOIN;
+    h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + JOIN + '">🔗 Checkout link</button>'
+      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", great - here's the link to join: " + JOIN) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Send on WhatsApp</a>' : "")
+      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your link to join The Heart Attractor Program") + '&body=' + encodeURIComponent(joinMail) + '" onclick="event.stopPropagation()">Send by email</a>' : "")
+      + "</div>";
     return h;
   }
   document.addEventListener("click", function(e){
@@ -5235,7 +5298,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var box = document.createElement("div"); box.className = "audbox";
       var head = document.createElement("button"); head.type = "button"; head.className = "audhead"; head.setAttribute("aria-expanded", String(!!lkOpen[g.title]));
       var nm = document.createElement("span"); nm.className = "audname"; nm.textContent = g.title;
-      var sub = document.createElement("span"); sub.className = "audsub"; sub.textContent = count + (count === 1 ? " link" : " links");
+      if (g.blurb){ var bl = document.createElement("small"); bl.className = "lkblurb"; bl.textContent = g.blurb; nm.appendChild(bl); }
+      var sub = document.createElement("span"); sub.className = "audsub"; sub.textContent = count ? count + (count === 1 ? " link" : " links") : "To copy";
       var ch = document.createElement("span"); ch.className = "audchev"; ch.textContent = lkOpen[g.title] ? "▴" : "▾";
       head.append(nm, sub, ch);
       head.addEventListener("click", function(){ lkOpen[g.title] = !lkOpen[g.title]; renderLinks(); });
@@ -6358,6 +6422,271 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       .then(show);
   }
 
+  // ── Carousel calendar (Olly, 2026-11-04) ─────────────────────────────
+  // Built like the YouTube community calendar. 1 carousel a day. Data: state.carousels =
+  // [{ title, date, status: draft|scheduled|sent, type, caption, images:[ids in /api/image, slide order] }].
+  // The content generator's Carousel maker sends every finished slide + the caption (#addcarousel). "Save all slides"
+  // opens the phone's share sheet with every slide in order (Save N Images → Photos); on a computer it downloads them
+  // as 01, 02, 03 … so they stay in order.
+  var CAR_TYPES = ["Belief shift", "Member win", "The crack", "Myth vs truth", "Signs you're stuck", "Science", "Personal story"];
+  var carCalCursor = new Date(); carCalCursor.setDate(1);
+  var carCalSel = null;
+  function carList(){ if (!Array.isArray(state.carousels)) state.carousels = []; return state.carousels; }
+  function carNextDate(){
+    var d = new Date();
+    for (var n = 0; n < 365; n++){
+      var iso = isoDate(d);
+      if (!carList().some(function(p){ return p.date === iso; })) return iso;
+      d.setDate(d.getDate() + 1);
+    }
+    return todayISO();
+  }
+  function carAdd(title, date){
+    var p = { title:String(title || "").trim() || "Untitled carousel", date: date || carNextDate(), status:"draft", type:"", caption:"", images:[] };
+    carList().push(p);
+    carCalSel = p.date;
+    var d = new Date(p.date + "T00:00:00"); carCalCursor = new Date(d.getFullYear(), d.getMonth(), 1);
+    markDirty();
+    renderCarCalendar();
+    return p;
+  }
+  function carAutoPublish(){
+    var t = todayISO(), n = 0;
+    carList().forEach(function(p){ if (p.status === "scheduled" && p.date && p.date < t){ p.status = "sent"; n++; } });
+    if (!n) return;
+    var wasClean = dirtyGet() === null;
+    markDirty();
+    if (wasClean) saveNow();
+    renderCarCalendar();
+  }
+  function renderCarCalendar(){
+    var grid = document.getElementById("carCalendar");
+    if (!grid) return;
+    document.getElementById("carCalMonthLabel").textContent = carCalCursor.toLocaleDateString("en-GB", { month:"long", year:"numeric" });
+    grid.innerHTML = "";
+    DOW_LABELS.forEach(function(d){ var h = document.createElement("div"); h.className = "caldow"; h.textContent = d; grid.appendChild(h); });
+    var year = carCalCursor.getFullYear(), month = carCalCursor.getMonth();
+    var startOffset = (new Date(year, month, 1).getDay() + 6) % 7;
+    var gridStart = new Date(year, month, 1 - startOffset), today = todayISO(), list = carList();
+    for (var i = 0; i < 42; i++){
+      let cellDate = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
+      let cellISO = isoDate(cellDate);
+      var outside = cellDate.getMonth() !== month;
+      var dayP = list.filter(function(p){ return p.date === cellISO; });
+      var cell = document.createElement("div");
+      cell.className = "calcell" + (outside ? " outside" : "") + (cellISO === today ? " today" : "") + (cellISO === carCalSel ? " today" : "");
+      cell.innerHTML = '<div class="caldatehead"><span class="caldatenum">' + cellDate.getDate() + '</span>' + (outside || !dayP.length ? "" : '<span class="calcount met">' + dayP.length + '</span>') + '</div>';
+      var wrap = document.createElement("div"); wrap.className = "calitems";
+      dayP.slice(0, 3).forEach(function(p){
+        var it = document.createElement("div"); it.className = "calitem emcal " + emStatusClass(p.status);
+        var dot = document.createElement("span"); dot.className = "calitem-dot";
+        var lb = document.createElement("span"); lb.className = "calitem-label";
+        var tg = document.createElement("span"); tg.className = "emcal-type" + (p.type ? "" : " none"); tg.textContent = p.type || "Carousel";
+        var ts = document.createElement("span"); ts.className = "emcal-short" + (p.type ? "" : " none"); ts.textContent = p.type ? p.type.split(" ")[0] : "?";
+        var sj = document.createElement("span"); sj.className = "emcal-subj"; sj.textContent = p.title;
+        lb.append(tg, ts, sj);
+        it.title = (p.type ? p.type + ": " : "") + p.title; it.append(dot, lb); wrap.appendChild(it);
+      });
+      cell.appendChild(wrap);
+      if (!outside) cell.addEventListener("click", function(){ carCalSel = carCalSel === cellISO ? null : cellISO; renderCarCalendar(); });
+      grid.appendChild(cell);
+    }
+    renderCarDay();
+  }
+  // every slide as a File, in order, fetched as soon as the day opens so the tap on Save can open the share sheet
+  // straight away (iPhone refuses it if it has to wait for downloads)
+  function carFiles(p){
+    return Promise.all((p.images || []).map(function(id, n){
+      return fetch("/api/image/" + id, { credentials: "same-origin" }).then(function(r){ if (!r.ok) throw new Error("load " + r.status); return r.blob(); })
+        .then(function(b){ return new File([b], "carousel-" + p.date + "-" + String(n + 1).padStart(2, "0") + ".jpg", { type: b.type || "image/jpeg" }); });
+    }));
+  }
+  function renderCarDay(){
+    var box = document.getElementById("carCalDay");
+    if (!box) return;
+    if (!carCalSel){ box.hidden = true; box.innerHTML = ""; return; }
+    box.hidden = false; box.innerHTML = "";
+    function saveButton(){
+      var sv = document.createElement("button"); sv.type = "button"; sv.className = "daymodal-savebtn"; sv.textContent = "Save";
+      var svSt = document.createElement("span"); svSt.className = "daymodal-savestatus";
+      sv.addEventListener("click", function(){
+        sv.disabled = true; svSt.textContent = "Saving…";
+        saveNow(function(ok){ sv.disabled = false; svSt.textContent = ok ? "Saved ✓" : "Save failed"; setTimeout(function(){ svSt.textContent = ""; }, 1500); });
+      });
+      return [svSt, sv];
+    }
+    function label(text){ var l = document.createElement("span"); l.className = "ytlabel"; l.textContent = text; return l; }
+    var head = document.createElement("div"); head.className = "emdayhead";
+    var h = document.createElement("h3");
+    h.textContent = new Date(carCalSel + "T00:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long" });
+    var acts0 = document.createElement("div"); acts0.className = "daymodal-headactions"; acts0.append.apply(acts0, saveButton());
+    head.append(h, acts0); box.appendChild(head);
+    var dayP = carList().filter(function(p){ return p.date === carCalSel; });
+    if (!dayP.length){ var n = document.createElement("p"); n.className = "hint"; n.textContent = "No carousel planned for this day."; box.appendChild(n); }
+    var ua = navigator.userAgent || "";
+    var mobile = /Android|iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    dayP.forEach(function(p){
+      if (!Array.isArray(p.images)) p.images = [];
+      var item = document.createElement("div"); item.className = "emitem";
+      var row = document.createElement("div"); row.className = "emrow";
+      var ti = document.createElement("input"); ti.type = "text"; ti.value = p.title; ti.setAttribute("aria-label", "Carousel idea");
+      ti.addEventListener("input", function(){ p.title = ti.value; markDirty(); });
+      ti.addEventListener("change", function(){ renderCarCalendar(); });
+      var dt = document.createElement("input"); dt.type = "date"; dt.value = p.date; dt.setAttribute("aria-label", "Move to date");
+      dt.addEventListener("change", function(){ if (!dt.value) return; p.date = dt.value; carCalSel = dt.value; var d = new Date(dt.value + "T00:00:00"); carCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); markDirty(); renderCarCalendar(); });
+      row.append(ti, dt); item.appendChild(row);
+      var row2 = document.createElement("div"); row2.className = "emrow";
+      var tog = document.createElement("div"); tog.className = "statustoggle";
+      EM_STATUS.forEach(function(o){
+        var b = document.createElement("button"); b.type = "button";
+        b.className = "statusbtn " + emStatusClass(o[0]) + ((p.status || "draft") === o[0] ? " active" : "");
+        b.textContent = o[1];
+        b.addEventListener("click", function(){ p.status = o[0]; markDirty(); renderCarCalendar(); });
+        tog.appendChild(b);
+      });
+      var ty = document.createElement("select"); ty.className = "storytype"; ty.setAttribute("aria-label", "Carousel type");
+      ty.add(new Option("Type…", ""));
+      CAR_TYPES.concat(p.type && CAR_TYPES.indexOf(p.type) === -1 ? [p.type] : []).forEach(function(t){ ty.add(new Option(t, t)); });
+      ty.value = p.type || "";
+      ty.addEventListener("change", function(){ p.type = ty.value; markDirty(); renderCarCalendar(); });
+      row2.append(tog, ty); item.appendChild(row2);
+      // the slides, numbered, in posting order: tap to open one full size, arrows to change the order
+      var strip = document.createElement("div"); strip.className = "carslides";
+      p.images.forEach(function(id, k){
+        var fig = document.createElement("div"); fig.className = "carslide";
+        var im = document.createElement("img"); im.src = "/api/image/" + id; im.alt = "Slide " + (k + 1); im.loading = "lazy"; im.title = "Open full size";
+        im.addEventListener("click", function(){ openImageViewer(id); });
+        var num = document.createElement("span"); num.className = "carnum"; num.textContent = String(k + 1);
+        var ctl = document.createElement("div"); ctl.className = "carctl";
+        function mv(to){ var a = p.images.splice(k, 1)[0]; p.images.splice(to, 0, a); markDirty(); renderCarDay(); }
+        if (k > 0){ var lf = document.createElement("button"); lf.type = "button"; lf.textContent = "‹"; lf.title = "Move earlier"; lf.addEventListener("click", function(){ mv(k - 1); }); ctl.appendChild(lf); }
+        if (k < p.images.length - 1){ var rt = document.createElement("button"); rt.type = "button"; rt.textContent = "›"; rt.title = "Move later"; rt.addEventListener("click", function(){ mv(k + 1); }); ctl.appendChild(rt); }
+        var rm = document.createElement("button"); rm.type = "button"; rm.textContent = "✕"; rm.title = "Remove this slide";
+        rm.addEventListener("click", function(){ if (!window.confirm("Remove slide " + (k + 1) + "?")) return; p.images.splice(k, 1); deleteStoryImage(id); markDirty(); renderCarDay(); });
+        ctl.appendChild(rm);
+        fig.append(im, num, ctl); strip.appendChild(fig);
+      });
+      item.append(label(p.images.length ? "Slides (" + p.images.length + ", in posting order)" : "Slides"));
+      if (p.images.length) item.appendChild(strip);
+      // Save all slides: share sheet on phones (Save N Images), numbered downloads on a computer
+      var srow = document.createElement("div"); srow.className = "emrow";
+      var all = document.createElement("button"); all.type = "button"; all.className = "addbtn";
+      var allSt = document.createElement("span"); allSt.className = "daymodal-savestatus";
+      var files = null;
+      if (p.images.length){
+        all.textContent = "Loading slides…"; all.disabled = true;
+        carFiles(p).then(function(f){ files = f; all.disabled = false; all.textContent = (mobile ? "Save all " : "Download all ") + f.length + " slides"; },
+          function(){ all.textContent = "Couldn't load the slides"; });
+        all.addEventListener("click", function(){
+          if (!files) return;
+          if (mobile && navigator.canShare && navigator.canShare({ files: files })){
+            navigator.share({ files: files }).catch(function(){ /* closed the share sheet */ });
+            return;
+          }
+          files.forEach(function(f, k){
+            setTimeout(function(){
+              var url = URL.createObjectURL(f), dl = document.createElement("a");
+              dl.href = url; dl.download = f.name; document.body.appendChild(dl); dl.click(); dl.remove();
+              setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+            }, k * 350);
+          });
+          allSt.textContent = "✓ Downloading " + files.length + " slides";
+        });
+        srow.append(all, allSt);
+      }
+      // add slides by hand (picked in order; files are sorted by name, so 01, 02 … stay in order)
+      var fileIn = document.createElement("input"); fileIn.type = "file"; fileIn.accept = "image/*"; fileIn.multiple = true; fileIn.hidden = true;
+      var attach = document.createElement("button"); attach.type = "button"; attach.className = "copybtn"; attach.textContent = "+ Add slides";
+      attach.addEventListener("click", function(){ fileIn.click(); });
+      fileIn.addEventListener("change", function(){
+        var fs = Array.prototype.slice.call(fileIn.files || []).sort(function(a, b){ return a.name.localeCompare(b.name, undefined, { numeric:true }); });
+        if (!fs.length) return;
+        attach.disabled = true; allSt.textContent = "Uploading " + fs.length + "…";
+        fs.reduce(function(pr, f){ return pr.then(function(){ return uploadStoryImage(f).then(function(id){ p.images.push(id); }); }); }, Promise.resolve())
+          .then(function(){ markDirty(); renderCarDay(); },
+            function(){ markDirty(); renderCarDay(); window.alert("Not every slide uploaded. If you've been away a while, reload the Hub to log in again, then try again."); });
+      });
+      srow.append(attach, fileIn);
+      item.appendChild(srow);
+      var cap = document.createElement("textarea"); cap.className = "carcap"; cap.value = p.caption || ""; cap.placeholder = "Caption";
+      cap.addEventListener("input", function(){ p.caption = cap.value; markDirty(); });
+      item.append(label("Caption"), cap);
+      var acts = document.createElement("div"); acts.className = "emrow";
+      var cc = document.createElement("button"); cc.type = "button"; cc.className = "copybtn"; cc.textContent = "Copy caption";
+      cc.addEventListener("click", function(){ copyToClipboard(p.caption || "", cc); });
+      var del = document.createElement("button"); del.type = "button"; del.className = "copybtn"; del.textContent = "Remove";
+      del.addEventListener("click", function(){
+        if (!confirm("Remove “" + p.title + "” and its slides from the calendar?")) return;
+        (p.images || []).forEach(deleteStoryImage);
+        var L = carList(); L.splice(L.indexOf(p), 1); markDirty(); renderCarCalendar();
+      });
+      var sb = saveButton();
+      acts.append(sb[1], cc, del, sb[0]); item.appendChild(acts);
+      box.appendChild(item);
+    });
+    var add = document.createElement("button"); add.type = "button"; add.className = "addbtn"; add.textContent = "+ Add a carousel on this day"; add.style.marginTop = "10px";
+    add.addEventListener("click", function(){ carAdd("", carCalSel); });
+    box.appendChild(add);
+  }
+  function moveCarMonth(delta){
+    if (delta === 0){ carCalCursor = new Date(); carCalCursor.setDate(1); }
+    else carCalCursor = new Date(carCalCursor.getFullYear(), carCalCursor.getMonth() + delta, 1);
+    renderCarCalendar();
+  }
+  document.getElementById("carCalPrev").addEventListener("click", function(){ moveCarMonth(-1); });
+  document.getElementById("carCalNext").addEventListener("click", function(){ moveCarMonth(1); });
+  document.getElementById("carCalToday").addEventListener("click", function(){ moveCarMonth(0); });
+  document.getElementById("carCalAdd").addEventListener("click", function(){
+    var ti = document.getElementById("carCalTitle"), dd = document.getElementById("carCalDate");
+    if (!ti.value.trim()){ ti.focus(); return; }
+    carAdd(ti.value, dd.value);
+    ti.value = ""; dd.value = "";
+  });
+  // hub.ollyhenson.com/#addcarousel=<encoded JSON {title, type?, caption?, images:[JPEG data URLs in slide order]}>
+  // (content generator's Carousel maker, 2026-11-04). Held until the shared data has loaded; the slides upload one by
+  // one in order. The same title still unpublished = that carousel is updated (new slides + caption), not duplicated.
+  var pendingCar = null;
+  function importCarFromHash(){
+    var m = /^#addcarousel=(.+)$/.exec(location.hash || "");
+    if (!m) return;
+    var data = null;
+    try { data = JSON.parse(decodeURIComponent(m[1])); } catch (err) { data = null; }
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
+    if (data && String(data.title || "").trim()) pendingCar = data;
+  }
+  function placePendingCar(){
+    if (!pendingCar) return;
+    var data = pendingCar; pendingCar = null;
+    var title = String(data.title).trim().slice(0, 140);
+    var p = carList().filter(function(x){ return x.title === title && x.status !== "sent"; })[0];
+    if (!p){ p = { title:title, date: carNextDate(), status:"draft", type:"", caption:"", images:[] }; carList().push(p); }
+    if (data.type) p.type = String(data.type).replace(/^Carousel\s*\S\s*/, ""); // "Carousel · Member win" → "Member win"
+    if (data.caption) p.caption = String(data.caption);
+    var imgs = (Array.isArray(data.images) ? data.images : []).filter(function(u){ return /^data:image\/(jpeg|png);base64,/.test(u); });
+    var old = Array.isArray(p.images) ? p.images.slice() : [];
+    var ids = [], failed = 0;
+    var show = function(){
+      if (ids.length){ old.forEach(deleteStoryImage); p.images = ids; }
+      else if (!Array.isArray(p.images)) p.images = [];
+      markDirty(); saveNow();
+      carCalSel = p.date;
+      var d = new Date(p.date + "T00:00:00"); carCalCursor = new Date(d.getFullYear(), d.getMonth(), 1);
+      goTab("content");
+      renderCarCalendar();
+      setTimeout(function(){ var bx = document.getElementById("carCalDay"); if (bx) bx.scrollIntoView({ behavior:"smooth", block:"start" }); }, 300);
+      if (failed) window.alert(failed + " of the slides couldn't upload. Download them from the generator and use + Add slides.");
+    };
+    imgs.reduce(function(pr, u){
+      return pr.then(function(){
+        return fetch(u).then(function(r){ return r.blob(); }).then(function(blob){
+          var id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10));
+          return fetch("/api/image/" + id, { method: "PUT", headers: { "content-type": blob.type || "image/jpeg" }, body: blob, credentials: "same-origin" })
+            .then(function(r){ if (!r.ok) throw new Error("upload failed " + r.status); ids.push(id); });
+        }).catch(function(){ failed++; });
+      });
+    }, Promise.resolve()).then(show);
+  }
+
   // hub.ollyhenson.com/#addreel=<encoded JSON {title, caption?, offer?}> (content generator's "Add to calendar", 2026-10-28).
   // Held until the shared data has loaded, then put in the next free slot (3 a day), saved without pressing Save,
   // and that day opened so Olly sees where it landed. Same title already waiting unpublished = no duplicate.
@@ -6377,7 +6706,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!state.content.ideas) state.content.ideas = [];
     var idea = state.content.ideas.filter(function(i){ return i.title === title && !i.posted; })[0];
     if (!idea){
-      idea = { title:title, date: findNextAvailableDate(), mode:"auto", synced:false, offer: data.offer === "scale" ? "scale" : "video" };
+      idea = { title:title, date: findNextAvailableDate(), mode:"auto", synced:false, offer: data.offer === "scale" || data.offer === "attract" ? data.offer : "video" };
       if (data.caption) idea.caption = outlierTags(String(data.caption));
       state.content.ideas.push(idea);
       markDirty();
@@ -6849,8 +7178,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   (function(){
     var KEY = "hubCalOpen", open = {};
     try { open = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){}
-    var hm = /^#add(reel|story|email|ytpost)=/.exec(location.hash || "");
-    if (hm) open[{ reel:"reels", story:"stories", email:"email", ytpost:"yt" }[hm[1]]] = true;
+    var hm = /^#add(reel|story|email|ytpost|carousel)=/.exec(location.hash || "");
+    if (hm) open[{ reel:"reels", story:"stories", email:"email", ytpost:"yt", carousel:"carousel" }[hm[1]]] = true;
     document.querySelectorAll(".calbox").forEach(function(box){
       var k = box.dataset.cal, head = box.querySelector(".audhead"), body = box.querySelector(".calbody"), ch = box.querySelector(".audchev");
       function set(on){ open[k] = on; body.hidden = !on; head.setAttribute("aria-expanded", String(on)); ch.textContent = on ? "▴" : "▾"; }
@@ -7649,6 +7978,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var REEL_TAGS = "#Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner";
   var REEL_BODY = "💜 Attract a genuine, committed relationship with someone you can build a life with\n\nFor people who want to meet someone special and settle down, but nothing is changing.\n\nThe 3 steps:\n\n✅ Step 1: Get clear on exactly who you want and what your life together looks like\n\n✅ Step 2: Define the emotions you’d feel with them\n\n✅ Step 3: Embody those emotions every day so the right person is drawn to you\n\n♥️ This is how I met my wife\n\n";
   var FEELING_ASK = "👇 Comment ‘FEELING’ and I’ll send you my free tool to help with steps 1 and 2\n\n(If you’d rather keep it private, DM me ‘FEELING’)\n\n";
+  var ATTRACT_ASK = "👇 Comment ‘ATTRACT’ and I’ll send you my free training on how to do this\n\n(If you’d rather keep it private, DM me ‘ATTRACT’)\n\n";
   var VIDEO_ASK = "👇 Comment ‘VIDEO’ and I’ll send you my free training on how to do this\n\n(If you’d rather keep it private, DM me ‘VIDEO’)\n\n";
   // FEELING = The Feeling Finder (the offer is still stored as "scale" on each idea)
   var SCALE_CAPTIONS = {
@@ -7663,12 +7993,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tiktok: REEL_BODY + VIDEO_ASK + REEL_TAGS,
     youtube: REEL_BODY + "👇 Watch my free training on how to do this: https://ollyhenson.com/free-video-training\n\n#shorts " + REEL_TAGS
   };
+  // ATTRACT = the second training, "How To Attract Your Person Scientifically" at ollyhenson.com/attract (2026-11-03)
+  var ATTRACT_CAPTIONS = {
+    instagram: REEL_BODY + ATTRACT_ASK + REEL_TAGS,
+    facebook: "VIDEO TITLE GOES HERE\n\n" + REEL_BODY + ATTRACT_ASK + REEL_TAGS,
+    tiktok: REEL_BODY + ATTRACT_ASK + REEL_TAGS,
+    youtube: REEL_BODY + "👇 Watch my free training on how to do this. Type this into your browser: ollyhenson.com/attract-shorts\n\n#shorts " + REEL_TAGS
+  };
   function reelCaption(offer, plat, saved){
     var key = { instagram:"IG", facebook:"FB", tiktok:"TIKTOK", youtube:"YOUTUBE" }[plat] + " " + (offer === "scale" ? "FEELING" : "VIDEO");
     var hit = (saved || []).filter(function(tpl){ return String(tpl.name || "").trim().toUpperCase() === key; })[0];
     // 2026-10-30: the built-in Perfect Reel captions always win, so every platform matches Instagram (old saved templates were short)
     hit = null;
     if (offer === "scale") return SCALE_CAPTIONS[plat] || "";
+    if (offer === "attract") return ATTRACT_CAPTIONS[plat] || "";
     if (VIDEO_CAPTIONS[plat]) return VIDEO_CAPTIONS[plat];
     if (plat === "tiktok") return tkCopy("caption");
     if (plat === "youtube") return ytCopy("shorts");
@@ -8614,6 +8952,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderStoryModal();
     renderEmailCalendar();
     renderYtCalendar();
+    renderCarCalendar();
     renderDelivery();
     renderCaptionTemplates();
     renderBrainDump();
@@ -8689,6 +9028,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var lmTab = document.getElementById("tab-looms");
     if (lmTab && !lmTab.hidden && !lmData && !lmLoading) renderLooms();
     importYtFromHash();
+    importCarFromHash();
     // Page views are the Hub's own counter, not GHL, so they refresh on every open (Olly, 2026-10-26:
     // the Overview showed yesterday's numbers until the next Pull from GHL). Not marked dirty: it's live data.
     fetch("/api/pageviews", { cache:"no-store" })
