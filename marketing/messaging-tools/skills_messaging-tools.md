@@ -171,6 +171,8 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 
 **Every image maker that makes a Story sends it to the Hub's Stories calendar** with the image, a title, the type and 3 song ideas (the meme editor was missing this, 2026-10-29).
 
+**Reel hook length (Olly, 2026-11-04, overrides 5 to 11 words):** 4 to 7 words, ideally about 6. His ideal: "How to attract your person - scientifically". Generated hooks were too wordy, so every proven hook is trimmed to that length ("Without a doubt, the fastest way to find someone who's fun and committed to a long-term relationship" → "The fastest way to find your person"), and `calBrief()` tells Reels to match the length of Olly's own Reel titles on the Hub calendar (he writes those himself). Carousel and Story hooks keep their own lengths unless he says otherwise.
+
 **Reel hooks (Olly, 2026-10-30):** use only hooks proven in his outliers (the 8 in REEL_OPENERS, with their numbers), each given a slight variation in wording or order. Never add generic creator-guide openers ("Why you keep...", "The real reason...") without flagging that they are untested; he asked "were these in the outliers?" when they slipped in.
 
 **Reel wording:** the generator says "hooks", not headers; each hook comes with a second line that names something she has felt. The hook = text above his head for the first 3 to 5 seconds + his first spoken line + caption line 1.
@@ -186,6 +188,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **Writing and image-making happen in one place (Olly, 2026-11-02):** "I just want it to create the meme and the image together with the ability to add my own within that same generator." Any image maker that needs words gets a Generate button that fills the image directly, keeps every line editable, and lets Olly use his own text or picture.
 
 ### Never
+- Never let a Reel hook run past 7 words, and never copy a long outlier hook at full length: trim it (2026-11-04).
 - Never make Olly go to another tab to get the words for an image he's making (meme text lived in the hidden Memes channel while the Story maker only had a blank editor, 2026-11-02).
 
 - Never invent statistics, research findings, proof or testimonials. The "68% of relationships start as friendships" claim was wrong and had to be removed. Check research claims and say how sure you are.
@@ -234,6 +237,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **Root of it all (2026-10-26, Olly's addition):** "All of it stems from fear. Impatience, frustration, envy, exhaustion, despair, hopelessness: low, survival-based emotions. In that fear we try to learn more, but learning doesn't touch the fear. Moving up the emotional scale is practical." Payoffs: better quality people, feel better about yourself, more authentically you, dating fun and spontaneous again, things play out naturally.
 - **Daily email, Olly's edit (2026-10-28, "the baggage test", Belief breaking):** "Think of the happiest couple you know. / Now be honest. / Are they flawless? / … Of course they do, they're human just like you and me. / So what makes them so special? / The truth is, nothing." He cut the draft's scene-setting lines ("the Sunday walks, the shared cooking") and went straight from the question to the point: short single lines, one idea, ends on how elevating your state makes meeting someone exciting again, P.S. to The Love Scale.
 - **Member win carousel, slide 1 (2026-11-04, Olly's edit):** "She got her confidence back..." above her covered message, then "This is what happens when you get into Emotional Resonance with the relationship that you want..." Short, outcome-led, the screenshot does the proving.
+- **Reel hook, ideal length (2026-11-04, Olly):** "How to attract your person - scientifically" (6 words). Also his own from the calendar: "The fastest way to a committed relationship", "You don't need to fix yourself to find love".
 - **Proof:** "I met my wife when I focused on how I was feeling every day, improving it and shifting my state, rather than learning more about what I should be doing."
 
 ---
@@ -337,3 +341,5 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **2026-11-02: Skill review.** Process: unicode escapes turn into real characters through the Edit tool/heredocs (use `String.fromCharCode`); multi-item Claude writes = one item per call in parallel with the real error shown (the 3-meme call failed). Map: v179 Story templates (`KT`, `KSTY`, `ktShow`) and the v180-181 meme Generate + Your own image. Rules: writing and image-making happen in one editor (Olly's meme request). Never: send Olly to another tab for the words of an image. Nothing overridden.
 
 - **2026-11-04: Skill review.** Process 11-14: test the reload with Olly's saved state (a load-order crash hid behind "nothing happens"); Claude buttons show a counting status on the button and never exit silently; version label + on-page error catcher when a bug can't be reproduced; Hub links with big payloads are built on pointerdown. Carousels: Add to queue on idea cards too (overrides "queue only the finished carousel"); the maker owns the finished carousel (editable caption, bottom button row with Not this one); centring stored per slide; Member win carousels; caption writer matches the last slide's CTA, subtle emojis, Reel hashtags added by the page; profile photo. Never: uncovered screenshots (covered ones may stay with a Member win), hidden-until-action features, stand-in tests presented as live. Example: Member win slide 1.
+
+- **2026-11-04 (later): Skill review.** Rules: Reel hooks 4 to 7 words (ideal "How to attract your person - scientifically"), overriding 5 to 11; proven hooks always trimmed; match Olly's own Reel titles on the calendar (calBrief). Never: a Reel hook over 7 words. Examples: the ideal-length hook plus two of his calendar titles. Process: a publish to WsnecJvYahvCKVDevtrUqc from a new session is refused once and shows the live diff; if the diff is only my own edits, publish again unchanged.

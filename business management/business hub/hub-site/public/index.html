@@ -7241,13 +7241,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var inR = function(d){ return !!d && d >= from && d <= to; };
     var reels = (state.content && state.content.ideas) || [], st = (state.stories && state.stories.ideas) || [];
     var sched = function(x){ return x.status === "scheduled" || x.status === "sent"; };
-    return {
+    var out = {
       "Reels": { done: reels.filter(function(i){ return inR(i.date) && i.posted; }).length, planned: reels.filter(function(i){ return inR(i.date) && i.title; }).length },
       "Stories": { done: st.filter(function(i){ return inR(i.date) && i.posted; }).length, planned: st.filter(function(i){ return inR(i.date); }).length },
       "Emails": { done: emList().filter(function(e){ return inR(e.date) && sched(e); }).length, planned: emList().filter(function(e){ return inR(e.date); }).length },
       "YouTube posts": { done: ytList().filter(function(x){ return inR(x.date) && sched(x); }).length, planned: ytList().filter(function(x){ return inR(x.date); }).length }
     };
+    // a ticked Email / YouTube routine box counts as that day's one, when nothing scheduled is on the calendar that day
+    var ct = state.coreTasks || {};
+    Object.keys(ct).forEach(function(d){ if (!inR(d)) return; var x = ct[d] || {};
+      TICK_KINDS.forEach(function(p){ if (!x[p[0]]) return; var list = p[1] === "Emails" ? emList() : ytList();
+        if (!list.some(function(e){ return e.date === d && sched(e); })) { out[p[1]].done++; if (!list.some(function(e){ return e.date === d; })) out[p[1]].planned++; } }); });
+    return out;
   }
+  var TICK_KINDS = [["c_email", "Emails"], ["c_yt", "YouTube posts"]];
   function coreCell(c, target){
     var pct = Math.min(100, Math.round(c.done / target * 100));
     var extra = c.planned > c.done ? " <em>(+" + (c.planned - c.done) + " planned)</em>" : "";
@@ -7273,6 +7280,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     ((state.stories && state.stories.ideas) || []).forEach(function(i){ add(i.date, "Stories", !!i.posted); });
     emList().forEach(function(e){ add(e.date, "Emails", sched(e)); });
     ytList().forEach(function(x){ add(x.date, "YouTube posts", sched(x)); });
+    // Ticking Email / YouTube in the daily routine counts as that day's one email / post (Olly, 2026-11-04: he schedules
+    // them straight in GHL and YouTube, so they're often not on the Hub calendar)
+    var ct = state.coreTasks || {};
+    Object.keys(ct).forEach(function(d){ var x = ct[d] || {};
+      TICK_KINDS.forEach(function(p){ if (!x[p[0]]) return; var y = m[d] || (m[d] = {}), c = y[p[1]] || (y[p[1]] = {out: 0, cal: 0, rec: 0});
+        if (c.out < 1) { c.out = 1; c.rec = Math.max(c.rec, 1); } if (c.cal < 1) c.cal = 1; }); });
     return m;
   }
   function consRange(mode, key){

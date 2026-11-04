@@ -122,6 +122,7 @@ Notes on fields that aren't obvious:
 ## 4. House conventions (follow these, don't reinvent)
 
 ### Never
+- Never tell Olly to refresh or reload the Hub without first telling him to press Save and check it says "saved". Routine ticks save themselves, calendar edits don't; on 2026-11-04 I said "hard-refresh" for a deploy and his unsaved calendar changes were lost (he had to re-add them).
 - Never draw a tab only from its tab-button click. The Hub reopens on the last tab used (and ↻ Refresh reloads into it), so a tab that renders itself must also render at boot when it's the restored tab. Looms stayed blank after Refresh until this was fixed (2026-11-02).
 - Never show a cached copy of live GHL data when Olly comes back to it. Looms refetches on every tab open and on `visibilitychange`; a brand-new applicant was missing because the list was the one loaded at startup (2026-11-02).
 - Never put a secret (`NOTIFY_KEY`, `VAPID_JWK`, `GHL_TOKEN`) in a file in the repo or in the chat. Auto mode blocks me from setting or printing secrets, so Olly runs a `!` command. To get a secret into GHL, write it to a file outside the repo and have Olly open that file himself (`! notepad <path>`), instead of printing it: printing put the webhook key into the conversation and Olly asked "I thought you weren't supposed to see this link?" (2026-11-02).
@@ -156,6 +157,7 @@ Notes on fields that aren't obvious:
 - Never auto-pull GHL data on load: a pull calls `markDirty()`, so auto-pulling would leave the Hub permanently "unsaved". Pulls are a button press (on Overview, Sales and Email).
 
 ### Design principles from past corrections
+- **What Olly ticks counts (2026-11-04, Olly: "I've done the daily email and the YouTube posts, but it's not updating the score").** He schedules emails in GHL and YouTube posts in YouTube directly, so they're often not on the Hub calendars. Ticking Email / YouTube in the daily routine counts as that day's one email / post in Content consistency, the today list and the day cards (`TICK_KINDS`, in `consByDay()` and `contentCounts()`), never double-counted with a calendar entry. Reels and Stories still need Published on the calendar (Done = Published).
 - **Notifications come from the Hub and open the exact screen (2026-11-02).** Olly turned down LeadConnector's in-app notifications: "I'd rather this come from the hub so that I can open their loom screen". New applications push to his iPhone via the Hub (Home Screen app), and a tap opens `/#looms=<contactId>` on that person.
 - **Long pages fold away like the Audience tab (2026-11-02).** Olly: "To save scrolling" … "so much better". Stacked sections become `.audbox` boxes (header button + body), closed by default, open state remembered per device (localStorage, not `state`), and a deep link (`#addreel` etc.) opens its own box.
 - **The main action sits at the top on the phone.** "Refresh from GHL" was below the applicant list on the phone and Olly couldn't find it; it now leads the Looms tab.
@@ -198,6 +200,7 @@ Notes on fields that aren't obvious:
 ---
 
 ## 5. Known pitfalls (already hit once — don't repeat)
+- **"It didn't save" / "it's not updating": check the live KV record first (2026-11-04).** `npx wrangler kv key get record --namespace-id f6ae5047d04c492d9409f74cdb3bb920 --remote` → compare `updatedAt` and the entries for that day with what Olly says he did. Both times that day it showed the real cause straight away (nothing on today's calendar; last save hours before his edits).
 - **Testing the Hub in puppeteer (2026-11-04):** `state` lives inside the page's closure, so read results from the DOM, not `state`. A stand-in for `/api/image` can't keep binary PUT bodies (`postData()` comes back empty); serve a real test image on GET instead.
 - **GHL search lags a few seconds behind a new contact (2026-11-02).** A lookup triggered by the new-application webhook (tapping the notification) found nobody. `openLoomsFor()` keeps the wanted id (`lmWant`) and retries every 5s for ~30s.
 - **`/api/track/*` shares the Cloudflare Access bypass (verified 2026-11-02):** `/api/track/new-application` answered with the Function's own 401, `/api/push` with a 302 to Access. Put any webhook from GHL under `/api/track/` and always check a key.
@@ -265,6 +268,8 @@ Notes on fields that aren't obvious:
 ---
 
 ## Changelog
+
+- **2026-11-04 (later): Skill review.** Never: tell Olly to refresh without Save first (his calendar edits were lost after I said hard-refresh). Design principle: routine ticks for Email / YouTube count in the score (TICK_KINDS), since he schedules those outside the Hub. Pitfall: check the live KV record first when something "didn't save" or a score looks wrong.
 
 - **2026-10-28 — Skill review 2 (Looms tab).** Data model: `state.looms`. Never: `/api/applicants` is the one Function allowed to return names (behind Access, read-only). Design principles: recorded views speak to the viewer ("you"), work-through lists get Archive + filters in Olly's order with Newest as the default every time, one copy button per link. Pitfall: apostrophes in single-quoted JS strings. Why: each came from Olly's requests and one failed deploy while building the Looms tab.
 - **2026-10-28 — Skill review.** Data model: `emailCal`, `ytPosts`, Story `music`. Never: open content in a new tab, share sheet on desktop, short links without https, day panels missing from `rerenderAll()`, deleting unused tabs. Overridden: "never autosave", narrowed to typing (generator imports and the Scheduled→Published flip save by themselves, at Olly's request). Design principles: how calendars work, at-a-glance day cells, Save next to the edit, GHL email formatting. Pitfalls: backslashes lost through heredoc/patch.py, puppeteer testing tricks. Quick reference: generator imports, Email/YouTube calendars, image viewer, Traffic card.
