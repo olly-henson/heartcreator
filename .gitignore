@@ -7,5 +7,7 @@ delivery/*.aup3
 reels/sample/
 reels/inbox/
 reels/ready/
+reels/reference/
 *.words.json
 *.plan.json
+__pycache__/

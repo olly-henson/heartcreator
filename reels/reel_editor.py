@@ -48,7 +48,9 @@ FE = ImageFont.truetype(EMOJI, 109)  # Segoe emoji only renders at 109px; scaled
 
 # ---------- audio + transcript ----------
 def run(cmd):
-    subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    # no console window pops up for ffmpeg when the upload server runs hidden
+    subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+                   creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
 
 
 def load_wav(p):
@@ -59,8 +61,15 @@ def load_wav(p):
 def transcribe(audio):
     from faster_whisper import WhisperModel
     m = WhisperModel("small.en", device="cpu", compute_type="int8")
-    segs, _ = m.transcribe(audio, word_timestamps=True)
-    return [{"w": w.word.strip(), "s": float(w.start), "e": float(w.end)} for s in segs for w in s.words]
+    def run_once(**kw):
+        segs, _ = m.transcribe(audio, word_timestamps=True, **kw)
+        return [{"w": w.word.strip(), "s": float(w.start), "e": float(w.end)} for s in segs for w in s.words]
+    words = run_once()
+    # small.en sometimes returns lowercase text with no punctuation, which breaks hook + caption splitting.
+    # A punctuated prompt reliably brings the punctuation back, so retry once with it.
+    if words and sum(bool(re.search(r"[.!?]$", w["w"])) for w in words) < max(1, len(words) // 60):
+        words = run_once(initial_prompt="Hello. You don't need a plan to find your person. Here's what you need instead.")
+    return words
 
 
 def speech_onset(audio, sr, near):
@@ -86,8 +95,11 @@ def plan(words):
     while i < len(words) and not re.search(r"[.!?]$", words[i]["w"]):
         i += 1
     i = min(i, len(words) - 1)
+    if i > 13:  # no sentence end found early (missing punctuation): cut at the longest pause in words 4-14
+        i = max(range(3, min(14, len(words) - 1)), key=lambda k: words[k + 1]["s"] - words[k]["e"])
     hook_words = words[: i + 1]
-    hook = (" ".join(clean(w["w"]) if k == len(hook_words) - 1 else w["w"] for k, w in enumerate(hook_words)),
+    hook_words[0] = dict(hook_words[0], w=hook_words[0]["w"][:1].upper() + hook_words[0]["w"][1:])
+    hook = (" ".join(clean(w["w"]).rstrip(",;:") if k == len(hook_words) - 1 else w["w"] for k, w in enumerate(hook_words)),
             0.0, words[i + 1]["s"] if i + 1 < len(words) else words[i]["e"])
     rest = words[i + 1:]
 
@@ -168,7 +180,7 @@ def draw_line(canvas, y, parts, heart=False, box=True, text=True):
     tw = sum(text_w(t) for t, _ in parts) + sp * (len(parts) - 1)
     hw = 0
     if heart:
-        heart_im = emoji_img("\u2764\ufe0f", 46)
+        heart_im = emoji_img(heart if isinstance(heart, str) else "\u2764\ufe0f", 46)
         hw = sp + heart_im.width
     bw = tw + hw + PAD_X * 2
     x0 = (W - bw) / 2
@@ -199,11 +211,13 @@ def hook_png(text, path):
     while best < len(words) - 1 and text_w(" ".join(words[:best + 1])) <= 760:
         best += 1
     l1, l2 = " ".join(words[:best]), " ".join(words[best:])
+    # end emoji, as on Olly's posted Reels: test tube when the hook says "scientifically"/"science", else red heart
+    emo = "\U0001F9EA" if re.search(r"scien", text, re.I) else "❤️"
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     step = 75
     for box, text in ((True, False), (False, True)):
         draw_line(im, BOX_TOP - 4, [(l1, False)], box=box, text=text)
-        draw_line(im, BOX_TOP - 4 + step, [(l2, False)], heart=True, box=box, text=text)
+        draw_line(im, BOX_TOP - 4 + step, [(l2, False)], heart=emo, box=box, text=text)
     im.crop((0, STRIP_Y, W, STRIP_Y + STRIP_H)).save(path)
 
 
