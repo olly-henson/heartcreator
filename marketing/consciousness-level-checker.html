@@ -179,6 +179,10 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .prl-left{display:flex;flex-direction:column;gap:12px;position:sticky;top:12px}
 @media (max-width:760px){.prl-left{position:static}}
 .prl-phones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.prl-min{grid-template-columns:150px minmax(0,1fr);align-items:center}
+@media (max-width:760px){.prl-min{grid-template-columns:120px minmax(0,1fr)}}
+.prl-side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.reelall{margin:0 0 12px;align-items:center}
 .prl-shot{margin:0;display:flex;flex-direction:column;gap:4px}
 .prl-shot figcaption{font:500 10px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
 .prl-phone{position:relative;width:100%;aspect-ratio:9/16;border-radius:14px;overflow:hidden;container-type:inline-size;background:#222 center/cover no-repeat;box-shadow:0 8px 20px -10px rgba(40,10,60,.45)}
@@ -223,7 +227,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
     <main class="stack" style="gap:20px">
       <section class="card stack">
         <div class="seg" role="group" aria-label="What are you making?">
-          <button type="button" id="ch-reels" aria-pressed="true"><b>Reels · The Perfect Reel</b><span>The full Reel in the structure of your best performers: hook, the 8 parts and the caption, ready to film and send to the calendar.</span></button>
+          <button type="button" id="ch-reels" aria-pressed="true"><b>Reels · Hooks</b><span>Just the hook on your cover, from the patterns of your best Reels. FEELING by default. Add them all to the calendar in one go.</span></button>
           <button type="button" id="ch-stories" aria-pressed="false"><b>Stories · Connection</b><span>Your life and your story, so people feel you understand them.</span></button>
           <button type="button" id="ch-memes" aria-pressed="false" hidden><b>Story memes · Connection</b><span>A popular meme template on a Story: the old belief next to the right emotional state.</span></button>
           <button type="button" id="ch-carousels" aria-pressed="false"><b>Carousels · Authority</b><span>Raw, belief-shifting feed posts: white text boxes over your photo, ending on Comment EMOTION.</span></button>
@@ -562,7 +566,7 @@ New belief: "When I embody the emotion of my relationship before it happens, it 
 Ideology: Love isn't earned or forced. Feel it first, and the belief follows. You can't think your way into believing it; you embody the emotion first.
 Why it's not positive thinking: positive thinking happens in your head and fades under stress; this changes how you actually feel. Emotional contagion: people pick up on each other's emotional states through faces, voices and body language. When you're anxious you overlook calm, kind people and put up with the ones who keep you guessing. HeartMath Institute research: heart focus, slow breathing and appreciation make the heart rhythm smooth and steady (heart coherence), linked to feeling calm, safe and connected. HeartMath also measured the heart's electromagnetic field: the strongest rhythmic field the body produces, detectable a few feet away with sensitive instruments, and in small lab studies traces of one person's heartbeat showed up in another person's brainwaves when they sat close or touched. Always present this as HeartMath's early, small studies suggesting connection may be more physical than we think. Never say the field attracts a partner.
 Objections: "But I'm happy most of the time" (it's how you feel about love, not life). "I've tried feeling good, it doesn't stick" (you were thinking your way into it; this shifts how you feel, a little more every day). "Isn't this just another method?" (every method was about what you know; this is about how you feel). "So I just sit and wait?" (no, you still date, just in the right emotional state). "I don't want to push myself out of my comfort zone or force things" (you don't have to: it's 10 gentle minutes a day, no forcing yourself to date more or harder. You date when it feels right, from a calmer state).
-Proof (Olly's real story only): after his 7-year relationship ended in 2019 he tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results. He met his wife when he focused on how he was feeling every day, improving it and shifting his state, rather than learning more about what he should be doing.
+Proof (Olly's real story only): before he met his wife Jules he was dating and enjoying himself, not trying to settle down, and focusing every day on keeping himself in a better emotional state; when they met they both just knew it was different. The key was working on his emotional state every day, not learning more or fixing himself. Never mention a past relationship, a breakup, 2019 or any teachers or techniques he tried (Olly 2026-11-05: the old story is out of the messaging).
 What to expect (lead with time wasters often, it's the audience's own phrase): it starts to unfold naturally with someone who resonates at the same emotional level. They notice the right people and lose interest in the ones who keep them guessing (the time wasters). They show up relaxed and fully themselves, and dating feels fun again, not a chore. Never promise a partner by a date.
 
 AUDIENCE VOICE (from real survey answers; use these as angles and language wherever the content type allows)
@@ -607,7 +611,7 @@ HOW TO SAY IT: "in one small study", "research suggests", "linked with", "went w
 const POST_TYPES = {
   "Personal story": {group:"Connection", desc:"Tell a story of your own that people can relate to. People connect with human emotion.",
     formats:["I get it...","I know what it's like...","I never thought I'd be able to...","I know it feels scary...","The moment I realised...","What I'd tell myself the week after my breakup","The day I almost gave up on finding someone","What changed when I stopped learning and started shifting my state","Me in 2019 vs me now","Something I used to believe about love","How I met my wife (the part I don't usually share)","The thing nobody told me about being single"],
-    rule:"Use only Olly's real story: his 7-year relationship ended in 2019, he tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results, and he met his wife when he focused on how he felt every day instead of learning more. Never invent details, dates, places or conversations. Where a detail is needed, write it as a prompt for Olly, like [the moment you realised]."},
+    rule:"Use only Olly's real story: before he met his wife Jules he was dating and enjoying himself, not trying to settle down, and focusing every day on keeping himself in a better emotional state; when they met they both just knew it was different. The key was working on his emotional state every day, not learning more or fixing himself. Never mention a past relationship, a breakup, 2019 or any teachers or techniques he tried (Olly 2026-11-05: the old story is out of the messaging). Never invent details, dates, places or conversations. Where a detail is needed, write it as a prompt for Olly, like [the moment you realised]."},
   "Lifestyle": {group:"Connection", desc:"Show you're a normal person like them, or who they want to be, and what you're up to.",
     formats:["Date night or time with my wife","How I unwind","A favourite place to eat","A family or friends outing","Post-workout or morning routine","A day in my life","Doing my own 10-minute practice","What a calm, secure relationship actually looks like day to day","Things my wife and I do that keep it fun and playful","Little moments I didn't think I'd ever have"],
     rule:"Suggest what to film from his normal life (he's married, so his wife and their life together can feature) and link it back to the right emotional state in a line or two. Keep it light."},
@@ -825,8 +829,8 @@ Object.assign(POST_TYPES, {
     formats:["What The Attraction Formula actually does","What changes in who you notice","Why it's not positive thinking","Changing the station, not reading the manual","Small shifts every day, not a quick fix"],
     rule:"Make the mechanism clear in one line: The Attraction Formula puts you in the right emotional state around love, so that you attract a consistent, committed relationship where you feel safe being yourself. Keep it principle-based, like a named solution: say what it does and why that works, never how. You can say it's practised a little every day (small shifts, not a quick fix), but never explain steps, the meditation or how to find their state: Olly covers that after they apply. Walk them through the why as cause and effect: the low feelings around love (impatience, worry, envy, exhaustion) are survival emotions and they're all fear, and learning more doesn't change how you feel, so you bring the same state to dating every day. In the right emotional state around love (calm, safe, appreciation, joy) you move up the emotional scale, and people pick up on each other's states (emotional contagion): you notice and are drawn to calm, kind, available people and lose interest in the ones who keep you guessing. That's why the quality of the people goes up. Focus on one or two links, with a line from Olly's life (he focused on how he felt every day, not on learning more, and met his wife) or an everyday scene. Science only from the core message, worded 'linked with'. Never promise a partner by a date."},
   "Email · Personal story": {group:"Email", desc:"A real moment from Olly's life, big or small, twisted into a lesson about the right emotional state.",
-    formats:["My 7-year relationship ended in 2019","The meditations that didn't stick","How I met my wife (the part I don't usually share)","Something small that happened this week","What I'd tell myself the week after my breakup","Me in 2019 vs me now"],
-    rule:"Use only Olly's real story: his 7-year relationship ended in 2019, he tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results, and he met his wife when he focused on how he felt every day instead of learning more. Everyday moments are welcome but never invent them: write [what happened] style placeholders for Olly to fill. Proof-first hook, concrete setup, the turning point, then the lesson."},
+    formats:["How I met my wife (the part I don't usually share)","The daily habit that changed everything","What I focused on instead of learning more","Something small that happened this week"],
+    rule:"Use only Olly's real story: before he met his wife Jules he was dating and enjoying himself, not trying to settle down, and focusing every day on keeping himself in a better emotional state; when they met they both just knew it was different. The key was working on his emotional state every day, not learning more or fixing himself. Never mention a past relationship, a breakup, 2019 or any teachers or techniques he tried (Olly 2026-11-05: the old story is out of the messaging). Everyday moments are welcome but never invent them: write [what happened] style placeholders for Olly to fill. Proof-first hook, concrete setup, the turning point, then the lesson."},
   "Email · Belief breaking": {group:"Email", desc:"Name the old belief in their own words, then show the crack so they start doubting it themselves.",
     formats:["\"Once I've fixed myself, I'll meet my person\"","My friends who settled down weren't even trying","The happy couples I know still have their baggage","\"I need to heal everything first\"","\"I just need to see my own worth\"","\"I'm attracted to the wrong people\""],
     rule:"Belief shift structure: the belief in quotation marks, the way they say it to themselves; acknowledge you hear it a lot; validate it; reframe with 'But what if...' questions so they reach it themselves; land on the right emotional state. Never make them feel foolish."},
@@ -1045,8 +1049,8 @@ Object.assign(POST_TYPES, {
     formats:["Why we're drawn to people who match how we feel", "What dating anxiety does to your body", "Why positive thinking fades"],
     rule:"Use only what's in the core message (emotional contagion; HeartMath's early, small studies). Present it simply and honestly. Never claim the heart's field attracts a partner."},
   "Carousel · Personal story": {group:"Carousel", desc:"Olly's real story as the belief shift.",
-    formats:["What I tried after my 7-year relationship ended", "The thing that changed before I met my wife"],
-    rule:"Only Olly's real story: his 7-year relationship ended in 2019, he tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results, and he met his wife when he focused on how he felt every day instead of learning more. Never invent details: use [placeholders] for anything not given."}
+    formats:["The thing that changed before I met my wife", "What I focused on every day before I met my wife"],
+    rule:"Only Olly's real story: before he met his wife Jules he was dating and enjoying himself, not trying to settle down, and focusing every day on keeping himself in a better emotional state; when they met they both just knew it was different. The key was working on his emotional state every day, not learning more or fixing himself. Never mention a past relationship, a breakup, 2019 or any teachers or techniques he tried (Olly 2026-11-05: the old story is out of the messaging). Never invent details: use [placeholders] for anything not given."}
 });
 /* YouTube community posts (2026-10-28). Same type names as the Hub's YouTube community calendar (after "YouTube · "). */
 Object.assign(POST_TYPES, {
@@ -2003,7 +2007,7 @@ function offerPitch(o){
 function offerGive(o){ return o === "scale" ? "I'll send you The Feeling Finder, a free 2-minute tool." : o === "attract" ? "I'll send you the free training." : "I'll send it to you for free."; }
 // kind: "reel" or "story". Returns what to say, the caption ending, how it's delivered and (for manual DMs) the link to send.
 function ctaFor(kind, plat, offer){
-  plat = plat || POST.plat; offer = offer || POST.offer;
+  plat = plat || POST.plat; offer = offer || (kind === "reel" ? "scale" : POST.offer);
   const O = OFFERS[offer], w = O.word, story = kind === "story";
   const dmLink = "https://ollyhenson.com/" + O.path + "?utm_source=" + plat + "&utm_medium=dm&utm_campaign=" + O.campaign;
   // Olly films each Reel once and posts it everywhere (2026-10-26), so what he says is the same on every platform
@@ -2080,8 +2084,8 @@ function renderPostBar(){
   };
   if (reels){
     box.appendChild(el("h4", "", "Say at the end of the Reel (the same on every platform)"));
+    item("Sending them to The Feeling Finder (default for every Reel)", ctaFor("reel", "instagram", "scale").spoken, true);
     item("Sending them to the free training", ctaFor("reel", "instagram", "video").spoken, true);
-    item("Sending them to The Feeling Finder", ctaFor("reel", "instagram", "scale").spoken, true);
     item("Sending them to the Attract training", ctaFor("reel", "instagram", "attract").spoken, true);
     box.appendChild(el("p", "hint", "Each Reel comes with its caption (VIDEO, FEELING or ATTRACT, switch it on the Reel). Add to calendar sends the caption to the Hub with it."));
     return;
@@ -2677,7 +2681,7 @@ $("go").onclick = async () => {
       : channel === "email" && (Number($("count").value) || 3) > 1
       ? await emailBatch(mine.signal)
       : channel === "carousels" && (Number($("count").value) || 3) > 1 ? await carouselBatch(mine.signal)
-      : channel === "reels" && (Number($("count").value) || 3) > 1 ? await reelBatch(mine.signal)
+      : channel === "reels" ? await reelBatch(mine.signal)
       : ((await sampleFn.json(buildPrompt() + outlierBrief() + rejectBrief() + calBrief() + (channel === "reels" ? "" : queueBrief()) + (channel === "email" ? emailBrief() : channel === "reels" ? reelBrief() : postBrief()), {signal: mine.signal, cache: false})) || {}).ideas || [];
     st.textContent = ideas.length ? "" : "No ideas came back. Try again.";
     store.set("cig-ideas", {type:$("type").value, channel, ideas});
@@ -2827,17 +2831,38 @@ function reelBrief(){
   return "\n\nREELS OLLY EDITED AND APPROVED (most recent first). Match how he words each part; never copy his lines:\n"
     + q.map(x => REEL_PARTS.filter(([k]) => k !== "cta" && k !== "hook").map(([k]) => k + ": " + String((k === "hook" ? x.title : x.script[k]) || "").replace(/\n+/g, " / ")).join("\n")).join("\n---\n");
 }
-// One call per Reel, in parallel (several long pieces in one answer get cut short)
+// Hooks only (Olly, 2026-11-05): he freestyles every Reel, so the page writes just the hook for the cover, one request
+// for the whole batch. Each hook varies a different proven opener. who/steps are kept as empty strings so the queue,
+// drafts and calendar still treat these as Perfect Reels.
+function reelHookPrompt(type, t, n, part, topic, ops, recent){
+  return `You write Instagram Reel hooks for Olly Henson (The Attraction Formula), who helps singles attract a committed relationship by shifting into the right emotional state around love.
+${CORE}
+
+THE HOOK is the white text box above Olly's head on the Reel's cover for the first 3 to 5 seconds. It is also his first spoken line and the first line of the caption. It must make the right person stop scrolling: a single woman in her 30s or 40s who has done years of inner work and wants someone to settle down and build a life with.
+- SHORT: 4 to 7 words, ideally about 6. Olly's ideal length: "How to attract your person, scientifically".
+- Outcome-led: name what she wants (a committed relationship, her person, someone to build a life with).
+- Each hook is a slight variation of one proven opener from Olly's best Reels: keep its pattern and its key words ("fastest", "without a doubt", "works way better than", "you don't need", "scientifically"), change a few words. Never copy it and never invent a new pattern.
+- No em dashes. No comma before "and" or "or". No "frequency" or "vibration".
+- Every hook must be clearly different from the others and from these recent ones:
+${recent.length ? recent.map(h => "- " + h).join("\n") : "- (none yet)"}
+
+THE OPENERS (one hook per opener, in this order):
+${ops.map((o, k) => (k + 1) + ". " + o).join("\n")}
+
+Content type: ${type} (${t.group}). ${t.desc}
+Part of the message to lean on: ${part}
+${topic ? "Topic or angle: " + topic : ""}
+
+Give ${n} hooks. For each: hook, stage (which part of the core message it leans on, a few words).
+Reply as JSON: {"ideas":[{"hook":"","stage":""}]}`;
+}
 async function reelBatch(signal){
-  const n = Number($("count").value) || 3, type = $("type").value, t = POST_TYPES[type], fmt = $("format").value;
+  const n = Math.max(1, Number($("count").value) || 3), type = $("type").value, t = POST_TYPES[type];
   const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1], topic = $("topic").value.trim();
-  const ops = reelRotate("cig-reel-op", REEL_OPENERS, n), mos = reelRotate("cig-reel-mo", REEL_MOMENTS, n), recent = recentReelHooks();
-  const extra = outlierBrief() + rejectBrief() + calBrief() + reelBrief(); // no queued titles: they pulled every hook towards the same opener
-  const jobs = Array.from({length:n}, (_, k) => sampleFn.json(reelPrompt(type, t, fmt, 1, part, topic, {k, n, opener:ops[k], moment:mos[k], recent}) + extra, {signal, cache:false})
-    .then(r => r && r.ideas && r.ideas[0]));
-  const res = await Promise.allSettled(jobs);
+  const ops = reelRotate("cig-reel-op", REEL_OPENERS, n), recent = recentReelHooks();
+  const r = await sampleFn.json(reelHookPrompt(type, t, n, part, topic, ops, recent) + outlierBrief() + rejectBrief() + calBrief(), {signal, cache:false});
   if (signal.aborted) throw new Error("aborted");
-  return res.filter(r => r.status === "fulfilled" && r.value).map(r => r.value);
+  return ((r && r.ideas) || []).filter(x => x && x.hook).map(x => ({hook:String(x.hook).trim(), stage:x.stage || "", who:"", steps:"", offer:"scale"}));
 }
 function isPerfectReel(i){ return i && typeof i.who === "string" && typeof i.steps === "string"; }
 function reelLines(i){ return REEL_PARTS.map(([k, label]) => label + ": " + String((k === "hook" ? i.hook : i[k]) || "").replace(/\n+/g, " / ")); }
@@ -2854,62 +2879,52 @@ function saveReelEdit(i){
   store.set("cig-ideas", last);
 }
 function reelCard(type, i, ch){
-  if (!OFFERS[i.offer]) i.offer = POST.offer;
+  // Hooks only (Olly, 2026-11-05): the cover with the hook above his head, the keyword (FEELING by default) and the buttons
+  if (!OFFERS[i.offer]) i.offer = "scale"; // every Reel defaults to FEELING (Olly, 2026-11-05); VIDEO / ATTRACT are for Stories
   if (!i.cta) i.cta = reelCta(i.offer);
   if (typeof i.caption !== "string") i.caption = reelCaption(i.offer);
   const c = el("article", "card idea");
-  c.appendChild(el("span", "tag", ["Perfect Reel", type, i.stage].filter(Boolean).join(" · ")));
-  const wrap = el("div", "prl"), left = el("div", "prl-left"), phones = el("div", "prl-phones");
-  const shot = (cls, label) => {
-    const f = el("figure", "prl-shot"), p = el("div", "prl-phone"), t = el("div", cls);
-    p.style.backgroundImage = "url(" + REEL_FACE + ")"; p.appendChild(t); f.append(p, el("figcaption", "", label)); phones.appendChild(f); return t;
-  };
-  const hookView = shot("prl-hook", "0–5s · Hook"), liveView = shot("prl-live", "After 5s · Captions");
-  const paint = () => { hookView.textContent = (i.hook || "").trim(); liveView.textContent = String(i.who || "").trim().split(/\s+/).slice(4, 9).join(" "); };
-  left.append(phones, el("p", "hint", "When the hook disappears, your captions take its place in the same spot: one white box, 3 to 6 words at a time. Never stack them under the hook."));
+  c.appendChild(el("span", "tag", ["Reel", type, i.stage].filter(Boolean).join(" · ")));
+  const wrap = el("div", "prl prl-min"), f = el("figure", "prl-shot"), ph = el("div", "prl-phone"), hv = el("div", "prl-hook");
+  ph.style.backgroundImage = "url(" + REEL_FACE + ")"; ph.appendChild(hv); f.appendChild(ph);
+  const side = el("div", "prl-side"), hk = el("p", "hook", i.hook || "");
+  editableHook(hk, i);
+  const paint = () => { hv.textContent = (hk.textContent || "").trim(); };
+  hk.addEventListener("input", paint); paint();
   const kw = el("div", "pbchips"), kwRow = el("div", "row");
   Object.keys(OFFERS).forEach(o => { const b = el("button", "", OFFERS[o].word); b.type = "button"; b.dataset.offer = o; b.setAttribute("aria-pressed", String(i.offer === o)); b.onclick = () => setOffer(o); kw.appendChild(b); });
-  kwRow.append(el("span", "sub", "Keyword"), kw); left.appendChild(kwRow);
-  const capWrap = el("div", "stack"), cap = document.createElement("textarea"), capCopy = el("button", "btn small", "Copy caption");
-  capWrap.style.gap = "6px";
-  cap.className = "prl-cap"; cap.value = i.caption; cap.spellcheck = true; cap.setAttribute("aria-label", "Caption");
-  cap.oninput = () => { i.caption = cap.value; }; cap.onblur = () => saveReelEdit(i);
-  capCopy.onclick = () => copyText(cap.value, capCopy); capCopy.style.alignSelf = "flex-start";
-  capWrap.append(el("span", "sub", "Caption · goes to the Hub with the Reel"), cap, capCopy); left.appendChild(capWrap);
-  const parts = el("ol", "prl-parts"), txt = {};
-  REEL_PARTS.forEach(([k, label, time, why], n) => {
-    const li = el("li", "prl-part" + (k === "name" || k === "missing" ? " key" : "")), h = el("h4", "", label);
-    h.appendChild(el("small", "", time));
-    const t = el("div", k === "hook" ? "hook txt" : "txt", (k === "hook" ? i.hook : i[k]) || "");
-    li.append(el("span", "n", String(n + 1)), h, el("p", "why", why), t);
-    if (k === "hook") { editableHook(t, i); t.addEventListener("input", paint); }
-    else {
-      t.contentEditable = "true"; t.spellcheck = true; t.classList.add("editable"); t.title = "Click to edit";
-      t.oninput = () => { i[k] = t.innerText.replace(/\n{3,}/g, "\n\n").trim(); if (k === "who") paint(); };
-      t.onblur = () => saveReelEdit(i);
-      t.onpaste = e => { e.preventDefault(); document.execCommand("insertText", false, (e.clipboardData && e.clipboardData.getData("text/plain")) || ""); };
-    }
-    txt[k] = t; parts.appendChild(li);
-  });
+  kwRow.append(el("span", "sub", "Keyword"), kw);
+  side.append(el("span", "sub", "Hook · click to edit"), hk, kwRow);
   function setOffer(o){
     const old = i.offer; if (o === old) return;
-    if (i.cta === reelCta(old)) { i.cta = reelCta(o); txt.cta.textContent = i.cta; }
-    if (i.caption === reelCaption(old)) { i.caption = reelCaption(o); cap.value = i.caption; }
+    if (i.cta === reelCta(old)) i.cta = reelCta(o);
+    if (i.caption === reelCaption(old)) i.caption = reelCaption(o);
     i.offer = o; kw.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.offer === o)));
     saveReelEdit(i);
   }
-  wrap.append(left, parts); c.appendChild(wrap); paint();
-  const notes = Array.isArray(i.research) ? i.research.filter(Boolean) : [];
-  if (notes.length) {
-    const rb = el("div", "research"), ul = el("ul");
-    notes.forEach(x => ul.appendChild(el("li", "", x)));
-    rb.append(el("span", "sub", "The research · for you while filming, not on screen"), ul); c.appendChild(rb);
-  }
-  if (i.why) c.appendChild(el("p", "hint", "Why it works: " + i.why));
+  wrap.append(f, side); c.appendChild(wrap);
   i._beforeQueue = () => saveReelEdit(i);
-  c.appendChild(connectButton(c, i));
-  c.appendChild(ideaButtons(c, ch, type, i, "Reel · " + type, () => reelLines(i)));
+  c.appendChild(ideaButtons(c, ch, type, i, "Reel · " + type, () => [i.hook || ""]));
   return c;
+}
+// Add all to calendar (Olly, 2026-11-05): one tap sends every Reel still on screen to the Hub (next free slots, FEELING
+// unless switched) and saves each to the queue. The Hub skips any title already waiting unposted, so pressing twice is safe.
+function reelAllBar(pairs, type){
+  const bar = el("div", "row reelall"), go = el("a", "btn small primary", "Add all to calendar"), note = el("span", "hint", "");
+  const live = () => pairs.filter(p => p[0].isConnected && (p[1].hook || "").trim());
+  const payload = () => live().map(([c, i]) => { if (i._beforeQueue) i._beforeQueue(); return {title:(c.querySelector(".hook").textContent || i.hook || "").trim(), type, caption:i.caption || "", offer:i.offer || "scale"}; });
+  const refresh = () => { const n = live().length; go.textContent = n ? "Add all " + n + " to calendar" : "Add all to calendar"; go.href = hubUrl() + "#addreel=" + encodeURIComponent(JSON.stringify(payload())); };
+  go.target = "_blank"; go.rel = "noopener";
+  go.addEventListener("pointerdown", refresh); go.addEventListener("focus", refresh); go.addEventListener("mouseenter", refresh);
+  go.addEventListener("click", e => {
+    refresh();
+    if (!live().length) { e.preventDefault(); return; }
+    live().forEach(([c]) => { const b = [...c.querySelectorAll("button")].find(x => x.textContent === "Add to queue"); if (b) b.click(); });
+    setTimeout(() => { go.textContent = "✓ Sent to calendar"; note.textContent = "Each one is also in your queue."; }, 50);
+  });
+  setTimeout(refresh, 0);
+  bar.append(go, note);
+  return bar;
 }
 /* Reel drafts (Olly, 2026-10-30): save any version of a Reel and open it again later. Kept online in db "reelDrafts". */
 const reelDrafts = {items:[], db:null};
@@ -2978,9 +2993,11 @@ function crsPreview(slides, shot){
 }
 function renderIdeas(type, ideas, ch){
   const box = $("ideas"); box.textContent = "";
+  const reelPairs = [];
+  if (ch === "reels" && ideas.some(isPerfectReel)) box.appendChild(reelAllBar(reelPairs, type));
   const noun = ch === "stories" ? "Story" : ch === "skool" ? "Skool" : ch === "memes" ? "Meme" : ch === "email" ? "Email" : ch === "ytpost" ? "Community" : ch === "carousels" ? "Carousel" : "Reel";
   ideas.forEach(i => {
-    if (ch === "reels" && isPerfectReel(i)) { box.appendChild(reelCard(type, i, ch)); return; }
+    if (ch === "reels" && isPerfectReel(i)) { const rc = reelCard(type, i, ch); reelPairs.push([rc, i]); box.appendChild(rc); return; }
     if (Array.isArray(i.slides)) {
       const slides = crsBeats(i), c = el("article", "card idea");
       c.append(el("span", "tag", ["Carousel", (i.type || type).replace("Carousel · ", ""), slides.length + " slides", i.stage].filter(Boolean).join(" · ")), el("p", "hook", i.hook || ""));
@@ -3907,7 +3924,7 @@ function renderQueue(){
     else if (q.channel === "reels" && q.script) {
       const op = el("button", "btn small primary", "Open"); op.title = "Open this Reel in the ideas to edit it";
       op.onclick = () => openReel({hook:q.title || "", stage:q.stage || "", why:q.why || "", ...q.script});
-      row.append(op, cp, hubButton("reel", () => ({title:(q.title || "").trim(), type:String(q.level || "").split(" · ")[1] || "", caption:q.caption || (q.script && q.script.caption) || "", offer:q.offer || (q.script && q.script.offer) || "video"})), del);
+      row.append(op, cp, hubButton("reel", () => ({title:(q.title || "").trim(), type:String(q.level || "").split(" · ")[1] || "", caption:q.caption || (q.script && q.script.caption) || "", offer:q.offer || (q.script && q.script.offer) || "scale"})), del);
     }
     else if (q.channel === "reels" || q.channel === "stories") row.append(ob, cp, ed, hubButton(q.channel === "reels" ? "reel" : "story", () => ({title: (q.title || "").trim(), type: String(q.level || "").split(" · ")[1] || ""})), del);
     else if (q.channel === "ytpost") row.append(ob, cp, ed, hubButton("ytpost", () => ({title: (q.title || "").trim(), type: String(q.level || "").split(" · ").pop(), post: q.post || "", pinned: q.pinned || "", poll: q.poll || []})), del);

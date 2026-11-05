@@ -258,6 +258,14 @@ Notes on fields that aren't obvious:
 
 ---
 
+### Added 2026-11-05 (Sales tab, Remove from GHL)
+- **Scaling a fixed 1600x900 stage: use CSS `zoom`, never `transform: scale()`.** Scaled layers (anything with opacity/filter transitions) render blurry ("part of it is blurred"). Applies to the Sales mind map and any recorded map page.
+- **Sales tab = board first.** Olly: the mind map "takes up too much room on desktop and on the phone". Main view = columns + money tiles; details + mind map live in a pop-up. Keep columns fitting one desktop screen (min ~145px each); on phones swipe sideways with snap.
+- **Test Hub UI with a mock fetch:** inject a `<script>` before boot that answers `/api/state` and `/api/applicants` with fake data, open the file with puppeteer and screenshot board + pop-up at 1440 and 390. Never test against real applicants.
+- **GHL writes from the Hub** use `env.GHL_WRITE_TOKEN` (the Claude agent key; Olly set it in Cloudflare: Claude is blocked from writing secrets). `GHL_TOKEN` is view-only. Test any GHL write on a dummy contact created and deleted via the API.
+- **Removed applicants** (`a.removed` from the `removed - not a fit` tag, or `lmStore(id).removed`) stay on the board but are left out of every stat.
+- **Python heredoc edits:** `\n` inside a JS string written through a bash heredoc became a real newline and broke the page twice. For JS strings with escapes use the Edit tool, then jscheck.
+
 ## 6. Quick reference — where things are in the code
 
 | Feature | Key functions |
@@ -450,3 +458,5 @@ Notes on fields that aren't obvious:
 
 - **2026-11-04 (late night): Skill review.** Data model: email pitch days (`pitch:true`, `emAudience`, `pitchSeed1`) + parked Story auto-post code/KV. Design principles: Stories stay manual for trending music (Olly parked the auto-post after it was built: ask what a Story needs before automating it); pitch days on the calendar; ask before building unrequested GHL features (Send-to-GHL left for Olly to decide).
 - **2026-11-04 (late, review 2):** Hub email labels now use Olly's renamed GHL smart lists (Daily email / Pitch / Daily email (pitch day)); overrides the Warm List / Cold List / Daily Email List labels from earlier today.
+
+- 2026-11-05 skill review: Sales tab rebuilt as a GHL-style board (pop-up details + mind map, Gone quiet column, VSL sent naming, sales video button), Remove from GHL (write key, dummy-contact testing, stat exclusion), the zoom-not-scale rule after Olly saw blur, mock-fetch UI testing, and the heredoc escape pitfall.

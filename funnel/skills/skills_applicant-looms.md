@@ -9,6 +9,8 @@ Built 2026-11-01 from Frankie's "close in 5-minute videos" method, adapted to ou
 - Hub > Looms tab (applicant answers + mind map, the screen you record over): hub.ollyhenson.com
 - Core argument: Messaging Center https://claude.ai/artifact/QPbzwHtvFExE8qqZKbB8ea
 
+> **⚠️ UPDATED 2026-11-05: personal Looms are replaced by ONE master sales video.** Flow now: application → rate in Hub > Looms → 💲 Price check message → they say it's within reach → **🎥 Sales video** button (https://youtu.be/wghvWJJ6YVk, unlisted YouTube; marks them Loom sent) → they reply "ready" → 🔗 Checkout link. No chasing. Script + map: `funnel/sales-video-script.md`, `funnel/sales-video-map.html`. Recorded in Google Vids (Loom free plan caps at 5 minutes). The personal-Loom steps below are kept for unusual applicants only.
+
 ---
 
 ## The 6 rules (from Frankie, applied to us)
@@ -183,9 +185,25 @@ Mark them **Not a fit**.
 
 ## Step 6: Personal now, one master video later
 
+> **Superseded 2026-11-05:** the master video was recorded early (see Step 7). Personal Looms only for unusual applicants. Keep logging the main doubt in the Hub notes.
+
 - **Now (no one has said yes yet):** record a fresh personal Loom for every Good and Okay applicant. Frankie does the same with a new offer.
 - **After every Loom, log 3 things** in the Hub notes box: main doubt they raised, what they replied to or asked, did they join.
 - **After 3 to 5 joins:** look at the notes. Whatever objection keeps coming up goes into the script. Then record **one master Loom** for everyone, and personalise only the WhatsApp message on top (the part above the link). Re-record personal Looms only for unusual situations.
+
+---
+
+## Step 7: The master VSL flow (2026-11-05, replaces personal Looms for normal applicants)
+
+1. Application -> Hub **Sales** tab (Trello-style board: New applications / Price check sent / Replied / VSL sent / Joined / Gone quiet / Not a fit; money tiles on top).
+2. Send the **💲 Price check message** from the card's pop-up. Only people who say the price is within reach get the video.
+3. **🎥 Sales video** button sends the unlisted YouTube VSL (https://youtu.be/wghvWJJ6YVk) on WhatsApp or email and moves them to **VSL sent**. Message (Olly's final wording): "Hey [Name], great, thanks for getting back to me. / Here's a video going through how the program works, what to expect and how to start. / [link] / If you're ready to start after watching, just reply here and I'll send you the link. / And if you have any questions, just let me know." No "watch it in your own time".
+4. They reply "ready" -> 🔗 Checkout link. No chasing (Step 5).
+5. Stopped replying but could be a fit -> **Gone quiet** (card shows where they went quiet). Rude / really bad fit -> **Not a fit -> Remove from GHL** (DND all channels, list tags off, tag `removed - not a fit`, left out of every stat and data pull).
+
+**The VSL map** (`funnel/sales-video-map.html`, script `funnel/sales-video-script.md`): Outcome (top, with the couple-cooking photo) -> centre "Helping, guiding and supporting you every step of the way to meet your person" -> The steps (left) -> What to expect (right, ending on the 14-day guarantee) -> "Steps to get started" heading only (bottom: he switches screen and shows sign-up live). Camera box top left (captions sit at the bottom). Desktop only.
+
+**Recording + hosting:** Google Vids (Loom free caps at 5 min), uploaded as an UNLISTED YouTube video (never Private: applicants can't open it). Send the link, not a file: WhatsApp shows a playable preview and the view count survives. For the sign-up demo use a fresh `olly+<word>@ollyhenson.com` address, stop before card details, and pause the recording while fetching a Skool code.
 
 ---
 
@@ -205,3 +223,5 @@ Mark them **Not a fit**.
 - [ ] **What happens after payment**: confirm the welcome email + Skool invite fire automatically, so the "how to join" section is true.
 
 - **2026-11-02: Skill review.** Added the Loom recorded stage (tap Recorded before sending), the new-application notification that opens their map, and the automatic confirmation email applicants now get.
+
+- **2026-11-05: Skill review.** Added Step 7 (master VSL flow) because Olly stopped personal Looms: price check first, one master VSL, Sales board stages (VSL sent, Gone quiet, Not a fit + Remove from GHL), his exact send-message wording (he cut "Watch it in your own time" and added the questions line), and the VSL map structure he approved after several rounds (outcome on top with a photo, centre linked to the outcome, steps, what to expect + guarantee, a bare "Steps to get started" heading because he demos sign-up live, camera box top left away from captions, desktop only). "Loom recorded" stage removed.

@@ -47,7 +47,7 @@ End with which 2–3 to film first and why. Keep it short. Olly wants titles, no
 - Specific topic in every title (see the Hook Specificity rule). It must make sense with zero context.
 - Use "soulmate" or "someone you can build a life with". Avoid manifestation, LOA and tarot language unless the data says the audience loves it.
 - No em dashes, and no comma before "and" or "or". American spelling for "program" and "visualize".
-- Never fabricate results or claims. Only use Olly's story where it's true (7-year relationship ended in 2019, struggled with dating, met his now-wife).
+- Never fabricate results or claims. Only use Olly's story where it's true (worked on his emotional state every day, then met his now-wife Jules and they both just knew; never the old breakup / 7-year relationship story).
 - Don't repeat a title from a previous batch in the same session.
 
 ---

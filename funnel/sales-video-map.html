@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Heart Attractor Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  One-page map for the master sales video (2026-11-05). Same look as the Hub > Looms mind map,
+  but general, for everyone who has said yes to the price. Script: funnel/sales-video-script.md
+  Record: open full screen (button or F), talk through it in this order:
+  Where you are -> What's in the way -> Where you want to be -> How it works -> What you get -> Reply "ready".
+  Click a branch to spotlight it while you talk about it; click it again (or Esc) to show everything.
+-->
+<style>
+  :root{ --bg:#0a0510; --ink:#f6eefb; --muted:#9c8bb0; --soft:#d6c8e4; --line:#2e2340; --card:rgba(22,16,32,.92); --pink:#e04fd6; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0a0510; } }
+  :root[data-theme="dark"]{ --bg:#0a0510; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:Poppins, system-ui, sans-serif; }
+  .wrap{ min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; box-sizing:border-box; }
+  .bar{ display:flex; gap:10px; align-items:center; font-size:13px; color:var(--muted); font-family:Inter, system-ui, sans-serif; }
+  .bar button{ font:600 13px Poppins, sans-serif; color:var(--ink); background:#2a1238; border:1px solid var(--pink); border-radius:999px; padding:7px 14px; cursor:pointer; }
+  .box{ position:relative; display:flex; align-items:center; justify-content:center; width:min(100%, calc((100vh - 80px) * 16 / 9)); aspect-ratio:16/9; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:radial-gradient(90% 90% at 50% 35%, #2a1238 0%, #120a1a 60%, #0a0510 100%); }
+  .box:fullscreen{ border-radius:0; border:0; width:100vw; height:100vh; aspect-ratio:auto; }
+  .stage{ position:relative; flex:none; width:1600px; height:900px; }
+  .stage svg{ position:absolute; inset:0; width:1600px; height:900px; }
+  .centre{ position:absolute; left:610px; top:400px; width:380px; padding:22px 24px; box-sizing:border-box; text-align:center; border-radius:24px; background:linear-gradient(160deg,#4a1a66,#2a0f3a); border:2px solid var(--pink); box-shadow:0 0 90px rgba(224,79,214,.55), 0 0 0 6px rgba(224,79,214,.12); }
+  .centre .nm{ font-weight:800; font-size:32px; line-height:1.1; }
+  .centre .want{ font-weight:700; font-size:21px; line-height:1.4; margin-top:12px; }
+  .centre .want small, .card small{ display:block; font-weight:700; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
+  .centre .want small{ color:#e1a6ff; margin-bottom:6px; }
+  .br{ position:absolute; width:470px; display:flex; flex-direction:column; gap:10px; cursor:pointer; }
+  .br h3{ margin:0 0 2px; font-weight:700; font-size:18px; letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:10px; }
+  .br h3 i{ width:12px; height:12px; border-radius:50%; display:inline-block; }
+  .card{ background:var(--card); border:1px solid var(--line); border-left:4px solid var(--c); border-radius:12px; padding:9px 14px; }
+  .card small{ color:var(--muted); margin-bottom:3px; }
+  .card p{ margin:0; font-size:18px; line-height:1.4; font-family:Inter, system-ui, sans-serif; }
+  .card.hot{ background:rgba(60,18,40,.92); border-color:rgba(248,113,113,.5); border-left-color:#f87171; }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
+  .chips span{ font-size:13px; padding:3px 9px; border-radius:999px; border:1px solid var(--line); background:#1f1630; color:var(--soft); font-family:Inter, system-ui, sans-serif; }
+  .ff{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-weight:700; font-size:15px; }
+  .ff em{ font-style:normal; color:var(--muted); font-weight:500; }
+  .card ol{ margin:4px 0 0; padding-left:22px; font-family:Inter, system-ui, sans-serif; }
+  .card li{ font-size:18px; line-height:1.4; margin:2px 0; }
+  .card.oc{ display:flex; gap:14px; align-items:center; padding:8px 14px 8px 8px; }
+  .card.oc img{ width:172px; height:129px; object-fit:cover; border-radius:8px; flex:none; }
+  .price{ font-weight:800; font-size:20px; margin:0; }
+  .stage.focus .br, .stage.focus .centre{ opacity:.18; filter:saturate(.4); }
+  .stage.focus .br.on{ opacity:1; filter:none; }
+  .cam{ position:absolute; left:40px; top:40px; width:400px; height:225px; box-sizing:border-box; border:2px dashed rgba(225,166,255,.35); border-radius:14px; display:flex; align-items:center; justify-content:center; color:rgba(225,166,255,.55); font:600 15px Poppins, sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+  .cam.off{ display:none; }
+  .stack{ display:none; flex-direction:column; gap:10px; width:100%; max-width:520px; }
+  .stack b{ font-size:13px; letter-spacing:.08em; text-transform:uppercase; margin-top:8px; }
+  @media (max-width:760px){ .box, .bar{ display:none; } .stack{ display:flex; } .wrap{ justify-content:flex-start; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><button type="button" id="full">Full screen for recording</button><span>Press F for full screen · click a branch to spotlight it · Esc shows everything · C hides the camera box</span></div>
+  <div class="box" id="box"><div class="stage" id="stage"></div></div>
+  <div class="stack" id="stack"></div>
+</div>
+<script>
+(function(){
+  var CENTRE = { title:"The Heart Attractor Program", label:"What it does", text:"Helping, guiding and supporting you every step of the way to meet your person." };
+  var OUTCOME = { title:"The outcome", text:"Help you meet someone that you can settle down and build your life with." };
+  function outcomeCard(){ return '<div class="card oc" style="--c:#e1a6ff"><img src="sales-video-map-assets/cooking-together.jpg" alt="A couple laughing while cooking dinner together"><div><small>Why you join</small><p style="font-size:21px; font-weight:600">' + esc(OUTCOME.text) + '</p></div></div>'; }
+
+  // [label, text | {chips:[]} | {ff:[]} | {ol:[]} | {price:true}, "hot"?]
+  var B = [
+    { title:"The steps", c:"#7dd3fc", x:40, y:300, cards:[
+      ["Step 1", "Get clear on your intentions."],
+      ["Step 2", "Get clear on what you'll feel with your person."],
+      ["Step 3 · Daily embodiment", { ol:["A 10-minute meditation, once a day", "Exercises during your day to stay in that state"] }]
+    ]},
+    { title:"What to expect", c:"#4ade80", x:1090, y:100, cards:[
+      ["The first week", "Get to know the materials and the meditation."],
+      ["Then", "You'll begin to believe it's possible."],
+      ["Then", "Your life circumstances start to improve."],
+      ["Then", "People start to show up."],
+      ["All the way through", "Old beliefs and patterns come up. THE most important part, where you get my daily support as you meet someone.", "hot"],
+      ["14-day guarantee", "Do it daily and message me daily. If you don't feel different after 14 days, you get every penny back."]
+    ]}
+  ];
+
+  var PLAN = { title:"Steps to get started", steps:["Reply “ready” and I'll send you the link", "Choose monthly ($497) or annual ($2,500)", "Pop in your card details", "Check your email for your invite to the community", "Start with the welcome training"], note:"14-day guarantee on both options." };
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(m){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[m]; }); }
+  function card(c, col){
+    var v = c[1], body;
+    if (v.chips) body = '<div class="chips">' + v.chips.map(function(x){ return "<span>" + esc(x) + "</span>"; }).join("") + "</div>";
+    else if (v.ff) body = '<div class="ff">' + v.ff.map(function(x, i){ return '<span style="color:' + ["#fde68a", "#86efac", "#4ade80"][i] + '">' + esc(x) + "</span>"; }).join("<em>→</em>") + "</div>";
+    else if (v.ol) body = "<ol>" + v.ol.map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ol>";
+    else if (v.price) body = '<p class="price">$497/month <span style="color:var(--muted); font-weight:500; font-size:15px">or</span> $2,500/year</p><p>Monthly cancels anytime. Annual is 58% off.</p>';
+    else body = "<p>" + esc(v) + "</p>";
+    return '<div class="card' + (c[2] === "hot" ? " hot" : "") + '" style="--c:' + col + '"><small>' + esc(c[0]) + "</small>" + body + "</div>";
+  }
+  function planCard(){
+    return ""; // heading only: Olly switches screens and walks them through sign-up (2026-11-05)
+  }
+
+  // desktop map (1600x900 stage, scaled to the box)
+  var st = '<svg viewBox="0 0 1600 900" aria-hidden="true">';
+  [[610, 495, 510, 495], [990, 495, 1090, 495], [800, 610, 800, 698], [800, 400, 800, 365]].forEach(function(p, i){
+    var col = ["#7dd3fc", "#4ade80", "#e04fd6", "#e1a6ff"][i], mx = (p[0] + p[2]) / 2;
+    var d = i >= 2 ?"M" + p[0] + " " + p[1] + " L " + p[2] + " " + p[3] : "M" + p[0] + " " + p[1] + " C " + mx + " " + p[1] + ", " + mx + " " + p[3] + ", " + p[2] + " " + p[3];
+    st += '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="3" stroke-opacity=".6"/>';
+  });
+  st += '</svg><div class="centre"><div class="nm">' + esc(CENTRE.title) + '</div><div class="want"><small>' + esc(CENTRE.label) + "</small>" + esc(CENTRE.text) + "</div></div>";
+  B.forEach(function(b, i){ st += '<div class="br" data-i="' + i + '" style="left:' + b.x + "px; top:" + b.y + 'px"><h3 style="color:' + b.c + '"><i style="background:' + b.c + '"></i>' + esc(b.title) + "</h3>" + b.cards.map(function(c){ return card(c, b.c); }).join("") + "</div>"; });
+  st += '<div class="br" data-i="2" style="left:560px; top:698px; width:480px"><h3 style="color:#e04fd6; justify-content:center; font-size:19px"><i style="background:#e04fd6"></i>' + esc(PLAN.title) + "</h3>" + planCard() + "</div>";
+  st += '<div class="br" data-i="3" style="left:560px; top:160px; width:480px"><h3 style="color:#e1a6ff"><i style="background:#e1a6ff"></i>' + esc(OUTCOME.title) + "</h3>" + outcomeCard() + "</div>";
+  st += '<div class="cam" id="cam">Your camera here</div>'; // space kept clear for the Google Vids webcam (2026-11-05); C hides the outline
+  var stage = document.getElementById("stage"), box = document.getElementById("box");
+  stage.innerHTML = st;
+
+  // phone: stacked list, same content
+  var sk = '<div class="card" style="--c:var(--pink)"><small>' + esc(CENTRE.label) + '</small><p style="font-weight:800; font-size:20px; font-family:Poppins, sans-serif">' + esc(CENTRE.title) + "</p><p>" + esc(CENTRE.text) + "</p></div>";
+  sk += '<b style="color:#e1a6ff">' + esc(OUTCOME.title) + "</b>" + outcomeCard();
+  B.forEach(function(b){ sk += '<b style="color:' + b.c + '">' + esc(b.title) + "</b>" + b.cards.map(function(c){ return card(c, b.c); }).join(""); });
+  sk += '<b style="color:#e04fd6">' + esc(PLAN.title) + "</b>" + planCard();
+  document.getElementById("stack").innerHTML = sk;
+
+  // zoom (not transform: scale) so text is laid out at the real size and stays sharp (2026-11-05: scaled layers looked blurred)
+  function fit(){ stage.style.zoom = Math.min(box.clientWidth / 1600, box.clientHeight / 900); }
+  window.addEventListener("resize", fit);
+  document.addEventListener("fullscreenchange", function(){ setTimeout(fit, 60); });
+  fit();
+
+  function full(){ if (document.fullscreenElement) document.exitFullscreen(); else if (box.requestFullscreen) box.requestFullscreen(); }
+  document.getElementById("full").addEventListener("click", full);
+  function clear(){ stage.classList.remove("focus"); stage.querySelectorAll(".br.on").forEach(function(x){ x.classList.remove("on"); }); }
+  stage.querySelectorAll(".br").forEach(function(el){
+    el.addEventListener("click", function(){ var was = el.classList.contains("on"); clear(); if (!was){ el.classList.add("on"); stage.classList.add("focus"); } });
+  });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") clear(); if ((e.key === "f" || e.key === "F") && !e.metaKey && !e.ctrlKey) full(); if ((e.key === "c" || e.key === "C") && !e.metaKey && !e.ctrlKey) document.getElementById("cam").classList.toggle("off"); });
+})();
+</script>
+</body>
+</html>

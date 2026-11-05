@@ -17,3 +17,12 @@ reels/.hubkey
 .wrangler/
 marketing/reel-stats/
 marketing/messaging-tools/survey-responses.md
+
+# Weekly email content: contains a member testimonial (repo is public) - kept local only (2026-11-05)
+marketing/email-sequences/weekly-email-final/
+marketing/email-sequences/weekly-email-saved/
+marketing/email-sequences/weekly-email-round2-seed.json
+marketing/email-sequences/weekly-email-builder-prompt.txt
+marketing/email-sequences/weekly-email-dormant-copy.html
+marketing/email-sequences/build_weekly_emails.py
+marketing/email-sequences/weekly-template-preview-*.html

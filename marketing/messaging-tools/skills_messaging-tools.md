@@ -187,6 +187,10 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 
 - **Writing and image-making happen in one place (Olly, 2026-11-02):** "I just want it to create the meme and the image together with the ability to add my own within that same generator." Any image maker that needs words gets a Generate button that fills the image directly, keeps every line editable, and lets Olly use his own text or picture.
 
+- **Reels (2026-11-05): hooks only.** Olly freestyles, so the Reel generator writes just the hook: one request per batch, each hook a variation of a different proven opener, 4-7 words, shown on a cover preview with the keyword. No talking points, 8 parts, caption box, research or "why it works". **Every Reel defaults to FEELING**; VIDEO / ATTRACT are only offered in Stories. "Add all N to calendar" sends every Reel on screen to the Hub (#addreel=[list]) and queues them.
+- The email prompt includes recent Reel titles (calBrief "other channels") on purpose, to keep the week varied; if emails start sounding like Reel hooks, drop Reels from it.
+- **Founder story:** only "worked on my emotional state every day, then met Jules and we both just knew". The old 7-year relationship / breakup / teachers story was removed everywhere 2026-11-05.
+
 ### Never
 - Never let a Reel hook run past 7 words, and never copy a long outlier hook at full length: trim it (2026-11-04).
 - Never make Olly go to another tab to get the words for an image he's making (meme text lived in the hidden Memes channel while the Story maker only had a blank editor, 2026-11-02).
@@ -343,3 +347,5 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **2026-11-04: Skill review.** Process 11-14: test the reload with Olly's saved state (a load-order crash hid behind "nothing happens"); Claude buttons show a counting status on the button and never exit silently; version label + on-page error catcher when a bug can't be reproduced; Hub links with big payloads are built on pointerdown. Carousels: Add to queue on idea cards too (overrides "queue only the finished carousel"); the maker owns the finished carousel (editable caption, bottom button row with Not this one); centring stored per slide; Member win carousels; caption writer matches the last slide's CTA, subtle emojis, Reel hashtags added by the page; profile photo. Never: uncovered screenshots (covered ones may stay with a Member win), hidden-until-action features, stand-in tests presented as live. Example: Member win slide 1.
 
 - **2026-11-04 (later): Skill review.** Rules: Reel hooks 4 to 7 words (ideal "How to attract your person - scientifically"), overriding 5 to 11; proven hooks always trimmed; match Olly's own Reel titles on the calendar (calBrief). Never: a Reel hook over 7 words. Examples: the ideal-length hook plus two of his calendar titles. Process: a publish to WsnecJvYahvCKVDevtrUqc from a new session is refused once and shows the live diff; if the diff is only my own edits, publish again unchanged.
+
+- 2026-11-05 skill review: Reels switched to hooks only with FEELING default and "Add all to calendar" (Olly: "I only need the cover photo with the hook... add all 6 to calendar"), noted why the email prompt carries Reel titles, and replaced the founder story everywhere.

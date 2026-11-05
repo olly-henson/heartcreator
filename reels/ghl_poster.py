@@ -256,7 +256,15 @@ def check(item):
                 if kid.get("previewLink"):
                     links[pl] = kid["previewLink"]
             else:
-                out[pl] = ("deleted", "removed in GHL before it posted")
+                # No published/failed child yet. Instagram and TikTok take a while to process a video, and GHL swaps the
+                # post for its child only when that finishes, so a recent swap is still in progress (2026-11-05: an
+                # Instagram Reel was wrongly marked "removed" 2 minutes after its slot). Only an old one counts as removed.
+                gone = p.get("deletedAt") or ""
+                try:
+                    age = datetime.now(timezone.utc) - datetime.strptime(gone[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+                except ValueError:
+                    age = timedelta(days=1)
+                out[pl] = ("in_progress", "") if age < timedelta(hours=6) else ("deleted", "removed in GHL before it posted")
         except Exception as e:
             out[pl] = ("unknown", str(e)[:200])
     item["_links"] = links

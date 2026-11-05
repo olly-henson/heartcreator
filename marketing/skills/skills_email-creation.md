@@ -212,6 +212,19 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 4. Smart lists: one action per message ("step by step"), filters joined by AND go in ONE box (Add nested filter); separate boxes = OR.
 5. Count check after every list change: the lists must add up (e.g. Daily email = Pitch + Daily email (pitch day) + engaged members).
 
+### Weekly email (dormant) workflow (LIVE 2026-11-05)
+- Trigger: `engaged recently` removed (filter: has `daily email list`, not joined). Wait until Sunday 09:00, then 12 emails a week apart (11 evergreen + week 12 "should I stop emailing you?"), then if still not engaged remove `daily email list`. Goal: `engaged recently` added = exit back to the daily email. 75 contacts bulk-added via **Trigger automation**, all at once.
+- Emails: `marketing/email-sequences/weekly-email-final/` (Olly's approved versions), copy/review page artifact TdT8tTRC5mcoF5ZfevVBhh (editable, Yes/No per email, saved in its db).
+- **How emails get into GHL (the rule):** the AI builder attaches a template by name but leaves the text empty. So build one GHL template per email WITH the text inside first (`make_weekly_templates.py`: Daily Email Template shell = Arial 18px, line-height 1.5, purple footer with magenta unsubscribe; POST /emails/builder then /emails/builder/data), then the builder prompt names each step's template and sets From "Olly Henson" / olly@ollyhenson.com / reply-to on every step. Check one preview + one step's From before publishing.
+
+### What Olly kept and cut in the weekly emails (2026-11-05)
+- **Kept:** friends-comparison emails (the baggage test, tired, you know more than your married friends), intellectualization -> emotional resonance mechanism emails, his own story, Catrin's result, reply questions (worst dating advice, an ordinary Sunday, when did you feel like this?).
+- **Cut:** metaphor and scenario emails (the radio manual, the 7pm text, "it'll happen when you stop looking"). Prefer direct mechanism + his Reel wording over clever analogies.
+- **He removed every link** from the evergreen emails: pure value, no ask, except week 12's stay-on-the-list link.
+- **Belief:** never say "you don't need to believe it first". Belief is essential AND it's built through emotional resonance (feeling like you're already with them). Source: his Reel "How to believe that you'll find love".
+- **Write new emails from his recent Reel transcripts** (`reels\inbox\*.words.json`): same 3 steps (clear intentions, the emotions, embody daily), same phrases ("under the level of intellect", "we just felt it", "the psychiatrist's term").
+- **Founder story = only** "I worked on my emotional state every day, then met Jules and we both just knew". Never the old 7-year relationship / breakup / teachers story.
+
 ### Never (lists)
 - Never use the old list names (Engaged / Warm List / Cold List / Dormant / Daily Email List). Olly: "Use the new names please from now on."
 - Never remove a condition from an OR box by deleting only its filter: what's left can match everyone (2026-11-04: the leftover "daily email list + not joined" box would have sent pitch-day email to the whole list). Delete the WHOLE box (Remove Filter), then re-check every remaining box.
@@ -925,3 +938,5 @@ Extracted from ~40 pages of screenshots of "The Email Player's Playbook" by Ben 
 **2026-11-04 — Pitch days + resends.** Added who-gets-what on pitch days, the 14-day wait before the first pitch, and the 90-day resend rule (Olly). Why: pitch routing was only in NEXT.md and Olly had to ask how long to wait before pitching.
 
 **2026-11-04 (late) — List tiers + names.** Lessons: Olly renamed the smart lists ("use the new names") -> names table + Never rule (overrides Warm/Cold/Engaged wording above). "You've missed a lot of what you've done before" -> Process step 1 (read the build + check live tags first) after I proposed a new tag + timer that already existed. Date filters can't do "last N days" -> recency tags. "Give me the AI prompt ... this is how we build these" -> prompt first. "Step by step" -> one action per message for list edits too. Leftover OR box nearly matched everyone -> delete whole boxes. Weekly email = rotating evergreen set, not one repeated email.
+
+<!-- 2026-11-05 skill review: added the Weekly email (dormant) workflow record, the "templates with text first" rule (the AI builder leaves bodies empty) and From name/email on every step, plus what Olly kept vs cut in his review (cut metaphors/scenarios, removed all links, belief must be built not skipped, write from his Reel transcripts, new founder story only). -->

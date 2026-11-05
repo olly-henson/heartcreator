@@ -98,6 +98,7 @@ export async function onRequestGet({ env }) {
         dateAdded: c.dateAdded || "",
         loomSent: hasTag(c, TAG_LOOM),
         joined: hasTag(c, TAG_JOINED),
+        removed: hasTag(c, "removed - not a fit"),   // Remove from GHL (2026-11-05): left out of every Hub stat
         fields,
       };
     }).sort(function (a, b) { return String(b.dateAdded).localeCompare(String(a.dateAdded)); });

@@ -160,7 +160,7 @@ This isn't another way to fix yourself, because nothing needs fixing. It's 10 mi
 "I don't need to fix myself to meet my person. I'm already enough. I just need to practise believing it, every day."
 
 **11. Proof**
-"After my 7-year relationship ended, I tried everything to fix myself. Neville Goddard, Joe Dispenza, Abraham Hicks. None of it lasted. What changed was when I stopped trying to fix myself and just focused on making myself feel good, every day. That daily practice became this meditation, and it's how I met my wife."
+"Before I met my wife, I wasn't trying to settle down. I was dating, enjoying myself and focusing every day on keeping myself in a better emotional state. When I met Jules, we both just knew it was different. That daily practice became this meditation." (Updated 2026-11-05: the old 7-year relationship / breakup story is out of the messaging. Never use it.)
 Add members' early wins as they're posted.
 
 **What to expect (keep in content and onboarding)**
@@ -210,7 +210,7 @@ Belief is a skill, so nobody is good at it on day one. You feel different first,
 
 **Competitive landscape:** manifestation/LOA (cheap, vague) vs attachment-theory coaching (credentialed, $99+/month, lots to fix). The Attraction Formula is one simple, grounded daily practice at $30/month.
 
-**Founder story:** breakup from a 7-year relationship in early 2019 → struggled with dating → tried Neville Goddard, Joe Dispenza and Abraham Hicks without lasting results → developed the practice → used it to meet his now-wife.
+**Founder story (updated 2026-11-05):** worked on his emotional state every day, not on learning more or fixing himself → dating felt light and fun → met Jules and they both just knew. Never mention the old breakup / 7-year relationship / teachers story.
 
 
 ## Addition (2026-10-26): the root is fear

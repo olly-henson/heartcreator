@@ -18,7 +18,7 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 8. **Captions:** white rounded box, bold black, 2-4 words (22 chars max); new caption at a sentence end or a 0.35s pause; hidden during 0.6s+ pauses; final full stops stripped.
 9. **Green (#10D05D):**
    - Every mention of "intellectualization" and "emotional resonance" (s/z spellings both match, always shown as Olly's US "intellectualization"). Own caption box when he names it ("called X") or says it as its own sentence; green in line otherwise.
-   - CTA keywords (feeling, emotion, video, attract, scale) when "comment" / "DM" / "message" came up to 3 words before, across caption boxes; comma after them removed.
+   - CTA keywords (feeling, emotion, video, attract, scale) when "comment" / "DM" / "message" came up to 5 words before, across caption boxes; comma after them removed. Green both times (after "comment" and after "DM").
 10. **Render:** PIL PNGs of the caption strip only, one ffmpeg overlay at y=240 (keep-segments trimmed + concatenated when pauses were shortened). 1080x1920, 30fps, H.264 Quick Sync, AAC.
 11. **Captions per platform:** the Hub's built-in Perfect Reel captions (mirrored to KV `reelcaptions`), exactly as laid out per platform. Only the set changes: it follows the keyword he SAYS at the end (`spoken_offer()`: ATTRACT → attract, FEELING/EMOTION → scale, VIDEO → video), else the calendar's CTA. `VIDEO TITLE GOES HERE` (Facebook line 1) = the on-screen hook.
 12. **Check before telling Olly it's ready:** read the hook word by word, grab frame 0 (hook + emoji), a frame at each green word, and the first 1s of audio (voice from ~0.0s). Confirm length ≤ 179s.
@@ -41,12 +41,19 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 
 - **Recycling (Olly decided 2026-11-04, build after Meta Ads + auto Reel stats):** now and then repost a TOP Reel unchanged after 90+ days, new caption + different time, on top of new Reels (not instead). Source = `reels\ready\` or the GHL media url; same GHL schedule path. Keep finished files for winners.
 
+- **Getting videos to the laptop (2026-11-05):** Safari's file picker fails on big videos (spinning circles, bounces back) and leaves GBs of hidden copies in Safari "Documents & Data" (cleared with Settings > Safari > Clear History and Website Data > **Today**, which keeps older logins). Use the iPhone Shortcut **Send to Reel Upload** (Select Photos, multiple > Repeat with each > Get Contents of URL `http://<laptop IP>:8800/upload`, POST, header `X-Name: video.mov`, body File = Repeat Item). It sends originals, but only in the foreground: Do Not Disturb on (calls set to No One), screen on, plugged in.
+- **Laptop address moves** (192.168.0.12 -> .7 on 2026-11-05). `Start Reel Upload.bat` prints the live IP. On the laptop itself bookmark `http://localhost:8800`.
+- **The upload page shows** "Uploaded up to <day> ✓" and "Next on the calendar" (next 6 open hooks, 14 days ahead), a Delete button on waiting Reels, and "Duplicate: you've already uploaded this video… Delete this copy?" (same first 25 spoken words as an earlier upload) instead of "Not matched".
+- **Posting time goes back to the Hub:** upload_server sends the GHL slot with the "scheduled" stage; the Hub moves the Reel to the posting day (06:00-06:00 Windhoek) and shows "posts <day time>". Times in chat are Windhoek/Cape Town (UTC+2); Git Bash `date` with TZ prints UTC, so check with Python or PowerShell.
+- **Days ahead:** next_slot never books a passed slot (20 min lead); overflow takes the next day's first slots. Olly's day numbers are respected.
+
 ### Never
 - Never put a new hook over old footage or splice a new opener on to "freshen" a Reel. Olly: "I tie my content into the hook itself throughout": the hook and the whole video are one piece. Recycle = the same video unchanged.
 - Never cut silences, pauses, misspeaks or retakes from the middle, except shortening pauses to fit 2:59.
 - Never put the hook on three lines (it covers his head).
 - Never add a hook line or anything else to the platform captions; never change their layout.
-- Never green a keyword that isn't a CTA (comment/DM/message within 3 words); never leave a mention of a TERM black.
+- Never green a keyword that isn't a CTA (comment/DM/message within 5 words before it); never leave a mention of a TERM black.
+- The CTA keyword is green BOTH times: after "comment" and after "DM" (Olly 2026-11-05: "send me a DM with the word feeling" has DM 4 words back and was missed when the window was 3).
 - Never state video specs without ffprobe (raw = 1080p 60fps HEVC, rotated).
 - Never use ffmpeg `drawtext` / ASS on this PC (fontconfig broken). Draw text with PIL.
 - Never print emoji to a cp1252 console: reel_editor reconfigures stdout to UTF-8; test scripts use `PYTHONIOENCODING=utf-8`. Windows `json.load(sys.stdin)` shows UTF-8 as mojibake: check raw bytes before believing GHL garbled an emoji.
@@ -57,6 +64,10 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 - Never run the upload server as a Claude background task; never add Startup/auto-run items yourself.
 - Never write Python containing backslashes, `\n` or `\u` through a bash heredoc patch: it mangled strings four times this session. Use the Edit/Write tools, or a .py patch file written with Write.
 - Never say you can't see his Instagram before trying (it's public; WebFetch reads it).
+- Never read a GHL post that is `deleted` with no child yet as "removed": GHL swaps the scheduled post for its child only when Instagram/TikTok finish processing (minutes for a 3-min Reel). Under 6 hours old = in progress.
+- Never ship upload-page JS with a bare apostrophe inside a single-quoted string (`won't` broke the whole page on 2026-11-05). The page is a raw Python string: extract the `<script>` and `node --check` it after every change.
+- Never restart the upload server while a `.part` file is in `inbox\` or a Reel is editing/scheduling: check `ready\reels.json` + `inbox\*.part` first.
+- Never record Reels in the browser: tried 2026-11-05 (zoom, glitchy frame rate, quiet raw mic, boosted audio broke Save to Photos) and Olly scrapped it ("not raw and natural enough"). He films in the camera app; the Hub Record tab is the hook prompt only. The editor stays without loudnorm.
 
 ## Examples
 - Hook from speech + calendar: heard "While your friends have found love and you haven't" + calendar "Why your friends found love and you haven't 💔" → on screen "Why your friends have found / love and you haven't 💔".
@@ -86,3 +97,5 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 - Dropped by Olly: mid-blink first frame is fine (the hook matters more); no YouTube cover work.
 -->
 <!-- 2026-11-04 (review 4, recycling talk): "I tie my content into the hook itself throughout" -> Never rule: no new hooks / spliced openers on old footage. Overridden: my suggestions "new hook text", "record a 5-second new opener", "start from a later sentence". Olly's call: occasional unchanged repost after 90+ days. -->
+
+- 2026-11-05: Skill review. Added the Shortcut upload route and Safari storage fix (the browser picker failed on 0.5 GB videos and hid 5.5 GB in Safari), the moving laptop IP + localhost bookmark, the upload page's up-to/next/duplicate/delete features Olly asked for, the GHL slot -> Hub calendar hand-off, and Nevers from today's bugs (false "removed" posts, the apostrophe that broke the page, restarting mid-upload) plus the scrapped in-browser recorder so it isn't rebuilt. CTA keyword now green after both "comment" and "DM" (5-word window).

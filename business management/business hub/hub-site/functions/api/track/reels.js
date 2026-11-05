@@ -50,7 +50,9 @@ export async function onRequestPost({ request, env }) {
   const stage = ["edited", "scheduled", "posted", ""].includes(b.stage) ? b.stage : null;
   if (!k || stage === null) return json({ ok: false, error: "title and stage needed" }, 400);
   const status = await getJSON(env, "reelstatus", {});
-  if (stage) status[k] = { stage, at: new Date().toISOString() }; else delete status[k];
+  // slot (2026-11-05): the GHL posting time (UTC ISO), so the calendar can show the day the Reel really goes out
+  const slot = typeof b.slot === "string" && /^\d{4}-\d\d-\d\dT\d\d:\d\d/.test(b.slot) ? b.slot : "";
+  if (stage) status[k] = slot ? { stage, at: new Date().toISOString(), slot } : { stage, at: new Date().toISOString() }; else delete status[k];
   await env.HUB_KV.put("reelstatus", JSON.stringify(status));
   return json({ ok: true });
 }

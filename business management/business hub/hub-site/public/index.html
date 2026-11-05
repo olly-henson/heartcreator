@@ -73,6 +73,48 @@
   .lmplan li{ font-size:15px; line-height:1.4; margin:2px 0; outline:none; }
   .lmplan li:empty::before{ content:"Type a step…"; color:#9c8bb0; }
   .lmstack{ display:none; flex-direction:column; gap:10px; }
+  /* Sales board (2026-11-05) */
+  .lmkpis{ display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:10px; margin:0 0 14px; }
+  @media (max-width:900px){ .lmkpis{ grid-template-columns:repeat(3, minmax(0,1fr)); } }
+  @media (max-width:520px){ .lmkpis{ grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px; } .lmkpis .lmkpi{ padding:7px 8px; } .lmkpis .lmkpi b{ font-size:17px; } .lmkpis .lmkpi small{ font-size:9.5px; letter-spacing:.03em; } .lmkpis .lmkpi span{ display:none; } }
+  .lmkpi{ background:var(--surface); border:1px solid var(--border-soft); border-radius:12px; padding:10px 12px; min-width:0; }
+  .lmkpi small{ display:block; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
+  .lmkpi b{ display:block; font-size:22px; margin:2px 0; }
+  .lmkpi span{ display:block; font-size:12px; opacity:.65; }
+  .lmboard2{ display:grid; grid-auto-flow:column; grid-auto-columns:minmax(145px, 1fr); gap:10px; overflow-x:auto; padding-bottom:8px; align-items:start; }
+  @media (max-width:760px){ .lmboard2{ grid-auto-columns:82vw; scroll-snap-type:x mandatory; } .lmcol2{ scroll-snap-align:start; } }
+  .lmcol2{ background:var(--surface); border:1px solid var(--border-soft); border-radius:12px; padding:8px; min-height:160px; }
+  .lmcol2.over{ border-color:#e04fd6; background:rgba(224,79,214,.08); }
+  .lmcol2 h4{ display:flex; align-items:center; gap:8px; margin:2px 2px 10px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; }
+  .lmcol2 h4 span{ flex:1; }
+  .lmcol2 h4 b{ font-size:12px; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.08); }
+  .lmcol2 h4 em{ font-style:normal; color:#4ade80; text-transform:none; letter-spacing:0; }
+  .lmcol2[data-st="joined"] h4{ color:#4ade80; }
+  .lmcol2[data-st="nofit"], .lmcol2[data-st="quiet"]{ opacity:.75; }
+  .lmcards{ display:flex; flex-direction:column; gap:6px; }
+  .lmempty{ font-size:12px; opacity:.5; padding:6px 4px; }
+  .lmbc2{ display:flex; flex-direction:column; gap:3px; width:100%; text-align:left; padding:9px 10px; border-radius:9px; border:1px solid var(--border-soft); background:var(--surface-2); color:inherit; font:inherit; font-size:13px; cursor:pointer; }
+  .lmbc2:hover{ border-color:#e04fd6; }
+  .lmbc2.drag{ opacity:.4; }
+  .lmbc2 b{ font-size:14px; }
+  .lmbc2 .sub{ font-size:12px; opacity:.65; }
+  .lmbcrow{ display:flex; flex-wrap:wrap; gap:5px; margin-top:2px; }
+  .lmbcnote{ font-size:12px; opacity:.75; font-style:italic; }
+  .lmr{ font-size:11px; font-weight:700; padding:2px 7px; border-radius:6px; }
+  .lmr-good{ background:rgba(34,197,94,.2); color:#4ade80; } .lmr-okay{ background:rgba(251,191,36,.2); color:#fbbf24; } .lmr-bad{ background:rgba(248,113,113,.2); color:#f87171; }
+  .lmmodal{ position:fixed; inset:0; z-index:1000; background:rgba(5,2,10,.7); display:flex; align-items:flex-start; justify-content:center; padding:4vh 16px; overflow-y:auto; }
+  .lmsheet{ width:min(1200px, 100%); background:var(--surface-solid); border:1px solid var(--border-soft); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  .lmsheethead{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:14px 64px 14px 16px; border-bottom:1px solid var(--border-soft); position:sticky; top:0; background:inherit; border-radius:16px 16px 0 0; z-index:1; }
+  .lmwho{ flex:1; min-width:160px; } .lmwho b{ display:block; font-size:18px; } .lmwho .sub{ font-size:12.5px; opacity:.7; }
+  .lmtabs{ display:flex; gap:6px; }
+  .lmtabs button{ font:600 13px/1 inherit; padding:8px 12px; border-radius:999px; border:1px solid var(--border-soft); background:transparent; color:inherit; cursor:pointer; }
+  .lmtabs button[aria-pressed="true"]{ background:#e04fd6; border-color:#e04fd6; color:#1a0b24; }
+  .lmx{ position:absolute; right:14px; top:14px; font-size:18px; width:36px; height:36px; border-radius:50%; border:1px solid var(--border-soft); background:transparent; color:inherit; cursor:pointer; }
+  .lmsheetbody{ padding:16px; display:flex; flex-direction:column; gap:10px; }
+  .lmdetail{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; cursor:default; padding:0; }
+  @media (max-width:760px){ .lmdetail{ grid-template-columns:minmax(0,1fr); } .lmdetail .lmdcol:last-child{ order:-1; } .lmmodal{ padding:0; } .lmsheet{ border-radius:0; min-height:100%; } .lmsheethead{ border-radius:0; } }
+  .lmdh{ display:block; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.6; margin:12px 0 4px; }
+  .lmdcol > .lmdh:first-child{ margin-top:0; }
   @media (max-width:760px){ .lmbox{ display:none; } .lmstack{ display:flex; } }
   :root{
     --bg-grad: radial-gradient(1100px 700px at 14% -6%, rgba(184,79,232,.20), transparent 55%),
@@ -1464,6 +1506,41 @@
   .recbtns button{ padding:16px 8px; border-radius:14px; border:1px solid var(--border-soft); background:var(--surface-2); color:var(--text); font:inherit; font-size:16px; font-weight:600; cursor:pointer; }
   .recbtns button.recdone{ background:var(--good); color:#08210f; border-color:transparent; font-weight:800; }
   .recbtns button:disabled{ opacity:.35; cursor:default; }
+  /* In-Hub recording (2026-11-05) */
+  .recopen{ align-self:flex-start; padding:14px 20px; border-radius:14px; border:0; background:#e04fd6; color:#1a0b24; font:inherit; font-size:17px; font-weight:800; cursor:pointer; }
+  .clips{ display:flex; flex-direction:column; gap:8px; }
+  .clipshead{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); margin-top:6px; }
+  .clip{ display:flex; align-items:center; gap:8px; padding:10px; border:1px solid var(--border-soft); border-radius:12px; background:var(--surface); }
+  .clipt{ flex:1; min-width:0; } .clipt b{ display:block; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .clipt span{ font-size:12px; color:var(--text-muted); }
+  .clip button{ flex:none; padding:8px 10px; border-radius:10px; border:1px solid var(--border-soft); background:var(--surface-2); color:var(--text); font:inherit; font-size:13px; font-weight:600; cursor:pointer; }
+  .clip .clipdel{ background:transparent; color:var(--text-muted); }
+  .camov{ position:fixed; inset:0; z-index:2000; background:#000; color:#fff; }
+  .camov video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; }
+  .camov #camLive{ transform:scaleX(-1); object-fit:contain; }   /* contain: show the whole frame being recorded, never a zoomed crop (Olly 2026-11-05) */
+  .caminfo{ position:absolute; top:calc(env(safe-area-inset-top, 0px) + 12px); left:16px; font:600 12px system-ui, sans-serif; background:rgba(0,0,0,.5); padding:3px 8px; border-radius:8px; }
+  .caminfo:empty{ display:none; }
+  .camlevel{ position:absolute; bottom:calc(env(safe-area-inset-bottom, 0px) + 190px); left:16px; right:16px; background:rgba(0,0,0,.5); border-radius:12px; padding:8px 10px; font:600 13px system-ui, sans-serif; display:flex; flex-direction:column; gap:6px; }
+  .camlevel[hidden]{ display:none; }
+  .camlevel label{ display:flex; align-items:center; gap:8px; } .camlevel input{ flex:1; } .camlevel small{ font-weight:500; opacity:.8; }
+  .cammeter{ height:8px; border-radius:4px; background:rgba(255,255,255,.2); overflow:hidden; } .cammeter i{ display:block; height:100%; width:0; background:#4ade80; transition:width .05s; }
+  .camsound{ position:absolute; top:calc(env(safe-area-inset-top, 0px) + 44px); left:16px; font:600 13px system-ui, sans-serif; color:#fff; background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.35); padding:6px 10px; border-radius:10px; }
+  .camzoom{ position:absolute; left:24px; right:24px; bottom:calc(env(safe-area-inset-bottom, 0px) + 150px); display:flex; align-items:center; gap:10px; font:600 13px system-ui, sans-serif; text-shadow:0 1px 3px #000; }
+  .camzoom input{ flex:1; }
+  .camov #camPlay{ object-fit:contain; top:0; bottom:calc(env(safe-area-inset-bottom, 0px) + 104px); height:auto; }
+  .camhook{ position:absolute; left:50%; top:calc(env(safe-area-inset-top, 0px) + 9%); transform:translateX(-50%); max-width:84%; width:max-content; background:#fff; color:#000; font:800 clamp(20px, 6vw, 30px)/1.2 system-ui, -apple-system, sans-serif; text-align:center; padding:8px 14px; border-radius:10px; text-wrap:balance; }
+  .camtime{ position:absolute; top:calc(env(safe-area-inset-top, 0px) + 12px); right:16px; font:700 15px system-ui, sans-serif; background:rgba(220,30,30,.85); padding:3px 9px; border-radius:8px; }
+  .camtime:empty{ display:none; }
+  .camcta{ position:absolute; left:0; right:0; bottom:calc(env(safe-area-inset-bottom, 0px) + 118px); text-align:center; font:600 15px system-ui, sans-serif; text-shadow:0 1px 4px rgba(0,0,0,.8); }
+  .camcta b{ color:#4ade80; }
+  .cammsg{ position:absolute; left:16px; right:16px; top:42%; text-align:center; font:600 16px system-ui, sans-serif; text-shadow:0 1px 4px rgba(0,0,0,.9); }
+  .cammsg:empty{ display:none; }
+  .cambar{ position:absolute; left:0; right:0; bottom:calc(env(safe-area-inset-bottom, 0px) + 22px); display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; padding:0 18px; }
+  .camside{ justify-self:start; padding:12px 14px; border-radius:12px; border:0; background:rgba(0,0,0,.55); color:#fff; font:600 15px system-ui, sans-serif; }
+  #camRetake{ grid-column:1; }
+  .camkeep{ grid-column:3; justify-self:end; padding:14px 18px; border-radius:12px; border:0; background:#4ade80; color:#06210f; font:800 16px system-ui, sans-serif; }
+  .camrec{ grid-column:2; width:76px; height:76px; border-radius:50%; border:4px solid #fff; background:transparent; display:flex; align-items:center; justify-content:center; padding:0; }
+  .camrec i{ width:58px; height:58px; border-radius:50%; background:#e11d48; transition:all .15s; }
+  .camrec.on i{ width:30px; height:30px; border-radius:6px; }
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 </head>
@@ -1493,7 +1570,7 @@
     <button class="tabbtn" data-tab="core" role="tab" aria-selected="false">Core tasks</button>
     <button class="tabbtn" data-tab="overview" role="tab" aria-selected="false">Overview</button>
     <button class="tabbtn" data-tab="links" role="tab" aria-selected="false">Links</button>
-    <button class="tabbtn" data-tab="looms" role="tab" aria-selected="false">Looms</button>
+    <button class="tabbtn" data-tab="looms" role="tab" aria-selected="false">Sales</button>
     <button class="tabbtn" data-tab="mrr" role="tab" aria-selected="false" hidden>MRR</button>
     <button class="tabbtn" data-tab="sales" role="tab" aria-selected="false" hidden>Sales</button>
     <button class="tabbtn active" data-tab="content" role="tab" aria-selected="true">Content calendar</button>
@@ -2459,7 +2536,7 @@ https://www.instagram.com/attractwitholly
   </div>
 
   <div id="tab-looms" class="tabpanel" hidden="">
-    <span class="hint" style="display:block; margin:0 0 14px;">Everyone who's applied, newest first. Rate each one, open their mind map, go full screen and record your Loom over it. Your rating and plan of action save in the Hub.</span>
+    <span class="hint" style="display:block; margin:0 0 14px;">Everyone who's applied, by stage. Tap a card for their details, messages and mind map. On desktop, drag a card to another column to move them.</span>
     <div id="lmNotify" class="lmnotify"></div>
     <div id="loomsBody"></div>
   </div>
@@ -3888,7 +3965,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       statusRow.appendChild(moveInput);
       row.appendChild(statusRow);
       var lapStage = idea.posted ? "" : reelStage(idea);
-      if (lapStage) row.insertAdjacentHTML("beforeend", '<span class="hint" style="display:block; margin-top:6px;">Updated by the Reel upload app: ' + STAGE_LABEL[lapStage].toLowerCase() + '</span>');
+      if (lapStage) row.insertAdjacentHTML("beforeend", '<span class="hint" style="display:block; margin-top:6px;">Updated by the Reel upload app: ' + STAGE_LABEL[lapStage].toLowerCase() +
+        (idea.slot ? " · posts " + niceStorySlot(idea.slot) + " (Windhoek)" : "") + '</span>');
 
       // Caption lives here, not in the ideas list — it's only useful once
       // something's actually scheduled, and this is the screen you're on
@@ -3913,7 +3991,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var offerBtns = [], platBtns = [];
       [["video", "VIDEO"], ["scale", "FEELING"], ["attract", "ATTRACT"]].forEach(function(o){
         var bt = document.createElement("button"); bt.type = "button"; bt.className = "captionchip"; bt.textContent = o[1];
-        bt.setAttribute("aria-pressed", String((idea.offer || "video") === o[0]));
+        bt.setAttribute("aria-pressed", String((idea.offer || "scale") === o[0]));
         bt.addEventListener("click", function(){
           idea.offer = o[0];
           offerBtns.forEach(function(x){ x.setAttribute("aria-pressed", String(x === bt)); });
@@ -3924,7 +4002,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         offerBtns.push(bt); offerLine.appendChild(bt);
       });
       function fillCaption(plat){
-        var text = reelCaption(idea.offer || "video", plat, savedTpls).replace(/VIDEO TITLE GOES HERE/g, idea.title || "VIDEO TITLE GOES HERE");
+        var text = reelCaption(idea.offer || "scale", plat, savedTpls).replace(/VIDEO TITLE GOES HERE/g, idea.title || "VIDEO TITLE GOES HERE");
         idea.caption = text; idea.capPlat = plat;
         captionArea.value = text;
         platBtns.forEach(function(x){ x.setAttribute("aria-pressed", String(x.dataset.plat === plat)); });
@@ -5154,16 +5232,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmEsc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
   // Pipeline (2026-11-01): each applicant has one stage. Old records: archived = Not a fit; GHL's loomSent / joined still count.
   // Flags in state.looms[id]: waSent, emSent, waReply, emReply, product ("monthly" | "annual").
-  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["recorded", "Loom recorded"], ["loom", "Loom sent"], ["joined", "Joined"], ["nofit", "Not a fit"]];
+  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["loom", "VSL sent"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
   function lmById(id){ return (lmData || []).filter(function(x){ return x.id === id; })[0]; }
   // The stage is the furthest step ticked on the card (2026-11-01 v2), so unticking a step moves them back.
-  function lmStage(a){
+  // base = true ignores "Gone quiet", to show how far they got before they went silent.
+  function lmStage(a, base){
     var s = lmStore(a.id);
     if (s.stage){ if (s.stage === "loom") s.loom = true; if (s.stage === "nofit") s.archived = true; delete s.stage; } // v1 records
     if (s.archived) return "nofit";
     if (s.product || (a.joined && s.product !== "")) return "joined";
+    if (s.quiet && !base) return "quiet";
     if (s.loom || (a.loomSent && s.loom !== false)) return "loom";
-    if (s.recorded) return "recorded";   // Loom recorded, not sent yet (2026-11-02)
     if (s.waReply || s.emReply) return "replied";
     if (s.waSent || s.emSent) return "contacted";
     return "new";
@@ -5177,15 +5256,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Checklist on each card: tap a step to tick it, tap again to untick. Pink = done.
   function lmStageBox(a){
     var s = lmStore(a.id), st = lmStage(a);
-    var on = { recorded:!!s.recorded, waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, loom:st === "loom" || st === "joined" && (s.loom || a.loomSent), monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived };
+    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, loom:st === "loom" || st === "joined" && (s.loom || a.loomSent), monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived, quiet:!!s.quiet && !s.archived };
     function btn(k, label){ return '<button type="button" data-act="' + k + '" aria-pressed="' + !!on[k] + '">' + label + "</button>"; }
     function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
     return '<div class="lmstg">' +
       row("1", "I messaged them", btn("waSent", "WhatsApp") + btn("emSent", "Email")) +
       row("2", "They replied", btn("waReply", "WhatsApp") + btn("emReply", "Email")) +
-      row("3", "Loom", btn("recorded", "Recorded") + btn("loom", "Loom sent")) +
+      row("3", "VSL", btn("loom", "VSL sent")) +
       row("4", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
-      '<div class="lmstep">' + btn("nofit", "Not a fit") + "</div></div>";
+      '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("nofit", "Not a fit") + "</div>" +
+      (s.archived ? '<div class="lmstep">' + (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL ✓</span>'
+        : '<button type="button" data-act="ghlremove" style="border-color:#f87171;color:#f87171">Remove from GHL</button><small style="flex-basis:100%;opacity:.7">Takes them off every list, turns on Do Not Disturb and leaves them out of all stats.</small>') + "</div>" : "") + "</div>";
   }
   // find an answer by the GHL field name (HA … / FF …), e.g. "HA Feelings About Love"
   // Love Scale fields ("Scale …") only match patterns that ask for them by name
@@ -5197,7 +5278,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
       lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
       // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
-      if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmFilter = lmStage(w); lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
+      if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmOpen = w.id; lmView = "info"; lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
       renderLooms();
     }).catch(function(){ lmLoading = false; lmErr = "Couldn't reach GHL. If you've been away a while, reload the Hub to log in again."; renderLooms(); });
   }
@@ -5222,7 +5303,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     else body = "<p>" + lmEsc(v) + "</p>";
     return '<div class="lmcard' + (c[2] === "hot" ? " hot" : "") + '" style="--c:' + col + '"><small>' + lmEsc(c[0]) + "</small>" + body + "</div>";
   }
-  function lmFit(){ var box = document.getElementById("lmBox"), st = document.getElementById("lmStage"); if (box && st) st.style.transform = "scale(" + (box.clientWidth / 1600) + ")"; }
+  function lmFit(){ var box = document.getElementById("lmBox"), st = document.getElementById("lmStage"); if (box && st) st.style.zoom = box.clientWidth / 1600; }
   window.addEventListener("resize", lmFit);
   document.addEventListener("fullscreenchange", function(){ setTimeout(lmFit, 60); });
   // Tap-to-copy WhatsApp + email on each applicant card, with buttons that open WhatsApp / a new email (2026-11-01).
@@ -5243,6 +5324,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(pend) + '">✅ Application pending</button>'
       + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(pend) + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
       + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Application pending") + '&body=' + encodeURIComponent(pend.replace(/\n/g, "\r\n")) + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
+      + "</div>";
+    // Sales video (2026-11-05): one master video (unlisted YouTube) for everyone who says the price is within reach.
+    // Sending it marks them Loom sent. Script + map: funnel/sales-video-script.md, funnel/sales-video-map.html.
+    var VIDEO = "https://youtu.be/wghvWJJ6YVk";
+    var vid = "Hey " + (a.firstName || "there") + ", great, thanks for getting back to me.\n\nHere's a video going through how the program works, what to expect and how to start.\n\n" + VIDEO + "\n\nIf you're ready to start after watching, just reply here and I'll send you the link.\n\nAnd if you have any questions, just let me know.";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(vid) + '">🎥 Sales video</button>'
+      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(vid) + '" target="_blank" rel="noopener" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
+      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent((a.firstName ? a.firstName + ", here" : "Here") + "'s the video") + '&body=' + encodeURIComponent((vid + "\n\nOlly").replace(/\n/g, "\r\n")) + '" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
       + "</div>";
     // Checkout link to send after the Loom (2026-11-03): ollyhenson.com/join redirects to the Skool group, so the target can change later.
     var JOIN = "https://ollyhenson.com/join", joinMail = "Hey " + (a.firstName || "there") + ", great - here's the link to join:\r\n\r\n" + JOIN;
@@ -5330,6 +5419,76 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     navigator.serviceWorker.addEventListener("message", function(e){ var u = e.data && e.data.open, h = u ? u.indexOf("#") : -1; if (h > -1){ location.hash = u.slice(h); loomsFromHash(); } });
     if (pushOk()) fetch("/api/push", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ pushKey = (d && d.publicKey) || ""; }).catch(function(){});
   }
+  // Sales board (Olly, 2026-11-05): a Trello / GHL-opportunities style pipeline is the main view, with the
+  // money at the top. Tap a card for their details, messages and the mind map (in a pop-up, so it no longer
+  // takes up the page). Drag a card to another column to move them (desktop).
+  // Remove from GHL (Olly 2026-11-05): really bad fits / rude applicants. /api/remove-applicant turns on DND, removes their
+  // list tags and adds "removed - not a fit". Removed applicants stay in Not a fit but are left out of every stat.
+  function lmRemoved(a){ return !!(a.removed || lmStore(a.id).removed); }
+  function lmRemove(a, btn){
+    if (!window.confirm("Remove " + (lmName(a) || "this applicant") + " from GHL?\n\nThey come off every email list, Do Not Disturb goes on for all channels and they're left out of all stats. Their record stays in GHL.")) return;
+    btn.disabled = true; btn.textContent = "Removing…";
+    fetch("/api/remove-applicant", { method:"POST", credentials:"same-origin", headers:{ "content-type":"application/json" }, body:JSON.stringify({ id:a.id }) })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d || !d.ok){ btn.disabled = false; btn.textContent = "Remove from GHL"; window.alert("Couldn't remove them: " + ((d && d.error) || "try again")); return; }
+        var s5 = lmStore(a.id); s5.removed = d.at || new Date().toISOString(); s5.archived = true; markDirty(); saveNow(); renderLooms();
+      })
+      .catch(function(){ btn.disabled = false; btn.textContent = "Remove from GHL"; window.alert("Couldn't reach the Hub. Reload and try again."); });
+  }
+  var LM_COLS = [["new", "New applications"], ["contacted", "Price check sent"], ["replied", "Replied"], ["loom", "VSL sent"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
+  var lmOpen = null, lmView = "info", lmDrag = null;
+  function lmMoneyFmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+  // Moving a card sets the checklist flags so lmStage() lands on that column (explicit false overrides GHL's loomSent / joined).
+  function lmSetStage(a, st){
+    var s = lmStore(a.id);
+    s.quiet = st === "quiet";
+    if (st === "quiet"){ s.archived = false; return; }
+    s.archived = st === "nofit";
+    if (st === "nofit") return;
+    var sent = s.waSent || s.emSent, rep = s.waReply || s.emReply;
+    s.recorded = false;
+    if (st === "new"){ s.waSent = s.emSent = s.waReply = s.emReply = false; }
+    if (st === "contacted"){ if (!sent) s.waSent = true; s.waReply = s.emReply = false; }
+    if (st === "replied" || st === "loom" || st === "joined"){ if (!sent) s.waSent = true; if (!rep) s.waReply = true; }
+    s.loom = st === "loom" || st === "joined";
+    s.product = st === "joined" ? (s.product || "monthly") : "";
+  }
+  function lmMoney(){
+    var m = 0, y = 0;
+    lmData.forEach(function(a){ if (lmStage(a) !== "joined") return; if (lmStore(a.id).product === "annual") y++; else m++; });
+    return { m:m, y:y, cash:m * 497 + y * 2500, mrr:m * 497 + y * 2500 / 12 };
+  }
+  function lmName(a){ return (a.firstName + " " + a.lastName).trim() || a.email; }
+  function lmCardHtml(a){
+    var s = lmStore(a.id), r = s.rating, d = String(a.dateAdded || "").slice(0, 10), place = [a.city, a.country].filter(Boolean).join(", ");
+    var tags = (r ? '<span class="lmr lmr-' + r + '">' + { good:"Good", okay:"Okay", bad:"Not good" }[r] + "</span>" : "") +
+      (lmStage(a) === "joined" ? '<span class="lmtag" style="margin:0">' + (s.product === "annual" ? "Annual $2,500" : "Monthly $497") + "</span>" : "") +
+      (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL</span>' : "") +
+      (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the price check", replied:"After replying", loom:"After the VSL" }[lmStage(a, true)] || "") + "</span>" : "");
+    return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, place].filter(Boolean).join(" · ")) + "</span>" +
+      (tags ? '<span class="lmbcrow">' + tags + "</span>" : "") + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";
+  }
+  // the per-applicant mind map (unchanged from the Loom days), now shown inside the pop-up
+  function lmMapHtml(a){
+    var B = lmBranches(a), name = lmName(a), want = lmAns(a, /want/i), place = [a.city, a.country].filter(Boolean).join(", ");
+    var html = '<div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen</button><button type="button" class="copybtn" id="lmClear">Clear the plan</button><span class="hint">Click a plan step to type. Enter adds a step.</span></div>';
+    var st = '<svg viewBox="0 0 1600 900" aria-hidden="true">';
+    [[610, 320, 510, 200], [610, 375, 510, 620], [990, 320, 1090, 200], [990, 375, 1090, 640], [800, 458, 800, 512]].forEach(function(p, i){
+      var col = ["#7dd3fc", "#f87171", "#4ade80", "#fbbf24", "#e04fd6"][i], mx = (p[0] + p[2]) / 2;
+      var d2 = i === 4 ? "M" + p[0] + " " + p[1] + " L " + p[2] + " " + p[3] : "M" + p[0] + " " + p[1] + " C " + mx + " " + p[1] + ", " + mx + " " + p[3] + ", " + p[2] + " " + p[3];
+      st += '<path d="' + d2 + '" fill="none" stroke="' + col + '" stroke-width="3" stroke-opacity=".6"/>';
+    });
+    st += '</svg><div class="lmcentre"><div class="nm">' + lmEsc(a.firstName || name) + '</div><div class="meta">' + lmEsc(place || a.email) + '</div>' + (want ? '<div class="want"><small>What you want</small>' + lmEsc(want) + "</div>" : "") + "</div>";
+    B.forEach(function(b){ st += '<div class="lmbr" style="left:' + b.x + "px; top:" + b.y + 'px"><h3 style="color:' + b.c + '"><i style="background:' + b.c + '"></i>' + lmEsc(b.title) + "</h3>" + b.cards.map(function(c){ return lmCard(c, b.c); }).join("") + "</div>"; });
+    var plan = lmStore(a.id).plan || ["", "", ""];
+    st += '<div class="lmplan"><h3 style="margin:0 0 8px; font-weight:700; font-size:15px; letter-spacing:.1em; text-transform:uppercase; color:#e04fd6">Your plan of action</h3><div class="lmcard" style="--c:#e04fd6"><small>The Attraction Formula, for ' + lmEsc(a.firstName || name) + '</small><ol id="lmPlan">' + plan.map(function(p){ return '<li contenteditable="true">' + lmEsc(p) + "</li>"; }).join("") + "</ol></div></div>";
+    html += '<div class="lmbox" id="lmBox"><div class="lmstage" id="lmStage">' + st + "</div></div>";
+    var sk = '<div class="lmcard" style="--c:#e04fd6"><small>' + lmEsc(place) + '</small><p style="font-weight:800; font-size:20px">' + lmEsc(name) + "</p>" + (want ? "<p>" + lmEsc(want) + "</p>" : "") + "</div>";
+    B.forEach(function(b){ sk += '<b style="color:' + b.c + '; font-size:13px; letter-spacing:.08em; text-transform:uppercase">' + lmEsc(b.title) + "</b>" + b.cards.map(function(c){ return lmCard(c, b.c); }).join(""); });
+    return html + '<div class="lmstack">' + sk + "</div>";
+  }
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && lmOpen && !document.fullscreenElement){ lmOpen = null; renderLooms(); } });
   function renderLooms(){
     var host = document.getElementById("loomsBody"); if (!host) return;
     if (!lmData){
@@ -5338,76 +5497,79 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (!lmLoading && !lmErr) lmLoad();
       return;
     }
-    // Stage buttons filter the list (lmData is already newest first); Board shows every stage side by side.
     var counts = {}; LM_STAGES.forEach(function(x){ counts[x[0]] = 0; });
     lmData.forEach(function(a){ counts[lmStage(a)]++; });
-    if (lmFilter !== "board" && !counts.hasOwnProperty(lmFilter)) lmFilter = "new";
-    var fbar = '<div class="lmfilt">' + LM_STAGES.map(function(x){ return '<button type="button" data-f="' + x[0] + '" aria-pressed="' + (lmFilter === x[0]) + '">' + x[1] + " " + counts[x[0]] + "</button>"; }).join("") + '<button type="button" data-f="board" aria-pressed="' + (lmFilter === "board") + '">Board</button></div>';
-    if (lmFilter === "board"){
-      host.innerHTML = lmTop() + fbar + '<div class="lmboard">' + LM_STAGES.map(function(x){
-        return '<div class="lmcol"><h4>' + x[1] + " " + counts[x[0]] + "</h4>" + lmData.filter(function(a){ return lmStage(a) === x[0]; }).map(function(a){
-          var r = lmStore(a.id).rating;
-          return '<button type="button" class="lmbc" data-id="' + a.id + '" data-st="' + x[0] + '"><b>' + lmEsc((a.firstName + " " + a.lastName).trim() || a.email) + "</b>" + (r ? '<span class="lmtag">' + { good:"Good", okay:"Okay", bad:"Not good" }[r] + "</span>" : "") + lmLabels(a) + "</button>";
-        }).join("") + "</div>";
-      }).join("") + "</div>";
-      host.querySelectorAll(".lmfilt button").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.f; renderLooms(); }); });
-      host.querySelectorAll(".lmbc").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.st; lmSel = b.dataset.id; renderLooms(); }); });
-      document.getElementById("lmRefresh").addEventListener("click", lmLoad);
-      return;
-    }
-    var shown = lmData.filter(function(a){ return lmStage(a) === lmFilter; });
-    if (!shown.some(function(a){ return a.id === lmSel; })) lmSel = shown[0] ? shown[0].id : null;
-    var html = lmTop() + '<div class="lmwrap"><div class="lmlist">' + fbar;
-    if (!shown.length) html += '<span class="hint" style="padding:8px">No applications here.</span>';
-    shown.forEach(function(a){
-      var r = lmStore(a.id).rating, d = String(a.dateAdded || "").slice(0, 10);
-      html += '<div class="lmapp' + (a.id === lmSel ? " on" : "") + '" data-id="' + a.id + '"><b>' + lmEsc((a.firstName + " " + a.lastName).trim() || a.email) + lmLabels(a) + '</b><span class="sub">' + lmEsc([d, [a.city, a.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")) + '</span><div class="lmrate">' +
-        [["good", "Good"], ["okay", "Okay"], ["bad", "Not good"]].map(function(x){ return '<button type="button" data-r="' + x[0] + '" aria-pressed="' + (r === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</div>" + lmStageBox(a) +
-        lmContact(a) +
-        '<textarea class="lmnote" rows="2" placeholder="Notes, e.g. not a fit because…" aria-label="Notes on ' + lmEsc(a.firstName || "this applicant") + '">' + lmEsc(lmStore(a.id).note || "") + "</textarea></div>";
-    });
-    html += '</div><div class="lmmain"><div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen for the Loom</button><button type="button" class="copybtn" id="lmClear">Clear the plan</button><span class="hint">Click a plan step to type. Enter adds a step.</span></div>';
-    var a = lmData.filter(function(x){ return x.id === lmSel; })[0];
+    var live = lmData.filter(function(a){ return !lmRemoved(a); });   // stats leave removed applicants out
+    var mo = lmMoney(), vsl = live.filter(function(a){ var b = lmStage(a, true); return b === "loom" || b === "joined"; }).length;
+    // money + pipeline at a glance
+    var K = [
+      ["Applications", live.length, counts["new"] + " new"],
+      ["In progress", counts.contacted + counts.replied + counts.loom, counts.loom + " watching the VSL"],
+      ["Joined", counts.joined, mo.m + " monthly · " + mo.y + " annual"],
+      ["Close rate", vsl ? Math.round(counts.joined / vsl * 100) + "%" : "—", "of VSLs sent"],
+      ["Cash collected", lmMoneyFmt(mo.cash), "all time, first payments"],
+      ["MRR", lmMoneyFmt(mo.mrr), "annual counted as $208/mo"]
+    ];
+    var html = lmTop() + '<div class="lmkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
+    html += '<div class="lmboard2">' + LM_COLS.map(function(c){
+      var items = lmData.filter(function(a){ return lmStage(a) === c[0]; });
+      var val = c[0] === "joined" && mo.cash ? '<em>' + lmMoneyFmt(mo.cash) + "</em>" : "";
+      return '<div class="lmcol2" data-st="' + c[0] + '"><h4><span>' + c[1] + "</span>" + val + "<b>" + items.length + '</b></h4><div class="lmcards">' +
+        (items.length ? items.map(lmCardHtml).join("") : '<span class="lmempty">Nothing here</span>') + "</div></div>";
+    }).join("") + "</div>";
+    // the pop-up for one applicant
+    var a = lmOpen ? lmById(lmOpen) : null;
+    if (lmOpen && !a) lmOpen = null;
     if (a){
-      var B = lmBranches(a), name = (a.firstName + " " + a.lastName).trim() || a.email, want = lmAns(a, /want/i), place = [a.city, a.country].filter(Boolean).join(", ");
-      var st = '<svg viewBox="0 0 1600 900" aria-hidden="true">';
-      [[610, 320, 510, 200], [610, 375, 510, 620], [990, 320, 1090, 200], [990, 375, 1090, 640], [800, 458, 800, 512]].forEach(function(p, i){
-        var col = ["#7dd3fc", "#f87171", "#4ade80", "#fbbf24", "#e04fd6"][i], mx = (p[0] + p[2]) / 2;
-        var d2 = i === 4 ? "M" + p[0] + " " + p[1] + " L " + p[2] + " " + p[3] : "M" + p[0] + " " + p[1] + " C " + mx + " " + p[1] + ", " + mx + " " + p[3] + ", " + p[2] + " " + p[3];
-        st += '<path d="' + d2 + '" fill="none" stroke="' + col + '" stroke-width="3" stroke-opacity=".6"/>';
-      });
-      st += '</svg><div class="lmcentre"><div class="nm">' + lmEsc(a.firstName || name) + '</div><div class="meta">' + lmEsc(place || a.email) + '</div>' + (want ? '<div class="want"><small>What you want</small>' + lmEsc(want) + "</div>" : "") + "</div>";
-      B.forEach(function(b){ st += '<div class="lmbr" style="left:' + b.x + "px; top:" + b.y + 'px"><h3 style="color:' + b.c + '"><i style="background:' + b.c + '"></i>' + lmEsc(b.title) + "</h3>" + b.cards.map(function(c){ return lmCard(c, b.c); }).join("") + "</div>"; });
-      var plan = lmStore(a.id).plan || ["", "", ""];
-      st += '<div class="lmplan"><h3 style="margin:0 0 8px; font-weight:700; font-size:15px; letter-spacing:.1em; text-transform:uppercase; color:#e04fd6">Your plan of action</h3><div class="lmcard" style="--c:#e04fd6"><small>The Attraction Formula, for ' + lmEsc(a.firstName || name) + '</small><ol id="lmPlan">' + plan.map(function(p){ return '<li contenteditable="true">' + lmEsc(p) + "</li>"; }).join("") + "</ol></div></div>";
-      html += '<div class="lmbox" id="lmBox"><div class="lmstage" id="lmStage">' + st + "</div></div>";
-      var sk = '<div class="lmcard" style="--c:#e04fd6"><small>' + lmEsc(place) + '</small><p style="font-weight:800; font-size:20px">' + lmEsc(name) + "</p>" + (want ? "<p>" + lmEsc(want) + "</p>" : "") + "</div>";
-      B.forEach(function(b){ sk += '<b style="color:' + b.c + '; font-size:13px; letter-spacing:.08em; text-transform:uppercase">' + lmEsc(b.title) + "</b>" + b.cards.map(function(c){ return lmCard(c, b.c); }).join(""); });
-      html += '<div class="lmstack">' + sk + "</div>";
-    } else html += '<span class="hint">Pick an application on the left.</span>';
-    html += "</div></div>";
+      var s = lmStore(a.id), r = s.rating, d = String(a.dateAdded || "").slice(0, 10);
+      html += '<div class="lmmodal" id="lmModal"><div class="lmsheet" role="dialog" aria-label="' + lmEsc(lmName(a)) + '"><div class="lmsheethead"><div class="lmwho"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, [a.city, a.country].filter(Boolean).join(", "), (LM_STAGES.filter(function(x){ return x[0] === lmStage(a); })[0] || [])[1]].filter(Boolean).join(" · ")) + "</span></div>" +
+        '<div class="lmtabs"><button type="button" data-v="info" aria-pressed="' + (lmView === "info") + '">Details</button><button type="button" data-v="map" aria-pressed="' + (lmView === "map") + '">Mind map</button></div><button type="button" class="lmx" aria-label="Close">✕</button></div><div class="lmsheetbody">';
+      if (lmView === "map") html += lmMapHtml(a);
+      else html += '<div class="lmapp lmdetail" data-id="' + a.id + '"><div class="lmdcol"><small class="lmdh">Rating</small><div class="lmrate">' +
+        [["good", "Good"], ["okay", "Okay"], ["bad", "Not good"]].map(function(x){ return '<button type="button" data-r="' + x[0] + '" aria-pressed="' + (r === x[0]) + '">' + x[1] + "</button>"; }).join("") + '</div><small class="lmdh">Where they are</small>' + lmStageBox(a) +
+        '<small class="lmdh">Notes</small><textarea class="lmnote" rows="3" placeholder="Notes, e.g. main doubt, what they asked…" aria-label="Notes on ' + lmEsc(a.firstName || "this applicant") + '">' + lmEsc(s.note || "") + '</textarea></div><div class="lmdcol"><small class="lmdh">Send</small>' + lmContact(a) + "</div></div>";
+      html += "</div></div></div>";
+    }
     host.innerHTML = html;
-    host.querySelectorAll(".lmfilt button").forEach(function(b){ b.addEventListener("click", function(){ lmFilter = b.dataset.f; renderLooms(); }); });
+    document.body.style.overflow = a ? "hidden" : "";
+    // board: tap to open, drag to move
+    host.querySelectorAll(".lmbc2").forEach(function(c){
+      c.addEventListener("click", function(){ lmOpen = c.dataset.id; lmSel = c.dataset.id; lmView = "info"; renderLooms(); });
+      c.addEventListener("dragstart", function(e){ lmDrag = c.dataset.id; c.classList.add("drag"); try { e.dataTransfer.setData("text/plain", lmDrag); e.dataTransfer.effectAllowed = "move"; } catch(x){} });
+      c.addEventListener("dragend", function(){ c.classList.remove("drag"); lmDrag = null; });
+    });
+    host.querySelectorAll(".lmcol2").forEach(function(col){
+      col.addEventListener("dragover", function(e){ if (!lmDrag) return; e.preventDefault(); col.classList.add("over"); });
+      col.addEventListener("dragleave", function(e){ if (!col.contains(e.relatedTarget)) col.classList.remove("over"); });
+      col.addEventListener("drop", function(e){ e.preventDefault(); col.classList.remove("over"); var a4 = lmById(lmDrag); lmDrag = null; if (!a4 || lmStage(a4) === col.dataset.st) return; lmSetStage(a4, col.dataset.st); markDirty(); renderLooms(); });
+    });
+    var md = document.getElementById("lmModal");
+    if (md){
+      md.addEventListener("click", function(e){ if (e.target === md){ lmOpen = null; renderLooms(); } });
+      md.querySelector(".lmx").addEventListener("click", function(){ lmOpen = null; renderLooms(); });
+      md.querySelectorAll(".lmtabs button").forEach(function(b){ b.addEventListener("click", function(){ lmView = b.dataset.v; renderLooms(); }); });
+    }
     host.querySelectorAll(".lmapp").forEach(function(el){
-      el.addEventListener("click", function(e){ if (e.target.closest(".lmrate, .lmnote, .lmstg, .lmcon")) return; lmSel = el.dataset.id; renderLooms(); });
       var nt = el.querySelector(".lmnote");
-      nt.addEventListener("input", function(){ lmStore(el.dataset.id).note = nt.value; markDirty(); });
+      if (nt) nt.addEventListener("input", function(){ lmStore(el.dataset.id).note = nt.value; markDirty(); });
       el.querySelectorAll(".lmrate button").forEach(function(b){ b.addEventListener("click", function(){ var s2 = lmStore(el.dataset.id); s2.rating = s2.rating === b.dataset.r ? "" : b.dataset.r; markDirty(); renderLooms(); }); });
       el.querySelectorAll(".lmstg button").forEach(function(b){ b.addEventListener("click", function(){
         var a2 = lmById(el.dataset.id), s4 = lmStore(a2.id), k = b.dataset.act;
+        if (k === "ghlremove"){ lmRemove(a2, b); return; }
         if (k === "monthly" || k === "annual") s4.product = s4.product === k ? "" : k;
-        else if (k === "nofit") s4.archived = !s4.archived;
+        else if (k === "nofit"){ s4.archived = !s4.archived; if (s4.archived) s4.quiet = false; }
+        else if (k === "quiet"){ s4.quiet = !s4.quiet; if (s4.quiet) s4.archived = false; }
         else if (k === "loom") s4.loom = !(b.getAttribute("aria-pressed") === "true");
         else s4[k] = !s4[k];
-        markDirty(); lmFilter = lmStage(a2); lmSel = a2.id; renderLooms();
+        markDirty(); renderLooms();
       }); });
     });
     document.getElementById("lmRefresh").addEventListener("click", lmLoad);
     var full = document.getElementById("lmFull"); if (full) full.addEventListener("click", function(){ var bx = document.getElementById("lmBox"); if (bx && bx.requestFullscreen) bx.requestFullscreen().catch(function(){}); });
-    var clr = document.getElementById("lmClear"); if (clr) clr.addEventListener("click", function(){ if (!lmSel) return; lmStore(lmSel).plan = ["", "", ""]; markDirty(); renderLooms(); });
+    var clr = document.getElementById("lmClear"); if (clr) clr.addEventListener("click", function(){ if (!lmOpen) return; lmStore(lmOpen).plan = ["", "", ""]; markDirty(); renderLooms(); });
     var ol = document.getElementById("lmPlan");
     if (ol){
-      var save = function(){ lmStore(lmSel).plan = Array.prototype.map.call(ol.querySelectorAll("li"), function(li){ return li.textContent.trim(); }); markDirty(); };
+      var save = function(){ lmStore(lmOpen).plan = Array.prototype.map.call(ol.querySelectorAll("li"), function(li){ return li.textContent.trim(); }); markDirty(); };
       ol.addEventListener("input", save);
       ol.addEventListener("keydown", function(e){ if (e.key !== "Enter") return; e.preventDefault(); var li = document.createElement("li"); li.contentEditable = "true"; e.target.closest("li").after(li); li.focus(); save(); });
     }
@@ -6878,6 +7040,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (!stg || idea.posted) return;
       if (!idea.recorded) { idea.recorded = true; changed = true; }
       if (stg === "scheduled" && !idea.scheduled) { idea.scheduled = true; changed = true; }
+      // the real GHL posting time (2026-11-05): a Reel pushed on to keep the spacing moves to the day it actually posts
+      var st = reelStatus[String(idea.title || "").trim().toLowerCase().replace(/\s+/g, " ")] || {};
+      if (st.slot && (stg === "scheduled" || stg === "posted")){
+        var wh = new Date(Date.parse(st.slot) + 2 * 3600e3), day = new Date(wh.getTime() - 6 * 3600e3).toISOString().slice(0, 10);
+        if (idea.slot !== st.slot){ idea.slot = st.slot; changed = true; }
+        if (idea.date !== day){ idea.date = day; idea.mode = "specific"; changed = true; }
+      }
       if (stg === "posted") { idea.posted = true; idea.scheduled = false; changed = true; if (idea.title) syncIdeaToOutliers(idea); }
     });
     if (changed) { markDirty(); saveNow(); renderOutliers(); renderContentTab(); }
@@ -6995,7 +7164,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function recBuildList(){
     var today = recToday();
     var ideas = (state.content && state.content.ideas) || [];
-    var due = ideas.filter(function(i){ return i.title && i.date && i.date <= today && !i.recorded && !i.posted && !i.skipped && !reelStage(i); });
+    // every Reel still to record, today's (and any late ones) first, then ahead day by day (Olly 2026-11-05: "keep going")
+    var due = ideas.filter(function(i){ return i.title && i.date && !i.recorded && !i.posted && !i.skipped && !reelStage(i); });
     due.sort(function(a, b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
     return due;
   }
@@ -7010,17 +7180,26 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (recIdx >= recList.length) recIdx = Math.max(0, recList.length - 1);
     var prev = document.getElementById("recPrev"), done = document.getElementById("recDone"), skip = document.getElementById("recSkip");
     if (!recList.length){
-      document.getElementById("recCount").textContent = "Today's Reels";
-      main.innerHTML = '<p class="rechook">All recorded ✓</p><p class="recnone">Nothing left to record for today. Add Reels in the Content calendar and they show up here on their day.</p>';
+      document.getElementById("recCount").textContent = "Reels to record";
+      main.innerHTML = '<p class="rechook">All recorded ✓</p><p class="recnone">Every Reel on your calendar is recorded. Add more in the content generator or the Content calendar and they show up here.</p><div id="recClips" class="clips"></div>';
+      renderClips();
       prev.disabled = done.disabled = skip.disabled = true;
       return;
     }
     var idea = recList[recIdx], today = recToday();
-    document.getElementById("recCount").textContent = "Reel " + (recIdx + 1) + " of " + recList.length + " to record";
-    var dayTxt = idea.date === today ? "Today" : "From " + new Date(idea.date + "T00:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"short" });
-    main.innerHTML = '<span class="recday' + (idea.date === today ? "" : " late") + '">' + recEsc(dayTxt) + '</span>' +
+    // where you're up to: everything before the first Reel still waiting is recorded
+    var nice = function(iso){ return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"short" }); };
+    var first = recList[0].date, upto = "";
+    if (first > today){ var dd = new Date(first + "T00:00:00"); dd.setDate(dd.getDate() - 1); var y = dd.getFullYear() + "-" + String(dd.getMonth()+1).padStart(2,"0") + "-" + String(dd.getDate()).padStart(2,"0"); upto = y === today ? "today" : nice(y); }
+    document.getElementById("recCount").textContent = "Reel " + (recIdx + 1) + " of " + recList.length + " to record" + (upto ? " · recorded up to " + upto + " ✓" : first < today ? " · some late ones first" : " · today first");
+    var dayTxt = idea.date === today ? "Today" : idea.date < today ? "Late · from " + nice(idea.date) : "For " + new Date(idea.date + "T00:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"short" });
+    main.innerHTML = '<span class="recday' + (idea.date < today ? " late" : "") + '">' + recEsc(dayTxt) + '</span>' +
       '<p class="rechook">' + recEsc(idea.title) + '</p>' +
-      '<p class="reccta">End on: comment <b>' + (REC_CTA[idea.offer || "video"] || "VIDEO") + '</b></p>';
+      '<p class="reccta">End on: comment <b>' + (REC_CTA[idea.offer || "scale"] || "FEELING") + '</b></p>' +
+      '<div id="recClips" class="clips"></div>';
+    // In-Hub recording switched off (Olly 2026-11-05: not raw and natural enough; he films in the camera app). The camera
+    // code stays below, unused. The clips list only shows if test clips are still on the phone, so they can be deleted.
+    renderClips();
     prev.disabled = recIdx === 0;
     skip.disabled = recIdx >= recList.length - 1;
     done.disabled = false;
@@ -7039,6 +7218,243 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   });
   function recordFromHash(){ if (/^#record$/i.test(location.hash || "")) { try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {} openRecord(); } }
 
+  // In-Hub recording, step 1 (Olly, 2026-11-05): record each Reel inside the Record tab with the hook on screen.
+  // Record, Stop, then Retake (throws the take away) or Keep (saves it on this phone against that hook, ticks it
+  // Recorded and moves to the next). Clips live in this phone's storage (IndexedDB "hub-clips"), work with no signal,
+  // and each one has Save to Photos. idea.clipId links the calendar Reel to its clip (for step 2: upload to the laptop).
+  var recDbP = null;
+  function recDb(){
+    if (!recDbP) recDbP = new Promise(function(res, rej){
+      var r = indexedDB.open("hub-clips", 1);
+      r.onupgradeneeded = function(){ r.result.createObjectStore("clips", { keyPath:"id" }); };
+      r.onsuccess = function(){ res(r.result); }; r.onerror = function(){ recDbP = null; rej(r.error); };
+    });
+    return recDbP;
+  }
+  function recStore(mode, fn){
+    return recDb().then(function(db){ return new Promise(function(res, rej){
+      var tx = db.transaction("clips", mode), req = fn(tx.objectStore("clips"));
+      tx.oncomplete = function(){ res(req ? req.result : undefined); }; tx.onerror = function(){ rej(tx.error); }; tx.onabort = function(){ rej(tx.error); };
+    }); });
+  }
+  function clipPut(c){ return recStore("readwrite", function(s){ return s.put(c); }); }
+  function clipAll(){ return recStore("readonly", function(s){ return s.getAll(); }); }
+  function clipDel(id){ return recStore("readwrite", function(s){ return s.delete(id); }); }
+  function clipMB(n){ return (n / 1048576).toFixed(n > 104857600 ? 0 : 1) + " MB"; }
+  function clipName(c){ return (c.date || "") + " " + String(c.title || "Reel").replace(/[\\\/:*?"<>|]+/g, "").replace(/\s+/g, " ").trim().slice(0, 80) + (/mp4/.test(c.type || "") ? ".mp4" : ".webm"); }
+  function clipSave(c, btn){
+    var f = new File([c.blob], clipName(c), { type:c.type || "video/mp4" });
+    if (navigator.canShare && navigator.canShare({ files:[f] })){
+      navigator.share({ files:[f] }).catch(function(e){ if (e && e.name !== "AbortError" && btn) btn.textContent = "Couldn't share (" + (e.name || "error") + ")"; });   // the share sheet has "Save Video" (goes to Photos)
+      return;
+    }
+    var a = document.createElement("a"); a.href = URL.createObjectURL(c.blob); a.download = f.name; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+    if (btn) btn.textContent = "Downloaded ✓";
+  }
+  // the list of clips waiting on this phone, under the hook in the Record tab
+  function renderClips(){
+    var box = document.getElementById("recClips"); if (!box || !window.indexedDB) return;
+    clipAll().then(function(list){
+      list.sort(function(a, b){ return (a.savedAt || 0) - (b.savedAt || 0); });
+      if (!list.length){ box.innerHTML = ""; return; }
+      var tot = list.reduce(function(n, c){ return n + (c.size || 0); }, 0);
+      box.innerHTML = '<div class="clipshead">On this phone: ' + list.length + (list.length === 1 ? " clip" : " clips") + " · " + clipMB(tot) + "</div>" +
+        (list.length > 1 ? '<button type="button" class="recopen" id="clipAll">Save all ' + list.length + ' to Photos</button>' : "") +
+        list.map(function(c){ return '<div class="clip" data-id="' + recEsc(c.id) + '"><div class="clipt"><b>' + recEsc(c.title || "Reel") + "</b><span>" + recEsc((c.date || "") + " · " + clipMB(c.size || 0)) + '</span></div><button type="button" data-a="save">Save to Photos</button><button type="button" data-a="del" class="clipdel">Delete</button></div>'; }).join("");
+      // one share sheet with every clip: "Save N Videos" puts them all in Photos (2026-11-05)
+      var all = document.getElementById("clipAll");
+      if (all) all.addEventListener("click", function(){
+        var files = list.map(function(c){ return new File([c.blob], clipName(c), { type:c.type || "video/mp4" }); });
+        if (navigator.canShare && navigator.canShare({ files:files })) navigator.share({ files:files }).catch(function(e){ if (e && e.name !== "AbortError") all.textContent = "Couldn't share (" + (e.name || "error") + "). Save them one by one"; });
+        else list.forEach(function(c){ clipSave(c); });
+      });
+      box.querySelectorAll(".clip").forEach(function(row){
+        var c = list.filter(function(x){ return x.id === row.dataset.id; })[0];
+        row.querySelector('[data-a="save"]').addEventListener("click", function(e){ clipSave(c, e.target); });
+        row.querySelector('[data-a="del"]').addEventListener("click", function(e){
+          var b = e.target;
+          if (b.dataset.sure !== "1"){ b.dataset.sure = "1"; b.textContent = "Tap again to delete"; setTimeout(function(){ b.dataset.sure = ""; b.textContent = "Delete"; }, 3000); return; }
+          clipDel(c.id).then(renderClips);
+        });
+      });
+    }).catch(function(){ box.innerHTML = '<div class="clipshead">This phone’s storage isn’t available here.</div>'; });
+  }
+
+  var cam = { stream:null, rec:null, chunks:[], blob:null, type:"", t0:0, tick:null, idea:null };
+  function camEl(id){ return document.getElementById(id); }
+  function camBuild(){
+    if (camEl("camOv")) return;
+    var d = document.createElement("div"); d.id = "camOv"; d.className = "camov"; d.hidden = true;
+    d.innerHTML = '<video id="camLive" playsinline muted autoplay></video><video id="camPlay" playsinline controls hidden></video>' +
+      '<div class="camhook" id="camHook"></div><div class="camtime" id="camTime"></div><div class="camcta" id="camCta"></div><div class="cammsg" id="camMsg"></div><div class="caminfo" id="camInfo"></div><button type="button" class="camsound" id="camSound"></button><div class="camlevel" id="camLevel" hidden><div class="cammeter"><i id="camBar"></i></div><label>Mic boost <input type="range" id="camBoost" min="1" max="20" step="1"> <b id="camBoostV"></b></label><small>Talk normally: aim for green, never red.</small></div><label class="camzoom" id="camZoomWrap" hidden>Zoom<input type="range" id="camZoom" step="0.05"></label>' +
+      '<div class="cambar"><button type="button" id="camClose" class="camside">Close</button><button type="button" id="camRec" class="camrec" aria-label="Record"><i></i></button>' +
+      '<button type="button" id="camRetake" class="camside" hidden>Retake</button><button type="button" id="camKeep" class="camkeep" hidden>✓ Keep</button><span id="camGap"></span></div>';
+    document.body.appendChild(d);
+    camEl("camClose").addEventListener("click", camClose);
+    camEl("camRec").addEventListener("click", function(){ if (cam.rec && cam.rec.state === "recording") camStop(); else camStart(); });
+    camEl("camRetake").addEventListener("click", camLive);
+    camEl("camKeep").addEventListener("click", camKeep);
+    camEl("camSound").addEventListener("click", function(){
+      if (cam.rec && cam.rec.state === "recording") return;
+      try { localStorage.setItem("hub-cam-sound2", camSound() === "clear" ? "natural" : "clear"); } catch (e){}
+      if (cam.stream){ cam.stream.getTracks().forEach(function(t){ t.stop(); }); cam.stream = null; }
+      camOpen();   // restart the microphone with the new setting
+    });
+  }
+  function camSound(){ try { return localStorage.getItem("hub-cam-sound2") || "natural"; } catch (e){ return "natural"; } }
+  function camSoundLabel(){ var b = camEl("camSound"); if (b) b.textContent = "Sound: " + (camSound() === "clear" ? "Clear voice" : "Natural, boosted") + " ⇄"; }
+  function camShowIdea(){
+    var idea = cam.idea;
+    camEl("camHook").textContent = idea ? idea.title : "";
+    camEl("camCta").innerHTML = idea ? 'End on: comment <b>' + (REC_CTA[idea.offer || "scale"] || "FEELING") + "</b>" : "";
+  }
+  function camOpen(){
+    var idea = recList[recIdx]; if (!idea) return;
+    camBuild(); cam.idea = idea; camShowIdea(); camSoundLabel();
+    var ov = camEl("camOv"); ov.hidden = false; document.body.style.overflow = "hidden";
+    camEl("camMsg").textContent = "Starting the camera…";
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){ camEl("camMsg").textContent = "This browser can't record video. Open the Hub from its Home Screen icon or in Safari."; return; }
+    // steady 30fps (Olly 2026-11-05: video looked slightly glitchy): ask for at least 30, fall back if the phone says no
+    // Sound (Olly 2026-11-05: raw mic sounded worse than the camera app): "Clear voice" = the phone's voice processing on
+    // (noise reduction, auto volume), "Natural" = raw microphone. Remembered on this phone; Clear voice by default.
+    var clean = camSound() === "clear";
+    var aud = { echoCancellation:clean, noiseSuppression:clean, autoGainControl:clean };
+    var go = cam.stream ? Promise.resolve(cam.stream) : navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:"user", width:{ ideal:1920 }, height:{ ideal:1080 }, frameRate:{ ideal:30, min:30 } },   // the phone turns it to portrait
+      audio:aud
+    }).catch(function(){ return navigator.mediaDevices.getUserMedia({ video:{ facingMode:"user", width:{ ideal:1920 }, height:{ ideal:1080 }, frameRate:{ ideal:30 } }, audio:aud }); });
+    go.then(function(s){ cam.stream = s; camEl("camLive").srcObject = s; camLive(); camTrackInfo(); })
+      .catch(function(){ camEl("camMsg").textContent = "The camera didn't start. Allow camera and microphone for the Hub (iPhone: Settings, Safari, Camera / Microphone), then try again."; });
+  }
+  // what the camera actually gives (shown small, top left, so we can see the size) + a zoom slider where the phone allows it
+  function camTrackInfo(){
+    var tr = cam.stream && cam.stream.getVideoTracks()[0]; if (!tr) return;
+    var st = tr.getSettings ? tr.getSettings() : {}, caps = tr.getCapabilities ? tr.getCapabilities() : {};
+    setTimeout(function(){ var v = camEl("camLive"); var s2 = tr.getSettings ? tr.getSettings() : st; camEl("camInfo").textContent = (v.videoWidth || st.width || "?") + "×" + (v.videoHeight || st.height || "?") + (s2.frameRate ? " · " + Math.round(s2.frameRate) + "fps" : ""); }, 800);
+    // no push to 4K: it drops the frame rate (glitchy). Full HD at a steady 30fps looks better on a Reel.
+    var z = caps.zoom, w = camEl("camZoomWrap"), r = camEl("camZoom");
+    if (z && z.max > z.min){
+      r.min = z.min; r.max = Math.min(z.max, z.min + 3); r.value = z.min; w.hidden = false;
+      tr.applyConstraints({ advanced:[{ zoom:z.min }] }).catch(function(){});
+      r.oninput = function(){ tr.applyConstraints({ advanced:[{ zoom:Number(r.value) }] }).catch(function(){}); };
+    } else w.hidden = true;
+  }
+  function camLive(){
+    cam.blob = null; cam.chunks = [];
+    var pl = camEl("camPlay"); pl.pause(); if (pl.src){ URL.revokeObjectURL(pl.src); pl.removeAttribute("src"); } pl.hidden = true;
+    camEl("camLive").hidden = false; camEl("camMsg").textContent = ""; camEl("camTime").textContent = "";
+    camEl("camRec").hidden = false; camEl("camRec").classList.remove("on"); camEl("camRetake").hidden = true; camEl("camKeep").hidden = true; camEl("camClose").hidden = false; camEl("camGap").hidden = false;
+    camEl("camHook").hidden = false; camEl("camCta").hidden = false; camEl("camSound").hidden = false; if (camEl("camLevel")) camEl("camLevel").hidden = !cam.chain;
+  }
+  function camType(){
+    var c = ["video/mp4;codecs=avc1.640028,mp4a.40.2", "video/mp4;codecs=avc1,mp4a.40.2", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"];
+    for (var i = 0; i < c.length; i++) if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c[i])) return c[i];
+    return "";
+  }
+  function camStart(){
+    if (!cam.stream) return;
+    // highest quality the phone can keep up with (Olly 2026-11-05): ~10 Mbps at 1080p, more above it; AAC 256k
+    var vt = cam.stream.getVideoTracks()[0], vs = vt && vt.getSettings ? vt.getSettings() : {}, px = (vs.width || 1080) * (vs.height || 1920);
+    var t = camType(), opts = { videoBitsPerSecond:px > 2500000 ? 18000000 : 10000000, audioBitsPerSecond:192000 };
+    if (t) opts.mimeType = t;
+    var rs = camRecStream();
+    try { cam.rec = new MediaRecorder(rs, opts); } catch (e){ try { cam.rec = new MediaRecorder(rs); } catch (x){ camEl("camMsg").textContent = "Recording isn't supported here."; return; } }
+    cam.chunks = []; cam.type = cam.rec.mimeType || t || "video/mp4";
+    cam.rec.ondataavailable = function(e){ if (e.data && e.data.size) cam.chunks.push(e.data); };
+    cam.rec.onstop = function(){
+      cam.blob = new Blob(cam.chunks, { type:cam.type.split(";")[0] });
+      if (cam.blob.size < 20000){ camEl("camMsg").textContent = "That take didn't record properly. Tap Retake and try again."; }
+      clearInterval(cam.tick);
+      var pl = camEl("camPlay"); pl.src = URL.createObjectURL(cam.blob); pl.hidden = false; camEl("camLive").hidden = true;
+      camEl("camRec").hidden = true; camEl("camRetake").hidden = false; camEl("camKeep").hidden = false; camEl("camClose").hidden = true; camEl("camGap").hidden = true;
+      camEl("camMsg").textContent = ""; camEl("camHook").hidden = true; camEl("camCta").hidden = true; camEl("camLevel").hidden = true;
+      var secs = Math.max(1, (Date.now() - cam.t0) / 1000), lv = camEl("camLive");
+      camEl("camInfo").textContent = (lv.videoWidth || "?") + "×" + (lv.videoHeight || "?") + " · " + Math.round(cam.blob.size * 8 / secs / 1e6 * 10) / 10 + " Mbps · " + Math.round(secs) + "s";
+    };
+    cam.rec.start();
+    cam.t0 = Date.now(); camEl("camRec").classList.add("on"); camEl("camClose").hidden = true; camEl("camSound").hidden = true;
+    camEl("camTime").textContent = "0:00";
+    cam.tick = setInterval(function(){ var s = Math.floor((Date.now() - cam.t0) / 1000); camEl("camTime").textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }, 500);
+    // the hook stays up for the first 5 seconds, like the finished Reel, then gets out of the way
+    setTimeout(function(){ if (cam.rec && cam.rec.state === "recording") camEl("camHook").hidden = true; }, 5000);
+  }
+  // Natural sound, boosted (Olly 2026-11-05: Natural sounded like him but very quiet; Clear voice sounded like a video call).
+  // Raw mic -> gentle compressor (evens it out) -> x2.8 volume -> limiter (no distortion on loud bits) -> recorder.
+  // Natural sound, boosted (Olly 2026-11-05: raw mic sounds like him but is very quiet; x2.8 wasn't enough).
+  // One audio chain per camera session: raw mic -> compressor (evens it out) -> boost (slider, 8x by default) -> limiter
+  // (no distortion) -> the recording. A level meter on screen shows how loud the recording will be before you start.
+  function camBoost(){ try { return Number(localStorage.getItem("hub-cam-boost")) || 8; } catch (e){ return 8; } }
+  function camAudio(){
+    if (camSound() === "clear" || !cam.stream) return null;
+    if (cam.chain && cam.chain.stream === cam.stream) return cam.chain;
+    camNodesOff();
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!cam.ac) cam.ac = new AC();
+      if (cam.ac.resume) cam.ac.resume();
+      var ac = cam.ac, src = ac.createMediaStreamSource(new MediaStream(cam.stream.getAudioTracks()));
+      var comp = ac.createDynamicsCompressor(); comp.threshold.value = -32; comp.knee.value = 10; comp.ratio.value = 4; comp.attack.value = 0.005; comp.release.value = 0.25;
+      var gain = ac.createGain(); gain.gain.value = camBoost();
+      var lim = ac.createDynamicsCompressor(); lim.threshold.value = -3; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.001; lim.release.value = 0.1;
+      var an = ac.createAnalyser(); an.fftSize = 1024;
+      var dst = ac.createMediaStreamDestination();
+      src.connect(comp); comp.connect(gain); gain.connect(lim); lim.connect(dst); lim.connect(an);
+      cam.nodes = [src, comp, gain, lim, an];
+      cam.chain = { stream:cam.stream, gain:gain, an:an, rec:new MediaStream(cam.stream.getVideoTracks().concat(dst.stream.getAudioTracks())) };
+      return cam.chain;
+    } catch (e){ return null; }
+  }
+  // 2026-11-05: always record the phone's own tracks. Mixing the boosted Web Audio track into the recording made clips
+  // that wouldn't save to Photos, so the volume is now brought up by the Reel editor on the laptop instead.
+  function camRecStream(){ return cam.stream; }
+  // level meter + boost slider (only for Natural sound)
+  function camMeter(){
+    var c = camAudio(), wrap = camEl("camLevel");
+    if (!wrap) return;
+    wrap.hidden = !c;
+    if (!c) return;
+    var r = camEl("camBoost"); r.value = camBoost(); camEl("camBoostV").textContent = "×" + camBoost();
+    r.oninput = function(){ var v = Number(r.value); c.gain.gain.value = v; camEl("camBoostV").textContent = "×" + v; try { localStorage.setItem("hub-cam-boost", String(v)); } catch (e){} };
+    var buf = new Float32Array(c.an.fftSize), bar = camEl("camBar");
+    cancelAnimationFrame(cam.raf);
+    (function loop(){
+      if (!cam.chain || camEl("camOv").hidden) return;
+      c.an.getFloatTimeDomainData(buf);
+      var peak = 0; for (var i = 0; i < buf.length; i++){ var x = Math.abs(buf[i]); if (x > peak) peak = x; }
+      var db = 20 * Math.log10(peak || 1e-6), pct = Math.max(0, Math.min(100, (db + 48) / 48 * 100));
+      bar.style.width = pct + "%"; bar.style.background = db > -3 ? "#f87171" : db > -18 ? "#4ade80" : "#fbbf24";
+      cam.raf = requestAnimationFrame(loop);
+    })();
+  }
+  function camNodesOff(){ cancelAnimationFrame(cam.raf); (cam.nodes || []).forEach(function(n){ try { n.disconnect(); } catch (e){} }); cam.nodes = null; cam.chain = null; }
+  function camStop(){ if (cam.rec && cam.rec.state !== "inactive") cam.rec.stop(); }
+  function camKeep(){
+    var idea = cam.idea, blob = cam.blob; if (!idea || !blob) return;
+    var b = camEl("camKeep"); b.disabled = true; b.textContent = "Saving…";
+    var id = idea.clipId || ("clip-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7));
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function(){});
+    clipPut({ id:id, title:idea.title, date:idea.date, type:blob.type, size:blob.size, savedAt:Date.now(), blob:blob }).then(function(){
+      idea.clipId = id; idea.recorded = true;
+      markDirty(); saveNow();
+      renderCalendar();
+      b.disabled = false; b.textContent = "✓ Keep";
+      recList = recBuildList(); if (recIdx >= recList.length) recIdx = Math.max(0, recList.length - 1);
+      renderRecord();
+      var next = recList[recIdx];
+      if (!next){ camClose(); return; }
+      cam.idea = next; camShowIdea(); camLive();
+      camEl("camMsg").textContent = "Saved ✓ Next Reel.";
+    }).catch(function(){ b.disabled = false; b.textContent = "✓ Keep"; camEl("camMsg").textContent = "Couldn't save it on this phone (storage full?). Tap Keep again, or Retake."; });
+  }
+  function camClose(){
+    if (cam.rec) cam.rec.onstop = null; camNodesOff();
+    camStop(); clearInterval(cam.tick);
+    if (cam.stream){ cam.stream.getTracks().forEach(function(t){ t.stop(); }); cam.stream = null; }
+    var ov = camEl("camOv"); if (ov) ov.hidden = true; document.body.style.overflow = "";
+    renderRecord();
+  }
+
   // hub.ollyhenson.com/#addreel=<encoded JSON {title, caption?, offer?}> (content generator's "Add to calendar", 2026-10-28).
   // Held until the shared data has loaded, then put in the next free slot (10 a day), saved without pressing Save,
   // and that day opened so Olly sees where it landed. Same title already waiting unpublished = no duplicate.
@@ -7049,21 +7465,28 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var data = null;
     try { data = JSON.parse(decodeURIComponent(m[1])); } catch (err) { data = null; }
     try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
-    if (data && String(data.title || "").trim()) pendingReel = data;
+    // a list = the generator's "Add all to calendar" (2026-11-05)
+    var list = (Array.isArray(data) ? data : [data]).filter(function(x){ return x && String(x.title || "").trim(); });
+    if (list.length) pendingReel = list;
   }
   function placePendingReel(){
     if (!pendingReel) return;
-    var data = pendingReel; pendingReel = null;
-    var title = withHookEmoji(data.title);
+    var list = Array.isArray(pendingReel) ? pendingReel : [pendingReel]; pendingReel = null;
     if (!state.content.ideas) state.content.ideas = [];
-    var idea = state.content.ideas.filter(function(i){ return i.title === title && !i.posted; })[0];
-    if (!idea){
-      idea = { title:title, date: findNextAvailableDate(), mode:"auto", synced:false, offer: data.offer === "scale" || data.offer === "attract" ? data.offer : "video" };
-      if (data.caption) idea.caption = outlierTags(String(data.caption));
-      state.content.ideas.push(idea);
-      markDirty();
-      saveNow();
-    }
+    var idea = null, added = false;
+    list.forEach(function(data){
+      var title = withHookEmoji(data.title);
+      var it = state.content.ideas.filter(function(i){ return i.title === title && !i.posted; })[0];
+      if (!it){
+        // FEELING unless the generator says otherwise (Olly, 2026-11-05: every Reel is FEELING)
+        it = { title:title, date: findNextAvailableDate(), mode:"auto", synced:false, offer: data.offer === "video" || data.offer === "attract" ? data.offer : "scale" };
+        if (data.caption) it.caption = outlierTags(String(data.caption));
+        state.content.ideas.push(it);
+        added = true;
+      }
+      if (!idea) idea = it;
+    });
+    if (added){ markDirty(); saveNow(); }
     goTab("content");
     renderIdeasAndWeek();
     var d = new Date(idea.date + "T00:00:00"); calCursor = new Date(d.getFullYear(), d.getMonth(), 1); renderCalendar();
@@ -7574,7 +7997,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var ROUTINE = [
     ["skool", "Check in with current members in the Skool app"],
     ["whatsapp", "Reply to WhatsApps (people you've sent Looms or messages to)"],
-    ["looms", "Check applications and send the Looms with the offer", "looms"],
+    ["looms", "Check applications and send the VSL", "looms"],
     ["socials", "Check socials: messages and DMs from people who are interested"],
     // content split into its own tick boxes (Olly, 2026-11-02); old "content" ticks become all four (coreStore)
     ["c_reels", "Reels: record and publish today's Reels"],
@@ -7896,7 +8319,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
           renderToday();
         });
         if (r[2] && date === t) {
-          var go = document.createElement("button"); go.type = "button"; go.className = "golink"; go.textContent = "Open the Looms tab \u2192";
+          var go = document.createElement("button"); go.type = "button"; go.className = "golink"; go.textContent = "Open the Sales tab \u2192";
           go.addEventListener("click", function(){ var b2 = document.querySelector('.tabbtn[data-tab="' + r[2] + '"]'); if (b2) b2.click(); });
           li.appendChild(go);
         }
@@ -9213,7 +9636,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         if (m) t.text = VIDEO_CAPTIONS[vPlat[m[1].toUpperCase()]];
       });
       ((state.content && state.content.ideas) || []).forEach(function(i){
-        if ((i.offer || "video") === "video" && i.capPlat && !i.posted)
+        if ((i.offer || "scale") === "video" && i.capPlat && !i.posted)
           i.caption = reelCaption("video", i.capPlat, vTpls.filter(function(t){ return t && t.text; }))
             .replace(/VIDEO TITLE GOES HERE/g, i.title || "VIDEO TITLE GOES HERE");
       });

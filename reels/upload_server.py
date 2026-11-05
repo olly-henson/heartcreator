@@ -106,11 +106,14 @@ def hub_get(fresh=False):
     return None
 
 
-def hub_stage(title, stage):
+def hub_stage(title, stage, slot=None):
     if not title:
         return
     try:
-        req = urllib.request.Request(HUB_URL + "?key=" + hub_key(), data=json.dumps({"title": title, "stage": stage}).encode(),
+        body = {"title": title, "stage": stage}
+        if slot:
+            body["slot"] = slot   # the real posting time, so the Hub calendar shows the day it actually goes out (2026-11-05)
+        req = urllib.request.Request(HUB_URL + "?key=" + hub_key(), data=json.dumps(body).encode(),
                                      headers={"content-type": "application/json", **UA}, method="POST")
         urllib.request.urlopen(req, timeout=15).read()
         _hub_cache["t"] = 0
@@ -271,7 +274,7 @@ select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;f
 .plats{display:flex;gap:6px;margin:4px 0 6px}.plats button{min-width:0;padding:8px 4px;font-size:13px}
 </style></head><body>
 <h1>Reel Upload</h1><p class="sub">Pick all your raw videos in any order. The laptop matches each one to its hook on the calendar and edits them one at a time.</p>
-<label class="drop">Upload raw videos<small>Choose one or several from Photos. Tap <b>Options</b> at the top and pick <b>Current</b>: it skips the iPhone's slow conversion. Keep this page open until they're sent.</small><input id="f" type="file" accept="video/*" multiple></label>
+<label class="drop">Upload raw videos<small>Best way: in Photos run the <b>Send to Reel Upload</b> shortcut and tick them all (Do Not Disturb on, screen on). This button works for one or two short videos</small><input id="f" type="file" accept="video/*" multiple></label>
 <div id="msg"></div>
 <label class="drop ghost" style="margin-top:10px;padding:14px;font-size:15px">Upload a reference Reel<small style="color:var(--mut)">Your best posted Reels, so the style stays the same. Not edited.</small><input id="rf" type="file" accept="video/*" multiple></label>
 <div id="ups"></div>
@@ -324,6 +327,7 @@ function showPlat(id,pl){const it=window._items[id];capPlat[id]=pl;const ta=docu
 // Only redraw a list when it actually changed: redrawing every 8s rebuilt the video players and killed playback (2026-11-04)
 const lastH={};function setH(sel,h){if(lastH[sel]===h)return;lastH[sel]=h;$(sel).innerHTML=h;}
 function whenTxt(iso){if(!iso)return'';return new Date(iso).toLocaleString('en-GB',{timeZone:'Africa/Windhoek',weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+async function delReel(id,btn){if(btn.dataset.sure!=='1'){btn.dataset.sure='1';btn.textContent='Tap again to delete';setTimeout(()=>{btn.dataset.sure='';btn.textContent='Delete'},3000);return}btn.disabled=true;btn.textContent='Deleting…';await fetch('/delete/'+id,{method:'POST'});msg('Deleted. It will not be posted.');refresh();}
 async function approve(id,btn){btn.disabled=true;btn.textContent='Scheduling…';await fetch('/approve/'+id,{method:'POST'});msg('Approved. It\'s being uploaded to GHL and booked into the next free slot.');refresh();}
 async function unsched(id,btn){if(!confirm('Take this Reel off the schedule? It goes back to To approve.'))return;btn.disabled=true;btn.textContent='Removing…';await fetch('/unschedule/'+id,{method:'POST'});refresh();}
 function saveCap(id,t){fetch('/caption/'+id+'?p='+(capPlat[id]||'instagram'),{method:'POST',body:t})}
@@ -334,10 +338,24 @@ async function refresh(){let items;try{items=await (await fetch('/list')).json()
   const today=new Date().toISOString().slice(0,10);
   const due=hubReels.reels.filter(r=>r.stage===''&&!have.has(r.title.toLowerCase())&&(r.recorded||r.date===today));
   $('#todoh').textContent='Waiting for videos ('+due.length+')';
-  $('#todo').innerHTML=due.length?'<div class="todo">'+due.map(r=>`<div>${esc(r.title)}<small>${fmtDay(r.date)}${r.recorded?' · recorded':''}</small></div>`).join('')+'</div>':'<p class="empty">Every recorded Reel on the calendar is uploaded.</p>';}
+  // Getting ahead (Olly 2026-11-05): how far the uploads reach, and the next Reels on the calendar to send, in order.
+  // Moves on every time an upload matches a hook. (The Hub sends Reels up to 14 days ahead.)
+  const open=hubReels.reels.filter(r=>r.stage===''&&!have.has(r.title.toLowerCase())).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  const loc=x=>x.toLocaleDateString('en-CA'),todayL=loc(new Date());let upto='';if(open.length&&open[0].date>todayL){const d=new Date(open[0].date+'T00:00:00');d.setDate(d.getDate()-1);upto=loc(d)<todayL?'':loc(d);}
+  const ahead=open.filter(r=>!due.includes(r)).slice(0,6);
+  $('#todo').innerHTML=(due.length?'<div class="todo">'+due.map(r=>`<div>${esc(r.title)}<small>${fmtDay(r.date)}${r.recorded?' · recorded':''}</small></div>`).join('')+'</div>':'<p class="empty">Every recorded Reel on the calendar is uploaded.</p>')
+   +(upto?`<p class="empty">Uploaded up to ${upto===todayL?'today':fmtDay(upto)} ✓</p>`:'')
+   +(ahead.length?`<h3 style="margin:14px 0 6px;font-size:15px">Next on the calendar</h3><div class="todo">${ahead.map((r,i)=>`<div>${i===0?'<b>Next: </b>':''}${esc(r.title)}<small>${fmtDay(r.date)}</small></div>`).join('')}</div>`:(open.length?'':'<p class="empty">Nothing else on the calendar yet. Add Reels in the content generator.</p>'));}
  else{$('#todoh').textContent='Waiting for videos';$('#todo').innerHTML='<p class="empty">Can\'t reach the Hub calendar right now. Uploads still get edited, using what you said as the hook.</p>';}
  const r=[],w=[],p=[],s=[];
+ // Duplicates (Olly 2026-11-05): the same video uploaded twice says so, with one Delete button, instead of "Not matched"
+ const dupOf={},seen={},key=t=>String(t||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').split(/\s+/).filter(Boolean).slice(0,25).join(' ');
+ for(const it of items.slice().sort((a,b)=>(a.uploaded||0)-(b.uploaded||0))){const k=key(it.spoken);if(k.split(' ').length<8)continue;if(seen[k])dupOf[it.id]=seen[k];else seen[k]=it;}
  for(const it of items.slice().reverse()){
+  if(it.status==='ready'&&dupOf[it.id]){const o=dupOf[it.id];
+   r.push(`<div class="card" id="card-${it.id}"><div class="hook">${esc(it.hook||it.name)}</div>
+   <div class="match no">Duplicate: you've already uploaded this video${o.match?' (“'+esc(o.match)+'”)':''}. Delete this copy?</div>
+   <div class="row"><button class="approve" onclick="delReel('${it.id}',this)">Delete duplicate</button></div></div>`);continue}
   if(it.status==='ready'){if(editing.has(it.id)&&document.getElementById('card-'+it.id)){r.push(document.getElementById('card-'+it.id).outerHTML);continue}
    const pl=capPlat[it.id]||'instagram';const hasCaps=it.captions&&it.captions.instagram;
    r.push(`<div class="card" id="card-${it.id}"><div class="hook">${esc(it.hook||it.name)}</div>
@@ -349,7 +367,7 @@ async function refresh(){let items;try{items=await (await fetch('/list')).json()
    ${it.length>179.5?`<div class="err">This Reel is ${Math.floor(it.length/60)}:${String(Math.round(it.length%60)).padStart(2,'0')} long. YouTube only counts it as a Short at 3:00 or under, so it would go up there as a normal video.</div>`:''}
    <div class="row"><button class="approve" onclick="approve('${it.id}',this)">✓ Approve and schedule</button></div>
    <div class="tip">Approve books the next free slot (your calendar day first) and schedules it on Instagram, Facebook, TikTok and YouTube with each platform's caption.</div>
-   <div class="row"><button class="ghost" onclick="saveVid('${it.id}','${it.file}',this)">Save to Photos</button><button class="ghost" onclick="copyCap('${it.id}',this)">Copy caption</button></div></div>`);}
+   <div class="row"><button class="ghost" onclick="saveVid('${it.id}','${it.file}',this)">Save to Photos</button><button class="ghost" onclick="copyCap('${it.id}',this)">Copy caption</button><button class="ghost" onclick="delReel('${it.id}',this)">Delete</button></div></div>`);}
   else if(it.status==='scheduled')s.push(`<div class="card"><div class="when">${whenTxt(it.slot)}</div><div class="hook">${esc(it.hook||it.name)}</div>
    <div class="res">${Object.keys(it.ghl||{}).map(k=>PL[k]).join(' · ')}</div>${it.post_error?`<div class="err">${esc(it.post_error)}</div>`:''}
    <div class="row"><button class="ghost" onclick="unsched('${it.id}',this)">Unschedule</button></div></div>`);
@@ -475,7 +493,7 @@ class H(BaseHTTPRequestHandler):
             wake.set()
             return self.send(200, rid)
         body = self.rfile.read(n) if n else b""
-        m = re.fullmatch(r"/(posted|unpost|retry|caption|match|approve|unschedule|retrypost)/([0-9a-f]{12})", u.path)
+        m = re.fullmatch(r"/(posted|unpost|retry|caption|match|approve|unschedule|retrypost|delete)/([0-9a-f]{12})", u.path)
         if not m:
             return self.send(404, "not found")
         a, rid = m.groups()
@@ -508,6 +526,17 @@ class H(BaseHTTPRequestHandler):
                 hub_stage(cur["match"], "")
             update(rid, status="queued", picked=True, match=title if r else "", offer=(r or {}).get("offer", "video"), date=(r or {}).get("date", ""), error="")
             wake.set()
+        elif a == "delete" and cur.get("status") in ("ready", "failed"):
+            with lock:
+                items = [it for it in load() if it["id"] != rid]
+                save(items)
+            for f in (cur.get("raw"), os.path.join(READY, cur.get("file") or "")):
+                for g in (f, (f or "") + ".cover.jpg", (f or "") + ".plan.json"):
+                    try:
+                        if g and os.path.isfile(g):
+                            os.remove(g)
+                    except OSError:
+                        pass
         elif a == "retry":
             update(rid, status="queued", error="")
             wake.set()
@@ -542,7 +571,7 @@ def poster():
                     counts[r["date"]] = counts.get(r["date"], 0) + 1
                 out = gp.schedule(job, os.path.join(READY, job["file"]), taken_slots(items, job["id"]), hub.get("targets"), counts)
                 update(job["id"], status="scheduled", post_error="", **out)
-                hub_stage(job.get("match"), "scheduled")
+                hub_stage(job.get("match"), "scheduled", out.get("slot"))
             except Exception as e:
                 update(job["id"], status="post_failed", post_error=str(e)[-500:], **getattr(e, "partial", {}))
             continue

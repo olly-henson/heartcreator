@@ -5,7 +5,7 @@ What it does (and nothing else; the middle of the video is never cut):
   2. Hook = the first spoken sentence, as a 2-line white box with a red heart, while he says it.
   3. Captions: white rounded box, bold black text, a few words at a time, ~y=289 on 1080x1920.
   4. Highlights in green (#10D05D): "intellectualization" / "emotional resonance" on their own
-     caption when the term is named ("called X") or said as its own sentence; "feeling" after DM/comment.
+     caption when the term is named ("called X") or said as its own sentence; "feeling" after DM/comment (up to 5 words before it).
 
 Usage:  py reel_editor.py <raw video> [<output.mp4>]
 Needs:  ffmpeg on PATH, pip faster-whisper pillow numpy
@@ -155,7 +155,9 @@ def plan(words):
     # (2026-11-04: "just comment | feeling" split over two boxes, and "DM me feeling" has a word between, so neither went green)
     green = set()
     for j, x in enumerate(rest):
-        if low[j] in CTA_WORDS and any(low[k] in ("dm", "comment", "message") for k in range(max(0, j - 3), j)):
+        # 5 words back (Olly 2026-11-05): "send me a DM with the word feeling" has DM 4 words before the keyword, so the
+        # DM keyword wasn't green while the comment one was. Both must always be highlighted.
+        if low[j] in CTA_WORDS and any(low[k] in ("dm", "dms", "comment", "message") for k in range(max(0, j - 5), j)):
             green.add(id(x))
     # Every mention of a TERM is green too (Olly 2026-11-04: "always highlighted even if mentioned more than once"):
     # "something called X" / its own sentence gets its own caption box (solo, above); any other mention is green in line
