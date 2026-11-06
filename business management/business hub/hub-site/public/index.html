@@ -2797,8 +2797,27 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     else if (kind === "unsaved"){ dot.classList.add("unsaved"); label.textContent = "unsaved changes"; btn.disabled = false; }
     else if (kind === "saving"){ dot.classList.add("saving"); label.textContent = "saving…"; btn.disabled = true; }
     else if (kind === "error"){ dot.classList.add("error"); label.textContent = "save failed — try again"; btn.disabled = false; }
-    else if (kind === "expired"){ dot.classList.add("error"); label.textContent = "logged out — changes kept on this device"; btn.disabled = false; }
+    else if (kind === "expired"){ dot.classList.add("error"); label.textContent = "logged out — changes kept on this device"; btn.disabled = false; autoOff = true; }
   }
+
+  // ── Autosave (Olly, 2026-11-06: "so when anything is added it automatically saves") ──
+  // Safe now that a clash with another device merges instead of overwriting (merge3). Saves 2 seconds after the last
+  // change (so typing is one save, not one per letter: well inside Cloudflare's daily write allowance), and straight
+  // away when the app is hidden or closed. One save at a time; edits made during a save trigger another one after it.
+  // Stops after a lapsed login until the page is reloaded (no repeated login pop-ups). The Save button still works.
+  // tabDirty = THIS tab has changes not yet saved. Kept in memory, not localStorage: two Hub tabs in one browser share
+  // localStorage, so one tab saving used to tell the other it had nothing left to save (found 2026-11-06).
+  var autoT = null, autoOff = false, saveInFlight = false, saveAgain = false, editsDuringSave = false, saveWaiting = [];
+  var tabDirty = false, baseMem = null;
+  try { tabDirty = localStorage.getItem("heart-attractor-community-tracker-dirty") !== null; } catch(e){}
+  function autoSoon(){
+    if (autoOff) return;
+    clearTimeout(autoT);
+    autoT = setTimeout(function(){ if (tabDirty) saveNow(); }, 2000);
+  }
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "hidden" && !autoOff && tabDirty){ clearTimeout(autoT); saveNow(); }
+  });
 
   // No autosave — edits only ever update `state` in memory and the local
   // browser copy, until the Save button explicitly pushes them to the
@@ -2807,7 +2826,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function markDirty(){
     localSave(state);
     if (dirtyGet() === null) dirtySet(serverRev);
+    tabDirty = true;
+    if (saveInFlight) editsDuringSave = true;
     setSaveState("unsaved");
+    autoSoon();
   }
 
   // Pull the shared record. Called once on boot (after the local copy has
@@ -2822,9 +2844,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
         if (!data) return;
-        if (dirtyGet() !== null) return; // unsaved edits here — keep them and their base rev
+        if (tabDirty) return; // unsaved edits in THIS tab: keep them (autosave merges them in)
         serverRev = Number(data.rev) || 0;
         if (!data.state) return; // KV empty — first ever run, local seed stands
+        baseSet(JSON.stringify(data.state));   // what this device last loaded: the base for merging (2026-11-06)
         state = data.state;
         migrateState();
         localSave(state);
@@ -2833,7 +2856,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         if (migSave){ migSave = false; markDirty(); saveNow(); } // a one-off data migration ran: store it
       })
       .catch(function(){ /* offline — local copy is fine */ })
-      .then(function(){ placePendingReel(); placePendingStory(); placePendingEmail(); placePendingYt(); placePendingCar(); emAutoPublish(); ytAutoPublish(); carAutoPublish(); }); // content sent from the generator lands on the freshest data
+      .then(function(){ hubContentReady = true; placePendingReel(); placePendingStory(); placePendingBatch(); placePendingEmail(); placePendingYt(); placePendingCar(); emAutoPublish(); emYtOnLoad(); ytAutoPublish(); carAutoPublish(); }); // content sent from the generator lands on the freshest data
   }
 
   // Refresh (2026-10-24): the phone app often resumes without reloading, and
@@ -2860,16 +2883,68 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // with a timeout. The header Save button doesn't need it; setSaveState
   // already drives its own label/dot.
   function saveNow(onDone){
+    // a save is already going: run once more straight after it, and report back then
+    if (saveInFlight){ saveAgain = true; if (onDone) saveWaiting.push(onDone); return; }
+    saveInFlight = true; editsDuringSave = false;
     localSave(state);
     setSaveState("saving");
-    putState(false, onDone);
+    putState(false, function(ok){
+      saveInFlight = false;
+      if (onDone) onDone(ok);
+      if (saveAgain || (ok && editsDuringSave)){
+        saveAgain = false; editsDuringSave = false;
+        var waiting = saveWaiting; saveWaiting = [];
+        if (dirtyGet() === null) dirtySet(serverRev);
+        saveNow(function(ok2){ waiting.forEach(function(f){ f(ok2); }); });
+      }
+    });
   }
 
+  // ── Merge instead of overwrite (Olly, 2026-11-06: an older open copy saved over the newer one and wiped 3 emails) ──
+  // Every device keeps the version it last loaded or saved ("hubBase"). When a save clashes with another device, the
+  // Hub fetches the newer version and merges: whatever this device changed since its base wins, everything the other
+  // device changed or added is kept. Lists (calendars, ideas, rows) merge item by item, so nothing gets wiped.
+  var BASE_KEY = "hubBase", mergeTries = 0, busyTries = 0;
+  // the base lives in this tab's memory (another tab in the same browser has its own); localStorage only covers a reload
+  function baseSet(json){ baseMem = json; try { localStorage.setItem(BASE_KEY, json); } catch(e){} }
+  function baseGet(){ try { var t = baseMem || localStorage.getItem(BASE_KEY); return t ? JSON.parse(t) : null; } catch(e){ return null; } }
+  function mJson(x){ return JSON.stringify(x === undefined ? null : x); }
+  function mObj(x){ return !!x && typeof x === "object" && !Array.isArray(x); }
+  function mKey(it){ return mObj(it) ? "k:" + (it.id || it.eid || it.sid || it.queueId || "") + "|" + (it.date || it.month || "") + "|" + (it.title || it.subject || it.name || it.text || "") : "v:" + mJson(it); }
+  function mKeyed(arr){ var m = {}, order = [], seen = {}; (arr || []).forEach(function(it){ var k = mKey(it); seen[k] = (seen[k] || 0) + 1; k += "#" + seen[k]; m[k] = it; order.push(k); }); return { m:m, order:order }; }
+  function merge3(b, l, s){
+    if (mJson(l) === mJson(b)) return s;   // not changed on this device: take the newer one
+    if (mJson(s) === mJson(b)) return l;   // not changed on the other device: keep this one
+    if (Array.isArray(l) && Array.isArray(s)){
+      if (!l.every(mObj) || !s.every(mObj)) return l;
+      var B = mKeyed(Array.isArray(b) ? b : []), L = mKeyed(l), S = mKeyed(s), out = [];
+      L.order.forEach(function(k){
+        if (Object.prototype.hasOwnProperty.call(S.m, k)) out.push(merge3(B.m[k], L.m[k], S.m[k]));
+        else if (!Object.prototype.hasOwnProperty.call(B.m, k)) out.push(L.m[k]);          // added here
+        else if (mJson(L.m[k]) !== mJson(B.m[k])) out.push(L.m[k]);                         // removed there, but edited here: keep
+      });
+      S.order.forEach(function(k){ if (!Object.prototype.hasOwnProperty.call(L.m, k) && !Object.prototype.hasOwnProperty.call(B.m, k)) out.push(S.m[k]); });  // added there
+      return out;
+    }
+    if (mObj(l) && mObj(s)){
+      var o = {}, bb = mObj(b) ? b : {};
+      Object.keys(l).concat(Object.keys(s)).forEach(function(k){
+        if (Object.prototype.hasOwnProperty.call(o, k)) return;
+        var inL = Object.prototype.hasOwnProperty.call(l, k), inS = Object.prototype.hasOwnProperty.call(s, k), inB = Object.prototype.hasOwnProperty.call(bb, k);
+        if (!inL){ if (!inB || mJson(s[k]) !== mJson(bb[k])) o[k] = s[k]; return; }
+        if (!inS){ if (!inB || mJson(l[k]) !== mJson(bb[k])) o[k] = l[k]; return; }
+        o[k] = merge3(bb[k], l[k], s[k]);
+      });
+      return o;
+    }
+    return l;   // both changed the same single value: this device wins
+  }
   function putState(force, onDone){
+    var sentJson = JSON.stringify(state);
     fetch(API, {
       method:"PUT",
       headers:{ "content-type":"application/json" },
-      body: JSON.stringify({ rev: serverRev, force: !!force, state: state }),
+      body: "{\"rev\":" + Number(serverRev || 0) + ",\"force\":" + (force ? "true" : "false") + ",\"state\":" + sentJson + "}",
       redirect: "manual"
     }).then(function(r){
       // Cloudflare Access login lapsed: the request is redirected to the
@@ -2887,7 +2962,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         return;
       }
       if (r.status === 409){
-        // Another device saved since this one loaded. Ask before overwriting.
+        // Another device saved since this one loaded: merge with the newer version and save again (2026-11-06)
+        var base = baseGet();
+        if (base && mergeTries < 3){
+          mergeTries++;
+          return fetch(API, { headers:{ "accept":"application/json" }, cache:"no-store" }).then(function(x){ return x.ok ? x.json() : null; }).then(function(srv){
+            if (!srv || !srv.state) throw new Error("no server copy");
+            state = merge3(base, state, srv.state);
+            baseSet(JSON.stringify(srv.state));
+            serverRev = Number(srv.rev) || serverRev;
+            localSave(state);
+            try { rerenderAll(); } catch(e){}
+            putState(false, onDone);
+          });
+        }
+        // no base on this device yet (first save after this update): ask, as before
         return r.json().then(function(d){
           var ok = window.confirm(
             "This was changed on another device since you opened it.\n\n" +
@@ -2898,14 +2987,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
           else { dirtyClear(); location.reload(); }
         });
       }
+      // the store was busy (two saves in the same second, or a hiccup): wait a moment and try again, up to 4 times
+      if (r.status >= 500 && busyTries < 4){
+        busyTries++;
+        setTimeout(function(){ putState(force, onDone); }, 900 * busyTries + Math.floor(Math.random() * 600));
+        return;
+      }
       if (!r.ok) throw new Error("save failed " + r.status);
       return r.json().then(function(d){
         serverRev = Number(d.rev) || serverRev;
+        baseSet(sentJson); mergeTries = 0; busyTries = 0;
+        tabDirty = false;
         dirtyClear();
         setSaveState("saved");
         if (onDone) onDone(true);
       });
     }).catch(function(){
+      // network blip: retry quietly a few times before showing "save failed"
+      if (busyTries < 4){ busyTries++; setTimeout(function(){ putState(force, onDone); }, 900 * busyTries); return; }
+      busyTries = 0;
       setSaveState("error");
       if (onDone) onDone(false);
     });
@@ -5311,28 +5411,42 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var h = "", ph = (a.phone || "").replace(/[^\d]/g, "");
     if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + '</button><a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", it's Olly Henson here. Your application for the Heart Attractor Program was successful.\n\nPlease can you reply 'YES' to this message and I'll send you the details about how the program works and what's included.\n\nThank you,\nOlly") + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a></div>';
     if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + '</button><a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your application was successful") + '&body=' + encodeURIComponent("Hi " + (a.firstName || "there") + ",\r\n\r\nI’m happy to say that your application for The Heart Attractor Program was successful.\r\n\r\nPlease could you reply to my WhatsApp and I’ll send you more details about how the program works and what’s included.\r\n\r\nThank you,\r\n\r\nOlly") + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a></div>';
-    // Price check (Olly, 2026-11-04): for an application that doesn't look like it can afford it (income / budget answers).
-    // His exact WhatsApp wording, sent BEFORE any Loom: if they reply still interested, carry on; if not, it saves everyone time.
-    var price = "Hey " + (a.firstName || "there") + ",\n\nJust got your application through for the Heart Attractor Program.\n\nLooks like you really need some help with this.\n\nGoing to be honest, this program is not super cheap because it’s for people who really want to make this work.\n\nThe price options if you’re accepted are either $497 per month or $2500 for the year.\n\nJust wanted to be up front and not waste your time.\n\nIf this is within reach for you, it’s definitely worth having a conversation - let me know.";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(price) + '">💲 Price check message</button>'
-      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(price) + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
-      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your Heart Attractor Program application") + '&body=' + encodeURIComponent((price + "\n\nOlly Henson").replace(/\n/g, "\r\n")) + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
-      + "</div>";
-    // Application pending (Olly, 2026-11-04): for applications he likes. His exact wording, same on WhatsApp and email
-    // (email subject "Application pending"). If they reply, he sends the Loom ("full video breakdown").
-    var pend = "Hey " + (a.firstName || "there") + ",\n\nIt’s Olly Henson here.\n\nThanks for your application for The Heart Attractor Program.\n\nLooks like you need some help with this.\n\nTo be up front, I don’t do sales calls or anything pressurised.\n\nThe price for this program is either $497 per month or $2500 per year - if you’re accepted.\n\nThis is for people who really want to commit to this and make it actually happen.\n\nIf that’s you and within range, let me know by replying to this message and I’ll send you a full video breakdown of how we’ll make this work for you and we can go from there.\n\nCheers,\n\nOlly";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(pend) + '">✅ Application pending</button>'
-      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(pend) + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
-      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Application pending") + '&body=' + encodeURIComponent(pend.replace(/\n/g, "\r\n")) + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
-      + "</div>";
+    // Intro text + voice note plan + emails (Olly, 2026-11-06, from Frankie Fihn's "pre-sell the plan"). Replaces the
+    // price check and application pending messages: no price before the video. Flow + wording: funnel/applicant-sales-process.html
+    function lmLow(v){ v = String(v || "").trim(); return /^I\b/.test(v) ? v : v.charAt(0).toLowerCase() + v.slice(1); }
+    var nm = a.firstName || "there";
+    var wants = lmLow(lmAns(a, /^HA Relationship Wanted/i)), howLong = lmLow(lmAns(a, /^HA How Long Looking/i));
+    var feel = lmAns(a, /^FF Resonance/i); feel = feel && feel.trim().split(/\s+/).length <= 4 ? lmLow(feel) : "";
+    var seen = wants && howLong ? "I can see you want " + wants + ", and you've been looking for " + howLong + "."
+      : wants ? "I can see you want " + wants + "." : howLong ? "I can see you've been looking for " + howLong + "." : "";
+    var PLAN = "It comes down to three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.";
+    var intro = "Hey " + nm + ", it's Olly. Just got your application, thanks for filling it in.\n\nHere's how I think I could help you with this 👇";
+    var vnote = ["Hey " + nm + ", it's Olly. Thanks for applying, I've read through everything.", seen,
+      "The way I help with this is three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.",
+      "If you want me to send you the details of the program and how we'd do this together, just let me know and I'll send them over."].filter(Boolean).join("\n\n");
+    var emWa = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nI've sent you a message on WhatsApp with a plan of how I'd help you with this. Have a listen and let me know what you think.\n\nOlly";
+    var emOnly = ["Hey " + nm + ",", "Just got your application, thanks for filling it in.", seen, "Here's how I'd help you with this. " + PLAN,
+      "If you want me to send you the details of the program and how we'd do this together, just reply to this email and I'll send them over.", "Olly"].filter(Boolean).join("\n\n");
+    function lmMail(subj, body, k){ return a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body.replace(/\n/g, "\r\n")) + '"' + (k ? ' data-k="' + k + '" data-id="' + a.id + '"' : "") + ' onclick="event.stopPropagation()">Email</a>' : ""; }
+    function lmWa(body, k){ return ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(body) + '" target="_blank" rel="noopener"' + (k ? ' data-k="' + k + '" data-id="' + a.id + '"' : "") + ' onclick="event.stopPropagation()">WhatsApp</a>' : ""; }
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(intro) + '">👋 1. Intro text</button>' + lmWa(intro, "waSent") + "</div>";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(vnote) + '">🎙️ 2. Voice note plan (copy)</button>'
+      + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it while recording</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(vnote) + "</p></details></div>";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(emWa) + '">✉️ 3. Email: check WhatsApp</button>' + lmMail("Got your application", emWa, "emSent") + "</div>";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(emOnly) + '">✉️ Email only (plan written out)</button>' + lmMail("Got your application", emOnly, "emSent") + "</div>";
     // Sales video (2026-11-05): one master video (unlisted YouTube) for everyone who says the price is within reach.
     // Sending it marks them Loom sent. Script + map: funnel/sales-video-script.md, funnel/sales-video-map.html.
-    var VIDEO = "https://youtu.be/wghvWJJ6YVk";
+    var VIDEO = "https://youtu.be/PhcbPYPfUU0";
     var vid = "Hey " + (a.firstName || "there") + ", great, thanks for getting back to me.\n\nHere's a video going through how the program works, what to expect and how to start.\n\n" + VIDEO + "\n\nIf you're ready to start after watching, just reply here and I'll send you the link.\n\nAnd if you have any questions, just let me know.";
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(vid) + '">🎥 Sales video</button>'
       + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(vid) + '" target="_blank" rel="noopener" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
       + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent((a.firstName ? a.firstName + ", here" : "Here") + "'s the video") + '&body=' + encodeURIComponent((vid + "\n\nOlly").replace(/\n/g, "\r\n")) + '" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
       + "</div>";
+    // Follow-up (2026-11-06, Frankie: "go deeper, never chase"): ONE idea message, only if they watched the video.
+    var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : "your application") + ". If I were you, "
+      + (feel ? "the feeling I'd start practicing first is " + feel + ", because that's the one that" : "I'd start by practicing how you'd feel with them every day, because that's what")
+      + " changes who you notice and who you're drawn to.\n\nExcited to help you get there.";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(fol) + '">💡 Follow-up idea (only if they watched)</button>' + lmWa(fol) + lmMail("An idea for you", fol + "\n\nOlly") + "</div>";
     // Checkout link to send after the Loom (2026-11-03): ollyhenson.com/join redirects to the Skool group, so the target can change later.
     var JOIN = "https://ollyhenson.com/join", joinMail = "Hey " + (a.firstName || "there") + ", great - here's the link to join:\r\n\r\n" + JOIN;
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + JOIN + '">🔗 Checkout link</button>'
@@ -5354,6 +5468,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // /#looms=<contactId>: the Looms tab, refreshed from GHL, on that person. sw.js shows the notification.
   var lmWant = null, lmTries = 0, pushKey = "";
   // the Refresh button sits at the top of the Looms tab (easy to reach on the phone) and says when it's updating
+  // Sales process steps (Olly, 2026-11-06): the flow from funnel/applicant-sales-process.html, folded at the top of the Sales tab
+  window.lmProcOpen = false;
+  function lmProc(){
+    return '<details class="audbox" style="margin:0 0 12px;padding:12px 16px"' + (window.lmProcOpen ? " open" : "") + ' ontoggle="window.lmProcOpen=this.open"><summary style="cursor:pointer;font-weight:700">The sales process, step by step</summary>'
+      + '<p style="opacity:.75;font-size:13px;margin:8px 0 0">Each applicant’s card has these with their name and answers already filled in.</p>'
+      + '<ol style="margin:12px 0 4px;padding:0"><li style="margin:0 0 14px;list-style:none"><b>1. Application comes in</b><br><span style="opacity:.8">Your phone gets a notification. Open their card and rate them Good, Okay or Not good within 24 hours.</span></li><li style="margin:0 0 14px;list-style:none"><b>2. 👋 Intro text on WhatsApp</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], it’s Olly. Just got your application, thanks for filling it in.<br><br>Here’s how I think I could help you with this 👇</div></li><li style="margin:0 0 14px;list-style:none"><b>3. 🎙️ Voice note: their plan (30 to 45 seconds, no price yet)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], it’s Olly. Thanks for applying, I’ve read through everything.<br><br>I can see you want [what they want], and you’ve been looking for [how long].<br><br>The way I help with this is three things: getting really clear on the person you want, working out how you’d feel with them, then practicing that feeling every day until it’s normal for you. That’s what changes who you notice and who you’re drawn to.<br><br>If you want me to send you the details of the program and how we’d do this together, just let me know and I’ll send them over.</div></li><li style="margin:0 0 14px;list-style:none"><b>4. ✉️ Email at the same time · subject: Got your application</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name],<br><br>Just got your application, thanks for filling it in.<br><br>I’ve sent you a message on WhatsApp with a plan of how I’d help you with this. Have a listen and let me know what you think.<br><br>Olly</div></li><li style="margin:0 0 14px;list-style:none"><b>4b. ✉️ Email only (if they don’t use WhatsApp) · subject: Got your application</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name],<br><br>Just got your application, thanks for filling it in.<br><br>I can see you want [what they want], and you’ve been looking for [how long].<br><br>Here’s how I’d help you with this. It comes down to three things: getting really clear on the person you want, working out how you’d feel with them, then practicing that feeling every day until it’s normal for you. That’s what changes who you notice and who you’re drawn to.<br><br>If you want me to send you the details of the program and how we’d do this together, just reply to this email and I’ll send them over.<br><br>Olly</div></li><li style="margin:0 0 14px;list-style:none"><b>5. 🎥 They ask for the details: send the sales video (tap VSL sent)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], great, thanks for getting back to me.<br><br>Here’s a video going through how the program works, what to expect and how to start.<br><br>https://youtu.be/PhcbPYPfUU0<br><br>If you’re ready to start after watching, just reply here and I’ll send you the link.<br><br>And if you have any questions, just let me know.</div></li><li style="margin:0 0 14px;list-style:none"><b>6. 💡 One follow-up, only if they watched (if not, send nothing)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], I was thinking about what you wrote, that you want [what they want]. If I were you, the feeling I’d start practicing first is [feeling from the Feeling Finder], because that’s the one that changes who you notice and who you’re drawn to.<br><br>Excited to help you get there.</div></li><li style="margin:0 0 14px;list-style:none"><b>7. 🔗 They say ready: send the checkout link</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], great - here’s the link to join: https://ollyhenson.com/join</div></li></ol>'
+      + '<a href="https://claude.ai/artifact/KwpZsKFecKog5AEyzbn3GS" target="_blank" rel="noopener" style="font-size:13px">Full process with Frankie’s notes ↗</a></details>';
+  }
   function lmTop(){
     return '<div class="lmbar" style="margin:0 0 10px"><button type="button" class="copybtn" id="lmRefresh">' + (lmLoading ? "Updating from GHL…" : "Refresh from GHL") + "</button>" +
       (lmWant ? '<span class="hint">Waiting for GHL to finish saving the new application…</span>' : "") + (lmErr ? '<span class="hint">' + lmEsc(lmErr) + "</span>" : "") + "</div>";
@@ -5436,7 +5558,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       })
       .catch(function(){ btn.disabled = false; btn.textContent = "Remove from GHL"; window.alert("Couldn't reach the Hub. Reload and try again."); });
   }
-  var LM_COLS = [["new", "New applications"], ["contacted", "Price check sent"], ["replied", "Replied"], ["loom", "VSL sent"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
+  var LM_COLS = [["new", "New applications"], ["contacted", "Messaged"], ["replied", "Replied"], ["loom", "VSL sent"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
   var lmOpen = null, lmView = "info", lmDrag = null;
   function lmMoneyFmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
   // Moving a card sets the checklist flags so lmStage() lands on that column (explicit false overrides GHL's loomSent / joined).
@@ -6052,6 +6174,50 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       body.insertAdjacentHTML("beforeend", '<p class="hint">Nothing scheduled for this day yet.</p>');
       return;
     }
+    // Save all of this day's Story images in one go (Olly, 2026-11-06). Phone: one share sheet, where "Save N Images"
+    // puts them all in Photos. They're fetched when the day opens, so the tap itself opens the share sheet (iPhone needs
+    // that). Laptop: downloads them one after another, numbered in posting order.
+    var dayImgs = [];
+    dayIdeas.forEach(function(idea, n){ (idea.images || []).forEach(function(id, k){
+      dayImgs.push({ id:id, name: storyModalDate + " " + (n + 1) + (k ? "-" + (k + 1) : "") + " " + String(idea.title).replace(/[\\\/:*?"<>|]+/g, "").replace(/\s+/g, " ").trim().slice(0, 50) });
+    }); });
+    if (dayImgs.length){
+      var allBtn = document.createElement("button"); allBtn.type = "button"; allBtn.className = "addbtn"; allBtn.style.cssText = "width:100%;margin:8px 0 12px";
+      var want = dayImgs.length, files = null;
+      allBtn.textContent = "Getting " + want + " images ready\u2026"; allBtn.disabled = true;
+      Promise.all(dayImgs.map(function(x){
+        return fetch("/api/image/" + x.id, { credentials:"same-origin" }).then(function(r){ if (!r.ok) throw new Error(r.status); return r.blob(); })
+          .then(function(b){ return new File([b], x.name + (/png/.test(b.type) ? ".png" : ".jpg"), { type: b.type || "image/jpeg" }); });
+      })).then(function(f){ files = f; allBtn.disabled = false; allBtn.textContent = "Save all " + want + (want === 1 ? " image" : " images"); })
+        .catch(function(){ allBtn.disabled = false; allBtn.textContent = "Couldn't load the images. Close and reopen the day."; });
+      allBtn.addEventListener("click", function(){
+        if (!files) return;
+        if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: files })){
+          navigator.share({ files: files }).catch(function(e){ if (e && e.name !== "AbortError") allBtn.textContent = "Couldn't share (" + (e.name || "error") + ")"; });
+          return;
+        }
+        files.forEach(function(f, i){ setTimeout(function(){
+          var a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click();
+          setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+        }, i * 350); });
+        allBtn.textContent = "Downloaded \u2713 (" + want + ")";
+      });
+      body.appendChild(allBtn);
+    }
+    // Mark the whole day posted in one tap (Olly, 2026-11-06); once they all are, the same button puts them back to draft
+    if (dayIdeas.length > 1){
+      var allDone = dayIdeas.every(function(i){ return i.posted; });
+      var postAll = document.createElement("button"); postAll.type = "button"; postAll.className = "addbtn"; postAll.style.cssText = "width:100%;margin:0 0 12px";
+      postAll.textContent = allDone ? "All " + dayIdeas.length + " posted ✓ · set back to draft" : "Mark all " + dayIdeas.length + " as posted";
+      postAll.addEventListener("click", function(){
+        dayIdeas.forEach(function(i){ i.posted = !allDone; });
+        markDirty();
+        renderStoryModal();
+        renderStoryCalendar();
+        renderStories();
+      });
+      body.appendChild(postAll);
+    }
     dayIdeas.forEach(function(idea){
       var row = document.createElement("div");
       row.className = "dayitem" + (idea.posted ? " posted" : "");
@@ -6345,10 +6511,53 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       })]).then(done, legacy);
     } else legacy();
   }
+  // Email -> YouTube community (Olly, 2026-11-06: "too much work creating different types of posts"). Every email from
+  // today on (not pitch emails) gets a matching draft community post on the same day: the email's text without the
+  // first-name line. While that post is a draft and its text hasn't been changed in the YouTube calendar, it follows the
+  // email's subject, date and text. Edit, schedule or post it there and it's left alone. Olly adds the image + link.
+  function emToYt(body){
+    var t = String(body || "").replace(/\r/g, "");
+    t = t.replace(/^\s*(hey|hi|hello|so)?\s*(\{\{\s*contact\.first_name\s*\}\}|FIRSTNAME)\s*[,.!]?[ \t]*\n+/i, "");
+    t = t.replace(/[ \t]*,?[ \t]*(\{\{\s*contact\.first_name\s*\}\}|FIRSTNAME)/g, "");
+    return t.replace(/\n{3,}/g, "\n\n").trim();
+  }
+  function emYtSync(){
+    var t = todayISO(), changed = false, yts = ytList();
+    emList().forEach(function(e){
+      if (e.pitch || !e.date || e.date < t) return;
+      var post = emToYt(e.body), title = String(e.subject || "").trim();
+      if (!post && (!title || title === "Untitled email")) return;
+      if (!e.eid){ e.eid = "e" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); changed = true; }
+      var p = yts.filter(function(x){ return x.fromEmail === e.eid; })[0];
+      if (!p){
+        yts.push({ title:title || "Untitled post", date:e.date, status:"draft", type:e.type ? String(e.type) : "", post:post, pinned:"", images:[], fromEmail:e.eid, synced:post });
+        changed = true; return;
+      }
+      if (p.status !== "draft") return;
+      if (p.post === p.synced && p.post !== post){ p.post = post; p.synced = post; changed = true; }
+      if (!p.titleEdited && title && p.title !== title){ p.title = title; changed = true; }
+      if (!p.dateEdited && p.date !== e.date){ p.date = e.date; changed = true; }
+      if (!p.type && e.type){ p.type = String(e.type); changed = true; }
+    });
+    return changed;
+  }
+  var emYtTimer = null;
+  function emYtSoon(){
+    clearTimeout(emYtTimer);
+    emYtTimer = setTimeout(function(){ if (emYtSync()){ markDirty(); renderYtCalendar(); } }, 700);
+  }
+  function emYtOnLoad(){
+    if (!emYtSync()) return;
+    var wasClean = dirtyGet() === null;
+    markDirty();
+    if (wasClean) saveNow();
+    renderYtCalendar();
+  }
   function emAdd(subject, date, body, preview){
     var e = { subject:String(subject || "").trim() || "Untitled email", date: date || emNextDate(), status:"draft", body: body || "" };
     if (preview) e.preview = String(preview);
     emList().push(e);
+    emYtSoon();
     emCalSel = e.date;
     var d = new Date(e.date + "T00:00:00"); emCalCursor = new Date(d.getFullYear(), d.getMonth(), 1);
     markDirty();
@@ -6441,10 +6650,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var item = document.createElement("div"); item.className = "emitem";
       var row = document.createElement("div"); row.className = "emrow";
       var subj = document.createElement("input"); subj.type = "text"; subj.value = e.subject; subj.setAttribute("aria-label", "Subject line");
-      subj.addEventListener("input", function(){ e.subject = subj.value; markDirty(); });
+      subj.addEventListener("input", function(){ e.subject = subj.value; markDirty(); emYtSoon(); });
       subj.addEventListener("change", function(){ renderEmailCalendar(); });
       var dt = document.createElement("input"); dt.type = "date"; dt.value = e.date; dt.setAttribute("aria-label", "Move to date");
-      dt.addEventListener("change", function(){ if (!dt.value) return; e.date = dt.value; emCalSel = dt.value; var d = new Date(dt.value + "T00:00:00"); emCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); markDirty(); renderEmailCalendar(); });
+      dt.addEventListener("change", function(){ if (!dt.value) return; e.date = dt.value; emYtSoon(); emCalSel = dt.value; var d = new Date(dt.value + "T00:00:00"); emCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); markDirty(); renderEmailCalendar(); });
       row.append(subj, dt);
       var aud = document.createElement("div"); aud.className = "emaudience" + (e.pitch ? " warm" : ""); aud.textContent = "Send to: " + emAudience(e);
       item.appendChild(aud); item.appendChild(row);
@@ -6468,7 +6677,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       pv.addEventListener("input", function(){ e.preview = pv.value; markDirty(); });
       item.appendChild(pv);
       var body = document.createElement("textarea"); body.className = "embody"; body.value = e.body || ""; body.placeholder = "Email body (paste it here, or send it from the content generator)";
-      body.addEventListener("input", function(){ e.body = body.value; markDirty(); });
+      body.addEventListener("input", function(){ e.body = body.value; markDirty(); emYtSoon(); });
       item.appendChild(body);
       var acts = document.createElement("div"); acts.className = "emrow";
       var cs = document.createElement("button"); cs.type = "button"; cs.className = "copybtn"; cs.textContent = "Copy subject";
@@ -6601,10 +6810,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var item = document.createElement("div"); item.className = "emitem";
       var row = document.createElement("div"); row.className = "emrow";
       var ti = document.createElement("input"); ti.type = "text"; ti.value = p.title; ti.setAttribute("aria-label", "Post idea");
-      ti.addEventListener("input", function(){ p.title = ti.value; markDirty(); });
+      ti.addEventListener("input", function(){ p.title = ti.value; p.titleEdited = true; markDirty(); });
       ti.addEventListener("change", function(){ renderYtCalendar(); });
       var dt = document.createElement("input"); dt.type = "date"; dt.value = p.date; dt.setAttribute("aria-label", "Move to date");
-      dt.addEventListener("change", function(){ if (!dt.value) return; p.date = dt.value; ytCalSel = dt.value; var d = new Date(dt.value + "T00:00:00"); ytCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); markDirty(); renderYtCalendar(); });
+      dt.addEventListener("change", function(){ if (!dt.value) return; p.date = dt.value; p.dateEdited = true; ytCalSel = dt.value; var d = new Date(dt.value + "T00:00:00"); ytCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); markDirty(); renderYtCalendar(); });
       row.append(ti, dt); item.appendChild(row);
       var row2 = document.createElement("div"); row2.className = "emrow";
       var tog = document.createElement("div"); tog.className = "statustoggle";
@@ -6715,9 +6924,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!pendingYt) return;
     var data = pendingYt; pendingYt = null;
     var title = String(data.title || String(data.post).split("\n")[0]).trim().slice(0, 120);
-    var p = ytList().filter(function(x){ return x.title === title && x.status !== "sent"; })[0];
+    // image from the generator for a given day (Olly, 2026-11-06): joins the post already on that day (the email copy first)
+    var want = /^\d{4}-\d{2}-\d{2}$/.test(data.date || "") ? data.date : "";
+    var p = null;
+    if (data.attach && want){
+      var onDay = ytList().filter(function(x){ return x.date === want && x.status !== "sent"; });
+      p = onDay.filter(function(x){ return x.fromEmail; })[0] || onDay[0] || null;
+    }
+    if (!p) p = ytList().filter(function(x){ return x.title === title && x.status !== "sent"; })[0];
     if (!p){
-      p = { title:title, date: ytNextDate(), status:"draft", type: data.type ? String(data.type) : "", post: data.post ? String(data.post) : "", pinned: data.pinned ? String(data.pinned) : "", images:[] };
+      p = { title:title, date: want || ytNextDate(), status:"draft", type: data.type ? String(data.type) : "", post: data.post ? String(data.post) : "", pinned: data.pinned ? String(data.pinned) : "", images:[] };
       if (Array.isArray(data.poll) && data.poll.length) p.poll = data.poll.map(String);
       ytList().push(p);
     }
@@ -7496,7 +7712,52 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // hub.ollyhenson.com/#addstory=<encoded JSON {title, type?, image?}> (content generator, 2026-10-28). image is a
   // JPEG data URL from the Story Image Maker: uploaded to /api/image like a picked photo. Same unposted title = the
   // image is added to that Story instead of making a second one (idea sent first, image made after).
-  var pendingStory = null;
+  var pendingStory = null, hubContentReady = false;
+  // Day batch (Olly, 2026-11-06): the generator's 7 Stories for one day reuse the same Hub tab, so a new #addstory
+  // arrives as a hash change, not a reload. Place it straight away once the shared data has loaded.
+  window.addEventListener("hashchange", function(){ importStoryFromHash(); importStoryBatchFromHash(); if (hubContentReady){ placePendingStory(); placePendingBatch(); } });
+  // hub.ollyhenson.com/#addstories=<JSON {date, items:[{title, type, image, music}]}> (Olly, 2026-11-06): the generator's
+  // "Add all to calendar" for a day of Stories. Every Story goes on that date in order, images uploaded one by one,
+  // then the day opens. Pressing it twice doesn't double up: a Story with the same title on that day is skipped.
+  var pendingBatch = null;
+  function importStoryBatchFromHash(){
+    var m = /^#addstories=(.+)$/.exec(location.hash || "");
+    if (!m) return;
+    var data = null;
+    try { data = JSON.parse(decodeURIComponent(m[1])); } catch (err) { data = null; }
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
+    if (data && Array.isArray(data.items) && data.items.length) pendingBatch = data;
+  }
+  function placePendingBatch(){
+    if (!pendingBatch) return;
+    var data = pendingBatch; pendingBatch = null;
+    var want = /^\d{4}-\d{2}-\d{2}$/.test(data.date || "") && data.date >= todayISO() ? data.date : findNextStoryDate();
+    var failed = 0, added = 0, chain = Promise.resolve();
+    data.items.forEach(function(it){
+      chain = chain.then(function(){
+        var title = String(it.title || "").trim() || "Story";
+        if (storyIdeas().some(function(s){ return s.date === want && s.title === title && (s.images || []).length; })) return;
+        var idea = { title:title, date:want, mode:"specific", type: STORY_TYPES.indexOf(it.type) !== -1 ? it.type : "", images:[] };
+        if (Array.isArray(it.music) && it.music.length) idea.music = it.music.map(function(s){ return String(s).trim(); }).filter(Boolean).slice(0, 5);
+        storyIdeas().push(idea); added++;
+        var img = /^data:image\/(jpeg|png|webp);base64,/.test(it.image || "") ? it.image : "";
+        if (!img) return;
+        return fetch(img).then(function(r){ return r.blob(); }).then(function(blob){
+          var id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10));
+          return fetch("/api/image/" + id, { method: "PUT", headers: { "content-type": blob.type || "image/jpeg" }, body: blob, credentials: "same-origin" })
+            .then(function(r){ if (!r.ok) throw new Error("upload failed " + r.status); idea.images.push(id); });
+        }).catch(function(){ failed++; });
+      });
+    });
+    chain.then(function(){
+      markDirty(); saveNow();
+      goTab("content");
+      renderStories();
+      var d = new Date(want + "T00:00:00"); storyCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); renderStoryCalendar();
+      openStoryModal(want);
+      if (failed) window.alert(failed + (failed === 1 ? " image" : " images") + " couldn't upload. Those Stories are on the calendar without their image: save them from the generator and add them in the day panel.");
+    });
+  }
   function importStoryFromHash(){
     var m = /^#addstory=(.+)$/.exec(location.hash || "");
     if (!m) return;
@@ -7512,7 +7773,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // an image only joins a waiting Story when it was made from that Story idea (join); Lead gen images all share a title
     var idea = (data.image && !data.join) ? null : storyIdeas().filter(function(s){ return s.title === title && !s.posted; })[0];
     if (!idea){
-      idea = { title:title, date: findNextStoryDate(), mode:"auto", type: STORY_TYPES.indexOf(data.type) !== -1 ? data.type : "" };
+      var want = /^\d{4}-\d{2}-\d{2}$/.test(data.date || "") && data.date >= todayISO() ? data.date : "";
+      idea = { title:title, date: want || findNextStoryDate(), mode: want ? "specific" : "auto", type: STORY_TYPES.indexOf(data.type) !== -1 ? data.type : "" };
       storyIdeas().push(idea);
     }
     if (!Array.isArray(idea.images)) idea.images = [];
@@ -7613,6 +7875,32 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (g == null) return "";
     var abs = money ? fmtMoney(Math.abs(g)) : fmtInt(Math.abs(g));
     return (g >= 0 ? "+" : "-") + abs + (ovMode === "year" ? " this year" : " vs. last month");
+  }
+  // Socials, last 7 days (Olly, 2026-11-06): live from GHL's Social Planner via /api/social-stats. GHL only gives
+  // the last 7 days vs the 7 before, "followers" = NEW followers in those days, and YouTube isn't included.
+  var socialStats = null, socialLoading = false;
+  function loadSocial(force){
+    if (socialLoading || (socialStats && !force)) return;
+    socialLoading = true;
+    fetch("/api/social-stats", { cache:"no-store", credentials:"same-origin" }).then(function(r){ return r.json(); })
+      .then(function(d){ socialStats = d; }).catch(function(e){ socialStats = { ok:false, error:String(e) }; })
+      .then(function(){ socialLoading = false; renderOverview(); });
+  }
+  function ovChg(c){ c = Number(c) || 0; return (c >= 0 ? "+" : "") + Math.round(c) + "% vs the week before"; }
+  function ovSocialGroup(){
+    var t = "Socials, last 7 days (live from GHL: Instagram, TikTok, Facebook)", s = socialStats;
+    if (!s){ loadSocial(); return ovGroup(t, [ovCard("Loading\u2026", "\u2014", "")]); }
+    if (!s.ok) return ovGroup(t, [ovCard("Couldn't load", "\u2014", s.error || "")]);
+    var p = s.platforms || {};
+    function nf(k){ return "+" + fmtInt((p[k] && p[k].newFollowers) || 0); }
+    return ovGroup(t, [
+      ovCard("New followers", "+" + fmtInt(s.newFollowers), "Instagram " + nf("instagram") + " \u00b7 TikTok " + nf("tiktok") + " \u00b7 Facebook " + nf("facebook"), "accent"),
+      ovCard("Reach", fmtInt(s.reach.total), ovChg(s.reach.change)),
+      ovCard("Impressions", fmtInt(s.impressions.total), ovChg(s.impressions.change)),
+      ovCard("Engagement", fmtInt(s.engagement), "likes, comments and shares"),
+      ovCard("Posts", fmtInt(s.posts.total), ovChg(s.posts.change)),
+      ovCard("Who's watching", Math.round(s.women) + "% women", s.topAge ? "most aged " + s.topAge + " (" + Math.round(s.topAgeShare) + "%)" : "")
+    ]);
   }
   function ovCard(label, value, sub, cls){
     var c = kpiCard(label, value, cls);
@@ -8458,6 +8746,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       ovAud("tt", "TikTok followers"),
       ovAud("em", "Email list")
     ]));
+    host.appendChild(ovSocialGroup());
 
     // 4. Every traffic source, side by side
     host.appendChild(ovSourceTable(ovInPeriod));
@@ -9308,6 +9597,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   });
   document.getElementById("ovGhlPull").addEventListener("click", function(){
     pullFromGhl(this, document.getElementById("ovGhlStatus"));
+    loadSocial(true);
   });
   document.getElementById("emailGhlPull").addEventListener("click", function(){
     pullFromGhl(this, document.getElementById("emailGhlStatus"));
@@ -9831,6 +10121,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     mirrorReelCaptions();
     pullStoryStatus();
     importStoryFromHash();
+    importStoryBatchFromHash();
     loomsFromHash();
     pushInit();
     // the Hub reopens on the last tab used: if that's Looms, load it (it used to stay blank until the tab was tapped)

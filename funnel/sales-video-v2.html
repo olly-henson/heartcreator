@@ -1,0 +1,151 @@
+<title>Sales Video v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: a recording script you can read on the phone: beats down the page, "on screen" and "say" side by side on desktop */
+  :root {
+    --bg: #f7f5f9; --card: #ffffff; --fg: #24182e; --muted: #6b6076; --line: #e3dbe9;
+    --accent: #7a2e9c; --screen: #eef6f1; --screen-ink: #1d5f3c; --say: #f6f0fb; --flag: #fdf1dc; --flag-ink: #8a5300;
+    --display: "Young Serif", Georgia, serif; --body: "Figtree", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #17111c; --card: #211928; --fg: #efe8f4; --muted: #a99bb4; --line: #3a2e44;
+    --accent: #c98ae8; --screen: #15291f; --screen-ink: #8fdcb1; --say: #2a1f33; --flag: #36280f; --flag-ink: #f0bd66; color-scheme: dark } }
+  :root[data-theme="dark"] {
+    --bg: #17111c; --card: #211928; --fg: #efe8f4; --muted: #a99bb4; --line: #3a2e44;
+    --accent: #c98ae8; --screen: #15291f; --screen-ink: #8fdcb1; --say: #2a1f33; --flag: #36280f; --flag-ink: #f0bd66; color-scheme: dark }
+  body { background: var(--bg); color: var(--fg); font: 16px/1.6 var(--body); }
+  .wrap { max-width: 860px; margin: 0 auto; padding-block: 28px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 22px; }
+  h1 { font: 400 clamp(30px, 6vw, 42px)/1.1 var(--display); margin: 0; text-wrap: balance; }
+  h2 { font: 400 25px/1.2 var(--display); margin: 18px 0 0; text-wrap: balance; }
+  .lede { color: var(--muted); margin: 0; max-width: 64ch; }
+  ul, ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+  .rules li b { color: var(--accent); }
+  .beat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 12px; }
+  .bh { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+  .bh h3 { font: 600 18px/1.3 var(--body); margin: 0; }
+  .bh .t { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .why { margin: 0; font-size: 14px; color: var(--muted); }
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 12px; }
+  @media (max-width: 640px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+  .screen, .say { border-radius: 10px; padding: 12px 14px; min-width: 0; }
+  .screen { background: var(--screen); color: var(--screen-ink); font-size: 14.5px; }
+  .say { background: var(--say); }
+  .lab { font-size: 11.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; opacity: .8; margin-bottom: 4px; }
+  .say p { margin: 0 0 8px; } .say p:last-child { margin: 0; }
+  .personal { border-left: 3px solid var(--accent); padding-left: 10px; font-size: 14.5px; }
+  .flag { background: var(--flag); color: var(--flag-ink); border-radius: 12px; padding: 14px 16px; }
+  .flag b { display: block; margin-bottom: 4px; }
+  .dec { display: grid; gap: 12px; }
+  .dec .flag p { margin: 6px 0 0; color: var(--fg); }
+  code { font-size: 13.5px; }
+</style>
+
+<div class="wrap">
+  <h1>Sales Video v2</h1>
+  <p class="lede">Our sales video rebuilt on Frankie Fihn's Loom method, for The Heart Attractor Program. It replaces the current master video (the map). About 6 minutes. Freestyle it: the lines are example wording, not a script to read.</p>
+
+  <h2>What we're taking from Frankie</h2>
+  <ul class="rules">
+    <li><b>Sell the outcome, never the program.</b> Nobody wakes up wanting "a community and a meditation". They want someone to settle down and build a life with. Open on that.</li>
+    <li><b>One specific example beats big claims.</b> Show one real person's result and one picture of the life they want, not "hundreds of members".</li>
+    <li><b>Evidence makes it believable.</b> A real member message on screen does more than anything you can say about yourself. Keep your intro to one sentence.</li>
+    <li><b>"This works for you if…"</b> is how the video screens people, so you never need a call. Say it early and again at the price.</li>
+    <li><b>Price formula:</b> the investment is ___, for that you get ___, it works well if ___. The thing they get has to feel worth more than the money.</li>
+    <li><b>Show exactly how to buy.</b> Click through the join page on screen and say what happens after they pay.</li>
+    <li><b>Pictures on every beat.</b> If you're talking a lot, it's because you're not showing enough.</li>
+  </ul>
+
+  <h2>The video, beat by beat</h2>
+
+  <section class="beat">
+    <div class="bh"><h3>1. Open on what they want</h3><span class="t">0:00 · 20 sec</span></div>
+    <p class="why">Not "Hi, I'm Olly, let me tell you about the program". Start with their outcome.</p>
+    <div class="cols">
+      <div class="screen"><div class="lab">On screen</div>The Sunday breakfast photo (<code>breakfast-together.jpg</code>) with one line: "Someone to settle down and build a life with."</div>
+      <div class="say"><div class="lab">Say</div><p>"In this video I'm going to show you how to attract someone to settle down and build your life with, without more inner work or learning more about yourself."</p>
+      <p class="personal">Personal version: put their own answer on the slide in quotes. "You said you want someone to settle down and have babies with. Let me show you how we get you there."</p></div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="bh"><h3>2. One real result</h3><span class="t">0:20 · 40 sec</span></div>
+    <p class="why">Frankie's "show one" rule. This is the evidence that makes everything after it believable.</p>
+    <div class="cols">
+      <div class="screen"><div class="lab">On screen</div>Catrin's message, names and photo covered (the redactor in the Story Image Maker does this).</div>
+      <div class="say"><div class="lab">Say</div><p>"This is a message from one of our members, just under three weeks in. She'd done a lot of inner work before joining and kept seeing glimpses of change that never lasted."</p>
+      <p>"Now she's got what she calls a quiet knowing, she's more confident in what she brings and she's seeing more consistency in opportunities. That's what changes first: how you feel. Then who shows up."</p></div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="bh"><h3>3. This works for you if…</h3><span class="t">1:00 · 30 sec</span></div>
+    <p class="why">The qualifier. It screens people out and sets expectations, which is why you don't need a call.</p>
+    <div class="cols">
+      <div class="screen"><div class="lab">On screen</div>Three ticks:<br>✓ You'll give it 10 minutes a day<br>✓ You're ready to stop learning and start feeling<br>✓ You'll message me when the old doubts come up</div>
+      <div class="say"><div class="lab">Say</div><p>"This works really well if you'll give it 10 minutes a day, you're ready to stop learning about love and start feeling it, and you'll message me when the old doubts come up, because they will."</p>
+      <p>"If you're after a quick fix or more theory, this isn't for you, and that's completely fine."</p></div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="bh"><h3>4. How it works</h3><span class="t">1:30 · 90 sec</span></div>
+    <p class="why">The missing piece in most videos. One picture per step, so they can see the path and stop wondering whether it's real.</p>
+    <div class="cols">
+      <div class="screen"><div class="lab">On screen</div>One slide per step:<br>1. <code>picturing-the-future.jpg</code><br>2. <code>head-to-heart.jpg</code><br>3. the meditation on a phone<br>4. <code>coffee-date.jpg</code></div>
+      <div class="say"><div class="lab">Say</div><p>"Step one: we get clear on exactly who you want and what your life together looks like."</p>
+      <p>"Step two: we define the emotions you'd feel with them. Safe, chosen, playful, whatever yours are."</p>
+      <p>"Step three: you embody those emotions every day. A 10-minute meditation, plus simple things you do during your day, so it's how you feel walking into a date or opening an app."</p>
+      <p>"Step four: you start noticing the right people, and they notice you. The ones who aren't right stop feeling exciting."</p>
+      <p>"Along the way your old patterns will come up. That's the most important part, because that's where most people give up on their own. It's where I'm with you every day."</p></div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="bh"><h3>5. The price</h3><span class="t">3:00 · 60 sec</span></div>
+    <p class="why">Frankie's formula, with the value said before and after the number, then the guarantee.</p>
+    <div class="cols">
+      <div class="screen"><div class="lab">On screen</div>The investment: $497 a month, cancel anytime, or $2,500 for the year.<br>For that: The Attraction Formula + daily support from Olly until you meet your person.<br>Works well if: 10 minutes a day + you message me.<br>14-day guarantee.</div>
+      <div class="say"><div class="lab">Say</div><p>"The investment is $497 a month, cancel anytime, or $2,500 for the year."</p>
+      <p>"For that you get The Attraction Formula, the daily meditation and me in your corner every day until you meet your person. I reply within 24 hours."</p>
+      <p>"It works well if you'll give it 10 minutes a day and message me when the doubts come up. And there's a 14-day guarantee: do the meditation and trainings every day, message me every day, and if you don't feel anything different, you get every penny back."</p>
+      <p class="personal">Personal version: "You told me you've been looking for more than 5 years. This is how we make sure the next year doesn't feel like the last five."</p></div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="bh"><h3>6. How to get it</h3><span class="t">4:00 · 60 sec</span></div>
+    <p class="why">Frankie's biggest point: people can't buy if you don't show them how. Click through it on screen.</p>
+    <div class="cols">
+      <div class="screen"><div class="lab">On screen</div>Switch to ollyhenson.com/join and click through it slowly: monthly or annual, card details, what they see after paying. Don't pay.</div>
+      <div class="say"><div class="lab">Say</div><p>"If that sounds like you, just reply to my message and I'll send you this link. You pick monthly or annual and pop your card details in."</p>
+      <p>"You'll get an email with your invite to the community, and the first thing you'll see is the welcome training. Start there, then do your first meditation that day."</p></div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="bh"><h3>7. Close</h3><span class="t">5:00 · 20 sec</span></div>
+    <div class="cols">
+      <div class="screen"><div class="lab">On screen</div>Back to the Sunday breakfast photo.</div>
+      <div class="say"><div class="lab">Say</div><p>"Most people ask me one thing after this: will it work for me, in my situation? Just reply and ask. I read every message. Speak soon."</p></div>
+    </div>
+  </section>
+
+  <h2>Messages around the video</h2>
+  <ol>
+    <li><b>Hand raiser:</b> already built. Comment VIDEO or ATTRACT, free training, then the application.</li>
+    <li><b>Price check:</b> the personalised version on your Applicant Messages page.</li>
+    <li><b>Video message:</b> the personalised "Sales video" message on the same page.</li>
+    <li><b>Follow-up that goes deeper:</b> see decision 1 below.</li>
+  </ol>
+
+  <h2>Your decisions</h2>
+  <div class="dec">
+    <div class="flag"><b>1. Follow-ups after the video</b>Your rule since 1 Nov is no follow-ups after a Loom. Frankie does follow up, but never "did you see my video?". Each follow-up goes one step deeper, as if you're already working together.
+      <p>My recommendation: one follow-up 2 days after they watch, value only, no ask. "Hey [Name], I was thinking about what you said about wanting [Wants]. The first thing we'd do is get clear on how you'd feel with them. Try this tonight: close your eyes for 2 minutes and picture an ordinary Sunday with them." Then stop.</p></div>
+    <div class="flag"><b>2. Personal videos for the next 5</b>Frankie personalises the first 5 to 10 until people start saying yes, then switches to one video. You moved to one master video on 5 Nov.
+      <p>My recommendation: record personal versions for the next 5 applicants, putting their own words on slides 1 and 5. The Hub's mind map already holds their answers. Then re-record the master from what landed.</p></div>
+    <div class="flag"><b>3. Loom or unlisted YouTube</b>Loom tells you when someone has watched, which is what a deeper follow-up needs. YouTube doesn't.
+      <p>My recommendation: Loom, if you go with decision 1. Otherwise keep YouTube.</p></div>
+  </div>
+</div>

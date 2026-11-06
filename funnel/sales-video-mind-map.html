@@ -1,0 +1,319 @@
+<title>Sales Video Mind Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: 16:9 slides (1600x900 stage scaled to fit) to record the sales video over; title slide + Frankie's 7 beats, one per slide */
+:root{
+  --bg:#120a1c; --panel:#1d1229; --panel2:#241733; --ink:#f6f0ff; --muted:#b8a8cc; --line:#3a2a4d;
+  --head:"Poppins",ui-sans-serif,system-ui,sans-serif; --body:"Inter",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--ink);height:100%}
+body{font-family:var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar button{font:600 13px var(--body);color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer}
+.bar .count{font:600 13px var(--body);color:var(--muted);min-width:56px;text-align:center}
+.bar .tip{font-size:12px;color:var(--muted)}
+button:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
+body.clean .bar{display:none}
+body.clean{padding-block:0}
+
+.fit{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:absolute;top:0;left:0;width:1600px;height:900px;overflow:hidden;border-radius:18px;
+  background:radial-gradient(ellipse at 30% 30%,#2a1640 0%,var(--bg) 70%)}
+.slide{position:absolute;inset:0;padding:70px 90px;box-sizing:border-box;display:none}
+.slide.on{display:flex}
+
+/* title slide */
+.slide.title{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:26px}
+.slide.title small{font:600 22px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.slide.title h1{margin:0;font:800 84px/1.1 var(--head);max-width:1200px;text-wrap:balance;outline:none;
+  background:linear-gradient(120deg,#f6f0ff 20%,#e9a6ff 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.slide.title .line{width:120px;height:6px;border-radius:3px;background:linear-gradient(90deg,#7c3aed,#c026d3)}
+
+/* beat slides */
+.slide.beat{gap:60px;align-items:stretch}
+.main{flex:1;min-width:0;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.top{display:flex;align-items:center;gap:20px}
+.top .n{flex:none;width:64px;height:64px;border-radius:50%;background:var(--c);color:#140b1f;font:800 30px var(--head);display:grid;place-items:center}
+.top h2{margin:0;font:800 60px/1.1 var(--head);text-wrap:balance;outline:none}
+.rows{display:flex;flex-direction:column;gap:16px}
+.k{position:relative;background:var(--panel);border-left:6px solid var(--c);border-radius:14px;padding:18px 24px;padding-right:130px}
+.k b{display:block;font:700 calc(34px * var(--fs,1))/1.25 var(--head);outline:none}
+.k span{display:block;margin-top:6px;font:400 calc(25px * var(--fs,1))/1.4 var(--body);color:var(--muted);outline:none}
+.k span.empty{display:none}
+.k:focus-within span.empty{display:block;min-height:1.4em}
+.ctl{position:absolute;top:12px;right:12px;display:flex;gap:6px}
+.ctl button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);font:600 18px/1 var(--body);cursor:pointer;padding:0}
+.addrow{align-self:flex-start;font:600 20px var(--body);color:var(--muted);background:transparent;border:2px dashed var(--line);border-radius:12px;padding:10px 18px;cursor:pointer}
+.addrow:hover,.ctl button:hover{color:var(--ink);border-color:var(--muted)}
+body.clean .addrow,body.clean .ctl{display:none}
+body.clean .k{padding-right:24px}
+.pics{flex:0 0 560px;display:flex;flex-direction:column;justify-content:center;gap:18px;min-width:0}
+.pics img{display:block;width:100%;border-radius:16px;object-fit:cover;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.pics.photo img{height:100%;max-height:760px;object-position:50% 45%}
+.pics.shots img{height:auto;background:#fff}
+.slide.wide{flex-direction:column;justify-content:center;gap:40px}
+.pics.slots{display:grid;grid-template-columns:1fr;gap:16px;align-content:center}
+.pics.slots.n4{grid-template-columns:1fr 1fr}
+.slot{position:relative;border-radius:14px;overflow:hidden;background:var(--panel)}
+.pics.slots.n3{flex-basis:640px;grid-template-columns:1fr 1fr 1fr}
+.n4 .slot{height:360px}.n3 .slot{height:740px}.n1 .slot{height:560px}.n2 .slot{height:360px}
+.slot img{display:block;width:100%;height:100%;object-fit:contain;box-shadow:none;border-radius:0}
+.slot.empty{border:3px dashed var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px;text-align:center;box-sizing:border-box}
+.slot.empty span{font:600 22px/1.3 var(--head);color:var(--muted)}
+.slot.empty button{font:600 18px var(--body);color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 16px;cursor:pointer}
+body.clean .slot.empty button{display:none}
+.slide.title small{outline:none}
+.slide.wide img{display:block;width:100%;height:auto;border-radius:18px;background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.slide.wide .wtext{margin:0;font:600 34px/1.35 var(--head);color:var(--ink);outline:none;border-left:6px solid var(--c);padding-left:22px}
+[contenteditable]:focus{box-shadow:0 0 0 3px #c084fc;border-radius:6px}
+</style>
+
+<div class="bar" id="bar">
+  <button type="button" id="b-prev" aria-label="Previous slide">←</button>
+  <span class="count" id="count">1 / 8</span>
+  <button type="button" id="b-next" aria-label="Next slide">→</button>
+  <button type="button" id="b-full">Full screen</button>
+  <button type="button" id="b-clean">Hide these buttons</button>
+  <button type="button" id="b-reset">Reset text</button>
+  <span class="tip">Arrow keys or tap the slide edge to move. Tap any text to change it. Press H to show or hide the buttons.</span>
+</div>
+
+<div class="fit" id="fit"><div class="stage" id="stage"></div></div>
+
+<script>
+(function(){
+  // Frankie Fihn's Loom order: outcome, one real result, "works for you if", how it works, price formula, how to buy, close.
+  var TITLE = "Attract someone to settle down and build a life with";
+  var DATA = [
+    { t:"What you want", c:"#c084fc", img:"breakfast-together.jpg", photo:true, alt:"A couple holding hands over Sunday breakfast at home", kids:[
+      ["Someone to settle down and build a life with", "Without more inner work or learning more about yourself"] ] },
+    { t:"One real result", c:"#7dd3fc", img:"member-result.jpg", more:{ img:"member-result-2.jpg", text:"A date request, a friend request and three attractive Welsh men in one morning. Welsh was one of her intentions." }, alt:"A member's message about what changed since joining", kids:[
+      ["A member, just under 3 weeks in", "She'd done a lot of inner work and kept seeing glimpses of change that never lasted"],
+      ["Now", "A quiet knowing · more confident in what she brings · more consistent opportunities"],
+      ["What changes first", "How you feel. Then who shows up."] ] },
+    { t:"This works for you if…", c:"#fbbf24", kids:[
+      ["✓ You'll give it 10 minutes a day", ""],
+      ["✓ You're ready to stop learning about love and start feeling it", ""],
+      ["✓ You'll message me when the old doubts come up", ""],
+      ["Not for you if", "You want a quick fix or more theory"] ] },
+    { t:"How it works", c:"#4ade80", slots:[
+      { l:"1 · Get clear: the Emotional Resonance training", src:"training.jpg" },
+      { l:"2 · Define the feelings: a Feeling Finder result", src:"feeling-result.jpg" },
+      { l:"3 · The meditation playing on your phone", src:"meditation.jpg" },
+      { l:"4 · The outcome: a couple cooking dinner together", src:"cooking-together.jpg", cover:true } ], kids:[
+      ["1 · Get clear", "Exactly who you want and what your life together looks like"],
+      ["2 · Define the feelings", "How you'd feel with them: safe, chosen, playful"],
+      ["3 · Embody them every day", "A 10-minute meditation plus simple things you do during your day"],
+      ["4 · The right people notice you", "The ones who aren't right stop feeling exciting"],
+      ["Along the way", "Old patterns come up. That's where I'm with you every day"] ] },
+    { t:"The investment", c:"#f472b6", slots:[
+      { l:"What you get: the classroom with the trainings and the meditation", src:"classroom.jpg" } ], kids:[
+      ["$497 a month", "Cancel anytime · or $2,500 for the year"],
+      ["For that you get", "The Attraction Formula · the daily meditation · me in your corner every day until you meet your person"],
+      ["Works well if", "You give it 10 minutes a day and message me when the doubts come up"],
+      ["14-day guarantee", "Do the meditation and trainings every day and message me every day. If you don't feel anything different, you get every penny back"] ] },
+    { t:"How to start", c:"#60a5fa", slots:[
+      { l:"Your join page (ollyhenson.com/join): monthly or annual", src:"join-page.jpg" },
+      { l:"The welcome email they get after paying", src:"welcome-email.jpg" },
+      { l:"The DM they get from you after joining", src:"dm.jpg" } ], kids:[
+      ["1 · Reply to my message", "I'll send you the link"],
+      ["2 · Pick monthly or annual", "Pop your card details in"],
+      ["3 · Your invite arrives by email", "Join the community"],
+      ["4 · Start today", "Watch the welcome training, then do your first meditation"] ] },
+    { t:"Will it work for me?", c:"#f87171", kids:[
+      ["14-day guarantee", "Do the meditation and trainings every day and message me every day. If you don't feel anything different, you get every penny back"],
+      ["Reply JOIN to my message", "I'll send you the link to start"] ] }
+  ];
+
+  // Text changes are kept in this browser. saved.rows[i] = [{b, s}] per slide (same key as the mind map version).
+  var KEY = "svmm-text", saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e){ saved = {}; }
+  function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
+  function store(){ try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e){} }
+  // 2026-11-06: the last slide's rows were rewritten (guarantee + reply JOIN), so drop any older saved version of them once
+  if (!saved.lastV2){ if (saved.rows) delete saved.rows[6]; if (saved.extra) delete saved.extra[6]; Object.keys(saved).forEach(function(k){ if (/^k6_/.test(k)) delete saved[k]; }); saved.lastV2 = true; store(); }
+  function rowsFor(i){
+    if (saved.rows && saved.rows[i]) return saved.rows[i];
+    var r = DATA[i].kids.map(function(k, j){
+      var kb = "k" + i + "_" + j + "b", ks = "k" + i + "_" + j + "s";
+      return { b: saved[kb] != null ? saved[kb] : k[0], s: saved[ks] != null ? saved[ks] : k[1] };
+    });
+    return r.concat((saved.extra || {})[i] || []);
+  }
+  function rowEl(r){
+    var k = document.createElement("div"); k.className = "k";
+    k.innerHTML = '<div class="ctl"><button type="button" data-m="up" aria-label="Move up">↑</button><button type="button" data-m="down" aria-label="Move down">↓</button><button type="button" data-m="del" aria-label="Delete this row">×</button></div><b contenteditable="true" spellcheck="false"></b><span contenteditable="true" spellcheck="false"></span>';
+    k.querySelector("b").textContent = r.b || "";
+    var sp = k.querySelector("span"); sp.textContent = r.s || ""; sp.classList.toggle("empty", !(r.s || "").trim());
+    return k;
+  }
+  function saveRows(sl){
+    saved.rows = saved.rows || {};
+    saved.rows[sl.dataset.i] = Array.prototype.map.call(sl.querySelectorAll(".rows > .k"), function(k){ return { b:k.querySelector("b").textContent, s:k.querySelector("span").textContent }; });
+    store();
+  }
+  function fillRows(sl){
+    var box = sl.querySelector(".rows"); box.innerHTML = "";
+    rowsFor(sl.dataset.i).forEach(function(r){ box.appendChild(rowEl(r)); });
+  }
+  // Picture slots (Frankie: one picture per step, plus the checkout page). Uploads are shrunk and kept in this browser.
+  function drawSlot(el){
+    var k = el.dataset.key, d = el._def, mine = (saved.slotImgs || {})[k];
+    var src = mine != null ? mine : (d.src || "");
+    if (src){
+      el.className = "slot has";
+      el.innerHTML = '<img src="' + src + '" alt="' + esc(d.l) + '"' + (d.cover && mine == null ? ' style="object-fit:cover;object-position:50% 30%"' : "") + '><div class="ctl"><button type="button" data-s="pick" aria-label="Replace this picture">↻</button><button type="button" data-s="clear" aria-label="Remove this picture">×</button></div>';
+    } else {
+      el.className = "slot empty";
+      el.innerHTML = '<span>' + esc(d.l) + '</span><button type="button" data-s="pick">+ Add picture</button>';
+    }
+  }
+  function setSlot(el, val){
+    saved.slotImgs = saved.slotImgs || {}; saved.slotImgs[el.dataset.key] = val; store(); drawSlot(el);
+  }
+  var picker = document.createElement("input"); picker.type = "file"; picker.accept = "image/*"; picker.hidden = true; document.body.appendChild(picker);
+  var pickFor = null;
+  picker.addEventListener("change", function(){
+    var f = picker.files && picker.files[0], el = pickFor; picker.value = ""; if (!f || !el) return;
+    var rd = new FileReader();
+    rd.onload = function(){
+      var im = new Image();
+      im.onload = function(){
+        var r = Math.min(1, 1400 / Math.max(im.width, im.height)), c = document.createElement("canvas");
+        c.width = Math.round(im.width * r); c.height = Math.round(im.height * r);
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+        setSlot(el, c.toDataURL("image/jpeg", 0.85));
+      };
+      im.src = rd.result;
+    };
+    rd.readAsDataURL(f);
+  });
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest(".slot button"); if (!b) return;
+    e.stopImmediatePropagation();
+    var el = b.closest(".slot");
+    if (b.dataset.s === "pick"){ pickFor = el; picker.click(); }
+    else setSlot(el, "");
+  });
+
+  function selectAll(n){ try { var r = document.createRange(); r.selectNodeContents(n); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch(e){} }
+
+  var stage = document.getElementById("stage"), fit = document.getElementById("fit");
+  var t = document.createElement("section");
+  t.className = "slide title";
+  t.innerHTML = '<small contenteditable="true" spellcheck="false" id="kick"></small><h1 contenteditable="true" spellcheck="false" id="ttl"></h1><div class="line"></div>';
+  stage.appendChild(t);
+  var ttl = t.querySelector("#ttl"); ttl.textContent = saved.center || TITLE;
+  var kick = t.querySelector("#kick"); kick.textContent = saved.kicker != null ? saved.kicker : "The Heart Attractor Program";
+
+  DATA.forEach(function(b, i){
+    var sl = document.createElement("section");
+    sl.className = "slide beat"; sl.style.setProperty("--c", b.c); sl.dataset.i = i;
+    var imgs = [].concat(b.img || []);
+    sl.innerHTML = '<div class="main"><div class="top"><span class="n">' + (i + 1) + "</span><h2 contenteditable=\"true\" spellcheck=\"false\" class=\"stitle\">" + esc((saved.titles || {})[i] != null ? saved.titles[i] : b.t) + '</h2></div><div class="rows"></div><button type="button" class="addrow">+ Add a row</button></div>' +
+      (imgs.length ? '<div class="pics ' + (b.photo ? "photo" : "shots") + '">' + imgs.map(function(src){ return '<img src="' + src + '" alt="' + esc(b.alt || "") + '">'; }).join("") + "</div>" : "") +
+      (b.slots ? '<div class="pics slots n' + b.slots.length + '">' + b.slots.map(function(s, j){ return '<div class="slot" data-key="s' + i + "_" + j + '"></div>'; }).join("") + "</div>" : "");
+    stage.appendChild(sl);
+    fillRows(sl);
+    sl.querySelectorAll(".slot").forEach(function(el, j){ el._def = b.slots[j]; drawSlot(el); });
+    if (b.more){ // a wide screenshot gets its own slide so it can be read on camera
+      var w = document.createElement("section");
+      w.className = "slide wide"; w.style.setProperty("--c", b.c);
+      w.innerHTML = '<div class="top"><span class="n">' + (i + 1) + '</span><h2 contenteditable="true" spellcheck="false" class="wtitle">' + esc(saved.moreTitle != null ? saved.moreTitle : b.t) + '</h2></div><img src="' + b.more.img + '" alt="' + esc(b.alt || "") + '"><p contenteditable="true" spellcheck="false" class="wtext"></p>';
+      w.querySelector(".wtext").textContent = saved.more != null ? saved.more : b.more.text;
+      stage.appendChild(w);
+    }
+    sl.querySelector(".addrow").addEventListener("click", function(){
+      var k = rowEl({ b:"New point", s:"" }); sl.querySelector(".rows").appendChild(k); saveRows(sl); fitText(sl);
+      var n = k.querySelector("b"); n.focus(); selectAll(n);
+    });
+  });
+
+  var slides = stage.querySelectorAll(".slide"), cur = 0;
+  try { cur = Math.min(slides.length - 1, Math.max(0, parseInt(localStorage.getItem(KEY + "-slide"), 10) || 0)); } catch(e){}
+  var count = document.getElementById("count");
+  function show(n){
+    cur = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function(s, j){ s.classList.toggle("on", j === cur); });
+    count.textContent = (cur + 1) + " / " + slides.length;
+    fitText(slides[cur]);
+    try { localStorage.setItem(KEY + "-slide", String(cur)); } catch(e){}
+  }
+  document.getElementById("b-prev").addEventListener("click", function(){ show(cur - 1); });
+  document.getElementById("b-next").addEventListener("click", function(){ show(cur + 1); });
+  document.addEventListener("keydown", function(e){
+    if (e.target.isContentEditable) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " "){ e.preventDefault(); show(cur + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp"){ e.preventDefault(); show(cur - 1); }
+    else if (e.key === "h" || e.key === "H") clean();
+  });
+  // tap the outer edges of the slide to move (keeps the middle free for editing text)
+  stage.addEventListener("click", function(e){
+    // only a tap on the empty slide background changes slide, never a tap on a row, button, title or picture
+    // (2026-11-06: deleting a row near the right edge also jumped to the next slide)
+    if (e.target !== stage && !(e.target.classList && (e.target.classList.contains("slide") || e.target.classList.contains("main") || e.target.classList.contains("pics")))) return;
+    if (!e.target.isConnected) return;
+    var r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+    if (x > 0.85) show(cur + 1); else if (x < 0.15) show(cur - 1);
+  });
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest && e.target.closest(".ctl button"); if (!btn) return;
+    e.stopPropagation();
+    var k = btn.closest(".k"); if (!k) return;
+    var sl = k.closest(".slide"), m = btn.dataset.m;
+    if (m === "up" && k.previousElementSibling) k.parentNode.insertBefore(k, k.previousElementSibling);
+    else if (m === "down" && k.nextElementSibling) k.parentNode.insertBefore(k.nextElementSibling, k);
+    else if (m === "del") k.remove();
+    saveRows(sl); fitText(sl);
+  });
+  document.addEventListener("input", function(e){
+    if (e.target === ttl){ saved.center = ttl.textContent; store(); return; }
+    if (e.target.classList && e.target.classList.contains("wtext")){ saved.more = e.target.textContent; store(); return; }
+    if (e.target.classList && e.target.classList.contains("wtitle")){ saved.moreTitle = e.target.textContent; store(); return; }
+    if (e.target === kick){ saved.kicker = kick.textContent; store(); return; }
+    if (e.target.classList && e.target.classList.contains("stitle")){ var ss = e.target.closest(".slide"); saved.titles = saved.titles || {}; saved.titles[ss.dataset.i] = e.target.textContent; store(); fitText(ss); return; }
+    var k = e.target.closest && e.target.closest(".rows > .k"); if (!k) return;
+    var sp = k.querySelector("span"); sp.classList.toggle("empty", !sp.textContent.trim());
+    saveRows(k.closest(".slide")); fitText(k.closest(".slide"));
+  });
+
+  // shrink a slide's row text until it fits (long rows or rows Olly adds)
+  function fitText(sl){
+    var m = sl.querySelector(".main"); if (!m) return;
+    var fs = 1; sl.style.setProperty("--fs", fs);
+    while (m.scrollHeight > m.clientHeight + 2 && fs > 0.55){ fs -= 0.05; sl.style.setProperty("--fs", fs); }
+  }
+  function layout(){
+    var s = Math.min(fit.clientWidth / 1600, fit.clientHeight / 900);
+    if (!isFinite(s) || s <= 0) s = fit.clientWidth / 1600;
+    // CSS zoom, never transform: scale() (Hub skill: scaled layers recorded blurry). With zoom, left/top are in zoomed units.
+    stage.style.zoom = s;
+    stage.style.left = ((fit.clientWidth - 1600 * s) / 2 / s) + "px";
+    stage.style.top = ((fit.clientHeight - 900 * s) / 2 / s) + "px";
+  }
+  function clean(){ document.body.classList.toggle("clean"); setTimeout(layout, 30); }
+  document.getElementById("b-clean").addEventListener("click", clean);
+  document.getElementById("b-full").addEventListener("click", function(){
+    var d = document.documentElement;
+    try { if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(function(){}); else if (document.exitFullscreen) document.exitFullscreen().catch(function(){}); } catch(e){}
+  });
+  document.getElementById("b-reset").addEventListener("click", function(){
+    saved = {}; try { localStorage.removeItem(KEY); } catch(e){}
+    ttl.textContent = TITLE;
+    stage.querySelectorAll(".wtext").forEach(function(p){ p.textContent = DATA[1].more.text; });
+    stage.querySelectorAll(".slot").forEach(drawSlot);
+    stage.querySelectorAll(".wtitle").forEach(function(h){ h.textContent = DATA[1].t; });
+    kick.textContent = "The Heart Attractor Program";
+    stage.querySelectorAll(".slide.beat").forEach(function(sl){ sl.querySelector(".stitle").textContent = DATA[sl.dataset.i].t; fillRows(sl); }); fitText(slides[cur]);
+  });
+
+  window.addEventListener("resize", layout);
+  // full screen = recording: hide the buttons, arrows and row controls; they come back when full screen ends
+  document.addEventListener("fullscreenchange", function(){ document.body.classList.toggle("clean", !!document.fullscreenElement); setTimeout(layout, 60); });
+  show(cur); layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ fitText(slides[cur]); });
+})();
+</script>

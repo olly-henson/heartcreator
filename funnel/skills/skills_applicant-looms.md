@@ -9,7 +9,9 @@ Built 2026-11-01 from Frankie's "close in 5-minute videos" method, adapted to ou
 - Hub > Looms tab (applicant answers + mind map, the screen you record over): hub.ollyhenson.com
 - Core argument: Messaging Center https://claude.ai/artifact/QPbzwHtvFExE8qqZKbB8ea
 
-> **⚠️ UPDATED 2026-11-05: personal Looms are replaced by ONE master sales video.** Flow now: application → rate in Hub > Looms → 💲 Price check message → they say it's within reach → **🎥 Sales video** button (https://youtu.be/wghvWJJ6YVk, unlisted YouTube; marks them Loom sent) → they reply "ready" → 🔗 Checkout link. No chasing. Script + map: `funnel/sales-video-script.md`, `funnel/sales-video-map.html`. Recorded in Google Vids (Loom free plan caps at 5 minutes). The personal-Loom steps below are kept for unusual applicants only.
+> **⚠️ UPDATED 2026-11-06 (latest): no price check before the video.** Flow = application → rate → 👋 Intro text on WhatsApp + 🎙️ voice note reading their plan (beats on the Looms card, filled from HA Relationship Wanted / HA How Long Looking) + ✉️ "check WhatsApp" email (or the email-only version with the plan written out) → they ask for the details → 🎥 Sales video (price is in the video) → 💡 one follow-up idea only if they watched → 🔗 Checkout. Built from Frankie Fihn's full workshop transcript; page: funnel/applicant-sales-process.html (https://claude.ai/artifact/KwpZsKFecKog5AEyzbn3GS). Looms column "Price check sent" renamed "Messaged".
+
+> **⚠️ UPDATED 2026-11-05: personal Looms are replaced by ONE master sales video.** Flow now: application → rate in Hub > Looms → 💲 Price check message → they say it's within reach → **🎥 Sales video** button (https://youtu.be/PhcbPYPfUU0, unlisted YouTube; marks them Loom sent) → they reply "ready" → 🔗 Checkout link. No chasing. Script + map: `funnel/sales-video-script.md`, `funnel/sales-video-map.html`. Recorded in Google Vids (Loom free plan caps at 5 minutes). The personal-Loom steps below are kept for unusual applicants only.
 
 ---
 
@@ -172,6 +174,8 @@ Once it's recorded but not sent yet, tap **Recorded** on their card (stage **Loo
 
 ## Step 5: After the Loom: no chasing
 
+**Update 2026-11-06:** Frankie's follow-up is not a chase, it "goes deeper": one extra idea about their situation, written as if you already work together. It's on the cards as "💡 Follow-up idea (only if they watched)"; whether to use it is still Olly's pick. Never "did you see my message/video?".
+
 **Olly's decision (2026-11-03): no follow-ups after a Loom.** If they haven't replied, they either haven't watched it or aren't sold, so let them come back. Don't suggest Loom follow-up messages. Reply to them when they get in touch.
 
 They stay on the daily email list, which keeps the conversation going without chasing.
@@ -195,9 +199,9 @@ Mark them **Not a fit**.
 
 ## Step 7: The master VSL flow (2026-11-05, replaces personal Looms for normal applicants)
 
-1. Application -> Hub **Sales** tab (Trello-style board: New applications / Price check sent / Replied / VSL sent / Joined / Gone quiet / Not a fit; money tiles on top).
-2. Send the **💲 Price check message** from the card's pop-up. Only people who say the price is within reach get the video.
-3. **🎥 Sales video** button sends the unlisted YouTube VSL (https://youtu.be/wghvWJJ6YVk) on WhatsApp or email and moves them to **VSL sent**. Message (Olly's final wording): "Hey [Name], great, thanks for getting back to me. / Here's a video going through how the program works, what to expect and how to start. / [link] / If you're ready to start after watching, just reply here and I'll send you the link. / And if you have any questions, just let me know." No "watch it in your own time".
+1. Application -> Hub **Sales** tab (Trello-style board: New applications / Messaged / Replied / VSL sent / Joined / Gone quiet / Not a fit; money tiles on top).
+2. **Superseded 2026-11-06:** no price check. Send the 👋 Intro text + 🎙️ voice note (their plan, no price) + ✉️ email from the card; people who ask for "the details" get the video. The price lives in the video (Frankie: price inside the video, with the "works well if" qualifier).
+3. **🎥 Sales video** button sends the unlisted YouTube VSL (https://youtu.be/PhcbPYPfUU0) on WhatsApp or email and moves them to **VSL sent**. Message (Olly's final wording): "Hey [Name], great, thanks for getting back to me. / Here's a video going through how the program works, what to expect and how to start. / [link] / If you're ready to start after watching, just reply here and I'll send you the link. / And if you have any questions, just let me know." No "watch it in your own time".
 4. They reply "ready" -> 🔗 Checkout link. No chasing (Step 5).
 5. Stopped replying but could be a fit -> **Gone quiet** (card shows where they went quiet). Rude / really bad fit -> **Not a fit -> Remove from GHL** (DND all channels, list tags off, tag `removed - not a fit`, left out of every stat and data pull).
 
@@ -225,3 +229,23 @@ Mark them **Not a fit**.
 - **2026-11-02: Skill review.** Added the Loom recorded stage (tap Recorded before sending), the new-application notification that opens their map, and the automatic confirmation email applicants now get.
 
 - **2026-11-05: Skill review.** Added Step 7 (master VSL flow) because Olly stopped personal Looms: price check first, one master VSL, Sales board stages (VSL sent, Gone quiet, Not a fit + Remove from GHL), his exact send-message wording (he cut "Watch it in your own time" and added the questions line), and the VSL map structure he approved after several rounds (outcome on top with a photo, centre linked to the outcome, steps, what to expect + guarantee, a bare "Steps to get started" heading because he demos sign-up live, camera box top left away from captions, desktop only). "Loom recorded" stage removed.
+
+## Rules from the 2026-11-06 session
+
+- **Frankie's words come from his material, never from memory.** His slide doc (`marketing/loom info/Watch Me Make A Loom Video.md`) has no follow-up wording; Olly pasted the full workshop transcript in chat (not saved on disk). If a source doesn't say it, say so and ask for the transcript; don't write a message and call it his.
+- **Frankie's process = Hand Raiser → Pre-Sell the Plan → Loom Video → Follow-Up → Cash In.** The step after the hand raiser is pre-selling the plan, not price qualifying. Our pre-sell for applicants is the voice note (Olly's idea): people apply from the training, the Feeling Finder or emails, so don't assume they've seen the plan.
+- **The pre-sell carries no price.** Intro text ("Just got your application… here's how I think I could help you with this 👇") → voice note with their plan (what they want, how long, the 3 steps) ending "If you want me to send you the details of the program…" → email saying "I've sent you a message on WhatsApp". Email-only people get the plan written out.
+- **Show every message's full text.** Olly: "I need to see the text of each one though without having to open it." No collapsed boxes for message wording on planning pages.
+- **The sales video never offers private messaging or calls.** Removed "you can message me privately and we jump on a call when you need one"; keep "I reply within 24 hours".
+- **Record over slides, not a mind map** (`funnel/sales-video-mind-map.html`, artifact 7s6q3K9hwqGouNrKnqiG6H). Every piece of text editable (titles too), rows can be added, moved (↑↓) and deleted, full screen hides every control, text shrinks to fit. Tapping the slide edge changes slide only on empty background (deleting a row near the edge used to jump slides).
+- **Pictures where Frankie uses them:** the outcome (couple photo), one real result (member screenshots, names and photos blurred), one picture per "how it works" step, what they get, and the buying process (join page, welcome email, the DM they get). A wide screenshot gets its own slide so it's readable on camera.
+- **Full screen doesn't work inside the claude.ai viewer.** Record from the local copy `marketing/assets/sales-video/Sales Video Slides.html` (images embedded; rebuild with `python -I tools/build_sales_slides.py`). Full screen ends when you switch tabs: start the Google Vids recording first, then click Full screen on the slides tab. That folder is git-ignored (member screenshots).
+
+- **The VSL is unlisted YouTube: https://youtu.be/PhcbPYPfUU0** (recorded over the slides, 2026-11-06). Olly went with YouTube, not Loom, so there's no "they watched" notification: only send the 💡 follow-up idea when you know they watched (they said so, or replied about it).
+
+### Never
+- Never ask applicants about price before the video (overrides the 2026-11-04/05 price check).
+- Never send a follow-up to someone who hasn't watched, and never one that asks if they've seen it.
+
+- **2026-11-06: Skill review.** Price check replaced by intro text + voice note + email (Olly: people come from different entry points, so the voice note pre-sells the plan; price moves into the video). Follow-up reframed as Frankie's "go deeper" message, pending Olly's pick. Added the slides/recording rules (editable titles, row controls, full screen via the local copy, pictures per Frankie, blur members) and the "quote Frankie only from his material" rule. Overridden: Step 7's price check, the "Price check sent" column name.
+- **2026-11-06: Skill review (2).** New VSL link (PhcbPYPfUU0) replaces wghvWJJ6YVk everywhere; hosting decision = unlisted YouTube, so the follow-up rule now says how to know they watched without Loom.

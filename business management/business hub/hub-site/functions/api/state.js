@@ -71,6 +71,9 @@ export async function onRequestPut({ request, env }) {
     updatedAt: new Date().toISOString(),
     state: body.state,
   };
-  await env.HUB_KV.put(KEY, JSON.stringify(next));
+  // KV allows about one write a second to the same key: two saves landing together made the second one fail.
+  // Tell the Hub to retry (2026-11-06, with autosave) instead of throwing a bare 500.
+  try { await env.HUB_KV.put(KEY, JSON.stringify(next)); }
+  catch (e) { return json({ ok: false, busy: true, error: String((e && e.message) || e) }, 503); }
   return json({ ok: true, rev: next.rev, updatedAt: next.updatedAt });
 }

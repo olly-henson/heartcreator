@@ -1,0 +1,293 @@
+<title>Applicant Sales Process</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: one narrow column, Frankie's 5-step strip on top, then our flow as a vertical track with status pills and copy-ready messages */
+:root{
+  --bg:#f7f5fb; --card:#ffffff; --ink:#1f1a2b; --muted:#615a72; --line:#e2dcec;
+  --accent:#5b3fa6; --accent-soft:#ece6f8; --msg:#f3f0f9;
+  --live:#1d7a4a; --live-bg:#e3f4ea; --draft:#9a5b00; --draft-bg:#fbefd9; --call:#5b3fa6; --call-bg:#ece6f8; --miss:#b3261e; --miss-bg:#fbe4e2;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15121c; --card:#1e1a28; --ink:#ece8f4; --muted:#a69fb8; --line:#332d41;
+  --accent:#b9a3f0; --accent-soft:#2c2442; --msg:#251f33;
+  --live:#7fd6a4; --live-bg:#183326; --draft:#f0c070; --draft-bg:#3a2c12; --call:#c9b6f5; --call-bg:#2c2442; --miss:#f19c95; --miss-bg:#3b1d1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15121c; --card:#1e1a28; --ink:#ece8f4; --muted:#a69fb8; --line:#332d41;
+  --accent:#b9a3f0; --accent-soft:#2c2442; --msg:#251f33;
+  --live:#7fd6a4; --live-bg:#183326; --draft:#f0c070; --draft-bg:#3a2c12; --call:#c9b6f5; --call-bg:#2c2442; --miss:#f19c95; --miss-bg:#3b1d1b; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:17px/1.55 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:2.1rem}
+h2{font-size:1.35rem}
+h3{font-size:1.1rem}
+p{margin:0}
+.lede{color:var(--muted);max-width:62ch;margin-top:8px}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+section{display:flex;flex-direction:column;gap:14px}
+
+.strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.strip div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 10px;display:flex;flex-direction:column;gap:4px}
+.strip b{font-family:var(--display);font-size:.98rem}
+.strip span{font-size:.85rem;color:var(--muted);line-height:1.35}
+@media (max-width:640px){.strip{grid-template-columns:1fr 1fr}.strip div:last-child{grid-column:1/-1}}
+.note{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+blockquote{margin:0;font-style:italic;color:var(--muted)}
+
+.track{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px 14px;counter-increment:s}
+.step>*{grid-column:2}
+.step::before{content:counter(s);grid-column:1;grid-row:1/span 12;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 .95rem var(--display);display:grid;place-items:center}
+.head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.pill{font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.live{color:var(--live);background:var(--live-bg)}
+.draft{color:var(--draft);background:var(--draft-bg)}
+.call{color:var(--call);background:var(--call-bg)}
+.miss{color:var(--miss);background:var(--miss-bg)}
+.fr{font-size:.8rem;color:var(--muted)}
+.do{color:var(--muted);font-size:.93rem}
+.rec{font-size:.93rem;border-left:3px solid var(--accent);padding-left:10px}
+.frank{font-size:.93rem;color:var(--muted)}
+.frank b{color:var(--ink)}
+
+.msg{background:var(--msg);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.msg .lab{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.msg .txt{white-space:pre-line;font-size:.97rem}
+.msg button,.choose button,.copy{font:600 .9rem var(--body);padding:7px 14px;border-radius:8px;cursor:pointer}
+.msg button{align-self:flex-start;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.choose{display:flex;gap:8px;flex-wrap:wrap}
+.choose button{border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.choose button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--card)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.todo{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.todo li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.todo li span:first-child{margin-top:3px}
+textarea{width:100%;box-sizing:border-box;min-height:90px;font:15px/1.45 var(--body);background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.copy{align-self:flex-start;border:0;background:var(--accent);color:var(--card)}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">The Heart Attractor Program · applicant to member</div>
+    <h1>Applicant Sales Process</h1>
+    <p class="lede">Frankie Fihn's video selling method, taken from his full workshop transcript and mapped onto your funnel. Each step shows what he does, what we do and the exact messages to send. Three decisions are left, with my pick on each.</p>
+  </header>
+
+  <section>
+    <h2>Frankie's 5 steps</h2>
+    <div class="strip" aria-label="Frankie's process">
+      <div><b>Hand Raiser</b><span>They say "I'm interested". If they won't raise a hand, they won't buy</span></div>
+      <div><b>Pre-Sell the Plan</b><span>"If you want X, this is what I'd do. What do you think?"</span></div>
+      <div><b>Loom Video</b><span>Outcome, who it works for, the steps, price, how to buy</span></div>
+      <div><b>Follow-Up</b><span>Go deeper on one part of the plan. Never "did you see my message?"</span></div>
+      <div><b>Cash In</b><span>Show them exactly how to pay and what happens next</span></div>
+    </div>
+    <div class="note">
+      <p><b>Every step is the same message with more detail.</b> His analogy is introducing a friend to someone single. First "would you like to meet her?", then "come to my barbecue on Sunday", then the time, the place and what to wear.</p>
+      <blockquote>"If they won't raise their hand for it, they won't buy it."</blockquote>
+    </div>
+  </section>
+
+  <section>
+    <h2>Your flow, start to finish</h2>
+    <ol class="track">
+      <li class="step">
+        <div class="head"><h3>Hand raise: content</h3><span class="pill live">Live</span><span class="fr">Frankie: Hand Raiser</span></div>
+        <p>Reels end on FEELING and Stories on VIDEO or ATTRACT. ManyChat sends the training link.</p>
+        <p class="frank"><b>Frankie:</b> content, ads and DMs all work as hand raisers. Name the outcome they want, not your service. Once it converts, he runs ads to it.</p>
+      </li>
+
+      <li class="step">
+        <div class="head"><h3>The free training</h3><span class="pill live">Live</span><span class="fr">Frankie: Pre-Sell the Plan</span></div>
+        <p>They opt in and watch the YouTube training, which explains The Attraction Formula. The daily emails keep selling the idea.</p>
+        <p class="frank"><b>Frankie:</b> "I like them to buy in to the basic process before they get to my Loom video… so by the time they get to it, they're basically bought into the idea."</p>
+      </li>
+
+      <li class="step">
+        <div class="head"><h3>Application</h3><span class="pill live">Live</span><span class="fr">Second hand raise</span></div>
+        <p>They apply. They get an automatic "Got your application" email and your phone gets a Hub notification.</p>
+      </li>
+
+      <li class="step">
+        <div class="head"><h3>Rate them in Hub › Looms</h3><span class="pill live">Live</span><span class="fr">Within 24 hours</span></div>
+        <p>Good, Okay or Not good. Not good gets the kind "not right now" message and nothing else.</p>
+      </li>
+
+      <li class="step">
+        <div class="head"><h3>Intro message, then your plan for them</h3><span class="pill live">Live on Looms cards</span><span class="fr">Frankie: Pre-Sell the Plan</span></div>
+        <p>This replaces the price check message. People apply from the training, the Feeling Finder or an email, so you can't know what they've already seen. A short text says you've got their application, then a voice note gives them the plan in their own words and offers the program details. No price yet. That goes in the video.</p>
+
+        <div class="msg">
+          <span class="lab">1 · WhatsApp text, sent first</span>
+          <div class="txt" id="m-intro">Hey [Name], it's Olly. Just got your application, thanks for filling it in.
+
+Here's how I think I could help you with this 👇</div>
+          <button type="button" data-copy="m-intro">Copy</button>
+        </div>
+
+        <div class="msg">
+          <span class="lab">2 · WhatsApp voice note, 30 to 45 seconds · beats to say</span>
+          <div class="txt" id="m-presell">Hey [Name], it's Olly. Thanks for applying, I've read through everything.
+
+I can see you want [Wants], and you've been looking for [How long].
+
+The way I help with this is three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.
+
+If you want me to send you the details of the program and how we'd do this together, just let me know and I'll send them over.</div>
+          <button type="button" data-copy="m-presell">Copy</button>
+        </div>
+
+        <div class="msg">
+          <span class="lab">3 · Email, sent at the same time · subject: Got your application</span>
+          <div class="txt" id="m-email-wa">Hey [Name],
+
+Just got your application, thanks for filling it in.
+
+I've sent you a message on WhatsApp with a plan of how I'd help you with this. Have a listen and let me know what you think.
+
+Olly</div>
+          <button type="button" data-copy="m-email-wa">Copy</button>
+        </div>
+
+        <div class="msg">
+          <span class="lab">Email only · for anyone who'd rather not use WhatsApp · subject: Got your application</span>
+          <div class="txt" id="m-email-only">Hey [Name],
+
+Just got your application, thanks for filling it in.
+
+I can see you want [Wants], and you've been looking for [How long].
+
+Here's how I'd help you with this. It comes down to three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.
+
+If you want me to send you the details of the program and how we'd do this together, just reply to this email and I'll send them over.
+
+Olly</div>
+          <button type="button" data-copy="m-email-only">Copy</button>
+        </div>
+        <p class="frank"><b>Frankie's version:</b> "Hey, if you want X, this is what I would do… What do you think of that?" Then: "I got a video. If you're interested in getting my help, can I send you that?"</p>
+        <p class="do">When they say yes, send the video (next step). If they ask about price first, tell them: it's $497 a month or $2,500 for the year, and the video shows exactly what you get for it.</p>
+      </li>
+
+      <li class="step" data-choice="video">
+        <div class="head"><h3>The sales video</h3><span class="pill draft">Script drafted</span><span class="fr">Frankie: Loom Video</span></div>
+        <p>Sales Video v2 already follows his order: the outcome first (Catrin's result), "this works for you if", the 4 steps with pictures, the price with what they get, then exactly how to buy.</p>
+        <p class="frank"><b>Frankie:</b> "The first five or ten times I send it out, I personalize it… once I get used to people saying yes, it's just the same video over and over." Show one real result before any numbers ("micro first, macro second"). Don't open with who you are. Talk like a person, not a script being read out. Keep it as long as it needs to be, but not boring.</p>
+        <div class="msg">
+          <span class="lab">Message with the video</span>
+          <div class="txt" id="m-video">Here it is, [Name]. This shows exactly how it works and what you get. Any questions after watching, just message me here.
+
+https://youtu.be/PhcbPYPfUU0</div>
+          <button type="button" data-copy="m-video">Copy</button>
+        </div>
+        <p class="rec"><b>My pick: personal videos for the next 5 to 10 applicants, then one master video.</b> That's exactly what he does.</p>
+        <div class="choose"><button type="button" id="video-keep" data-v="keep" aria-pressed="false">Personal first</button><button type="button" id="video-drop" data-v="drop" aria-pressed="false">Master video now</button></div>
+      </li>
+
+      <li class="step" data-choice="host">
+        <div class="head"><h3>Where the video lives</h3><span class="pill call">Your call</span></div>
+        <p>Loom or unlisted YouTube.</p>
+        <p class="frank"><b>Frankie:</b> "The reason I use Loom is just because Loom gives you a notification when the person watches it. And so I know how to handle the sale based on they saw it or didn't see it."</p>
+        <p class="rec"><b>My pick: Loom.</b> The follow-up below depends on knowing who watched.</p>
+        <div class="choose"><button type="button" id="host-keep" data-v="keep" aria-pressed="false">Loom</button><button type="button" id="host-drop" data-v="drop" aria-pressed="false">Unlisted YouTube</button></div>
+      </li>
+
+      <li class="step" data-choice="follow">
+        <div class="head"><h3>Follow-up: go deeper, never chase</h3><span class="pill call">Your call</span><span class="fr">Frankie: Follow-Up</span></div>
+        <p>Frankie's follow-up isn't "did you see my message?". It's one more idea about their situation, written as if you're already working together.</p>
+        <p class="frank"><b>Frankie:</b> "All follow-up done correctly is going deeper… I'm actually already talking like we're working together." And: "Ideas are never unwelcome."</p>
+        <div class="msg">
+          <span class="lab">If they watched · 1 to 2 days after</span>
+          <div class="txt" id="m-follow">Hey [Name], I was thinking about what you wrote, that you want [Wants]. If I were you, the feeling I'd start practicing first is [Wants to feel], because that's the one that changes who you notice and who you're drawn to.
+
+Excited to help you get there.</div>
+          <button type="button" data-copy="m-follow">Copy</button>
+        </div>
+        <div class="msg">
+          <span class="lab">If they ask "will this work for me?"</span>
+          <div class="txt">Frankie says this is the question that almost always comes after the video, and he answers it by text. Use their own situation: how long they've looked, what they've tried, their age or where they live.</div>
+        </div>
+        <p class="rec"><b>My pick: Keep, but only the "watched" message, sent once.</b> If they didn't watch, send nothing, which keeps your no-chasing rule. I changed this from Drop because the transcript shows Frankie's follow-up is an idea, not a chase.</p>
+        <div class="choose"><button type="button" id="follow-keep" data-v="keep" aria-pressed="false">Keep (one message)</button><button type="button" id="follow-drop" data-v="drop" aria-pressed="false">Drop</button></div>
+      </li>
+
+      <li class="step">
+        <div class="head"><h3>They say "ready", you send the checkout link</h3><span class="pill live">Live</span><span class="fr">Frankie: Cash In</span></div>
+        <p>ollyhenson.com/join. The copy button and WhatsApp/email send are on every Looms card.</p>
+        <p class="frank"><b>Frankie:</b> "They don't know how to buy this from you… show them exactly how to buy it." He also tells them in the video to "reply with the words 'I'm in' and I'll send you a link". Your video ends the same way.</p>
+        <p class="do">/join still points to the old Skool group URL until you pay the $99 to change it.</p>
+      </li>
+
+      <li class="step">
+        <div class="head"><h3>What happens after they pay</h3><span class="pill miss">Not confirmed</span></div>
+        <p>The Skool invite and the welcome message. This hasn't been checked end to end yet.</p>
+        <p class="frank"><b>Frankie</b> says in the video what happens next, so nobody panics: "Henry from my team will reach out… It usually takes a couple hours… If you submit your payment info and nothing happens immediately, there's no fireworks." Your video should say how long the Skool invite takes.</p>
+      </li>
+
+      <li class="step">
+        <div class="head"><h3>Track it in the Hub</h3><span class="pill miss">Parked</span></div>
+        <p>When you mark someone "Loom sent" or "Joined", their GHL contact gets tagged and the Overview shows videos sent and new cash.</p>
+        <p class="frank"><b>Frankie's numbers:</b> about 15 to 20% of people who watch his video buy.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>What's left to make it work</h2>
+    <ul class="todo">
+      <li><span class="pill call">You</span><span>Pick on the 3 decisions above and send the first voice note to your next applicant.</span></li>
+      <li><span class="pill call">You</span><span>Approve the Sales Video v2 script, then record it.</span></li>
+      <li><span class="pill live">Done</span><span>The intro text, voice note beats, both emails and the follow-up are on the Looms cards, filled in with each applicant's answers. The price check message is gone.</span></li>
+      <li><span class="pill call">You</span><span>Check the Sales Video v2 script still fits now that people ask for "the details of the program".</span></li>
+      <li><span class="pill draft">Me</span><span>Add one line to the video script saying how long the Skool invite takes.</span></li>
+      <li><span class="pill draft">Me</span><span>Check what happens after payment, end to end, then build the Hub tracking.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Your choices</h2>
+    <textarea id="choices" readonly aria-label="Your choices, ready to copy"></textarea>
+    <button type="button" class="copy" id="copybtn">Copy my choices</button>
+  </section>
+</div>
+
+<script>
+(function(){
+  function copyText(text,btn,label){
+    var done=function(){btn.textContent="Copied";setTimeout(function(){btn.textContent=label},1500)};
+    try{navigator.clipboard.writeText(text).then(done,function(){})}catch(e){}
+  }
+  document.querySelectorAll("[data-copy]").forEach(function(b){
+    b.addEventListener("click",function(){copyText(document.getElementById(b.dataset.copy).textContent,b,"Copy")});
+  });
+  var labels={video:"Sales video",host:"Where the video lives",follow:"Follow-up"};
+  var state={};
+  try{state=JSON.parse(localStorage.getItem("asp-choices")||"{}")||{}}catch(e){state={}}
+  var box=document.getElementById("choices");
+  function render(){
+    var lines=[];
+    document.querySelectorAll("[data-choice]").forEach(function(s){
+      var k=s.dataset.choice;
+      s.querySelectorAll(".choose button").forEach(function(b){b.setAttribute("aria-pressed",String(state[k]===b.dataset.v))});
+      var picked=s.querySelector('.choose button[data-v="'+state[k]+'"]');
+      lines.push(labels[k]+": "+(picked?picked.textContent:"not picked yet"));
+    });
+    box.value=lines.join("\n");
+  }
+  document.querySelectorAll(".choose button").forEach(function(b){
+    b.addEventListener("click",function(){
+      state[b.closest("[data-choice]").dataset.choice]=b.dataset.v;
+      try{localStorage.setItem("asp-choices",JSON.stringify(state))}catch(e){}
+      render();
+    });
+  });
+  var cb=document.getElementById("copybtn");
+  cb.addEventListener("click",function(){
+    try{navigator.clipboard.writeText(box.value).then(function(){cb.textContent="Copied";setTimeout(function(){cb.textContent="Copy my choices"},1500)},function(){box.select()})}catch(e){box.select()}
+  });
+  render();
+})();
+</script>

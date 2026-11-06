@@ -26,3 +26,9 @@ marketing/email-sequences/weekly-email-builder-prompt.txt
 marketing/email-sequences/weekly-email-dormant-copy.html
 marketing/email-sequences/build_weekly_emails.py
 marketing/email-sequences/weekly-template-preview-*.html
+
+# sales video screenshots (member DMs/community, keep out of the public repo)
+marketing/assets/sales-video/
+
+# Frankie Fihn's workshop slide doc (third-party material, 6MB), keep out of the public repo
+marketing/loom info/

@@ -95,6 +95,27 @@ def clean(t):
     return re.sub(r"[.!?]+$", "", t)
 
 
+# Words the transcriber mishears in Olly's voice (2026-11-06: "feeding" for the FEELING keyword, so the CTA wasn't green
+# and the caption read wrong). Fixed in the cached .words.json too, so upload_server's keyword check sees "feeling".
+WORD_FIXES = {"feeding": "feeling", "feedings": "feelings"}
+
+
+def fix_words(words):
+    fixed = False
+    out = []
+    for w in words:
+        t = w["w"]
+        m = re.match(r"^(\W*)([A-Za-z]+)(\W*)$", t)
+        if m and m.group(2).lower() in WORD_FIXES:
+            core = WORD_FIXES[m.group(2).lower()]
+            if m.group(2)[0].isupper():
+                core = core.upper() if m.group(2).isupper() else core.capitalize()
+            w = dict(w, w=m.group(1) + core + m.group(3))
+            fixed = True
+        out.append(w)
+    return out, fixed
+
+
 def plan(words):
     """Returns hook (text, start, end) and a list of captions [{'parts':[(text,green)], 's','e'}]."""
     # hook = first sentence
@@ -322,6 +343,7 @@ def hook_png(text, path):
 HOOK_MAX = 780   # widest hook line incl. the end emoji. Instagram/TikTok crop ~100px off each side on tall phones
                  # (Olly 2026-11-04: 940 sat "right tight on the edge"), so the box keeps ~125px clear of each edge
 HOOK_MIN_PX = 54  # a long hook's text may shrink to this (from 66) to stay two lines inside the safe width
+PYRAMID_MIN_PX = 48  # shrink only SLIGHTLY for the pyramid (Olly 2026-11-06: 40px was "too small"); a hook too long for that keeps 54px+ and the most even split
 
 
 def hook_lines(words, f=None):
@@ -350,13 +372,30 @@ def hook_fit(words):
     """Full size if a two-line pyramid fits; otherwise shrink the text a step at a time (to HOOK_MIN_PX) until one does.
     No pyramid at any size: the largest size where two lines fit at all (same idea as Olly squeezing it by hand)."""
     fallback = None
-    for px in range(FONT_PX, HOOK_MIN_PX - 1, -2):
+    # RULE (Olly 2026-11-06): the top line is ALWAYS wider than the bottom. Shrink further (to PYRAMID_MIN_PX) before
+    # ever giving up the pyramid; "How to attract your life partner / without more effort" needed 50px, not 54.
+    for px in range(FONT_PX, PYRAMID_MIN_PX - 1, -2):
         f = F if px == FONT_PX else font(px)
         lines, pyramid, fits = hook_lines(words, f)
         if pyramid:
             return lines, f
-        if fits and fallback is None:
+        if fits and fallback is None:  # the largest size where two lines fit at all
             fallback = (lines, f)
+    # Too long for a two-line pyramid at a readable size: THREE lines, still a pyramid (each line at least as wide as
+    # the one below it, the bottom counting its end emoji), at the biggest size that fits. Olly chose this 2026-11-06
+    # for "You don't need another plan to attract a committed relationship" over smaller text or a wider top line below.
+    for px in range(FONT_PX, HOOK_MIN_PX - 1, -2):
+        f = F if px == FONT_PX else font(px)
+        ew = f.getlength(" ") + 46 * f.size / FONT_PX
+        best = None
+        for i in range(1, len(words) - 1):
+            for j in range(i + 1, len(words)):
+                a = f.getlength(" ".join(words[:i])); b = f.getlength(" ".join(words[i:j])); c = f.getlength(" ".join(words[j:])) + ew
+                if max(a, b, c) <= HOOK_MAX and a >= b >= c and (best is None or a - c < best[0]):
+                    best = (a - c, i, j)
+        if best:
+            i, j = best[1], best[2]
+            return [" ".join(words[:i]), " ".join(words[i:j]), " ".join(words[j:])], f
     return fallback or (lines, f)
 
 
@@ -382,6 +421,8 @@ def main(src, out, hook_text=None, words_only=False):
         words = json.load(open(cache))
     else:
         words = transcribe(audio)
+    words, fixed = fix_words(words)
+    if fixed or not os.path.exists(cache):
         json.dump(words, open(cache, "w"))
     if not words:
         sys.exit("No speech found")

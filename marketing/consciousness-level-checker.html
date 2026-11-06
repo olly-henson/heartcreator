@@ -610,7 +610,7 @@ const RESEARCH_FACTS = `RESEARCH YOU CAN USE (the ONLY studies and numbers allow
 HOW TO SAY IT: "in one small study", "research suggests", "linked with", "went with". Never "proven", never "doubles your hormones" as a promise, never cure claims, never claim any study measured attracting a partner (none did). Name HeartMath lightly ("a HeartMath study"). The bridge to the message is always: it's not one good meditation, it's the state you practise every day, and that's what changes how you feel around love.`;
 const POST_TYPES = {
   "Personal story": {group:"Connection", desc:"Tell a story of your own that people can relate to. People connect with human emotion.",
-    formats:["I get it...","I know what it's like...","I never thought I'd be able to...","I know it feels scary...","The moment I realised...","What I'd tell myself the week after my breakup","The day I almost gave up on finding someone","What changed when I stopped learning and started shifting my state","Me in 2019 vs me now","Something I used to believe about love","How I met my wife (the part I don't usually share)","The thing nobody told me about being single"],
+    formats:["I get it...","I know what it's like...","I never thought I'd be able to...","I know it feels scary...","The moment I realised...","What I focused on every day before I met my wife","The moment Jules and I both just knew","What changed when I stopped learning and started shifting my state","Dating for fun vs dating to fix something","Something I used to believe about love","How I met my wife (the part I don't usually share)","The thing nobody told me about being single"],
     rule:"Use only Olly's real story: before he met his wife Jules he was dating and enjoying himself, not trying to settle down, and focusing every day on keeping himself in a better emotional state; when they met they both just knew it was different. The key was working on his emotional state every day, not learning more or fixing himself. Never mention a past relationship, a breakup, 2019 or any teachers or techniques he tried (Olly 2026-11-05: the old story is out of the messaging). Never invent details, dates, places or conversations. Where a detail is needed, write it as a prompt for Olly, like [the moment you realised]."},
   "Lifestyle": {group:"Connection", desc:"Show you're a normal person like them, or who they want to be, and what you're up to.",
     formats:["Date night or time with my wife","How I unwind","A favourite place to eat","A family or friends outing","Post-workout or morning routine","A day in my life","Doing my own 10-minute practice","What a calm, secure relationship actually looks like day to day","Things my wife and I do that keep it fun and playful","Little moments I didn't think I'd ever have"],
@@ -1921,9 +1921,14 @@ const ytImg = (function(){
     upIn.value = "";
   };
   ta.oninput = () => { st.text = ta.value; draw(); };
-  const cal = hubButton("ytpost", () => Object.assign(st.idea ? ytPayload(st.idea, st.type) : {title: st.text.trim(), type: "", post: "", pinned: "", poll: []}, {image: cv.toDataURL("image/jpeg", 0.88)}));
+  // Olly 2026-11-06: community posts now come from his emails (the Hub copies each email into the YouTube calendar), so
+  // this tab only makes the image. "For the post on" = the day: the image joins the post already on that day in the Hub.
+  const dayLbl = el("label", "hint", "For the post on "), dayIn = document.createElement("input");
+  dayIn.type = "date"; { const d = new Date(); dayIn.value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  dayLbl.appendChild(dayIn); dayLbl.style.cssText = "display:block;margin:8px 0"; ta.style.cssText = "width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10px;border-radius:8px;margin-top:10px";
+  const cal = hubButton("ytpost", () => Object.assign(st.idea ? ytPayload(st.idea, st.type) : {title: st.text.trim(), type: "", post: "", pinned: "", poll: [], date: dayIn.value, attach: true}, {image: cv.toDataURL("image/jpeg", 0.88)}));
   acts.append(save, cal, msg);
-  box.append(sum, ta, styles, prev, acts);
+  box.append(sum, ta, dayLbl, styles, prev, acts);
   function wrapLines(ctx, text, maxW){
     const out = []; let line = "";
     String(text).split(/\s+/).filter(Boolean).forEach(w => { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { out.push(line); line = w; } else line = t; });
@@ -1974,6 +1979,24 @@ const ytImg = (function(){
     load(i, type){ st.idea = i || null; st.type = type || ""; st.text = (i && (i.image || i.hook)) || ""; ta.value = st.text; box.hidden = false; box.open = true; draw(); box.scrollIntoView({behavior: "smooth", block: "start"}); },
     show(on){ box.hidden = !on; if (on) draw(); }
   };
+})();
+// Links for community posts (Olly, 2026-11-06): the tracked short links (GHL redirects, utm_medium=community), ready to copy
+const ytLinks = (function(){
+  const box = el("div", "card"); box.id = "ytLinksBox"; box.hidden = true;
+  box.append(el("b", "", "Links for community posts"), el("p", "hint", "Tracked links for YouTube community posts. Copy one and paste it into the post on the Hub or YouTube."));
+  [["attract-yc", "Free training: How to attract your person scientifically", "Watch the free training here:"],
+   ["training-yc", "Free training (the first one)", "Watch the free training here:"],
+   ["feeling-yc", "The Feeling Finder (2-minute tool)", "Find the feeling that attracts your person here:"],
+   ["apply-yc", "Apply for The Heart Attractor Program", "You can apply here:"]].forEach(([path, label, line]) => {
+    const url = "https://ollyhenson.com/" + path;
+    const row = el("div", "row"); row.style.cssText = "align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap";
+    const t = el("div", ""); t.style.cssText = "flex:1 1 220px;min-width:0"; t.append(el("div", "", label), el("div", "hint", url));
+    const c1 = el("button", "btn small", "Copy link"), c2 = el("button", "btn small", "Copy with a line"); c1.type = c2.type = "button";
+    const copy = (b, txt, done) => { navigator.clipboard.writeText(txt).then(() => { b.textContent = "\u2713 Copied"; setTimeout(() => { b.textContent = done; }, 1500); }).catch(() => { window.prompt("Copy this:", txt); }); };
+    c1.onclick = () => copy(c1, url, "Copy link"); c2.onclick = () => copy(c2, line + "\n" + url, "Copy with a line");
+    row.append(t, c1, c2); box.appendChild(row);
+  });
+  return box;
 })();
 // the post and pinned comment with [LINK] swapped for the tracked link (or the line dropped when there's no link)
 function ytFill(text, i){
@@ -2123,9 +2146,13 @@ function setChannel(ch, keepType, keepFormat){
   $("tab-instagram").setAttribute("aria-selected", String(ig));
   $("tab-skool").setAttribute("aria-selected", String(channel === "skool"));
   $("tab-yt").setAttribute("aria-selected", String(channel === "ytpost"));
-  $("ytCtaWrap").hidden = channel !== "ytpost";
+  $("ytCtaWrap").hidden = true;
   if (!ytImg.box.isConnected) $("tsmBox").after(ytImg.box);
-  ytImg.show(channel === "ytpost");
+  if (!ytLinks.isConnected) ytImg.box.after(ytLinks);
+  ytImg.show(channel === "ytpost"); ytLinks.hidden = channel !== "ytpost"; if (channel === "ytpost") ytImg.box.open = true;
+  // the page CSS gives these display:grid/flex, which beats [hidden]: hide them outright on the YouTube tab only
+  [".form", ".seg", "aside", "#ideas", "#postBar"].forEach(s => { const n = document.querySelector(s); if (n) n.style.display = channel === "ytpost" ? "none" : ""; });
+  { const g = $("go") && $("go").parentNode; if (g) g.style.display = channel === "ytpost" ? "none" : ""; }
   if (!cImg.box.isConnected) $("tsmBox").after(cImg.box);
   cImg.show(channel === "carousels"); $("carouselNote").hidden = channel !== "carousels";
   $("tab-memes").setAttribute("aria-selected", String(channel === "memes"));
@@ -2133,8 +2160,8 @@ function setChannel(ch, keepType, keepFormat){
   $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email";
   document.querySelector(".seg").hidden = !ig; $("balance").hidden = !ig;
   // Stories (Olly, 2026-11-02): no idea writer, just the Story Image Maker
-  { const sty = channel === "stories"; if (sty) $("balance").hidden = true; document.querySelector(".form").hidden = sty; $("go").parentNode.hidden = sty;
-    $("ideas").hidden = sty; document.querySelector("aside").hidden = sty; $("panel-instagram").style.gridTemplateColumns = sty ? "minmax(0,1fr)" : ""; if (sty) $("tsmBox").open = true; }
+  { const sty = channel === "stories" || channel === "ytpost"; if (sty) $("balance").hidden = true; document.querySelector(".form").hidden = sty; $("go").parentNode.hidden = sty;
+    $("ideas").hidden = sty; document.querySelector("aside").hidden = sty; $("panel-instagram").style.gridTemplateColumns = sty ? "minmax(0,1fr)" : ""; if (channel === "stories") $("tsmBox").open = true; }
   $("tsmBox").hidden = channel !== "stories" && channel !== "memes"; $("skoolNote").hidden = channel !== "skool"; $("memeNote").hidden = channel !== "memes"; $("memeBlank").hidden = channel !== "memes";
   if (ig) lastIg = channel;
   $("go").textContent = CHANNELS[channel].button;
@@ -2505,7 +2532,7 @@ async function emailBatch(signal){
 /* Self-learning (Olly, 2026-10-26): emails he edited and queued are the standard. The newest few go in whole,
    and where he rewrote one, the before and after, so new emails come out closer to his voice each time. */
 function emailBrief(){
-  const q = (queue.items || []).filter(x => chanOf(x) === "email" && x.body).slice(0, 4);
+  const q = (queue.items || []).filter(x => chanOf(x) === "email" && x.body && cleanStory(x)).slice(0, 4);
   if (!q.length) return "";
   const cut = t => String(t || "").slice(0, 1600);
   const edits = q.filter(x => x.origBody).slice(0, 2);
@@ -2798,7 +2825,7 @@ THE PERFECT REEL (built from Olly's 9 best-performing Reels; every Reel follows 
 4. name: name the problem. It is ALWAYS intellectualization, introduced like this: "That's telling you you're stuck in something called intellectualization. It's the psychiatrist's term for using thinking and analysing to deal with emotional situations." Then that it's her mind protecting her from getting her hopes up again (kind, never blaming her), and what it costs her (she never actually feels the right person is coming; dating becomes exhausting and transactional).
 5. missing: what she needs. It is ALWAYS emotional resonance: the emotional connection two people feel when they click. We're drawn to people who match the emotions we're feeling. You can't think your way into a feeling. When she feels like she's already in that relationship, she starts to believe it can happen, notices the right people and can spot who isn't right. Emotional resonance is the connection, never "a practice".
 6. steps: one bridge line, then exactly these 3 numbered steps, each with one short line of explanation: "Step 1: get clear on exactly who you want and what your life together looks like." "Step 2: define the emotions you'd feel with them." "Step 3: embody those emotions every day, before they show up." Put a blank line between the bridge and each step (\\n\\n).
-7. proof: one short line from Olly's own life: this is how he met his wife. You may add that it came after years of nothing changing. Never invent other stories, clients, results or numbers.
+7. proof: one short line from Olly's own life: this is how he met his wife. He worked on his emotional state every day, and when they met they both just knew. Never add a past relationship, a breakup, years of struggle or trying different methods (Olly 2026-11-05: the old story is out). Never invent other stories, clients, results or numbers.
 Don't write the call to action or a caption: the page adds both.
 
 KEEP EVERY REEL DIFFERENT (Olly posts 3 a day)
@@ -3558,8 +3585,12 @@ function dropIdea(i){
 }
 // Finished posts Olly queued (2026-10-28): the full text, plus his rewrites, so new posts start closer to his version.
 // Links are swapped back to [LINK] so the model keeps writing [LINK].
+/* Olly 2026-11-06: older approved posts still tell the old story (7-year relationship, 2019 breakup, teachers, years of
+   trying). Never show those to Claude as examples, or it copies the story back in. */
+const OLD_STORY = /break-?up|2019|7-year|seven-year|years of trying|nothing lasting|years of nothing|Neville|Dispenza|Abraham Hicks/i;
+function cleanStory(x){ return !OLD_STORY.test(String(x.post || "") + " " + String(x.body || "") + " " + String(x.proof || "")); }
 function postBrief(){
-  const q = (queue.items || []).filter(x => chanOf(x) === channel && x.post).slice(0, 4);
+  const q = (queue.items || []).filter(x => chanOf(x) === channel && x.post && cleanStory(x)).slice(0, 4);
   if (!q.length) return "";
   const cut = t => String(t || "").replace(/https?:\/\/\S+/g, "[LINK]").slice(0, 1200);
   const edits = q.filter(x => x.origPost).slice(0, 2);
@@ -4958,8 +4989,8 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     b_wish: { hint:"Things I wish I knew: three short lessons from your own story, a line or two each.",
       fields:[["title", "Title", 2], ["l1", "1", 2], ["l2", "2", 2], ["l3", "3", 2]],
       bank:[{ title:"3 things I wish I knew about love sooner", l1:"It was never about knowing more.", l2:"How I felt around love decided who showed up.", l3:"Calm can be practised, like anything else." },
-        { title:"What I wish I knew after my breakup", l1:"Fixing myself wasn't the missing piece.", l2:"More books and courses didn't change who showed up.", l3:"Feeling it first is what made it real." },
-        { title:"3 things I'd tell my 2019 self", l1:"Stop studying love. Start feeling it.", l2:"The right person doesn't need convincing.", l3:"10 minutes a day changes how we show up." }] },
+        { title:"What I wish I knew before I met my wife", l1:"Fixing myself wasn't the missing piece.", l2:"More books and courses didn't change who showed up.", l3:"Feeling it first is what made it real." },
+        { title:"3 things I'd tell my single self", l1:"Stop studying love. Start feeling it.", l2:"The right person doesn't need convincing.", l3:"10 minutes a day changes how we show up." }] },
     l_pov: { hint:"POV: one line over your photo, like the text on a Reel. Short and specific.",
       fields:[["pov", "POV line", 2]],
       bank:["POV: a normal Sunday with my wife", "POV: my 10 minutes before the day starts", "POV: I stopped reading dating books and started practising the feeling",
@@ -5954,6 +5985,292 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     showLayout(); render();
   };
   window.tsmRerender = function(){ render(); };
+  // ── Make a day of Stories (Olly, 2026-11-06) ──────────────────────────────────────────────────────────────────
+  // Claude plans 7 different Stories for one date and writes the text; this maker draws each one, so the alignment,
+  // auto-fit and drag/size controls are the ones Olly already uses. Per Story: Edit (opens it in the maker below,
+  // then "Save to batch"), Feedback + Redo, Add to calendar (to that date in the Hub, reusing one Hub tab).
+  // Variety: no template twice in a day, yesterday's Stories and the last 30 on the calendar are shown to Claude,
+  // plus the batches made on this device. Feedback notes are remembered (this device) and steer every new batch.
+  var DAY_T = [
+    { id:"lead_attract", kind:"lead", layout:"attractpage", type:"Lead gen", hint:ATTRACT_LEAD.hint, fields:[["text", "Hook, 4 to 9 words"]], ex:ATTRACT_HOOKS },
+    { id:"lead_video", kind:"lead", layout:"page", type:"Lead gen", hint:KINDS.lead.hint, fields:[["text", "Hook, 4 to 9 words"]], ex:HOOKS },
+    { id:"question", kind:"engagement", style:"", hint:KINDS.engagement.hint, fields:[["text", "The question, under 12 words"]], ex:QUESTIONS },
+    { id:"e_tot", kind:"engagement", style:"e_tot" },
+    { id:"e_rate", kind:"engagement", style:"e_rate" },
+    { id:"e_flags", kind:"engagement", style:"e_flags" },
+    { id:"aspire_photo", kind:"aspire", style:"", hint:KINDS.aspire.hint, fields:[["text", "Text on the image, under 10 words"]], ex:ASPIRE },
+    { id:"a_ba", kind:"aspire", style:"a_ba" },
+    { id:"a_check", kind:"aspire", style:"a_check" },
+    { id:"belief_told", kind:"belief", bstyle:"told", hint:KINDS.belief.hint + " Design: the old belief, then the crack underneath.", fields:[["old", "The old belief, as people say it, under 16 words"], ["crack", "The crack in it, under 14 words"]], ex:BELIEFS },
+    { id:"belief_crossed", kind:"belief", bstyle:"crossed", hint:KINDS.belief.hint + " Design: the old belief crossed out, the crack written under it.", fields:[["old", "The old belief, under 12 words"], ["crack", "The crack, under 12 words"]], ex:BELIEFS },
+    { id:"b_unpop", kind:"belief", bstyle:"unpop" },
+    { id:"b_wish", kind:"belief", bstyle:"wish" },
+    { id:"scale", kind:"scale", hint:KINDS.scale.hint, fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCALE_HOOKS },
+    { id:"science", kind:"science", sciStyle:"waves", hint:KINDS.science.hint, fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
+    { id:"s_dyk", kind:"science", sciStyle:"dyk" }
+  ];
+  DAY_T.forEach(function(t){
+    var kk = t.style ? t.style : t.bstyle && t.bstyle !== "told" ? "b_" + t.bstyle : t.sciStyle === "dyk" ? "s_dyk" : "";
+    if (kk && KT[kk]){ t.kt = kk; t.hint = KT[kk].hint; t.fields = KT[kk].fields.map(function(f){ return [f[0], f[1]]; }); t.ex = KT[kk].bank; }
+    t.type = t.type || STORY_CAL_TYPE[t.kind] || "";
+  });
+  function dayT(id){ return DAY_T.filter(function(t){ return t.id === id; })[0]; }
+
+  function dayApply(s){
+    var t = dayT(s.t); if (!t) return false;
+    var f = s.f || {};
+    st.kind = t.kind; st.calTitle = ""; st.calType = "";
+    if (t.layout) st.layout = t.layout;
+    if (t.bstyle) st.bstyle = t.bstyle;
+    if (t.sciStyle) st.sciStyle = t.sciStyle;
+    if (KSTY[t.kind]) st.ks[t.kind] = t.style || "";
+    var kk = ktKey();
+    if (kk){ var v = Object.assign({}, KT[kk].bank[0]); KT[kk].fields.forEach(function(x){ if (f[x[0]] != null) v[x[0]] = String(f[x[0]]); }); st.kt[kk] = v; }
+    else if (t.kind === "lead") st[kdef().text] = String(f.text || "");
+    else if (t.kind === "belief"){ if (f.old) st.oldB = String(f.old); if (f.crack) st.crack = String(f.crack); }
+    else if (t.kind === "scale"){ if (f.text) st.sc = String(f.text); if (f.bottom) st.scBottom = String(f.bottom); }
+    else if (t.kind === "science"){ if (f.text) st.sci = String(f.text); if (f.bottom) st.sciBottom = String(f.bottom); }
+    else st[KINDS[t.kind].text] = String(f.text || "");
+    return true;
+  }
+  function dayRead(t){
+    var kk = ktKey();
+    if (kk) return Object.assign({}, st.kt[kk]);
+    if (st.kind === "lead") return { text: st[kdef().text] };
+    if (st.kind === "belief") return { old: st.oldB, crack: st.crack };
+    if (st.kind === "scale") return { text: st.sc, bottom: st.scBottom };
+    if (st.kind === "science") return { text: st.sci, bottom: st.sciBottom };
+    return { text: st[(KINDS[st.kind] || {}).text] };
+  }
+  // draw twice: a render already running from showLayout() can't leave half a frame behind
+  async function dayDraw(){ showLayout(); await render(); await new Promise(function(r){ setTimeout(r, 80); }); await render(); }
+
+  var day = { date:"", items:[], editing:-1, busy:false };
+  function isoLocal(d){ return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function addDays(iso, n){ var d = new Date(iso + "T00:00:00"); d.setDate(d.getDate() + n); return isoLocal(d); }
+  function niceDay(iso){ return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"short" }); }
+  function daySave(){ store.set("dayBatch", { date:day.date, items:day.items.map(function(i){ return { t:i.t, title:i.title, f:i.f, sent:!!i.sent, fb:i.fb || "" }; }) }); }
+  function dayHist(){ var h = store.get("dayHist"); return Array.isArray(h) ? h : []; }
+  function dayHistSave(){
+    var h = dayHist().filter(function(x){ return x.date !== day.date; });
+    h.unshift({ date:day.date, items:day.items.map(function(i){ return { t:i.t, title:i.title }; }) });
+    store.set("dayHist", h.slice(0, 10));
+  }
+  function dayFb(){ var f = store.get("dayFb"); return Array.isArray(f) ? f : []; }
+  function dayFbAdd(note){ note = String(note || "").trim(); if (!note) return; var f = dayFb(); f.unshift(note); store.set("dayFb", f.slice(0, 15)); }
+
+  function dayContext(date){
+    var c = (typeof cal === "object" && cal && cal.data) || null;
+    var stories = (c && Array.isArray(c.stories)) ? c.stories : [];
+    var prev = addDays(date, -1);
+    var yCal = stories.filter(function(x){ return x.d === prev && x.t; }).map(function(x){ return "- " + (x.ty ? x.ty + ": " : "") + x.t; });
+    var yMine = (dayHist().filter(function(x){ return x.date === prev; })[0] || { items:[] }).items.map(function(i, n){ return "- Story " + (n + 1) + " (template " + i.t + "): " + i.title; });
+    var recent = stories.filter(function(x){ return x.t && x.d < date; }).sort(function(a, b){ return a.d < b.d ? 1 : -1; }).slice(0, 30).map(function(x){ return "- " + x.d + " " + (x.ty ? x.ty + ": " : "") + x.t; });
+    var other = dayHist().filter(function(x){ return x.date !== date && x.date !== prev; }).slice(0, 4).map(function(x){ return x.date + ": " + x.items.map(function(i){ return i.t; }).join(", "); });
+    var fb = dayFb();
+    return "\n\nYESTERDAY (" + niceDay(prev) + "). Today must feel clearly different: different topics, different lines, a different running order of templates, and don't reuse more than two of yesterday's templates:\n"
+      + ((yMine.concat(yCal)).join("\n") || "- nothing recorded")
+      + "\n\nRECENT STORIES ON THE CALENDAR (never repeat or write near copies of these):\n" + (recent.join("\n") || "- none synced")
+      + (other.length ? "\n\nTEMPLATES USED ON RECENT DAYS (rotate away from the ones used most):\n" + other.join("\n") : "")
+      + (fb.length ? "\n\nOLLY'S FEEDBACK ON EARLIER STORY BATCHES (most recent first). Apply all of it:\n" + fb.map(function(x){ return "- " + x; }).join("\n") : "");
+  }
+  function dayTemplates(){
+    return DAY_T.map(function(t){
+      return "- " + t.id + " (" + t.type + "): " + t.hint + "\n  fields: " + t.fields.map(function(f){ return f[0] + " = " + f[1]; }).join("; ")
+        + "\n  style examples (never copy): " + JSON.stringify((t.ex || []).slice(0, 3));
+    }).join("\n");
+  }
+  function dayPrompt(date, n, extra){
+    return "You plan Olly Henson's Instagram Stories for one day (The Attraction Formula: he helps singles attract a committed relationship by getting into the right emotional state around love). Each Story becomes a finished 1080 x 1920 image in his Story Image Maker: you pick a template and write its text. The maker sizes and places the text, so your only job is the words.\n\n"
+      + CORE + "\n\n" + RULES + "\n\n" + RESEARCH_FACTS
+      + "\n\nSTORY RULES\n- Stories are connection content. Reels carry the argument; Stories make people feel understood and keep them coming back. Show, don't lecture.\n- Use \"we\", \"us\" or \"most people\", never a \"you\" call-out that makes someone feel judged.\n- Every line must be short enough to read in two seconds. Respect each field's word limit; shorter is better.\n- Never the old story: no past relationship, breakup, 2019, years of trying or any teachers. Olly's only story: he worked on his emotional state every day, met his wife Jules and they both just knew.\n- Never say the right partner feels boring, flat or less exciting. Calm love is committed AND fun.\n- No manifestation words. Science only from the research list, worded carefully.\n- Engagement templates leave space for Instagram's poll, slider or question sticker; write lines that make a tap easy.\n"
+      + "\nTHE DAY: " + niceDay(date) + ". " + (n === 7 ? "Plan 7 Stories in posting order (first thing to evening). Mix: exactly 1 Lead gen (lead_attract most days, lead_video now and then), at least 5 different types across the 7 (Lead gen, Questions / entertainment, Aspiration, Belief breaking, Emotional scale, Science), never the same template twice in the day. Open with something light that gets a tap, put the Lead gen in the second half, and let the day build: relate, crack a belief, show the vision, invite." : "")
+      + dayContext(date) + (extra || "")
+      + "\n\nTEMPLATES (use the id exactly; fill every field it lists):\n" + dayTemplates()
+      + "\n\nReply as JSON only: {\"stories\":[{\"t\":\"template id\",\"title\":\"a 3 to 7 word label for the calendar\",\"f\":{\"field name\":\"text\"}}]}. Use \\n inside a field only where the field asks for one item per line.";
+  }
+  async function dayAsk(prompt){
+    if (!sampleFn) throw Object.assign(new Error("Claude isn't available in this view."), { code:"none" });
+    var r = await Promise.race([sampleFn.json(prompt, { cache:false }), new Promise(function(_, no){ setTimeout(function(){ no(Object.assign(new Error("timeout"), { code:"timeout" })); }, 150000); })]);
+    var list = (r && Array.isArray(r.stories)) ? r.stories : [];
+    return list.filter(function(s){ return s && dayT(s.t) && s.f && typeof s.f === "object"; });
+  }
+  async function dayRenderItem(it){
+    if (!dayApply(it)) return;
+    await dayDraw();
+    it.img = calImage(); it.thumb = $("tsm-preview").src; it.music = songsNow(); songsNext();
+  }
+
+  // ---- UI ----
+  var dayBox = el("div", "daybatch");
+  dayBox.innerHTML = '<style>'
+    + '.daybatch{border:1px solid var(--line,#e5e0ec);border-radius:14px;padding:14px;margin:12px 0 16px;background:var(--card2,rgba(138,43,226,.04))}'
+    + '.daybatch h4{margin:0 0 6px;font-size:16px}.daybatch .dayrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}'
+    + '.daybatch textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px;border-radius:8px;border:1px solid var(--line,#d9d2e3)}'
+    + '.daygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-top:12px}'
+    + '.daycard{border:1px solid var(--line,#e5e0ec);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;background:var(--card,#fff)}'
+    + '.daycard.editing{outline:3px solid #8a2be2}.daycard img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:8px;background:#eee;cursor:pointer}'
+    + '.daycard .dlab{font-size:12px;font-weight:700;color:#8a2be2;text-transform:uppercase;letter-spacing:.04em}.daycard .dttl{font-size:13px;line-height:1.3}'
+    + '.daycard .songs{font-size:11px;color:var(--muted,#6b6475);line-height:1.35}.daycard .btn{width:100%;justify-content:center;text-align:center;box-sizing:border-box}'
+    + '.dayedit{position:sticky;top:0;z-index:5;background:#8a2be2;color:#fff;border-radius:10px;padding:10px 12px;margin:8px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}'
+    + '.dayedit .btn{background:#fff;color:#4b0f7a}.dayedit[hidden]{display:none}'
+    + '</style>'
+    + '<h4>Make a day of Stories</h4><p class="hint">7 different Stories for one day, made in this maker so the text fits. Check each one, press Edit to change it below (then Save to batch), or write feedback and press Redo. Add to calendar sends it to that day in the Hub.</p>'
+    + '<div class="dayrow"><label class="label" for="day-date">Day</label><input type="date" id="day-date"><button type="button" class="btn primary" id="day-go">Write 7 Stories</button><span class="status" id="day-st" role="status"></span></div>'
+    + '<textarea id="day-note" rows="2" placeholder="Optional: anything for this day (a topic, a mood, what to avoid). Saved as feedback for future batches too."></textarea>'
+    + '<div id="day-editbar" class="dayedit" hidden></div>'
+    + '<div class="daygrid" id="day-grid"></div>'
+    + '<div class="dayrow" id="day-foot" hidden><span id="day-all" style="display:flex;gap:8px;flex-wrap:wrap"></span><button type="button" class="btn" id="day-redraw">Redraw all</button><span class="hint">Add to calendar opens the Hub. Leave that tab open: each next one lands in the same tab.</span></div>';
+  $("tsm-kinds").before(dayBox);
+  var dSt = dayBox.querySelector("#day-st"), dGrid = dayBox.querySelector("#day-grid"), dDate = dayBox.querySelector("#day-date");
+
+  function dayLink(it){
+    var payload = { title: it.title || "Story", type: (dayT(it.t) || {}).type || "", image: it.img || "", music: it.music || [], date: day.date };
+    return hubUrl() + "#addstory=" + encodeURIComponent(JSON.stringify(payload));
+  }
+  // Add all to calendar (Olly, 2026-11-06): every Story in one link (#addstories). About 1MB for 7 images fits one link;
+  // if a day runs bigger the images are re-saved smaller, and if it still doesn't fit it splits into 2 links.
+  var dayAllSeq = 0;
+  function dayRecode(src, q){ return new Promise(function(ok){ var im = new Image(); im.onload = function(){ var c = document.createElement("canvas"); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext("2d").drawImage(im, 0, 0); ok(c.toDataURL("image/jpeg", q)); }; im.onerror = function(){ ok(src); }; im.src = src; }); }
+  function dayAllLink(list, imgs){
+    return hubUrl() + "#addstories=" + encodeURIComponent(JSON.stringify({ date: day.date, items: list.map(function(it, k){ return { title: it.title || "Story", type: (dayT(it.t) || {}).type || "", image: imgs[k], music: it.music || [] }; }) }));
+  }
+  async function dayPrepAll(){
+    var host = dayBox.querySelector("#day-all"); if (!host) return;
+    var me = ++dayAllSeq; host.textContent = "";
+    var list = day.items.filter(function(i){ return i.img; });
+    if (!list.length) return;
+    var MAX = 1500000, parts = null, imgs = list.map(function(i){ return i.img; });
+    var qs = [0, 0.75, 0.65];
+    for (var k = 0; k < qs.length && !parts; k++){
+      if (qs[k]) { imgs = await Promise.all(list.map(function(i){ return dayRecode(i.img, qs[k]); })); if (me !== dayAllSeq) return; }
+      var one = dayAllLink(list, imgs);
+      if (one.length <= MAX) parts = [{ href:one, n:list.length }];
+    }
+    if (!parts){ var h = Math.ceil(list.length / 2); parts = [{ href:dayAllLink(list.slice(0, h), imgs.slice(0, h)), n:h }, { href:dayAllLink(list.slice(h), imgs.slice(h)), n:list.length - h }]; }
+    if (me !== dayAllSeq) return;
+    var allSent = list.every(function(i){ return i.sent; });
+    parts.forEach(function(p, k){
+      var a = el("a", "btn primary", (allSent ? "✓ Sent · send again" : parts.length > 1 ? "Add part " + (k + 1) + " of 2 to calendar" : "Add all " + p.n + " to calendar") + " (" + new Date(day.date + "T00:00:00").toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"short" }) + ")");
+      a.href = p.href; a.target = "ollyhub"; a.rel = "opener";
+      a.addEventListener("click", function(){
+        var from = k === 0 ? 0 : Math.ceil(list.length / 2), to = parts.length > 1 && k === 0 ? Math.ceil(list.length / 2) : list.length;
+        list.slice(from, to).forEach(function(i){ i.sent = true; }); daySave();
+        setTimeout(function(){ a.textContent = "✓ Sent to the calendar"; dGrid.querySelectorAll(".daycard").forEach(function(){}); }, 60);
+      });
+      host.appendChild(a);
+    });
+  }
+  function dayCards(){
+    dGrid.textContent = "";
+    day.items.forEach(function(it, n){
+      var t = dayT(it.t) || {};
+      var c = el("div", "daycard" + (day.editing === n ? " editing" : ""));
+      var img = el("img"); img.alt = "Story " + (n + 1); if (it.thumb) img.src = it.thumb;
+      img.onclick = function(){ dayEdit(n); };
+      c.append(img, el("div", "dlab", (n + 1) + " · " + t.type + (t.kt || t.bstyle ? "" : "")), el("div", "dttl", it.title || ""));
+      if (it.music && it.music.length) c.append(el("div", "songs", "♪ " + it.music.join(" · ")));
+      var ed = el("button", "btn small", day.editing === n ? "Editing below…" : "Edit"); ed.type = "button"; ed.onclick = function(){ dayEdit(n); };
+      var fb = el("textarea"); fb.rows = 2; fb.placeholder = "Feedback for this one"; fb.value = it.fb || ""; fb.oninput = function(){ it.fb = fb.value; daySave(); };
+      var redo = el("button", "btn small", "Redo with feedback"); redo.type = "button"; redo.onclick = function(){ dayRedo(n, redo); };
+      var a = el("a", "btn small primary", it.sent ? "✓ Sent · send again" : "Add to calendar");
+      a.target = "ollyhub"; a.rel = "opener";
+      var refresh = function(){ a.href = it.img ? dayLink(it) : "#"; };
+      refresh(); a.addEventListener("pointerdown", refresh); a.addEventListener("focus", refresh);
+      a.addEventListener("click", function(e){ if (!it.img){ e.preventDefault(); return; } refresh(); it.sent = true; daySave(); setTimeout(dayCards, 60); });
+      var del = el("button", "btn small", "Delete & replace"); del.type = "button"; del.title = "Drops this one and writes a different Story in its place. Your feedback says why.";
+      del.onclick = function(){ dayRedo(n, del, true); };
+      c.append(ed, fb, redo, del, a);
+      dGrid.appendChild(c);
+    });
+    dayBox.querySelector("#day-foot").hidden = !day.items.length;
+    if (!day.busy) dayPrepAll();
+    dayEditBar();
+  }
+  function dayEditBar(){
+    var bar = dayBox.querySelector("#day-editbar");
+    if (day.editing < 0 || !day.items[day.editing]){ bar.hidden = true; bar.textContent = ""; return; }
+    bar.hidden = false; bar.textContent = "";
+    var save = el("button", "btn small", "Save to batch"); save.type = "button";
+    var cancel = el("button", "btn small", "Cancel"); cancel.type = "button";
+    bar.append(el("span", "", "Editing Story " + (day.editing + 1) + ". Change the text, size or position below, then:"), save, cancel);
+    save.onclick = async function(){
+      var it = day.items[day.editing];
+      it.f = dayRead(dayT(it.t)); await render();
+      it.img = calImage(); it.thumb = $("tsm-preview").src; it.sent = false;
+      day.editing = -1; daySave(); dayCards(); dSt.textContent = "✓ Saved to the batch";
+    };
+    cancel.onclick = function(){ day.editing = -1; dayCards(); };
+  }
+  async function dayEdit(n){
+    var it = day.items[n]; if (!it || day.busy) return;
+    day.editing = n; dayApply(it); await dayDraw(); dayCards();
+    $("tsm-main").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+  async function dayRenderAll(){
+    day.busy = true;
+    for (var n = 0; n < day.items.length; n++){ dSt.textContent = "Drawing Story " + (n + 1) + " of " + day.items.length + "…"; await dayRenderItem(day.items[n]); dayCards(); }
+    day.busy = false; dayPrepAll(); dSt.textContent = "✓ " + day.items.length + " Stories for " + niceDay(day.date) + ". Check each one.";
+  }
+  function dayErr(e){ return e && e.code === "rate_limited" ? "Too many requests just now. Try again in a minute." : e && e.code === "timeout" ? "Claude took too long. Try again." : (e && e.message) || "Something went wrong. Try again."; }
+  dayBox.querySelector("#day-go").onclick = async function(){
+    var b = this; if (day.busy) return;
+    var date = dDate.value || addDays(isoLocal(new Date()), 1);
+    var note = dayBox.querySelector("#day-note").value.trim();
+    b.disabled = true; day.busy = true; dSt.className = "status"; dSt.textContent = "Writing 7 Stories for " + niceDay(date) + "…";
+    try {
+      var list = await dayAsk(dayPrompt(date, 7, note ? "\n\nOLLY'S NOTE FOR THIS DAY: " + note : ""));
+      var seen = {}; list = list.filter(function(s){ if (seen[s.t]) return false; seen[s.t] = 1; return true; }).slice(0, 7);
+      if (list.length < 5) throw new Error("Claude didn't return enough Stories. Try again.");
+      if (note) dayFbAdd(note);
+      day.date = date; day.editing = -1;
+      day.items = list.map(function(s){ return { t:s.t, title:String(s.title || "").trim(), f:s.f }; });
+      daySave(); dayHistSave(); dayCards();
+      day.busy = false; await dayRenderAll();
+    } catch(e){ dSt.className = "status err"; dSt.textContent = dayErr(e); }
+    day.busy = false; b.disabled = false;
+  };
+  // replace = Delete & replace (Olly, 2026-11-06): the Story is dropped, the feedback is remembered as a dislike, and a
+  // completely different Story (another template) takes its place
+  async function dayRedo(n, btn, replace){
+    var it = day.items[n]; if (!it || day.busy) return;
+    var fb = String(it.fb || "").trim();
+    btn.disabled = true; day.busy = true; dSt.className = "status"; dSt.textContent = (replace ? "Replacing Story " : "Rewriting Story ") + (n + 1) + "…";
+    if (replace){ it.thumb = ""; dayCards(); }
+    try {
+      var others = day.items.filter(function(x, k){ return k !== n; }).map(function(x){ return "- " + x.t + ": " + x.title; }).join("\n");
+      var extra = "\n\nREWRITE ONE STORY ONLY: Story " + (n + 1) + " of " + day.items.length + ".\nCurrent version: " + JSON.stringify({ t:it.t, title:it.title, f:it.f })
+        + (replace ? "\nOlly DELETED this Story. Why: " + (fb || "no reason given") + "\nWrite a completely different Story in its place: a different template, topic and angle, never close to the deleted one, and never a template another Story that day already uses.\nThe other Stories that day (stay clearly different from them):\n" + others
+        : "\nOlly's feedback on it: " + (fb || "none given: write a fresher, stronger version with a different angle")
+        + "\nKeep the same template unless the feedback asks for something else, and never use a template another Story that day already uses.\nThe other Stories that day (stay clearly different from them):\n" + others)
+        + "\nReturn exactly 1 story in the array.";
+      var list = await dayAsk(dayPrompt(day.date, 1, extra));
+      if (!list.length) throw new Error("Claude didn't return a Story. Try again.");
+      if (replace) dayFbAdd("Deleted a " + ((dayT(it.t) || {}).type || it.t) + " Story (" + it.t + ") titled \"" + it.title + "\"" + (fb ? " because: " + fb : ""));
+      else if (fb) dayFbAdd(fb);
+      var s = list[0];
+      day.items[n] = { t:s.t, title:String(s.title || "").trim(), f:s.f, fb:"" };
+      daySave(); dayHistSave();
+      await dayRenderItem(day.items[n]); if (day.editing === n) day.editing = -1; dayCards();
+      dSt.textContent = "✓ Story " + (n + 1) + " rewritten";
+    } catch(e){ dSt.className = "status err"; dSt.textContent = dayErr(e); }
+    day.busy = false; btn.disabled = false; dayPrepAll();
+  }
+  dayBox.querySelector("#day-redraw").onclick = function(){ if (!day.busy) dayRenderAll(); };
+  // reopen on the last batch (texts only: images are redrawn when the box is opened)
+  (function(){
+    dDate.value = addDays(isoLocal(new Date()), 1);
+    var b = store.get("dayBatch");
+    if (b && Array.isArray(b.items) && b.items.length && b.date >= isoLocal(new Date())){
+      day.date = b.date; dDate.value = b.date;
+      day.items = b.items.filter(function(i){ return dayT(i.t); });
+      dayCards();
+      var drawn = false, box = document.getElementById("tsmBox");
+      var go = function(){ if (drawn || !box.open) return; drawn = true; dayRenderAll(); };
+      box.addEventListener("toggle", go); setTimeout(go, 400);
+    }
+  })();
+
   window.tsmLoad = function(o){
     st.calTitle = o.title || ""; // the Story idea's title, so Add to calendar joins the image to it in the Hub
     st.calType = o.ideaType || "";
