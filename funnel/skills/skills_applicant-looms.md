@@ -234,7 +234,7 @@ Mark them **Not a fit**.
 
 - **Frankie's words come from his material, never from memory.** His slide doc (`marketing/loom info/Watch Me Make A Loom Video.md`) has no follow-up wording; Olly pasted the full workshop transcript in chat (not saved on disk). If a source doesn't say it, say so and ask for the transcript; don't write a message and call it his.
 - **Frankie's process = Hand Raiser → Pre-Sell the Plan → Loom Video → Follow-Up → Cash In.** The step after the hand raiser is pre-selling the plan, not price qualifying. Our pre-sell for applicants is the voice note (Olly's idea): people apply from the training, the Feeling Finder or emails, so don't assume they've seen the plan.
-- **The pre-sell carries no price.** Intro text ("Just got your application… here's how I think I could help you with this 👇") → voice note with their plan (what they want, how long, the 3 steps) ending "If you want me to send you the details of the program…" → email saying "I've sent you a message on WhatsApp". Email-only people get the plan written out.
+- **The pre-sell carries no price.** Intro text ("Just got your application, thanks for filling it in. Give me a few minutes. I'm recording you a quick voice note with a plan of how I'd help you with this.") → voice note with their plan (what they want, how long, the 3 steps) ending "If you want me to send you the details of the program…" → email saying "I've sent you a message on WhatsApp". Email-only people get the plan written out.
 - **Show every message's full text.** Olly: "I need to see the text of each one though without having to open it." No collapsed boxes for message wording on planning pages.
 - **The sales video never offers private messaging or calls.** Removed "you can message me privately and we jump on a call when you need one"; keep "I reply within 24 hours".
 - **Record over slides, not a mind map** (`funnel/sales-video-mind-map.html`, artifact 7s6q3K9hwqGouNrKnqiG6H). Every piece of text editable (titles too), rows can be added, moved (↑↓) and deleted, full screen hides every control, text shrinks to fit. Tapping the slide edge changes slide only on empty background (deleting a row near the edge used to jump slides).
@@ -243,9 +243,22 @@ Mark them **Not a fit**.
 
 - **The VSL is unlisted YouTube: https://youtu.be/PhcbPYPfUU0** (recorded over the slides, 2026-11-06). Olly went with YouTube, not Loom, so there's no "they watched" notification: only send the 💡 follow-up idea when you know they watched (they said so, or replied about it).
 
+## Rules from the 2026-11-07 session
+
+- **Every message must make sense the moment it lands.** The intro text goes out before the voice note is recorded, so it says the voice note is coming (Olly: "if they get it and then I'm still recording the voice note, it doesn't really make sense"). Overrides "Here's how I think I could help you with this 👇".
+- **No WhatsApp = iMessage.** Most applicants with an iCloud email have an iPhone. iMessage works over Wi-Fi (Olly is often on Wi-Fi only) and takes voice notes. If the number turns blue in Messages, run the same flow there; green = SMS (needs signal, international cost, no voice notes), so email only. The card switches to iMessage by itself when their application says they don't have WhatsApp.
+- **A personal email, when Olly asks for one, is built from their own answers:** acknowledge what they shared in one or two kind lines, say what they want in their words, then the 3 steps each tied to their answers (the person: their listed qualities; the feeling: what they feel now vs what they want; daily practice: why their current state shapes who they notice, who they're drawn to and how they show up), name what they've already tried and say this isn't more learning, end by asking if they'd like the video on how the program works. No price. It goes on their card for Olly to check before he sends it.
+- **Leave out sensitive details about other people** (an ex's diagnosis, private history) even when the applicant wrote them. Use the feeling, not the story.
+- **Flag a budget mismatch before the video:** if their "willing to invest" answer is under the annual price (e.g. "Under $500"), tell Olly the monthly fits and the annual probably won't.
+- **Stuck typing dots ("..." for an hour) are an app glitch** (iMessage keeps them when someone leaves text in the box; WhatsApp needs a restart). Do nothing and don't message about it: same as no chasing.
+
 ### Never
+- Never put an applicant's name or answers in a file in this repo (it's public). Drafts live on their Hub card (KV).
+- Never send an intro that promises something ("here's how 👇") before that thing exists.
 - Never ask applicants about price before the video (overrides the 2026-11-04/05 price check).
 - Never send a follow-up to someone who hasn't watched, and never one that asks if they've seen it.
 
 - **2026-11-06: Skill review.** Price check replaced by intro text + voice note + email (Olly: people come from different entry points, so the voice note pre-sells the plan; price moves into the video). Follow-up reframed as Frankie's "go deeper" message, pending Olly's pick. Added the slides/recording rules (editable titles, row controls, full screen via the local copy, pictures per Frankie, blur members) and the "quote Frankie only from his material" rule. Overridden: Step 7's price check, the "Price check sent" column name.
 - **2026-11-06: Skill review (2).** New VSL link (PhcbPYPfUU0) replaces wghvWJJ6YVk everywhere; hosting decision = unlisted YouTube, so the follow-up rule now says how to know they watched without Loom.
+
+- **2026-11-07: Skill review.** Intro text now says a voice note plan is coming (the old "Here's how I think I could help 👇" made no sense while he was still recording). Added the iMessage route for people without WhatsApp (blue = voice notes over Wi-Fi, green = email only), how to write a personal email from their answers (example structure, no names: the repo is public), leave out sensitive third-party details, flag budget vs the annual price, and stuck typing dots = do nothing. Overridden: the 👇 intro wording.

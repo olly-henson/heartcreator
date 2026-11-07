@@ -4,7 +4,7 @@ Olly approves a finished Reel on the upload page -> this books the next free pos
 media library, and creates one scheduled Social Planner post per platform with that platform's own caption.
 
 - Slots (Windhoek time, UTC+2, no daylight saving), filled in this order each day: 18:00, 19:30, 21:00 (his audience's
-  peak), 08:00, then 23:30, 11:00, 13:30, 16:00, 05:00, 02:00. Max 10 a day; a matched Reel goes on its calendar date
+  peak), 08:00, then 23:30, 11:00, 13:30, 16:00, 05:00, 02:00. Max 6 a day (MAX_A_DAY); a matched Reel goes on its calendar date
   first (or the next day with a free slot). Never sooner than 20 minutes from now.
 - Captions exactly as the Hub's per-platform templates (Olly: keep the layout). YouTube title = the hook.
 - Key: GHL_PIT_TOKEN + GHL_LOCATION_ID in marketing\\.env ('Claude agent' Private Integration: socialplanner post +
@@ -64,7 +64,8 @@ def accounts():
     return out
 
 
-MIN_A_DAY = 4  # Olly 2026-11-04: minimum 4, maximum 10 a day
+MIN_A_DAY = 4  # Olly 2026-11-04: minimum 4 a day
+MAX_A_DAY = 6  # Olly 2026-11-07: maximum 6 a day (was 10), so a batch of recordings lasts longer. A full day pushes to the next.
 
 # Spacing by how many Reels the day has (Olly 2026-11-04: "space out the reels better depending on how many are
 # scheduled ... still with an emphasis on the US time zones"). Windhoek = US Eastern +7h, Pacific +10h (Nov).
@@ -94,7 +95,7 @@ def day_of(iso):
 def day_slots(d, n):
     """The n spread-out slots for posting day d, as UTC ISO strings in time order."""
     out = []
-    for t in SPREAD[max(1, min(10, n))]:
+    for t in SPREAD[max(1, min(MAX_A_DAY, n))]:
         hhmm, plus = (t.split("+") + ["0"])[:2]
         hh, mm = map(int, hhmm.split(":"))
         dd = d + timedelta(days=int(plus))
@@ -116,11 +117,14 @@ def next_slot(taken, want_date=None, now=None, targets=None, counts=None):
         per_day[day_of(t)] = per_day.get(day_of(t), 0) + 1
     for _ in range(90):
         tgt = int(targets.get(d.isoformat(), MIN_A_DAY))
-        n = max(tgt, int(counts.get(d.isoformat(), 0)))
+        n = min(MAX_A_DAY, max(tgt, int(counts.get(d.isoformat(), 0))))
+        if per_day.get(d, 0) >= MAX_A_DAY:
+            d += timedelta(days=1)
+            continue
         if not on_time and (tgt == 0 or per_day.get(d, 0) >= n):
             d += timedelta(days=1)
             continue
-        for iso in day_slots(d, max(n, per_day.get(d, 0) + 1)):
+        for iso in day_slots(d, min(MAX_A_DAY, max(n, per_day.get(d, 0) + 1))):
             dt = datetime.strptime(iso, "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=timezone.utc)
             if dt > now + LEAD and iso not in taken:
                 return iso

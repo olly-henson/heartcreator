@@ -127,6 +127,9 @@ Notes on fields that aren't obvious:
 ## 4. House conventions (follow these, don't reinvent)
 
 ### Never
+- Never put a full-screen pop-up's close button (or anything tappable) at the very top without `env(safe-area-inset-top)`. The Hub runs full screen on Olly's iPhone (`viewport-fit=cover` + black-translucent status bar), so the Sales pop-up's X sat under the clock and couldn't be tapped (2026-11-07: "it makes the X ... not in the right place"). Header gets `padding-top: calc(env(safe-area-inset-top) + 10px)`, close buttons 44px.
+- Never put an applicant's name, answers or a drafted message in `index.html` or any repo file (the repo is public). Per-applicant drafts live in KV: `state.looms[id].draftEmail = { subject, body }`, shown on their card as "Personal email for <name>".
+- Never let the Reels calendar fill a day past 6 (`DAILY_REEL_TARGET = 6`; `reelTarget()` clamps saved day numbers to it). Must match `MAX_A_DAY` in `reels/ghl_poster.py`.
 - Never tell Olly to refresh or reload the Hub without first telling him to press Save and check it says "saved". Routine ticks save themselves, calendar edits don't; on 2026-11-04 I said "hard-refresh" for a deploy and his unsaved calendar changes were lost (he had to re-add them).
 - Never draw a tab only from its tab-button click. The Hub reopens on the last tab used (and ↻ Refresh reloads into it), so a tab that renders itself must also render at boot when it's the restored tab. Looms stayed blank after Refresh until this was fixed (2026-11-02).
 - Never show a cached copy of live GHL data when Olly comes back to it. Looms refetches on every tab open and on `visibilitychange`; a brand-new applicant was missing because the list was the one loaded at startup (2026-11-02).
@@ -260,6 +263,12 @@ Notes on fields that aren't obvious:
 
 ---
 
+### Added 2026-11-07 (Sales pop-up on the phone, iMessage, drafts)
+- **Phone pop-ups are tight:** every send row is one line (label left, WhatsApp/iMessage/Email buttons right, label wraps to 2 lines if needed), each checklist step is label + buttons on one row, Details/Mind map tabs share the full width, `overscroll-behavior: contain` on the overlay. Olly: "more functional and a little bit tighter for mobile". The whole card went from 2 screens to about 1.3.
+- **Test the pop-up at 390px with a mock applicant** (scratch script: override `window.fetch` for `/api/applicants`, click the Sales tab, click a `.lmbc2` card, screenshot top + scrolled, log the X's bounding box). Puppeteer can't fake the iPhone safe area, so tell Olly that part is unverified.
+- **Messaging app per applicant:** `state.looms[id].msgApp = "wa" | "im"`. "Text them on WhatsApp | iMessage" switch at the top of Send; iMessage rewrites every `wa.me` link to `sms:+<number>&body=` (no target=_blank), blue `#0a84ff`, and relabels checklist steps 1-2. Defaults to iMessage when any application answer says they don't have WhatsApp (`lmUsesIm()`).
+- **Writing a draft into KV from outside the app:** fetch the record fresh, set the field, `rev + 1`, put it back, then tell Olly to close and reopen the Hub before looking (his open copy would otherwise save over it).
+
 ### Added 2026-11-05 (Sales tab, Remove from GHL)
 - **Scaling a fixed 1600x900 stage: use CSS `zoom`, never `transform: scale()`.** Scaled layers (anything with opacity/filter transitions) render blurry ("part of it is blurred"). Applies to the Sales mind map and any recorded map page.
 - **Sales tab = board first.** Olly: the mind map "takes up too much room on desktop and on the phone". Main view = columns + money tiles; details + mind map live in a pop-up. Keep columns fitting one desktop screen (min ~145px each); on phones swipe sideways with snap.
@@ -299,6 +308,7 @@ Notes on fields that aren't obvious:
 
 ## Changelog
 
+- **2026-11-07: Skill review.** Never: tappable things at the top of a full-screen pop-up without the safe-area inset (the Sales X was under the iPhone clock); applicant data or drafts in repo files (public repo, drafts go in KV); Reels days past 6. Added: phone pop-up layout rules + how to test it, the WhatsApp/iMessage switch (`msgApp`), and how to write a KV draft safely. Overridden: Reels max 10 a day (now 6).
 - **2026-11-04 (later): Skill review.** Never: tell Olly to refresh without Save first (his calendar edits were lost after I said hard-refresh). Design principle: routine ticks for Email / YouTube count in the score (TICK_KINDS), since he schedules those outside the Hub. Pitfall: check the live KV record first when something "didn't save" or a score looks wrong.
 
 - **2026-10-28 — Skill review 2 (Looms tab).** Data model: `state.looms`. Never: `/api/applicants` is the one Function allowed to return names (behind Access, read-only). Design principles: recorded views speak to the viewer ("you"), work-through lists get Archive + filters in Olly's order with Newest as the default every time, one copy button per link. Pitfall: apostrophes in single-quoted JS strings. Why: each came from Olly's requests and one failed deploy while building the Looms tab.

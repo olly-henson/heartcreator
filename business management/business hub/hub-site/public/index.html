@@ -40,6 +40,12 @@
   .lmcon .lmcopy{ flex:1; min-width:0; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; background:var(--surface); color:inherit; border:1px solid var(--border-soft); border-radius:8px; padding:7px 9px; font:inherit; font-size:13px; cursor:pointer; }
   .lmcon a{ flex:none; padding:7px 10px; border-radius:8px; background:#25a35a; color:#fff; font-size:13px; font-weight:600; text-decoration:none; }
   .lmcon a[href^="mailto"]{ background:#7b4fd6; }
+  .lmcon a[href^="sms"]{ background:#0a84ff; }
+  .lmapptog{ font-size:12.5px; }
+  .lmapptog span{ opacity:.7; margin-right:2px; }
+  .lmapptog button{ font:600 12px/1 inherit; padding:7px 11px; border-radius:999px; border:1px solid var(--border-soft); background:transparent; color:inherit; cursor:pointer; }
+  .lmapptog button[aria-pressed="true"][data-app="wa"]{ background:#25a35a; border-color:#25a35a; color:#fff; }
+  .lmapptog button[aria-pressed="true"][data-app="im"]{ background:#0a84ff; border-color:#0a84ff; color:#fff; }
   /* message rows (2026-11-04): name full width, the two send buttons share the line under it */
   .lmcon.lmmsg{ flex-wrap:wrap; }
   .lmcon.lmmsg .lmcopy{ flex-basis:100%; }
@@ -113,6 +119,32 @@
   .lmsheetbody{ padding:16px; display:flex; flex-direction:column; gap:10px; }
   .lmdetail{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; cursor:default; padding:0; }
   @media (max-width:760px){ .lmdetail{ grid-template-columns:minmax(0,1fr); } .lmdetail .lmdcol:last-child{ order:-1; } .lmmodal{ padding:0; } .lmsheet{ border-radius:0; min-height:100%; } .lmsheethead{ border-radius:0; } }
+  /* Phone pass (2026-11-07): the Hub runs full screen under the iPhone status bar, so the X sat under the clock. Header clears the safe area, X is a big tap target, rows are tighter. */
+  .lmmodal{ overscroll-behavior:contain; }
+  @media (max-width:760px){
+    .lmsheet{ min-height:100dvh; padding-bottom:env(safe-area-inset-bottom, 0px); }
+    .lmsheethead{ padding:calc(env(safe-area-inset-top, 0px) + 10px) 60px 10px 14px; gap:8px; }
+    .lmwho{ min-width:0; } .lmwho b{ font-size:17px; } .lmwho .sub{ font-size:12px; }
+    .lmtabs{ width:100%; } .lmtabs button{ flex:1; padding:8px 10px; }
+    .lmx{ top:calc(env(safe-area-inset-top, 0px) + 8px); right:10px; width:44px; height:44px; font-size:20px; background:var(--surface-2); }
+    .lmsheetbody{ padding:12px 14px 20px; gap:8px; }
+    .lmdetail{ gap:6px; }
+    .lmdh{ margin:14px 0 4px; }
+    .lmcon{ margin-top:5px; gap:5px; }
+    .lmcon .lmcopy{ padding:8px 9px; }
+    .lmcon.lmmsg{ flex-wrap:nowrap; align-items:stretch; }
+    .lmcon.lmmsg .lmcopy{ flex:1 1 auto; flex-basis:auto; white-space:normal; line-height:1.3; }
+    .lmcon.lmmsg a{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; padding:7px 9px; font-size:12.5px; }
+    .lmcon.lmmsg:has(details){ flex-wrap:wrap; }
+    .lmcon.lmmsg:has(details) .lmcopy{ flex-basis:100%; }
+    .lmvn summary{ font-size:13px; padding:2px 2px 0; }
+    .lmstg{ gap:8px; }
+    .lmstep{ flex-wrap:nowrap; }
+    .lmstep small{ flex:1 1 auto; flex-basis:auto; margin:0; }
+    .lmstep:has(> small:last-child), .lmstep:has(> span){ flex-wrap:wrap; }
+    .lmstg button{ padding:7px 11px; font-size:12.5px; }
+    .lmrate button{ padding:8px 12px; }
+  }
   .lmdh{ display:block; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.6; margin:12px 0 4px; }
   .lmdcol > .lmdh:first-child{ margin-top:0; }
   @media (max-width:760px){ .lmbox{ display:none; } .lmstack{ display:flex; } }
@@ -3602,14 +3634,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // nothing to retype once the real numbers come in. `synced` stops that
   // happening twice if the date gets changed later.
   var DOW_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  var DAILY_REEL_TARGET = 10; // most a day fills to (2026-11-04, was 3): Reel auto-editor makes recording the only job
+  var DAILY_REEL_TARGET = 6; // most a day fills to (Olly 2026-11-07: 6, was 10) so a recording batch lasts; reels/ghl_poster.py MAX_A_DAY matches
   var DAILY_REEL_MIN = 4;
   // Per-day Reel number (Olly 2026-11-04: "for each day ... a drop-down of how many, 0 up to 10"): state.reelDayTarget
   // = { "YYYY-MM-DD": n }. Unset days = DAILY_REEL_MIN. Drives the calendar count, auto-slotting, the consistency score
   // and (via /api/track/reels) which days the laptop tops up with late Reels. 0 = a rest day.
   function reelTarget(iso){
     var m = state.reelDayTarget || {};
-    return Object.prototype.hasOwnProperty.call(m, iso) ? Number(m[iso]) : DAILY_REEL_MIN;
+    return Object.prototype.hasOwnProperty.call(m, iso) ? Math.min(DAILY_REEL_TARGET, Number(m[iso])) : DAILY_REEL_MIN;
   }     // Olly 2026-11-04: minimum 4, maximum 10 a day; 4 = the score target (weekends / busy days), 10 = a great day
   var ideaTableBuiltForCount = -1;
   var calCursor = new Date(); // which month the calendar is showing — restored from uiLoad() in boot()
@@ -5360,8 +5392,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     function btn(k, label){ return '<button type="button" data-act="' + k + '" aria-pressed="' + !!on[k] + '">' + label + "</button>"; }
     function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
     return '<div class="lmstg">' +
-      row("1", "I messaged them", btn("waSent", "WhatsApp") + btn("emSent", "Email")) +
-      row("2", "They replied", btn("waReply", "WhatsApp") + btn("emReply", "Email")) +
+      row("1", "I messaged them", btn("waSent", lmUsesIm(a) ? "iMessage" : "WhatsApp") + btn("emSent", "Email")) +
+      row("2", "They replied", btn("waReply", lmUsesIm(a) ? "iMessage" : "WhatsApp") + btn("emReply", "Email")) +
       row("3", "VSL", btn("loom", "VSL sent")) +
       row("4", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
       '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("nofit", "Not a fit") + "</div>" +
@@ -5407,8 +5439,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   window.addEventListener("resize", lmFit);
   document.addEventListener("fullscreenchange", function(){ setTimeout(lmFit, 60); });
   // Tap-to-copy WhatsApp + email on each applicant card, with buttons that open WhatsApp / a new email (2026-11-01).
+  // iMessage option (Olly, 2026-11-07): for applicants without WhatsApp, every WhatsApp button becomes an iMessage one (sms: link, opens
+  // the Messages app, goes as iMessage over Wi-Fi if their number is blue). Per applicant: state.looms[id].msgApp = "wa" | "im".
+  // Default is iMessage when their application says they don't have WhatsApp.
+  function lmUsesIm(a){
+    var s = lmStore(a.id);
+    if (s.msgApp) return s.msgApp === "im";
+    return Object.keys(a.fields || {}).some(function(k){ return /(don.?t|do not|no) (have |use )?whats ?app/i.test(String(a.fields[k])); });
+  }
   function lmContact(a){
-    var h = "", ph = (a.phone || "").replace(/[^\d]/g, "");
+    var h = "", ph = (a.phone || "").replace(/[^\d]/g, ""), im = lmUsesIm(a);
+    if (ph) h += '<div class="lmcon lmapptog"><span>Text them on</span><button type="button" data-app="wa" aria-pressed="' + !im + '">WhatsApp</button><button type="button" data-app="im" aria-pressed="' + im + '">iMessage</button></div>';
     if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + '</button><a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", it's Olly Henson here. Your application for the Heart Attractor Program was successful.\n\nPlease can you reply 'YES' to this message and I'll send you the details about how the program works and what's included.\n\nThank you,\nOlly") + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a></div>';
     if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + '</button><a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your application was successful") + '&body=' + encodeURIComponent("Hi " + (a.firstName || "there") + ",\r\n\r\nI’m happy to say that your application for The Heart Attractor Program was successful.\r\n\r\nPlease could you reply to my WhatsApp and I’ll send you more details about how the program works and what’s included.\r\n\r\nThank you,\r\n\r\nOlly") + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a></div>';
     // Intro text + voice note plan + emails (Olly, 2026-11-06, from Frankie Fihn's "pre-sell the plan"). Replaces the
@@ -5420,11 +5461,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var seen = wants && howLong ? "I can see you want " + wants + ", and you've been looking for " + howLong + "."
       : wants ? "I can see you want " + wants + "." : howLong ? "I can see you've been looking for " + howLong + "." : "";
     var PLAN = "It comes down to three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.";
-    var intro = "Hey " + nm + ", it's Olly. Just got your application, thanks for filling it in.\n\nHere's how I think I could help you with this 👇";
+    var intro = "Hey " + nm + ", it's Olly. Just got your application, thanks for filling it in.\n\nGive me a few minutes. I'm recording you a quick voice note with a plan of how I'd help you with this.";
     var vnote = ["Hey " + nm + ", it's Olly. Thanks for applying, I've read through everything.", seen,
       "The way I help with this is three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.",
       "If you want me to send you the details of the program and how we'd do this together, just let me know and I'll send them over."].filter(Boolean).join("\n\n");
-    var emWa = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nI've sent you a message on WhatsApp with a plan of how I'd help you with this. Have a listen and let me know what you think.\n\nOlly";
+    var emWa = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nI've sent you a message on " + (im ? "text" : "WhatsApp") + " with a plan of how I'd help you with this. Have a listen and let me know what you think.\n\nOlly";
     var emOnly = ["Hey " + nm + ",", "Just got your application, thanks for filling it in.", seen, "Here's how I'd help you with this. " + PLAN,
       "If you want me to send you the details of the program and how we'd do this together, just reply to this email and I'll send them over.", "Olly"].filter(Boolean).join("\n\n");
     function lmMail(subj, body, k){ return a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body.replace(/\n/g, "\r\n")) + '"' + (k ? ' data-k="' + k + '" data-id="' + a.id + '"' : "") + ' onclick="event.stopPropagation()">Email</a>' : ""; }
@@ -5432,7 +5473,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(intro) + '">👋 1. Intro text</button>' + lmWa(intro, "waSent") + "</div>";
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(vnote) + '">🎙️ 2. Voice note plan (copy)</button>'
       + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it while recording</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(vnote) + "</p></details></div>";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(emWa) + '">✉️ 3. Email: check WhatsApp</button>' + lmMail("Got your application", emWa, "emSent") + "</div>";
+    // Personal email Claude drafted for this applicant (2026-11-07): stored in KV as state.looms[id].draftEmail = { subject, body }, never in this file (public repo)
+    var dr = lmStore(a.id).draftEmail;
+    if (dr && dr.body) h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(dr.body) + '">✍️ Personal email for ' + lmEsc(a.firstName || "them") + ' (copy)</button>' + lmMail(dr.subject || "Got your application", dr.body, "emSent")
+      + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it: ' + lmEsc(dr.subject || "") + '</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(dr.body) + "</p></details></div>";
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(emWa) + '">✉️ 3. Email: check ' + (im ? "your messages" : "WhatsApp") + '</button>' + lmMail("Got your application", emWa, "emSent") + "</div>";
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(emOnly) + '">✉️ Email only (plan written out)</button>' + lmMail("Got your application", emOnly, "emSent") + "</div>";
     // Sales video (2026-11-05): one master video (unlisted YouTube) for everyone who says the price is within reach.
     // Sending it marks them Loom sent. Script + map: funnel/sales-video-script.md, funnel/sales-video-map.html.
@@ -5453,6 +5498,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", great - here's the link to join: " + JOIN) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a>' : "")
       + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your link to join The Heart Attractor Program") + '&body=' + encodeURIComponent(joinMail) + '" onclick="event.stopPropagation()">Email</a>' : "")
       + "</div>";
+    if (im) h = h.replace(/href="https:\/\/wa\.me\/(\d+)\?text=([^"]*)" target="_blank" rel="noopener"/g, 'href="sms:+$1&body=$2"').replace(/>WhatsApp<\/a>/g, ">iMessage</a>");
     return h;
   }
   document.addEventListener("click", function(e){
@@ -5673,6 +5719,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     }
     host.querySelectorAll(".lmapp").forEach(function(el){
       var nt = el.querySelector(".lmnote");
+      el.querySelectorAll("[data-app]").forEach(function(b){ b.addEventListener("click", function(){ lmStore(el.dataset.id).msgApp = b.dataset.app; markDirty(); renderLooms(); }); });
       if (nt) nt.addEventListener("input", function(){ lmStore(el.dataset.id).note = nt.value; markDirty(); });
       el.querySelectorAll(".lmrate button").forEach(function(b){ b.addEventListener("click", function(){ var s2 = lmStore(el.dataset.id); s2.rating = s2.rating === b.dataset.r ? "" : b.dataset.r; markDirty(); renderLooms(); }); });
       el.querySelectorAll(".lmstg button").forEach(function(b){ b.addEventListener("click", function(){
