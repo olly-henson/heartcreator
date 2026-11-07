@@ -205,6 +205,12 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 - `engaged recently` = opened/clicked in the last 14 days. 'Email engagement' workflow (open +1, click +3, Last Engaged = today) removes + re-adds the contact to 'Engaged recently timer' (add tag, wait 14 days, remove tag). 'Start engaged timer for new subscribers' starts the timer when `daily email list` is added (skips `attract with olly`).
 - Claude agent key (marketing\.env) has contacts.write + workflows.readonly since 2026-11-04, so Claude adds/removes tags itself. New scopes take ~1 minute to work.
 
+### Scheduling the daily email + checking what's scheduled (2026-11-07)
+- **One daily email a day, in the evening Cape Town time.** No day empty, no two on the same day.
+- **GHL account timezone = Africa/Harare (CAT, GMT+2, = Cape Town all year)** since 2026-11-07 (Settings → Business Profile → Time Zone). It was Europe/London, so the date picker said one day and the campaign page showed another (10 PM picked = midnight Cape Town = next day). If dates look off again, check this setting first. Never pick Africa/Cairo: Egypt has summer time, so it drifts an hour.
+- **To check:** `node tools/ghl-email-schedule.mjs` lists the last sent and next scheduled campaigns in Cape Town time (subject, time, how many it went to).
+- **When Olly asks "is it scheduled right?", answer exactly what he wants to check:** last email sent + next ones scheduled, Cape Town time, one line each. Then flag any gap or double day. Explanations of why come after, short.
+
 ### Process for any change to lists, tags or workflows
 1. Read the record of what's already built (this section + NEXT.md) and check live tag counts through the API BEFORE proposing anything. State back what exists first.
 2. Recency = a tag + a timer workflow. GHL smart-list date filters only offer is / is not / empty: never plan "within the last N days".
@@ -940,3 +946,5 @@ Extracted from ~40 pages of screenshots of "The Email Player's Playbook" by Ben 
 **2026-11-04 (late) — List tiers + names.** Lessons: Olly renamed the smart lists ("use the new names") -> names table + Never rule (overrides Warm/Cold/Engaged wording above). "You've missed a lot of what you've done before" -> Process step 1 (read the build + check live tags first) after I proposed a new tag + timer that already existed. Date filters can't do "last N days" -> recency tags. "Give me the AI prompt ... this is how we build these" -> prompt first. "Step by step" -> one action per message for list edits too. Leftover OR box nearly matched everyone -> delete whole boxes. Weekly email = rotating evergreen set, not one repeated email.
 
 <!-- 2026-11-05 skill review: added the Weekly email (dormant) workflow record, the "templates with text first" rule (the AI builder leaves bodies empty) and From name/email on every step, plus what Olly kept vs cut in his review (cut metaphors/scenarios, removed all links, belief must be built not skipped, write from his Reel transcripts, new founder story only). -->
+
+<!-- 2026-11-07 skill review: added "Scheduling the daily email" (GHL timezone was Europe/London -> now Africa/Harare, never Cairo; tools/ghl-email-schedule.mjs; answer last sent + next scheduled in Cape Town time first). Why: Olly's picked dates didn't match the campaign page and my first answer explained instead of giving the times he asked for ("that's what I want to check"). -->

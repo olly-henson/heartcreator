@@ -176,7 +176,11 @@ Once it's recorded but not sent yet, tap **Recorded** on their card (stage **Loo
 
 **Update 2026-11-06:** Frankie's follow-up is not a chase, it "goes deeper": one extra idea about their situation, written as if you already work together. It's on the cards as "💡 Follow-up idea (only if they watched)"; whether to use it is still Olly's pick. Never "did you see my message/video?".
 
-**Olly's decision (2026-11-03): no follow-ups after a Loom.** If they haven't replied, they either haven't watched it or aren't sold, so let them come back. Don't suggest Loom follow-up messages. Reply to them when they get in touch.
+**No chasing (Olly, 2026-11-03, narrowed 2026-11-06):** the only follow-up is the one 💡 "go deeper" idea, sent once, 1 to 2 days after they watched. If they haven't watched or haven't replied, send nothing and let them come back. Reply to them when they get in touch.
+
+**When Olly asks what Frankie said about something:** quote only the saved lines (this file + `funnel/applicant-sales-process.html`), then say the full workshop transcript isn't on disk and ask him to paste it if he needs more. Frankie's saved follow-up lines: "All follow-up done correctly is going deeper… I'm actually already talking like we're working together." / "Ideas are never unwelcome." / Loom is for the watch notification, "so I know how to handle the sale based on they saw it or didn't see it." / "Will this work for me?" is the usual question after the video; answer it by text from their own situation.
+
+**Planned (to-do in the Hub, for the week of 9 Nov): our own Loom with view tracking.** Preview: https://claude.ai/artifact/M8JLSLFLdfYGV2aBDsWP7c. Each applicant gets `hub.ollyhenson.com/v/<code>` (code → contactId in KV); the page plays the unlisted VSL through the YouTube IFrame Player API with the "Watch on YouTube" link off, and pings a Pages Function every 10 s plus on open/leave with the seconds actually watched (skips don't count). The Sales card shows opened / % watched / when (Cape Town time) / visits; the 💡 idea unlocks at 50%; one email to Olly the first time someone finishes. Olly's own views (Hub login) don't count. Copy/send buttons use the tracked link automatically.
 
 They stay on the daily email list, which keeps the conversation going without chasing.
 
@@ -257,8 +261,11 @@ Mark them **Not a fit**.
 - Never send an intro that promises something ("here's how 👇") before that thing exists.
 - Never ask applicants about price before the video (overrides the 2026-11-04/05 price check).
 - Never send a follow-up to someone who hasn't watched, and never one that asks if they've seen it.
+- Never put words in Frankie's mouth: if the saved material doesn't say it, say so.
 
 - **2026-11-06: Skill review.** Price check replaced by intro text + voice note + email (Olly: people come from different entry points, so the voice note pre-sells the plan; price moves into the video). Follow-up reframed as Frankie's "go deeper" message, pending Olly's pick. Added the slides/recording rules (editable titles, row controls, full screen via the local copy, pictures per Frankie, blur members) and the "quote Frankie only from his material" rule. Overridden: Step 7's price check, the "Price check sent" column name.
 - **2026-11-06: Skill review (2).** New VSL link (PhcbPYPfUU0) replaces wghvWJJ6YVk everywhere; hosting decision = unlisted YouTube, so the follow-up rule now says how to know they watched without Loom.
 
 - **2026-11-07: Skill review.** Intro text now says a voice note plan is coming (the old "Here's how I think I could help 👇" made no sense while he was still recording). Added the iMessage route for people without WhatsApp (blue = voice notes over Wi-Fi, green = email only), how to write a personal email from their answers (example structure, no names: the repo is public), leave out sensitive third-party details, flag budget vs the annual price, and stuck typing dots = do nothing. Overridden: the 👇 intro wording.
+
+- **2026-11-07: Skill review (2).** Merged the 2026-11-03 "no follow-ups" rule into the 2026-11-06 one (one 💡 idea, only after they watched) so the two no longer contradict. Added Frankie's saved follow-up quotes and the rule to say when the transcript isn't on disk (Olly asked "did Frank say how to follow up"). Added the planned view-tracking video page (Olly: "build our own Loom to track individual views", parked for next week).
