@@ -3879,6 +3879,22 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return floor;
   }
 
+  // Olly 2026-11-07: "for the reels that don't get recorded on the day, automatically move them to the following slots in
+  // the upcoming days". Runs on every load of the shared data: a Reel dated before today that is still a Draft (not
+  // recorded, scheduled or published, not skipped) moves to the first free slot from today on (rest days and full days
+  // are passed over). Oldest first, so they keep their order. Returns how many moved.
+  function rollOverReels(){
+    var ideas = state.content && state.content.ideas || [];
+    var today = todayISO();
+    var late = [];
+    ideas.forEach(function(idea, idx){
+      if (idea.title && idea.date && idea.date < today && !idea.skipped && reelState(idea) === "draft") late.push(idx);
+    });
+    late.sort(function(a, b){ return ideas[a].date < ideas[b].date ? -1 : ideas[a].date > ideas[b].date ? 1 : a - b; });
+    late.forEach(function(idx){ ideas[idx].date = findNextAvailableDate(idx); });
+    return late.length;
+  }
+
   function renderCalendar(){
     var label = document.getElementById("calMonthLabel");
     label.textContent = calCursor.toLocaleDateString("en-GB", { month:"long", year:"numeric" });
@@ -7289,7 +7305,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function pullReelStatus(){
     fetch("/api/reelstatus", { cache:"no-store", credentials:"same-origin" })
       .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(d){ if (d && d.ok) { reelStatus = d.status || {}; applyReelStatus(); renderCalendar(); renderDayModal(); renderRecord(); } })
+      .then(function(d){ if (d && d.ok) { reelStatus = d.status || {}; applyReelStatus();
+        // Roll late Drafts forward only now, once the laptop's stages are in, so a Reel recorded on the laptop never moves.
+        if (serverRev && rollOverReels()) { markDirty(); saveNow(); }
+        renderCalendar(); renderDayModal(); renderRecord(); } })
       .catch(function(){});
   }
   // Olly 2026-11-04: "rather than me having to manually keep going in and updating it". The laptop's stages set the
