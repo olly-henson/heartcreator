@@ -23,4 +23,4 @@ Generator gotcha (2026-10-28): code near the top of the main script that runs at
 
 Gotcha (2026-10-29): a heredoc Python edit with \u escapes failed mid-write (surrogates) and EMPTIED the generator file. For in-place Python edits, write the script with the Write tool, use raw strings, and save to a .tmp file then os.replace(). Restore source if it happens: Artifact read of the live version, then drop line 1 and the last 2 lines.
 | `ghl-redirect.sh` | Creates a GHL URL redirect on ollyhenson.com via the API and tests it: `bash tools/ghl-redirect.sh /path "https://target"`. Use it instead of asking Olly to make redirects (2026-11-03). |
-- `ghl-email-schedule.mjs`: last sent + next scheduled GHL email campaigns in Cape Town time. `node tools/ghl-email-schedule.mjs [count]`
+| `ghl-email-schedule.mjs` | Last sent + next scheduled GHL email campaigns in Cape Town time: `node tools/ghl-email-schedule.mjs [count]` (2026-11-07). |
