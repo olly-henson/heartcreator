@@ -203,6 +203,8 @@ Mark them **Not a fit**.
 
 ## Step 7: The master VSL flow (2026-11-05, replaces personal Looms for normal applicants)
 
+> **ORDER CHANGED 2026-11-08 (Olly, after Frankie's "sell anything with video"):** the plan of action comes BEFORE the sales video. Intro text + voice note → they ask for the details → **send their plan of action link and ask what they think of it** → handle any doubts by text, before the price (Frankie: if they object to the plan they'll object to everything later) → **once they agree with the plan, send the sales video** (it does the closing: price, what they get, how to buy) → "ready" → checkout link. Hub card and the "sales process, step by step" box follow this order.
+
 1. Application -> Hub **Sales** tab (Trello-style board: New applications / Messaged / Replied / VSL sent / Joined / Gone quiet / Not a fit; money tiles on top).
 2. **Superseded 2026-11-06:** no price check. Send the 👋 Intro text + 🎙️ voice note (their plan, no price) + ✉️ email from the card; people who ask for "the details" get the video. The price lives in the video (Frankie: price inside the video, with the "works well if" qualifier).
 3. **🎥 Sales video** button sends the unlisted YouTube VSL (https://youtu.be/PhcbPYPfUU0) on WhatsApp or email and moves them to **VSL sent**. Message (Olly's final wording): "Hey [Name], great, thanks for getting back to me. / Here's a video going through how the program works, what to expect and how to start. / [link] / If you're ready to start after watching, just reply here and I'll send you the link. / And if you have any questions, just let me know." No "watch it in your own time".
@@ -275,6 +277,7 @@ Mark them **Not a fit**.
 Olly: "I want to send them a summary plan of action of exactly what we're going to do for each person, so I can show that I know what I'm doing" (Frankie: demonstrate the plan). This REPLACES the science guide (the 5-page `funnel/science-guide.html` is retired).
 
 ### Process
+0. **When:** after the voice note, when they ask for the details. Before the sales video, never after (see Step 7).
 1. **Hub > Sales > applicant card > 📄 Plan of action** opens `/plan.html?id=<contactId>`, auto-filled from GHL: name, "where you are now" (first sentences of HA Feelings About Love), outcome (HA Relationship Wanted), tried (HA Tried), must-haves (FF Intentions, me/my → you/your), emotions (FF Resonance), anchor moments (default line). Orange box = empty.
 2. **Olly checks three things:** the "where you are now" line (swap in the line that shows them stuck in their head, like a line about scanning every room for someone available), the anchor moments (make it one real moment of theirs), and any orange box (no Feeling Finder = fill from the application).
 3. **Make their link** (saves + creates `hub.ollyhenson.com/p/<code>`; does NOT count as sent) → the send message appears in an editable box → **Send on WhatsApp** / **Send by email** / Copy message / Copy link only / Preview. Only a send or copy marks it sent.
@@ -298,6 +301,10 @@ Olly: "I want to send them a summary plan of action of exactly what we're going 
 > Here's your plan for you:
 >
 > [link]
+>
+> Have a look and let me know what you think.
+
+(Last line added 2026-11-08, Olly: "Yer that sounds good". It's Frankie's "What do you think of that?" after pre-selling the plan.)
 
 Email: subject "Your plan of action", same text + "Olly" (both Claude's wording, not yet confirmed by Olly).
 
@@ -326,3 +333,4 @@ Email: subject "Your plan of action", same text + "Olly" (both Claude's wording,
 ---
 
 - **2026-11-08: Skill review.** Consolidated the day's plan work into one "Plan of action" section (process, the 4 signed-off pages, Olly's send message, rules with the reason for each, Never list). Lessons: the plan replaces the science guide (Olly wants to show he knows what to do); emotional resonance is the product and must run through the problem, solution and every step; introduce terms the Reels' way; keep science to two terms; readable for people with poor eyesight (large text, no italics, no shrinking); Olly's dictated words verbatim; making a link isn't sending it and his own opens don't count; test contacts get deleted; explain one path. Removed/overridden: the science guide section (retired), the 5-page and 3-page layouts, the "what to expect / how I'll support you / reply for the link" page, the "You'll keep [pattern]" box and `pattern` field, the work/profession line, brainwave/DMN/nervous-system wording, "Send as a link" (now "Make their link"), and the "week numbers are Claude's proposal" note (Olly set the order).
+- **2026-11-08: Order change.** Plan of action moved before the sales video (Frankie's bucket 2: pre-sell the plan, get agreement, then the video closes). Overrides the Step 7 order where the video went straight after "send me the details".

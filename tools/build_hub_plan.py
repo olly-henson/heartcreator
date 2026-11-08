@@ -132,7 +132,7 @@ LOADER = r'''
         // Olly's message, word for word (2026-11-08). Only the first name and the link change.
         var goal = (document.querySelector('[data-k="want"]').value || '').trim().replace(/[.!]+$/, '');
         goal = goal ? goal.charAt(0).toLowerCase() + goal.slice(1) : 'where you want to be with your person';
-        var msg = 'Hey ' + (who || 'there') + ', I had a look through your application again today.\n\nI\u2019m certain we can make this work so I\u2019ve put together a plan of action of exactly what we\u2019ll do to get you to ' + goal + '.\n\nExcited to get started.\n\nHere\u2019s your plan for you:\n\n' + url;
+        var msg = 'Hey ' + (who || 'there') + ', I had a look through your application again today.\n\nI\u2019m certain we can make this work so I\u2019ve put together a plan of action of exactly what we\u2019ll do to get you to ' + goal + '.\n\nExcited to get started.\n\nHere\u2019s your plan for you:\n\n' + url + '\n\nHave a look and let me know what you think.';
         document.getElementById('linkMsgText').value = msg; setLinks();
 
         document.getElementById('linkView').href = url + '?preview=1';
