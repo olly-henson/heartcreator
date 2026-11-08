@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Your Plan of Action</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: editor panel left, the 4 plan pages (540x675, 4:5) right. Pages use the fixed brand look; the editor follows the theme.
+   Science + terms follow Olly's Reels (2026-11-08): intellectualization, high beta, default mode network, nothing to fix, emotional resonance, the 3 steps. */
+:root {
+  --ui-bg: #f6f3fa; --ui-panel: #ffffff; --ui-fg: #1f1530; --ui-muted: #6b5f7d; --ui-line: #e2daec; --ui-accent: #8b2fc9; --ui-field: #faf8fd;
+  --space: #080010; --deep: #1a0535; --mid: #6b21a8; --violet: #a855f7; --magenta: #d946ef; --pink: #f0abfc; --star: #f8f4ff; --lav: #c4b5fd;
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ui-bg: #0f0a17; --ui-panel: #18111f; --ui-fg: #efe8f7; --ui-muted: #a497b5; --ui-line: #2c2238; --ui-accent: #c47cf5; --ui-field: #120c19; color-scheme: dark } }
+:root[data-theme="dark"] { --ui-bg: #0f0a17; --ui-panel: #18111f; --ui-fg: #efe8f7; --ui-muted: #a497b5; --ui-line: #2c2238; --ui-accent: #c47cf5; --ui-field: #120c19; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--ui-bg); color: var(--ui-fg); font-family: var(--body); }
+.wrap { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 32px; max-width: 1180px; margin: 0 auto; padding-block: 28px 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- editor ---------- */
+.panel { background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: 14px; padding: 22px; align-self: start; position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); display: flex; flex-direction: column; gap: 13px; max-height: calc(100vh - 32px); overflow-y: auto; }
+@media (max-width: 860px) { .panel { position: static; max-height: none; } }
+.panel h1 { font-family: var(--display); font-size: 22px; margin: 0; text-wrap: balance; }
+.panel p.lead { margin: 0; color: var(--ui-muted); font-size: 13px; line-height: 1.5; }
+.note { font-size: 12px; line-height: 1.45; background: color-mix(in srgb, var(--ui-accent) 10%, transparent); border-radius: 8px; padding: 9px 11px; color: var(--ui-fg); }
+label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+label small { font-weight: 400; color: var(--ui-muted); letter-spacing: 0; }
+input, textarea { font: 14px/1.4 var(--body); color: var(--ui-fg); background: var(--ui-field); border: 1px solid var(--ui-line); border-radius: 8px; padding: 8px 10px; width: 100%; }
+textarea { resize: vertical; min-height: 54px; }
+input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 1px; }
+.row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: 600 14px var(--body); border: 0; border-radius: 50px; padding: 10px 18px; cursor: pointer; color: #fff; background: linear-gradient(135deg, #d946ef, #6b21a8); }
+button.ghost { background: transparent; color: var(--ui-fg); border: 1px solid var(--ui-line); }
+button:disabled { opacity: .6; cursor: wait; }
+
+.pages { display: flex; flex-direction: column; gap: 22px; align-items: center; min-width: 0; }
+.stage { width: 540px; }
+.outbox { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 10px; }
+.outbox h2 { font: 600 13px var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--ui-muted); margin: 6px 0 0; }
+.outbox img { width: 100%; border-radius: 6px; display: block; }
+.imgs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+
+/* ---------- guide pages (fixed 540 x 675) ---------- */
+.pg { width: 540px; height: 675px; position: relative; overflow: hidden; padding: 40px 44px 30px; display: flex; flex-direction: column; color: var(--star); font-family: var(--body); background: radial-gradient(120% 80% at 85% 0%, #2d0a5e 0%, var(--deep) 45%, var(--space) 100%); box-shadow: 0 10px 40px rgba(20, 0, 40, .25); }
+.pg + .pg { margin-top: 22px; }
+.pg .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--pink); }
+.pg h2 { font-family: var(--display); font-weight: 900; font-size: 32px; line-height: 1.08; margin: 10px 0 0; text-wrap: balance; }
+.pg h2 em { font-style: italic; font-weight: 700; background: linear-gradient(135deg, var(--magenta), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 2px; }
+.pg p { font-size: 14.5px; line-height: 1.55; color: var(--star); margin: 0; }
+.pg p.soft { color: var(--lav); }
+.pg .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: baseline; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--lav); opacity: .8; padding-top: 10px; }
+.pg .foot b { font-family: var(--display); text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--star); font-weight: 700; opacity: 1; }
+.k { color: var(--pink); font-weight: 600; }
+.term { color: var(--pink); font-weight: 700; }
+.quote { border-left: 2px solid var(--magenta); padding: 3px 0 3px 14px; font-family: var(--display); font-style: italic; font-size: 17px; line-height: 1.38; color: var(--star); }
+.qlabel { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--lav); margin-bottom: 6px; }
+.stack { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+
+.cover .orb { position: absolute; right: -120px; top: 120px; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle at 40% 40%, rgba(240,171,252,.55), rgba(217,70,239,.25) 35%, rgba(107,33,168,.0) 70%); filter: blur(6px); }
+.cover .orb2 { position: absolute; right: 70px; top: 300px; width: 90px; height: 90px; border-radius: 50%; border: 1px solid rgba(240,171,252,.35); }
+.cover h2 { font-size: 50px; margin-top: 150px; position: relative; }
+.cover .sub { margin-top: 20px; max-width: 410px; color: var(--lav); font-size: 16px; position: relative; }
+.cover .for { position: relative; }
+
+/* state comparison (page 2) */
+.modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.modes > div { border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.45; }
+.modes .head { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+.modes .now { background: rgba(255, 255, 255, .05); border: 1px solid rgba(196, 181, 253, .18); color: var(--lav); }
+.modes .now .head { color: var(--lav); }
+.modes .then { background: rgba(217, 70, 239, .14); border: 1px solid rgba(240, 171, 252, .35); color: var(--star); }
+.modes .then .head { color: var(--pink); }
+
+.step { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 13px; }
+.step .n { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 900; font-size: 16px; background: linear-gradient(135deg, var(--magenta), var(--mid)); }
+.step h3 { margin: 3px 0 3px; font-size: 15.5px; font-weight: 700; }
+.step p { font-size: 13px; line-height: 1.48; color: var(--lav); }
+.step p.you { margin-top: 4px; color: var(--star); }
+
+.why { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-top: 14px; }
+.why div { padding: 8px 13px; border-radius: 10px; background: rgba(168, 85, 247, .12); border: 1px solid rgba(196, 181, 253, .18); }
+.why h3 { margin: 0 0 1px; font-size: 14px; font-weight: 700; color: var(--pink); }
+.why p { font-size: 12.5px; line-height: 1.4; }
+.pg p.close { margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+.sign { font-family: var(--display); font-style: italic; font-size: 19px; color: var(--pink); }
+.pg p.refs { font-size: 8px; line-height: 1.35; color: var(--lav); opacity: .7; margin-top: 6px; }
+
+#offscreen { position: fixed; left: -10000px; top: 0; width: 540px; }
+
+@page { size: 540px 675px; margin: 0; }
+@media print {
+  body { background: #080010; }
+  .panel, .outbox { display: none !important; }
+  .wrap { display: block; padding: 0; max-width: none; }
+  .stage { zoom: 1 !important; width: 540px; }
+  .pg { box-shadow: none; margin: 0 !important; break-after: page; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+/* plan of action extras */
+.cover h2 { margin-top: 70px; font-size: 46px; }
+.journey { position: relative; margin-top: 26px; display: flex; flex-direction: column; gap: 6px; }
+.journey > div { border-radius: 12px; padding: 12px 15px; font-size: 14.5px; line-height: 1.45; }
+.journey .head { font-family: var(--body); font-style: normal; font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 5px; }
+.journey .from { background: rgba(8, 0, 16, .55); border: 1px solid rgba(196, 181, 253, .2); color: var(--star); font-family: var(--body); font-style: normal; }
+.journey .from .head { color: var(--lav); }
+.journey .arrow { text-align: center; color: var(--magenta); font-size: 20px; line-height: 1; padding: 0; }
+.journey .to { background: linear-gradient(135deg, rgba(217, 70, 239, .28), rgba(107, 33, 168, .35)); border: 1px solid rgba(240, 171, 252, .45); color: var(--star); font-weight: 600; }
+.journey .to .head { color: var(--pink); }
+.pg h2.sm { font-size: 29px; }
+.tl { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 16px; position: relative; }
+.tl::before { content: ""; position: absolute; left: 39px; top: 6px; bottom: 6px; width: 1px; background: rgba(240, 171, 252, .3); }
+.tl li { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 14px; position: relative; }
+.tl .when { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--pink); text-align: center; background: var(--deep); border: 1px solid rgba(240, 171, 252, .4); border-radius: 50px; padding: 4px 0; align-self: start; position: relative; }
+.tl h3 { margin: 1px 0 2px; font-size: 14.5px; font-weight: 700; }
+.pg .tl p { font-size: 13.5px; line-height: 1.5; color: var(--lav); }
+.pg .tl p.you { margin-top: 3px; color: var(--star); }
+.stages { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; }
+.stages div { display: flex; gap: 10px; align-items: center; font-size: 14px; }
+.stages .dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, var(--magenta), var(--violet)); flex: none; }
+.warn { margin-top: 14px; padding: 11px 14px; border-radius: 10px; background: rgba(217, 70, 239, .12); border: 1px solid rgba(240, 171, 252, .35); font-size: 13px; line-height: 1.5; color: var(--star); }
+.warn b { color: var(--pink); }
+.support { margin-top: 14px; }
+.support .head { font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--lav); margin-bottom: 6px; }
+.support ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.support li { font-size: 13px; line-height: 1.45; color: var(--star); }
+.support li::marker { color: var(--magenta); }
+
+.tl li.key .when { background: linear-gradient(135deg, var(--magenta), var(--mid)); color: #fff; border-color: transparent; }
+.pg .tl p.keyline { margin-top: 3px; color: var(--pink); font-weight: 700; }
+
+.pg .stack.tight { gap: 9px; margin-top: 14px; }
+.modes .ttl { font-size: 15px; font-weight: 700; margin-bottom: 3px; color: var(--star); }
+.modes .then .ttl { color: var(--pink); }
+.solpill { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--pink); padding: 6px 12px; border-radius: 50px; background: linear-gradient(135deg, rgba(217, 70, 239, .28), rgba(107, 33, 168, .35)); border: 1px solid rgba(240, 171, 252, .45); }
+.journey.endbox { margin-top: 22px; }
+/* No italics anywhere (Olly, 2026-11-08: italic is too hard to read). Emphasis = colour only. */
+.pg h2 em { font-style: normal !important; font-weight: 900 !important; }
+.quote { font-style: normal !important; font-family: var(--body) !important; font-weight: 600; }
+.sign { font-style: normal !important; }
+</style>
+
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+[hidden] { display: none !important; }
+html, body { background: #080010 !important; margin: 0; color: #f8f4ff; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: rgba(8, 0, 16, .92); border-bottom: 1px solid rgba(196, 181, 253, .15); font-family: var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: #080010; }
+.bar b { font-family: var(--display); font-size: 17px; }
+.bar button { font: 600 14px var(--body); border: 0; border-radius: 50px; padding: 10px 18px; cursor: pointer; color: #fff; background: linear-gradient(135deg, #d946ef, #6b21a8); white-space: nowrap; }
+.viewwrap { display: flex; justify-content: center; padding-block: 18px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.msg { text-align: center; padding: 60px 16px; font-family: var(--body); color: #c4b5fd; }
+@media print { .bar, body::before { display: none !important; } .viewwrap { padding: 0; display: block; } }
+/* Readable on screen (Olly, 2026-11-08: "MUCH bigger ... anyone with visual issues"): one flowing column, large text in rem,
+   follows the iPhone's own text-size setting. Print/PDF keeps the fixed designed pages. */
+html { font-size: 112.5%; }
+@supports (font: -apple-system-body) { html { font: -apple-system-body; } }
+@media screen {
+  .viewwrap .stage { width: 100%; max-width: 680px; zoom: 1 !important; }
+  .viewwrap .pg { width: 100%; height: auto; padding: 2rem 1.25rem 1.5rem; border-radius: 16px; }
+  .viewwrap .pg + .pg { margin-top: 1.25rem; }
+  .viewwrap .pg .eyebrow { font-size: .85rem; letter-spacing: .1em; }
+  .viewwrap .solpill { font-size: .85rem; letter-spacing: .08em; padding: .45rem .9rem; }
+  .viewwrap .pg h2, .viewwrap .pg h2.sm { font-size: 2rem; line-height: 1.15; }
+  .viewwrap .cover h2 { font-size: 2.5rem; margin-top: 1.25rem; }
+  .viewwrap .pg p, .viewwrap .cover .sub, .viewwrap .journey > div, .viewwrap .modes > div, .viewwrap .pg .tl p,
+  .viewwrap .stages div, .viewwrap .warn, .viewwrap .support li, .viewwrap .pg p.close { font-size: 1.15rem; line-height: 1.6; }
+  .viewwrap .cover .sub { max-width: none; }
+  .viewwrap .journey { margin-top: 1.5rem; gap: .5rem; }
+  .viewwrap .journey > div { padding: 1rem 1.1rem; }
+  .viewwrap .journey .head, .viewwrap .modes .head, .viewwrap .qlabel, .viewwrap .support .head { font-size: .85rem; letter-spacing: .08em; }
+  .viewwrap .quote { font-size: 1.3rem; line-height: 1.45; }
+  .viewwrap .stack, .viewwrap .stack.tight { gap: 1.1rem; margin-top: 1.25rem; }
+  .viewwrap .modes { grid-template-columns: minmax(0, 1fr); gap: .6rem; }
+  .viewwrap .modes > div { padding: .9rem 1rem; }
+  .viewwrap .modes .ttl { font-size: 1.3rem; margin-bottom: .3rem; }
+  .viewwrap .tl { gap: 1.4rem; margin-top: 1.25rem; }
+  .viewwrap .tl::before { display: none; }
+  .viewwrap .tl li { grid-template-columns: minmax(0, 1fr); gap: .4rem; }
+  .viewwrap .tl .when { justify-self: start; font-size: .85rem; padding: .3rem .9rem; }
+  .viewwrap .tl h3 { font-size: 1.25rem; margin: 0 0 .25rem; }
+  .viewwrap .pg .tl p.you, .viewwrap .pg .tl p.keyline { margin-top: .4rem; }
+  .viewwrap .stages { gap: .6rem; margin-top: 1.25rem; }
+  .viewwrap .stages .dot { width: .7rem; height: .7rem; }
+  .viewwrap .warn { padding: 1rem 1.1rem; margin-top: 1.25rem; }
+  .viewwrap .support { margin-top: 1.25rem; }
+  .viewwrap .support ul { gap: .5rem; padding-left: 1.3rem; }
+  .viewwrap .sign { font-size: 1.5rem; }
+  .viewwrap .pg .foot { font-size: .8rem; margin-top: 1.75rem; padding-top: 0; }
+  .viewwrap .pg .foot b { font-size: 1rem; }
+  .bar b { font-size: 1.15rem; }
+  .bar button { font-size: 1rem; padding: .7rem 1.2rem; }
+  .msg { font-size: 1.15rem; }
+}
+</style>
+</head>
+<body>
+<div class="bar"><b>Your plan</b><button type="button" id="pdfBtn">Download PDF</button></div>
+<p class="msg" id="msg">Loading your plan…</p>
+<div class="viewwrap">
+<div class="stage" id="stage" hidden>
+
+      <!-- 1. Cover: where you are -> where we're going -->
+      <section class="pg cover">
+        <div class="orb"></div>
+        <div class="eyebrow for">Plan of action for <span data-v="name"></span></div>
+        <h2>Your plan to meet <em>your person</em></h2>
+        <div class="journey">
+          <div class="from"><div class="head">Where you are now</div>"<span data-v="now"></span>"</div>
+          <div class="arrow" aria-hidden="true">↓</div>
+          <div class="to"><div class="head">Where we're going</div><span data-v="want"></span></div>
+        </div>
+        <div class="foot"><b>Olly Henson</b><span>The Heart Attractor Program</span></div>
+      </section>
+
+      <!-- 2. What's in the way -->
+      <section class="pg">
+        <div class="eyebrow">What's in the way</div>
+        <h2 class="sm">There's nothing to fix. <em>You're stuck in your head.</em></h2>
+        <div class="stack tight">
+          <p>You've tried <span class="k" data-v="tried"></span>. None of it was wasted, but the list of things to fix never ends. Your friends who settled down didn't fix every part of themselves first.</p>
+          <p class="soft">What's going on is something called <span class="term">intellectualization</span>. When love feels uncomfortable, your mind jumps in to analyse and fix, to get away from the feeling. Your inner voice gets louder and more critical and you end up stuck in your head.</p>
+          <div class="modes">
+            <div class="now"><div class="head">The problem</div><div class="ttl">Intellectualization</div>Stuck in your head. Busy mind. Worrying, overthinking, scanning for answers.</div>
+            <div class="then"><div class="head">The solution</div><div class="ttl">Emotional resonance</div>Back in your heart. Calm mind. Present, light and playful. Just being you.</div>
+          </div>
+          <p>The plan below builds your <span class="term">emotional resonance</span>, every day.</p>
+          <div>
+            <div class="qlabel">What it does for you</div>
+            <div class="stages" style="margin-top:6px">
+              <div><span class="dot"></span>It builds the belief in yourself that you can meet your person.</div>
+              <div><span class="dot"></span>It attracts high-quality partners.</div>
+              <div><span class="dot"></span>It lets you confidently be yourself and fall into a true and authentic relationship.</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot"><span>Page 2 of 4</span><span>The Heart Attractor Program</span></div>
+      </section>
+
+      <!-- 3. The plan, step by step -->
+      <section class="pg">
+        <div class="solpill">The solution: emotional resonance</div>
+        <h2>How we build it, <em>step by step</em></h2>
+        <ol class="tl">
+          <li><div class="when">Day 1</div><div>
+            <h3>Get you inside the program</h3>
+            <p>I make sure you're in with all the starter trainings. They're short and show you exactly how we'll build your emotional resonance.</p>
+          </div></li>
+          <li><div class="when">Week 1</div><div>
+            <h3>Clarity on what you want and how you'll feel</h3>
+            <p>Emotional resonance starts here: knowing the person you want and exactly how you'll feel with them.</p>
+            <p class="you">Your person: <span class="k" data-v="qlist"></span></p>
+            <p class="you">Your emotions: <span class="k" data-v="feels"></span></p>
+          </div></li>
+          <li class="key"><div class="when">Week 1</div><div>
+            <h3>Embody it with the meditation</h3>
+            <p>I take you through how to use The Attraction Formula Meditation to embody <span class="k" data-v="feel1"></span> every day. It gets you out of your head and out of intellectualization. This is where your emotional resonance builds.</p>
+            <p class="keyline">This is the step that makes the difference.</p>
+          </div></li>
+        </ol>
+        <div class="foot"><span>Page 3 of 4</span><span>The Heart Attractor Program</span></div>
+      </section>
+
+      <!-- 4. The plan, continued -->
+      <section class="pg">
+        <div class="solpill">The solution: emotional resonance</div>
+        <h2>Then, <em>beyond the first week</em></h2>
+        <ol class="tl">
+          <li><div class="when">Week 2</div><div>
+            <h3>Anchor it through your day</h3>
+            <p>Simple anchors that bring the feeling back when you get pulled into your head, so your emotional resonance carries through your day.</p>
+            <p class="you">For you: <span class="k" data-v="moments"></span>.</p>
+          </div></li>
+          <li><div class="when">Day 14</div><div>
+            <h3>Feel-the-difference check</h3>
+            <p>By now you should feel a real difference. If you've done it every day and you don't, you get your money back.</p>
+          </div></li>
+          <li><div class="when">Day 14+</div><div>
+            <h3>Notice the shifts</h3>
+            <p>You start noticing positive shifts in your world and new people coming into it. I guide you through how to handle each one, so it unfolds the way you want it to.</p>
+          </div></li>
+        </ol>
+        <div class="journey endbox">
+          <div class="to"><div class="head">Where this leads</div><span data-v="want"></span></div>
+        </div>
+        <div class="foot"><span>Page 4 of 4</span><span>The Heart Attractor Program</span></div>
+      </section>
+
+
+    </div>
+</div>
+
+<script>
+(function () {
+  var code = (location.pathname.split('/')[2] || ''), preview = /[?&]preview/.test(location.search);
+  try { if (localStorage.getItem('hubOwner')) preview = true; } catch (e) {}
+  var stage = document.getElementById('stage'), msg = document.getElementById('msg');
+  function seen(w) { if (preview) return; try { fetch('/p/' + code + '/seen', { method: 'POST', body: w, keepalive: true }); } catch (e) {} }
+  function fit() {}
+  window.addEventListener('resize', fit);
+  function set(k, v) { document.querySelectorAll('[data-v="' + k + '"]').forEach(function (s) { s.textContent = v; }); }
+  fetch('/p/' + code + '/data', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+    if (!d || !d.ok) throw new Error('missing');
+    var p = d.plan;
+    Object.keys(p).forEach(function (k) { set(k, String(p[k] || '').trim()); });
+    set('qlist', [p.q1, p.q2, p.q3, p.q4].map(function (x) { return String(x || '').trim(); }).filter(Boolean).join(' · '));
+    document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !String(p[s.dataset.show] || '').trim(); });
+    if (p.name) document.title = p.name + "'s Plan of Action";
+    msg.hidden = true; stage.hidden = false; fit();
+    seen('open');
+  }).catch(function () { msg.textContent = "This plan couldn't load. Please ask Olly for a new link."; });
+  document.getElementById('pdfBtn').addEventListener('click', function () { seen('pdf'); window.print(); });
+})();
+</script>
+</body>
+</html>

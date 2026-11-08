@@ -5456,10 +5456,24 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       lmLoading = false;
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
       lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
+      lmPlanViews();
       // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
       if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmOpen = w.id; lmView = "info"; lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
       renderLooms();
     }).catch(function(){ lmLoading = false; lmErr = "Couldn't reach GHL. If you've been away a while, reload the Hub to log in again."; renderLooms(); });
+  }
+  // Plan of action link views (2026-11-08): /api/planviews -> { contactId: { sent, opens, first, last, pdf } }
+  // Mark this device as Olly's, so opening an applicant's plan link here never counts as their open (2026-11-08)
+  try { localStorage.setItem("hubOwner", "1"); } catch(e){}
+  var lmPV = {};
+  function lmPlanViews(){ fetch("/api/planviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmPV = d.views || {}; renderLooms(); } }).catch(function(){}); }
+  function lmWhen(iso){ if (!iso) return ""; try { return new Date(iso).toLocaleString("en-GB", { timeZone:"Africa/Johannesburg", weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" }); } catch(e){ return ""; } }
+  function lmPlanLine(id){
+    var v = lmPV[id]; if (!v || !v.sent) return "";
+    var bits = ["Link made " + lmWhen(v.sent)];
+    bits.push(v.opens ? "Opened " + v.opens + "×, last " + lmWhen(v.last) : "Not opened yet");
+    if (v.pdf) bits.push("PDF downloaded");
+    return '<small style="flex-basis:100%;opacity:.85">' + lmEsc(bits.join(" · ")) + "</small>";
   }
   function lmBranches(a){
     var used = {};
@@ -5534,6 +5548,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(vid) + '" target="_blank" rel="noopener" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
       + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent((a.firstName ? a.firstName + ", here" : "Here") + "'s the video") + '&body=' + encodeURIComponent((vid + "\n\nOlly").replace(/\n/g, "\r\n")) + '" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
       + "</div>";
+    // Plan of action (Olly, 2026-11-08): their personalised plan, filled from GHL on /plan.html; send it as images on WhatsApp or a PDF.
+    // Page is built from funnel/plan-of-action.html by tools/build_hub_plan.py. Edits are saved in KV under plan:<id>.
+    h += '<div class="lmcon lmmsg"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 Plan of action</a>' + lmPlanLine(a.id) + '</div>';
     // Follow-up (2026-11-06, Frankie: "go deeper, never chase"): ONE idea message, only if they watched the video.
     var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : "your application") + ". If I were you, "
       + (feel ? "the feeling I'd start practicing first is " + feel + ", because that's the one that" : "I'd start by practicing how you'd feel with them every day, because that's what")
@@ -5680,6 +5697,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var tags = (r ? '<span class="lmr lmr-' + r + '">' + { good:"Good", okay:"Okay", bad:"Not good" }[r] + "</span>" : "") +
       (lmStage(a) === "joined" ? '<span class="lmtag" style="margin:0">' + (s.product === "annual" ? "Annual $2,500" : "Monthly $497") + "</span>" : "") +
       (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL</span>' : "") +
+      (lmPV[a.id] && lmPV[a.id].sent ? '<span class="lmtag" style="margin:0;' + (lmPV[a.id].opens ? 'background:rgba(74,222,128,.18);color:#4ade80">📄 Plan opened' + (lmPV[a.id].opens > 1 ? " " + lmPV[a.id].opens + "×" : "") : 'background:rgba(251,191,36,.16);color:#fbbf24">📄 Plan sent, not opened') + "</span>" : "") +
       (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the price check", replied:"After replying", loom:"After the VSL" }[lmStage(a, true)] || "") + "</span>" : "");
     return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, place].filter(Boolean).join(" · ")) + "</span>" +
       (tags ? '<span class="lmbcrow">' + tags + "</span>" : "") + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";

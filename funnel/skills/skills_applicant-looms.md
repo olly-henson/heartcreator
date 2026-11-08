@@ -269,3 +269,60 @@ Mark them **Not a fit**.
 - **2026-11-07: Skill review.** Intro text now says a voice note plan is coming (the old "Here's how I think I could help 👇" made no sense while he was still recording). Added the iMessage route for people without WhatsApp (blue = voice notes over Wi-Fi, green = email only), how to write a personal email from their answers (example structure, no names: the repo is public), leave out sensitive third-party details, flag budget vs the annual price, and stuck typing dots = do nothing. Overridden: the 👇 intro wording.
 
 - **2026-11-07: Skill review (2).** Merged the 2026-11-03 "no follow-ups" rule into the 2026-11-06 one (one 💡 idea, only after they watched) so the two no longer contradict. Added Frankie's saved follow-up quotes and the rule to say when the transcript isn't on disk (Olly asked "did Frank say how to follow up"). Added the planned view-tracking video page (Olly: "build our own Loom to track individual views", parked for next week).
+
+## Plan of action (2026-11-08): the per-applicant document
+
+Olly: "I want to send them a summary plan of action of exactly what we're going to do for each person, so I can show that I know what I'm doing" (Frankie: demonstrate the plan). This REPLACES the science guide (the 5-page `funnel/science-guide.html` is retired).
+
+### Process
+1. **Hub > Sales > applicant card > 📄 Plan of action** opens `/plan.html?id=<contactId>`, auto-filled from GHL: name, "where you are now" (first sentences of HA Feelings About Love), outcome (HA Relationship Wanted), tried (HA Tried), must-haves (FF Intentions, me/my → you/your), emotions (FF Resonance), anchor moments (default line). Orange box = empty.
+2. **Olly checks three things:** the "where you are now" line (swap in the line that shows them stuck in their head, like a line about scanning every room for someone available), the anchor moments (make it one real moment of theirs), and any orange box (no Feeling Finder = fill from the application).
+3. **Make their link** (saves + creates `hub.ollyhenson.com/p/<code>`; does NOT count as sent) → the send message appears in an editable box → **Send on WhatsApp** / **Send by email** / Copy message / Copy link only / Preview. Only a send or copy marks it sent.
+4. The Sales card shows "📄 Plan sent, not opened" (amber) → "📄 Plan opened N×" (green), plus last open (Cape Town time) and PDF downloads.
+5. **Changing the plan for everyone:** edit `funnel/plan-of-action.html` (the template, example data only), run `python -I tools/build_hub_plan.py`, deploy the Hub. Every link, including ones already sent, shows the new layout (only each person's words are stored, in KV `plan:<id>`).
+6. Local PDF/PNGs for one person (rarely needed now): `funnel/applicant-guides/<first-last>/plan.html` with `var PRESET = {...}` (git-ignored), then `node tools/export_guide.js <file>` (also checks every page fits).
+
+### The plan (4 pages, as Olly signed it off on 2026-11-08)
+1. **Cover:** "Plan of action for [Name]" / "Your plan to meet your person" / Where you are now (their words) ↓ Where we're going (their outcome).
+2. **What's in the way:** "There's nothing to fix. You're stuck in your head." What they've tried + friends who settled down didn't fix everything. "What's going on is something called intellectualization." Two boxes: **The problem: Intellectualization** / **The solution: Emotional resonance** (pink). "The plan below builds your emotional resonance, every day." **What it does for you:** builds the belief in yourself that you can meet your person · attracts high-quality partners · lets you confidently be yourself and fall into a true and authentic relationship.
+3. **"The solution: emotional resonance" label, "How we build it, step by step":** Day 1 get you inside the program (starter trainings are short and show exactly how we'll build your emotional resonance) · Week 1 clarity on what you want and how you'll feel (their must-haves + emotions) · Week 1 embody it with the meditation (flagged "This is the step that makes the difference").
+4. **Same label, "Then, beyond the first week":** Week 2 anchor it through your day (their moments) · Day 14 feel-the-difference check (money back) · Day 14+ notice the shifts ("positive shifts in your world and new people coming into it. I guide you through how to handle each one") · closing **Where this leads** box with their outcome.
+
+### The send message (Olly's words, verbatim; only name, outcome and link change)
+> Hey [Name], I had a look through your application again today.
+>
+> I'm certain we can make this work so I've put together a plan of action of exactly what we'll do to get you to [their outcome, first letter lowercase, no full stop].
+>
+> Excited to get started.
+>
+> Here's your plan for you:
+>
+> [link]
+
+Email: subject "Your plan of action", same text + "Olly" (both Claude's wording, not yet confirmed by Olly).
+
+### Rules
+- **Everything points at emotional resonance as what he's selling.** The problem is intellectualization, the solution is emotional resonance, and every step says how it builds it. Why: Olly asked twice that the solution "blend into the steps as this is what I'm selling".
+- **Introduce terms the way the Reels do:** "something called intellectualization", "This is called emotional resonance". Why: Olly corrected "I call this…" and "There's a name for this".
+- **Keep the science simple.** Intellectualization and emotional resonance are the only named terms. Plain words: busy mind vs calm mind, inner voice louder and more critical, stuck in your head. Why: "make it sound less technical, it's a bit overwhelming".
+- **Readable for anyone, including people with poor eyesight.** On screen (link + Hub) it's one flowing column, body ~21px on a phone, labels ≥15px, follows the iPhone text-size setting. Only the PDF uses the fixed designed pages. No italics anywhere (highlighted heading words stay upright; quotes in the plain font). Why: "MUCH bigger … anyone with visual issues", then "the italic is too hard to read".
+- **Use Olly's own words for anything he dictates** (support lines, the Day 14+ step, the send message); only fix typos. Why: he replaced Claude's support lines with his own after "less robotic".
+- **Promise only what he delivers.** No calls. Private messages in the program's DMs are fine in the plan (Olly's words, 2026-11-08; this overrides the older "never private messaging" rule for the plan only). No price in the plan. Day 14 promises a feeling, never a partner by a date.
+- **A per-applicant document shows how it'll be done, step by step,** in Olly's order (he set Day 1 → Week 1 → Week 2 → Day 14 → Day 14+). Don't invent timings: when Claude proposes one, say so.
+- **Leave out sensitive details about other people,** and use their feeling rather than their story.
+- **Making a link is not sending it, and Olly's own opens never count** (his Hub login cookie or a device marked from the Hub). Why: an applicant showed "sent" after Olly only looked, and another showed Olly's own open. Reset a wrong count in KV `planview:<id>`.
+- **Testing with a fake applicant:** create it in GHL with an `olly+` email and a UK drama number (+44 7700 900xxx, can't reach a real person), then delete it from GHL (DELETE /contacts/<id> with marketing/.env GHL_PIT_TOKEN) and its KV keys (`plan:`, `planview:`, `share:`) as soon as Olly's done: it counts as an application until then.
+- **Explaining to Olly: one path, not every button.** He was "very confused" by a two-option explanation; give the one way to do it in 4 steps, offer to remove the extras.
+
+### Never (plan of action)
+- Never name the person mid-copy ("[Name], getting clear…"); the name is on the cover only.
+- Never add their job/profession ("your analytical mind is a strength in [their job]"): removed.
+- Never add fear lines ("If you don't do this part, nothing changes. You'll keep…"): removed by Olly.
+- Never brainwaves (high beta, alpha), default mode network, nervous system or fight or flight in client documents.
+- Never italics, never text shrunk to fit a phone.
+- Never commas inside one must-have (the list is joined with " · ").
+- Never hand-edit `hub-site/public/plan.html` or `plan-view.html`: they're generated from the template.
+
+---
+
+- **2026-11-08: Skill review.** Consolidated the day's plan work into one "Plan of action" section (process, the 4 signed-off pages, Olly's send message, rules with the reason for each, Never list). Lessons: the plan replaces the science guide (Olly wants to show he knows what to do); emotional resonance is the product and must run through the problem, solution and every step; introduce terms the Reels' way; keep science to two terms; readable for people with poor eyesight (large text, no italics, no shrinking); Olly's dictated words verbatim; making a link isn't sending it and his own opens don't count; test contacts get deleted; explain one path. Removed/overridden: the science guide section (retired), the 5-page and 3-page layouts, the "what to expect / how I'll support you / reply for the link" page, the "You'll keep [pattern]" box and `pattern` field, the work/profession line, brainwave/DMN/nervous-system wording, "Send as a link" (now "Make their link"), and the "week numbers are Claude's proposal" note (Olly set the order).

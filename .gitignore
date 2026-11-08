@@ -35,3 +35,6 @@ marketing/loom info/
 
 # Cloudflare Tunnel: binary + secret credentials, never commit
 tools/cloudflared/
+
+# Personalised applicant science guides (names + answers, keep out of the public repo)
+funnel/applicant-guides/
