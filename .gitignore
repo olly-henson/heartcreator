@@ -32,3 +32,6 @@ marketing/assets/sales-video/
 
 # Frankie Fihn's workshop slide doc (third-party material, 6MB), keep out of the public repo
 marketing/loom info/
+
+# Cloudflare Tunnel: binary + secret credentials, never commit
+tools/cloudflared/

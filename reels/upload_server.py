@@ -8,7 +8,7 @@ Then on the phone (same Wi-Fi) open the address it prints, e.g. http://192.168.0
 - Standard library only. State lives in reels\\ready\\reels.json, so a restart keeps the list
   and re-queues anything that was mid-edit.
 """
-import difflib, json, os, re, socket, subprocess, sys, threading, time, uuid
+import difflib, json, os, re, shutil, socket, subprocess, sys, threading, time, uuid
 import urllib.request
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, unquote
@@ -297,15 +297,22 @@ let wl=null;async function awake(on){try{if(on&&!wl&&navigator.wakeLock){wl=awai
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&(busy||queue.length))awake(true)});
 function next(){if(busy||!queue.length){if(!busy&&!queue.length)awake(false);return}awake(true);busy=true;const f=queue.shift();
  const d=document.createElement('div');d.className='card up';d.innerHTML=`<div class="meta">${esc(f.name)} · ${(f.size/1048576).toFixed(0)} MB</div><div class="bar"><i></i></div>`;$('#ups').prepend(d);
- const x=new XMLHttpRequest();x.open('POST',f.ref?'/upload?ref=1':'/upload');x.setRequestHeader('X-Name',encodeURIComponent(f.name));
+ // Sent in 50 MB pieces (2026-11-08): the Cloudflare Tunnel link caps one request at 100 MB. Each piece retries 3x.
+ const PS=50*1048576,parts=Math.max(1,Math.ceil(f.size/PS)),up=[...crypto.getRandomValues(new Uint8Array(6))].map(b=>b.toString(16).padStart(2,'0')).join('');
+ let x=null,tries=0,last=Date.now(),done=false;
+ const fin=ok=>{done=true;d.querySelector('.meta').textContent+=ok?(f.ref?' · saved as a reference':' · uploaded, queued for editing'):' · upload failed (check signal, then pick it again)';if(!queue.length)msg(ok?'Sent. The laptop is editing it now (see below).':'Upload failed. Try again.');if(ok)setTimeout(()=>d.remove(),4000);busy=false;refresh();next();};
  // Watchdog (2026-11-04): leaving the page kills the upload without telling it, which left the page "busy" forever
- // and new picks did nothing. No progress for 20s while visible = give up, say so, move on.
- let last=Date.now(),done=false;const dog=setInterval(()=>{if(done){clearInterval(dog);return}if(document.visibilityState==='visible'&&Date.now()-last>20000){clearInterval(dog);done=true;try{x.abort()}catch(e){}d.querySelector('.meta').textContent+=' · stopped (the page was closed or the phone locked). Pick it again.';busy=false;msg('An upload stopped part way. Pick that video again.');next();}},3000);
- x.upload.onprogress=p=>{last=Date.now();if(p.lengthComputable)d.querySelector('i').style.width=(100*p.loaded/p.total)+'%'};
- x.onabort=()=>{if(!done){done=true;busy=false;next();}};
- x.onload=()=>{done=true;d.querySelector('.meta').textContent+=x.status==200?(f.ref?' · saved as a reference':' · uploaded, queued for editing'):' · upload failed';if(!queue.length)msg(x.status==200?'Sent. The laptop is editing it now (see below).':'Upload failed. Try again.');if(x.status==200)setTimeout(()=>d.remove(),4000);busy=false;refresh();next();};
- x.onerror=()=>{if(done)return;done=true;d.querySelector('.meta').textContent+=' · upload failed (still on the same Wi-Fi?)';busy=false;next();};
- x.send(f);}
+ // and new picks did nothing. No progress for 30s while visible = give up, say so, move on.
+ const dog=setInterval(()=>{if(done){clearInterval(dog);return}if(document.visibilityState==='visible'&&Date.now()-last>30000){clearInterval(dog);done=true;try{x.abort()}catch(e){}d.querySelector('.meta').textContent+=' · stopped (the page was closed or the phone locked). Pick it again.';busy=false;msg('An upload stopped part way. Pick that video again.');next();}},3000);
+ const retry=i=>{if(++tries<4){last=Date.now();setTimeout(()=>send(i),2000)}else fin(false)};
+ function send(i){x=new XMLHttpRequest();x.open('POST',f.ref?'/upload?ref=1':'/upload');x.setRequestHeader('X-Name',encodeURIComponent(f.name));
+  x.setRequestHeader('X-Upload',up);x.setRequestHeader('X-Part',i);x.setRequestHeader('X-Parts',parts);x.setRequestHeader('X-Offset',i*PS);x.setRequestHeader('X-Size',f.size);
+  x.upload.onprogress=p=>{last=Date.now();if(p.lengthComputable)d.querySelector('i').style.width=(100*(i*PS+p.loaded)/f.size)+'%'};
+  x.onabort=()=>{if(!done){done=true;busy=false;next();}};
+  x.onerror=()=>{if(!done)retry(i)};
+  x.onload=()=>{if(done)return;if(x.status==200){tries=0;if(i<parts-1)send(i+1);else fin(true)}else retry(i)};
+  x.send(f.slice(i*PS,Math.min(f.size,(i+1)*PS)));}
+ send(0);}
 async function act(id,a){await fetch('/'+a+'/'+id,{method:'POST'});refresh();}
 async function copyCap(id,btn){const t=document.getElementById('cap-'+id).value;
  try{await navigator.clipboard.writeText(t)}catch(e){const ta=document.getElementById('cap-'+id);ta.select();document.execCommand('copy')}
@@ -461,14 +468,23 @@ class H(BaseHTTPRequestHandler):
             ext = os.path.splitext(name)[1].lower() or ".mov"
             if ext not in (".mov", ".mp4", ".m4v", ".hevc"):
                 ext = ".mov"
-            rid = uuid.uuid4().hex[:12]
+            # Pieces (2026-11-08): the phone sends big videos in 50 MB parts sharing one X-Upload id
+            up = re.sub(r"[^0-9a-f]", "", (self.headers.get("X-Upload") or "").lower())[:12]
+            parts = int(self.headers.get("X-Parts") or 1)
+            idx = int(self.headers.get("X-Part") or 0)
+            off = int(self.headers.get("X-Offset") or 0)
+            size = int(self.headers.get("X-Size") or n)
+            rid = up if len(up) == 12 else uuid.uuid4().hex[:12]
             ref = "ref=1" in u.query
             stem = re.sub(r"[^\w.-]", "_", os.path.splitext(name)[0]) + "-" + rid if ref else rid
             raw = os.path.join(REFS if ref else INBOX, stem + ext)
             part = raw + ".part"
             left = n
             try:
-                with open(part, "wb") as f:
+                if idx and not os.path.exists(part):
+                    return self.send(400, "missing earlier part")
+                with open(part, "r+b" if idx else "wb") as f:
+                    f.seek(off)
                     while left > 0:
                         b = self.rfile.read(min(CHUNK, left))
                         if not b:
@@ -478,6 +494,15 @@ class H(BaseHTTPRequestHandler):
             except (ConnectionError, OSError):
                 pass
             if left > 0 or n == 0:
+                if parts == 1:
+                    try:
+                        os.remove(part)
+                    except OSError:
+                        pass
+                return self.send(400, "upload incomplete")
+            if idx < parts - 1:
+                return self.send(200, "part")
+            if os.path.getsize(part) != size:
                 try:
                     os.remove(part)
                 except OSError:
@@ -530,6 +555,9 @@ class H(BaseHTTPRequestHandler):
             with lock:
                 items = [it for it in load() if it["id"] != rid]
                 save(items)
+            # 2026-11-08: free its calendar hook, or a re-recorded take can't match it (stuck on "edited")
+            if cur.get("match") and not any(it.get("match") == cur["match"] for it in items):
+                hub_stage(cur["match"], "")
             for f in (cur.get("raw"), os.path.join(READY, cur.get("file") or "")):
                 for g in (f, (f or "") + ".cover.jpg", (f or "") + ".plan.json"):
                     try:
@@ -551,12 +579,62 @@ class H(BaseHTTPRequestHandler):
 
 # ── GHL poster (2026-11-04): approved Reels -> next free slot -> one scheduled post per platform ─────────────
 def taken_slots(items, skip_id=None):
-    return {it["slot"] for it in items if it.get("slot") and it["id"] != skip_id and it["status"] in ("scheduling", "scheduled", "posted", "post_failed")}
+    return {it["slot"] for it in items if it.get("slot") and it["id"] != skip_id and it["status"] in ("approved", "scheduling", "scheduled", "posted", "post_failed")}
+
+
+def rebalance():
+    """Olly 2026-11-08: lowering a day's Reel number in the Hub must move that day's spare GHL posts on too.
+    For every posting day from today: if it holds more Reels (scheduled + posted) than its Hub number, the latest
+    scheduled ones (not due within the hour) come off GHL and are re-booked on the first free slot after that day,
+    through the normal poster path (status approved + slot kept), which also tells the Hub the new day."""
+    hub = hub_get(fresh=True)
+    if not hub:
+        return 0
+    targets = hub.get("targets") or {}
+    counts = {}
+    for r in hub.get("reels", []):
+        counts[r["date"]] = counts.get(r["date"], 0) + 1
+    now = gp.datetime.now(gp.timezone.utc)
+    safe = (now + gp.timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    today = (now.astimezone(gp.WH) - gp.timedelta(hours=6)).date()
+    with lock:
+        items = load()
+    per_day = {}
+    for it in items:
+        if it.get("slot") and it["status"] in ("approved", "scheduling", "scheduled", "posted"):
+            per_day.setdefault(gp.day_of(it["slot"]), []).append(it)
+    moved = 0
+    for d in sorted(per_day):
+        if d < today:
+            continue
+        extra = len(per_day[d]) - int(targets.get(d.isoformat(), gp.MIN_A_DAY))
+        if extra <= 0:
+            continue
+        movable = sorted((it for it in per_day[d] if it["status"] == "scheduled" and it["slot"] > safe), key=lambda it: it["slot"])
+        for it in movable[max(0, len(movable) - extra):]:
+            left = gp.unschedule(it)
+            if left:   # part of it already went out or GHL refused: leave it where it is
+                update(it["id"], ghl=left, post_error="Couldn't move it off a day you lowered: " + ", ".join(left))
+                continue
+            with lock:
+                taken = taken_slots(load(), it["id"])
+            new = gp.next_slot(taken, targets=targets, counts=counts, start=(d + gp.timedelta(days=1)).isoformat())
+            update(it["id"], status="approved", slot=new, ghl={}, post_error="", moved_from=it["slot"])
+            print("moved", it["id"], it["slot"], "->", new)   # id, not title: emoji titles crash a cp1252 console
+            moved += 1
+    return moved
 
 
 def poster():
     last_check = 0
+    last_bal = 0
     while True:
+        if time.time() - last_bal > 600:  # every 10 min: did Olly lower a day's Reel number in the Hub? (2026-11-08)
+            last_bal = time.time()
+            try:
+                rebalance()
+            except Exception as e:
+                print("rebalance failed:", e)
         with lock:
             items = load()
             job = next((it for it in items if it["status"] == "approved"), None)
@@ -595,6 +673,56 @@ def poster():
         pwake.clear()
 
 
+# ── Google Drive drop folder (Olly 2026-11-08: "upload stuff from anywhere") ─────────────────────────────────
+# Videos saved from the phone into the Drive folder sync down to the laptop (Google Drive for desktop) and are
+# moved into the inbox here, then edited exactly like a page upload. Approving still happens on the upload page.
+# The folder path lives in reels\drive_folder.txt (one line); default G:\My Drive\Reel Upload.
+VIDEO_EXT = (".mov", ".mp4", ".m4v", ".hevc")
+
+
+def drive_folder():
+    try:
+        p = open(os.path.join(HERE, "drive_folder.txt"), encoding="utf-8").read().strip()
+        if p:
+            return p
+    except OSError:
+        pass
+    return r"G:\My Drive\Reel Upload"
+
+
+def drive_watch():
+    seen = {}   # name -> size at the last look; a file is taken only once its size stops changing (sync finished)
+    while True:
+        folder = drive_folder()
+        try:
+            names = [n for n in os.listdir(folder) if os.path.splitext(n)[1].lower() in VIDEO_EXT] if os.path.isdir(folder) else []
+        except OSError:
+            names = []
+        for n in names:
+            src = os.path.join(folder, n)
+            try:
+                size = os.path.getsize(src)
+            except OSError:
+                continue
+            if size == 0 or seen.get(n) != size:
+                seen[n] = size
+                continue
+            rid = uuid.uuid4().hex[:12]
+            raw = os.path.join(INBOX, rid + os.path.splitext(n)[1].lower())
+            try:
+                shutil.move(src, raw)
+            except OSError as e:
+                print("drive move failed:", rid, e)
+                continue
+            seen.pop(n, None)
+            with lock:
+                items = load()
+                items.append({"id": rid, "name": n, "raw": raw, "status": "queued", "uploaded": time.time(), "via": "drive"})
+                save(items)
+            wake.set()
+        time.sleep(30)
+
+
 def lan_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -604,6 +732,38 @@ def lan_ip():
         return "127.0.0.1"
     finally:
         s.close()
+
+
+# ── One fixed link (Olly 2026-11-08): the Wi-Fi address changes, so the laptop tells the Hub where it is and
+# https://hub.ollyhenson.com/api/track/upload forwards the phone here. Checked every 2 minutes, sent only on change.
+def wifi_ip():
+    ps = ("(Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Where-Object { $_.InterfaceAlias -notmatch "
+          "'Nord|OpenVPN|vEthernet|Bluetooth|Loopback' } | Select-Object -First 1).IPAddress")
+    try:
+        ip = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True, timeout=20,
+                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)).stdout.strip()
+        if re.fullmatch(r"\d+\.\d+\.\d+\.\d+", ip):
+            return ip
+    except Exception:
+        pass
+    return lan_ip()
+
+
+def report_ip():
+    sent = ""
+    while True:
+        ip = wifi_ip()
+        if ip and ip != sent and not ip.startswith("127."):
+            try:
+                req = urllib.request.Request("https://hub.ollyhenson.com/api/track/upload?key=" + hub_key(),
+                                             data=json.dumps({"ip": ip}).encode(), method="POST",
+                                             headers={"content-type": "application/json", **UA})
+                urllib.request.urlopen(req, timeout=15).read()
+                sent = ip
+                print("address sent to the Hub:", ip)
+            except Exception as e:
+                print("address report failed:", e)
+        time.sleep(120)
 
 
 class Server(ThreadingHTTPServer):
@@ -634,5 +794,7 @@ if __name__ == "__main__":
         save(items)
     threading.Thread(target=worker, daemon=True).start()
     threading.Thread(target=poster, daemon=True).start()
-    print(f"\n  Reel Upload is running.\n  On your phone (same Wi-Fi) open:  http://{lan_ip()}:{PORT}\n  Keep this window open. Close it to stop.\n")
+    threading.Thread(target=drive_watch, daemon=True).start()
+    threading.Thread(target=report_ip, daemon=True).start()
+    print(f"\n  Reel Upload is running.\n  On your phone (same Wi-Fi) open:  https://hub.ollyhenson.com/api/track/upload  (or http://{wifi_ip()}:{PORT})\n  Keep this window open. Close it to stop.\n")
     srv.serve_forever()

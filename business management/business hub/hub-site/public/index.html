@@ -3861,11 +3861,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // already hit the daily reel target — used to auto-slot a new idea.
   // The date field stays a normal editable input, so this is just a
   // starting point, not a lock.
-  function findNextAvailableDate(excludeIndex){
+  function findNextAvailableDate(excludeIndex, fromISO){
     // Today is a valid slot, but never a date before today — hard floor
     // enforced below regardless of where the search starts.
+    // fromISO (optional): start the search on this day instead of today (used when a day's number is lowered).
     var floor = todayISO();
     var d = new Date();
+    if (fromISO && fromISO > floor){ var fp = fromISO.split("-"); d = new Date(+fp[0], +fp[1]-1, +fp[2]); }
     for (var i = 0; i < 365; i++){
       var iso = isoDate(d);
       if (iso >= floor){
@@ -3892,7 +3894,29 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     });
     late.sort(function(a, b){ return ideas[a].date < ideas[b].date ? -1 : ideas[a].date > ideas[b].date ? 1 : a - b; });
     late.forEach(function(idx){ ideas[idx].date = findNextAvailableDate(idx); });
-    return late.length;
+    // Also catch any day from today on that holds more Reels than its number (e.g. a number lowered on another device).
+    var over = {};
+    ideas.forEach(function(idea){ if (idea.title && idea.date && idea.date >= today) over[idea.date] = 1; });
+    var moved = 0;
+    Object.keys(over).sort().forEach(function(iso){ moved += pushOverflowReels(iso); });
+    return late.length + moved;
+  }
+
+  // Olly 2026-11-08: "if I change how many reels to post on a day (if I reduce the number) the spares automatically get
+  // pushed to the days in the future". When a day holds more Reels than its number, the spare Drafts (the last ones on
+  // that day) move to the first free slots after it; full days and rest days are passed over, order is kept.
+  // Recorded / Scheduled / Published Reels never move (they're tied to the laptop + GHL). Returns how many moved.
+  function pushOverflowReels(iso){
+    var ideas = state.content && state.content.ideas || [];
+    var onDay = [];
+    ideas.forEach(function(idea, idx){ if (idea.date === iso && idea.title) onDay.push(idx); });
+    var extra = onDay.length - reelTarget(iso);
+    if (extra <= 0) return 0;
+    var movable = onDay.filter(function(idx){ return !ideas[idx].skipped && reelState(ideas[idx]) === "draft"; });
+    var move = movable.slice(Math.max(0, movable.length - extra));
+    var p = iso.split("-"), nd = new Date(+p[0], +p[1]-1, +p[2] + 1), next = isoDate(nd);
+    move.forEach(function(idx){ ideas[idx].date = findNextAvailableDate(idx, next); });
+    return move.length;
   }
 
   function renderCalendar(){
@@ -4012,7 +4036,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tgtSel.addEventListener("change", function(){
       if (!state.reelDayTarget) state.reelDayTarget = {};
       state.reelDayTarget[dayModalDate] = Number(tgtSel.value);
-      markDirty(); renderCalendar(); if (typeof renderToday === "function") renderToday();
+      var pushed = pushOverflowReels(dayModalDate);
+      markDirty(); renderIdeasAndWeek(); if (typeof renderToday === "function") renderToday();
+      renderDayModal();
+      if (pushed){
+        var pn = document.createElement("p"); pn.className = "hint";
+        pn.textContent = "Moved " + pushed + " Reel" + (pushed === 1 ? "" : "s") + " to the next free days.";
+        document.getElementById("dayModalBody").insertBefore(pn, document.getElementById("dayModalBody").children[1] || null);
+      }
     });
     tgtRow.appendChild(tgtLbl); tgtRow.appendChild(tgtSel);
     body.appendChild(tgtRow);

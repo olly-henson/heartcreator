@@ -103,15 +103,18 @@ def day_slots(d, n):
     return sorted(out)
 
 
-def next_slot(taken, want_date=None, now=None, targets=None, counts=None):
+def next_slot(taken, want_date=None, now=None, targets=None, counts=None, start=None):
     """The Hub calendar decides: a matched Reel books its own calendar day; that day's slots are spread for
     max(the day's Reel number, Reels on it). A Reel whose day has passed, or with no match, tops up the first day
-    that has fewer booked than its number (rest days skipped). Never sooner than 20 minutes from now."""
+    that has fewer booked than its number (rest days skipped). Never sooner than 20 minutes from now.
+    start (2026-11-08): top up from this day on instead (a spare pushed off a day whose number was lowered)."""
     now = now or datetime.now(WH)
     targets, counts = targets or {}, counts or {}
     today = (now - timedelta(hours=6)).date()
     on_time = bool(want_date) and date.fromisoformat(want_date) >= today
     d = date.fromisoformat(want_date) if on_time else today
+    if start:
+        on_time, d = False, max(today, date.fromisoformat(start))
     per_day = {}
     for t in taken:
         per_day[day_of(t)] = per_day.get(day_of(t), 0) + 1
