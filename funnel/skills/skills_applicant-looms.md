@@ -317,6 +317,9 @@ Email: subject "Your plan of action", same text + "Olly" (both Claude's wording,
 - **Testing with a fake applicant:** create it in GHL with an `olly+` email and a UK drama number (+44 7700 900xxx, can't reach a real person), then delete it from GHL (DELETE /contacts/<id> with marketing/.env GHL_PIT_TOKEN) and its KV keys (`plan:`, `planview:`, `share:`) as soon as Olly's done: it counts as an application until then.
 - **Explaining to Olly: one path, not every button.** He was "very confused" by a two-option explanation; give the one way to do it in 4 steps, offer to remove the extras.
 
+- **The plan pre-sells, the video closes.** Send the plan when they ask for the details, ask whether they think it's possible for them, handle any doubt by text, and only send the sales video once they agree. Why: Frankie's 4 buckets (hand-raiser → pre-sell the plan, 80% of the sale → video close → follow-up); objections to the plan become objections to everything later, so they're handled before the price.
+- **Message wording is Olly's; when he rewrites a template, replace it whole** rather than merging his version with Claude's earlier one. Fix only typos and missing words, and say which.
+
 ### Never (plan of action)
 - Never name the person mid-copy ("[Name], getting clear…"); the name is on the cover only.
 - Never add their job/profession ("your analytical mind is a strength in [their job]"): removed.
@@ -325,8 +328,10 @@ Email: subject "Your plan of action", same text + "Olly" (both Claude's wording,
 - Never italics, never text shrunk to fit a phone.
 - Never commas inside one must-have (the list is joined with " · ").
 - Never hand-edit `hub-site/public/plan.html` or `plan-view.html`: they're generated from the template.
+- Never send the sales video before they've had the plan and said it sounds possible for them.
 
 ---
 
 - **2026-11-08: Skill review.** Consolidated the day's plan work into one "Plan of action" section (process, the 4 signed-off pages, Olly's send message, rules with the reason for each, Never list). Lessons: the plan replaces the science guide (Olly wants to show he knows what to do); emotional resonance is the product and must run through the problem, solution and every step; introduce terms the Reels' way; keep science to two terms; readable for people with poor eyesight (large text, no italics, no shrinking); Olly's dictated words verbatim; making a link isn't sending it and his own opens don't count; test contacts get deleted; explain one path. Removed/overridden: the science guide section (retired), the 5-page and 3-page layouts, the "what to expect / how I'll support you / reply for the link" page, the "You'll keep [pattern]" box and `pattern` field, the work/profession line, brainwave/DMN/nervous-system wording, "Send as a link" (now "Make their link"), and the "week numbers are Claude's proposal" note (Olly set the order).
 - **2026-11-08: Order change.** Plan of action moved before the sales video (Frankie's bucket 2: pre-sell the plan, get agreement, then the video closes). Overrides the Step 7 order where the video went straight after "send me the details".
+- **2026-11-08: Skill review (2).** Added: plan before video as a rule with the reason (Frankie's buckets), Olly's rewritten send message (replaces both earlier versions: "I had a look through your application again today… Here's your plan for you" and the "what you think" ending), rule to replace a rewritten template whole. Still open from the Frankie comparison: (1) the sales video should say who the program works well for (check the recording); (2) no watch tracking on the YouTube video yet (planned own-Loom page); (3) Olly to decide whether follow-ups stay at one or go to 3 "go deeper" messages. Email subject "Your plan of action" + "Olly" sign-off are still Claude's wording, unconfirmed.
