@@ -291,20 +291,16 @@ Olly: "I want to send them a summary plan of action of exactly what we're going 
 3. **"The solution: emotional resonance" label, "How we build it, step by step":** Day 1 get you inside the program (starter trainings are short and show exactly how we'll build your emotional resonance) · Week 1 clarity on what you want and how you'll feel (their must-haves + emotions) · Week 1 embody it with the meditation (flagged "This is the step that makes the difference").
 4. **Same label, "Then, beyond the first week":** Week 2 anchor it through your day (their moments) · Day 14 feel-the-difference check (money back) · Day 14+ notice the shifts ("positive shifts in your world and new people coming into it. I guide you through how to handle each one") · closing **Where this leads** box with their outcome.
 
-### The send message (Olly's words, verbatim; only name, outcome and link change)
-> Hey [Name], I had a look through your application again today.
+### The send message (Olly's words, verbatim, rewritten by him 2026-11-08; only name, outcome and link change)
+> Hey [Name], so I've just reviewed your application and it all looks good.
 >
-> I'm certain we can make this work so I've put together a plan of action of exactly what we'll do to get you to [their outcome, first letter lowercase, no full stop].
->
-> Excited to get started.
->
-> Here's your plan for you:
+> So I've put together a plan of action of how we can get you to [their outcome, first letter lowercase, no full stop].
 >
 > [link]
 >
-> Have a look and let me know what you think.
+> Have a look and let me know if you think this is possible for you.
 
-(Last line added 2026-11-08, Olly: "Yer that sounds good". It's Frankie's "What do you think of that?" after pre-selling the plan.)
+(Claude only fixed typos: "of we can" -> "of how we can", and put the link before the question. The last line is Frankie's "What do you think of that?" after pre-selling the plan: it invites the doubt so it's handled before the price.)
 
 Email: subject "Your plan of action", same text + "Olly" (both Claude's wording, not yet confirmed by Olly).
 
