@@ -1,6 +1,7 @@
 # NEXT: where we left off
 
 Read this at the start of every session. Keep it short; build details live in the skill files.
+**2026-11-07 (5):** Hub rolls unrecorded Draft Reels from past days into the next free slots on load (`rollOverReels()`, rule in the Hub skills file). Session closed.
 **2026-11-07 (4):** GHL timezone London -> Africa/Harare (Cape Town time); daily emails now Sat 7 + Sun 8 Nov 22:07 (`node tools/ghl-email-schedule.mjs` to check). Hub to-do for next week: build our own Loom with view tracking (preview https://claude.ai/artifact/M8JLSLFLdfYGV2aBDsWP7c, plan in funnel/skills/skills_applicant-looms.md Step 5).
 **2026-11-07 (3):** Reels max 6 a day (Hub DAILY_REEL_TARGET + reels/ghl_poster.py MAX_A_DAY; upload_server restarted). Moved 'How to attract your life partner' from Sat 15:00 to Sun 8 Nov 12:00 Windhoek; nothing scheduled after that until Olly uploads.
 **2026-11-07 (2):** Sales cards: 'Text them on WhatsApp | iMessage' switch (state.looms[id].msgApp; auto-iMessage if application says no WhatsApp; sms: links). Per-applicant drafted emails live in KV state.looms[id].draftEmail {subject, body} (never in code: public repo); one applicant's draft (no WhatsApp) is on their card awaiting Olly's check. Intro text now says a voice note plan is coming.
