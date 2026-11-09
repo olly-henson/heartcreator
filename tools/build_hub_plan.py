@@ -24,6 +24,8 @@ HEAD = '''<!doctype html>
 <meta name="robots" content="noindex">
 '''
 s = HEAD + s.replace('<title>Plan of Action</title>', '<title>Plan of Action · Hub</title>', 1)
+import time as _t0
+s = s.replace("IMG_BASE + n;", "IMG_BASE + n + '?v=" + str(int(_t0.time())) + "';")  # cache-bust editor images (2026-11-09)
 s = s.replace('<style>', '<style>\n:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }\n[hidden] { display: none !important; }\nbody { margin: 0; font-size: 14px; }\n.miss { border-color: #f59e0b !important; background: color-mix(in srgb, #f59e0b 12%, var(--ui-field)) !important; }\n.back { font-size: 13px; color: var(--ui-accent); text-decoration: none; font-weight: 600; }\n.status { font-size: 12px; color: var(--ui-muted); min-height: 1em; margin: 0; }\n.linkbox { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--ui-line); border-radius: 10px; background: var(--ui-field); }\n.linkbox small { font-size: 12px; color: var(--ui-muted); }\n.linkbox code { font-size: 13px; word-break: break-all; color: var(--ui-fg); }\n.lbtn { font: 600 14px var(--body); border-radius: 50px; padding: 10px 18px; color: #fff; background: #25a35a; text-decoration: none; }\n.lbtn.ghostl { background: transparent; color: var(--ui-fg); border: 1px solid var(--ui-line); }\n', 1)
 
 # header: back link + title
@@ -73,6 +75,23 @@ LOADER = r'''
   function andList(a) { a = a.filter(Boolean); return a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
   function ans(a, re) { var k = Object.keys(a.fields || {}).filter(function (n) { return re.test(n); })[0]; return k ? String(a.fields[k] || '').trim() : ''; }
   function sentences(t, max) { var p = String(t || '').match(/[^.!?]+[.!?]*/g) || []; var out = ''; for (var i = 0; i < p.length; i++) { if ((out + p[i]).length > max && out) break; out += p[i]; } return out.trim(); }
+  // Gender (2026-11-09): the application has no gender question, so guess and let Olly override with "They are a".
+  // 1) words in what they want / feelings, 2) common male first names (worldwide), else woman.
+  var MALE = ('rami ramy sami samy omar omer ali ahmed ahmad mohamed mohammed muhammad mustafa hassan hussein ibrahim karim kareem khalid tariq tarek youssef yusuf ziad zaid hamza bilal faisal fadi jad nabil walid amir amr adam adem '
+    + 'raj rahul rohan arjun amit anil ankit ajay vijay vikram sanjay suresh ramesh rakesh rajesh mahesh manoj deepak dev aditya akash aman arun ashok harsh karan kunal nikhil nitin pranav pradeep prakash rishi rohit sachin sahil sameer saurabh siddharth sunil tarun varun vivek yash '
+    + 'wei jun hao ming jian lei tao feng hiroshi kenji takashi yuki daichi haruto ren sota min-jun jae seo-jun ji-ho '
+    + 'jose juan carlos luis miguel javier diego pablo alejandro andres antonio manuel francisco rafael sergio jorge marco mario matteo luca lorenzo giovanni paolo pedro joao tiago rui '
+    + 'james john robert michael william david richard joseph thomas charles christopher daniel matthew anthony mark donald steven paul andrew joshua kenneth kevin brian george timothy ronald edward jason jeffrey ryan jacob gary nicholas eric jonathan stephen larry justin scott brandon benjamin samuel gregory alexander frank patrick raymond jack dennis jerry tyler aaron henry douglas peter adam nathan zachary walter kyle harold carl jeremy keith roger gerald ethan arthur terry christian sean lawrence austin noah joe jesse albert bryan billy bruce willie jordan dylan alan ralph gabriel roy juan wayne eugene logan randy louis russell vincent philip bobby johnny bradley '
+    + 'oliver olly harry charlie freddie alfie archie oscar leo theo max finn liam lucas mason elijah owen sebastian hugo louis rory callum connor declan ewan fraser hamish jamie lewis ross stuart toby tom ben sam dan dave matt mike nick rob steve chris joe josh luke jake will '
+    + 'kwame kofi kojo chidi chinedu emeka obi tunde segun femi olu musa ibrahima mamadou sipho thabo themba bongani lwazi andile mandla sibusiso tshepo kagiso '
+    + 'ivan dmitri sergei alexei mikhail nikolai andrei pavel igor oleg piotr pawel tomasz krzysztof marek jan lars sven anders erik nils henrik johan mats jens klaus hans stefan jurgen jonas felix moritz').split(' ');
+  function guessGender(a) {
+    var t = ' ' + [ans(a, /^HA Relationship Wanted/i), ans(a, /^HA Feelings About Love/i), ans(a, /^HA Anything/i)].join(' ').toLowerCase() + ' ';
+    var m = (t.match(/\b(a woman|women|she|her|wife|girlfriend|lady)\b/g) || []).length, f = (t.match(/\b(a man|men|he|him|his|husband|boyfriend|guy)\b/g) || []).length;
+    if (m > f) return 'male'; if (f > m) return 'female';
+    var n = String(a.firstName || '').trim().toLowerCase().split(/[\s]+/)[0];
+    return MALE.indexOf(n) >= 0 ? 'male' : 'female';
+  }
   function auto(a) {
     var tried = ans(a, /^HA Tried/i).split(/\s*,\s*/).map(low).filter(Boolean);
     var ints = ans(a, /^FF Intentions/i).split(/\s*[·|]\s*/).map(function (x) { return low(you(x)); }).filter(Boolean);
@@ -87,7 +106,7 @@ LOADER = r'''
       q1: ints[0] || '', q2: ints[1] || '', q3: ints[2] || '', q4: ints[3] || '',
       feels: res, feel1: res,
       oldfeel: low(ans(a, /^FF Current Emotion/i)),
-      gender: 'female',
+      gender: guessGender(a),
       moments: 'catching yourself overthinking about love' + (apps ? ', and opening a dating app' : '')
     };
   }
@@ -109,7 +128,7 @@ LOADER = r'''
     var v = auto(a); if (saved) Object.keys(saved).forEach(function (k) { if (k.charAt(0) !== '_') v[k] = saved[k]; });
     apply(v);
     document.title = who + "'s Plan of Action";
-    note.textContent = saved ? 'Your saved version for ' + who + '. Orange boxes are still empty.' : 'Filled in from ' + who + "'s answers. Check the anchor moments line and anything in orange, then save.";
+    note.textContent = (saved ? 'Your saved version for ' + who + '. Orange boxes are still empty.' : 'Filled in from ' + who + "'s answers. Check anything in orange, then save.") + ' Images and wording are set for a ' + (/^m/i.test(v.gender) ? 'man' : 'woman') + ' (change "They are a" if that is wrong).';
   }).catch(function () { note.textContent = "Couldn't reach GHL. If you've been away a while, reload to log in again."; apply({}); });
 
   var phone = '', mail = '';
@@ -233,6 +252,23 @@ html { font-size: 112.5%; }
 @supports (font: -apple-system-body) { html { font: -apple-system-body; } }
 @media screen {
   .viewwrap .stage { width: 100%; max-width: 680px; zoom: 1 !important; }
+  /* photos keep their shape on the applicant page at any width (Olly 2026-11-09: they looked squashed) */
+  .viewwrap .stepimg img { height: auto !important; aspect-ratio: 4 / 3; }
+  .viewwrap .stepimg.ptxt img, .viewwrap .stepimg.s8 img { aspect-ratio: 6 / 5; }
+  .viewwrap .big img { height: auto !important; aspect-ratio: 16 / 9; }
+  .viewwrap .step-pg h2.sm { min-height: 0; }
+  /* even, readable text on the applicant page (Olly 2026-11-09: boxes cramped, body text too small on mobile) */
+  .viewwrap .pg p, .viewwrap .pg p.steptext, .viewwrap .pg .stack.tight > p { font-size: 1.12rem !important; line-height: 1.6 !important; }
+  .viewwrap .journey.solo > div, .viewwrap .journey.solo > .from, .viewwrap .journey.solo > .to { font-size: 1.05rem !important; line-height: 1.6 !important; padding: 1.15rem 1.2rem !important; }
+  .viewwrap .journey.solo > div p { font-size: inherit !important; line-height: inherit !important; }
+  .viewwrap .journey.solo > div p + p { margin-top: .75rem !important; }
+  .viewwrap .journey.solo > div p.wave { font-size: 1rem !important; margin-top: .9rem !important; padding-top: .9rem !important; }
+  .viewwrap .journey > div { font-size: 1.12rem; line-height: 1.55; }
+  .viewwrap .pg .stack.tight { gap: 1rem; }
+  .viewwrap .steptext { margin-top: 1.1rem; }
+  .viewwrap .junction h2 { font-size: 2.1rem; }
+  .viewwrap .pg .foot { font-size: .64rem; letter-spacing: .05em; gap: .3rem .8rem; flex-wrap: wrap; }
+  .viewwrap .pg .foot span { white-space: nowrap; }
   .viewwrap .pg { width: 100%; height: auto; padding: 2rem 1.25rem 1.5rem; border-radius: 16px; }
   .viewwrap .pg + .pg { margin-top: 1.25rem; }
   .viewwrap .pg .eyebrow { font-size: .85rem; letter-spacing: .1em; }
@@ -283,13 +319,41 @@ VIEW_JS = r'''
   function fit() {}
   window.addEventListener('resize', fit);
   function set(k, v) { document.querySelectorAll('[data-v="' + k + '"]').forEach(function (s) { s.textContent = v; }); }
+  // First person -> second person for the cover (Olly, 2026-11-09: "you want xyz")
+  function toYou(t) {
+    t = String(t || '').trim().replace(/^["'“”]+|["'“”]+$/g, '').trim();
+    if (!t) return '…';
+    var M = { "i'm": "you're", "i’m": "you’re", "i've": "you've", "i’ve": "you’ve", "i'd": "you'd", "i’d": "you’d", "i'll": "you'll", "i’ll": "you’ll", 'i am': 'you are', 'i was': 'you were', 'i': 'you', 'me': 'you', 'my': 'your', 'mine': 'yours', 'myself': 'yourself' };
+    t = t.replace(/\b(i[’']m|i[’']ve|i[’']d|i[’']ll|i am|i was|myself|mine|my|me|i)\b/gi, function (w) { return M[w.toLowerCase()] || w; });
+    t = t.charAt(0).toUpperCase() + t.slice(1);
+    return /[.!?]$/.test(t) ? t : t + '.';
+  }
+  // Auto-fit (Olly 2026-11-09): long answers must never push a page past its edge.
+  // 1) shrink that page's image (down to 90px), 2) then ease the text down until it fits.
+  function planFit() {
+    document.querySelectorAll('.pg').forEach(function (pg) {
+      var imgs = pg.querySelectorAll('.big img, .stepimg img'), txt = pg.querySelectorAll('h2, .journey > div, .steptext, .stack p, .journey.solo p');
+      imgs.forEach(function (im) { im.style.height = ''; }); txt.forEach(function (t) { t.style.fontSize = ''; });
+      var over = function () { return pg.scrollHeight > pg.clientHeight + 1; };
+      if (!over()) return;
+      imgs.forEach(function (im) { var h = im.getBoundingClientRect().height; while (over() && h > 90) { h -= 6; im.style.height = h + 'px'; } });
+      var base = [].map.call(txt, function (t) { return parseFloat(getComputedStyle(t).fontSize); }), k = 1;
+      while (over() && k > 0.6) { k -= 0.04; txt.forEach(function (t, i) { t.style.fontSize = (base[i] * k).toFixed(1) + 'px'; }); }
+    });
+  }
+  function wantYou(t) {
+    t = String(t || '').trim().replace(/^["'“”]+|["'“”]+$/g, '').replace(/^(i\s+(really\s+)?(want|would like)\s+(to\s+(have|find|be in|meet)\s+)?)/i, '').trim();
+    if (!t) return '…';
+    return 'You want ' + toYou(t).replace(/^./, function (c) { return c.toLowerCase(); });
+  }
   fetch('/p/' + code + '/data', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
     if (!d || !d.ok) throw new Error('missing');
     var p = d.plan;
     Object.keys(p).forEach(function (k) { set(k, String(p[k] || '').trim()); });
+    set('nowYou', toYou(p.now)); set('wantYou', wantYou(p.want)); set('pron', /^m/i.test(p.gender || '') ? 'His' : 'Her');
     set('qlist', [p.q1, p.q2, p.q3, p.q4].map(function (x) { return String(x || '').trim(); }).filter(Boolean).join(' · '));
     document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !String(p[s.dataset.show] || '').trim(); });
-    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(p.gender || '') ? 'male' : 'female') + '.jpg' : im.dataset.img; im.onerror = function () { im.parentElement.hidden = true; }; im.src = '/p/' + code + '/img/' + n; });
+    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(p.gender || '') ? 'male' : 'female') + '.jpg' : im.dataset.img.replace('{g}', /^m/i.test(p.gender || '') ? 'male' : 'female'); im.onerror = function () { im.parentElement.hidden = true; }; im.src = '/p/' + code + '/img/' + n + '?v=__BUILDV__'; });
     function getv(k) { return p[k]; }
     // No feeling yet (Feeling Finder "I'm not sure", 2026-11-09): say we'll find it together, and don't put "I'm not sure" in a sentence
     (function(){
@@ -297,6 +361,7 @@ VIEW_JS = r'''
       if (!fl || NS.test(fl)) set('feels', (fl || "I'm not sure") + " (this is what we'll go through)");
       if (!f1 || NS.test(f1)) set('feel1', 'the feeling we find together');
     })();
+    planFit(); if (document.fonts) document.fonts.ready.then(planFit);
 
     if (p.name) document.title = p.name + "'s Plan of Action";
     msg.hidden = true; stage.hidden = false; fit();
@@ -316,5 +381,7 @@ ed = open(OUT, encoding='utf-8').read()
 ed = ed.replace('</style>', _read + '</style>', 1).replace('<div class="pages">', '<div class="pages viewwrap">', 1)
 open(OUT, 'w', encoding='utf-8').write(ed)
 VOUT = os.path.join(os.path.dirname(OUT), 'plan-view.html')
-open(VOUT, 'w', encoding='utf-8').write(view)
+import time as _t
+BUILDV = str(int(_t.time()))
+open(VOUT, 'w', encoding='utf-8').write(view.replace('__BUILDV__', BUILDV))
 print('built', VOUT)

@@ -36,7 +36,7 @@ export async function onRequest({ request, env, params }) {
     const f = parts[2] || "";
     if (!id || !/^[a-z0-9-]+\.jpg$/.test(f)) return new Response("", { status: 404 });
     const r = await env.ASSETS.fetch(new URL("/plan-img/" + f, request.url));
-    return new Response(r.body, { status: r.status, headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=86400" } });
+    return new Response(r.body, { status: r.status, headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=600" } });
   }
 
   if (action === "data" && request.method === "GET") {

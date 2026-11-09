@@ -119,12 +119,12 @@ button:disabled { opacity: .6; cursor: wait; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 /* plan of action extras */
 .cover h2 { margin-top: 70px; font-size: 46px; }
-.journey { position: relative; margin-top: 26px; display: flex; flex-direction: column; gap: 6px; }
-.journey > div { border-radius: 12px; padding: 12px 15px; font-size: 14.5px; line-height: 1.45; }
-.journey .head { font-family: var(--body); font-style: normal; font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 5px; }
+.journey { position: relative; margin-top: 30px; display: flex; flex-direction: column; gap: 6px; }
+.journey > div { border-radius: 14px; padding: 18px 20px; font-size: 19px; line-height: 1.45; }
+.journey .head { font-family: var(--body); font-style: normal; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 8px; }
 .journey .from { background: rgba(8, 0, 16, .55); border: 1px solid rgba(196, 181, 253, .2); color: var(--star); font-family: var(--body); font-style: normal; }
 .journey .from .head { color: var(--lav); }
-.journey .arrow { text-align: center; color: var(--magenta); font-size: 20px; line-height: 1; padding: 0; }
+.journey .arrow { text-align: center; color: var(--magenta); font-size: 26px; line-height: 1; padding: 0; }
 .journey .to { background: linear-gradient(135deg, rgba(217, 70, 239, .28), rgba(107, 33, 168, .35)); border: 1px solid rgba(240, 171, 252, .45); color: var(--star); font-weight: 600; }
 .journey .to .head { color: var(--pink); }
 .pg h2.sm { font-size: 29px; }
@@ -164,12 +164,127 @@ button:disabled { opacity: .6; cursor: wait; }
 .pg h2 em { font-style: normal !important; font-weight: 900 !important; }
 .quote { font-style: normal !important; font-family: var(--body) !important; font-weight: 600; }
 .sign { font-style: normal !important; }
+
+/* WHITE THEME (Olly, 2026-11-09: "the purple is way too much … white and text just really clear with subtle branding signals").
+   Dark text on white; purple only for the highlighted words, the step labels and thin lines. Overrides everything above. */
+.pg { --star:#1d1527; --lav:#4a4057; --pink:#6b21a8; --magenta:#7c3aed; --violet:#7c3aed; --deep:#ffffff;
+  background:#ffffff !important; color:#1d1527; box-shadow:0 2px 16px rgba(30,10,50,.10); border:1px solid #ece6f3; }
+.pg h2 em { background:none !important; -webkit-background-clip:initial !important; background-clip:initial !important; color:#6b21a8 !important; }
+.pg .eyebrow, .solpill { color:#6b21a8 !important; }
+.solpill { background:#f5f0fb !important; border:1px solid #e4d8f3 !important; }
+.cover .orb, .cover .orb2 { display:none !important; }
+.cover h2 { margin-top:60px !important; }
+.journey .from { background:#f7f5fa !important; border:1px solid #e7e1ee !important; color:#1d1527 !important; }
+.journey .to { background:#f5f0fb !important; border:1px solid #d9c7f0 !important; color:#1d1527 !important; }
+.journey .head, .journey .from .head, .journey .to .head { color:#6b21a8 !important; }
+.journey .arrow { color:#7c3aed !important; }
+.modes .now { background:#f7f5fa !important; border:1px solid #e7e1ee !important; color:#4a4057 !important; }
+.modes .then { background:#f5f0fb !important; border:1px solid #d9c7f0 !important; color:#1d1527 !important; }
+.modes .head, .modes .now .head, .modes .then .head { color:#6b21a8 !important; }
+.modes .ttl, .modes .then .ttl { color:#1d1527 !important; }
+.tl::before { background:#e4d8f3 !important; }
+.tl .when { background:#ffffff !important; border:1px solid #d9c7f0 !important; color:#6b21a8 !important; }
+.tl li.key .when { background:#6b21a8 !important; color:#ffffff !important; border-color:#6b21a8 !important; }
+.pg .tl p, .step p, .pg p.soft { color:#4a4057 !important; }
+.pg .tl p.you, .pg .tl h3, .pg p { color:#1d1527; }
+.k, .term, .pg .tl p.keyline, .shots figcaption { color:#6b21a8 !important; }
+.quote { border-left-color:#7c3aed !important; color:#1d1527 !important; }
+.shots img { border:1px solid #ece6f3 !important; background:#f7f5fa !important; }
+.pg .foot { color:#8a7f99 !important; opacity:1 !important; }
+.pg .foot b { color:#1d1527 !important; }
+.modes .mimg { margin: -10px -12px 9px; overflow: hidden; border-radius: 10px 10px 0 0; }
+.modes .mimg img { width: 100%; height: 130px; object-fit: cover; object-position: center 30%; display: block; }
+.big { margin: 16px 0 0; }
+.big img { width: 100%; height: 135px; object-fit: cover; object-position: center 35%; border-radius: 12px; display: block; border: 1px solid #ece6f3; }
+.journey.solo { margin-top: 0; }
+.journey.solo > div { font-size: 16.5px; line-height: 1.5; padding: 15px 18px; }
+.pg p.wave { margin-top: 10px; padding-top: 10px; border-top: 1px solid #e4d8f3; font-size: 14.5px; font-weight: 500; color: #4a4057; }
+.pg p.wave b { color: #6b21a8; }
+.journey.solo p { font-size: inherit; line-height: inherit; color: inherit; }
+.journey.solo p + p { margin-top: 8px; }
+.journey.solo > div { font-size: 14.5px; line-height: 1.42; padding: 13px 16px; }
+.journey.solo > div p + p { margin-top: 6px; }
+.journey.solo > div p.wave { font-size: 13.5px; margin-top: 8px; padding-top: 8px; }
+.big.short img { height: 136px; }
+.big.xshort img { height: 180px; }
+.journey.solo > .from { font-size: 14px; line-height: 1.4; }
+.journey.solo > .to { font-weight: 400; }
+.cover .pfp { position: absolute; top: 30px; right: 40px; width: 88px; height: 88px; border-radius: 50%; overflow: hidden; border: 3px solid #e4d8f3; box-shadow: 0 2px 10px rgba(30,10,50,.12); z-index: 2; }
+.cover .pfp img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.stepimg { margin: 18px 0 0; }
+.stepimg img { width: 100%; height: 370px; object-fit: cover; object-position: center; border-radius: 14px; border: 1px solid #ece6f3; background: #f7f5fa; display: block; }
+.pg p.steptext { margin-top: 18px; font-size: 17px; line-height: 1.5; color: #1d1527; }
+.step-pg p.you { margin-top: 8px; font-size: 15px; color: #1d1527; }
+.journey.endstep { margin-top: 14px; }
+.stepimg.s2 img { height: 334px; }
+.stepimg.s3 img { height: 288px; }
+.stepimg.shot img { height: auto; object-fit: contain; background: #fff; border: 0 !important; border-radius: 0; }
+.stepimg.ptxt img { object-position: center top; }
+.stepimg.s8 img { height: 300px; }
+.closing h2 { font-size: 40px; margin-top: 70px; }
+.closing .journey { margin-top: 28px; }
+.signoff { display: flex; align-items: center; gap: 14px; margin-top: 26px; }
+.signoff img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #e4d8f3; }
+.signoff b { display: block; font-family: var(--display); font-size: 20px; color: #1d1527; }
+.signoff span { font-size: 13px; color: #8a7f99; }
+.pg p.steptext b { font-weight: 700; color: #1d1527; }
+.pg p.steptext b { font-weight: 700; color: #1d1527; }
+.solpill.tag { font-size: 15px; letter-spacing: .12em; padding: 8px 18px; background: #e7f6ec !important; color: #1a7f37 !important; border: 1px solid #b7e2c3 !important; }
+.solpill.tag.prob { background: #fdecec !important; color: #b42318 !important; border: 1px solid #f3c1bd !important; }
+/* uniform step titles: always a 2-line block, natural wrapping (Olly 2026-11-09) */
+.step-pg h2.sm { text-wrap: wrap; font-size: 28px; line-height: 1.12; min-height: 2.24em; margin-top: 14px; display: block; }
+.cover h2 { margin-top: 104px !important; }
+.pg h2 { text-wrap: pretty; }
+/* pages 2-3: taller photos (Olly 2026-11-09) */
+.big.short img, .big.xshort img { height: 235px; }
+.big { margin-top: 12px; }
+.journey.solo > div, .journey.solo > .from { font-size: 13.5px; line-height: 1.38; padding: 11px 15px; }
+.journey.solo > div p.wave { font-size: 13px; margin-top: 6px; padding-top: 6px; }
+.pg .stack.tight { gap: 7px; margin-top: 10px; }
+.pg .stack.tight > p { font-size: 13.5px; line-height: 1.45; }
+.pg.pq { padding-top: 30px; padding-bottom: 24px; }
+.pg.pq .solpill.tag { font-size: 13px; padding: 6px 15px; }
+.pg.pq h2.sm { margin-top: 8px; }
+.pg.pq .stack.tight > p { line-height: 1.4; }
+.pg.pq .journey.solo > div p + p { margin-top: 4px; }
+.big.short img, .big.xshort img { height: 214px; }
+.junction { text-align: center; }
+.junction .jtop { margin-top: 18px; }
+.junction h2 { font-size: 30px; line-height: 1.15; margin-top: 10px; text-wrap: balance; }
+.jpath { list-style: none; margin: 26px auto 0; padding: 0; width: 410px; position: relative; display: flex; flex-direction: column; gap: 9px; text-align: left; }
+.jpath::before { content: ""; position: absolute; left: 13px; top: 10px; bottom: 10px; width: 2px; background: #e4d8f3; }
+.jpath li { display: flex; align-items: center; gap: 12px; position: relative; }
+.jpath .n { flex: none; width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 2px solid #7c3aed; color: #6b21a8; font: 700 13px var(--body); display: grid; place-items: center; }
+.jpath .tt { font-size: 14px; line-height: 1.3; color: #1d1527; font-weight: 500; }
+.jarrow { margin: 14px auto 0; width: 44px; height: 44px; border-radius: 50%; background: #6b21a8; color: #fff; font-size: 24px; line-height: 44px; text-align: center; }
+.junction { justify-content: center; }
+.junction .jtop { margin-top: auto; }
+.junction h2 { font-size: 38px; line-height: 1.15; }
+.junction .jarrow { margin: 34px auto auto; width: 64px; height: 64px; line-height: 64px; font-size: 32px; }
+.viewwrap .junction { min-height: 70vh; display: flex; flex-direction: column; }
 /* Readable on screen (Olly, 2026-11-08: "MUCH bigger ... anyone with visual issues"): one flowing column, large text in rem,
    follows the iPhone's own text-size setting. Print/PDF keeps the fixed designed pages. */
 html { font-size: 112.5%; }
 @supports (font: -apple-system-body) { html { font: -apple-system-body; } }
 @media screen {
   .viewwrap .stage { width: 100%; max-width: 680px; zoom: 1 !important; }
+  /* photos keep their shape on the applicant page at any width (Olly 2026-11-09: they looked squashed) */
+  .viewwrap .stepimg img { height: auto !important; aspect-ratio: 4 / 3; }
+  .viewwrap .stepimg.ptxt img, .viewwrap .stepimg.s8 img { aspect-ratio: 6 / 5; }
+  .viewwrap .big img { height: auto !important; aspect-ratio: 16 / 9; }
+  .viewwrap .step-pg h2.sm { min-height: 0; }
+  /* even, readable text on the applicant page (Olly 2026-11-09: boxes cramped, body text too small on mobile) */
+  .viewwrap .pg p, .viewwrap .pg p.steptext, .viewwrap .pg .stack.tight > p { font-size: 1.12rem !important; line-height: 1.6 !important; }
+  .viewwrap .journey.solo > div, .viewwrap .journey.solo > .from, .viewwrap .journey.solo > .to { font-size: 1.05rem !important; line-height: 1.6 !important; padding: 1.15rem 1.2rem !important; }
+  .viewwrap .journey.solo > div p { font-size: inherit !important; line-height: inherit !important; }
+  .viewwrap .journey.solo > div p + p { margin-top: .75rem !important; }
+  .viewwrap .journey.solo > div p.wave { font-size: 1rem !important; margin-top: .9rem !important; padding-top: .9rem !important; }
+  .viewwrap .journey > div { font-size: 1.12rem; line-height: 1.55; }
+  .viewwrap .pg .stack.tight { gap: 1rem; }
+  .viewwrap .steptext { margin-top: 1.1rem; }
+  .viewwrap .junction h2 { font-size: 2.1rem; }
+  .viewwrap .pg .foot { font-size: .64rem; letter-spacing: .05em; gap: .3rem .8rem; flex-wrap: wrap; }
+  .viewwrap .pg .foot span { white-space: nowrap; }
   .viewwrap .pg { width: 100%; height: auto; padding: 2rem 1.25rem 1.5rem; border-radius: 16px; }
   .viewwrap .pg + .pg { margin-top: 1.25rem; }
   .viewwrap .pg .eyebrow { font-size: .85rem; letter-spacing: .1em; }
@@ -275,74 +390,130 @@ html { font-size: 112.5%; }
 
       <!-- 1. Cover: where you are -> where we're going -->
       <section class="pg cover">
+        <div class="pfp"><img data-img="olly.jpg" alt="Olly Henson"></div>
         <div class="orb"></div>
-        <div class="eyebrow for">Plan of action for <span data-v="name"></span></div>
-        <h2>Your plan to meet <em>your person</em></h2>
+        <div class="eyebrow for">Your plan of action</div>
+        <h2><span data-v="name"></span>'s Plan To Meet <em><span data-v="pron">Your</span> Person</em></h2>
         <div class="journey">
-          <div class="from"><div class="head">Where you are now</div>"<span data-v="now"></span>"</div>
+          <div class="from"><div class="head">Where you are now</div><span data-v="nowYou"></span></div>
           <div class="arrow" aria-hidden="true">↓</div>
-          <div class="to"><div class="head">Where we're going</div><span data-v="want"></span></div>
+          <div class="to"><div class="head">Where we're going</div><span data-v="wantYou"></span></div>
         </div>
         <div class="foot"><b>Olly Henson</b><span>The Heart Attractor Program</span></div>
       </section>
 
-      <!-- 2. What's in the way -->
-      <section class="pg">
-        <div class="eyebrow">What's in the way</div>
-        <h2 class="sm">There's nothing to fix. <em>You're stuck in your head.</em></h2>
+      <!-- 2. The problem: intellectualization (Olly, 2026-11-09: one page for the problem, one for the solution) -->
+      <section class="pg pq">
+        <div class="solpill tag prob">The Problem</div>
+        <h2 class="sm"><em>Intellectualization</em></h2>
+        <figure class="big short xshort"><img data-img="intellectualization-{g}.jpg" alt=""></figure>
         <div class="stack tight">
-          <p>You've tried <span class="k" data-v="tried"></span>. None of it was wasted, but the list of things to fix never ends. Your friends who settled down didn't fix every part of themselves first.</p>
-          <p class="soft">What's going on is something called <span class="term">intellectualization</span>. When love feels uncomfortable, your mind jumps in to analyse and fix, to get away from the feeling. Your inner voice gets louder and more critical and you end up stuck in your head.</p>
-          <div class="modes">
-            <div class="now"><div class="head">The problem</div><div class="ttl">Intellectualization</div>Stuck in your head. Busy mind. Worrying, overthinking, scanning for answers.</div>
-            <div class="then"><div class="head">The solution</div><div class="ttl">Emotional resonance</div>Back in your heart. Calm mind. Present, light and playful. Just being you.</div>
-          </div>
-          <p>So we need to get you out of the worry, the overthinking and the belief that you need to fix yourself.</p>
-          <p class="soft">That's what lets you meet someone and have things play out naturally and enjoyably, with a genuine connection, just like the friends and family you know who have the kind of relationship you want too.</p>
-          </div>
+          <p>You've tried <span class="k" data-v="tried"></span>.</p>
+          <div class="journey solo"><div class="from"><div class="head">The Real Problem: Intellectualization</div><p>Intellectualization is the psychiatrist's term for using your analytical mind to try to fix yourself, in order to escape the discomfort of not finding someone.</p><p>It keeps your mind busy: worrying, overthinking and searching for the right 'thing' that will finally make it happen.</p><p>But it becomes a trap. There's always something else to fix, so you never truly believe it can happen for you.</p><p class="wave">Linked to a fight or flight brainwave pattern: <b>high beta</b>.</p></div></div>
         </div>
-        <div class="foot"><span>Page 2 of 5</span><span>The Heart Attractor Program</span></div>
+        <div class="foot"><span>Page 2 of 13</span><span>The Heart Attractor Program</span></div>
       </section>
 
-      <!-- 3. How we're going to do this (Olly's outline, 2026-11-09) -->
-      <section class="pg">
-        <div class="solpill">The solution: emotional resonance</div>
-        <h2>How we're going <em>to do this</em></h2>
-        <ol class="tl">
-          <li><div class="when">Step 1</div><div><h3>You get access to the platform</h3><p>Sign up and you're straight in.</p></div></li>
-          <li><div class="when">Step 2</div><div><h3>Get clear on what you want</h3><p>Short trainings to get clear on the relationship you definitely want and the emotions you want to feel in it.</p>
-            <p class="you">Your person: <span class="k" data-v="qlist"></span></p><p class="you">Your emotions: <span class="k" data-v="feels"></span></p></div></li>
-        </ol>
-        <div class="shots"><figure><img data-img="join.jpg" alt="Sign up and get access"><figcaption>Sign up and get access</figcaption></figure><figure><img data-img="training.jpg" alt="Your trainings"><figcaption>Your trainings</figcaption></figure></div>
-        <div class="foot"><span>Page 3 of 5</span><span>The Heart Attractor Program</span></div>
+      <!-- 3. The solution: emotional resonance -->
+      <section class="pg pq">
+        <div class="solpill tag">The Solution</div>
+        <h2 class="sm"><em>Emotional Resonance</em></h2>
+        <figure class="big short"><img data-img="resonance.jpg" alt=""></figure>
+        <div class="stack tight">
+          <div class="journey solo"><div class="to"><div class="head">The Solution: Emotional Resonance</div><p>Emotional resonance is conditioning your body to feel as if you're already in the relationship you want.</p><p>You feel like you're already enough and you truly believe this is possible.</p><p>In this state you meet people as your authentic self. That's where a genuine emotional connection can happen.</p><p class="wave">Linked to a calmer brainwave pattern: <b>alpha</b>.</p></div></div>
+          <p>So we need to get you out of the worry, the overthinking and the belief that you need to fix yourself.</p>
+          <p class="soft">Then things play out naturally, like they did for the friends and family you know who have what you want.</p>
+        </div>
+        <div class="foot"><span>Page 3 of 13</span><span>The Heart Attractor Program</span></div>
       </section>
 
-      <section class="pg">
-        <div class="solpill">The solution: emotional resonance</div>
-        <h2>Then you <em>embody it</em></h2>
-        <ol class="tl">
-          <li class="key"><div class="when">Step 3</div><div><h3>Your personal meditation</h3><p>You practise a meditation that embodies <span class="k" data-v="feel1"></span> and gets you out of intellectualization.</p>
-            <p class="keyline">This dramatically improves your confidence that this will happen, and takes you out of the overthinking, worry and stress of not meeting someone.</p></div></li>
-          <li><div class="when">Step 4</div><div><h3>Steps within your comfort zone</h3><p>As you feel more confident, we work on you taking steps within your comfort zone to meet someone.</p></div></li>
-        </ol>
-        <div class="shots"><figure><img data-img="meditation.jpg" alt="Your daily meditation"><figcaption>Your daily meditation</figcaption></figure><figure><img data-img="dm.jpg" alt="Me, guiding you privately"><figcaption>Me, guiding you privately</figcaption></figure></div>
-        <div class="foot"><span>Page 4 of 5</span><span>The Heart Attractor Program</span></div>
+      <!-- Junction page (Olly 2026-11-09): before the steps -->
+      <section class="pg junction">
+        <div class="jtop">
+          <div class="eyebrow">The process</div>
+          <h2>These Are The Exact Steps We're Going To Follow <em>To Make This Work For You</em></h2>
+        </div>
+        <div class="jarrow" aria-hidden="true">↓</div>
+        <div class="foot"><span>Page 4 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
+      <!-- Step 1 (one image + short text per step, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 1</div>
+        <h2 class="sm">You'll Get Access To The Program</h2>
+        <figure class="stepimg"><img data-img="step1-classroom.jpg" alt=""></figure>
+        <p class="steptext">You get access to all the materials straight away.</p>
+        <div class="foot"><span>Page 5 of 13</span><span>The Heart Attractor Program</span></div>
       </section>
 
-      <section class="pg">
-        <div class="solpill">Your support</div>
-        <h2>With you <em>all the way</em></h2>
-        <ol class="tl">
-          <li><div class="when">Step 5</div><div><h3>Through every interaction</h3><p>Strengthening your self-esteem and guiding you through these interactions.</p></div></li>
-          <li><div class="when">Step 6</div><div><h3>Until you're in it</h3><p>You're supported up until the point you're in the exact relationship you want.</p></div></li>
-        </ol>
-        <div class="shots"><figure><img data-img="partner-text.jpg" alt="The messages you want to be getting"><figcaption>The messages you want to be getting</figcaption></figure><figure><img data-img="pov" alt="Where this leads"><figcaption>Where this leads</figcaption></figure><figure class="wide"><img data-img="support.jpg" alt="Support from me, every day"><figcaption>Support from me, every day</figcaption></figure></div>
-        <div class="journey endbox"><div class="to"><div class="head">Where this leads</div><span data-v="want"></span></div></div>
-        <div class="foot"><span>Page 5 of 5</span><span>The Heart Attractor Program</span></div>
+      <!-- Step 2 (one image + short text per step, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 2</div>
+        <h2 class="sm">You'll Start With The Attraction Formula Trainings</h2>
+        <figure class="stepimg s2"><img data-img="step2-trainings.jpg" alt=""></figure>
+        <p class="steptext">The first 2 trainings in <b>The Attraction Formula</b> will guide you through how to find the exact Emotional Resonance that's right for you and the relationship that you want.</p>
+        <div class="foot"><span>Page 6 of 13</span><span>The Heart Attractor Program</span></div>
       </section>
 
+      <!-- Step: how to do the meditation (third training, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 3</div>
+        <h2 class="sm">You'll Learn How To Do The Attraction Formula Meditation</h2>
+        <figure class="stepimg s3"><img data-img="step3-howto.jpg" alt=""></figure>
+        <p class="steptext">The third training will take you through how to use The Attraction Formula Meditation to actually feel your Emotional Resonance. This video will explain the step-by-step process you'll be using in the meditation to slow down your brainwaves and unlock your capacity to feel the emotions of your future relationship.</p>
+        <div class="foot"><span>Page 7 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
+      <!-- Step 3 (one image + short text per step, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 4</div>
+        <h2 class="sm">You'll Practice The Attraction Formula Meditation</h2>
+        <figure class="stepimg s2"><img data-img="meditation.jpg" alt=""></figure>
+        <p class="steptext">You'll practice <b>The Attraction Formula</b> once per day for 10 minutes. This meditation will put you into the Emotional Resonance of your future relationship.</p>
+        <div class="foot"><span>Page 8 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
 
+      <!-- Step: anchor your state (final training, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 5</div>
+        <h2 class="sm">You'll Learn How To ‘Anchor’ Your Emotional Resonance</h2>
+        <figure class="stepimg s3"><img data-img="step5-anchor.jpg" alt=""></figure>
+        <p class="steptext">In this final training you'll learn how to anchor your Emotional Resonance at any point during your day. This will allow you to keep the intellectualizing at bay as you gradually feel more like yourself and build your confidence in meeting someone.</p>
+        <div class="foot"><span>Page 9 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
+      <!-- Step 4 (one image + short text per step, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 6</div>
+        <h2 class="sm">As Your Confidence Builds</h2>
+        <figure class="stepimg ptxt"><img data-img="partner-text-{g}.jpg" alt=""></figure>
+        <p class="steptext">As you feel more confident, we'll help you take small steps within your comfort zone to meet someone.</p>
+        <div class="foot"><span>Page 10 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
 
+      <!-- Step 5 (one image + short text per step, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 7</div>
+        <h2 class="sm">Helping You With The Early Steps</h2>
+        <figure class="stepimg"><img data-img="pov" alt=""></figure>
+        <p class="steptext">We'll guide you through and be there for you as you meet your person, so that this becomes real this time.</p>
+        <div class="foot"><span>Page 11 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
+
+      <!-- Step 6 (one image + short text per step, Olly 2026-11-09) -->
+      <section class="pg step-pg">
+        <div class="solpill">Step 8</div>
+        <h2 class="sm">With You All Of The Way</h2>
+        <figure class="stepimg s8"><img data-img="support-{g}.jpg" alt=""></figure>
+        <p class="steptext">You'll have private DM support every day on the way to meeting your person. This includes getting text replies from me as well as video feedback. You'll constantly be supported as you work your way through the materials, meet your person and make it real.</p>
+        <div class="foot"><span>Page 12 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
+      <!-- Closing page (Olly 2026-11-09) -->
+      <section class="pg closing">
+        <div class="eyebrow">Your plan</div>
+        <h2><span data-v="name"></span>, This Is Your Plan To Meet <em>Your Person</em></h2>
+        <div class="journey"><div class="to"><div class="head">Where we're going</div><span data-v="wantYou"></span></div></div>
+        <p class="steptext">Let me know your thoughts and if you've got any questions, just reply to my message.</p>
+        <div class="signoff"><img data-img="olly.jpg" alt="Olly Henson"><div><b>Olly Henson</b><span>The Heart Attractor Program</span></div></div>
+        <div class="foot"><span>Page 13 of 13</span><span>The Heart Attractor Program</span></div>
+      </section>
     </div>
 
     <div class="outbox" id="outbox" hidden>
@@ -367,10 +538,38 @@ var PRESET = null;
   function val(k) { var el = document.querySelector('[data-k="' + k + '"]'); return el ? el.value.trim() : ''; }
   function list(a) { a = a.filter(Boolean); return a.length < 2 ? (a[0] || '…') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
   function set(k, v) { document.querySelectorAll('[data-v="' + k + '"]').forEach(function (s) { s.textContent = v; }); }
+  // First person -> second person for the cover (Olly, 2026-11-09: "you want xyz")
+  function toYou(t) {
+    t = String(t || '').trim().replace(/^["'“”]+|["'“”]+$/g, '').trim();
+    if (!t) return '…';
+    var M = { "i'm": "you're", "i’m": "you’re", "i've": "you've", "i’ve": "you’ve", "i'd": "you'd", "i’d": "you’d", "i'll": "you'll", "i’ll": "you’ll", 'i am': 'you are', 'i was': 'you were', 'i': 'you', 'me': 'you', 'my': 'your', 'mine': 'yours', 'myself': 'yourself' };
+    t = t.replace(/\b(i[’']m|i[’']ve|i[’']d|i[’']ll|i am|i was|myself|mine|my|me|i)\b/gi, function (w) { return M[w.toLowerCase()] || w; });
+    t = t.charAt(0).toUpperCase() + t.slice(1);
+    return /[.!?]$/.test(t) ? t : t + '.';
+  }
+  // Auto-fit (Olly 2026-11-09): long answers must never push a page past its edge.
+  // 1) shrink that page's image (down to 90px), 2) then ease the text down until it fits.
+  function planFit() {
+    document.querySelectorAll('.pg').forEach(function (pg) {
+      var imgs = pg.querySelectorAll('.big img, .stepimg img'), txt = pg.querySelectorAll('h2, .journey > div, .steptext, .stack p, .journey.solo p');
+      imgs.forEach(function (im) { im.style.height = ''; }); txt.forEach(function (t) { t.style.fontSize = ''; });
+      var over = function () { return pg.scrollHeight > pg.clientHeight + 1; };
+      if (!over()) return;
+      imgs.forEach(function (im) { var h = im.getBoundingClientRect().height; while (over() && h > 90) { h -= 6; im.style.height = h + 'px'; } });
+      var base = [].map.call(txt, function (t) { return parseFloat(getComputedStyle(t).fontSize); }), k = 1;
+      while (over() && k > 0.6) { k -= 0.04; txt.forEach(function (t, i) { t.style.fontSize = (base[i] * k).toFixed(1) + 'px'; }); }
+    });
+  }
+  function wantYou(t) {
+    t = String(t || '').trim().replace(/^["'“”]+|["'“”]+$/g, '').replace(/^(i\s+(really\s+)?(want|would like)\s+(to\s+(have|find|be in|meet)\s+)?)/i, '').trim();
+    if (!t) return '…';
+    return 'You want ' + toYou(t).replace(/^./, function (c) { return c.toLowerCase(); });
+  }
   var IMG_BASE = window.PLAN_IMG_BASE || '/plan-img/';
   function fill() {
-    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(val('gender')) ? 'male' : 'female') + '.jpg' : im.dataset.img; if (im.getAttribute('data-n') !== n) { im.setAttribute('data-n', n); im.parentElement.hidden = false; im.onerror = function () { im.parentElement.hidden = true; }; im.src = IMG_BASE + n; } });
+    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(val('gender')) ? 'male' : 'female') + '.jpg' : im.dataset.img.replace('{g}', /^m/i.test(val('gender')) ? 'male' : 'female'); if (im.getAttribute('data-n') !== n) { im.setAttribute('data-n', n); im.parentElement.hidden = false; im.onerror = function () { im.parentElement.hidden = true; }; im.src = IMG_BASE + n + '?v=1794251297'; } });
     inputs.forEach(function (el) { set(el.dataset.k, el.value.trim() || '…'); });
+    set('nowYou', toYou(val('now'))); set('wantYou', wantYou(val('want'))); set('pron', /^m/i.test(val('gender')) ? 'His' : 'Her');
     set('qlist', [val('q1'), val('q2'), val('q3'), val('q4')].filter(Boolean).join(' · ') || '…');
     document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !val(s.dataset.show); });
 
@@ -380,6 +579,7 @@ var PRESET = null;
       if (!fl || NS.test(fl)) set('feels', (fl || "I'm not sure") + " (this is what we'll go through)");
       if (!f1 || NS.test(f1)) set('feel1', 'the feeling we find together');
     })();
+    planFit();
   }
   inputs.forEach(function (el) { el.addEventListener('input', function () { document.getElementById('exampleNote').hidden = true; fill(); }); });
   fill();
@@ -445,6 +645,23 @@ var PRESET = null;
   function andList(a) { a = a.filter(Boolean); return a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
   function ans(a, re) { var k = Object.keys(a.fields || {}).filter(function (n) { return re.test(n); })[0]; return k ? String(a.fields[k] || '').trim() : ''; }
   function sentences(t, max) { var p = String(t || '').match(/[^.!?]+[.!?]*/g) || []; var out = ''; for (var i = 0; i < p.length; i++) { if ((out + p[i]).length > max && out) break; out += p[i]; } return out.trim(); }
+  // Gender (2026-11-09): the application has no gender question, so guess and let Olly override with "They are a".
+  // 1) words in what they want / feelings, 2) common male first names (worldwide), else woman.
+  var MALE = ('rami ramy sami samy omar omer ali ahmed ahmad mohamed mohammed muhammad mustafa hassan hussein ibrahim karim kareem khalid tariq tarek youssef yusuf ziad zaid hamza bilal faisal fadi jad nabil walid amir amr adam adem '
+    + 'raj rahul rohan arjun amit anil ankit ajay vijay vikram sanjay suresh ramesh rakesh rajesh mahesh manoj deepak dev aditya akash aman arun ashok harsh karan kunal nikhil nitin pranav pradeep prakash rishi rohit sachin sahil sameer saurabh siddharth sunil tarun varun vivek yash '
+    + 'wei jun hao ming jian lei tao feng hiroshi kenji takashi yuki daichi haruto ren sota min-jun jae seo-jun ji-ho '
+    + 'jose juan carlos luis miguel javier diego pablo alejandro andres antonio manuel francisco rafael sergio jorge marco mario matteo luca lorenzo giovanni paolo pedro joao tiago rui '
+    + 'james john robert michael william david richard joseph thomas charles christopher daniel matthew anthony mark donald steven paul andrew joshua kenneth kevin brian george timothy ronald edward jason jeffrey ryan jacob gary nicholas eric jonathan stephen larry justin scott brandon benjamin samuel gregory alexander frank patrick raymond jack dennis jerry tyler aaron henry douglas peter adam nathan zachary walter kyle harold carl jeremy keith roger gerald ethan arthur terry christian sean lawrence austin noah joe jesse albert bryan billy bruce willie jordan dylan alan ralph gabriel roy juan wayne eugene logan randy louis russell vincent philip bobby johnny bradley '
+    + 'oliver olly harry charlie freddie alfie archie oscar leo theo max finn liam lucas mason elijah owen sebastian hugo louis rory callum connor declan ewan fraser hamish jamie lewis ross stuart toby tom ben sam dan dave matt mike nick rob steve chris joe josh luke jake will '
+    + 'kwame kofi kojo chidi chinedu emeka obi tunde segun femi olu musa ibrahima mamadou sipho thabo themba bongani lwazi andile mandla sibusiso tshepo kagiso '
+    + 'ivan dmitri sergei alexei mikhail nikolai andrei pavel igor oleg piotr pawel tomasz krzysztof marek jan lars sven anders erik nils henrik johan mats jens klaus hans stefan jurgen jonas felix moritz').split(' ');
+  function guessGender(a) {
+    var t = ' ' + [ans(a, /^HA Relationship Wanted/i), ans(a, /^HA Feelings About Love/i), ans(a, /^HA Anything/i)].join(' ').toLowerCase() + ' ';
+    var m = (t.match(/\b(a woman|women|she|her|wife|girlfriend|lady)\b/g) || []).length, f = (t.match(/\b(a man|men|he|him|his|husband|boyfriend|guy)\b/g) || []).length;
+    if (m > f) return 'male'; if (f > m) return 'female';
+    var n = String(a.firstName || '').trim().toLowerCase().split(/[\s]+/)[0];
+    return MALE.indexOf(n) >= 0 ? 'male' : 'female';
+  }
   function auto(a) {
     var tried = ans(a, /^HA Tried/i).split(/\s*,\s*/).map(low).filter(Boolean);
     var ints = ans(a, /^FF Intentions/i).split(/\s*[·|]\s*/).map(function (x) { return low(you(x)); }).filter(Boolean);
@@ -459,7 +676,7 @@ var PRESET = null;
       q1: ints[0] || '', q2: ints[1] || '', q3: ints[2] || '', q4: ints[3] || '',
       feels: res, feel1: res,
       oldfeel: low(ans(a, /^FF Current Emotion/i)),
-      gender: 'female',
+      gender: guessGender(a),
       moments: 'catching yourself overthinking about love' + (apps ? ', and opening a dating app' : '')
     };
   }
@@ -481,7 +698,7 @@ var PRESET = null;
     var v = auto(a); if (saved) Object.keys(saved).forEach(function (k) { if (k.charAt(0) !== '_') v[k] = saved[k]; });
     apply(v);
     document.title = who + "'s Plan of Action";
-    note.textContent = saved ? 'Your saved version for ' + who + '. Orange boxes are still empty.' : 'Filled in from ' + who + "'s answers. Check the anchor moments line and anything in orange, then save.";
+    note.textContent = (saved ? 'Your saved version for ' + who + '. Orange boxes are still empty.' : 'Filled in from ' + who + "'s answers. Check anything in orange, then save.") + ' Images and wording are set for a ' + (/^m/i.test(v.gender) ? 'man' : 'woman') + ' (change "They are a" if that is wrong).';
   }).catch(function () { note.textContent = "Couldn't reach GHL. If you've been away a while, reload to log in again."; apply({}); });
 
   var phone = '', mail = '';

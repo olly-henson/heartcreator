@@ -9,6 +9,8 @@ Use these instead of writing one-off scripts. All run from Git Bash.
 | `jscheck.js` | Syntax-check every inline script in an HTML file | `node tools/jscheck.js FILE.html` |
 | `deploy-hub.sh` | Check + deploy the Business Hub (hub.ollyhenson.com) | `bash tools/deploy-hub.sh` |
 | `preview_wrap.py` | Desktop + phone preview page for any funnel page (webhooks blanked, thumbnails embedded) | `python tools/preview_wrap.py PAGE.html OUT.html "Title"`, then publish OUT.html as an Artifact |
+| `laptop_pov_hq.py` | Sharp laptop POV image for the plan/slides: screenshot on the laptop photo at 3x, purple outline + arrow, hands in shot | `python -I tools/laptop_pov_hq.py SHOT.png OUT.jpg "x0,y0,x1,y1" [top]` |
+| `laptop_mockup.py` | Plain laptop mockup (white background) for a screenshot | `python -I tools/laptop_mockup.py SHOT.png OUT.jpg` |
 | `shot.js` | Screenshot a page at several widths, report overflow and errors (outside requests blocked) | `node tools/shot.js PAGE OUTPREFIX 1280,390` |
 
 Paths: `tools/` = `C:\Users\Olly\AI OS\heartattractor\tools\`.
