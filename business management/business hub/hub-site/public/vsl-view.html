@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>How To Get Started</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* The applicant's private sales video page (Olly, 2026-11-10). Served at /p/<code>/video by functions/p/[[path]].js.
+   Video: /p/<code>/vsl.mp4 (men's or women's by the plan's "gender"). Tracking: POST /p/<code>/vseen.
+   Counts only seconds actually played (skips don't count), in 100 slices of the video, so the Hub can show how they watched.
+   Olly's own views never count (Access cookie on the server + the Hub's "hubOwner" mark on this device). */
+:root { --ink:#1d1527; --soft:#4a4057; --purple:#6b21a8; --violet:#7c3aed; --line:#ece6f3; --tint:#f5f0fb;
+  --display:"Playfair Display", Georgia, serif; --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:#fff; color:var(--ink); font-family:var(--body); }
+.wrap { max-width:980px; margin:0 auto; padding:28px max(16px, env(safe-area-inset-left)) 48px; }
+.k { font-size:13px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--purple); }
+h1 { font-family:var(--display); font-weight:900; font-size:clamp(28px, 5vw, 46px); line-height:1.1; margin:8px 0 6px; text-wrap:balance; }
+h1 em { font-style:normal; color:var(--purple); }
+.sub { font-size:clamp(16px, 2.2vw, 19px); line-height:1.5; color:var(--soft); margin:0 0 20px; }
+.player { position:relative; border-radius:14px; overflow:hidden; background:#000; box-shadow:0 6px 30px rgba(30,10,50,.14); aspect-ratio:16/9; }
+.player:fullscreen { border-radius:0; aspect-ratio:auto; width:100%; height:100%; }
+.player video { width:100%; height:100%; display:block; background:#000; }
+.fs { position:absolute; left:10px; top:10px; z-index:3; border:0; border-radius:10px; background:rgba(20,16,26,.72); color:#fff; font:600 14px var(--body); padding:9px 12px; cursor:pointer; }
+.end { position:absolute; inset:0; z-index:4; display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:rgba(20,16,26,.86); color:#fff; text-align:center; padding:20px; }
+.end.on { display:flex; }
+.end p { margin:0; font-family:var(--display); font-weight:900; font-size:clamp(20px, 4vw, 32px); }
+.end .again { background:none; border:0; color:#d9c7f0; font:600 15px var(--body); text-decoration:underline; cursor:pointer; }
+.join { display:block; width:100%; max-width:560px; margin:22px auto 0; text-align:center; background:var(--purple); color:#fff; font:700 clamp(17px, 2.4vw, 20px) var(--body);
+  padding:18px 20px; border-radius:14px; text-decoration:none; box-shadow:0 6px 18px rgba(107,33,168,.28); }
+.join:hover { background:#5b1890; }
+.end .join { margin:0; max-width:420px; }
+.note { text-align:center; color:var(--soft); font-size:15px; margin:14px 0 0; }
+.sign { display:flex; align-items:center; gap:12px; justify-content:center; margin-top:28px; color:var(--soft); font-size:14px; }
+.sign b { display:block; font-family:var(--display); font-size:18px; color:var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="k">The Heart Attractor Program</div>
+  <h1>Let's Help You Find <em>Your Person</em></h1>
+  <p class="sub" id="sub">Here's how we'll do it, the investment and exactly how to get started.</p>
+  <div class="player" id="player">
+    <video id="v" controls playsinline preload="metadata"></video>
+    <button class="fs" id="fs" type="button">&#x26F6; Full screen</button>
+    <div class="end" id="end"><p>Ready to get started?</p><a class="join" id="join2" href="https://ollyhenson.com/join">Join The Heart Attractor Program</a><button class="again" id="again" type="button">Watch again</button></div>
+  </div>
+  <a class="join" id="join" href="https://ollyhenson.com/join">Join The Heart Attractor Program</a>
+  <p class="note">Any questions? Just reply to my message.</p>
+  <div class="sign"><div><b>Olly Henson</b>The Heart Attractor Program</div></div>
+</div>
+<script>
+(function () {
+  var parts = location.pathname.split("/").filter(Boolean), code = parts[1] || "", base = "/p/" + code;
+  var v = document.getElementById("v"), endBox = document.getElementById("end");
+  v.poster = base + "/poster-2.jpg";
+  v.src = base + "/vsl-2.mp4";   // bump the number after replacing a video file (beats Cloudflare's cache)
+  v.addEventListener("error", function () { document.getElementById("player").innerHTML = '<div style="color:#fff;display:grid;place-items:center;height:100%;padding:20px;text-align:center;font:600 18px Inter,sans-serif">Your video is nearly ready. Please check back shortly, or reply to my message.</div>'; });
+  var owner = false; try { owner = localStorage.getItem("hubOwner") === "1"; } catch (e) {}
+  var dev = /Mobi|iPhone|Android/i.test(navigator.userAgent) ? "phone" : (/iPad|Tablet/i.test(navigator.userAgent) ? "tablet" : "computer");
+
+  fetch(base + "/data", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+    var n = d && d.plan && String(d.plan.name || "").trim().split(/\s+/)[0];
+    if (n) document.getElementById("sub").textContent = "Hey " + n + ", here's how we'll do it, the investment and exactly how to get started.";
+  }).catch(function () {});
+
+  function send(ev, extra, beacon) {
+    if (owner) return;
+    var body = JSON.stringify(Object.assign({ ev: ev, pos: v.currentTime || 0, dur: v.duration || 0, dev: dev }, extra || {}));
+    try {
+      if (beacon && navigator.sendBeacon) { navigator.sendBeacon(base + "/vseen", new Blob([body], { type: "text/plain" })); return; }
+      fetch(base + "/vseen", { method: "POST", body: body, keepalive: true }).catch(function () {});
+    } catch (e) {}
+  }
+  send("open");
+
+  // only seconds actually played count: a jump bigger than 2s (a skip) marks nothing
+  var last = null, pending = {};
+  v.addEventListener("timeupdate", function () {
+    var t = v.currentTime, d = v.duration;
+    if (!d || v.seeking) { last = t; return; }
+    if (last !== null && t > last && t - last <= 2) {
+      for (var i = Math.floor(last / d * 100); i <= Math.min(99, Math.floor(t / d * 100)); i++) pending[i] = 1;
+    }
+    last = t;
+  });
+  v.addEventListener("seeking", function () { last = null; });
+  function flush(beacon) { var b = Object.keys(pending).map(Number); if (!b.length) return; pending = {}; send("tick", { bins: b }, beacon); }
+  setInterval(function () { if (!v.paused) flush(false); }, 15000);
+  v.addEventListener("pause", function () { flush(false); });
+  v.addEventListener("ended", function () { flush(false); send("end"); endBox.classList.add("on"); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {} });
+  addEventListener("pagehide", function () { flush(true); });
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") flush(true); });
+
+  function joined() { flush(true); send("join", {}, true); }
+  document.getElementById("join").addEventListener("click", joined);
+  document.getElementById("join2").addEventListener("click", joined);
+  document.getElementById("again").addEventListener("click", function () { endBox.classList.remove("on"); v.currentTime = 0; v.play(); });
+
+  document.getElementById("fs").addEventListener("click", function () {
+    var el = document.getElementById("player");
+    try {
+      if (el.requestFullscreen) { el.requestFullscreen().then(function () { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function () {}); }).catch(function () { if (v.webkitEnterFullscreen) v.webkitEnterFullscreen(); }); }
+      else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();   // iPhone: the video's own full screen (turns sideways)
+    } catch (e) {}
+    if (v.paused) v.play().catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>

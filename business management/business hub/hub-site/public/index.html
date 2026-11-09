@@ -5467,7 +5467,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       lmLoading = false;
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
       lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
-      lmPlanViews();
+      lmPlanViews(); lmVslViews();
       // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
       if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmOpen = w.id; lmView = "info"; lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
       renderLooms();
@@ -5478,6 +5478,35 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   try { localStorage.setItem("hubOwner", "1"); } catch(e){}
   var lmPV = {};
   function lmPlanViews(){ fetch("/api/planviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmPV = d.views || {}; renderLooms(); } }).catch(function(){}); }
+  // Sales video (VSL) views (2026-11-10): /api/vslviews -> { contactId: { opens, first, last, pct, far, done, join, joinAt, dev } }
+  // pct = share of the video actually played (skips don't count), far = furthest point reached. Link = /p/<plan code>/video.
+  var lmVV = {}, lmVB = {};
+  function lmVslViews(){ fetch("/api/vslviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmVV = d.views || {}; lmVB = {}; renderLooms(); } }).catch(function(){}); }
+  function lmVslTag(id){
+    var v = lmVV[id]; if (!v || !v.opens) return "";
+    if (v.join) return '<span class="lmtag" style="margin:0;background:rgba(74,222,128,.22);color:#4ade80">🎬 Clicked Join</span>';
+    return '<span class="lmtag" style="margin:0;background:rgba(167,139,250,.2);color:#c4b5fd">🎬 Video ' + (v.pct || 0) + '%</span>';
+  }
+  function lmVslRow(a){
+    var pv = lmPV[a.id];
+    if (!pv || !pv.code) return '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">🎬 Sales video: make their plan link first. The video link uses the same private code.</small></div>';
+    var url = "https://hub.ollyhenson.com/p/" + pv.code + "/video";
+    return '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(url) + '">🎬 Copy their video link</button><a href="' + url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3b2a52">Watch it (your views don’t count)</a>' + lmVslLine(a.id) + "</div>";
+  }
+  function lmVslLine(id){
+    var v = lmVV[id];
+    if (!v || !v.opens) return '<small style="flex-basis:100%;opacity:.85">Video not opened yet</small>';
+    var bits = ["Opened " + v.opens + "×" + (v.dev ? " on " + v.dev : "") + ", first " + lmWhen(v.first) + ", last " + lmWhen(v.last), "Watched " + (v.pct || 0) + "% · got to " + (v.far || 0) + "%" + (v.done ? " (finished)" : "")];
+    if (v.join) bits.push("Clicked Join " + v.join + "× · first " + lmWhen(v.joinAt));
+    var bar = "";
+    if (lmVB[id] === undefined){ lmVB[id] = null; fetch("/api/vslviews?id=" + encodeURIComponent(id), { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ lmVB[id] = (d && d.bins) || []; renderLooms(); }).catch(function(){}); }
+    else if (lmVB[id] && lmVB[id].length){
+      bar = '<span title="How they watched: dark = watched more than once, light = once, grey = skipped or not reached" style="flex-basis:100%;display:flex;height:12px;border-radius:4px;overflow:hidden;margin-top:4px">' +
+        lmVB[id].map(function(n){ return '<i style="flex:1;background:' + (n > 1 ? "#7c3aed" : n === 1 ? "#c4b5fd" : "#3f3a48") + '"></i>'; }).join("") + "</span>" +
+        '<small style="flex-basis:100%;opacity:.7">Start → end. Light = watched once, dark = watched again, grey = skipped or not reached.</small>';
+    }
+    return '<small style="flex-basis:100%;opacity:.85">' + lmEsc(bits.join(" · ")) + "</small>" + bar;
+  }
   function lmWhen(iso){ if (!iso) return ""; try { return new Date(iso).toLocaleString("en-GB", { timeZone:"Africa/Johannesburg", weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" }); } catch(e){ return ""; } }
   function lmPlanLine(id){
     var v = lmPV[id]; if (!v || !v.sent) return "";
@@ -5569,6 +5598,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // Plan of action (Olly, 2026-11-08): sent BEFORE the sales video (Frankie: pre-sell the plan, video closes once they agree). their personalised plan, filled from GHL on /plan.html; send it as images on WhatsApp or a PDF.
     // Page is built from funnel/plan-of-action.html by tools/build_hub_plan.py. Edits are saved in KV under plan:<id>.
     h += '<div class="lmcon lmmsg"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 Plan of action</a>' + lmPlanLine(a.id) + '</div>';
+    h += lmVslRow(a);
     // Email ideas from this applicant (Olly, 2026-11-09: "inspiration for the daily emails that go to engaged people").
     // Copies their answers with their name, contact details, place and job taken out; paste into the content generator's
     // Email tab ("An applicant's words"). The generator uses the feelings and patterns, never the story or details.
@@ -5730,6 +5760,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       (lmStage(a) === "joined" ? '<span class="lmtag" style="margin:0">' + (s.product === "annual" ? "Annual $2,500" : "Monthly $497") + "</span>" : "") +
       (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL</span>' : "") +
       (lmPV[a.id] && lmPV[a.id].sent ? '<span class="lmtag" style="margin:0;' + (lmPV[a.id].opens ? 'background:rgba(74,222,128,.18);color:#4ade80">📄 Plan opened' + (lmPV[a.id].opens > 1 ? " " + lmPV[a.id].opens + "×" : "") : 'background:rgba(251,191,36,.16);color:#fbbf24">📄 Plan sent, not opened') + "</span>" : "") +
+      lmVslTag(a.id) +
       (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the price check", replied:"After replying", loom:"After the VSL" }[lmStage(a, true)] || "") + "</span>" : "");
     return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, place].filter(Boolean).join(" · ")) + "</span>" +
       (tags ? '<span class="lmbcrow">' + tags + "</span>" : "") + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";

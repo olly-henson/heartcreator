@@ -180,7 +180,9 @@ Once it's recorded but not sent yet, tap **Recorded** on their card (stage **Loo
 
 **When Olly asks what Frankie said about something:** quote only the saved lines (this file + `funnel/applicant-sales-process.html`), then say the full workshop transcript isn't on disk and ask him to paste it if he needs more. Frankie's saved follow-up lines: "All follow-up done correctly is going deeper… I'm actually already talking like we're working together." / "Ideas are never unwelcome." / Loom is for the watch notification, "so I know how to handle the sale based on they saw it or didn't see it." / "Will this work for me?" is the usual question after the video; answer it by text from their own situation.
 
-**Planned (to-do in the Hub, for the week of 9 Nov): our own Loom with view tracking.** Preview: https://claude.ai/artifact/M8JLSLFLdfYGV2aBDsWP7c. Each applicant gets `hub.ollyhenson.com/v/<code>` (code → contactId in KV); the page plays the unlisted VSL through the YouTube IFrame Player API with the "Watch on YouTube" link off, and pings a Pages Function every 10 s plus on open/leave with the seconds actually watched (skips don't count). The Sales card shows opened / % watched / when (Cape Town time) / visits; the 💡 idea unlocks at 50%; one email to Olly the first time someone finishes. Olly's own views (Hub login) don't count. Copy/send buttons use the tracked link automatically.
+> **Superseded 2026-11-10:** built differently: our own video page at `/p/<plan code>/video` playing an MP4 from the Hub (no YouTube, no Loom). See "Sales video (VSL) v2" below.
+
+**(Old plan) Planned (to-do in the Hub, for the week of 9 Nov): our own Loom with view tracking.** Preview: https://claude.ai/artifact/M8JLSLFLdfYGV2aBDsWP7c. Each applicant gets `hub.ollyhenson.com/v/<code>` (code → contactId in KV); the page plays the unlisted VSL through the YouTube IFrame Player API with the "Watch on YouTube" link off, and pings a Pages Function every 10 s plus on open/leave with the seconds actually watched (skips don't count). The Sales card shows opened / % watched / when (Cape Town time) / visits; the 💡 idea unlocks at 50%; one email to Olly the first time someone finishes. Olly's own views (Hub login) don't count. Copy/send buttons use the tracked link automatically.
 
 They stay on the daily email list, which keeps the conversation going without chasing.
 
@@ -207,13 +209,13 @@ Mark them **Not a fit**.
 
 1. Application -> Hub **Sales** tab (Trello-style board: New applications / Messaged / Replied / VSL sent / Joined / Gone quiet / Not a fit; money tiles on top).
 2. **Superseded 2026-11-06:** no price check. Send the 👋 Intro text + 🎙️ voice note (their plan, no price) + ✉️ email from the card; people who ask for "the details" get the video. The price lives in the video (Frankie: price inside the video, with the "works well if" qualifier).
-3. **🎥 Sales video** button sends the unlisted YouTube VSL (https://youtu.be/PhcbPYPfUU0) on WhatsApp or email and moves them to **VSL sent**. Message (Olly's final wording): "Hey [Name], great, thanks for getting back to me. / Here's a video going through how the program works, what to expect and how to start. / [link] / If you're ready to start after watching, just reply here and I'll send you the link. / And if you have any questions, just let me know." No "watch it in your own time".
+3. **Superseded 2026-11-10** (the link is now 🎬 Copy their video link, `/p/<plan code>/video`; see "Sales video (VSL) v2"). Old: **🎥 Sales video** button sends the unlisted YouTube VSL (https://youtu.be/PhcbPYPfUU0) on WhatsApp or email and moves them to **VSL sent**. Message (Olly's final wording): "Hey [Name], great, thanks for getting back to me. / Here's a video going through how the program works, what to expect and how to start. / [link] / If you're ready to start after watching, just reply here and I'll send you the link. / And if you have any questions, just let me know." No "watch it in your own time".
 4. They reply "ready" -> 🔗 Checkout link. No chasing (Step 5).
 5. Stopped replying but could be a fit -> **Gone quiet** (card shows where they went quiet). Rude / really bad fit -> **Not a fit -> Remove from GHL** (DND all channels, list tags off, tag `removed - not a fit`, left out of every stat and data pull).
 
-**The VSL map** (`funnel/sales-video-map.html`, script `funnel/sales-video-script.md`): Outcome (top, with the couple-cooking photo) -> centre "Helping, guiding and supporting you every step of the way to meet your person" -> The steps (left) -> What to expect (right, ending on the 14-day guarantee) -> "Steps to get started" heading only (bottom: he switches screen and shows sign-up live). Camera box top left (captions sit at the bottom). Desktop only.
+**The VSL map (superseded 2026-11-10 by the 11-slide VSL v2; the 14-day guarantee is OUT of the video)** (`funnel/sales-video-map.html`, script `funnel/sales-video-script.md`): Outcome (top, with the couple-cooking photo) -> centre "Helping, guiding and supporting you every step of the way to meet your person" -> The steps (left) -> What to expect (right, ending on the 14-day guarantee) -> "Steps to get started" heading only (bottom: he switches screen and shows sign-up live). Camera box top left (captions sit at the bottom). Desktop only.
 
-**Recording + hosting:** Google Vids (Loom free caps at 5 min), uploaded as an UNLISTED YouTube video (never Private: applicants can't open it). Send the link, not a file: WhatsApp shows a playable preview and the view count survives. For the sign-up demo use a fresh `olly+<word>@ollyhenson.com` address, stop before card details, and pause the recording while fetching a Skool code.
+**Recording + hosting (superseded 2026-11-10: the MP4 goes into the Hub, not YouTube; see "Sales video (VSL) v2"):** Google Vids (Loom free caps at 5 min), uploaded as an UNLISTED YouTube video (never Private: applicants can't open it). Send the link, not a file: WhatsApp shows a playable preview and the view count survives. For the sign-up demo use a fresh `olly+<word>@ollyhenson.com` address, stop before card details, and pause the recording while fetching a Skool code.
 
 ---
 
@@ -361,3 +363,54 @@ Email: subject "Your plan of action", same text + "Olly" (both Claude's wording,
 - Never long replies when Olly says tokens are low: short answers, one step.
 - Never fake a member testimonial or result in an image; mock chats show support and progress (Olly approved the step 8 celebration chat for the plan).
 - Never fixed pixel heights for photos on the applicant page; never zoom a POV screenshot so far that the hands disappear.
+
+### Sales video page (built 2026-11-10, LIVE)
+- **Link = their plan code:** `https://hub.ollyhenson.com/p/<plan code>/video` (Sales card > 🎬 Copy their video link; needs the plan link made first). Plays `public/vsl/vsl-women.mp4` or `vsl-men.mp4` by the plan's "They are a" (gender). Files are git-ignored; each must stay under 25 MB (Pages limit; 4.5 min 1080p was 21 MB). If a file is missing the page says "Your video is nearly ready".
+- **Tracking** (functions/p/[[path]].js `vseen`, KV `vslview:<id>`, Hub reads /api/vslviews): opens + device, % actually played in 100 slices (skips don't count), furthest point, finished, Join clicks + when. Sales card shows the line + a watch map bar (light = once, dark = again, grey = skipped). Phone notifications: first open, finished, Join click. Olly's views never count (Access cookie + hubOwner mark).
+- **Page:** white, title "Let's Help You Find Your Person", "Hey <first name>", native player + Full screen button (top-LEFT, so it never covers Olly's webcam, which is top-right in the video), Join button under the video + over it at the end → https://ollyhenson.com/join.
+- **Video seeking:** Pages ignores Range for assets, so the function slices bytes itself (iPhones need 206). Tested 2026-11-10.
+- **Replacing a video:** copy the new mp4 over `hub-site/public/vsl/vsl-men.mp4` / `vsl-women.mp4`, bump the number in `v.src = base + "/vsl-2.mp4"` (public/vsl-view.html) so Cloudflare's cache can't serve the old file, deploy. A deploy takes ~50 s to reach hub.ollyhenson.com: test after that, not straight away (2026-11-10 I chased a "bug" that was just the old version still live).
+- Both videos LIVE 2026-11-10: women 4:34 (21 MB), men 3:36 (17 MB). Originals in marketing/assets/sales-video/recordings/.
+- Slides: men J8ScpxcRzJsdGcg1kJzft1, women UEZE3B1m5Pp6MRcxGnGLC5 (marketing/assets/sales-video/vsl/).
+
+## Sales video (VSL) v2 (2026-11-10, recorded + LIVE)
+
+One video per gender, sent only once they've bought into the plan and ask "how do I start / what's the price". It answers Frankie's 5 questions in order (what is it, will it work for me, how does it work, how much, how do I start) and nothing else.
+
+### Process
+1. **Show every slide up front in the agreed order, then fix slide by slide** (Olly: "give me all the slides up front… it's easy to do it that way"). Don't drip one slide at a time.
+2. **The 11 slides** (`marketing/assets/sales-video/vsl/vsl-men.html` / `vsl-women.html`): 1 Let's Help You Find Your Person · 2 Problem → Solution (each photo with its own words) · 3 The End Result · 4 This Works For You If… · 5 The Exact Steps (numbered list only) · 6 The Investment · 7 The Timeline · 8 Click The Join Button · 9 Make Your Account · 10 Choose Monthly Or Annual And Add Your Card · 11 Look Out For My Email And My Message.
+3. **Preview, then final:** desktop + phone preview while editing (`tools/vsl_preview.py`), then the plain full-screen slides when Olly says he's recording ("final full screen slides with no mobile view"). Keys: F = full screen, arrows/click = next.
+4. **Women's version = copy of the men's with the female photos + chat** (`vsl-women.html`). Any change goes into BOTH files.
+5. **After recording:** MP4 into `marketing/assets/sales-video/recordings/`, copy to `hub-site/public/vsl/vsl-<men|women>.mp4`, deploy, wait ~50 s, test (see "Sales video page" above).
+6. **When Olly asks to "see" the page, give a playable preview** (a small copy of the video in the artifact, tracking off). A still he can't press play on isn't a preview.
+
+### Rules
+- **Titles name what they want, not the program** ("Let's Help You Find Your Person", not "How To Get Started With The Heart Attractor Program"). Why: Frankie, the name of the program doesn't matter to them.
+- **The steps live in the plan, not the video.** The video keeps only the numbered list; Olly says "you've seen these in your plan". Why: they've already bought into the plan.
+- **Proof = the outcome, not a member quote.** Slide 3 is the end-result picture + "someone you can marry, have children with and settle down with". Why (Olly): "I don't want to bullshit my proof."
+- **Price wording (Olly):** "$2,500 for the year, or $497 a month if you'd like to split it", then "And for that you get" ticks (first tick ends "(access to all bonus materials)"). The outcome photo sits next to the price.
+- **"This works for you if" (Olly's words):** It's the biggest priority in your life · You can spare 10 minutes a day to meditate · You're willing to ask for help when you need it.
+- **Timeline (Olly's words):** First 2 Weeks / First 12 Weeks / Nine-Month Mentorship, after the price.
+- **One fixed layout on every slide:** picture box left (640×640), webcam square top-right (Google Vids, set once, never moved), words under the webcam. Why: "it looks all over the place" when every slide has its own layout.
+- **Wide photos stay wide; words sit next to the photo they describe.**
+- **Every "how to start" step shows the real screen on a laptop AND a phone** with the button outlined (join page, sign-up, Monthly/Annual, the email, the DM).
+- **Screens must be readable at full size.** Small phones in a frame look poor even in the real video: use tall close-up crops (`tools/phone_pov_hq.py`, `CROP=` and `NOARROW=1`).
+- **A rebuilt screen must look exactly like the real screenshot** (same colours, layout, words), just sharp (`vsl/mock/email.html`, `dm.html`, `payment.html`). Why: Olly rejected a "cleaner" restyle.
+- **Chats: make one up rather than blur everything** (blurred chats "aren't helpful"): a member asks for help, Olly answers, then a video reply. Support only, never a result (`vsl/mock/chat.html` + `chat-female.html`).
+
+### Examples
+- Good slide 4 chat: "Hey Olly, I've got a second date on Saturday and I'm already overthinking it. How do I deal with that?" → Olly's short practical reply → Sunday: "The old worry came back when she didn't reply straight away. Is that normal?" → "Totally normal. Recorded you a quick video 👇" + video card.
+
+### Never (VSL v2)
+- Never Loom: our own player only (Olly: "I don't want to use Loom at all").
+- Never the 14-day guarantee in the video (Olly mentions it only if asked) and never "(minimum 3 months)".
+- Never show a real card number, surname or member conversation: rebuild the screen with an empty card box / blur.
+- Never put anything in the webcam corner, and never move the webcam between slides.
+- Never crop a horizontal photo into a tall strip.
+- Never claim a deploy is broken in the first minute: it takes ~50 s to reach hub.ollyhenson.com.
+
+<!-- Changelog
+- 2026-11-10: Skill review. Added "Sales video (VSL) v2" (process, rules with reasons, example chat, Never list) from Olly's edits this session: no Loom, own tracked page; outcome titles; steps stay in the plan; end-result picture instead of member proof; his works-if, price and timeline wording; no guarantee, no 3-month minimum; one fixed layout with the webcam top-right; wide photos stay wide; words next to their photo; real screens on laptop + phone, readable, exact copies; made-up support chat instead of blur; all slides up front; playable previews. Marked the YouTube/Loom hosting plan, the 🎥 YouTube VSL button, the old VSL map and its 14-day guarantee as superseded.
+-->
+

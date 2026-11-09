@@ -1,6 +1,6 @@
 // Screenshot a page (file path or http URL) at one or more widths, to check layout. Outside requests are blocked
 // (no tracking hits, no webhooks) except Google Fonts and YouTube thumbnails.
-// Usage: node shot.js PAGE OUTPREFIX [widths=1280,390]
+// Usage: node shot.js PAGE OUTPREFIX [widths=1280,390]  (FULL=1 for the whole page)
 //   -> OUTPREFIX-1280.png, OUTPREFIX-390.png, and prints any page errors / sideways overflow.
 const path = require('path');
 const puppeteer = require(path.join('C:/Users/Olly/AI OS/heartattractor/funnel/node_modules/puppeteer'));
@@ -18,7 +18,7 @@ const [page, prefix, widths = '1280,390'] = process.argv.slice(2);
     await p.goto(/^https?:/.test(page) ? page : 'file:///' + path.resolve(page), { waitUntil: 'networkidle0' });
     await new Promise(r => setTimeout(r, 800));
     const over = await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
-    await p.screenshot({ path: `${prefix}-${w}.png` });
+    await p.screenshot({ path: `${prefix}-${w}.png`, fullPage: !!process.env.FULL });
     console.log(`${w}px -> ${prefix}-${w}.png${over ? '  (SIDEWAYS OVERFLOW)' : ''}`);
   }
   console.log(errs.length ? 'ERRORS: ' + errs.join(' | ') : 'no page errors'); await b.close();

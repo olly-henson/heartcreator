@@ -9,6 +9,8 @@
 //     metadata { sent, opens, first, last, pdf } (read in one list call by /api/planviews).
 // The code is 10 random characters, so a link can't be guessed. Nothing here is in the repo.
 
+import { pushAll } from "../../lib/webpush.js";
+
 function json(body, status) {
   return new Response(JSON.stringify(body), {
     status: status || 200,
@@ -63,6 +65,85 @@ export async function onRequest({ request, env, params }) {
     if (what === "open") { m.opens = (m.opens || 0) + 1; m.first = m.first || now; m.last = now; }
     else { m.pdf = (m.pdf || 0) + 1; }
     await env.HUB_KV.put(key, "", { metadata: m });
+    return json({ ok: true });
+  }
+
+  // ---- The sales video (VSL), 2026-11-10 -------------------------------------------------------
+  //   GET  /p/<code>/video    -> public/vsl-view.html (player + Join button + full screen)
+  //   GET  /p/<code>/vsl.mp4  -> the men's or women's video (plan "gender"), Range requests passed through
+  //   POST /p/<code>/vseen    -> JSON { ev:"open"|"tick"|"end"|"join", bins:[0-99], pos, dur, dev }
+  // KV vslview:<contactId>: value = { bins:[100 counts], visits:[{t,dev}], joins:[{t,at}] },
+  //   metadata = { opens, first, last, pct, far, done, join, joinAt, dev } (read by /api/vslviews).
+  if (action === "video" && request.method === "GET") {
+    if (!id) return new Response("This link isn't valid any more. Please ask Olly for a new one.", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
+    const page = await env.ASSETS.fetch(new URL("/vsl-view.html", request.url));
+    return new Response(page.body, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
+  }
+
+  // the file name carries a version (vsl-<n>.mp4) so a new upload never meets an old copy in Cloudflare's cache (2026-11-10:
+  // a "not found" from before the men's video existed was cached for 4 hours). Not-found answers are never cached.
+  if (/^vsl(-[a-z0-9]+)?\.mp4$/.test(action) && request.method === "GET") {
+    if (!id) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    let g = "female";
+    try { const p = JSON.parse((await env.HUB_KV.get("plan:" + id)) || "{}"); if (/^m/i.test(p.gender || "")) g = "male"; } catch {}
+    const file = "/vsl/vsl-" + (g === "male" ? "men" : "women") + ".mp4";
+    const r = await env.ASSETS.fetch(new Request(new URL(file, request.url), { headers: request.headers }));
+    // a missing file makes Pages fall back to index.html: never send that (it's the Hub's own page) as the "video"
+    if (!/video|octet-stream/i.test(r.headers.get("content-type") || "")) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    const h = new Headers(r.headers);
+    h.set("content-type", "video/mp4"); h.set("cache-control", "private, max-age=3600"); h.set("x-robots-tag", "noindex"); h.set("accept-ranges", "bytes");
+    // iPhones only play video when byte ranges work (206). Pages' asset server ignores Range here, so slice it ourselves.
+    const range = /^bytes=(\d*)-(\d*)$/.exec(request.headers.get("range") || "");
+    if (range && r.status === 200) {
+      const buf = await r.arrayBuffer(), size = buf.byteLength;
+      let start = range[1] === "" ? Math.max(0, size - (+range[2] || 0)) : +range[1];
+      let end = range[1] === "" || range[2] === "" ? size - 1 : Math.min(+range[2], size - 1);
+      if (start >= size || start > end) return new Response("", { status: 416, headers: { "content-range": "bytes */" + size } });
+      h.set("content-range", "bytes " + start + "-" + end + "/" + size); h.set("content-length", String(end - start + 1));
+      return new Response(buf.slice(start, end + 1), { status: 206, headers: h });
+    }
+    return new Response(r.body, { status: r.status, headers: h });
+  }
+
+  // the still shown before they press play (iPhones show black otherwise): /p/<code>/poster-<n>.jpg
+  if (/^poster(-[a-z0-9]+)?\.jpg$/.test(action) && request.method === "GET") {
+    if (!id) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    let g = "female";
+    try { const p = JSON.parse((await env.HUB_KV.get("plan:" + id)) || "{}"); if (/^m/i.test(p.gender || "")) g = "male"; } catch {}
+    const r = await env.ASSETS.fetch(new URL("/vsl/poster-" + (g === "male" ? "men" : "women") + ".jpg", request.url));
+    if (!/image/i.test(r.headers.get("content-type") || "")) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    return new Response(r.body, { status: 200, headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=3600" } });
+  }
+
+  if (action === "vseen" && request.method === "POST") {
+    if (!id) return json({ ok: false }, 404);
+    if (/(?:^|;\s*)CF_Authorization=/.test(request.headers.get("cookie") || "")) return json({ ok: true, owner: true });
+    let b = {};
+    try { b = JSON.parse(await request.text()); } catch { return json({ ok: false }, 400); }
+    if (!/^(open|tick|end|join)$/.test(b.ev || "")) return json({ ok: false }, 400);
+    const key = "vslview:" + id, cur = await env.HUB_KV.getWithMetadata(key);
+    let v = {}; try { v = JSON.parse(cur.value || "{}") || {}; } catch { v = {}; }
+    const m = Object.assign({ opens: 0, first: null, last: null, pct: 0, far: 0, done: false, join: 0, joinAt: null, dev: "" }, cur.metadata || {});
+    v.bins = Array.isArray(v.bins) && v.bins.length === 100 ? v.bins : new Array(100).fill(0);
+    v.visits = v.visits || []; v.joins = v.joins || [];
+    const now = new Date().toISOString(), dur = Math.max(0, +b.dur || 0), pos = Math.max(0, +b.pos || 0);
+    (Array.isArray(b.bins) ? b.bins : []).slice(0, 100).forEach(function (i) { i = i | 0; if (i >= 0 && i < 100) v.bins[i]++; });
+    m.pct = v.bins.filter(function (n) { return n > 0; }).length;
+    if (dur) m.far = Math.max(m.far || 0, Math.min(100, Math.round(pos / dur * 100)));
+    m.last = now;
+    let note = null;
+    if (b.ev === "open") {
+      m.opens++; m.first = m.first || now; m.dev = String(b.dev || "").slice(0, 10);
+      v.visits.push({ t: now, dev: m.dev }); v.visits = v.visits.slice(-30);
+      if (m.opens === 1) note = { title: "Video opened", body: "Someone just opened their sales video. Tap to see who.", url: "/#looms", tag: "vsl-" + id };
+    }
+    if ((b.ev === "end" || m.pct >= 90) && !m.done) { m.done = true; note = { title: "Video watched to the end", body: "An applicant just finished their sales video (" + m.pct + "% watched). Tap to see who.", url: "/#looms", tag: "vsl-" + id }; }
+    if (b.ev === "join") {
+      m.join++; m.joinAt = m.joinAt || now; v.joins.push({ t: now, at: Math.round(pos) }); v.joins = v.joins.slice(-20);
+      note = { title: "Someone clicked Join 🎉", body: "An applicant just clicked Join on their sales video. Tap to see who.", url: "/#looms", tag: "vsl-join-" + id };
+    }
+    await env.HUB_KV.put(key, JSON.stringify(v), { metadata: m });
+    if (note) { try { await pushAll(env, note); } catch (e) {} }
     return json({ ok: true });
   }
 
