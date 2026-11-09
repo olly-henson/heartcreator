@@ -38,6 +38,17 @@
   .lmbc b{ display:block; margin-bottom:3px; }
   .lmcon{ display:flex; gap:6px; align-items:center; margin-top:6px; }
   .lmcon .lmcopy{ flex:1; min-width:0; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; background:var(--surface); color:inherit; border:1px solid var(--border-soft); border-radius:8px; padding:7px 9px; font:inherit; font-size:13px; cursor:pointer; }
+  .emcal-time{ display:block; font-size:11px; font-weight:600; color:#f0abfc; }
+  .emsendtime{ font-size:13px; margin:2px 0 8px; }
+  .emsendtime span{ opacity:.7; }
+  .emghl{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #2e2340; }
+  .emghl .emghlbtn{ font-weight:600; }
+  .emghlst{ flex-basis:100%; font-size:12.5px; opacity:.8; }
+  .ytimgmaker{ margin:8px 0 4px; border:1px solid #2e2340; border-radius:12px; padding:8px 12px; }
+  .ytimgmaker summary{ cursor:pointer; font-weight:600; }
+  .ytimgmaker .ytimgline{ width:100%; box-sizing:border-box; margin:10px 0 6px; font:inherit; font-size:16px; }
+  .ytimgmaker .copybtn.active{ outline:2px solid #d946ef; }
+  .ytimgprev{ display:block; width:100%; max-width:380px; border-radius:10px; margin:8px 0; }
   .lmcon a{ flex:none; padding:7px 10px; border-radius:8px; background:#25a35a; color:#fff; font-size:13px; font-weight:600; text-decoration:none; }
   .lmcon a[href^="mailto"]{ background:#7b4fd6; }
   .lmcon a[href^="sms"]{ background:#0a84ff; }
@@ -5508,6 +5519,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (s.msgApp) return s.msgApp === "im";
     return Object.keys(a.fields || {}).some(function(k){ return /(don.?t|do not|no) (have |use )?whats ?app/i.test(String(a.fields[k])); });
   }
+  function lmVoice(a){
+    var cut = [a.firstName, a.lastName, a.city, a.country, lmAns(a, /profession|work/i)].map(function(x){ return String(x || "").trim(); }).filter(function(x){ return x.length > 1; });
+    function clean(t){
+      t = String(t || "").replace(/\S+@\S+\.\S+/g, "[…]").replace(/https?:\/\/\S+/g, "[…]").replace(/\+?\d[\d\s().-]{6,}\d/g, "[…]");
+      cut.forEach(function(w){ t = t.replace(new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "gi"), "[…]"); });
+      return t.trim();
+    }
+    var rows = [["How they feel about love and dating", /^HA Feelings About Love/i], ["What still isn't happening", /^HA Not Happening/i],
+      ["\u201cI'll meet the right person once I\u2026\u201d", /^HA Meet Right Person Once/i], ["What they want", /^HA Relationship Wanted/i],
+      ["How long they've been looking", /^HA How Long Looking/i], ["What they've already tried", /^HA Tried/i],
+      ["How they feel now (Feeling Finder)", /^FF Current Emotion/i], ["The feeling they want (Feeling Finder)", /^FF Resonance/i],
+      ["Must-haves in a partner", /^FF Intentions/i], ["Anything else they said", /^HA Anything Else/i]];
+    var out = rows.map(function(r){ var v = clean(lmAns(a, r[1])); return v ? r[0] + ": " + v : ""; }).filter(Boolean);
+    return "Applicant's answers (name and personal details taken out):\n" + (out.length ? out.join("\n") : "(no answers yet)");
+  }
   function lmContact(a){
     var h = "", ph = (a.phone || "").replace(/[^\d]/g, ""), im = lmUsesIm(a);
     if (ph) h += '<div class="lmcon lmapptog"><span>Text them on</span><button type="button" data-app="wa" aria-pressed="' + !im + '">WhatsApp</button><button type="button" data-app="im" aria-pressed="' + im + '">iMessage</button></div>';
@@ -5543,6 +5569,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // Plan of action (Olly, 2026-11-08): sent BEFORE the sales video (Frankie: pre-sell the plan, video closes once they agree). their personalised plan, filled from GHL on /plan.html; send it as images on WhatsApp or a PDF.
     // Page is built from funnel/plan-of-action.html by tools/build_hub_plan.py. Edits are saved in KV under plan:<id>.
     h += '<div class="lmcon lmmsg"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 Plan of action</a>' + lmPlanLine(a.id) + '</div>';
+    // Email ideas from this applicant (Olly, 2026-11-09: "inspiration for the daily emails that go to engaged people").
+    // Copies their answers with their name, contact details, place and job taken out; paste into the content generator's
+    // Email tab ("An applicant's words"). The generator uses the feelings and patterns, never the story or details.
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for email ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator: Email tab, “An applicant’s words”.</small></div>';
     // Sales video (2026-11-05): one master video (unlisted YouTube) for everyone who says the price is within reach.
     // Sending it marks them Loom sent. Script + map: funnel/sales-video-script.md, funnel/sales-video-map.html.
     var VIDEO = "https://youtu.be/PhcbPYPfUU0";
@@ -5656,7 +5686,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // takes up the page). Drag a card to another column to move them (desktop).
   // Remove from GHL (Olly 2026-11-05): really bad fits / rude applicants. /api/remove-applicant turns on DND, removes their
   // list tags and adds "removed - not a fit". Removed applicants stay in Not a fit but are left out of every stat.
-  function lmRemoved(a){ return !!(a.removed || lmStore(a.id).removed); }
+  // GHL's "removed - not a fit" tag decides (2026-11-09: an applicant was restored in GHL but the Hub's own flag kept him "removed").
+  // The Hub's flag only bridges the moment after Remove from GHL, before the next refresh brings the tag back.
+  function lmRemoved(a){ var s = lmStore(a.id); if (a.removed === false && s.removed && Date.now() - new Date(s.removed).getTime() > 10 * 60000) delete s.removed; return !!(a.removed || s.removed); }
   function lmRemove(a, btn){
     if (!window.confirm("Remove " + (lmName(a) || "this applicant") + " from GHL?\n\nThey come off every email list, Do Not Disturb goes on for all channels and they're left out of all stats. Their record stays in GHL.")) return;
     btn.disabled = true; btn.textContent = "Removing…";
@@ -6558,6 +6590,24 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var EM_TYPES = ["Free value", "Mechanism", "Personal story", "Belief breaking", "The vision", "Science", "Q&A", "What it's not", "List", "Challenge the dogma", "Ask them to reply", "Results share", "Invitation"];
   // one-word names for the phone calendar, where full names don't fit a day cell
   var EM_TYPE_SHORT = { "Free value":"Value", "Mechanism":"How", "Personal story":"Story", "Belief breaking":"Belief", "The vision":"Vision", "Science":"Science", "Q&A":"Q&A", "What it's not":"Not", "List":"List", "Challenge the dogma":"Dogma", "Ask them to reply":"Reply", "Results share":"Results", "Invitation":"Invite" };
+  // Recommended send time (Olly, 2026-11-09: "add recommended Cape Town times to schedule these in the calendar").
+  // US audience test from 9 Nov 2026: days alternate between 10am New York (morning on both coasts) and 3pm New York
+  // (his old 22:00 Cape Town slot). Anchored to New York so US clock changes move the Cape Town time by themselves.
+  var EM_TEST_START = "2026-11-09";
+  function emTzOffset(tz, ms){
+    var p = new Intl.DateTimeFormat("en-US", { timeZone:tz, hourCycle:"h23", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" }).formatToParts(new Date(ms));
+    function g(k){ return +p.filter(function(x){ return x.type === k; })[0].value; }
+    return (Date.UTC(g("year"), g("month") - 1, g("day"), g("hour") % 24, g("minute")) - ms) / 60000;
+  }
+  function emSendTime(iso){
+    if (!iso || iso < EM_TEST_START) return null;
+    var d = iso.split("-").map(Number), days = Math.round((Date.UTC(d[0], d[1] - 1, d[2]) - Date.UTC(2026, 10, 9)) / 86400000);
+    var nyHour = days % 2 === 0 ? 10 : 15, guess = Date.UTC(d[0], d[1] - 1, d[2], nyHour, 0);
+    var ms = guess - emTzOffset("America/New_York", guess) * 60000;
+    function f(tz, opts){ return new Date(ms).toLocaleTimeString("en-GB", Object.assign({ timeZone:tz }, opts)); }
+    var la = new Date(ms).toLocaleTimeString("en-US", { timeZone:"America/Los_Angeles", hour:"numeric" }).replace(" ", "").toLowerCase();
+    return { cape: f("Africa/Johannesburg", { hour:"2-digit", minute:"2-digit" }), ny: (nyHour > 12 ? nyHour - 12 + "pm" : nyHour + "am"), la: la, slot: nyHour === 10 ? "morning test" : "afternoon test" };
+  }
   function emList(){ if (!Array.isArray(state.emailCal)) state.emailCal = []; return state.emailCal; }
   // Pitch days (Olly 2026-11-04): a pitch email (pitch:true) goes to the Warm List; that day's daily email goes to the
   // Cold List. Every other day the daily email goes to the Daily Email List. Weekly, Thursdays, from 12 Nov 2026
@@ -6717,8 +6767,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         var ts = document.createElement("span"); ts.className = "emcal-short" + (e.type ? "" : " none"); ts.textContent = e.pitch ? "💰 Pitch" : e.type ? (EM_TYPE_SHORT[e.type] || e.type.split(" ")[0]) : "?";
         if (e.pitch) it.className += " pitch";
         var sj = document.createElement("span"); sj.className = "emcal-subj"; sj.textContent = e.subject;
-        lb.append(tg, ts, sj);
-        it.title = (e.type ? e.type + ": " : "") + e.subject; it.append(dot, lb); wrap.appendChild(it);
+        var stt = emSendTime(e.date);
+        if (stt && e.status !== "sent"){ var tm = document.createElement("span"); tm.className = "emcal-time"; tm.textContent = "⏰ " + stt.cape; lb.append(tg, ts, tm, sj); }
+        else lb.append(tg, ts, sj);
+        it.title = (e.type ? e.type + ": " : "") + e.subject + (stt ? " · send " + stt.cape + " Cape Town" : ""); it.append(dot, lb); wrap.appendChild(it);
       });
       if (dayEm.length > 3){ var more = document.createElement("div"); more.className = "calitem"; more.style.color = "var(--text-muted)"; more.textContent = "+" + (dayEm.length - 3) + " more"; wrap.appendChild(more); }
       cell.appendChild(wrap);
@@ -6768,7 +6820,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       dt.addEventListener("change", function(){ if (!dt.value) return; e.date = dt.value; emYtSoon(); emCalSel = dt.value; var d = new Date(dt.value + "T00:00:00"); emCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); markDirty(); renderEmailCalendar(); });
       row.append(subj, dt);
       var aud = document.createElement("div"); aud.className = "emaudience" + (e.pitch ? " warm" : ""); aud.textContent = "Send to: " + emAudience(e);
-      item.appendChild(aud); item.appendChild(row);
+      item.appendChild(aud);
+      var stt2 = emSendTime(e.date);
+      if (stt2){ var tmr = document.createElement("div"); tmr.className = "emsendtime"; tmr.innerHTML = "⏰ Schedule for <b>" + stt2.cape + " Cape Town</b> · " + stt2.ny + " New York, " + stt2.la + " LA <span>(" + stt2.slot + ")</span>"; item.appendChild(tmr); }
+      item.appendChild(row);
       // Draft / Scheduled / Published buttons (like the Reels panel) and the email's type
       var row2 = document.createElement("div"); row2.className = "emrow";
       var tog = document.createElement("div"); tog.className = "statustoggle";
@@ -6806,11 +6861,64 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       });
       var sb = saveButton();
       acts.append(sb[1], cs, cp, cb, del, sb[0]); item.appendChild(acts);
+      item.appendChild(emGhlRow(e));
       box.appendChild(item);
     });
     var add = document.createElement("button"); add.type = "button"; add.className = "addbtn"; add.textContent = "+ Add an email on this day"; add.style.marginTop = "10px";
     add.addEventListener("click", function(){ emAdd("", emCalSel, ""); });
     box.appendChild(add);
+  }
+  // Email -> GHL template (Olly, 2026-11-09): "publish the email as a template (with its date) ... then I can just choose
+  // it from the templates and schedule it", so his smart lists still decide who gets it. /api/email-template makes or
+  // updates "Daily email for 9th of November 2026" (Pitch email / Daily email (pitch day) on pitch days) in his Daily
+  // email look. Stored on the email: e.ghlTpl = { id, name, at, sig } (sig spots edits made after it went to GHL).
+  function emKind(e){ return e.pitch ? "pitch" : emIsPitchDay(e.date) ? "pitchday" : "daily"; }
+  function emSig(e){ var t = String(e.subject || "") + "\u0001" + String(e.body || "") + "\u0001" + e.date + "\u0001" + emKind(e), h = 0; for (var i = 0; i < t.length; i++){ h = (h * 31 + t.charCodeAt(i)) | 0; } return String(h); }
+  function emGhlRow(e){
+    var wrap = document.createElement("div"); wrap.className = "emghl";
+    var tp = e.ghlTpl, stale = tp && tp.sig !== emSig(e);
+    var b = document.createElement("button"); b.type = "button"; b.className = "copybtn emghlbtn";
+    b.textContent = !tp ? "📨 Send to GHL templates" : stale ? "📨 Update the GHL template" : "📨 Sent to GHL ✓ (send again)";
+    var st = document.createElement("span"); st.className = "emghlst";
+    if (tp) st.textContent = (stale ? "Changed since it went to GHL. " : "") + "In GHL templates as “" + tp.name + "”. Pick it there when you schedule, and paste the subject.";
+    else st.textContent = "Makes a template you can pick when scheduling in GHL. Your smart lists still decide who gets it.";
+    b.addEventListener("click", function(){
+      if (!String(e.body || "").trim()){ st.textContent = "Add the email text first."; return; }
+      b.disabled = true; st.textContent = "Sending to GHL…";
+      fetch("/api/email-template", { method:"POST", headers:{ "content-type":"application/json" }, credentials:"same-origin",
+        body: JSON.stringify({ subject:e.subject, body:e.body, date:e.date, kind:emKind(e), templateId: tp && tp.id, templateName: tp && tp.name }) })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (!d || !d.ok) throw new Error((d && d.error) || "failed");
+          e.ghlTpl = { id:d.templateId, name:d.name, at:d.at, sig:emSig(e) };
+          var wasClean = dirtyGet() === null; markDirty(); if (wasClean) saveNow();
+          renderEmailCalendar();
+        })
+        .catch(function(err){ b.disabled = false; st.textContent = "Couldn't reach GHL (" + String(err.message || err).slice(0, 120) + "). If you've been away a while, reload the Hub and try again."; });
+    });
+    wrap.append(b);
+    // its matching YouTube community post (made automatically from the email)
+    var yp = e.eid ? ytList().filter(function(x){ return x.fromEmail === e.eid; })[0] : null;
+    if (yp){
+      var yb = document.createElement("button"); yb.type = "button"; yb.className = "copybtn"; yb.textContent = "▶ Its YouTube post" + ((yp.images || []).length ? " ✓ image" : " (needs an image)");
+      yb.addEventListener("click", function(){
+        ytCalSel = yp.date; var d = new Date(yp.date + "T00:00:00"); ytCalCursor = new Date(d.getFullYear(), d.getMonth(), 1);
+        renderYtCalendar();
+        var t = document.getElementById("ytCalDay"); if (t) t.scrollIntoView({ behavior:"smooth", block:"start" });
+      });
+      wrap.append(yb);
+    }
+    wrap.append(st);
+    // relabel as soon as he edits the email (2026-11-09: he edited, then couldn't find "Update" because the label hadn't changed)
+    setTimeout(function(){
+      var item = wrap.parentElement; if (!item || !e.ghlTpl) return;
+      item.addEventListener("input", function(){
+        if (!e.ghlTpl || e.ghlTpl.sig === emSig(e) || b.disabled) return;
+        b.textContent = "📨 Update the GHL template";
+        st.textContent = "Changed since it went to GHL. Tap Update to send your changes to “" + e.ghlTpl.name + "”.";
+      });
+    }, 0);
+    return wrap;
   }
   function moveEmailMonth(delta){
     if (delta === 0){ emCalCursor = new Date(); emCalCursor.setDate(1); }
@@ -6895,6 +7003,96 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     }
     renderYtDay();
   }
+  // Community post image maker, in the calendar (Olly, 2026-11-09: "frustrating having to go back into the content
+  // generator to create the image"). Same as the generator's: square 1080 x 1080, the line in big type, Purple / Photo /
+  // Light, Next photo, your own photo. Starts with the post's title; "Add to this post" attaches it like + Attach image.
+  var YTIMG_PHOTOS = ["breakfast-together", "coffee-date", "family-sunday", "friends-at-dinner", "wedding", "picturing-the-future", "at-the-bar", "heart-field"];
+  function ytImgPref(k, v){ try { if (v === undefined) return localStorage.getItem("ytimg-" + k); localStorage.setItem("ytimg-" + k, v); } catch(e){ return null; } }
+  function ytImageMaker(p){
+    var S = 1080, st = { style: ytImgPref("style") || "purple", photo: Number(ytImgPref("photo")) || 0, custom: "", text: p.imageLine || p.title || "" };
+    var det = document.createElement("details"); det.className = "ytimgmaker";
+    var sum = document.createElement("summary"); sum.textContent = "🎨 Make the image here"; det.appendChild(sum);
+    var ta = document.createElement("textarea"); ta.rows = 2; ta.className = "ytimgline"; ta.value = st.text; ta.setAttribute("aria-label", "The line on the image");
+    ta.placeholder = "The line for the image (8 words or so)";
+    var styles = document.createElement("div"); styles.className = "emrow";
+    var cv = document.createElement("canvas"); cv.width = S; cv.height = S;
+    var prev = document.createElement("img"); prev.alt = "Image preview"; prev.className = "ytimgprev";
+    var acts = document.createElement("div"); acts.className = "emrow";
+    var addB = document.createElement("button"); addB.type = "button"; addB.className = "addbtn"; addB.textContent = "Add to this post";
+    var msg = document.createElement("span"); msg.className = "daymodal-savestatus";
+    var nextPh = document.createElement("button"); nextPh.type = "button"; nextPh.className = "copybtn"; nextPh.textContent = "Next photo";
+    [["purple", "Purple"], ["photo", "Photo"], ["light", "Light"]].forEach(function(o){
+      var b = document.createElement("button"); b.type = "button"; b.className = "copybtn"; b.textContent = o[1]; b.dataset.style = o[0];
+      b.addEventListener("click", function(){ st.style = o[0]; ytImgPref("style", o[0]); draw(); });
+      styles.appendChild(b);
+    });
+    nextPh.addEventListener("click", function(){ st.custom = ""; st.photo = (st.photo + 1) % YTIMG_PHOTOS.length; ytImgPref("photo", st.photo); draw(); });
+    var upIn = document.createElement("input"); upIn.type = "file"; upIn.accept = "image/*"; upIn.hidden = true;
+    var upB = document.createElement("button"); upB.type = "button"; upB.className = "copybtn"; upB.textContent = "Your own photo";
+    upB.addEventListener("click", function(){ upIn.click(); });
+    upIn.addEventListener("change", function(){
+      var f = upIn.files && upIn.files[0]; if (!f) return;
+      var r = new FileReader(); r.onload = function(){ st.custom = r.result; st.style = "photo"; draw(); }; r.readAsDataURL(f); upIn.value = "";
+    });
+    styles.append(nextPh, upB, upIn);
+    ta.addEventListener("input", function(){ st.text = ta.value; p.imageLine = ta.value; markDirty(); draw(); });
+    function wrapLines(ctx, text, maxW){
+      var out = [], line = "";
+      String(text).split(/\s+/).filter(Boolean).forEach(function(w){ var t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line){ out.push(line); line = w; } else line = t; });
+      if (line) out.push(line); return out;
+    }
+    var seq = 0;
+    function paint(img, me){
+      if (me !== seq) return;
+      var ctx = cv.getContext("2d"), text = st.text.trim() || "Your line goes here", ink = "#ffffff", accent = "#e879f9";
+      if (st.style === "light"){ ctx.fillStyle = "#fbfaf6"; ctx.fillRect(0, 0, S, S); ink = "#2a0846"; accent = "#a21caf"; }
+      else if (st.style === "photo"){
+        if (img){ var k = Math.max(S / img.width, S / img.height), w = img.width * k, h = img.height * k; ctx.drawImage(img, (S - w) / 2, (S - h) / 2, w, h); }
+        else { ctx.fillStyle = "#2a0846"; ctx.fillRect(0, 0, S, S); }
+        ctx.fillStyle = "rgba(20,4,32,.58)"; ctx.fillRect(0, 0, S, S);
+      } else {
+        var g = ctx.createLinearGradient(0, 0, 0, S); g.addColorStop(0, "#2a0846"); g.addColorStop(1, "#12041f");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
+        ctx.fillStyle = "rgba(217,70,239,.16)"; ctx.beginPath(); ctx.arc(S * 0.85, S * 0.2, 380, 0, Math.PI * 2); ctx.fill();
+      }
+      var size = 96, ls;
+      for (; size >= 52; size -= 4){ ctx.font = "800 " + size + "px Poppins, sans-serif"; ls = wrapLines(ctx, text, S - 200); if (ls.length <= 5) break; }
+      var lh = size * 1.18, top = (S - ls.length * lh) / 2 + size * 0.85 - 30;
+      ctx.fillStyle = ink; ctx.textAlign = "center";
+      ls.forEach(function(l, n){ ctx.fillText(l, S / 2, top + n * lh); });
+      var bar = ctx.createLinearGradient(S / 2 - 60, 0, S / 2 + 60, 0); bar.addColorStop(0, "#e879f9"); bar.addColorStop(1, "#c084fc");
+      ctx.fillStyle = bar; ctx.fillRect(S / 2 - 60, top + ls.length * lh - size * 0.35, 120, 8);
+      ctx.font = "600 30px Poppins, sans-serif"; ctx.fillStyle = st.style === "light" ? accent : "rgba(255,255,255,.8)";
+      ctx.fillText("OLLY HENSON", S / 2, S - 70);
+      try { prev.src = cv.toDataURL("image/jpeg", 0.9); } catch(e){ prev.removeAttribute("src"); }
+    }
+    function draw(){
+      var me = ++seq;
+      styles.querySelectorAll("[data-style]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.style === st.style)); b.classList.toggle("active", b.dataset.style === st.style); });
+      nextPh.hidden = st.style !== "photo";
+      var ready = document.fonts && document.fonts.load ? document.fonts.load("800 60px Poppins") : Promise.resolve();
+      ready.catch(function(){}).then(function(){
+        if (st.style !== "photo") return paint(null, me);
+        var img = new Image();
+        img.onload = function(){ paint(img, me); }; img.onerror = function(){ paint(null, me); };
+        img.src = st.custom || ("cig-assets/" + YTIMG_PHOTOS[st.photo % YTIMG_PHOTOS.length] + ".jpg");
+      });
+    }
+    addB.addEventListener("click", function(){
+      addB.disabled = true; msg.textContent = "Adding…";
+      cv.toBlob(function(blob){
+        if (!blob){ addB.disabled = false; msg.textContent = "Couldn't make the image."; return; }
+        uploadStoryImage(blob).then(function(id){ if (!Array.isArray(p.images)) p.images = []; p.images.push(id); markDirty(); renderYtDay(); },
+          function(){ addB.disabled = false; msg.textContent = "Couldn't upload. If you've been away a while, reload the Hub and try again."; });
+      }, "image/jpeg", 0.92);
+    });
+    acts.append(addB, msg);
+    det.append(ta, styles, prev, acts);
+    det.addEventListener("toggle", function(){ if (det.open) draw(); });
+    if (!(p.images || []).length) det.open = true;   // no image yet: open and ready
+    if (det.open) draw();
+    return det;
+  }
   function renderYtDay(){
     var box = document.getElementById("ytCalDay");
     if (!box) return;
@@ -6968,7 +7166,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
           function(){ attach.disabled = false; imgSt.textContent = ""; window.alert("The image couldn't upload. If you've been away a while, reload the Hub to log in again, then try again."); });
       });
       var imgRow = document.createElement("div"); imgRow.className = "emrow"; imgRow.append(attach, imgSt, fileIn);
-      item.append(label("Image"), imgWrap, imgRow);
+      item.append(label("Image"), imgWrap, imgRow, ytImageMaker(p));
       var post = document.createElement("textarea"); post.className = "ytpost"; post.value = p.post || ""; post.placeholder = "The post (a blank line after every line)";
       post.addEventListener("input", function(){ p.post = post.value; markDirty(); });
       var pin = document.createElement("textarea"); pin.className = "ytpin"; pin.value = p.pinned || ""; pin.placeholder = "Pinned comment (with the link), optional";

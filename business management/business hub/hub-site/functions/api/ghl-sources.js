@@ -78,6 +78,13 @@ async function utmFieldIds(env) {
   return { ids, ha, dates };
 }
 
+// GHL's dateAdded is UTC; the Hub's days are Cape Town days (page views use the SAST day too). Sign-ups between
+// midnight and 02:00 Cape Town were landing on the day before (Olly, 2026-11-09: "only 2 opt-ins" when GHL had 5).
+function capeDay(iso) {
+  const d = new Date(iso);
+  if (!iso || isNaN(d)) return String(iso || "").slice(0, 10);
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Johannesburg", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+}
 // a date custom field can come back as epoch ms or as text; returns YYYY-MM-DD or ""
 function dateValue(c, id) {
   if (!id) return "";
@@ -162,7 +169,7 @@ export async function onRequestGet({ env }) {
 
     const groups = {};
     function bump(c, set, what, when) {
-      const d = when || String(c.dateAdded || "").slice(0, 10);
+      const d = when || capeDay(c.dateAdded);
       const row = {
         month: d.slice(0, 7),
         day: d,
@@ -199,7 +206,7 @@ export async function onRequestGet({ env }) {
       const plan = fieldValue(c, dates.plan);
       return {
         plan: plan.indexOf("free") !== -1 ? "free" : plan.indexOf("annual") !== -1 ? "annual" : plan.indexOf("monthly") !== -1 ? "monthly" : "",
-        joined: dateValue(c, dates.joined) || String(c.dateAdded || "").slice(0, 10),
+        joined: dateValue(c, dates.joined) || capeDay(c.dateAdded),
         cancelled: hasTag(c, TAG_CANCELLED) ? (dateValue(c, dates.cancelled) || new Date().toISOString().slice(0, 10)) : "",
         source: fieldValue(c, set.source), medium: fieldValue(c, set.medium), content: fieldValue(c, set.content),
       };

@@ -948,3 +948,5 @@ Extracted from ~40 pages of screenshots of "The Email Player's Playbook" by Ben 
 <!-- 2026-11-05 skill review: added the Weekly email (dormant) workflow record, the "templates with text first" rule (the AI builder leaves bodies empty) and From name/email on every step, plus what Olly kept vs cut in his review (cut metaphors/scenarios, removed all links, belief must be built not skipped, write from his Reel transcripts, new founder story only). -->
 
 <!-- 2026-11-07 skill review: added "Scheduling the daily email" (GHL timezone was Europe/London -> now Africa/Harare, never Cairo; tools/ghl-email-schedule.mjs; answer last sent + next scheduled in Cape Town time first). Why: Olly's picked dates didn't match the campaign page and my first answer explained instead of giving the times he asked for ("that's what I want to check"). -->
+
+**2026-11-09 — Send-time test (US audience).** From 9 Nov the Hub's Email calendar alternates 10am New York (17:00 Cape Town now) and 3pm New York (22:00, the old slot). Compare GHL open rates after 4–5 sends each; then use the winner for every daily email.

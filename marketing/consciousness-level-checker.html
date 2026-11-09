@@ -168,7 +168,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .lssaved{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;padding:6px 0;border-top:1px solid var(--line)}
 .lssaved span{flex:1;min-width:0}
 .idea .research ul{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}.idea .research{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
-#emailResult{font:inherit;width:100%}
+#emailResult,#emailVoice{font:inherit;width:100%}
 .pswrap{display:flex;flex-direction:column;gap:6px;margin-top:10px}.pschk{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
 .idea textarea.psbox{width:100%;font:inherit;line-height:1.5;color:inherit;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
 .subopt{text-align:left;font:inherit;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;color:inherit}
@@ -273,6 +273,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           </select></label>
           <div class="f full" id="crsShotWrap" hidden><span>Member screenshot</span><span class="hint">One real message or post, shared with permission. Names and profile photos get covered for you: check the covers, then press Generate.</span><div class="row"><label class="tsmfile">Upload the screenshot<input type="file" id="crsShot" accept="image/*"></label></div><div id="crsShotHost"></div></div>
           <label class="f full" id="emailResultWrap" hidden>A real result to share <span class="hint">Optional. Paste a member's win or message (with their permission, name left out). Mixed week then includes one email built around it, or pick Results share to write it on its own.</span><textarea id="emailResult" rows="3" placeholder="e.g. I went on a date at the weekend and for the first time I didn't overthink a single text"></textarea></label>
+          <label class="f full" id="emailVoiceWrap" hidden>An applicant's words, for inspiration <span class="hint">Optional. In the Hub: Sales, open an applicant, tap 💡 Copy for email ideas, then paste here. Names and personal details are already taken out. Every email you write uses their feelings and patterns as the angle, never their story or their details. Clear it when you're done.</span><textarea id="emailVoice" rows="4" placeholder="Paste from the Hub's 💡 Copy for email ideas"></textarea><span class="row"><button type="button" class="btn small" id="emailVoiceClear">Clear</button></span></label>
           <div class="f full" id="reelCtaWrap"><span>Call to action (on every Reel)</span><p class="ctabox" id="reelCta"></p></div>
           <label class="f full">Topic or angle <span class="hint">Optional. Something you want to talk about, a question you've been asked, or a word to build on.</span><input type="text" id="topic" placeholder="e.g. why the people you like won't commit"></label>
           <label class="f" id="countWrap">How many ideas<select id="count"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
@@ -2157,7 +2158,7 @@ function setChannel(ch, keepType, keepFormat){
   cImg.show(channel === "carousels"); $("carouselNote").hidden = channel !== "carousels";
   $("tab-memes").setAttribute("aria-selected", String(channel === "memes"));
   $("tab-email").setAttribute("aria-selected", String(channel === "email"));
-  $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email";
+  $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email"; $("emailVoiceWrap").hidden = channel !== "email";
   document.querySelector(".seg").hidden = !ig; $("balance").hidden = !ig;
   // Stories (Olly, 2026-11-02): no idea writer, just the Story Image Maker
   { const sty = channel === "stories" || channel === "ytpost"; if (sty) $("balance").hidden = true; document.querySelector(".form").hidden = sty; $("go").parentNode.hidden = sty;
@@ -2412,7 +2413,7 @@ Format: ${fmt || "pick the best fit from: " + t.formats.join(" / ")}`}
 Part of the message to connect to: ${part}
 ${topic ? "Topic or angle: " + topic : ""}
 Call to action: ${ctaRule}
-${$("emailResult").value.trim() ? "REAL RESULT TO SHARE (a real member's words, shared with permission; quote it exactly, never add to it or invent details, no name): \"" + $("emailResult").value.trim() + "\"" + (t.rule === "MIXED" ? "\nMake exactly one email in the set a Results share built around it." : "") : ""}
+${voiceBrief()}${$("emailResult").value.trim() ? "REAL RESULT TO SHARE (a real member's words, shared with permission; quote it exactly, never add to it or invent details, no name): \"" + $("emailResult").value.trim() + "\"" + (t.rule === "MIXED" ? "\nMake exactly one email in the set a Results share built around it." : "") : ""}
 Write ${n} different emails.${n > 1 ? " They go out on different days, so vary the angle, opening and subject technique across the batch." : ""}
 
 For each email give:
@@ -2529,6 +2530,19 @@ async function emailBatch(signal){
   if (!ok.length && res[0] && res[0].reason) throw res[0].reason;
   return ok;
 }
+/* Applicant voice (Olly, 2026-11-09): "inspiration for the daily emails that go to engaged people". The Hub's Sales card
+   copies an applicant's answers with names and personal details taken out; pasted here, every email uses their feelings
+   and patterns as its angle. Never their story, details or identity: the list must never recognise a person. */
+function voiceBrief(){
+  const v = ($("emailVoice") && $("emailVoice").value.trim()) || "";
+  if (!v) return "";
+  return "A REAL APPLICANT'S WORDS (private, for inspiration only):\n" + v.slice(0, 2500)
+    + "\nUse this as the angle: what they feel, the loop they're stuck in, what they've tried and what they want, in words the reader will recognise in themselves. Speak to everyone who feels this, not to this person. Keep Olly's core message (their emotional state around love; intellectualization keeps them in their head; emotional resonance is the way out). Never say an applicant, a client or someone wrote this, never quote more than four of their words in a row, and never include a name, place, job, age, family detail, health detail or anything about another person (an ex, a parent, a friend). If the email has several in a batch, each one takes a different thing they said.\n\n";
+}
+{ const ev = document.getElementById("emailVoice");
+  if (ev) { ev.value = store.get("cig-voice", "") || ""; ev.addEventListener("input", () => store.set("cig-voice", ev.value)); }
+  const ec = document.getElementById("emailVoiceClear");
+  if (ec) ec.onclick = () => { ev.value = ""; store.set("cig-voice", ""); ev.focus(); }; }
 /* Self-learning (Olly, 2026-10-26): emails he edited and queued are the standard. The newest few go in whole,
    and where he rewrote one, the before and after, so new emails come out closer to his voice each time. */
 function emailBrief(){

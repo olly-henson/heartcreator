@@ -87,6 +87,7 @@ LOADER = r'''
       q1: ints[0] || '', q2: ints[1] || '', q3: ints[2] || '', q4: ints[3] || '',
       feels: res, feel1: res,
       oldfeel: low(ans(a, /^FF Current Emotion/i)),
+      gender: 'female',
       moments: 'catching yourself overthinking about love' + (apps ? ', and opening a dating app' : '')
     };
   }
@@ -261,6 +262,9 @@ html { font-size: 112.5%; }
   .viewwrap .support { margin-top: 1.25rem; }
   .viewwrap .support ul { gap: .5rem; padding-left: 1.3rem; }
   .viewwrap .sign { font-size: 1.5rem; }
+  .viewwrap .shots { grid-template-columns: minmax(0, 1fr); }
+  .viewwrap .shots img, .viewwrap .shots .wide img { height: auto; max-height: 520px; object-fit: contain; }
+  .viewwrap .shots figcaption { font-size: 1.05rem; }
   .viewwrap .pg .foot { font-size: .8rem; margin-top: 1.75rem; padding-top: 0; }
   .viewwrap .pg .foot b { font-size: 1rem; }
   .bar b { font-size: 1.15rem; }
@@ -285,6 +289,15 @@ VIEW_JS = r'''
     Object.keys(p).forEach(function (k) { set(k, String(p[k] || '').trim()); });
     set('qlist', [p.q1, p.q2, p.q3, p.q4].map(function (x) { return String(x || '').trim(); }).filter(Boolean).join(' · '));
     document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !String(p[s.dataset.show] || '').trim(); });
+    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(p.gender || '') ? 'male' : 'female') + '.jpg' : im.dataset.img; im.onerror = function () { im.parentElement.hidden = true; }; im.src = '/p/' + code + '/img/' + n; });
+    function getv(k) { return p[k]; }
+    // No feeling yet (Feeling Finder "I'm not sure", 2026-11-09): say we'll find it together, and don't put "I'm not sure" in a sentence
+    (function(){
+      var NS = /not sure|don.?t know|unsure|no idea/i, fl = String(getv('feels') || '').trim(), f1 = String(getv('feel1') || '').trim();
+      if (!fl || NS.test(fl)) set('feels', (fl || "I'm not sure") + " (this is what we'll go through)");
+      if (!f1 || NS.test(f1)) set('feel1', 'the feeling we find together');
+    })();
+
     if (p.name) document.title = p.name + "'s Plan of Action";
     msg.hidden = true; stage.hidden = false; fit();
     seen('open');

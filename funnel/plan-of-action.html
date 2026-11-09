@@ -136,10 +136,44 @@ button:disabled { opacity: .6; cursor: wait; }
 .modes .then .ttl { color: var(--pink); }
 .solpill { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--pink); padding: 6px 12px; border-radius: 50px; background: linear-gradient(135deg, rgba(217, 70, 239, .28), rgba(107, 33, 168, .35)); border: 1px solid rgba(240, 171, 252, .45); }
 .journey.endbox { margin-top: 22px; }
+.shots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.shots figure { margin: 0; display: flex; flex-direction: column; gap: 5px; }
+.shots img { width: 100%; height: 210px; object-fit: cover; object-position: center; border-radius: 12px; border: 1px solid rgba(240,171,252,.35); background: #12041f; }
+.shots .wide { grid-column: 1 / -1; }
+.shots .wide img { height: 150px; }
+.shots figcaption { font-size: 12.5px; font-weight: 600; color: var(--pink); }
 /* No italics anywhere (Olly, 2026-11-08: italic is too hard to read). Emphasis = colour only. */
 .pg h2 em { font-style: normal !important; font-weight: 900 !important; }
 .quote { font-style: normal !important; font-family: var(--body) !important; font-weight: 600; }
 .sign { font-style: normal !important; }
+
+/* WHITE THEME (Olly, 2026-11-09: "the purple is way too much … white and text just really clear with subtle branding signals").
+   Dark text on white; purple only for the highlighted words, the step labels and thin lines. Overrides everything above. */
+.pg { --star:#1d1527; --lav:#4a4057; --pink:#6b21a8; --magenta:#7c3aed; --violet:#7c3aed; --deep:#ffffff;
+  background:#ffffff !important; color:#1d1527; box-shadow:0 2px 16px rgba(30,10,50,.10); border:1px solid #ece6f3; }
+.pg h2 em { background:none !important; -webkit-background-clip:initial !important; background-clip:initial !important; color:#6b21a8 !important; }
+.pg .eyebrow, .solpill { color:#6b21a8 !important; }
+.solpill { background:#f5f0fb !important; border:1px solid #e4d8f3 !important; }
+.cover .orb, .cover .orb2 { display:none !important; }
+.cover h2 { margin-top:60px !important; }
+.journey .from { background:#f7f5fa !important; border:1px solid #e7e1ee !important; color:#1d1527 !important; }
+.journey .to { background:#f5f0fb !important; border:1px solid #d9c7f0 !important; color:#1d1527 !important; }
+.journey .head, .journey .from .head, .journey .to .head { color:#6b21a8 !important; }
+.journey .arrow { color:#7c3aed !important; }
+.modes .now { background:#f7f5fa !important; border:1px solid #e7e1ee !important; color:#4a4057 !important; }
+.modes .then { background:#f5f0fb !important; border:1px solid #d9c7f0 !important; color:#1d1527 !important; }
+.modes .head, .modes .now .head, .modes .then .head { color:#6b21a8 !important; }
+.modes .ttl, .modes .then .ttl { color:#1d1527 !important; }
+.tl::before { background:#e4d8f3 !important; }
+.tl .when { background:#ffffff !important; border:1px solid #d9c7f0 !important; color:#6b21a8 !important; }
+.tl li.key .when { background:#6b21a8 !important; color:#ffffff !important; border-color:#6b21a8 !important; }
+.pg .tl p, .step p, .pg p.soft { color:#4a4057 !important; }
+.pg .tl p.you, .pg .tl h3, .pg p { color:#1d1527; }
+.k, .term, .pg .tl p.keyline, .shots figcaption { color:#6b21a8 !important; }
+.quote { border-left-color:#7c3aed !important; color:#1d1527 !important; }
+.shots img { border:1px solid #ece6f3 !important; background:#f7f5fa !important; }
+.pg .foot { color:#8a7f99 !important; opacity:1 !important; }
+.pg .foot b { color:#1d1527 !important; }
 </style>
 
 <div class="wrap">
@@ -153,6 +187,9 @@ button:disabled { opacity: .6; cursor: wait; }
     </label>
     <label for="f-now">Where they are now <small>HA Feelings About Love, their words</small>
       <textarea id="f-now" data-k="now">I keep overthinking every date and wondering what's wrong with me.</textarea>
+    </label>
+    <label for="f-gender">They are a <small>picks the "where this leads" picture</small>
+      <select id="f-gender" data-k="gender"><option value="female">Woman</option><option value="male">Man</option></select>
     </label>
     <label for="f-want">Where they want to be <small>HA Relationship Wanted</small>
       <textarea id="f-want" data-k="want">a committed relationship with someone kind, where I feel safe being myself</textarea>
@@ -212,67 +249,50 @@ button:disabled { opacity: .6; cursor: wait; }
             <div class="now"><div class="head">The problem</div><div class="ttl">Intellectualization</div>Stuck in your head. Busy mind. Worrying, overthinking, scanning for answers.</div>
             <div class="then"><div class="head">The solution</div><div class="ttl">Emotional resonance</div>Back in your heart. Calm mind. Present, light and playful. Just being you.</div>
           </div>
-          <p>The plan below builds your <span class="term">emotional resonance</span>, every day.</p>
-          <div>
-            <div class="qlabel">What it does for you</div>
-            <div class="stages" style="margin-top:6px">
-              <div><span class="dot"></span>It builds the belief in yourself that you can meet your person.</div>
-              <div><span class="dot"></span>It attracts high-quality partners.</div>
-              <div><span class="dot"></span>It lets you confidently be yourself and fall into a true and authentic relationship.</div>
-            </div>
+          <p>So we need to get you out of the worry, the overthinking and the belief that you need to fix yourself.</p>
+          <p class="soft">That's what lets you meet someone and have things play out naturally and enjoyably, with a genuine connection, just like the friends and family you know who have the kind of relationship you want too.</p>
           </div>
         </div>
-        <div class="foot"><span>Page 2 of 4</span><span>The Heart Attractor Program</span></div>
+        <div class="foot"><span>Page 2 of 5</span><span>The Heart Attractor Program</span></div>
       </section>
 
-      <!-- 3. The plan, step by step -->
+      <!-- 3. How we're going to do this (Olly's outline, 2026-11-09) -->
       <section class="pg">
         <div class="solpill">The solution: emotional resonance</div>
-        <h2>How we build it, <em>step by step</em></h2>
+        <h2>How we're going <em>to do this</em></h2>
         <ol class="tl">
-          <li><div class="when">Day 1</div><div>
-            <h3>Get you inside the program</h3>
-            <p>I make sure you're in with all the starter trainings. They're short and show you exactly how we'll build your emotional resonance.</p>
-          </div></li>
-          <li><div class="when">Week 1</div><div>
-            <h3>Clarity on what you want and how you'll feel</h3>
-            <p>Emotional resonance starts here: knowing the person you want and exactly how you'll feel with them.</p>
-            <p class="you">Your person: <span class="k" data-v="qlist"></span></p>
-            <p class="you">Your emotions: <span class="k" data-v="feels"></span></p>
-          </div></li>
-          <li class="key"><div class="when">Week 1</div><div>
-            <h3>Embody it with the meditation</h3>
-            <p>I take you through how to use The Attraction Formula Meditation to embody <span class="k" data-v="feel1"></span> every day. It gets you out of your head and out of intellectualization. This is where your emotional resonance builds.</p>
-            <p class="keyline">This is the step that makes the difference.</p>
-          </div></li>
+          <li><div class="when">Step 1</div><div><h3>You get access to the platform</h3><p>Sign up and you're straight in.</p></div></li>
+          <li><div class="when">Step 2</div><div><h3>Get clear on what you want</h3><p>Short trainings to get clear on the relationship you definitely want and the emotions you want to feel in it.</p>
+            <p class="you">Your person: <span class="k" data-v="qlist"></span></p><p class="you">Your emotions: <span class="k" data-v="feels"></span></p></div></li>
         </ol>
-        <div class="foot"><span>Page 3 of 4</span><span>The Heart Attractor Program</span></div>
+        <div class="shots"><figure><img data-img="join.jpg" alt="Sign up and get access"><figcaption>Sign up and get access</figcaption></figure><figure><img data-img="training.jpg" alt="Your trainings"><figcaption>Your trainings</figcaption></figure></div>
+        <div class="foot"><span>Page 3 of 5</span><span>The Heart Attractor Program</span></div>
       </section>
 
-      <!-- 4. The plan, continued -->
       <section class="pg">
         <div class="solpill">The solution: emotional resonance</div>
-        <h2>Then, <em>beyond the first week</em></h2>
+        <h2>Then you <em>embody it</em></h2>
         <ol class="tl">
-          <li><div class="when">Week 2</div><div>
-            <h3>Anchor it through your day</h3>
-            <p>Simple anchors that bring the feeling back when you get pulled into your head, so your emotional resonance carries through your day.</p>
-            <p class="you">For you: <span class="k" data-v="moments"></span>.</p>
-          </div></li>
-          <li><div class="when">Day 14</div><div>
-            <h3>Feel-the-difference check</h3>
-            <p>By now you should feel a real difference. If you've done it every day and you don't, you get your money back.</p>
-          </div></li>
-          <li><div class="when">Day 14+</div><div>
-            <h3>Notice the shifts</h3>
-            <p>You start noticing positive shifts in your world and new people coming into it. I guide you through how to handle each one, so it unfolds the way you want it to.</p>
-          </div></li>
+          <li class="key"><div class="when">Step 3</div><div><h3>Your personal meditation</h3><p>You practise a meditation that embodies <span class="k" data-v="feel1"></span> and gets you out of intellectualization.</p>
+            <p class="keyline">This dramatically improves your confidence that this will happen, and takes you out of the overthinking, worry and stress of not meeting someone.</p></div></li>
+          <li><div class="when">Step 4</div><div><h3>Steps within your comfort zone</h3><p>As you feel more confident, we work on you taking steps within your comfort zone to meet someone.</p></div></li>
         </ol>
-        <div class="journey endbox">
-          <div class="to"><div class="head">Where this leads</div><span data-v="want"></span></div>
-        </div>
-        <div class="foot"><span>Page 4 of 4</span><span>The Heart Attractor Program</span></div>
+        <div class="shots"><figure><img data-img="meditation.jpg" alt="Your daily meditation"><figcaption>Your daily meditation</figcaption></figure><figure><img data-img="dm.jpg" alt="Me, guiding you privately"><figcaption>Me, guiding you privately</figcaption></figure></div>
+        <div class="foot"><span>Page 4 of 5</span><span>The Heart Attractor Program</span></div>
       </section>
+
+      <section class="pg">
+        <div class="solpill">Your support</div>
+        <h2>With you <em>all the way</em></h2>
+        <ol class="tl">
+          <li><div class="when">Step 5</div><div><h3>Through every interaction</h3><p>Strengthening your self-esteem and guiding you through these interactions.</p></div></li>
+          <li><div class="when">Step 6</div><div><h3>Until you're in it</h3><p>You're supported up until the point you're in the exact relationship you want.</p></div></li>
+        </ol>
+        <div class="shots"><figure><img data-img="partner-text.jpg" alt="The messages you want to be getting"><figcaption>The messages you want to be getting</figcaption></figure><figure><img data-img="pov" alt="Where this leads"><figcaption>Where this leads</figcaption></figure><figure class="wide"><img data-img="support.jpg" alt="Support from me, every day"><figcaption>Support from me, every day</figcaption></figure></div>
+        <div class="journey endbox"><div class="to"><div class="head">Where this leads</div><span data-v="want"></span></div></div>
+        <div class="foot"><span>Page 5 of 5</span><span>The Heart Attractor Program</span></div>
+      </section>
+
 
 
     </div>
@@ -299,10 +319,19 @@ var PRESET = null;
   function val(k) { var el = document.querySelector('[data-k="' + k + '"]'); return el ? el.value.trim() : ''; }
   function list(a) { a = a.filter(Boolean); return a.length < 2 ? (a[0] || '…') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
   function set(k, v) { document.querySelectorAll('[data-v="' + k + '"]').forEach(function (s) { s.textContent = v; }); }
+  var IMG_BASE = window.PLAN_IMG_BASE || '/plan-img/';
   function fill() {
+    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(val('gender')) ? 'male' : 'female') + '.jpg' : im.dataset.img; if (im.getAttribute('data-n') !== n) { im.setAttribute('data-n', n); im.parentElement.hidden = false; im.onerror = function () { im.parentElement.hidden = true; }; im.src = IMG_BASE + n; } });
     inputs.forEach(function (el) { set(el.dataset.k, el.value.trim() || '…'); });
     set('qlist', [val('q1'), val('q2'), val('q3'), val('q4')].filter(Boolean).join(' · ') || '…');
     document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !val(s.dataset.show); });
+
+    // No feeling yet (Feeling Finder "I'm not sure", 2026-11-09): say we'll find it together, and don't put "I'm not sure" in a sentence
+    (function(){
+      var NS = /not sure|don.?t know|unsure|no idea/i, fl = String(val('feels') || '').trim(), f1 = String(val('feel1') || '').trim();
+      if (!fl || NS.test(fl)) set('feels', (fl || "I'm not sure") + " (this is what we'll go through)");
+      if (!f1 || NS.test(f1)) set('feel1', 'the feeling we find together');
+    })();
   }
   inputs.forEach(function (el) { el.addEventListener('input', function () { document.getElementById('exampleNote').hidden = true; fill(); }); });
   fill();

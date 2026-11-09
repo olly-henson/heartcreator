@@ -31,6 +31,14 @@ export async function onRequest({ request, env, params }) {
     return new Response(page.body, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
   }
 
+  // the support page's screenshots (2026-11-09): served from public/plan-img/ through the link, so they need no login
+  if (action === "img" && request.method === "GET") {
+    const f = parts[2] || "";
+    if (!id || !/^[a-z0-9-]+\.jpg$/.test(f)) return new Response("", { status: 404 });
+    const r = await env.ASSETS.fetch(new URL("/plan-img/" + f, request.url));
+    return new Response(r.body, { status: r.status, headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=86400" } });
+  }
+
   if (action === "data" && request.method === "GET") {
     if (!id) return json({ ok: false }, 404);
     let plan = null;
