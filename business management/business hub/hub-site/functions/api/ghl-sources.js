@@ -115,9 +115,10 @@ async function contactsWithTag(env, tag) {
       out.push(...batch);
       if (batch.length < 100) break;
     }
-    return out;
+    // tag "removed - not a fit" = left out of every count (Olly's rule)
+    return out.filter(function (c) { return !hasTag(c, "removed - not a fit"); });
   } catch (e) {
-    return (await allContacts(env)).filter(function (c) { return hasTag(c, tag); });
+    return (await allContacts(env)).filter(function (c) { return hasTag(c, tag) && !hasTag(c, "removed - not a fit"); });
   }
 }
 
@@ -209,6 +210,9 @@ export async function onRequestGet({ env }) {
         joined: dateValue(c, dates.joined) || capeDay(c.dateAdded),
         cancelled: hasTag(c, TAG_CANCELLED) ? (dateValue(c, dates.cancelled) || new Date().toISOString().slice(0, 10)) : "",
         source: fieldValue(c, set.source), medium: fieldValue(c, set.medium), content: fieldValue(c, set.content),
+        // the journey (Olly, 2026-11-10): where they first became a lead (opt-in UTMs), then where they applied from (HA UTMs)
+        lead: { source: fieldValue(c, ids.source), medium: fieldValue(c, ids.medium), content: fieldValue(c, ids.content) },
+        app: ha.source ? { source: fieldValue(c, ha.source), medium: fieldValue(c, ha.medium), content: fieldValue(c, ha.content) } : null,
       };
     });
 

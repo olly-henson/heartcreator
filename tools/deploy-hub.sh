@@ -8,4 +8,7 @@ node "$(dirname "$0")/jscheck.js" "$HUB/public/index.html"
 node "$(dirname "$0")/jscheck.js" "$HUB/public/plan.html"
 node "$(dirname "$0")/jscheck.js" "$HUB/public/plan-view.html"
 cd "$HUB"
-npx wrangler pages deploy public --project-name hub-ollyhenson --branch main --commit-dirty=true 2>&1 | tail -1
+# npx can fail with EBUSY when its cache is locked (2026-11-10): fall back to any cached wrangler copy
+W=$(ls /c/Users/Olly/AppData/Local/npm-cache/_npx/*/node_modules/wrangler/bin/wrangler.js 2>/dev/null | tail -1)
+if [ -n "$W" ]; then node "$W" pages deploy public --project-name hub-ollyhenson --branch main --commit-dirty=true 2>&1 | tail -1
+else npx wrangler pages deploy public --project-name hub-ollyhenson --branch main --commit-dirty=true 2>&1 | tail -1; fi

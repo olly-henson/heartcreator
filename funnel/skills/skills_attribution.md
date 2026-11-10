@@ -213,11 +213,17 @@ The following preview pages are excluded from the Website Pages section of the d
 2. If it's a conversion page — add the appropriate GA4 event script
 3. If it's a new traffic source — ask Marketing Assistant to create UTM links using `skills_utm-links.md` (in marketing/skills/) and log in `memory/utm-link-log.md`
 4. If it's a new upgrade CTA — add `?ref=` tag and map in the GHL workflow
-5. Update this file
+5. Add a plain-English line for the new UTM code in `ovPlainSource()` (Hub index.html) so the Overview never shows raw codes (Olly 2026-11-10: "a ten year old should be able to understand it")
+6. If the link goes to people already on the list (emails, results pages), add its source to `ovIsExistingLead()`: they don't count as new leads, only as applications
+7. Update this file
 
 ---
 
 ## Changelog
+
+### 2026-11-10 — Hub Overview attribution in plain English
+- New traffic sources need a plain-English label in the Hub and, if they go to existing leads, a place in `ovIsExistingLead()` (steps 5–6 above). Why: Olly couldn't read the UTM labels, and results-page clicks were being counted as new leads.
+- Sales attribution follows each buyer: became a lead from (opt-in UTMs) → applied from (HA UTMs) → joined. Sales videos are counted from the Hub Sales card as well as the GHL `loom video sent` tag (bigger of the two per source).
 
 ### 2026-06-22 (session 2 — file reorganisation)
 - **Rule added:** UTM link *creation* is a Marketing Assistant task, not a Funnel Builder task. `skills_utm-links.md` stays in `marketing/skills/` — only attribution *tracking* belongs to this file.

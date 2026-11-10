@@ -5871,7 +5871,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return html + '<div class="lmstack">' + sk + "</div>";
   }
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && lmOpen && !document.fullscreenElement){ lmOpen = null; renderLooms(); } });
+  // when each sales video went out (2026-11-10), so the Overview can count them by day/week/month
+  function lmStampVideos(){
+    var L = state.looms || {}, changed = false;
+    Object.keys(L).forEach(function(id){
+      var s = L[id], vv = lmVV[id] || {};
+      if (s && s.loom !== false && (s.loom || vv.opens) && !s.loomAt){ s.loomAt = String(vv.first || "").slice(0, 10) || todayISO(); changed = true; }
+    });
+    if (changed) markDirty();
+  }
   function renderLooms(){
+    lmStampVideos();
     var host = document.getElementById("loomsBody"); if (!host) return;
     if (!lmData){
       host.innerHTML = '<div class="lmbar"><button type="button" class="copybtn" id="lmRefresh">' + (lmLoading ? "Loading…" : "Load applications from GHL") + "</button>" + (lmErr ? '<span class="hint">' + lmEsc(lmErr) + "</span>" : "") + "</div>";
@@ -8561,17 +8571,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       .sort(function(a, b){ return (b.optins - a.optins) || (b.visits - a.visits); });
   }
   function ovBreakdownTable(page, field, doneLabel){
-    var rows = ovPageBreakdown(page, field), wrap = document.createElement("div"); wrap.className = "ovdetail";
+    var rows = ovMergeByLabel(ovPageBreakdown(page, field), function(r){ return ovPlainSource(r.source, r.medium, r.content) + (page !== "apply" && ovIsExistingLead(r.source) ? " (already on your list)" : ""); }, ["visits", "optins"],
+      function(a, b){ return (b.optins - a.optins) || (b.visits - a.visits); });
+    var wrap = document.createElement("div"); wrap.className = "ovdetail";
     if (!rows.length){ var e = document.createElement("p"); e.className = "ovsub"; e.textContent = "Nothing tracked for this period yet."; wrap.appendChild(e); return wrap; }
+    var done = doneLabel || "Signed up";
+    var top = ovTopLine(rows, "optins", done === "Applied" ? "applications" : "sign-ups") || ovTopLine(rows, "visits", "visitors"); if (top) wrap.appendChild(top);
     var t = document.createElement("table"); t.className = "ovtable";
     var hr = document.createElement("tr");
-    ["Source", "Where", "Content", "Visits", doneLabel || "Opted in", "Rate"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
+    ["Where they came from", "Visitors", done, "Out of every 100 visitors"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
     var th = document.createElement("thead"); th.appendChild(hr); t.appendChild(th);
     var tb = document.createElement("tbody");
     rows.forEach(function(r){
       var tr = document.createElement("tr");
-      [ovSourceName(r.source), r.medium ? ghlNice(GHL_MEDIUM_NAMES, r.medium) : "—", r.content ? r.content.replace(/[_-]/g, " ") : "—",
-       fmtInt(r.visits), fmtInt(r.optins), r.visits && r.optins <= r.visits ? fmtPct(r.optins / r.visits * 100) : "—"].forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
+      [r.label, fmtInt(r.visits), fmtInt(r.optins), r.visits && r.optins <= r.visits ? fmtInt(Math.round(r.optins / r.visits * 100)) : "—"].forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
       tb.appendChild(tr);
     });
     t.appendChild(tb); wrap.appendChild(t);
@@ -8593,17 +8606,19 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         });
       });
     });
-    var rows = Object.keys(by).map(function(k){ return by[k]; }).sort(function(a, b){ return b.total - a.total; });
+    var rows = ovMergeByLabel(Object.keys(by).map(function(k){ return by[k]; }), function(r){ return ovPlainSource(r.source, r.medium, ""); },
+      ["optin", "feeling", "scale", "apply", "total"], function(a, b){ return b.total - a.total; });
     var wrap = document.createElement("div"); wrap.className = "ovdetail";
     if (!rows.length){ var e = document.createElement("p"); e.className = "ovsub"; e.textContent = "No visits tracked for this period yet."; wrap.appendChild(e); return wrap; }
+    var top = ovTopLine(rows, "total", "visitors"); if (top) wrap.appendChild(top);
     var t = document.createElement("table"); t.className = "ovtable ovtraffic";
     var hr = document.createElement("tr");
-    ["Source", "Where", "Training", "Feeling Finder", "Love Scale", "Application", "Total", "Share"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
+    ["Where they came from", "Training page", "Feeling Finder", "Love Scale", "Application", "Total visitors", "% of all visitors"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
     var th = document.createElement("thead"); th.appendChild(hr); t.appendChild(th);
     var tb = document.createElement("tbody");
     rows.forEach(function(r){
       var tr = document.createElement("tr");
-      [ovSourceName(r.source), r.medium ? ghlNice(GHL_MEDIUM_NAMES, r.medium) : "—", fmtInt(r.optin), fmtInt(r.feeling), fmtInt(r.scale), fmtInt(r.apply), fmtInt(r.total), fmtPct(r.total / tot * 100)]
+      [r.label, fmtInt(r.optin), fmtInt(r.feeling), fmtInt(r.scale), fmtInt(r.apply), fmtInt(r.total), fmtPct(r.total / tot * 100)]
         .forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
       tb.appendChild(tr);
     });
@@ -8626,18 +8641,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var r = by[k] || (by[k] = { source:String(x.source || "").toLowerCase() || "(unknown)", medium:x.medium, content:x.content, loom:0, joined:0, cash:0 });
       r.cash += x.amount;
     });
-    var rows = Object.keys(by).map(function(k){ return by[k]; }).sort(function(a, b){ return (b.joined - a.joined) || (b.loom - a.loom); });
+    var hv = {};
+    ovHubVideos().forEach(function(x){ if (week ? ovDayIn(x.date) : ovInPeriod(x.date.slice(0, 7))){ var k = ovVideoKey(x); hv[k] = (hv[k] || 0) + 1; } });
+    Object.keys(hv).forEach(function(k){
+      var p = k.split("|"), r = by[k] || (by[k] = { source:p[0] || "(unknown)", medium:p[1], content:p[2], loom:0, joined:0, cash:0 });
+      r.loom = Math.max(r.loom, hv[k]);
+    });
+    var rows = ovMergeByLabel(Object.keys(by).map(function(k){ return by[k]; }), function(r){ return ovPlainSource(r.source, r.medium, r.content); },
+      ["loom", "joined", "cash"], function(a, b){ return (b.joined - a.joined) || (b.loom - a.loom); });
     var wrap = document.createElement("div"); wrap.className = "ovdetail";
     if (!rows.length){ var e = document.createElement("p"); e.className = "ovsub"; e.textContent = "Nothing yet: tag people “loom video sent” in GHL, then Pull from GHL."; wrap.appendChild(e); return wrap; }
+    var top = ovTopLine(rows, "joined", "buyers"); if (top) wrap.appendChild(top);
     var t = document.createElement("table"); t.className = "ovtable";
     var hr = document.createElement("tr");
-    ["Source", "Where", "Content", "Loom videos", "Sales", "Close rate", "Cash"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
+    ["Where they came from", "Sent a sales video", "Sales made", "Out of every 100 sent a video", "Money in"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
     var th = document.createElement("thead"); th.appendChild(hr); t.appendChild(th);
     var tb = document.createElement("tbody");
     rows.forEach(function(r){
       var tr = document.createElement("tr");
-      [ovSourceName(r.source), r.medium ? ghlNice(GHL_MEDIUM_NAMES, r.medium) : "—", r.content ? r.content.replace(/[_-]/g, " ") : "—",
-       fmtInt(r.loom), fmtInt(r.joined), r.loom && r.joined <= r.loom ? fmtPct(r.joined / r.loom * 100) : "\u2014", r.cash ? fmtMoney(r.cash) : "\u2014"].forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
+      [r.label, fmtInt(r.loom), fmtInt(r.joined), r.loom && r.joined <= r.loom ? fmtInt(Math.round(r.joined / r.loom * 100)) : "\u2014", r.cash ? fmtMoney(r.cash) : "\u2014"].forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
       tb.appendChild(tr);
     });
     t.appendChild(tb); wrap.appendChild(t);
@@ -8661,39 +8683,172 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     sync();
     return card;
   }
-  function ovSourceName(src){
-    if (src === "(unknown)") return "Unknown (no UTM)";
-    if (src === "(direct)") return "Direct (typed or bookmarked)";
-    if (src === "scale_check") return "The Love Scale result page";
-    if (src === "(earlier)") return "Earlier visits (before source tracking)";
-    return typeof GHL_SOURCE_NAMES !== "undefined" && GHL_SOURCE_NAMES[src] ? GHL_SOURCE_NAMES[src] : src.charAt(0).toUpperCase() + src.slice(1);
-  }
-  function ovSourceTable(inPeriod){
-    var rows = ovSourceRows(inPeriod);
-    var wrap = document.createElement("div");
-    var h = document.createElement("p"); h.className = "section-label"; h.textContent = "Traffic sources"; wrap.appendChild(h);
-    if (!rows.length){
-      var e = document.createElement("p"); e.className = "dueok"; e.textContent = "Nothing tracked for this period yet. Press Pull from GHL to refresh."; wrap.appendChild(e); return wrap;
+  // Plain-English lead sources (Olly, 2026-11-10: "a ten year old should be able to understand it").
+  // One sentence per source + medium + content instead of Source / Where / Content columns of UTM words.
+  var OV_PLATFORMS = { instagram:"Instagram", facebook:"Facebook", youtube:"YouTube", tiktok:"TikTok", email:"Your emails", google:"Google" };
+  var OV_VIDEOS = { scientifically_attract_training:"the Attract training video", emotional_resonance_training:"the free training video" };
+  function ovWords(v){ return String(v || "").replace(/[_-]+/g, " ").trim(); }
+  function ovPlainSource(source, medium, content){
+    var s = String(source || "").toLowerCase().replace(/^(www\.|m\.|l\.|lm\.)/, ""), m = String(medium || "").toLowerCase(), c = String(content || "").toLowerCase();
+    var kwm = /^(attract|feeling|emotion|video|scale)_keyword$/.exec(c), kw = kwm ? kwm[1].toUpperCase() : "";
+    if (!s || s === "(unknown)") return "Unknown: the link had no tracking on it";
+    if (s === "(direct)") return "Unknown: typed the address in, or the app hid where they came from";
+    if (s === "(earlier)") return "Before tracking started (no info)";
+    if (s === "test") return "Your own test visits";
+    if (s === "app.gohighlevel.com") return "Clicked from inside GHL (probably you testing)";
+    if (s === "feeling_finder") return "Did the Feeling Finder, then clicked the link on their results";
+    if (s === "scale_check") return "Did the Love Scale, then clicked the link on their results";
+    if (s === "youtube.com" || s === "youtu.be") return "YouTube: clicked a link (YouTube didn't say which one)";
+    if (s === "instagram.com") return "Instagram: clicked a link (Instagram didn't say which one)";
+    if (s === "facebook.com" || s === "fb.com") return "Facebook: clicked a link (Facebook didn't say which one)";
+    if (s === "tiktok.com") return "TikTok: clicked a link (TikTok didn't say which one)";
+    if (s === "google.com") return "Found you on Google";
+    if (s === "email"){
+      if (!m) return "Your emails";
+      if (m === "daily_email") return c ? "Your daily email \u201c" + ovWords(c) + "\u201d" : "One of your daily emails";
+      if (m === "feeling_finder_result") return "Your emails: the Feeling Finder results email";
+      if (m === "scale_result_email") return "Your emails: the Love Scale results email";
+      if (m === "training_followup") return "Your emails: the follow-ups after someone signs up for the training";
+      if (m === "welcome_email") return "Your emails: the welcome email";
+      if (m === "reply") return "Your emails: a link you sent when someone replied";
+      return "Your emails: " + ovWords(m);
     }
+    var app = OV_PLATFORMS[s] || s.charAt(0).toUpperCase() + s.slice(1);
+    if (!m) return app;
+    var vid = OV_VIDEOS[c];
+    var what = {
+      bio: s === "youtube" ? "the links on your channel page" : "the link in your bio",
+      dm: kw ? "messaged you " + kw + " and got the link" : c === "manual" ? "a link you sent them by hand" : "a link sent in a message",
+      comment: kw ? "commented " + kw + " on a Reel or post and got the link" : "a link in a comment",
+      reel_comment: kw ? "commented " + kw + " on a Reel and got the link" : "a link in a Reel comment",
+      story_reply: kw ? "replied " + kw + " to a Story and got the link" : "replied to a Story",
+      description: vid ? "the link under " + vid : "the link under one of your videos",
+      pinned_comment: vid ? "the pinned comment under " + vid : "the pinned comment under a video",
+      shorts: "a Short", community: "a community post", stories: "a Story", reels: "a Reel",
+      referral: "clicked a link (no detail)"
+    }[m];
+    return app + ": " + (what || ovWords(m));
+  }
+  function ovSourceName(src){ return ovPlainSource(src, "", ""); }
+  // rows -> merged by their plain-English label (two tracking codes can mean the same thing), biggest first
+  function ovMergeByLabel(rows, labelOf, fields, sortKey){
+    var by = {};
+    rows.forEach(function(r){
+      var l = labelOf(r), m = by[l] || (by[l] = { label:l });
+      fields.forEach(function(f){ m[f] = (m[f] || 0) + (r[f] || 0); });
+    });
+    return Object.keys(by).map(function(k){ return by[k]; }).sort(sortKey);
+  }
+  // one plain sentence over a table: "Most came from: X (12 of 40)"
+  function ovTopLine(rows, field, noun){
+    var tot = rows.reduce(function(a, r){ return a + (r[field] || 0); }, 0);
+    var top = rows.slice().sort(function(a, b){ return (b[field] || 0) - (a[field] || 0); })[0];
+    if (!tot || !top || !top[field]) return null;
+    var p = document.createElement("p"); p.className = "ovsub ovtopline";
+    p.textContent = "Most " + noun + " came from: " + top.label + " (" + fmtInt(top[field]) + " of " + fmtInt(tot) + ").";
+    return p;
+  }
+  // Where leads, applications and sales came from (Olly, 2026-11-10): three plain tables instead of one mixed one.
+  // People who come from your emails or a results page are already on your list, so they never count as new leads.
+  function ovIsExistingLead(src){ return /^(email|feeling_finder|scale_check)$/.test(String(src || "").toLowerCase()); }
+  function ovRawRows(pages, fields){
+    var by = {}, week = ovDaily();
+    function key(a, b, c){ return [a, b, c].map(function(v){ return String(v || "").toLowerCase(); }).join("|"); }
+    function row(k){ var p = k.split("|"); return by[k] || (by[k] = { source:p[0] || "(unknown)", medium:p[1], content:p[2], visits:0 }); }
+    var ps = week ? (state.pageSourceDays || {}) : (state.pageSources || {});
+    Object.keys(ps).forEach(function(m){
+      if (week ? !ovDayIn(m) : !ovInPeriod(m)) return;
+      pages.forEach(function(pg){ var bySrc = ps[m][pg] || {}; Object.keys(bySrc).forEach(function(k){ var p = k.split("|"); row(key(p[0], p[1], p[2])).visits += bySrc[k]; }); });
+    });
+    ((state.ghlSources && state.ghlSources.rows) || []).forEach(function(g){
+      if (week ? !ovDayIn(g.day) : !ovInPeriod(g.month)) return;
+      fields.forEach(function(f){ var n = Number(g[f]) || 0; if (n){ var r = row(key(g.source, g.medium, g.content)); r[f] = (r[f] || 0) + n; } });
+    });
+    return Object.keys(by).map(function(k){ return by[k]; });
+  }
+  function ovPlainTable(title, intro, cols, rows, cells, total){
+    var wrap = document.createElement("div");
+    var h = document.createElement("p"); h.className = "section-label"; h.textContent = title; wrap.appendChild(h);
+    if (intro) wrap.appendChild(intro);
+    if (!rows.length){ var e = document.createElement("p"); e.className = "dueok"; e.textContent = "Nothing tracked for this period yet. Press Pull from GHL to refresh."; wrap.appendChild(e); return wrap; }
     var box = document.createElement("div"); box.className = "ovtablewrap";
     var t = document.createElement("table"); t.className = "ovtable";
-    var cols = [["Source"], ["Visits"], ["Training opt-ins"], ["Feeling Finder opt-ins"], ["Love Scale opt-ins"], ["Applied"], ["Joined"], ["Visit → opt-in"]];
     var thead = document.createElement("thead"), hr = document.createElement("tr");
-    cols.forEach(function(c){ var th = document.createElement("th"); th.textContent = c[0]; hr.appendChild(th); });
+    cols.forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
     thead.appendChild(hr); t.appendChild(thead);
-    var tb = document.createElement("tbody"), tot = { visits:0, optins:0, feelingDone:0, scaleDone:0, applied:0, loom:0, joined:0 };
-    function addRow(label, r, cls){
-      var tr = document.createElement("tr"); if (cls) tr.className = cls;
-      var signups = r.optins + r.feelingDone + r.scaleDone, rate = r.visits ? fmtPct(signups / r.visits * 100) : "—";
-      [label, fmtInt(r.visits), fmtInt(r.optins), fmtInt(r.feelingDone), fmtInt(r.scaleDone), fmtInt(r.applied), fmtInt(r.joined), rate].forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
+    var tb = document.createElement("tbody");
+    rows.concat(total ? [total] : []).forEach(function(r, i){
+      var tr = document.createElement("tr"); if (total && i === rows.length) tr.className = "total";
+      cells(r).forEach(function(v){ var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
       tb.appendChild(tr);
-    }
-    rows.forEach(function(r){ addRow(ovSourceName(r.source), r); Object.keys(tot).forEach(function(k){ tot[k] += r[k]; }); });
-    // page views counted before the pages sent where they came from
-    var allViews = ovViews("optin", inPeriod) + ovViews("feeling", inPeriod) + ovViews("scale", inPeriod) + ovViews("apply", inPeriod);
-    if (allViews > tot.visits){ var early = { visits: allViews - tot.visits, optins:0, feelingDone:0, scaleDone:0, applied:0, loom:0, joined:0 }; addRow(ovSourceName("(earlier)"), early); tot.visits = allViews; }
-    addRow("Total", tot, "total");
+    });
     t.appendChild(tb); box.appendChild(t); wrap.appendChild(box);
+    return wrap;
+  }
+  function ovPer100(n, of){ return of && n <= of ? fmtInt(Math.round(n / of * 100)) : "—"; }
+  function ovSumRows(rows, fields, label){ var t = { label:label }; fields.forEach(function(f){ t[f] = rows.reduce(function(a, r){ return a + (r[f] || 0); }, 0); }); return t; }
+  function ovLabel(r){ return ovPlainSource(r.source, r.medium, r.content); }
+
+  // 1. New leads: opt-ins to the three freebies, from people who weren't on the list yet
+  function ovLeadsTable(){
+    var raw = ovRawRows(["optin", "feeling", "scale"], ["optins", "feeling", "scale"]);
+    var fields = ["visits", "optins", "feeling", "scale"];
+    var rows = ovMergeByLabel(raw.filter(function(r){ return !ovIsExistingLead(r.source); }), ovLabel, fields, function(){ return 0; });
+    rows.forEach(function(r){ r.leads = r.optins + r.feeling + r.scale; });
+    // only places that brought in at least one lead (Olly, 2026-11-10: just where the opt-ins came from)
+    rows = rows.filter(function(r){ return r.leads > 0; }).sort(function(a, b){ return b.leads - a.leads; });
+    var old = ovSumRows(raw.filter(function(r){ return ovIsExistingLead(r.source); }), fields, "");
+    old.leads = old.optins + old.feeling + old.scale;
+    var intro = document.createElement("div");
+    var top = ovTopLine(rows, "leads", "new leads"); if (top) intro.appendChild(top);
+    if (old.leads){
+      var n = document.createElement("p"); n.className = "ovsub";
+      n.textContent = "Not counted here: " + fmtInt(old.leads) + (old.leads === 1 ? " sign-up" : " sign-ups") + " from people already on your list (they clicked a link in your emails or on a results page and grabbed another freebie).";
+      intro.appendChild(n);
+    }
+    var tot = ovSumRows(rows, fields.concat(["leads"]), "Total");
+    return ovPlainTable("Where your new leads came from", intro,
+      ["Where they came from", "New leads"], rows,
+      function(r){ return [r.label, fmtInt(r.leads)]; }, rows.length ? tot : null);
+  }
+
+  // 2. Applications: where they were when they clicked through to apply (here coming from your emails is the point)
+  function ovAppsTable(){
+    var fields = ["visits", "applied", "joined"];
+    var rows = ovMergeByLabel(ovRawRows(["apply"], ["applied", "joined"]), ovLabel, fields,
+      function(a, b){ return ((b.applied || 0) - (a.applied || 0)) || (b.visits - a.visits); });
+    var intro = ovTopLine(rows, "applied", "applications");
+    return ovPlainTable("Where your applications came from", intro,
+      ["Where they came from", "Visitors", "Applied", "Out of every 100 visitors", "Sales made"], rows,
+      function(r){ return [r.label, fmtInt(r.visits), fmtInt(r.applied || 0), ovPer100(r.applied || 0, r.visits), fmtInt(r.joined || 0)]; },
+      rows.length ? ovSumRows(rows, fields, "Total") : null);
+  }
+
+  // 3. Sales: each buyer's path, from where they first became a lead, to where they applied, to joining
+  function ovSalesJourneyTable(){
+    var week = ovDaily();
+    var rows = (state.ghlMembers || []).filter(function(m){
+      return (m.plan === "monthly" || m.plan === "annual") && m.joined && (week ? ovDayIn(m.joined) : ovInPeriod(m.joined.slice(0, 7)));
+    }).sort(function(a, b){ return a.joined < b.joined ? 1 : -1; });
+    var anyJourney = rows.some(function(m){ return m.lead || m.app; });
+    var intro = document.createElement("p"); intro.className = "ovsub";
+    intro.textContent = anyJourney || !rows.length ? "One row per sale: how that person found you, where they applied from, and when they joined."
+      : "Press Pull from GHL to fill in each buyer's path.";
+    function where(x, fallback){ return x && x.source ? ovPlainSource(x.source, x.medium, x.content) : fallback; }
+    return ovPlainTable("Where your sales came from", intro,
+      ["1. Became a lead from", "2. Applied from", "3. Joined", "Plan"], rows,
+      function(m){
+        return [where(m.lead, m.lead ? "Unknown (no link info)" : where(m, "Unknown")),
+                where(m.app, "Unknown (no link info)"),
+                dayLabel ? dayLabel(m.joined) : m.joined,
+                m.plan === "annual" ? "Yearly" : "Monthly"];
+      }, null);
+  }
+  function ovSourceTable(){
+    var wrap = document.createElement("div");
+    wrap.appendChild(ovLeadsTable());
+    wrap.appendChild(ovAppsTable());
+    wrap.appendChild(ovSalesJourneyTable());
     return wrap;
   }
 
@@ -8718,6 +8873,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (m.cancelled && m.cancelled <= today) return;
       row(m.source, m.medium, m.content).mrr += m.plan === "annual" ? MRR_PRICE_ANNUAL / 12 : MRR_PRICE_MONTHLY;
     });
+    // sales videos sent from the Sales card (2026-11-10): the bigger of that and GHL's "loom video sent" tag count, per source
+    var hv = {};
+    ovHubVideos().forEach(function(x){ var k = ovVideoKey(x); hv[k] = (hv[k] || 0) + 1; });
+    Object.keys(hv).forEach(function(k){ var p = k.split("|"), r = row(p[0], p[1], p[2]); r.loom = Math.max(r.loom, hv[k]); });
     return Object.keys(by).map(function(k){ return by[k]; })
       .filter(function(r){ return r.optins || r.applied || r.loom || r.joined || r.cash; })
       .sort(function(a, b){ return (b.cash - a.cash) || (b.mrr - a.mrr) || (b.joined - a.joined) || (b.applied - a.applied) || (b.optins - a.optins); });
@@ -8733,7 +8892,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var box = document.createElement("div"); box.className = "ovtablewrap";
     var t = document.createElement("table"); t.className = "ovtable ovcontent";
     var hr = document.createElement("tr");
-    ["Content", "Where", "Opt-ins", "Applied", "Loom videos", "Sales", "Cash collected", "MRR now"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
+    ["Content", "Where", "Opt-ins", "Applied", "Sales videos sent", "Sales made", "Cash collected", "MRR now"].forEach(function(c){ var th = document.createElement("th"); th.textContent = c; hr.appendChild(th); });
     var thead = document.createElement("thead"); thead.appendChild(hr); t.appendChild(thead);
     var tb = document.createElement("tbody"), tot = { optins:0, applied:0, loom:0, joined:0, cash:0, mrr:0 };
     function addRow(content, where, r, cls){
@@ -9170,6 +9329,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     })(addDaysISO(wk, n));
     host.appendChild(days);
   }
+  var ovVslAsked = false, ovApplAsked = false;
+  // Sales videos sent from the Sales card (2026-11-10): ticked "Video sent" or opened their video link.
+  // Each one carries its date (loomAt, else first open) and where they applied from (their HA UTM fields).
+  function ovHubVideos(){
+    if (!ovVslAsked){ ovVslAsked = true; fetch("/api/vslviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmVV = d.views || {}; renderOverview(); } }).catch(function(){}); }
+    if (!lmData && !ovApplAsked){ ovApplAsked = true; fetch("/api/applicants", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok && !lmData){ lmData = d.applicants || []; renderOverview(); } }).catch(function(){}); }
+    var out = [], L = state.looms || {}, seen = {}, byId = {};
+    (lmData || []).forEach(function(a){ byId[a.id] = a; });
+    function fld(a, name){ var f = (a && a.fields) || {}, k = Object.keys(f).filter(function(n){ return n.toLowerCase() === name; })[0]; return k ? f[k] : ""; }
+    Object.keys(L).concat(Object.keys(lmVV)).forEach(function(id){
+      if (seen[id]) return; seen[id] = 1;
+      var s = L[id] || {}, vv = lmVV[id] || {}, a = byId[id];
+      if (s.loom === false || s.archived || (a && a.removed) || !(s.loom || vv.opens)) return;
+      var d = s.loomAt || String(vv.first || "").slice(0, 10); if (!d) return;
+      out.push({ id:id, date:d, source:String(fld(a, "ha utm source")).toLowerCase(), medium:String(fld(a, "ha utm medium")).toLowerCase(), content:String(fld(a, "ha utm content")).toLowerCase() });
+    });
+    return out;
+  }
+  function ovVideoKey(x){ return [x.source, x.medium, x.content].map(function(v){ return String(v || "").toLowerCase(); }).join("|"); }
   function renderOverview(){
     var host = document.getElementById("ovBody");
     if (!host) return;
@@ -9238,9 +9416,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // From GHL (tags "loom video sent" + "joined heart attractor program"); the Sales tab's typed numbers only
     // fill in if GHL has nothing yet.
     var gLoom = ovGhlSum("loom", ovInPeriod), gJoin = ovGhlSum("joined", ovInPeriod), useG = (gLoom + gJoin) > 0;
-    var lv = useG ? gLoom : taken, sv = useG ? gJoin : sales;
+    // sales videos sent from the Sales card (2026-11-10): ticked "Video sent", or they opened their video link
+    var hubVideos = ovHubVideos().filter(function(x){ return ovDaily() ? ovDayIn(x.date) : ovInPeriod(x.date.slice(0, 7)); }).length;
+    var lv = Math.max(useG ? gLoom : taken, hubVideos), sv = useG ? gJoin : sales;
     host.appendChild(ovGroup(useG ? "Sales" : ovMonthly("Sales"), [
-      ovExpandable(ovCard("Loom videos", lv && sv <= lv ? fmtPct(sv / lv * 100) : "—", fmtInt(lv) + (lv === 1 ? " Loom video sent · " : " Loom videos sent · ") + fmtInt(sv) + (sv === 1 ? " sale" : " sales") + (sv > lv ? " (some sales have no Loom tagged)" : "")),
+      ovExpandable(ovCard("Sales made", fmtInt(sv), "from " + fmtInt(lv) + (lv === 1 ? " sales video sent" : " sales videos sent") + (lv && sv <= lv ? " · " + fmtInt(Math.round(sv / lv * 100)) + " in every 100 bought" : "") + (sv > lv ? " (some sales have no video tagged)" : "")),
         "sales", function(){ return ovSalesBreakdown(); })
     ]));
 
@@ -9839,7 +10019,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     grid.appendChild(kpiCard("Opt-in rate", pcs[0].rate == null ? "—" : fmtPct(pcs[0].rate), "accent"));
     grid.appendChild(kpiCard("Applications", fmtInt(n("applications"))));
     grid.appendChild(kpiCard("Application rate", pcs[1].rate == null ? "—" : fmtPct(pcs[1].rate), "accent"));
-    grid.appendChild(kpiCard("Loom videos sent", fmtInt(n("callsTaken"))));
+    grid.appendChild(kpiCard("Sales videos sent", fmtInt(n("callsTaken"))));
     grid.appendChild(kpiCard("Show-up rate", fmtPct(safeDiv(n("callsTaken"), n("callsBooked"))*100), "accent"));
     grid.appendChild(kpiCard("Sales", fmtInt(n("salesMonthly") + n("salesAnnual"))));
     grid.appendChild(kpiCard("Close rate", fmtPct(c.closeRate), "accent"));
