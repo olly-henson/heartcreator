@@ -19,11 +19,15 @@ async function sumPrefix(env, prefix, add) {
   } while (cursor);
 }
 
+// The Feeling Finder A/B variant B beacons as "feelingb" (2026-10-28); the Hub only reads "feeling", so it was
+// dividing BOTH variants' sign-ups by variant A's visits (showed ~72% opt-in, real ~40%). Fold B into "feeling" (2026-11-10).
+function pageKey(p) { return p === "feelingb" ? "feeling" : p; }
+
 export async function onRequestGet({ env }) {
   const sources = {};
   await sumPrefix(env, "ps:", function (name, n) {
     const i = name.indexOf(":", 3), j = name.indexOf(":", i + 1);   // ps:page:YYYY-MM:src
-    const page = name.slice(3, i), ym = name.slice(i + 1, j), src = name.slice(j + 1);
+    const page = pageKey(name.slice(3, i)), ym = name.slice(i + 1, j), src = name.slice(j + 1);
     sources[ym] = sources[ym] || {};
     sources[ym][page] = sources[ym][page] || {};
     sources[ym][page][src] = (sources[ym][page][src] || 0) + n;
@@ -32,7 +36,7 @@ export async function onRequestGet({ env }) {
   const days = {}, daySources = {};
   await sumPrefix(env, "psd:", function (name, n) {
     const i = name.indexOf(":", 4), j = name.indexOf(":", i + 1);   // psd:page:YYYY-MM-DD:src
-    const page = name.slice(4, i), d = name.slice(i + 1, j), src = name.slice(j + 1);
+    const page = pageKey(name.slice(4, i)), d = name.slice(i + 1, j), src = name.slice(j + 1);
     daySources[d] = daySources[d] || {};
     daySources[d][page] = daySources[d][page] || {};
     daySources[d][page][src] = (daySources[d][page][src] || 0) + n;
@@ -46,9 +50,10 @@ export async function onRequestGet({ env }) {
       const parts = k.name.split(":");   // pv, page, YYYY-MM-DD
       const ym = parts[2].slice(0, 7);
       months[ym] = months[ym] || {};
-      months[ym][parts[1]] = (months[ym][parts[1]] || 0) + (Number(vals[i]) || 0);
+      const pg = pageKey(parts[1]);
+      months[ym][pg] = (months[ym][pg] || 0) + (Number(vals[i]) || 0);
       days[parts[2]] = days[parts[2]] || {};
-      days[parts[2]][parts[1]] = (days[parts[2]][parts[1]] || 0) + (Number(vals[i]) || 0);
+      days[parts[2]][pg] = (days[parts[2]][pg] || 0) + (Number(vals[i]) || 0);
     });
     cursor = list.list_complete ? null : list.cursor;
   } while (cursor);

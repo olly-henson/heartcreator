@@ -8703,6 +8703,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (s === "facebook.com" || s === "fb.com") return "Facebook: clicked a link (Facebook didn't say which one)";
     if (s === "tiktok.com") return "TikTok: clicked a link (TikTok didn't say which one)";
     if (s === "google.com") return "Found you on Google";
+    if (s === "meta"){   // Meta ads (2026-11-10): boosted Reels, utm_content = comment-<reel> from the Reel's own ManyChat FEELING automation
+      var reel = c.replace(/^(comment|button)-/, "");
+      if (/^comment-/.test(c)) return "Meta ad: commented FEELING on the boosted Reel “" + ovWords(reel) + "”";
+      if (/^button-/.test(c)) return "Meta ad: tapped the button on the ad for “" + ovWords(reel) + "”";
+      return "Meta ad" + (c ? ": " + ovWords(c) : "");
+    }
     if (s === "email"){
       if (!m) return "Your emails";
       if (m === "daily_email") return c ? "Your daily email \u201c" + ovWords(c) + "\u201d" : "One of your daily emails";

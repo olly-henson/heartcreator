@@ -161,6 +161,14 @@ Leads are tracked via the "meditation download" tag. If any workflow removes thi
 ### Opt-in tracking — source of truth
 The dashboard counts leads via GHL contacts tagged "meditation download" (form submissions via webhook). GHL's native Stats tab shows `-` for opt-ins because it only tracks native form submissions, not webhooks. The dashboard figure is always the correct one.
 
+### Paid ads — first touch (added 2026-11-10)
+- Ad leads carry `utm_source=meta&utm_medium=paid&utm_content=comment-<reel>` (from the boosted Reel's own ManyChat automation) and the permanent GHL tag `meta ad`. Plain UTM fields can be overwritten by a later opt-in; the tag can't.
+- **Rule:** judge ads on first touch in the Hub (spend from Meta ÷ sign-ups/sales from GHL). Never on Meta's report alone: it only credits sales within ~7 days of the click.
+
+### A/B test pages — count every variant (added 2026-11-10)
+- The Feeling Finder variant B beacons as `feelingb`. `/api/pageviews` now folds it into `feeling` (`pageKey()` in pageviews.js). Before that the Hub divided both variants' sign-ups by variant A's visits and showed ~72% opt-in (real ~40%).
+- **Rule:** any new A/B variant beacon name must be folded into its main page in `pageKey()` the same day, or every rate for that page is wrong.
+
 ### Tag management for pipeline progression
 When a contact applies, the correct actions are:
 1. Add tag: "heart creator applicant"
@@ -215,11 +223,16 @@ The following preview pages are excluded from the Website Pages section of the d
 4. If it's a new upgrade CTA — add `?ref=` tag and map in the GHL workflow
 5. Add a plain-English line for the new UTM code in `ovPlainSource()` (Hub index.html) so the Overview never shows raw codes (Olly 2026-11-10: "a ten year old should be able to understand it")
 6. If the link goes to people already on the list (emails, results pages), add its source to `ovIsExistingLead()`: they don't count as new leads, only as applications
-7. Update this file
+7. A/B variant page? Fold its beacon name into the main page in `pageKey()` (pageviews.js)
+8. Update this file
 
 ---
 
 ## Changelog
+
+### 2026-11-10 — Meta ads + A/B visit fix
+- Added paid-ads first-touch rules (`meta ad` tag, judge in the Hub not Meta). Why: Olly's buyers take weeks; Meta's window is ~7 days.
+- Added the A/B variant rule + step 7. Why: the Hub showed a 72% Feeling Finder opt-in rate because variant B visits weren't counted; Olly spotted the mismatch.
 
 ### 2026-11-10 — Hub Overview attribution in plain English
 - New traffic sources need a plain-English label in the Hub and, if they go to existing leads, a place in `ovIsExistingLead()` (steps 5–6 above). Why: Olly couldn't read the UTM labels, and results-page clicks were being counted as new leads.

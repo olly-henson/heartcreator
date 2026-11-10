@@ -1,0 +1,453 @@
+<title>Paid Ads Money Loop</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column; the money loop is a vertical flow with a green "cash returns" rail on its left */
+:root{
+  --bg:#f6f5fa; --surface:#ffffff; --ink:#1c1830; --muted:#625c78; --line:#dcd8e8;
+  --plum:#5b2a86; --plum-soft:#efe7f7; --cash:#13795b; --cash-soft:#e2f4ec;
+  --warn:#a5560b; --warn-soft:#fbeedd; --bad:#b0303a; --bad-soft:#fae5e6;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Inter",ui-sans-serif,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14121c; --surface:#1d1a29; --ink:#ece9f5; --muted:#a59fba; --line:#332e45;
+  --plum:#c39bf0; --plum-soft:#2c2240; --cash:#4fd1a0; --cash-soft:#15302a;
+  --warn:#f0a65a; --warn-soft:#352717; --bad:#f07a82; --bad-soft:#3a1d22; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14121c; --surface:#1d1a29; --ink:#ece9f5; --muted:#a59fba; --line:#332e45;
+  --plum:#c39bf0; --plum-soft:#2c2240; --cash:#4fd1a0; --cash-soft:#15302a;
+  --warn:#f0a65a; --warn-soft:#352717; --bad:#f07a82; --bad-soft:#3a1d22; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,6vw,3rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.6rem;font-weight:800}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:65ch}
+.eyebrow{font:600 .75rem/1 var(--body);text-transform:uppercase;letter-spacing:.1em;color:var(--plum)}
+.lede{font-size:1.15rem;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:18px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* Hero formula */
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:6px}
+.chip{padding:10px 14px;border-radius:10px;font-weight:600;background:var(--surface);border:1px solid var(--line)}
+.chip.spend{background:var(--bad-soft);border-color:transparent;color:var(--bad)}
+.chip.cash{background:var(--cash-soft);border-color:transparent;color:var(--cash)}
+.op{font-family:var(--mono);color:var(--muted)}
+
+/* The loop */
+.loop{display:grid;grid-template-columns:44px 1fr;gap:0 14px}
+.rail{position:relative;border:3px solid var(--cash);border-right:0;border-radius:16px 0 0 16px;margin:28px 0 28px 18px}
+.rail::before{content:"";position:absolute;top:-9px;right:-2px;border:7px solid transparent;border-left:11px solid var(--cash)}
+.rail span{position:absolute;top:50%;left:-13px;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;
+  background:var(--bg);padding:8px 0;font:600 .78rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--cash);white-space:nowrap}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;min-width:0}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 16px;align-items:baseline}
+.step .what{font-weight:600}
+.step .why{grid-column:1/-1;color:var(--muted);font-size:.92rem}
+.step .count{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500;color:var(--plum);text-align:right}
+.step.spend{background:var(--bad-soft);border-color:transparent}.step.spend .count{color:var(--bad)}
+.step.money{background:var(--cash-soft);border-color:transparent}.step.money .count{color:var(--cash)}
+.arrow{display:flex;align-items:center;gap:10px;padding:6px 0 6px 22px;color:var(--muted);font-size:.85rem}
+.arrow::before{content:"↓";font-size:1.1rem;color:var(--plum)}
+.arrow b{font-family:var(--mono);font-weight:500;color:var(--plum)}
+.note{font-size:.88rem;color:var(--muted)}
+
+/* Calculator */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.inputs{display:flex;flex-direction:column;gap:16px;min-width:0}
+.field label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;font-weight:500}
+.field output{font-family:var(--mono);color:var(--plum)}
+.field small{display:block;color:var(--muted);font-size:.8rem}
+input[type=range]{width:100%;accent-color:var(--plum)}
+input[type=range]:focus-visible{outline:2px solid var(--plum);outline-offset:3px}
+.results{display:flex;flex-direction:column;gap:10px;min-width:0}
+.row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px;font-size:.95rem}
+.row span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.row.big{font-weight:600;font-size:1.05rem}
+.verdict{border-radius:12px;padding:14px 16px;font-size:.95rem;display:flex;flex-direction:column;gap:4px}
+.verdict strong{font-family:var(--display);font-size:1.1rem}
+.verdict.good{background:var(--cash-soft);color:var(--cash)}
+.verdict.ok{background:var(--warn-soft);color:var(--warn)}
+.verdict.bad{background:var(--bad-soft);color:var(--bad)}
+.verdict p{color:var(--ink)}
+.presets{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.presets span{font-size:.85rem;color:var(--muted)}
+button{font:500 .85rem var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--plum);color:var(--plum)}
+button:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+
+/* Diagnose */
+.diag{display:flex;flex-direction:column;gap:0}
+.q{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:14px;align-items:stretch}
+.q .ask{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-weight:600}
+.q .ask small{display:block;font-weight:400;color:var(--muted);font-size:.82rem}
+.q .fix{background:var(--warn-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+.q .fix b{color:var(--warn)}
+.yes{padding:6px 0 6px 22px;font-size:.82rem;color:var(--cash);font-weight:600}
+.yes::before{content:"↓ ";color:var(--cash)}
+.done{background:var(--cash-soft);color:var(--cash);border-radius:12px;padding:12px 14px;font-weight:600}
+
+/* Ladder */
+.ladder{display:flex;flex-direction:column;gap:10px;list-style:none;margin:0;padding:0}
+.rung{display:grid;grid-template-columns:110px 1fr;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.rung .amt{font-family:var(--mono);font-weight:500;color:var(--plum);font-size:1.05rem}
+.rung .amt small{display:block;font-family:var(--body);font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.rung .gate{font-size:.88rem;color:var(--cash);font-weight:600;margin-top:4px}
+.rung.now{border:2px solid var(--plum)}
+
+/* Compare */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.card .bar{height:12px;border-radius:6px;background:var(--line);overflow:hidden}
+.card .bar i{display:block;height:100%;background:var(--cash)}
+.card.low .bar i{background:var(--bad)}
+.card .k{font-size:.85rem;color:var(--muted)}
+.card .v{font-family:var(--mono);font-size:1.3rem}
+
+/* Tracking */
+.formula-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.fcard .eq{font-family:var(--mono);font-size:.95rem;color:var(--ink)}
+.fcard .eq b{color:var(--plum);font-weight:500}
+.fcard .goal{font-size:.88rem;color:var(--cash);font-weight:600}
+.timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;border-left:3px solid var(--plum-soft);margin-left:8px}
+.timeline li{position:relative;padding:0 0 18px 22px}
+.timeline li::before{content:"";position:absolute;left:-9px;top:5px;width:15px;height:15px;border-radius:50%;background:var(--surface);border:3px solid var(--plum)}
+.timeline li.sale::before{border-color:var(--cash);background:var(--cash)}
+.timeline .when{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+.timeline .meta-sees{font-size:.82rem;color:var(--warn);font-weight:600}
+.credit{background:var(--cash-soft);color:var(--cash);border-radius:12px;padding:12px 14px;font-weight:600}
+.credit span{display:block;font-weight:400;color:var(--ink);font-size:.92rem}
+
+/* 12-month model */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tile .k{font-size:.82rem;color:var(--muted)}
+.tile .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1.35rem;color:var(--ink)}
+.tile .s{font-size:.8rem;color:var(--muted)}
+.chartbox{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px;position:relative}
+.chartbox h3{font-size:1rem}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend i.line{height:0;border-top:2px dashed var(--bad);border-radius:0;width:16px;vertical-align:3px}
+.chartscroll{overflow-x:auto}
+.chartscroll svg{display:block;width:100%;min-width:520px;height:auto}
+.chartscroll text{font-family:var(--body);font-size:11px;fill:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:.8rem;padding:6px 9px;border-radius:8px;white-space:nowrap;z-index:5}
+.mtable{overflow-x:auto}
+.mtable table{border-collapse:collapse;width:100%;min-width:560px;font-size:.85rem}
+.mtable th,.mtable td{padding:6px 8px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.mtable th:first-child,.mtable td:first-child{text-align:left}
+.mtable td{font-family:var(--mono);font-size:.8rem}
+.mtable td.neg{color:var(--bad)} .mtable td.pos{color:var(--cash)}
+details summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--plum)}
+.churnfield{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+
+@media (max-width:640px){
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .formula-row{grid-template-columns:1fr}
+  .calc{grid-template-columns:1fr;padding:18px}
+  .q{grid-template-columns:1fr;gap:8px}
+  .rung{grid-template-columns:1fr;gap:4px}
+  .compare{grid-template-columns:1fr}
+  .loop{grid-template-columns:30px 1fr;gap:0 10px}
+  .rail{margin-left:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:14px">
+  <span class="eyebrow">The Heart Attractor Program · Meta ads</span>
+  <h1>How ads end up paying for themselves</h1>
+  <p class="lede">With a $497/month or $2,500/year program you don't need ads to be cheap. You need each dollar to come back as more than a dollar, fast enough to fund the next one. Once that happens, scaling is just turning the budget up.</p>
+  <div class="formula">
+    <span class="chip spend">$ into ads</span><span class="op">→</span>
+    <span class="chip">leads</span><span class="op">→</span>
+    <span class="chip">applications</span><span class="op">→</span>
+    <span class="chip">sales</span><span class="op">→</span>
+    <span class="chip cash">more $ back</span><span class="op">↺</span>
+  </div>
+</header>
+
+<section>
+  <span class="eyebrow">1 · The loop</span>
+  <h2>What $300 a month could turn into</h2>
+  <p>Numbers in <b style="color:var(--plum)">purple</b> are your real numbers from this month. The rest are guesses until the ads run.</p>
+  <div class="loop">
+    <div class="rail" aria-hidden="true"><span>The money comes back and pays for more ads</span></div>
+    <ol class="steps">
+      <li class="step spend"><span class="what">You spend $300</span><span class="count">$300</span><span class="why">$10 a day for a month, showing one of your best Reels to people who don't know you yet.</span></li>
+      <li class="arrow">Each comment costs about $2 (guess)</li>
+      <li class="step"><span class="what">150 people comment FEELING</span><span class="count">150</span><span class="why">Each one gets your automatic message with the link.</span></li>
+      <li class="arrow">7 out of 10 click the link (guess)</li>
+      <li class="step"><span class="what">105 people open the Feeling Finder</span><span class="count">105</span><span class="why">The same page your Instagram followers use now.</span></li>
+      <li class="arrow"><b>4 out of 10 answer the questions and enter their email to see their result</b></li>
+      <li class="step"><span class="what">42 people see their result page</span><span class="count">42</span><span class="why">You now have their email. That's about $7 per person. Your limit is $8.</span></li>
+      <li class="arrow"><b>7 out of 10 click “Find Out More” on their result page</b></li>
+      <li class="step"><span class="what">30 people look at the application</span><span class="count">30</span><span class="why">The same application page as now.</span></li>
+      <li class="arrow"><b>1 out of 10 fill it in</b></li>
+      <li class="step"><span class="what">3 people apply</span><span class="count">3</span><span class="why">They get their plan and sales video, the same as everyone else.</span></li>
+      <li class="arrow">1 out of 4 join (guess)</li>
+      <li class="step money"><span class="what">About $860 comes back</span><span class="count">$860</span><span class="why">Roughly 1 new member a month. This assumes 3 in 10 members pay yearly ($2,500) and 7 in 10 pay monthly ($497 first payment). If everyone paid monthly it would be about $390 in month one, still more than the $300 spent, with more each month they stay. If everyone paid yearly, about $1,960.</span></li>
+    </ol>
+  </div>
+  <p class="note">$10 a day is a test. If it works, $100 a day works the same way, with 10 times more of everything.</p>
+</section>
+
+<section>
+  <span class="eyebrow">2 · The maths</span>
+  <h2>Try your own numbers</h2>
+  <p>Move the sliders. The verdict tells you which of the three positions you're in.</p>
+  <div class="calc">
+    <div class="inputs">
+      <div class="field"><label for="daily">Daily budget <output id="o-daily"></output></label><input type="range" id="daily" min="10" max="300" step="5" value="10"></div>
+      <div class="field"><label for="cpc">Cost per FEELING comment <output id="o-cpc"></output></label><input type="range" id="cpc" min="0.5" max="8" step="0.25" value="2"><small>Guess. Set by the Reel you boost. Meta reports it.</small></div>
+      <div class="field"><label for="click">Commenters who tap the link <output id="o-click"></output></label><input type="range" id="click" min="20" max="100" step="5" value="70"><small>Guess. ManyChat shows the real click rate on the flow.</small></div>
+      <div class="field"><label for="optin">Visitors who sign up <output id="o-optin"></output></label><input type="range" id="optin" min="10" max="80" step="1" value="40"><small>Your November rate: 506 visits, 200 sign-ups.</small></div>
+      <div class="field"><label for="results">Sign-ups who visit the application <output id="o-results"></output></label><input type="range" id="results" min="10" max="100" step="1" value="71"><small>Your November rate: 142 visits from the results page.</small></div>
+      <div class="field"><label for="apply">Application visitors who apply <output id="o-apply"></output></label><input type="range" id="apply" min="1" max="30" step="0.5" value="10.5"><small>Your November rate: 15 of 142.</small></div>
+      <div class="field"><label for="close">Applicants who buy <output id="o-close"></output></label><input type="range" id="close" min="5" max="60" step="1" value="25"><small>Guess until the first sales videos are answered.</small></div>
+      <div class="field"><label for="annual">Buyers who choose yearly <output id="o-annual"></output></label><input type="range" id="annual" min="0" max="100" step="5" value="30"><small>Yearly pays $2,500 upfront, which is what makes month one pay back.</small></div>
+      <div class="field"><label for="months">Months a monthly member stays <output id="o-months"></output></label><input type="range" id="months" min="1" max="12" step="1" value="4"></div>
+    </div>
+    <div class="results" aria-live="polite">
+      <div class="row"><span>Spend per month</span><span id="r-spend"></span></div>
+      <div class="row"><span>FEELING comments</span><span id="r-comments"></span></div>
+      <div class="row"><span>Feeling Finder sign-ups</span><span id="r-leads"></span></div>
+      <div class="row"><span>Cost per sign-up</span><span id="r-cpl"></span></div>
+      <div class="row"><span>Applications</span><span id="r-apps"></span></div>
+      <div class="row"><span>Sales</span><span id="r-sales"></span></div>
+      <div class="row"><span>Cost per sale</span><span id="r-cac"></span></div>
+      <div class="row big"><span>Cash back in month one</span><span id="r-cash"></span></div>
+      <div class="row big"><span>Lifetime value of those sales</span><span id="r-ltv"></span></div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+    <div class="presets"><span>Examples:</span>
+      <button type="button" data-p="10,2,70,40,71,10.5,25,30,4">Your November rates</button>
+      <button type="button" data-p="10,2,70,40,71,5,25,30,4">Ad leads apply half as often</button>
+      <button type="button" data-p="10,4,70,40,71,10.5,25,30,4">Comments cost $4</button>
+      <button type="button" data-p="50,2,70,40,71,10.5,30,40,5">Working loop at $50/day</button>
+    </div>
+  </div>
+  <div class="verdict ok"><strong>Your real Feeling Finder numbers, 1–10 November</strong><p>506 page visits → 200 sign-ups (40%) → 142 application page visits from the results page (71%) → 15 applications (10.5% of those visits, 7.5% of sign-ups). Visits from the Hub tracker, sign-ups and applications from GHL.</p></div>
+  <p class="note">Sales below 1 are averages: 0.4 sales a month means about one sale every two and a half months.</p>
+</section>
+
+<section>
+  <span class="eyebrow">3 · When it isn't working</span>
+  <h2>Fix the first step that's broken</h2>
+  <p>Work down from the top. Changing the ads when the real problem is the emails just costs money.</p>
+  <div class="diag">
+    <div class="q"><div class="ask">Do FEELING comments cost under $2.25, and sign-ups under $8?<small>Check after 7 days.</small></div><div class="fix"><b>No:</b> if comments are dear, it's the Reel: swap in a bench Reel. If comments are cheap but sign-ups aren't, it's the ManyChat message or the Feeling Finder page.</div></div>
+    <div class="yes">yes</div>
+    <div class="q"><div class="ask">Do at least 5 in 100 sign-ups apply?<small>Now 7.5 in 100. Check after 30 days.</small></div><div class="fix"><b>No:</b> it's the training or the emails. Stronger application asks in the daily emails, a clearer invite at the end of the training.</div></div>
+    <div class="yes">yes</div>
+    <div class="q"><div class="ask">Do 1 in 5 or more applicants buy?</div><div class="fix"><b>No:</b> it's the plan of action or the sales video. The Hub shows where they stop reading or watching.</div></div>
+    <div class="yes">yes</div>
+    <div class="q"><div class="ask">Is cost per sale under $650?</div><div class="fix"><b>No:</b> one of the steps above is only just passing. Lift the weakest one.</div></div>
+    <div class="yes">yes</div>
+    <div class="done">The loop works. Turn the budget up (section 4).</div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">4 · Scaling</span>
+  <h2>Climb one step at a time</h2>
+  <p>Each step only unlocks when the one before has proved itself. Raising the budget too fast resets Meta's learning and costs go up.</p>
+  <ol class="ladder">
+    <li class="rung now"><div class="amt">$10/day<small>Now</small></div><div><h3>Prove the ads get sign-ups</h3><p class="note">3 ads, cold audience only. Judge on cost per sign-up and whether anyone applies.</p><div class="gate">Move up when: sign-ups under $10 and at least 1 application</div></div></li>
+    <li class="rung"><div class="amt">$20–30/day<small>Month 2</small></div><div><h3>Prove the ads get sales</h3><p class="note">Replace the weakest ad every 2 weeks with your best new Reel.</p><div class="gate">Move up when: cost per sale under $650</div></div></li>
+    <li class="rung"><div class="amt">$30–50/day<small>Month 3</small></div><div><h3>Add retargeting</h3><p class="note">10–20% of spend shown to people who watched, engaged or visited /training but didn't apply. These ads go straight to the application.</p><div class="gate">Move up when: cash back in month one covers spend</div></div></li>
+    <li class="rung"><div class="amt">+20% every 3–4 days<small>After that</small></div><div><h3>Turn it up while it holds</h3><p class="note">Keep raising while cost per sale stays under $650. If it jumps, step back one level and refresh the ads.</p><div class="gate">Keep going while cost per sale stays under $650</div></div></li>
+  </ol>
+</section>
+
+<section>
+  <span class="eyebrow">5 · Why the price matters</span>
+  <h2>The most you can pay to win one member</h2>
+  <p>A rule most advertisers use: a member should be worth at least 3 times what it cost to get them. So the price decides how much you're allowed to spend per sale.</p>
+  <div class="compare">
+    <div class="card low"><span class="k">Old $30/month trial · about 3 months</span><span class="v num">$90 value → max $30 per sale</span><div class="bar"><i style="width:4.5%"></i></div><p class="note">No ad can find a buyer for $30. This is why paid ads never made sense before.</p></div>
+    <div class="card"><span class="k">The Heart Attractor Program · about $2,000</span><span class="v num">$2,000 value → max $650 per sale</span><div class="bar"><i style="width:100%"></i></div><p class="note">Twenty times more room. Ads only need to find one buyer in every few hundred clicks.</p></div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">6 · Tracking</span>
+  <h2>How each ad is scored</h2>
+  <p>Two places, one sum. Meta tells you what you spent. Your Hub tells you what came back, credited to the ad each person first came from, however long they take.</p>
+  <div class="compare">
+    <div class="card"><span class="k">From Meta Ads Manager</span><span class="v">What you spent</span><p class="note">Per ad, per day, to the cent.</p></div>
+    <div class="card"><span class="k">From GHL + the Hub</span><span class="v">What came back</span><p class="note">Sign-ups, applications and sales, each marked with the ad they first came from (tracked link + the permanent <b>meta ad</b> tag).</p></div>
+  </div>
+  <div class="formula-row">
+    <div class="fcard"><span class="eq">Spend ÷ sign-ups from the ad = <b>cost per sign-up</b></span><span class="goal">Aim: under $8</span></div>
+    <div class="fcard"><span class="eq">Spend ÷ sales from the ad = <b>cost per sale</b></span><span class="goal">Aim: under $650</span></div>
+  </div>
+  <h3>A slow buyer still counts</h3>
+  <ol class="timeline">
+    <li><div class="when">Day 0</div>Sees the boosted Reel and comments FEELING. ManyChat sends the tracked link.</li>
+    <li><div class="when">Day 0</div>Does the Feeling Finder. GHL records “first came from: Meta ad, feel confident Reel” and adds the <b>meta ad</b> tag for good.<div class="meta-sees">Meta's own report stops watching about 7 days after the click.</div></li>
+    <li><div class="when">Week 4</div>Applies from one of your daily emails. GHL records “applied from: daily email” separately, so the ad isn't overwritten.</li>
+    <li><div class="when">Weeks 5–10</div>Plan of action, sales video, goes quiet for a while.</li>
+    <li class="sale"><div class="when">Week 10</div>Joins.</li>
+  </ol>
+  <div class="credit">The Hub credits this sale to the Meta ad.<span>Meta's report would show nothing, because the sale came weeks after its 7-day window. That's why the ads are judged in the Hub, not in Meta.</span></div>
+<section>
+  <span class="eyebrow">7 · 12 months, everyone pays monthly, budget grows</span>
+  <h2>How members stack up over a year</h2>
+  <p>Here every member pays $497 a month and nobody pays yearly. Each month the ads bring in new members, and some existing members leave. The ones who stay keep paying, so income builds month after month. As the income comes in, the ad budget goes up.</p>
+  <p class="note">New members each month and the ad budget come from your numbers in section 2. Change them there and this updates.</p>
+  <div class="churnfield">
+    <label for="churn" style="display:flex;justify-content:space-between;gap:8px;font-weight:500">Members who leave each month <output id="o-churn" class="num" style="color:var(--plum)"></output></label>
+    <input type="range" id="churn" min="3" max="40" step="1" value="15">
+    <small class="note">Paid coaching memberships commonly lose somewhere around 10–20% of members a month. This is a rough range, not hard data. We start at 15% until your own members show the real number.</small>
+  </div>
+  <div class="churnfield">
+    <label for="grow" style="display:flex;justify-content:space-between;gap:8px;font-weight:500">Raise the ad budget each month by <output id="o-grow" class="num" style="color:var(--plum)"></output></label>
+    <input type="range" id="grow" min="0" max="100" step="5" value="100">
+    <label style="display:flex;gap:10px;align-items:flex-start;font-size:.92rem"><input type="checkbox" id="fund" style="margin-top:4px;accent-color:var(--plum)"> <span>Only spend what came in: next month's budget is never more than last month's income from ad members</span></label>
+    <small class="note">100% = double it every month: $10 a day, then $20, $40, $80 and so on. Tick the box to slow it down so the ads only grow as fast as the money they bring back.</small>
+  </div>
+  <div class="tiles">
+    <div class="tile"><span class="k">New members a month</span><span class="v" id="t-new"></span><span class="s" id="t-new-s"></span></div>
+    <div class="tile"><span class="k">Members after 12 months</span><span class="v" id="t-members"></span><span class="s" id="t-members-s"></span></div>
+    <div class="tile"><span class="k">Income in month 12</span><span class="v" id="t-rev12"></span><span class="s" id="t-rev12-s"></span></div>
+    <div class="tile"><span class="k">Total income, 12 months</span><span class="v" id="t-rev"></span><span class="s">from ad members only</span></div>
+    <div class="tile"><span class="k">Total ad spend, 12 months</span><span class="v" id="t-spend"></span><span class="s" id="t-spend-s"></span></div>
+    <div class="tile"><span class="k">Left after paying for ads</span><span class="v" id="t-profit"></span><span class="s" id="t-profit-s"></span></div>
+  </div>
+  <div class="chartbox" id="cb1">
+    <h3>Income from ad members each month</h3>
+    <div class="legend"><span><i style="background:var(--plum)"></i>Monthly income</span><span><i class="line"></i>Ad spend that month</span></div>
+    <div class="chartscroll"><svg id="chart1" viewBox="0 0 720 240" role="img" aria-label="Monthly income from ad members compared with monthly ad spend over 12 months"></svg></div>
+  </div>
+  <div class="chartbox" id="cb2">
+    <h3>Money in your pocket so far (income minus ad spend, added up)</h3>
+    <div class="legend"><span><i style="background:var(--bad)"></i>Still behind</span><span><i style="background:var(--cash)"></i>Ahead</span></div>
+    <div class="chartscroll"><svg id="chart2" viewBox="0 0 720 240" role="img" aria-label="Running total of income minus ad spend over 12 months"></svg></div>
+  </div>
+  <div class="verdict ok" id="m-ceiling"></div>
+  <details>
+    <summary>See it month by month</summary>
+    <div class="mtable"><table><thead><tr><th>Month</th><th>New</th><th>Left</th><th>Members</th><th>Income</th><th>Ad spend</th><th>Running total</th></tr></thead><tbody id="m-rows"></tbody></table></div>
+  </details>
+  <p class="note">Doubling for a whole year is the most optimistic case. In real life each new member costs more as the budget gets bigger, because Meta runs out of the cheapest people to show the ad to. Members are shown with decimals because they're averages: 0.8 new members a month means about 4 in 5 months bring one. This leaves out yearly payers, so it's the cautious version.</p>
+</section>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const ids=["daily","cpc","click","optin","results","apply","close","annual","months"];
+const money=n=>"$"+Math.round(n).toLocaleString("en-US");
+const money2=n=>"$"+n.toFixed(2);
+const dec=n=>n<10?(Math.round(n*10)/10).toString():Math.round(n).toLocaleString("en-US");
+function calc(){
+  const v=Object.fromEntries(ids.map(k=>[k,parseFloat($(k).value)]));
+  $("o-daily").textContent=money(v.daily);
+  $("o-cpc").textContent=money2(v.cpc);
+  ["click","optin","results","apply","close","annual"].forEach(k=>$("o-"+k).textContent=v[k]+"%");
+  $("o-months").textContent=v.months;
+  const spend=v.daily*30, comments=spend/v.cpc, leads=comments*v.click/100*v.optin/100;
+  const apps=leads*v.results/100*v.apply/100, sales=apps*v.close/100, p=v.annual/100;
+  const cash=sales*(p*2500+(1-p)*497), ltv=sales*(p*2500+(1-p)*497*v.months);
+  const cac=sales>0?spend/sales:Infinity, cpl=leads>0?spend/leads:Infinity;
+  $("r-spend").textContent=money(spend);
+  $("r-comments").textContent=dec(comments);
+  $("r-leads").textContent=dec(leads);
+  $("r-cpl").textContent=isFinite(cpl)?money2(cpl)+(cpl<=8?"  (under $8)":"  (over $8)"):"—";
+  $("r-apps").textContent=dec(apps);
+  $("r-sales").textContent=dec(sales);
+  $("r-cac").textContent=isFinite(cac)?money(cac):"—";
+  $("r-cash").textContent=money(cash)+"  ("+(cash/spend).toFixed(1)+"x)";
+  $("r-ltv").textContent=money(ltv)+"  ("+(ltv/spend).toFixed(1)+"x)";
+  window.__fun={sales:sales,spend:spend}; if(window.model) model();
+  const el=$("verdict");
+  if(cash>=spend){el.className="verdict good";el.innerHTML="<strong>The ads pay for themselves</strong><p>Month one cash covers the spend, so every sale after that is profit. Climb the next step of the ladder.</p>";}
+  else if(ltv>=spend*3){el.className="verdict ok";el.innerHTML="<strong>Profitable, but slowly</strong><p>The money comes back over the months members stay, so you cover the gap upfront. Scale gently and push the yearly option.</p>";}
+  else{el.className="verdict bad";el.innerHTML="<strong>Not paying back yet</strong><p>Use section 3 to find the step that's letting it down before spending more.</p>";}
+}
+
+function model(){
+  const f=window.__fun||{sales:0,spend:300}, c=parseFloat($("churn").value)/100;
+  const g=parseFloat($("grow").value)/100, fund=$("fund").checked;
+  $("o-churn").textContent=Math.round(c*100)+"%";
+  $("o-grow").textContent=g===0?"0% (same every month)":Math.round(g*100)+"%"+(g===1?" (double)":"");
+  const perMember=f.sales>0?f.spend/f.sales:Infinity;
+  const rows=[]; let active=0, cum=0, rev=0, spendTot=0, firstAhead=0, sp=f.spend, prevInc=0;
+  for(let m=1;m<=12;m++){
+    if(m>1){ sp=sp*(1+g); if(fund) sp=Math.min(sp,Math.max(f.spend,prevInc)); }
+    const nw=isFinite(perMember)?sp/perMember:0;
+    const left=active*c; active=active-left+nw;
+    const inc=active*497; rev+=inc; spendTot+=sp; cum+=inc-sp; prevInc=inc;
+    if(!firstAhead && cum>=0) firstAhead=m;
+    rows.push({m,new:nw,left,active,inc,cum,spend:sp});
+  }
+  const one=n=>(Math.round(n*10)/10).toFixed(1);
+  $("t-new").textContent=one(rows[0].new)+" \u2192 "+one(rows[11].new);
+  $("t-new-s").textContent="month 1 \u2192 month 12, about "+(isFinite(perMember)?money(perMember):"\u2014")+" of ads per member";
+  $("t-members").textContent=one(active);
+  $("t-members-s").textContent="each one staying about "+one(1/c)+" months";
+  $("t-rev12").textContent=money(rows[11].inc);
+  $("t-rev12-s").textContent="ad spend that month: "+money(rows[11].spend);
+  $("t-rev").textContent=money(rev);
+  $("t-spend").textContent=money(spendTot);
+  $("t-spend-s").textContent=g===0?"the same every month":money(rows[0].spend)+" in month 1 \u2192 "+money(rows[11].spend)+" in month 12";
+  $("t-profit").textContent=(cum<0?"−":"")+money(Math.abs(cum));
+  $("t-profit-s").textContent=firstAhead?"ahead from month "+firstAhead:"still behind after 12 months";
+  const cap=f.sales/c;
+  if(g>0){ $("m-ceiling").innerHTML="<strong>Growing the budget: "+money(rows[11].spend)+" a month of ads by month 12, "+one(active)+" members paying "+money(rows[11].inc)+" a month</strong><p>"+(fund?"Because the budget only grows as fast as the income, you never put in more than the ads have already earned back after month 1.":"Without the 'only spend what came in' rule you'd be funding the growth upfront, so watch the running total.")+" Each member is worth about "+money(497/c)+" on average ("+one(1/c)+" months \u00d7 $497).</p>"; }
+  else $("m-ceiling").innerHTML="<strong>The ceiling at this budget: about "+one(cap)+" members, "+money(cap*497)+" a month</strong><p>With the same budget every month, members level off where the number joining equals the number leaving. Each member is worth about "+money(497/c)+" on average ("+one(1/c)+" months × $497). To grow past the ceiling: spend more, or keep members longer.</p>";
+  $("m-rows").innerHTML=rows.map(r=>"<tr><td>"+r.m+"</td><td>"+one(r.new)+"</td><td>"+one(r.left)+"</td><td>"+one(r.active)+"</td><td>"+money(r.inc)+"</td><td>"+money(r.spend)+" ($"+Math.round(r.spend/30).toLocaleString("en-US")+"/day)</td><td class='"+(r.cum<0?"neg":"pos")+"'>"+(r.cum<0?"−":"")+money(Math.abs(r.cum))+"</td></tr>").join("");
+  drawBars("chart1","cb1",rows.map(r=>({v:r.inc,label:"Month "+r.m+": "+money(r.inc)+" income, "+money(r.spend)+" ads, "+one(r.active)+" members"})),rows.map(r=>r.spend),false);
+  drawBars("chart2","cb2",rows.map(r=>({v:r.cum,label:"Month "+r.m+": "+(r.cum<0?"−":"")+money(Math.abs(r.cum))+" so far"})),null,true);
+}
+function niceMax(v){ if(v<=0) return 100; const p=Math.pow(10,Math.floor(Math.log10(v))), n=v/p; return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p; }
+function drawBars(id,boxId,data,refLine,signed){
+  const svg=$(id), W=720,H=240,L=58,R=12,T=14,B=28, iw=W-L-R, ih=H-T-B, NS="http://www.w3.org/2000/svg";
+  const vals=data.map(d=>d.v).concat(refLine||[]);
+  let hi=niceMax(Math.max(0,...vals)), lo=signed?-niceMax(Math.max(0,-Math.min(0,...vals))):0;
+  if(signed && Math.max(...vals)<=0) hi=0;
+  if(signed && hi===0 && lo===0) hi=100;
+  const y=v=>T+(hi-v)/(hi-lo)*ih;
+  let out="";
+  const ticks=signed?[lo,lo/2,0,hi/2,hi].filter((v,i,a)=>a.indexOf(v)===i):[0,hi/4,hi/2,hi*3/4,hi];
+  ticks.forEach(t=>{ out+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="var(--line)" stroke-width="1"/>';
+    out+='<text x="'+(L-8)+'" y="'+(y(t)+4)+'" text-anchor="end">'+(t<0?"−":"")+"$"+Math.abs(Math.round(t)).toLocaleString("en-US")+'</text>'; });
+  const bw=iw/data.length, gap=Math.max(6,bw*.28);
+  data.forEach((d,i)=>{
+    const x=L+i*bw+gap/2, w=bw-gap, y0=y(0), y1=y(d.v), top=Math.min(y0,y1), h=Math.max(1,Math.abs(y1-y0));
+    const col=signed?(d.v<0?"var(--bad)":"var(--cash)"):"var(--plum)";
+    const r=Math.min(4,h/2,w/2);
+    const path=d.v>=0
+      ? "M"+x+","+(top+h)+"V"+(top+r)+"Q"+x+","+top+" "+(x+r)+","+top+"H"+(x+w-r)+"Q"+(x+w)+","+top+" "+(x+w)+","+(top+r)+"V"+(top+h)+"Z"
+      : "M"+x+","+top+"V"+(top+h-r)+"Q"+x+","+(top+h)+" "+(x+r)+","+(top+h)+"H"+(x+w-r)+"Q"+(x+w)+","+(top+h)+" "+(x+w)+","+(top+h-r)+"V"+top+"Z";
+    out+='<path d="'+path+'" fill="'+col+'"/>';
+    out+='<rect class="hit" data-i="'+i+'" x="'+(L+i*bw)+'" y="'+T+'" width="'+bw+'" height="'+ih+'" fill="transparent"/>';
+    out+='<text x="'+(x+w/2)+'" y="'+(H-8)+'" text-anchor="middle">'+(i+1)+'</text>';
+  });
+  if(signed) out+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="var(--muted)" stroke-width="1"/>';
+  if(refLine){ let d=""; refLine.forEach((v,i)=>{ const x0=L+i*bw, x1=x0+bw; d+=(i?"L":"M")+x0+","+y(v)+"L"+x1+","+y(v); });
+    out+='<path d="'+d+'" fill="none" stroke="var(--bad)" stroke-width="2" stroke-dasharray="6 4"/>'; }
+  svg.innerHTML=out;
+  const box=$(boxId); let tip=box.querySelector(".tip"); if(!tip){tip=document.createElement("div");tip.className="tip";tip.hidden=true;box.appendChild(tip);}
+  svg.querySelectorAll(".hit").forEach(h=>{
+    const show=e=>{ tip.textContent=data[+h.dataset.i].label; tip.hidden=false; const br=box.getBoundingClientRect(), hr=h.getBoundingClientRect();
+      tip.style.left=Math.max(4,Math.min(br.width-tip.offsetWidth-4,hr.left-br.left+hr.width/2-tip.offsetWidth/2))+"px"; tip.style.top=(hr.top-br.top-4)+"px"; };
+    h.addEventListener("mouseenter",show); h.addEventListener("click",show); h.addEventListener("mouseleave",()=>tip.hidden=true);
+  });
+}
+$("churn").addEventListener("input",model); $("grow").addEventListener("input",model); $("fund").addEventListener("change",model);
+ids.forEach(k=>$(k).addEventListener("input",calc));
+document.querySelectorAll("[data-p]").forEach(b=>b.addEventListener("click",()=>{b.dataset.p.split(",").forEach((x,i)=>$(ids[i]).value=x);calc();}));
+calc();
+</script>

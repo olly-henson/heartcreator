@@ -536,3 +536,9 @@ workflow change (ovHubVideos for Sales-card VSLs, max not sum), drop removed con
 order (three tables: leads / applications / sales journey) and the EBUSY deploy rule (deploy-hub.sh falls back itself).
 Added the "ten year old" numbers principle with a good/bad example. Removed the 2026-10-24 "never split rates by channel"
 rule, already marked overridden and now superseded by the three tables. -->
+
+### Added 2026-11-10 (Meta ads source + Feeling Finder A/B visits)
+- `ovPlainSource()` has a `meta` branch: `utm_content=comment-<reel>` → "Meta ad: commented FEELING on the boosted Reel “<reel>”" (`button-` for the button fallback).
+- `functions/api/pageviews.js` folds `feelingb` (Feeling Finder variant B) into `feeling` via `pageKey()`. **Never** add an A/B variant beacon without folding it in, or the opt-in rate is wrong (it showed ~72%, real ~40%).
+- Still to build: an **Ads** card on the Overview (spend typed in weekly, sign-ups, cost per sign-up vs $8, applications, sales, cost per sale vs $650). Spec: `marketing/skills/skills_meta-ads.md`.
+
