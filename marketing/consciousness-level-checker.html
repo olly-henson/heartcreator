@@ -2368,6 +2368,32 @@ For each post give:
 
 Reply as JSON: {"ideas":[{"hook":"","stage":"","post":"","poll":[],"when":"","why":""}]}`;
 }
+/* Real open rates from GHL (Olly, 2026-11-10: "a pattern here", use as a reference for subject lines). Refresh with tools/ghl-email-stats.mjs. */
+let EMAIL_SUBJECT_DATA = `WHAT HAS ACTUALLY WORKED ON OLLY'S LIST (real GHL open rates, November 2026 daily emails; small sample but a clear pattern):
+- Best: "tired" 53%, "You know more about love than your married friends" 48%, "the day I met my wife" 43%, "why love isn't working" 40%.
+- Worst: "do you do this?" 20%, "she did it" 22%, "How to attract real love" 27%, "How to know if you'll find love" 27%.
+- Pattern: personal, emotional, curiosity-led subjects that read like a note from a person win (a feeling, a bit of Olly's own life, a surprising claim about the reader). How-to or blog-style "How to attract / find love" headlines get about half the opens. Subjects that are too vague to hint at any feeling or story ("do you do this?", "she did it") also underperform. Lean towards the winners' feel.`;
+/* Live version (Olly, 2026-11-10): the Hub pulls open rates from GHL (/api/track/email-stats, cached 1 hour, daily emails,
+   last 30 days with 50+ delivered each). Replaces the best/worst lines above; the snapshot stays as the fallback. */
+const EMAIL_SUBJECT_PATTERN = EMAIL_SUBJECT_DATA.split("\n").pop();
+let emailStatsAt = 0;
+async function refreshEmailStats(){
+  if (Date.now() - emailStatsAt < 600000) return;
+  emailStatsAt = Date.now();
+  try {
+    const r = await fetch("https://hub.ollyhenson.com/api/track/email-stats");
+    const j = await r.json();
+    const e = (j && j.ok && j.emails) || [];
+    if (e.length < 4) return;
+    const fmt = x => '"' + x.subject + '" ' + x.openRate + "%";
+    const n = Math.min(4, Math.floor(e.length / 2));
+    EMAIL_SUBJECT_DATA = "WHAT IS ACTUALLY WORKING ON OLLY'S LIST (live GHL open rates, daily emails, " + j.window + ", " + e.length + " emails):\n"
+      + "- Best: " + e.slice(0, n).map(fmt).join(", ") + ".\n"
+      + "- Worst: " + e.slice(-n).reverse().map(fmt).join(", ") + ".\n"
+      + EMAIL_SUBJECT_PATTERN + " If the live best and worst above point somewhere new, follow the live numbers.";
+  } catch (err) { /* keep the snapshot */ }
+}
+refreshEmailStats();
 function emailPrompt(type, t, fmt, n, part, topic){
   const cta = $("emailCta").value;
   const ctaRule = {
@@ -2407,6 +2433,7 @@ SUBJECT LINES (NO PREVIEW TEXT)
 - Subject (Olly, 2026-10-26: the short style he always opens): ONE TO FOUR WORDS, all lowercase, like a quick note from a friend, not a headline. Odd, intriguing or emotional so the reader has to open it to find out what it means. Trailing ".." or "?" and the odd :( are welcome. Real examples of the style he likes (another creator's, never copy them): "is this weird?", "scary stuff..", "cactus in the hospital?", "sorry, dad :(", "jump... or else", "risky business", "fun", "want to join me?", "make it easy peezy". Often a fragment pulled from the story or the strangest detail in the email. Never crude, never clickbait the body doesn't pay off.
 - Name the technique you used: Curiosity, Odd detail, Emotion, Question, Contrast, Play on a phrase, Challenge the dogma, Seasonal. Never the same technique twice in a batch.
 - No preview text (Olly, 2026-11-03: he doesn't use it; the subject and then straight into the email). Always leave "preview" as "".
+${EMAIL_SUBJECT_DATA}
 
 THIS REQUEST
 ${t.rule === "MIXED" ? `Email types: write a mixed set like a normal week. Roughly 4 in 10 Belief breaking, 4 in 10 free value (Free value, Mechanism, Science, Q&A, What it's not, List, Challenge the dogma), and the rest connection-led (Personal story, The vision, Ask them to reply). Never the same type twice in a row. Name the type of each email in "type". How to handle each type:\n` + Object.entries(POST_TYPES).filter(([k, v]) => v && v.group === "Email" && v.rule !== "MIXED" && k !== "Email · Invitation" && (k !== "Email · Results share" || $("emailResult").value.trim())).map(([k, v]) => "- " + k.replace("Email · ", "") + ": " + v.rule).join("\n") : `Email type: ${type.replace("Email · ", "")}. ${t.desc}
@@ -2507,6 +2534,7 @@ async function carouselBatch(signal){
    Each email is its own request, all sent at once, each told its type, a subject technique and what the others cover. */
 const EMAIL_TECHS = ["Curiosity", "Odd detail", "Emotion", "Question", "Contrast", "Play on a phrase", "Challenge the dogma"];
 async function emailBatch(signal){
+  await refreshEmailStats();
   const n = Number($("count").value) || 3, type = $("type").value, t = POST_TYPES[type], fmt = $("format").value;
   const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1], topic = $("topic").value.trim();
   const shuffle = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
@@ -2586,6 +2614,7 @@ function subjectPrompt(i){
   return `Write 6 alternative subject lines for this email from Olly Henson to his daily list (people who signed up for his free training on attracting a committed relationship).
 
 STYLE (Olly's favourite): one to four words, all lowercase, like a quick note from a friend, not a headline. Odd, intriguing or emotional so they have to open it. Often a fragment or the strangest detail pulled from the email itself. Trailing ".." or "?" welcome. Examples of the style (another creator's, never copy): "is this weird?", "scary stuff..", "cactus in the hospital?", "sorry, dad :(". Never crude. Never promise something the email doesn't pay off. No em dashes.
+${EMAIL_SUBJECT_DATA}
 ${liked ? "Subjects Olly has already chosen (match the feel, don't repeat them):\n" + liked + "\n" : ""}
 Leave "preview" empty (Olly doesn't use preview text). Make the 6 genuinely different from each other and from the current subject "${i.hook || ""}".
 
@@ -3125,6 +3154,7 @@ function renderIdeas(type, ideas, ch){
         if (dirty()) saveEmail();
         subBtn.disabled = true; subBtn.textContent = "Writing…"; subBox.textContent = "";
         try {
+          await refreshEmailStats();
           const r = await sampleFn.json(subjectPrompt(i), {cache:false});
           (r && r.subjects || []).forEach(o => {
             const b = el("button", "subopt"); b.type = "button";

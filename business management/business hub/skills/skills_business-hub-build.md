@@ -291,7 +291,12 @@ Notes on fields that aren't obvious:
 - **Test Hub UI with a mock fetch:** inject a `<script>` before boot that answers `/api/state` and `/api/applicants` with fake data, open the file with puppeteer and screenshot board + pop-up at 1440 and 390. Never test against real applicants.
 - **GHL writes from the Hub** use `env.GHL_WRITE_TOKEN` (the Claude agent key; Olly set it in Cloudflare: Claude is blocked from writing secrets). `GHL_TOKEN` is view-only. Test any GHL write on a dummy contact created and deleted via the API.
 - **Removed applicants** (`a.removed` from the `removed - not a fit` tag, or `lmStore(id).removed`) stay on the board but are left out of every stat.
-- **Python heredoc edits:** `\n` inside a JS string written through a bash heredoc became a real newline and broke the page twice. For JS strings with escapes use the Edit tool, then jscheck.
+- **Python heredoc edits:** `\n` inside a JS string written through a bash heredoc became a real newline and broke the page twice (and the generator again on 2026-11-10). For JS strings with escapes use the Edit tool or a `.py` file made with Write, then jscheck.
+
+### Added 2026-11-10 (live email stats for the generator)
+- **A claude.ai artifact can only reach the Hub under `/api/track/...`**: that's the one path Cloudflare Access lets through. Put any endpoint a tool page or the laptop must call there, send `access-control-allow-origin: *`, and return no names or emails. Example: `functions/api/track/email-stats.js` (GHL open rates, daily emails, last 30 days with 50+ delivered, widens to 90 days / 20+ if fewer than 6; KV cache `emailstats` 1 hour; `?fresh` skips the cache).
+- **New Pages secrets: Claude is blocked from writing them.** Give Olly one `!` command that pipes the value from `marketing\.env` into `pages secret put` with the cached wrangler (`node <npm-cache>/_npx/<id>/node_modules/wrangler/bin/wrangler.js`), because `npx wrangler` hits EBUSY. Then redeploy: a secret only reaches new deployments. `GHL_EMAIL_TOKEN` = the Claude agent key (has the read-only email scopes).
+- **Before declaring an endpoint live, curl the custom domain**, not just the `*.pages.dev` deploy link: the first test of `hub.ollyhenson.com` returned the Hub page until the new deploy was serving.
 
 ## 6. Quick reference — where things are in the code
 
@@ -542,3 +547,5 @@ rule, already marked overridden and now superseded by the three tables. -->
 - `functions/api/pageviews.js` folds `feelingb` (Feeling Finder variant B) into `feeling` via `pageKey()`. **Never** add an A/B variant beacon without folding it in, or the opt-in rate is wrong (it showed ~72%, real ~40%).
 - Still to build: an **Ads** card on the Overview (spend typed in weekly, sign-ups, cost per sign-up vs $8, applications, sales, cost per sale vs $650). Spec: `marketing/skills/skills_meta-ads.md`.
 
+
+<!-- 2026-11-10 skill review: added the /api/track-only rule for artifact-facing endpoints, the secret hand-off command (Claude is blocked from secrets; npx EBUSY), and curl-the-custom-domain. Strengthened the heredoc pitfall after it recurred in the generator. Why: the live email-stats build hit all three. -->

@@ -106,11 +106,13 @@ Before finalising, ask:
 - **Write like you talk** — casual, personality-driven, imperfect beats polished and corporate (see Section 8).
 
 ### Subject lines
-- Mirror the first line or emotional hook of the email
-- 5–9 words
-- Plain language — no clickbait, no false urgency
-- Always use one of the 13 techniques in Section 8 — rotate, never repeat the same technique twice in a row
-- Examples: *"This is not your fault"* / *"Why it keeps crashing back"* / *"I know you've tried everything"* / *"The missing piece isn't more information"*
+- Short and personal, like a note from a friend: usually one to four words, lowercase (Olly, 2026-10-26). Odd, emotional or intriguing enough that they have to open it.
+- **Real open rates decide, not taste (Olly, 2026-11-10: "it's quite clear that there's a pattern here").** November daily emails: "tired" 53%, "You know more about love than your married friends" 48%, "the day I met my wife" 43%, "why love isn't working" 40% vs "do you do this?" 20%, "she did it" 22%, "How to attract real love" 27%, "How to know if you'll find love" 27%.
+  - Win: a feeling, a piece of Olly's own life, or a surprising claim about the reader.
+  - Lose: how-to / blog-style headlines (about half the opens) and subjects so vague they hint at no feeling or story.
+- Plain language. No clickbait, no false urgency, never promise what the email doesn't pay off.
+- Always use one of the techniques in Section 8. Rotate, never the same technique twice in a row.
+- Examples (real winners): *"tired"* / *"the day I met my wife"* / *"You know more about love than your married friends"* / *"why love isn't working"*
 
 ### Preview text: none
 - Olly doesn't use preview text (2026-11-03): subject, then straight into the email. Never write one.
@@ -209,6 +211,7 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 - **One daily email a day, in the evening Cape Town time.** No day empty, no two on the same day.
 - **GHL account timezone = Africa/Harare (CAT, GMT+2, = Cape Town all year)** since 2026-11-07 (Settings → Business Profile → Time Zone). It was Europe/London, so the date picker said one day and the campaign page showed another (10 PM picked = midnight Cape Town = next day). If dates look off again, check this setting first. Never pick Africa/Cairo: Egypt has summer time, so it drifts an hour.
 - **To check:** `node tools/ghl-email-schedule.mjs` lists the last sent and next scheduled campaigns in Cape Town time (subject, time, how many it went to).
+- **Which emails worked (2026-11-10):** `node tools/ghl-email-stats.mjs out.json` pulls every campaign with delivered / opened / clicked (`GET /emails/schedule?showStats=true`; the per-campaign `/stats` endpoints are 401). Rank daily emails by open rate, delivered 50+ each, and say which ones went to a tiny early list. Opens include Apple Mail auto-opens: compare emails with each other, never with industry rates. Don't use per-contact conversation status for broadcasts: GHL doesn't log most bulk sends there. Use this for the send-time test below too.
 - **When Olly asks "is it scheduled right?", answer exactly what he wants to check:** last email sent + next ones scheduled, Cape Town time, one line each. Then flag any gap or double day. Explanations of why come after, short.
 
 ### Process for any change to lists, tags or workflows
@@ -245,8 +248,8 @@ Before writing, check Section 7 (live nurture sequence) to confirm the content a
 
 | Field | Notes |
 |-------|-------|
-| Subject Line | 5–9 words, mirrors the emotional hook — see Section 4 |
-| Preview | Continues the subject line's hook without repeating it |
+| Subject Line | Short and personal, see Section 4 "Subject lines" |
+| Preview | Leave empty: Olly doesn't use preview text (2026-11-03) |
 | Email Content | The full body copy |
 | CTA Yes/No | Whether this email carries a CTA |
 | Type of Email | Select (Personal Story, Belief-Changing, etc.) |
@@ -950,3 +953,8 @@ Extracted from ~40 pages of screenshots of "The Email Player's Playbook" by Ben 
 <!-- 2026-11-07 skill review: added "Scheduling the daily email" (GHL timezone was Europe/London -> now Africa/Harare, never Cairo; tools/ghl-email-schedule.mjs; answer last sent + next scheduled in Cape Town time first). Why: Olly's picked dates didn't match the campaign page and my first answer explained instead of giving the times he asked for ("that's what I want to check"). -->
 
 **2026-11-09 — Send-time test (US audience).** From 9 Nov the Hub's Email calendar alternates 10am New York (17:00 Cape Town now) and 3pm New York (22:00, the old slot). Compare GHL open rates after 4–5 sends each; then use the winner for every daily email.
+
+<!-- 2026-11-10 skill review: Olly asked which daily emails performed best and said the pattern was clear. Subject lines rule rewritten
+from "5-9 words" (overridden by his 2026-10-26 short-lowercase style) to the real open-rate pattern, with the winners as examples;
+Database "Preview" field corrected to empty (overridden 2026-11-03); added how to pull opens/clicks (tools/ghl-email-stats.mjs).
+Why: subjects should follow what his list actually opens, and the old examples contradicted his current style. -->

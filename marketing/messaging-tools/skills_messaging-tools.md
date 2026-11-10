@@ -45,6 +45,7 @@ Use this whenever Olly asks to change, fix, rebuild or find any tool listed in `
 - **Add to calendar** (`hubButton(kind, getPayload)`) opens `hub.ollyhenson.com/#add<kind>=<JSON>`; the Hub places it and saves itself. Kinds: `reel`, `story` (with image + songs), `email`, `ytpost` (with image), `carousel` (2026-11-04, from the Carousel maker: every slide as a JPEG data URL in order, plus title, type and caption, built on pointerdown). `getPayload` runs at the moment of the tap.
 - Story Image Maker extras: song ideas (`SONGS` mood banks, `SONG_MOOD`, rotate after each send); Results share **Cover names and photos** (`red`: Claude finds boxes via `sampleFn.json(..., {images:[blob]})`, blurred by default, drag to add, tap to remove).
 - YouTube: `ytFill()` swaps `[LINK]` for the tracked `utm_medium=community` link (`YT_DEST`, `ytLink()`); square 1080 × 1080 image maker `ytImg` (Purple / Photo / Light).
+- **Live email open rates (v221, 2026-11-10):** `EMAIL_SUBJECT_DATA` (best/worst subjects + the pattern) goes into `emailPrompt()` and `subjectPrompt()`. `refreshEmailStats()` fetches `hub.ollyhenson.com/api/track/email-stats` at load and is awaited before `emailBatch()` and "More subject lines"; it rewrites the best/worst lines and keeps the pattern line. If the Hub fails or fewer than 4 emails qualify, the November snapshot stays. Olly wanted it as "a reference when creating subject lines", not a hard rule: keep the existing short-lowercase style rules beside it.
 - **Load order:** code near the top that runs at load must never use a `const`/`let` declared further down. It throws and the whole generator stops working (2026-10-28, `HUB_URL`; now the function `hubUrl()`).
 - Small changes: publish with Artifact `edits` (changes the file and the page in one call), then `node tools/jscheck.js`. Test over `python -m http.server` from `marketing/` (canvas images); that server sends no charset, so non-ASCII looks mangled in tests only.
 - Meme images: `MEME_LAYOUTS` (template image, text boxes) → `memeEditor()` → `composeMeme()` → `downloads.save()`. Since v180-181 `memeEditor()` (Story Image Maker > Meme) has **Generate meme** (3 parallel `memePrompt` calls → Version 1/2/3, optional topic, "Let it pick the templates") and the template **Your own image** (`OWN_MEME`: upload any picture, top/bottom text).
@@ -229,6 +230,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - Never put invented DMs, results or screenshots on a Story image. DM and Results share use real messages with names hidden.
 - Never build a link or payload when the card is drawn. Read the text at the moment of the tap, or Olly's edits get lost.
 - Never use the browser share sheet or a new tab for saving images from the Hub on a computer (see the Hub skill); in the generator, saving goes through `downloads.save()`.
+- **Never write JS that contains `\n` (or any backslash escape) through a bash or Python heredoc.** It lands as a real line break and the whole generator stops parsing. This rule already existed and was broken again on 2026-11-10 (four patch attempts). Put the patch in a `.py` file with the Write tool, or use the Artifact `edits` / Edit tool, then jscheck before publishing.
 - Never present the Aspiration stock images as Olly's family: the words stay about the vision, not "my Sunday". Olly said it's "pretty on point"; discuss in chat and wait for a pattern.
 
 ## 6. Examples (current strong versions)
@@ -252,6 +254,8 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 ---
 
 ## Changelog
+
+- **2026-11-10: Skill review (email subject data).** Olly asked for the best daily emails, then for that data "just as a reference when creating subject lines", then for it to be live. Added the live email stats entry to the generator map, and a Never rule on heredoc escapes because the existing Process rule was broken again. Why: a reference that updates itself beats a snapshot, and the escape bug cost four tries.
 
 - **2026-10-28: Skill review.** Generator map updated (YouTube tab, Add to calendar kinds, songs, cover-names step, `ytImg`, load-order rule, publish with `edits`). Rules: Add to queue keeps the idea on screen and the queue's full text teaches the generator (overrides "only titles are fed back"); Add to calendar reads the text at the tap; everything posted is editable; Stories = Image Maker first, with varied songs for Catrin's crowd; Results share names/photos blurred automatically; tracked links on every email; YouTube CTA per batch. Never: build links at draw time; share sheet/new tab for desktop saves. Example: Olly's edit of "the baggage test" email (cut the scene-setting, short single lines).
 
