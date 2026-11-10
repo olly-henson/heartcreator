@@ -472,6 +472,14 @@ def main(src, out, hook_text=None, words_only=False):
     lst = os.path.join(tmp, "caps.ffconcat")
     open(lst, "w").write("\n".join(l.replace("\\", "/") for l in lines))
 
+    # Cover still (Olly 2026-11-10): best frame of him + the hook, drawn into frame 0 in this same encode (no second pass)
+    cover, cover_info = None, None
+    try:
+        sys.path.insert(0, HERE)
+        import cover_pick
+        cover, cover_info = cover_pick.make_cover(src, t0, t1, hook[0])
+    except Exception as e:
+        print(f"cover: skipped ({e})")
     pre, vin, ain = "", "[0:v]", "0:a"
     if keep:  # keep-segments joined back together (+ a tiny speed-up only if the pauses weren't enough)
         for i, (a, b) in enumerate(keep):
@@ -485,12 +493,17 @@ def main(src, out, hook_text=None, words_only=False):
             vin, ain = "[vk]", "[ak]"
     run(["ffmpeg", "-y", "-ss", f"{t0:.3f}", "-t", f"{src_len:.3f}", "-i", src,
          "-f", "concat", "-safe", "0", "-i", lst,
+         *(["-i", cover] if cover else []),
          "-filter_complex", pre + f"{vin}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps=30[v];"
-                            f"[1:v]fps=30,format=rgba[c];[v][c]overlay=0:{STRIP_Y}:shortest=0:eof_action=pass,format=nv12[o]",
+                            f"[1:v]fps=30,format=rgba[c];[v][c]overlay=0:{STRIP_Y}:shortest=0:eof_action=pass"
+                            + (",format=yuv420p[o1];[o1][2:v]overlay=0:0:enable='lt(t,0.03)',format=nv12[o]" if cover else ",format=nv12[o]"),
          "-map", "[o]", "-map", ain, "-t", f"{length:.3f}",
          *ENC, "-c:a", "aac", "-b:a", "192k",
          "-movflags", "+faststart", out])
     print(f"done: {out}  trim {t0:.2f}s -> {t1:.2f}s  hook '{hook[0]}'  {len(caps)} captions")
+    if cover_info:  # recorded in the plan (recover_ready.py skips Reels that have one)
+        pj = json.load(open(out + ".plan.json", encoding="utf-8")); pj["cover"] = cover_info
+        json.dump(pj, open(out + ".plan.json", "w"), indent=1)
 
 
 if __name__ == "__main__":

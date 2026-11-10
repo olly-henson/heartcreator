@@ -14,6 +14,8 @@
 //
 // GHL has no API for its own funnel stats (2026-10-24), hence this.
 
+import { isOwner } from "../../lib/owner.js";
+
 const PAGES = { optin: true, apply: true, scale: true, feeling: true, feelingb: true, attract: true };   // attract = training v2 opt-in at /attract (2026-11-03)   // feelingb = The Feeling Finder A/B variant B (phone image), 2026-10-28   // scale = The Love Scale (2026-10-26), feeling = The Feeling Finder (2026-10-28)
 const BOT_RE = /bot|crawl|spider|preview|facebookexternalhit|headless/i;
 
@@ -33,6 +35,8 @@ export async function onRequestPost({ request, env }) {
   const parts = (await request.text()).slice(0, 300).split("|");
   const page = parts[0].trim().toLowerCase();
   if (!PAGES[page] || BOT_RE.test(request.headers.get("user-agent") || "")) return done();
+  // Olly testing his own links (2026-11-10): his addresses come from opening the Hub (lib/owner.js)
+  if (await isOwner(env, request)) return done();
   // Day in South Africa time (Olly's time zone), so months line up with his.
   const day = new Date(Date.now() + 2 * 3600 * 1000).toISOString().slice(0, 10);
   const key = "pv:" + page + ":" + day;

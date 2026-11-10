@@ -1,3 +1,4 @@
+import { rememberOwner } from "../../lib/owner.js";
 // Cloudflare Pages Function — GET/PUT the single shared Business Hub record.
 //
 // Route: /api/state   (this file's path under functions/ is the route)
@@ -37,8 +38,10 @@ async function readRecord(env) {
   }
 }
 
-export async function onRequestGet({ env }) {
+export async function onRequestGet({ env, request, waitUntil }) {
   if (!env.HUB_KV) return json({ error: "HUB_KV binding missing" }, 500);
+  // remember Olly's internet address so his own funnel visits aren't counted (lib/owner.js, 2026-11-10)
+  waitUntil(rememberOwner(env, request).catch(function () {}));
   return json(await readRecord(env));
 }
 

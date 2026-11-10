@@ -44,10 +44,19 @@
   .emghl{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #2e2340; }
   .emghl .emghlbtn{ font-weight:600; }
   .emghlst{ flex-basis:100%; font-size:12.5px; opacity:.8; }
+  .emlinklist{ font-size:13px; margin:2px 0 8px; line-height:1.6; word-break:break-all; }
+  .emlinklist a{ color:#a78bfa; }
+  .emlinkpick{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:4px 0 8px; padding:10px; border:1px solid #2e2340; border-radius:8px; }
+  .emlinkpick > .hint{ flex-basis:100%; }
+  .emlinkpick .emrow{ flex-basis:100%; margin:0; }
+  .emlinkother{ flex:1 1 200px; min-width:0; }
   .ytimgmaker{ margin:8px 0 4px; border:1px solid #2e2340; border-radius:12px; padding:8px 12px; }
   .ytimgmaker summary{ cursor:pointer; font-weight:600; }
   .ytimgmaker .ytimgline{ width:100%; box-sizing:border-box; margin:10px 0 6px; font:inherit; font-size:16px; }
   .ytimgmaker .copybtn.active{ outline:2px solid #d946ef; }
+  .ytimgstrip{ display:flex; gap:6px; overflow-x:auto; padding:4px 0 8px; }
+  .ytimgstrip img{ flex:0 0 auto; width:64px; height:64px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid transparent; opacity:.8; }
+  .ytimgstrip img.on{ border-color:#d946ef; opacity:1; }
   .ytimgprev{ display:block; width:100%; max-width:380px; border-radius:10px; margin:8px 0; }
   .lmcon a{ flex:none; padding:7px 10px; border-radius:8px; background:#25a35a; color:#fff; font-size:13px; font-weight:600; text-decoration:none; }
   .lmcon a[href^="mailto"]{ background:#7b4fd6; }
@@ -5422,7 +5431,24 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmEsc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
   // Pipeline (2026-11-01): each applicant has one stage. Old records: archived = Not a fit; GHL's loomSent / joined still count.
   // Flags in state.looms[id]: waSent, emSent, waReply, emReply, product ("monthly" | "annual").
-  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["loom", "VSL sent"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
+  // Stages v3 (Olly, 2026-11-10): plan + video steps, and "Asked questions / next steps" after the plan is read.
+  // Plan sent, Plan read, Video watched and Clicked Join also move on their own from the tracking (lmPV / lmVV).
+  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"], ["asked", "Asked questions / next steps"],
+    ["loom", "Video sent"], ["watched", "Video watched"], ["joinclick", "Clicked Join"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
+  var LM_ORDER = ["new", "contacted", "replied", "plan_sent", "plan_read", "asked", "loom", "watched", "joinclick", "joined"];
+  // each step = ticked on the card, or seen by the tracking; an explicit false (unticked or dragged back) beats the tracking
+  function lmFlags(a){
+    var s = lmStore(a.id), pv = (typeof lmPV === "object" && lmPV[a.id]) || {}, vv = (typeof lmVV === "object" && lmVV[a.id]) || {};
+    function f(k, auto){ return s[k] === false ? false : !!(s[k] || auto); }
+    return {
+      planSent: f("planSent", pv.sent),
+      planRead: f("planRead", pv.far && pv.far >= Math.ceil((pv.pages || 13) * 0.6)),
+      asked: !!s.asked,
+      loom: s.loom === false ? false : !!(s.loom || a.loomSent),
+      watched: f("watched", (vv.pct || 0) >= 50 || vv.done),
+      joinClick: f("joinClick", (vv.join || 0) > 0)
+    };
+  }
   function lmById(id){ return (lmData || []).filter(function(x){ return x.id === id; })[0]; }
   // The stage is the furthest step ticked on the card (2026-11-01 v2), so unticking a step moves them back.
   // base = true ignores "Gone quiet", to show how far they got before they went silent.
@@ -5432,7 +5458,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (s.archived) return "nofit";
     if (s.product || (a.joined && s.product !== "")) return "joined";
     if (s.quiet && !base) return "quiet";
-    if (s.loom || (a.loomSent && s.loom !== false)) return "loom";
+    var F = lmFlags(a);
+    if (F.joinClick) return "joinclick";
+    if (F.watched) return "watched";
+    if (F.loom) return "loom";
+    if (F.asked) return "asked";
+    if (F.planRead) return "plan_read";
+    if (F.planSent) return "plan_sent";
     if (s.waReply || s.emReply) return "replied";
     if (s.waSent || s.emSent) return "contacted";
     return "new";
@@ -5446,14 +5478,18 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Checklist on each card: tap a step to tick it, tap again to untick. Pink = done.
   function lmStageBox(a){
     var s = lmStore(a.id), st = lmStage(a);
-    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, loom:st === "loom" || st === "joined" && (s.loom || a.loomSent), monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived, quiet:!!s.quiet && !s.archived };
+    var F = lmFlags(a);
+    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, planSent:F.planSent, planRead:F.planRead, asked:F.asked, loom:F.loom, watched:F.watched, joinClick:F.joinClick, monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived, quiet:!!s.quiet && !s.archived };
     function btn(k, label){ return '<button type="button" data-act="' + k + '" aria-pressed="' + !!on[k] + '">' + label + "</button>"; }
     function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
     return '<div class="lmstg">' +
       row("1", "I messaged them", btn("waSent", lmUsesIm(a) ? "iMessage" : "WhatsApp") + btn("emSent", "Email")) +
       row("2", "They replied", btn("waReply", lmUsesIm(a) ? "iMessage" : "WhatsApp") + btn("emReply", "Email")) +
-      row("3", "VSL", btn("loom", "VSL sent")) +
-      row("4", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
+      row("3", "Their plan", btn("planSent", "Plan sent") + btn("planRead", "Plan read")) +
+      row("4", "After the plan", btn("asked", "Asked questions / next steps")) +
+      row("5", "Their video", btn("loom", "Video sent") + btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
+      row("6", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
+      '<small style="display:block;opacity:.65;margin:2px 0 6px">Plan sent, Plan read, Watched and Clicked Join tick themselves from the tracking. Untick one to override it.</small>' +
       '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("nofit", "Not a fit") + "</div>" +
       (s.archived ? '<div class="lmstep">' + (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL ✓</span>'
         : '<button type="button" data-act="ghlremove" style="border-color:#f87171;color:#f87171">Remove from GHL</button><small style="flex-basis:100%;opacity:.7">Takes them off every list, turns on Do Not Disturb and leaves them out of all stats.</small>') + "</div>" : "") + "</div>";
@@ -5477,10 +5513,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Mark this device as Olly's, so opening an applicant's plan link here never counts as their open (2026-11-08)
   try { localStorage.setItem("hubOwner", "1"); } catch(e){}
   var lmPV = {};
-  function lmPlanViews(){ fetch("/api/planviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmPV = d.views || {}; renderLooms(); } }).catch(function(){}); }
+  function lmPlanViews(){ fetch("/api/planviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmPV = d.views || {}; lmPH = {}; renderLooms(); } }).catch(function(){}); }
   // Sales video (VSL) views (2026-11-10): /api/vslviews -> { contactId: { opens, first, last, pct, far, done, join, joinAt, dev } }
   // pct = share of the video actually played (skips don't count), far = furthest point reached. Link = /p/<plan code>/video.
-  var lmVV = {}, lmVB = {};
+  var lmVV = {}, lmVB = {}, lmPH = {};
+  window.lmPHOpen = window.lmPHOpen || {}; var lmPHOpen = window.lmPHOpen;
+  // the plan's pages in order (public/plan-view.html), for the page-by-page heat map
+  var LM_PLAN_PAGES = ["Your plan of action", "Intellectualization", "Emotional resonance", "The process", "You'll get access to the program",
+    "The Attraction Formula trainings", "How to do the meditation", "Practising the meditation", "Anchoring your emotional resonance",
+    "As your confidence builds", "Help with the early steps", "With you all of the way", "Your plan"];
+  function lmDur(s){ s = Math.round(s || 0); return s < 60 ? s + "s" : Math.floor(s / 60) + " min" + (s % 60 >= 30 ? " " + (s % 60) + "s" : ""); }
   function lmVslViews(){ fetch("/api/vslviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmVV = d.views || {}; lmVB = {}; renderLooms(); } }).catch(function(){}); }
   function lmVslTag(id){
     var v = lmVV[id]; if (!v || !v.opens) return "";
@@ -5511,9 +5553,36 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmPlanLine(id){
     var v = lmPV[id]; if (!v || !v.sent) return "";
     var bits = ["Link made " + lmWhen(v.sent)];
-    bits.push(v.opens ? "Opened " + v.opens + "×, last " + lmWhen(v.last) : "Not opened yet");
+    bits.push(v.opens ? "Opened " + v.opens + "×, last " + lmWhen(v.last) + (v.dev ? " on " + v.dev : "") : "Not opened yet");
     if (v.pdf) bits.push("PDF downloaded");
-    return '<small style="flex-basis:100%;opacity:.85">' + lmEsc(bits.join(" · ")) + "</small>";
+    // how far they read + the heat map (Olly, 2026-11-10)
+    var bar = "";
+    if (v.far){
+      bits.push("Read to page " + v.far + " of " + (v.pages || "?") + (v.read ? " · " + lmDur(v.read) + " reading" : ""));
+      if (lmPH[id] === undefined){ lmPH[id] = null; fetch("/api/planviews?id=" + encodeURIComponent(id), { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ lmPH[id] = (d && d.secs) || []; renderLooms(); }).catch(function(){}); }
+      else if (lmPH[id] && lmPH[id].length){
+        var mx = Math.max.apply(null, lmPH[id].concat([1]));
+        // tap the bar for page by page (Olly, 2026-11-10: "make the heat map ... expandable"); stays open across refreshes
+        var names = lmPH[id].length === LM_PLAN_PAGES.length ? LM_PLAN_PAGES : null;
+        function shade(s){ var k = s <= 0 ? 0 : 0.25 + 0.75 * Math.min(1, s / mx); return k ? "rgba(217,70,239," + k.toFixed(2) + ")" : "#3f3a48"; }
+        bar = '<details style="flex-basis:100%;width:100%" ' + (lmPHOpen[id] ? "open " : "") + 'ontoggle="lmPHOpen[\'' + id + '\']=this.open" onclick="event.stopPropagation()">'
+          + '<summary style="cursor:pointer;list-style:none"><span style="display:flex;gap:2px;height:16px;margin-top:4px">' + lmPH[id].map(function(s, i){
+            return '<i title="Page ' + (i + 1) + ": " + lmDur(s) + '" style="flex:1;border-radius:3px;background:' + shade(s) + '"></i>';
+          }).join("") + "</span>"
+          + '<small style="display:block;opacity:.7;margin-top:2px">Page 1 → ' + lmPH[id].length + '. Brighter = longer on that page, grey = not read. <u>Tap for page by page</u></small></summary>'
+          + '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;margin:8px 0 2px;font-size:13px">'
+          + lmPH[id].map(function(s, i){
+            var w = s > 0 ? Math.max(4, Math.round(s / mx * 100)) : 0;
+            return '<span style="opacity:.6;font-variant-numeric:tabular-nums">' + (i + 1) + "</span>"
+              + '<span style="min-width:0"><span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + lmEsc(names ? names[i] : "Page " + (i + 1)) + "</span>"
+              + '<span style="display:block;height:6px;border-radius:3px;background:#3f3a48;margin-top:2px"><span style="display:block;height:6px;border-radius:3px;width:' + w + "%;background:" + shade(s) + '"></span></span></span>'
+              + '<span style="font-variant-numeric:tabular-nums;opacity:' + (s > 0 ? ".9" : ".5") + '">' + (s > 0 ? lmDur(s) : "not read") + "</span>";
+          }).join("") + "</div>"
+          + (v.code ? '<a href="/p/' + v.code + "?preview=1&heat=" + encodeURIComponent(id) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-block;margin:6px 0 2px;background:linear-gradient(135deg,#d946ef,#6b21a8)">🔥 See it on their plan</a>' : "")
+          + "</details>";
+      }
+    } else if (v.opens) bits.push("Reading not tracked yet (opened before 10 Nov tracking)");
+    return '<small style="flex-basis:100%;opacity:.85">' + lmEsc(bits.join(" · ")) + "</small>" + bar;
   }
   function lmBranches(a){
     var used = {};
@@ -5566,51 +5635,65 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmContact(a){
     var h = "", ph = (a.phone || "").replace(/[^\d]/g, ""), im = lmUsesIm(a);
     if (ph) h += '<div class="lmcon lmapptog"><span>Text them on</span><button type="button" data-app="wa" aria-pressed="' + !im + '">WhatsApp</button><button type="button" data-app="im" aria-pressed="' + im + '">iMessage</button></div>';
-    if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + '</button><a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", it's Olly Henson here. Your application for the Heart Attractor Program was successful.\n\nPlease can you reply 'YES' to this message and I'll send you the details about how the program works and what's included.\n\nThank you,\nOlly") + '" target="_blank" rel="noopener" data-k="waSent" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a></div>';
-    if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + '</button><a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your application was successful") + '&body=' + encodeURIComponent("Hi " + (a.firstName || "there") + ",\r\n\r\nI’m happy to say that your application for The Heart Attractor Program was successful.\r\n\r\nPlease could you reply to my WhatsApp and I’ll send you more details about how the program works and what’s included.\r\n\r\nThank you,\r\n\r\nOlly") + '" data-k="emSent" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a></div>';
-    // Intro text + voice note plan + emails (Olly, 2026-11-06, from Frankie Fihn's "pre-sell the plan"). Replaces the
-    // price check and application pending messages: no price before the video. Flow + wording: funnel/applicant-sales-process.html
+    // Applicant flow v3 (Olly, 2026-11-10, his wording): WhatsApp / iMessage ALWAYS goes first, then the email.
+    // 1 first message + voice note (confirms the application, asks if they'd like their plan) + email.
+    // 2 once they reply: plan of action link + voice note.  3 their own video page + voice note ("any questions, just
+    // reply here", from Frankie's saved message). Then the one follow-up idea (only if they watched) and the join link.
+    // Replaced: "application successful" texts, the old voice note plan, email-only plan, the YouTube sales video.
     function lmLow(v){ v = String(v || "").trim(); return /^I\b/.test(v) ? v : v.charAt(0).toLowerCase() + v.slice(1); }
-    var nm = a.firstName || "there";
+    var nm = a.firstName || "there", app = im ? "iMessage" : "WhatsApp";
     var wants = lmLow(lmAns(a, /^HA Relationship Wanted/i)), howLong = lmLow(lmAns(a, /^HA How Long Looking/i));
     var feel = lmAns(a, /^FF Resonance/i); feel = feel && feel.trim().split(/\s+/).length <= 4 ? lmLow(feel) : "";
     var seen = wants && howLong ? "I can see you want " + wants + ", and you've been looking for " + howLong + "."
       : wants ? "I can see you want " + wants + "." : howLong ? "I can see you've been looking for " + howLong + "." : "";
-    var PLAN = "It comes down to three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.";
-    var intro = "Hey " + nm + ", it's Olly. Just got your application, thanks for filling it in.\n\nGive me a few minutes. I'm recording you a quick voice note with a plan of how I'd help you with this.";
-    var vnote = ["Hey " + nm + ", it's Olly. Thanks for applying, I've read through everything.", seen,
-      "The way I help with this is three things: getting really clear on the person you want, working out how you'd feel with them, then practicing that feeling every day until it's normal for you. That's what changes who you notice and who you're drawn to.",
-      "If you want me to send you the details of the program and how we'd do this together, just let me know and I'll send them over."].filter(Boolean).join("\n\n");
-    var emWa = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nI've sent you a message on " + (im ? "text" : "WhatsApp") + " with a plan of how I'd help you with this. Have a listen and let me know what you think.\n\nOlly";
-    var emOnly = ["Hey " + nm + ",", "Just got your application, thanks for filling it in.", seen, "Here's how I'd help you with this. " + PLAN,
-      "If you want me to send you the details of the program and how we'd do this together, just reply to this email and I'll send them over.", "Olly"].filter(Boolean).join("\n\n");
     function lmMail(subj, body, k){ return a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body.replace(/\n/g, "\r\n")) + '"' + (k ? ' data-k="' + k + '" data-id="' + a.id + '"' : "") + ' onclick="event.stopPropagation()">Email</a>' : ""; }
     function lmWa(body, k){ return ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(body) + '" target="_blank" rel="noopener"' + (k ? ' data-k="' + k + '" data-id="' + a.id + '"' : "") + ' onclick="event.stopPropagation()">WhatsApp</a>' : ""; }
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(intro) + '">👋 1. Intro text</button>' + lmWa(intro, "waSent") + "</div>";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(vnote) + '">🎙️ 2. Voice note plan (copy)</button>'
-      + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it while recording</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(vnote) + "</p></details></div>";
+    function lmHead(t){ return '<div style="flex-basis:100%;width:100%;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin:12px 0 2px">' + t + "</div>"; }
+    function lmVn(label, text){ return '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(text) + '">' + label + '</button>'
+      + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it while recording</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(text) + "</p></details></div>"; }
+    function lmTxt(label, text, links){ return '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(text) + '">' + label + "</button>" + links
+      + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(text) + "</p></details></div>"; }
+    if (ph || a.email) h += '<div class="lmcon">' + (ph ? '<button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + "</button>" : "")
+      + (a.email ? '<button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + "</button>" : "") + "</div>";
+
+    // 1. First contact
+    var first = "Hey " + nm + ", it's Olly Henson.\n\nJust got your application for The Heart Attractor Program, thanks for filling it in.\n\nGive me a few minutes, I'm recording you a quick voice note with a plan of how I'd help you with this.";
+    var vn1 = ["Hey " + nm + ", it's Olly. I've been through your application and it all looks really good.", seen,
+      "I'd love to put together a plan of action for you, of exactly how we'd help you meet this person.", "Would you like me to send it through?"].filter(Boolean).join("\n\n");
+    var mail1 = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nAll looks really good.\n\nI've sent you a message on " + app + " with the next steps.\n\nChat soon,\n\nOlly";
+    var mailOnly = ["Hey " + nm + ",", "Just got your application, thanks for filling it in.", "All looks really good." + (seen ? " " + seen : ""),
+      "I'd love to put together a plan of action for you, of exactly how we'd help you meet this person. Would you like me to send it through? Just reply to this email.", "Chat soon,", "Olly"].join("\n\n");
+    h += lmHead("1. When they apply");
+    if (ph){
+      h += lmTxt("👋 1a. First message", first, lmWa(first, "waSent"));
+      h += lmVn("🎙️ 1b. Voice note: their plan?", vn1);
+      if (a.email) h += lmTxt("✉️ 1c. Email (after the " + app + ")", mail1, lmMail("Got your application", mail1, "emSent"));
+    } else if (a.email) h += lmTxt("✉️ 1. Email (no phone number)", mailOnly, lmMail("Got your application", mailOnly, "emSent"));
+
     // Personal email Claude drafted for this applicant (2026-11-07): stored in KV as state.looms[id].draftEmail = { subject, body }, never in this file (public repo)
     var dr = lmStore(a.id).draftEmail;
     if (dr && dr.body) h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(dr.body) + '">✍️ Personal email for ' + lmEsc(a.firstName || "them") + ' (copy)</button>' + lmMail(dr.subject || "Got your application", dr.body, "emSent")
       + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it: ' + lmEsc(dr.subject || "") + '</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(dr.body) + "</p></details></div>";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(emWa) + '">✉️ 3. Email: check ' + (im ? "your messages" : "WhatsApp") + '</button>' + lmMail("Got your application", emWa, "emSent") + "</div>";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(emOnly) + '">✉️ Email only (plan written out)</button>' + lmMail("Got your application", emOnly, "emSent") + "</div>";
-    // Plan of action (Olly, 2026-11-08): sent BEFORE the sales video (Frankie: pre-sell the plan, video closes once they agree). their personalised plan, filled from GHL on /plan.html; send it as images on WhatsApp or a PDF.
-    // Page is built from funnel/plan-of-action.html by tools/build_hub_plan.py. Edits are saved in KV under plan:<id>.
-    h += '<div class="lmcon lmmsg"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 Plan of action</a>' + lmPlanLine(a.id) + '</div>';
+
+    // 2. Once they reply: the plan of action (its own page makes the link + message), then a voice note
+    var vn2 = "Hey " + nm + ", here's the plan of action I've put together for you, that we'll use to help you meet this special person.\n\nLet me know your thoughts once you've checked it out.";
+    h += lmHead("2. Once they reply: their plan");
+    h += '<div class="lmcon lmmsg" style="flex-wrap:wrap"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 2a. Plan of action (make + send their link)</a>' + lmPlanLine(a.id) + '</div>';
+    h += lmVn("🎙️ 2b. Voice note after the plan", vn2);
+
+    // 3. Once they've checked the plan (ideally replied): their own video page + a voice note
+    h += lmHead("3. After they've seen the plan: their video");
+    var pv0 = lmPV[a.id], vurl = pv0 && pv0.code ? "https://hub.ollyhenson.com/p/" + pv0.code + "/video" : "";
+    if (vurl){
+      var vtxt = "Hey " + nm + ", here's the video I've made for you.\n\n" + vurl + "\n\nIt goes through the program, the steps, the investment and how to get started. Watch it in your own time, and if you have any questions, just reply here.";
+      h += lmTxt("🎬 3a. Send their video", vtxt, lmWa(vtxt, "loom") + lmMail(nm + ", here's your video", vtxt + "\n\nOlly", "loom"));
+    }
+    var vn3 = "Hey " + nm + ", I've just sent you a video. It goes through the program, the steps, the investment and how to get started.\n\nHave a watch in your own time, and if you have any questions, just reply here.";
+    h += lmVn("🎙️ 3b. Voice note with the video", vn3);
     h += lmVslRow(a);
-    // Email ideas from this applicant (Olly, 2026-11-09: "inspiration for the daily emails that go to engaged people").
-    // Copies their answers with their name, contact details, place and job taken out; paste into the content generator's
-    // Email tab ("An applicant's words"). The generator uses the feelings and patterns, never the story or details.
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for email ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator: Email tab, “An applicant’s words”.</small></div>';
-    // Sales video (2026-11-05): one master video (unlisted YouTube) for everyone who says the price is within reach.
-    // Sending it marks them Loom sent. Script + map: funnel/sales-video-script.md, funnel/sales-video-map.html.
-    var VIDEO = "https://youtu.be/PhcbPYPfUU0";
-    var vid = "Hey " + (a.firstName || "there") + ", great, thanks for getting back to me.\n\nHere's a video going through how the program works, what to expect and how to start.\n\n" + VIDEO + "\n\nIf you're ready to start after watching, just reply here and I'll send you the link.\n\nAnd if you have any questions, just let me know.";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(vid) + '">🎥 Sales video</button>'
-      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(vid) + '" target="_blank" rel="noopener" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
-      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent((a.firstName ? a.firstName + ", here" : "Here") + "'s the video") + '&body=' + encodeURIComponent((vid + "\n\nOlly").replace(/\n/g, "\r\n")) + '" data-k="loom" data-id="' + a.id + '" onclick="event.stopPropagation()">Email</a>' : "")
-      + "</div>";
+    // Email ideas from this applicant (Olly, 2026-11-09): their answers with personal details taken out, for the content generator.
+    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for content ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator, Email or Reels tab, “An applicant’s words”: emails use their feelings, Reel hooks are built from their pain and the outcomes they want.</small></div>';
+    h += lmHead("4. After the video");
     // Follow-up (2026-11-06, Frankie: "go deeper, never chase"): ONE idea message, only if they watched the video.
     var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : "your application") + ". If I were you, "
       + (feel ? "the feeling I'd start practicing first is " + feel + ", because that's the one that" : "I'd start by practicing how you'd feel with them every day, because that's what")
@@ -5643,7 +5726,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmProc(){
     return '<details class="audbox" style="margin:0 0 12px;padding:12px 16px"' + (window.lmProcOpen ? " open" : "") + ' ontoggle="window.lmProcOpen=this.open"><summary style="cursor:pointer;font-weight:700">The sales process, step by step</summary>'
       + '<p style="opacity:.75;font-size:13px;margin:8px 0 0">Each applicant’s card has these with their name and answers already filled in.</p>'
-      + '<ol style="margin:12px 0 4px;padding:0"><li style="margin:0 0 14px;list-style:none"><b>1. Application comes in</b><br><span style="opacity:.8">Your phone gets a notification. Open their card and rate them Good, Okay or Not good within 24 hours.</span></li><li style="margin:0 0 14px;list-style:none"><b>2. 👋 Intro text on WhatsApp</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], it’s Olly. Just got your application, thanks for filling it in.<br><br>Here’s how I think I could help you with this 👇</div></li><li style="margin:0 0 14px;list-style:none"><b>3. 🎙️ Voice note: their plan (30 to 45 seconds, no price yet)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], it’s Olly. Thanks for applying, I’ve read through everything.<br><br>I can see you want [what they want], and you’ve been looking for [how long].<br><br>The way I help with this is three things: getting really clear on the person you want, working out how you’d feel with them, then practicing that feeling every day until it’s normal for you. That’s what changes who you notice and who you’re drawn to.<br><br>If you want me to send you the details of the program and how we’d do this together, just let me know and I’ll send them over.</div></li><li style="margin:0 0 14px;list-style:none"><b>4. ✉️ Email at the same time · subject: Got your application</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name],<br><br>Just got your application, thanks for filling it in.<br><br>I’ve sent you a message on WhatsApp with a plan of how I’d help you with this. Have a listen and let me know what you think.<br><br>Olly</div></li><li style="margin:0 0 14px;list-style:none"><b>4b. ✉️ Email only (if they don’t use WhatsApp) · subject: Got your application</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name],<br><br>Just got your application, thanks for filling it in.<br><br>I can see you want [what they want], and you’ve been looking for [how long].<br><br>Here’s how I’d help you with this. It comes down to three things: getting really clear on the person you want, working out how you’d feel with them, then practicing that feeling every day until it’s normal for you. That’s what changes who you notice and who you’re drawn to.<br><br>If you want me to send you the details of the program and how we’d do this together, just reply to this email and I’ll send them over.<br><br>Olly</div></li><li style="margin:0 0 14px;list-style:none"><b>5. 📄 They want the details: send their plan of action</b><br><span style="opacity:.8">Open their card, tap 📄 Plan of action, check it, tap Make their link, then Send on WhatsApp. Ask what they think of the plan and handle any doubts here, before the price. The video only goes once they agree with the plan.</span></li><li style="margin:0 0 14px;list-style:none"><b>6. 🎥 They agree with the plan: send the sales video (tap VSL sent)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], great, thanks for getting back to me.<br><br>Here’s a video going through how the program works, what to expect and how to start.<br><br>https://youtu.be/PhcbPYPfUU0<br><br>If you’re ready to start after watching, just reply here and I’ll send you the link.<br><br>And if you have any questions, just let me know.</div></li><li style="margin:0 0 14px;list-style:none"><b>7. 💡 One follow-up, only if they watched (if not, send nothing)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], I was thinking about what you wrote, that you want [what they want]. If I were you, the feeling I’d start practicing first is [feeling from the Feeling Finder], because that’s the one that changes who you notice and who you’re drawn to.<br><br>Excited to help you get there.</div></li><li style="margin:0 0 14px;list-style:none"><b>8. 🔗 They say ready: send the checkout link</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], great - here’s the link to join: https://ollyhenson.com/join</div></li></ol>'
+      + '<ol style="margin:12px 0 4px;padding:0"><li style="margin:0 0 14px;list-style:none"><b>1. Application comes in</b><br><span style="opacity:.8">Your phone gets a notification. Open their card and rate them Good, Okay or Not good within 24 hours.</span></li><li style="margin:0 0 14px;list-style:none"><b>2. 👋 First message on WhatsApp or iMessage (always first)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], it’s Olly Henson.<br><br>Just got your application for The Heart Attractor Program, thanks for filling it in.<br><br>Give me a few minutes, I’m recording you a quick voice note with a plan of how I’d help you with this.</div></li><li style="margin:0 0 14px;list-style:none"><b>3. 🎙️ Voice note</b><br><span style="opacity:.8">Confirm their application looks good and ask if they’d like you to send their plan of action through. The script is on their card.</span></li><li style="margin:0 0 14px;list-style:none"><b>4. ✉️ Email, just after</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name],<br><br>Just got your application, thanks for filling it in.<br><br>All looks really good.<br><br>I’ve sent you a message on WhatsApp with the next steps.<br><br>Chat soon,<br><br>Olly</div></li><li style="margin:0 0 14px;list-style:none"><b>5. Once they reply: 📄 their plan of action + 🎙️ voice note</b><br><span style="opacity:.8">Make their plan and send the link from their card, then a voice note: here’s the plan I’ve put together to help you meet this special person, let me know your thoughts once you’ve checked it out. Their card shows when they open it and how far they read.</span></li><li style="margin:0 0 14px;list-style:none"><b>6. Answer their questions one by one</b><br><span style="opacity:.8">Wait for them to check the plan and ideally reply. When they ask how to get started or what the price is, it’s time for the video.</span></li><li style="margin:0 0 14px;list-style:none"><b>7. 🎬 Their video + 🎙️ voice note</b><br><span style="opacity:.8">Send their video link from their card, with a voice note: it goes through the program, the steps, the investment and how to get started; any questions, just reply here. Their card shows how much they watched and if they clicked Join.</span></li><li style="margin:0 0 14px;list-style:none"><b>8. 💡 One follow-up idea, only if they watched</b><br><span style="opacity:.8">Never chase. If they haven’t watched or replied, let them come back.</span></li><li style="margin:0 0 14px;list-style:none"><b>9. 🔗 Join link</b><br><span style="opacity:.8">When they say yes.</span></li></ol>'
       + '<a href="https://claude.ai/artifact/KwpZsKFecKog5AEyzbn3GS" target="_blank" rel="noopener" style="font-size:13px">Full process with Frankie’s notes ↗</a></details>';
   }
   function lmTop(){
@@ -5730,7 +5813,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       })
       .catch(function(){ btn.disabled = false; btn.textContent = "Remove from GHL"; window.alert("Couldn't reach the Hub. Reload and try again."); });
   }
-  var LM_COLS = [["new", "New applications"], ["contacted", "Messaged"], ["replied", "Replied"], ["loom", "VSL sent"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
+  var LM_COLS = [["new", "New applications"], ["contacted", "Messaged"], ["replied", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"], ["asked", "Asked questions / next steps"],
+    ["loom", "Video sent"], ["watched", "Video watched"], ["joinclick", "Clicked Join"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
   var lmOpen = null, lmView = "info", lmDrag = null;
   function lmMoneyFmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
   // Moving a card sets the checklist flags so lmStage() lands on that column (explicit false overrides GHL's loomSent / joined).
@@ -5743,9 +5827,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var sent = s.waSent || s.emSent, rep = s.waReply || s.emReply;
     s.recorded = false;
     if (st === "new"){ s.waSent = s.emSent = s.waReply = s.emReply = false; }
+    var i = LM_ORDER.indexOf(st);
     if (st === "contacted"){ if (!sent) s.waSent = true; s.waReply = s.emReply = false; }
-    if (st === "replied" || st === "loom" || st === "joined"){ if (!sent) s.waSent = true; if (!rep) s.waReply = true; }
-    s.loom = st === "loom" || st === "joined";
+    if (i >= 2){ if (!sent) s.waSent = true; if (!rep) s.waReply = true; }
+    // later steps: true up to this column, explicit false after it (so the tracking doesn't pull them forward again)
+    s.planSent = i >= 3; s.planRead = i >= 4; s.asked = i >= 5; s.loom = i >= 6; s.watched = i >= 7; s.joinClick = i >= 8;
     s.product = st === "joined" ? (s.product || "monthly") : "";
   }
   function lmMoney(){
@@ -5761,7 +5847,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL</span>' : "") +
       (lmPV[a.id] && lmPV[a.id].sent ? '<span class="lmtag" style="margin:0;' + (lmPV[a.id].opens ? 'background:rgba(74,222,128,.18);color:#4ade80">📄 Plan opened' + (lmPV[a.id].opens > 1 ? " " + lmPV[a.id].opens + "×" : "") : 'background:rgba(251,191,36,.16);color:#fbbf24">📄 Plan sent, not opened') + "</span>" : "") +
       lmVslTag(a.id) +
-      (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the price check", replied:"After replying", loom:"After the VSL" }[lmStage(a, true)] || "") + "</span>" : "");
+      (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the first message", replied:"After replying", plan_sent:"After the plan was sent", plan_read:"After reading the plan", asked:"After asking questions", loom:"After the video was sent", watched:"After watching the video", joinclick:"After clicking Join" }[lmStage(a, true)] || "") + "</span>" : "");
     return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, place].filter(Boolean).join(" · ")) + "</span>" +
       (tags ? '<span class="lmbcrow">' + tags + "</span>" : "") + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";
   }
@@ -5796,13 +5882,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var counts = {}; LM_STAGES.forEach(function(x){ counts[x[0]] = 0; });
     lmData.forEach(function(a){ counts[lmStage(a)]++; });
     var live = lmData.filter(function(a){ return !lmRemoved(a); });   // stats leave removed applicants out
-    var mo = lmMoney(), vsl = live.filter(function(a){ var b = lmStage(a, true); return b === "loom" || b === "joined"; }).length;
+    var mo = lmMoney(), vsl = live.filter(function(a){ var b = lmStage(a, true); return b === "loom" || b === "watched" || b === "joinclick" || b === "joined"; }).length;
     // money + pipeline at a glance
     var K = [
       ["Applications", live.length, counts["new"] + " new"],
-      ["In progress", counts.contacted + counts.replied + counts.loom, counts.loom + " watching the VSL"],
+      ["In progress", counts.contacted + counts.replied + counts.plan_sent + counts.plan_read + counts.asked + counts.loom + counts.watched + counts.joinclick,
+        (counts.plan_sent + counts.plan_read + counts.asked) + " on their plan · " + (counts.loom + counts.watched + counts.joinclick) + " on their video"],
       ["Joined", counts.joined, mo.m + " monthly · " + mo.y + " annual"],
-      ["Close rate", vsl ? Math.round(counts.joined / vsl * 100) + "%" : "—", "of VSLs sent"],
+      ["Close rate", vsl ? Math.round(counts.joined / vsl * 100) + "%" : "—", "of videos sent"],
       ["Cash collected", lmMoneyFmt(mo.cash), "all time, first payments"],
       ["MRR", lmMoneyFmt(mo.mrr), "annual counted as $208/mo"]
     ];
@@ -5856,7 +5943,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         if (k === "monthly" || k === "annual") s4.product = s4.product === k ? "" : k;
         else if (k === "nofit"){ s4.archived = !s4.archived; if (s4.archived) s4.quiet = false; }
         else if (k === "quiet"){ s4.quiet = !s4.quiet; if (s4.quiet) s4.archived = false; }
-        else if (k === "loom") s4.loom = !(b.getAttribute("aria-pressed") === "true");
+        else if (k === "loom" || k === "planSent" || k === "planRead" || k === "watched" || k === "joinClick") s4[k] = !(b.getAttribute("aria-pressed") === "true"); // unticking an automatic step = explicit false
         else s4[k] = !s4[k];
         markDirty(); renderLooms();
       }); });
@@ -6675,7 +6762,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function emailHtml(text){
     var esc = function(s){ return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
     return String(text).replace(/\r/g, "").trim().split(/\n\s*\n/).map(function(par){
-      return '<p style="' + EMAIL_STYLE + 'margin:0 0 18px;">' + esc(par.trim()).replace(/\n/g, "<br>") + "</p>";
+      // [word](url) becomes a hyperlink, like Send to GHL does (2026-11-10)
+      return '<p style="' + EMAIL_STYLE + 'margin:0 0 18px;">' + esc(par.trim()).replace(/\n/g, "<br>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)"]+)\)/g, '<a href="$2" style="color:#0b57d0;">$1</a>') + "</p>";
     }).join("");
   }
   function copyEmailRich(text, btn){
@@ -6712,13 +6800,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var t = String(body || "").replace(/\r/g, "");
     t = t.replace(/^\s*(hey|hi|hello|so)?\s*(\{\{\s*contact\.first_name\s*\}\}|FIRSTNAME)\s*[,.!]?[ \t]*\n+/i, "");
     t = t.replace(/[ \t]*,?[ \t]*(\{\{\s*contact\.first_name\s*\}\}|FIRSTNAME)/g, "");
+    t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, "$1 ($2)"); // YouTube posts can't hyperlink a word
     return t.replace(/\n{3,}/g, "\n\n").trim();
   }
   function emYtSync(){
     var t = todayISO(), changed = false, yts = ytList();
     emList().forEach(function(e){
       if (e.pitch || !e.date || e.date < t) return;
-      var post = emToYt(e.body), title = String(e.subject || "").trim();
+      var post = emToYt(emExpand(e)), title = String(e.subject || "").trim();
       if (!post && (!title || title === "Untitled email")) return;
       if (!e.eid){ e.eid = "e" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); changed = true; }
       var p = yts.filter(function(x){ return x.fromEmail === e.eid; })[0];
@@ -6875,8 +6964,77 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       pv.addEventListener("input", function(){ e.preview = pv.value; markDirty(); });
       item.appendChild(pv);
       var body = document.createElement("textarea"); body.className = "embody"; body.value = e.body || ""; body.placeholder = "Email body (paste it here, or send it from the content generator)";
-      body.addEventListener("input", function(){ e.body = body.value; markDirty(); emYtSoon(); });
+      body.addEventListener("input", function(){ e.body = body.value; markDirty(); emYtSoon(); emLinksDraw(); });
       item.appendChild(body);
+      // Links (Olly, 2026-11-10: "I can't add links" when sending to GHL). Select a word, tap Add link, paste the address:
+      // it becomes [word](https://...), which Send to GHL and Copy email turn into a real hyperlink. Nothing selected =
+      // the address goes in on its own (a direct link). The list under the box shows every link in the email.
+      var lrow = document.createElement("div"); lrow.className = "emrow emlinks";
+      var lb2 = document.createElement("button"); lb2.type = "button"; lb2.className = "copybtn"; lb2.textContent = "🔗 Add link";
+      lb2.title = "Select a word in the email first to make it the link. Nothing selected = the address goes in as a direct link.";
+      var lst = document.createElement("div"); lst.className = "emlinklist";
+      lb2.addEventListener("mousedown", function(ev){ ev.preventDefault(); }); // keep the selection in the box
+      // Offer links (Olly, 2026-11-10): tracked back to this email. Same UTMs as the content generator's email links
+      // (utm_source=email, utm_medium=daily_email, utm_content = subject slug, max 40) so the Email tab's
+      // "emails -> applications" table and the GHL source pull match them to this email.
+      var pick = document.createElement("div"); pick.className = "emlinkpick"; pick.hidden = true;
+      var selS = 0, selE = 0;
+      function insertLink(url){
+        var v = body.value, raw = v.slice(selS, selE), word = raw.trim();
+        var ins = word ? raw.match(/^\s*/)[0] + "[" + word.replace(/[\[\]]/g, "") + "](" + url + ")" + raw.match(/\s*$/)[0] : url;
+        body.value = v.slice(0, selS) + ins + v.slice(selE);
+        body.focus(); body.selectionStart = body.selectionEnd = selS + ins.length;
+        e.body = body.value; markDirty(); emYtSoon(); emLinksDraw();
+        body.dispatchEvent(new Event("input", { bubbles:true }));
+        pick.hidden = true;
+      }
+      lb2.addEventListener("click", function(){
+        selS = body.selectionStart; selE = body.selectionEnd;
+        var word = body.value.slice(selS, selE).trim();
+        pick.innerHTML = "";
+        var hd = document.createElement("div"); hd.className = "hint";
+        hd.textContent = word ? "Link “" + word + "” to:" : "No word selected, so the address goes in on its own. Pick a link:";
+        pick.appendChild(hd);
+        var slug = emSlug(e.subject);
+        EM_OFFER_LINKS.forEach(function(o){
+          var url = o.path; // short in the box, the full tracked address goes in at send time (emExpand)
+          var ob = document.createElement("button"); ob.type = "button"; ob.className = "copybtn"; ob.textContent = o.name;
+          ob.title = emOfferUrl(o, e.subject); ob.addEventListener("mousedown", function(ev){ ev.preventDefault(); });
+          ob.addEventListener("click", function(){ insertLink(url); });
+          pick.appendChild(ob);
+        });
+        var other = document.createElement("input"); other.type = "text"; other.placeholder = "Or paste any other address"; other.className = "emlinkother";
+        var ok = document.createElement("button"); ok.type = "button"; ok.className = "copybtn"; ok.textContent = "Add";
+        function addOther(){
+          var url = other.value.trim(); if (!url) return;
+          if (!/^https?:\/\//i.test(url)) url = "https://" + url.replace(/^\/+/, "");
+          insertLink(url);
+        }
+        ok.addEventListener("click", addOther);
+        other.addEventListener("keydown", function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); addOther(); } });
+        var cx = document.createElement("button"); cx.type = "button"; cx.className = "copybtn"; cx.textContent = "Cancel";
+        cx.addEventListener("click", function(){ pick.hidden = true; });
+        var orow = document.createElement("div"); orow.className = "emrow"; orow.append(other, ok, cx);
+        var tag = document.createElement("div"); tag.className = "hint"; tag.textContent = "Offer links show short here, like [here](apply), and go to GHL as the full address tracked to this email’s subject.";
+        pick.append(orow, tag);
+        pick.hidden = false;
+      });
+      function emLinksDraw(){
+        lst.innerHTML = "";
+        var re = /\[([^\]]+)\]\((https?:\/\/[^\s)]+|attract|feeling|apply|training)\)/g, m, n = 0;
+        while ((m = re.exec(body.value))){
+          n++;
+          var r = document.createElement("div");
+          var w = document.createElement("b"); w.textContent = m[1];
+          var off = EM_OFFER_LINKS.filter(function(x){ return x.path === m[2]; })[0], full = off ? emOfferUrl(off, e.subject) : m[2];
+          if (off) w.textContent = m[1] + " (" + off.name + ")";
+          var a = document.createElement("a"); a.href = full; a.target = "_blank"; a.rel = "noopener"; a.textContent = full;
+          r.append("🔗 ", w, " → ", a); lst.appendChild(r);
+        }
+        if (!n) lst.innerHTML = '<span class="hint">Select a word above, then Add link. It shows as [word](address) in the box and as a normal hyperlink in GHL.</span>';
+      }
+      lrow.append(lb2); item.appendChild(lrow); item.appendChild(pick); item.appendChild(lst);
+      emLinksDraw();
       var acts = document.createElement("div"); acts.className = "emrow";
       var cs = document.createElement("button"); cs.type = "button"; cs.className = "copybtn"; cs.textContent = "Copy subject";
       cs.addEventListener("click", function(){ copyToClipboard(e.subject, cs); });
@@ -6884,7 +7042,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       cp.addEventListener("click", function(){ copyToClipboard(e.preview || "", cp); });
       var cb = document.createElement("button"); cb.type = "button"; cb.className = "copybtn"; cb.textContent = "Copy email";
       cb.title = "Copies in Arial 18px, line height 1.5, ready to paste into GHL";
-      cb.addEventListener("click", function(){ copyEmailRich(e.body || "", cb); });
+      cb.addEventListener("click", function(){ copyEmailRich(emExpand(e), cb); });
       var del = document.createElement("button"); del.type = "button"; del.className = "copybtn"; del.textContent = "Remove";
       del.addEventListener("click", function(){
         if (!confirm("Remove “" + e.subject + "” from the calendar?")) return;
@@ -6903,6 +7061,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // it from the templates and schedule it", so his smart lists still decide who gets it. /api/email-template makes or
   // updates "Daily email for 9th of November 2026" (Pitch email / Daily email (pitch day) on pitch days) in his Daily
   // email look. Stored on the email: e.ghlTpl = { id, name, at, sig } (sig spots edits made after it went to GHL).
+  // Offers an email can link to (2026-11-10). Paths + campaigns match the Links tab and the content generator's OFFERS.
+  var EM_OFFER_LINKS = [
+    { name:"Attract training", path:"attract", campaign:"scientifically_attract_training" },
+    { name:"Feeling Finder", path:"feeling", campaign:"feeling_finder" },
+    { name:"Application", path:"apply", campaign:"heart_attractor" },
+    { name:"Free training (VIDEO)", path:"training", campaign:"emotional_resonance_training" }
+  ];
+  function emOfferUrl(o, subject){ return "https://ollyhenson.com/" + o.path + "?utm_source=email&utm_medium=daily_email&utm_campaign=" + o.campaign + "&utm_content=" + emSlug(subject); }
+  // [here](apply) -> [here](full tracked address), using the subject as it is now
+  function emExpand(e){
+    return String(e.body || "").replace(/\]\((attract|feeling|apply|training)\)/g, function(m, k){
+      var o = EM_OFFER_LINKS.filter(function(x){ return x.path === k; })[0];
+      return "](" + emOfferUrl(o, e.subject) + ")";
+    });
+  }
+  function emSlug(subject){
+    var s = String(subject || "email").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40).replace(/-$/, "");
+    return s || "email";
+  }
   function emKind(e){ return e.pitch ? "pitch" : emIsPitchDay(e.date) ? "pitchday" : "daily"; }
   function emSig(e){ var t = String(e.subject || "") + "\u0001" + String(e.body || "") + "\u0001" + e.date + "\u0001" + emKind(e), h = 0; for (var i = 0; i < t.length; i++){ h = (h * 31 + t.charCodeAt(i)) | 0; } return String(h); }
   function emGhlRow(e){
@@ -6917,7 +7094,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (!String(e.body || "").trim()){ st.textContent = "Add the email text first."; return; }
       b.disabled = true; st.textContent = "Sending to GHL…";
       fetch("/api/email-template", { method:"POST", headers:{ "content-type":"application/json" }, credentials:"same-origin",
-        body: JSON.stringify({ subject:e.subject, body:e.body, date:e.date, kind:emKind(e), templateId: tp && tp.id, templateName: tp && tp.name }) })
+        body: JSON.stringify({ subject:e.subject, body:emExpand(e), date:e.date, kind:emKind(e), templateId: tp && tp.id, templateName: tp && tp.name }) })
         .then(function(r){ return r.json(); })
         .then(function(d){
           if (!d || !d.ok) throw new Error((d && d.error) || "failed");
@@ -7037,10 +7214,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Community post image maker, in the calendar (Olly, 2026-11-09: "frustrating having to go back into the content
   // generator to create the image"). Same as the generator's: square 1080 x 1080, the line in big type, Purple / Photo /
   // Light, Next photo, your own photo. Starts with the post's title; "Add to this post" attaches it like + Attach image.
-  var YTIMG_PHOTOS = ["breakfast-together", "coffee-date", "family-sunday", "friends-at-dinner", "wedding", "picturing-the-future", "at-the-bar", "heart-field"];
+  var YTIMG_PHOTOS = ["breakfast-together", "coffee-date", "family-sunday", "friends-at-dinner", "wedding", "picturing-the-future", "at-the-bar", "heart-field",
+    // the sales video (VSL) images (Olly, 2026-11-10), copied from marketing/assets/sales-video/vsl/img as vsl-<name>.jpg
+    "vsl-pov-female", "vsl-pov-male", "vsl-resonance", "vsl-intellectualization-female", "vsl-intellectualization-male", "vsl-meditation",
+    "vsl-chat-phone-sq-female", "vsl-chat-phone-sq", "vsl-join-desktop", "vsl-join-phone-tall", "vsl-account-desktop", "vsl-account-phone-tall",
+    "vsl-email-phone-tall", "vsl-message-phone-tall", "vsl-pay-desktop", "vsl-pay-phone-tall"];
   function ytImgPref(k, v){ try { if (v === undefined) return localStorage.getItem("ytimg-" + k); localStorage.setItem("ytimg-" + k, v); } catch(e){ return null; } }
   function ytImageMaker(p){
     var S = 1080, st = { style: ytImgPref("style") || "purple", photo: Number(ytImgPref("photo")) || 0, custom: "", text: p.imageLine || p.title || "" };
+    st.dy = 0; st.scale = Number(ytImgPref("scale")) || 1; st.noText = false; // text position / size / pure photo (Olly, 2026-11-10)
     var det = document.createElement("details"); det.className = "ytimgmaker";
     var sum = document.createElement("summary"); sum.textContent = "🎨 Make the image here"; det.appendChild(sum);
     var ta = document.createElement("textarea"); ta.rows = 2; ta.className = "ytimgline"; ta.value = st.text; ta.setAttribute("aria-label", "The line on the image");
@@ -7054,7 +7236,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var nextPh = document.createElement("button"); nextPh.type = "button"; nextPh.className = "copybtn"; nextPh.textContent = "Next photo";
     [["purple", "Purple"], ["photo", "Photo"], ["light", "Light"]].forEach(function(o){
       var b = document.createElement("button"); b.type = "button"; b.className = "copybtn"; b.textContent = o[1]; b.dataset.style = o[0];
-      b.addEventListener("click", function(){ st.style = o[0]; ytImgPref("style", o[0]); draw(); });
+      b.addEventListener("click", function(){ st.style = o[0]; if (o[0] !== "photo") st.noText = false; ytImgPref("style", o[0]); draw(); });
       styles.appendChild(b);
     });
     nextPh.addEventListener("click", function(){ st.custom = ""; st.photo = (st.photo + 1) % YTIMG_PHOTOS.length; ytImgPref("photo", st.photo); draw(); });
@@ -7066,6 +7248,24 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var r = new FileReader(); r.onload = function(){ st.custom = r.result; st.style = "photo"; draw(); }; r.readAsDataURL(f); upIn.value = "";
     });
     styles.append(nextPh, upB, upIn);
+    var tctl = document.createElement("div"); tctl.className = "emrow ytimgtext";
+    var tlab = document.createElement("span"); tlab.className = "hint"; tlab.textContent = "Text:";
+    function tbtn(label, title, fn){ var b = document.createElement("button"); b.type = "button"; b.className = "copybtn"; b.textContent = label; b.title = title; b.addEventListener("click", function(){ fn(); draw(); }); tctl.appendChild(b); return b; }
+    tctl.appendChild(tlab);
+    var tUp = tbtn("↑ Up", "Move the text up", function(){ st.dy = Math.max(-420, st.dy - 40); });
+    var tDn = tbtn("↓ Down", "Move the text down", function(){ st.dy = Math.min(420, st.dy + 40); });
+    var tSm = tbtn("A− Smaller", "Smaller text", function(){ st.scale = Math.max(0.5, Math.round((st.scale - 0.1) * 10) / 10); ytImgPref("scale", st.scale); });
+    var tBg = tbtn("A+ Bigger", "Bigger text", function(){ st.scale = Math.min(1.8, Math.round((st.scale + 0.1) * 10) / 10); ytImgPref("scale", st.scale); });
+    var tCt = tbtn("Centre", "Put the text back in the middle at its normal size", function(){ st.dy = 0; st.scale = 1; ytImgPref("scale", 1); });
+    var tNo = tbtn("No text", "Just the photo: no text, no darkening", function(){ st.noText = !st.noText; if (st.noText && st.style !== "photo"){ st.style = "photo"; ytImgPref("style", "photo"); } });
+    // tap a photo instead of clicking Next photo through all of them (2026-11-10); thumbnails load when the maker opens
+    var strip = document.createElement("div"); strip.className = "ytimgstrip";
+    YTIMG_PHOTOS.forEach(function(name, n){
+      var t = document.createElement("img"); t.alt = name; t.title = name.replace(/^vsl-/, "sales video: ").replace(/-/g, " "); t.loading = "lazy"; t.dataset.n = n;
+      t.addEventListener("click", function(){ st.custom = ""; st.photo = n; st.style = "photo"; ytImgPref("style", "photo"); ytImgPref("photo", n); draw(); });
+      strip.appendChild(t);
+    });
+    det.addEventListener("toggle", function(){ if (det.open) strip.querySelectorAll("img:not([src])").forEach(function(t){ t.src = "cig-assets/" + YTIMG_PHOTOS[t.dataset.n] + ".jpg"; }); });
     ta.addEventListener("input", function(){ st.text = ta.value; p.imageLine = ta.value; markDirty(); draw(); });
     function wrapLines(ctx, text, maxW){
       var out = [], line = "";
@@ -7080,15 +7280,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       else if (st.style === "photo"){
         if (img){ var k = Math.max(S / img.width, S / img.height), w = img.width * k, h = img.height * k; ctx.drawImage(img, (S - w) / 2, (S - h) / 2, w, h); }
         else { ctx.fillStyle = "#2a0846"; ctx.fillRect(0, 0, S, S); }
+        if (st.noText){ try { prev.src = cv.toDataURL("image/jpeg", 0.9); } catch(e){ prev.removeAttribute("src"); } return; } // pure photo
         ctx.fillStyle = "rgba(20,4,32,.58)"; ctx.fillRect(0, 0, S, S);
       } else {
         var g = ctx.createLinearGradient(0, 0, 0, S); g.addColorStop(0, "#2a0846"); g.addColorStop(1, "#12041f");
         ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
         ctx.fillStyle = "rgba(217,70,239,.16)"; ctx.beginPath(); ctx.arc(S * 0.85, S * 0.2, 380, 0, Math.PI * 2); ctx.fill();
       }
-      var size = 96, ls;
-      for (; size >= 52; size -= 4){ ctx.font = "800 " + size + "px Poppins, sans-serif"; ls = wrapLines(ctx, text, S - 200); if (ls.length <= 5) break; }
-      var lh = size * 1.18, top = (S - ls.length * lh) / 2 + size * 0.85 - 30;
+      var size = Math.round(96 * st.scale), ls, minSize = Math.round(52 * st.scale);
+      for (; size >= minSize; size -= 4){ ctx.font = "800 " + size + "px Poppins, sans-serif"; ls = wrapLines(ctx, text, S - 160); if (ls.length <= 6) break; }
+      size = Math.max(size, minSize); ctx.font = "800 " + size + "px Poppins, sans-serif"; ls = wrapLines(ctx, text, S - 160);
+      var lh = size * 1.18, top = (S - ls.length * lh) / 2 + size * 0.85 - 30 + st.dy;
       ctx.fillStyle = ink; ctx.textAlign = "center";
       ls.forEach(function(l, n){ ctx.fillText(l, S / 2, top + n * lh); });
       var bar = ctx.createLinearGradient(S / 2 - 60, 0, S / 2 + 60, 0); bar.addColorStop(0, "#e879f9"); bar.addColorStop(1, "#c084fc");
@@ -7100,7 +7302,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     function draw(){
       var me = ++seq;
       styles.querySelectorAll("[data-style]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.style === st.style)); b.classList.toggle("active", b.dataset.style === st.style); });
-      nextPh.hidden = st.style !== "photo";
+      nextPh.hidden = st.style !== "photo"; strip.hidden = st.style !== "photo";
+      tNo.textContent = st.noText ? "Show text" : "No text"; tNo.classList.toggle("active", st.noText);
+      [tUp, tDn, tSm, tBg, tCt].forEach(function(b){ b.disabled = st.noText; });
+      strip.querySelectorAll("img").forEach(function(t){ t.classList.toggle("on", !st.custom && Number(t.dataset.n) === st.photo % YTIMG_PHOTOS.length); });
       var ready = document.fonts && document.fonts.load ? document.fonts.load("800 60px Poppins") : Promise.resolve();
       ready.catch(function(){}).then(function(){
         if (st.style !== "photo") return paint(null, me);
@@ -7118,7 +7323,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       }, "image/jpeg", 0.92);
     });
     acts.append(addB, msg);
-    det.append(ta, styles, prev, acts);
+    det.append(ta, styles, strip, tctl, prev, acts);
     det.addEventListener("toggle", function(){ if (det.open) draw(); });
     if (!(p.images || []).length) det.open = true;   // no image yet: open and ready
     if (det.open) draw();

@@ -63,6 +63,6 @@ export async function onRequestPost({ request, env }) {
   const m = Object.assign({ opens: 0, first: null, last: null, pdf: 0 }, cur.metadata || {});
   m.code = code;
   if (new URL(request.url).searchParams.get("sent") === "1") m.sent = m.sent || new Date().toISOString();
-  await env.HUB_KV.put(key, "x", { metadata: m });
+  await env.HUB_KV.put(key, cur.value || "x", { metadata: m }); // keep the open log (2026-11-10)
   return json({ ok: true, code, sent: m.sent || null });
 }

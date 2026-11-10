@@ -29,3 +29,6 @@ Gotcha (2026-10-29): a heredoc Python edit with \u escapes failed mid-write (sur
 | `vsl_preview.py` | Desktop + phone preview of the sales-video slides (all or one) | `python -I tools/vsl_preview.py marketing/assets/sales-video/vsl/vsl-men.html OUT.html [N\|all] "Title"` (2026-11-10) |
 | `phone_pov_hq.py` | Phone-in-hand POV image from a phone screenshot, purple outline (+ arrow) | `[CROP="x0,y0,x1,y1"] [NOARROW=1] python -I tools/phone_pov_hq.py SHOT.png OUT.jpg "x0,y0,x1,y1" [left\|right] ["pov phone."]` (2026-11-10) |
 | `shot.js` full page | `FULL=1 node tools/shot.js PAGE OUT 1400` screenshots the whole page, not just the first screen (2026-11-10) |
+| `top-reels.mjs` | Best performing Reels from GHL (likes/comments/shares per Reel, all platforms grouped, hook = caption line 1; no views in GHL): `node tools/top-reels.mjs [days=7] [count=15]`, `LINKS=1` for links (2026-11-10). |
+
+Gotcha (2026-11-10): deploy-hub.sh failed with npm EBUSY on workerd.exe (old `wrangler dev` processes from 8-9 Nov held it). Workaround without killing them: from hub-site, `npm_config_cache=<scratchpad>/npmcache npx --yes wrangler pages deploy public --project-name hub-ollyhenson --branch main --commit-dirty=true` (keep `--branch main` or it goes to a preview).

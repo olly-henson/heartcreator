@@ -273,7 +273,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           </select></label>
           <div class="f full" id="crsShotWrap" hidden><span>Member screenshot</span><span class="hint">One real message or post, shared with permission. Names and profile photos get covered for you: check the covers, then press Generate.</span><div class="row"><label class="tsmfile">Upload the screenshot<input type="file" id="crsShot" accept="image/*"></label></div><div id="crsShotHost"></div></div>
           <label class="f full" id="emailResultWrap" hidden>A real result to share <span class="hint">Optional. Paste a member's win or message (with their permission, name left out). Mixed week then includes one email built around it, or pick Results share to write it on its own.</span><textarea id="emailResult" rows="3" placeholder="e.g. I went on a date at the weekend and for the first time I didn't overthink a single text"></textarea></label>
-          <label class="f full" id="emailVoiceWrap" hidden>An applicant's words, for inspiration <span class="hint">Optional. In the Hub: Sales, open an applicant, tap 💡 Copy for email ideas, then paste here. Names and personal details are already taken out. Every email you write uses their feelings and patterns as the angle, never their story or their details. Clear it when you're done.</span><textarea id="emailVoice" rows="4" placeholder="Paste from the Hub's 💡 Copy for email ideas"></textarea><span class="row"><button type="button" class="btn small" id="emailVoiceClear">Clear</button></span></label>
+          <label class="f full" id="emailVoiceWrap" hidden>An applicant's words, for inspiration <span class="hint">Optional. In the Hub: Sales, open an applicant, tap 💡 Copy for content ideas, then paste here. Names and personal details are already taken out. Emails use their feelings and patterns as the angle; Reel hooks are built from their pain and the outcomes they want. Never their story or their details. Clear it when you're done.</span><textarea id="emailVoice" rows="4" placeholder="Paste from the Hub's 💡 Copy for content ideas"></textarea><span class="row"><button type="button" class="btn small" id="emailVoiceClear">Clear</button></span></label>
           <div class="f full" id="reelCtaWrap"><span>Call to action (on every Reel)</span><p class="ctabox" id="reelCta"></p></div>
           <label class="f full">Topic or angle <span class="hint">Optional. Something you want to talk about, a question you've been asked, or a word to build on.</span><input type="text" id="topic" placeholder="e.g. why the people you like won't commit"></label>
           <label class="f" id="countWrap">How many ideas<select id="count"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
@@ -376,10 +376,12 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
               <div class="tsmlay" id="tsm-sciStyles">
                 <button type="button" data-sci="waves" aria-pressed="true">Brainwaves</button>
                 <button type="button" data-sci="heart" aria-pressed="false">Heart rhythm</button>
+                <button type="button" data-sci="sync" aria-pressed="false">Heart + brain</button>
                 <button type="button" data-sci="table" aria-pressed="false">Two states</button>
                 <button type="button" data-sci="photo" aria-pressed="false">Photo</button>
                 <button type="button" data-sci="dyk" aria-pressed="false">Did you know?</button>
               </div>
+              <div class="row" id="tsm-sciSync"><button type="button" class="btn small" id="tsm-sciSyncImg">Remove the photo</button></div>
               <div class="tsmg" id="tsm-sciWaves">
                 <label class="label" for="tsm-sciW1">First wave: label</label><input type="text" id="tsm-sciW1">
                 <label class="label" for="tsm-sciW1s">First wave: what it is</label><input type="text" id="tsm-sciW1s">
@@ -2158,7 +2160,7 @@ function setChannel(ch, keepType, keepFormat){
   cImg.show(channel === "carousels"); $("carouselNote").hidden = channel !== "carousels";
   $("tab-memes").setAttribute("aria-selected", String(channel === "memes"));
   $("tab-email").setAttribute("aria-selected", String(channel === "email"));
-  $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email"; $("emailVoiceWrap").hidden = channel !== "email";
+  $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email"; $("emailVoiceWrap").hidden = channel !== "email" && channel !== "reels"; // Reel hooks from an applicant's pain + outcomes (Olly, 2026-11-10)
   document.querySelector(".seg").hidden = !ig; $("balance").hidden = !ig;
   // Stories (Olly, 2026-11-02): no idea writer, just the Story Image Maker
   { const sty = channel === "stories" || channel === "ytpost"; if (sty) $("balance").hidden = true; document.querySelector(".form").hidden = sty; $("go").parentNode.hidden = sty;
@@ -2539,6 +2541,14 @@ function voiceBrief(){
   return "A REAL APPLICANT'S WORDS (private, for inspiration only):\n" + v.slice(0, 2500)
     + "\nUse this as the angle: what they feel, the loop they're stuck in, what they've tried and what they want, in words the reader will recognise in themselves. Speak to everyone who feels this, not to this person. Keep Olly's core message (their emotional state around love; intellectualization keeps them in their head; emotional resonance is the way out). Never say an applicant, a client or someone wrote this, never quote more than four of their words in a row, and never include a name, place, job, age, family detail, health detail or anything about another person (an ex, a parent, a friend). If the email has several in a batch, each one takes a different thing they said.\n\n";
 }
+// Reels (Olly, 2026-11-10: "take someone's mind map ... the pain and also the outcomes they want ... create real hooks")
+function reelVoiceBrief(){
+  const v = ($("emailVoice") && $("emailVoice").value.trim()) || "";
+  if (!v) return "";
+  return "\n\nA REAL APPLICANT'S ANSWERS (private, for inspiration only):\n" + v.slice(0, 2500)
+    + "\nBuild the hooks from these answers. First pick out (1) their PAIN: what hurts, what keeps happening, the loop they're stuck in, what they've tried that didn't work; and (2) the OUTCOMES they want: the relationship and the life they describe, and how they want it to feel. Then write each hook from one of those: an outcome hook names what they want in words close to theirs (e.g. the shape of \"The fastest way to ...\"), a pain hook names what they keep living through (e.g. the shape of \"This pushes love away quickly\"). Mix the two across the batch. Still follow every hook rule above (length, outcome-led, the opener patterns). Speak to everyone who feels this, never to this person: never a name, place, job, age, family or health detail, never more than four of their words in a row, never say an applicant or client said it."
+    + "\nFor each hook, \"stage\" says \"Pain: \" or \"Outcome: \" and then, in a few words, which of their answers it came from.";
+}
 { const ev = document.getElementById("emailVoice");
   if (ev) { ev.value = store.get("cig-voice", "") || ""; ev.addEventListener("input", () => store.set("cig-voice", ev.value)); }
   const ec = document.getElementById("emailVoiceClear");
@@ -2901,7 +2911,7 @@ async function reelBatch(signal){
   const n = Math.max(1, Number($("count").value) || 3), type = $("type").value, t = POST_TYPES[type];
   const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1], topic = $("topic").value.trim();
   const ops = reelRotate("cig-reel-op", REEL_OPENERS, n), recent = recentReelHooks();
-  const r = await sampleFn.json(reelHookPrompt(type, t, n, part, topic, ops, recent) + outlierBrief() + rejectBrief() + calBrief(), {signal, cache:false});
+  const r = await sampleFn.json(reelHookPrompt(type, t, n, part, topic, ops, recent) + reelVoiceBrief() + outlierBrief() + rejectBrief() + calBrief(), {signal, cache:false});
   if (signal.aborted) throw new Error("aborted");
   return ((r && r.ideas) || []).filter(x => x && x.hook).map(x => ({hook:String(x.hook).trim(), stage:x.stage || "", who:"", steps:"", offer:"scale"}));
 }
@@ -4498,6 +4508,39 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
         ctx.save(); ctx.shadowColor = "rgba(0,0,0,.45)"; ctx.shadowBlur = 40; ctx.fillStyle = "#fff"; rrect(ctx, cx - 16, cyy - 16, cw + 32, chh + 32, 26); ctx.fill(); ctx.restore();
         ctx.drawImage(img2, cx, cyy, cw, chh);
         ctx.save(); ctx.fillStyle = "#cbb8da"; ctx.font = font(500, 26); ctx.textAlign = "center"; ctx.fillText("Heart rhythm patterns, after HeartMath Institute research", W / 2, cyy + chh + 60); ctx.restore();
+      } else if (style === "sync"){
+        // Heart + brain (Olly, 2026-11-10: "more imagery with the heart and brain coherence, the heart rhythm patterns"):
+        // the head-and-heart photo, then the two heart rhythm patterns drawn live (after HeartMath's incoherent vs coherent charts)
+        var room = end - top, py0, ph3;
+        if (st.sciNoImg){ // no photo: bigger rhythm panels, centred in the space
+          ph3 = Math.min(420, (room - 100) / 2); py0 = top + Math.max(0, (room - 100 - 2 * ph3 - 24) / 2);
+        } else {
+          var hi = await loadImg("cig-assets/head-and-heart.jpg");
+          var ih = Math.max(300, Math.min(660, room * 0.5)), iw = Math.round(ih * hi.width / hi.height), ix = (W - iw) / 2, iy = top; // whole photo: brain and heart both in shot
+          ctx.save(); rrect(ctx, ix, iy, iw, ih, 28); ctx.clip();
+          var kk = Math.max(iw / hi.width, ih / hi.height), dw = hi.width * kk, dh = hi.height * kk;
+          ctx.drawImage(hi, ix + (iw - dw) / 2, iy + (ih - dh) / 2, dw, dh); ctx.restore();
+          ctx.save(); ctx.strokeStyle = "rgba(255,255,255,.25)"; ctx.lineWidth = 2; rrect(ctx, ix, iy, iw, ih, 28); ctx.stroke(); ctx.restore();
+          py0 = iy + ih + 34; ph3 = Math.min(280, (end - py0 - 100) / 2);
+        }
+        [["Out of sync", "Worry, frustration, overthinking", "#fb923c", true], ["In sync (coherent)", "Appreciation, calm, care", "#f0abfc", false]].forEach(function(w, i){
+          var py = py0 + i * (ph3 + 24), px = 70, pw = W - 140;
+          ctx.save(); ctx.fillStyle = "rgba(255,255,255,.07)"; ctx.strokeStyle = "rgba(255,255,255,.18)"; ctx.lineWidth = 2;
+          rrect(ctx, px, py, pw, ph3, 24); ctx.fill(); ctx.stroke(); ctx.restore();
+          ctx.save(); ctx.textAlign = "left"; ctx.fillStyle = w[2]; ctx.font = font(800, 36); ctx.fillText(w[0].toUpperCase(), px + 36, py + 56);
+          ctx.fillStyle = "#e9dcf3"; ctx.font = font(500, 28); ctx.fillText(w[1], px + 36, py + 96);
+          var cy = py + 110 + (ph3 - 110) / 2, amp = Math.max(20, Math.min(st.sciNoImg ? 110 : 70, (ph3 - 140) / 2)), x0 = px + 36, x1 = px + pw - 36;
+          ctx.strokeStyle = w[2]; ctx.lineWidth = 5; ctx.lineJoin = "round"; ctx.shadowColor = w[2]; ctx.shadowBlur = 14; ctx.beginPath();
+          for (var x = x0; x <= x1; x += 2){
+            var t = (x - x0) / (x1 - x0), v = w[3]
+              ? 0.45 * Math.sin(t * 2 * Math.PI * 13 + 0.7) + 0.3 * Math.sin(t * 2 * Math.PI * 29 + 2.2) + 0.3 * Math.sin(t * 2 * Math.PI * 4.3) + 0.18 * Math.sin(t * 2 * Math.PI * 47 + 1.1)
+              : Math.sin(t * 2 * Math.PI * 9);
+            if (x === x0) ctx.moveTo(x, cy - v * amp); else ctx.lineTo(x, cy - v * amp);
+          }
+          ctx.stroke(); ctx.restore();
+        });
+        ctx.save(); ctx.fillStyle = "#cbb8da"; ctx.font = font(500, 24); ctx.textAlign = "center";
+        ctx.fillText("Heart rhythm patterns, after HeartMath Institute research", W / 2, py0 + 2 * ph3 + 24 + 40); ctx.restore();
       } else if (style === "table"){
         var rows = String(st.sciRows || "").split("\n").map(function(l){ return l.split("|").map(function(c){ return c.trim(); }); }).filter(function(r){ return r.join(""); });
         var head = rows.shift() || ["", "", ""], cw2 = (W - 160) / 2, lx = 70, rx = 70 + cw2 + 20, yy = top;
@@ -5561,6 +5604,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   function showSci(){
     var sty = st.sciStyle, sm = sciM();
     document.querySelectorAll("#tsm-sciStyles button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.sci === sty)); });
+    $("tsm-sciSync").hidden = sty !== "sync"; $("tsm-sciSyncImg").textContent = st.sciNoImg ? "Show the photo" : "Remove the photo";
     $("tsm-sciWaves").hidden = sty !== "waves"; $("tsm-sciTable").hidden = sty !== "table"; $("tsm-sciPhotos").hidden = sty !== "photo";
     $("tsm-sciMidLbl").textContent = sty === "photo" ? "Move photo" : sty === "table" ? "Table" : sty === "dyk" ? "Number and finding" : "Chart";
     [["tsm-sciAll", "all"], ["tsm-sciTop", "top"], ["tsm-sciMid", "mid"], ["tsm-sciBot", "bot"]].forEach(function(q){ $(q[0]).value = sm[q[1]]; });
@@ -5587,6 +5631,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   [["tsm-sciAll", "all"], ["tsm-sciTop", "top"], ["tsm-sciMid", "mid"], ["tsm-sciBot", "bot"]].forEach(function(q){
     $(q[0]).addEventListener("input", function(e){ sciM()[q[1]] = Number(e.target.value) || 0; render(); });
   });
+  $("tsm-sciSyncImg").addEventListener("click", function(){ st.sciNoImg = !st.sciNoImg; store.set("sciNoImg", st.sciNoImg); showSci(); render(); });
   $("tsm-sciReset").addEventListener("click", function(){ st.sciMv[st.sciStyle] = { all:0, top:0, mid:0, bot:0 }; showSci(); render(); });
   $("tsm-sciNewBottom").addEventListener("click", function(){ st.sciBottom = nextFrom(SCI_BOTTOM, "bank-science-bottom"); showSci(); render(); });
   // Emotional scale controls
@@ -5972,7 +6017,8 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   if (!st.lsBy.scalecheck && store.get("ls") && typeof store.get("ls") === "object") st.lsBy.scalecheck = store.get("ls");
   st.aspUp = Number(store.get("aspUp")) || 0;
   st.sci = nextFrom(SCI_HOOKS, "bank-science"); st.sciBottom = SCI_BOTTOM[0];
-  if (["waves", "heart", "table", "photo", "dyk"].indexOf(store.get("sciStyle")) !== -1) st.sciStyle = store.get("sciStyle");
+  if (["waves", "heart", "sync", "table", "photo", "dyk"].indexOf(store.get("sciStyle")) !== -1) st.sciStyle = store.get("sciStyle");
+  st.sciNoImg = store.get("sciNoImg") === true; // Heart + brain without the woman's photo (Olly, 2026-11-10)
   if (typeof store.get("sciRows") === "string" && store.get("sciRows").trim()) st.sciRows = store.get("sciRows");
   st.sc = nextFrom(SCALE_HOOKS, "bank-scale"); st.scBottom = SCALE_BOTTOM[0];
   if (["full", "top", "bottom"].indexOf(store.get("scStyle")) !== -1) st.scStyle = store.get("scStyle");
@@ -6008,6 +6054,15 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   var DAY_T = [
     { id:"lead_attract", kind:"lead", layout:"attractpage", type:"Lead gen", hint:ATTRACT_LEAD.hint, fields:[["text", "Hook, 4 to 9 words"]], ex:ATTRACT_HOOKS },
     { id:"lead_video", kind:"lead", layout:"page", type:"Lead gen", hint:KINDS.lead.hint, fields:[["text", "Hook, 4 to 9 words"]], ex:HOOKS },
+    // more looks (Olly, 2026-11-10: "real variation ... the style of it to also be different")
+    { id:"lead_feeling", kind:"lead", layout:"scalepage", type:"Lead gen", hint:SCALE_LEAD.hint + " Design: the Feeling Finder page on a phone.", fields:[["text", "Hook, 4 to 9 words"]], ex:SCALE_LEAD_HOOKS },
+    { id:"lead_notes", kind:"lead", layout:"notes", type:"Lead gen", hint:KINDS.lead.hint + " Design: an iPhone Notes app page; the hook is the note's title, the body about the free training is already written.", fields:[["text", "Note title, 4 to 9 words"]], ex:HOOKS },
+    { id:"lead_player", kind:"lead", layout:"player", type:"Lead gen", hint:KINDS.lead.hint + " Design: a video player with the hook above it.", fields:[["text", "Hook, 4 to 9 words"]], ex:HOOKS },
+    { id:"belief_mythtruth", kind:"belief", bstyle:"mythtruth", hint:KINDS.belief.hint + " Design: MYTH on top, TRUTH underneath, like a fact-check card.", fields:[["old", "The myth, as people say it, under 12 words"], ["crack", "The truth, under 14 words"]], ex:BELIEFS },
+    { id:"belief_post", kind:"belief", bstyle:"post", hint:KINDS.belief.hint + " Design: a text post (like a Threads / X post) quoting the old belief, with the crack as the reply.", fields:[["old", "The old belief, under 16 words"], ["crack", "The crack, under 14 words"]], ex:BELIEFS },
+    { id:"belief_photo", kind:"belief", bstyle:"photo", hint:KINDS.belief.hint + " Design: over a photo.", fields:[["old", "The old belief, under 12 words"], ["crack", "The crack, under 12 words"]], ex:BELIEFS },
+    { id:"belief_dm", kind:"belief", bstyle:"dm", hint:"Design: an Instagram DM. On top, a question people ask Olly all the time, written generically (never a quote from a real named person). Underneath, Olly's short reply that cracks the old belief behind it.", fields:[["old", "The question, as people ask it, under 16 words"], ["crack", "Olly's reply, under 16 words"]], ex:BELIEFS },
+    { id:"belief_notes", kind:"belief", bstyle:"bnotes", hint:KINDS.belief.hint + " Design: an iPhone Notes page with the old belief crossed out and the crack highlighted.", fields:[["old", "The old belief, under 12 words"], ["crack", "The crack, under 12 words"]], ex:BELIEFS },
     { id:"question", kind:"engagement", style:"", hint:KINDS.engagement.hint, fields:[["text", "The question, under 12 words"]], ex:QUESTIONS },
     { id:"e_tot", kind:"engagement", style:"e_tot" },
     { id:"e_rate", kind:"engagement", style:"e_rate" },
@@ -6021,8 +6076,18 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     { id:"b_wish", kind:"belief", bstyle:"wish" },
     { id:"scale", kind:"scale", hint:KINDS.scale.hint, fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCALE_HOOKS },
     { id:"science", kind:"science", sciStyle:"waves", hint:KINDS.science.hint, fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
-    { id:"s_dyk", kind:"science", sciStyle:"dyk" }
+    { id:"s_dyk", kind:"science", sciStyle:"dyk" },
+    { id:"science_heart", kind:"science", sciStyle:"heart", hint:KINDS.science.hint + " Design: HeartMath's heart rhythm chart (jagged incoherent rhythm in frustration and worry vs a smooth coherent rhythm in appreciation and care).", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
+    { id:"science_sync", kind:"science", sciStyle:"sync", hint:KINDS.science.hint + " Design: a woman with her brain and heart glowing, linked, above two heart rhythm lines: out of sync (worry, overthinking) and in sync, coherent (appreciation, calm). Topic: heart and brain coherence.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
+    { id:"science_table", kind:"science", sciStyle:"table", hint:KINDS.science.hint + " Design: a two-column table, survival state vs elevated state (brainwaves, heart rhythm, body, how it feels, who we notice). The table is already filled in.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
+    { id:"science_photo", kind:"science", sciStyle:"photo", hint:KINDS.science.hint + " Design: a full photo of a woman with her heart glowing and its field around her (heart coherence), text on top.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS }
   ];
+  // the look of each design: no two Stories in one day share a look (Olly, 2026-11-10)
+  var DAY_LOOK = { lead_attract:"phone page", lead_video:"phone page", lead_feeling:"phone page", lead_notes:"Notes app", lead_player:"video player",
+    question:"photo + sticker", e_tot:"two cards", e_rate:"rating slider", e_flags:"two cards", aspire_photo:"full photo", a_ba:"two cards", a_check:"checklist",
+    belief_told:"bold text", belief_crossed:"crossed-out text", belief_mythtruth:"myth / truth card", belief_post:"text post", belief_photo:"full photo",
+    belief_dm:"DM chat", belief_notes:"Notes app", b_unpop:"bold text", b_wish:"numbered list", scale:"emotional scale chart",
+    science:"brainwave chart", s_dyk:"big number", science_heart:"heart rhythm chart", science_sync:"heart + brain image", science_table:"table", science_photo:"full photo" };
   DAY_T.forEach(function(t){
     var kk = t.style ? t.style : t.bstyle && t.bstyle !== "told" ? "b_" + t.bstyle : t.sciStyle === "dyk" ? "s_dyk" : "";
     if (kk && KT[kk]){ t.kt = kk; t.hint = KT[kk].hint; t.fields = KT[kk].fields.map(function(f){ return [f[0], f[1]]; }); t.ex = KT[kk].bank; }
@@ -6037,6 +6102,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     if (t.layout) st.layout = t.layout;
     if (t.bstyle) st.bstyle = t.bstyle;
     if (t.sciStyle) st.sciStyle = t.sciStyle;
+    if (t.sciStyle === "photo"){ var hp = [0, 1, 3]; st.sciPhoto = hp[Math.floor(Math.random() * hp.length)]; st.sciCustom = ""; } // a heart / heart-field photo
     if (KSTY[t.kind]) st.ks[t.kind] = t.style || "";
     var kk = ktKey();
     if (kk){ var v = Object.assign({}, KT[kk].bank[0]); KT[kk].fields.forEach(function(x){ if (f[x[0]] != null) v[x[0]] = String(f[x[0]]); }); st.kt[kk] = v; }
@@ -6063,7 +6129,42 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   function isoLocal(d){ return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
   function addDays(iso, n){ var d = new Date(iso + "T00:00:00"); d.setDate(d.getDate() + n); return isoLocal(d); }
   function niceDay(iso){ return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"short" }); }
-  function daySave(){ store.set("dayBatch", { date:day.date, items:day.items.map(function(i){ return { t:i.t, title:i.title, f:i.f, sent:!!i.sent, fb:i.fb || "" }; }) }); }
+  // Batch saved online (Olly, 2026-11-10: a refresh lost his batch). db doc "daybatch/current" holds the texts, and each
+  // finished image is an uploaded asset (imgId), so a refresh brings back exactly what he had, nothing redrawn.
+  // Browser storage below stays as a backup. Old images are deleted once their replacement is saved.
+  var dayCloud = { db:null, assets:null, timer:null, busy:false, again:false, savedAt:"" };
+  function dayCloudSoon(){ clearTimeout(dayCloud.timer); dayCloud.timer = setTimeout(dayCloudSave, 900); }
+  function dayCloudStatus(t){ var e = dayBox && dayBox.querySelector("#day-saved"); if (e) e.textContent = t; }
+  async function dayCloudSave(){
+    if (!dayCloud.db) return;
+    if (dayCloud.busy){ dayCloud.again = true; return; }
+    dayCloud.busy = true; dayCloudStatus("Saving…");
+    try {
+      var old = [];
+      for (var n = 0; n < day.items.length; n++){
+        var it = day.items[n];
+        if (dayCloud.assets && it.img && it.img !== it.imgUp && /^data:/.test(it.img)){
+          var src = it.img, blob = await (await fetch(src)).blob(), r = await dayCloud.assets.upload(blob);
+          if (it.imgId) old.push(it.imgId);
+          it.imgId = r.id; it.imgUrl = r.url; it.imgUp = src;
+        }
+      }
+      var now = new Date().toISOString();
+      await dayCloud.db.doc("daybatch/current").set({ date:day.date || "", savedAt:now, items:day.items.map(function(i){
+        return { t:i.t, title:i.title || "", f:i.f || {}, sent:!!i.sent, fb:i.fb || "", own:!!i.own, type:i.type || "", music:i.music || [], imgId:i.imgId || "", imgUrl:i.imgUrl || "" }; }) });
+      dayCloud.savedAt = now;
+      var keep = {}; day.items.forEach(function(i){ if (i.imgId) keep[i.imgId] = 1; });
+      old.concat(Object.keys(dayCloud.lastIds || {})).forEach(function(id){ if (!keep[id] && dayCloud.assets) dayCloud.assets.delete(id).catch(function(){}); });
+      dayCloud.lastIds = keep;
+      dayCloudStatus("✓ Batch saved. It stays if you refresh.");
+    } catch(e){ dayCloudStatus("Couldn't save the batch online just now (it's still saved on this device). It'll try again on the next change."); }
+    dayCloud.busy = false;
+    if (dayCloud.again){ dayCloud.again = false; dayCloudSave(); }
+  }
+  function daySave(){ dayCloudSoon(); store.set("dayBatch", { date:day.date, items:day.items.map(function(i){
+    var o = { t:i.t, title:i.title, f:i.f, sent:!!i.sent, fb:i.fb || "" };
+    if (i.own){ o.own = true; o.type = i.type; o.img = i.img; o.music = i.music || []; } // Olly's own Story: kept as its image
+    return o; }) }); }
   function dayHist(){ var h = store.get("dayHist"); return Array.isArray(h) ? h : []; }
   function dayHistSave(){
     var h = dayHist().filter(function(x){ return x.date !== day.date; });
@@ -6090,7 +6191,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   }
   function dayTemplates(){
     return DAY_T.map(function(t){
-      return "- " + t.id + " (" + t.type + "): " + t.hint + "\n  fields: " + t.fields.map(function(f){ return f[0] + " = " + f[1]; }).join("; ")
+      return "- " + t.id + " (" + t.type + ", look: " + (DAY_LOOK[t.id] || t.id) + "): " + t.hint + "\n  fields: " + t.fields.map(function(f){ return f[0] + " = " + f[1]; }).join("; ")
         + "\n  style examples (never copy): " + JSON.stringify((t.ex || []).slice(0, 3));
     }).join("\n");
   }
@@ -6098,7 +6199,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     return "You plan Olly Henson's Instagram Stories for one day (The Attraction Formula: he helps singles attract a committed relationship by getting into the right emotional state around love). Each Story becomes a finished 1080 x 1920 image in his Story Image Maker: you pick a template and write its text. The maker sizes and places the text, so your only job is the words.\n\n"
       + CORE + "\n\n" + RULES + "\n\n" + RESEARCH_FACTS
       + "\n\nSTORY RULES\n- Stories are connection content. Reels carry the argument; Stories make people feel understood and keep them coming back. Show, don't lecture.\n- Use \"we\", \"us\" or \"most people\", never a \"you\" call-out that makes someone feel judged.\n- Every line must be short enough to read in two seconds. Respect each field's word limit; shorter is better.\n- Never the old story: no past relationship, breakup, 2019, years of trying or any teachers. Olly's only story: he worked on his emotional state every day, met his wife Jules and they both just knew.\n- Never say the right partner feels boring, flat or less exciting. Calm love is committed AND fun.\n- No manifestation words. Science only from the research list, worded carefully.\n- Engagement templates leave space for Instagram's poll, slider or question sticker; write lines that make a tap easy.\n"
-      + "\nTHE DAY: " + niceDay(date) + ". " + (n === 7 ? "Plan 7 Stories in posting order (first thing to evening). Mix: exactly 1 Lead gen (lead_attract most days, lead_video now and then), at least 5 different types across the 7 (Lead gen, Questions / entertainment, Aspiration, Belief breaking, Emotional scale, Science), never the same template twice in the day. Open with something light that gets a tap, put the Lead gen in the second half, and let the day build: relate, crack a belief, show the vision, invite." : "")
+      + "\nTHE DAY: " + niceDay(date) + ". " + (n === 7 ? "Plan 7 Stories in posting order (first thing to evening). Mix: exactly 1 Lead gen (lead_attract most days; lead_feeling, lead_notes, lead_player or lead_video now and then), at least 5 different types across the 7 (Lead gen, Questions / entertainment, Aspiration, Belief breaking, Emotional scale, Science), never the same template twice in the day. VARIETY OF LOOK: every Story in the day must have a different look (the look in brackets below), so the day never feels like the same format repeated. Pick at least 3 templates that weren't used on the recent days listed, and favour the ones used least. Science most days, rotating its looks (heart + brain image, heart rhythm chart, full photo, table, brainwave chart, big number); heart and brain coherence and heart rhythm patterns are good topics. Open with something light that gets a tap, put the Lead gen in the second half, and let the day build: relate, crack a belief, show the vision, invite." : "")
       + dayContext(date) + (extra || "")
       + "\n\nTEMPLATES (use the id exactly; fill every field it lists):\n" + dayTemplates()
       + "\n\nReply as JSON only: {\"stories\":[{\"t\":\"template id\",\"title\":\"a 3 to 7 word label for the calendar\",\"f\":{\"field name\":\"text\"}}]}. Use \\n inside a field only where the field asks for one item per line.";
@@ -6132,6 +6233,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     + '<h4>Make a day of Stories</h4><p class="hint">7 different Stories for one day, made in this maker so the text fits. Check each one, press Edit to change it below (then Save to batch), or write feedback and press Redo. Add to calendar sends it to that day in the Hub.</p>'
     + '<div class="dayrow"><label class="label" for="day-date">Day</label><input type="date" id="day-date"><button type="button" class="btn primary" id="day-go">Write 7 Stories</button><span class="status" id="day-st" role="status"></span></div>'
     + '<textarea id="day-note" rows="2" placeholder="Optional: anything for this day (a topic, a mood, what to avoid). Saved as feedback for future batches too."></textarea>'
+    + '<div class="dayrow"><button type="button" class="btn" id="day-own">+ Add the Story in the maker below</button><button type="button" class="btn" id="day-savenow">Save batch</button><span class="status" id="day-saved"></span><span class="hint">Make any Story yourself in the maker below, then press this to put it in this day\'s batch.</span></div>'
     + '<div id="day-editbar" class="dayedit" hidden></div>'
     + '<div class="daygrid" id="day-grid"></div>'
     + '<div class="dayrow" id="day-foot" hidden><span id="day-all" style="display:flex;gap:8px;flex-wrap:wrap"></span><button type="button" class="btn" id="day-redraw">Redraw all</button><span class="hint">Add to calendar opens the Hub. Leave that tab open: each next one lands in the same tab.</span></div>';
@@ -6139,7 +6241,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   var dSt = dayBox.querySelector("#day-st"), dGrid = dayBox.querySelector("#day-grid"), dDate = dayBox.querySelector("#day-date");
 
   function dayLink(it){
-    var payload = { title: it.title || "Story", type: (dayT(it.t) || {}).type || "", image: it.img || "", music: it.music || [], date: day.date };
+    var payload = { title: it.title || "Story", type: (dayT(it.t) || {}).type || it.type || "", image: it.img || "", music: it.music || [], date: day.date };
     return hubUrl() + "#addstory=" + encodeURIComponent(JSON.stringify(payload));
   }
   // Add all to calendar (Olly, 2026-11-06): every Story in one link (#addstories). About 1MB for 7 images fits one link;
@@ -6147,7 +6249,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   var dayAllSeq = 0;
   function dayRecode(src, q){ return new Promise(function(ok){ var im = new Image(); im.onload = function(){ var c = document.createElement("canvas"); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext("2d").drawImage(im, 0, 0); ok(c.toDataURL("image/jpeg", q)); }; im.onerror = function(){ ok(src); }; im.src = src; }); }
   function dayAllLink(list, imgs){
-    return hubUrl() + "#addstories=" + encodeURIComponent(JSON.stringify({ date: day.date, items: list.map(function(it, k){ return { title: it.title || "Story", type: (dayT(it.t) || {}).type || "", image: imgs[k], music: it.music || [] }; }) }));
+    return hubUrl() + "#addstories=" + encodeURIComponent(JSON.stringify({ date: day.date, items: list.map(function(it, k){ return { title: it.title || "Story", type: (dayT(it.t) || {}).type || it.type || "", image: imgs[k], music: it.music || [] }; }) }));
   }
   async function dayPrepAll(){
     var host = dayBox.querySelector("#day-all"); if (!host) return;
@@ -6181,8 +6283,8 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       var t = dayT(it.t) || {};
       var c = el("div", "daycard" + (day.editing === n ? " editing" : ""));
       var img = el("img"); img.alt = "Story " + (n + 1); if (it.thumb) img.src = it.thumb;
-      img.onclick = function(){ dayEdit(n); };
-      c.append(img, el("div", "dlab", (n + 1) + " · " + t.type + (t.kt || t.bstyle ? "" : "")), el("div", "dttl", it.title || ""));
+      if (!it.own) img.onclick = function(){ dayEdit(n); };
+      c.append(img, el("div", "dlab", (n + 1) + " · " + (t.type || it.type || "Story") + (it.own ? " · yours" : "")), el("div", "dttl", it.title || ""));
       if (it.music && it.music.length) c.append(el("div", "songs", "♪ " + it.music.join(" · ")));
       var ed = el("button", "btn small", day.editing === n ? "Editing below…" : "Edit"); ed.type = "button"; ed.onclick = function(){ dayEdit(n); };
       var fb = el("textarea"); fb.rows = 2; fb.placeholder = "Feedback for this one"; fb.value = it.fb || ""; fb.oninput = function(){ it.fb = fb.value; daySave(); };
@@ -6194,7 +6296,11 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       a.addEventListener("click", function(e){ if (!it.img){ e.preventDefault(); return; } refresh(); it.sent = true; daySave(); setTimeout(dayCards, 60); });
       var del = el("button", "btn small", "Delete & replace"); del.type = "button"; del.title = "Drops this one and writes a different Story in its place. Your feedback says why.";
       del.onclick = function(){ dayRedo(n, del, true); };
-      c.append(ed, fb, redo, del, a);
+      if (it.own){ // made by Olly in the maker: no rewrite, just remove
+        var rm = el("button", "btn small", "Remove"); rm.type = "button";
+        rm.onclick = function(){ if (day.busy) return; day.items.splice(n, 1); if (day.editing === n) day.editing = -1; daySave(); dayCards(); };
+        c.append(rm, a);
+      } else c.append(ed, fb, redo, del, a);
       dGrid.appendChild(c);
     });
     dayBox.querySelector("#day-foot").hidden = !day.items.length;
@@ -6224,7 +6330,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   async function dayRenderAll(){
     day.busy = true;
     for (var n = 0; n < day.items.length; n++){ dSt.textContent = "Drawing Story " + (n + 1) + " of " + day.items.length + "…"; await dayRenderItem(day.items[n]); dayCards(); }
-    day.busy = false; dayPrepAll(); dSt.textContent = "✓ " + day.items.length + " Stories for " + niceDay(day.date) + ". Check each one.";
+    day.busy = false; dayPrepAll(); daySave(); dSt.textContent = "✓ " + day.items.length + " Stories for " + niceDay(day.date) + ". Check each one.";
   }
   function dayErr(e){ return e && e.code === "rate_limited" ? "Too many requests just now. Try again in a minute." : e && e.code === "timeout" ? "Claude took too long. Try again." : (e && e.message) || "Something went wrong. Try again."; }
   dayBox.querySelector("#day-go").onclick = async function(){
@@ -6265,24 +6371,64 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       var s = list[0];
       day.items[n] = { t:s.t, title:String(s.title || "").trim(), f:s.f, fb:"" };
       daySave(); dayHistSave();
-      await dayRenderItem(day.items[n]); if (day.editing === n) day.editing = -1; dayCards();
+      await dayRenderItem(day.items[n]); if (day.editing === n) day.editing = -1; daySave(); dayCards();
       dSt.textContent = "✓ Story " + (n + 1) + " rewritten";
     } catch(e){ dSt.className = "status err"; dSt.textContent = dayErr(e); }
     day.busy = false; btn.disabled = false; dayPrepAll();
   }
   dayBox.querySelector("#day-redraw").onclick = function(){ if (!day.busy) dayRenderAll(); };
-  // reopen on the last batch (texts only: images are redrawn when the box is opened)
+  // Add your own (Olly, 2026-11-10: "add my own creation from fresh to the batch"): whatever is in the maker right now
+  // joins this day's batch as a finished image, and goes to the calendar with the others.
+  dayBox.querySelector("#day-own").onclick = async function(){
+    if (day.busy) return;
+    if (day.editing >= 0){ dSt.textContent = "Save or cancel the Story you're editing first."; return; }
+    if (!day.items.length) day.date = dDate.value || addDays(isoLocal(new Date()), 1);
+    await render();
+    var k = KINDS[st.kind] || {}, kk = ktKey(), kv = kk && !KT[kk].hook ? ktv(kk)[KT[kk].fields[0][0]] : "";
+    var title = String(st.calTitle || kv || (k.text ? st[k.text] : st.kind === "belief" ? st.oldB : "") || "").replace(/\s+/g, " ").trim();
+    var img = calImage();
+    day.items.push({ t:"own", own:true, title: title || "My Story", type: st.calType || STORY_CAL_TYPE[st.kind] || "", img: img, thumb: img, music: songsNow() });
+    songsNext(); daySave(); dayCards();
+    dSt.className = "status"; dSt.textContent = "✓ Added your Story to " + niceDay(day.date) + " (Story " + day.items.length + ")";
+    dGrid.scrollIntoView({ behavior:"smooth", block:"nearest" });
+  };
+  dayBox.querySelector("#day-savenow").onclick = function(){ dayCloudSoon(); clearTimeout(dayCloud.timer); if (!dayCloud.db){ daySave(); dayCloudStatus("Saved on this device."); return; } dayCloudSave(); };
+  // reopen on the last batch: the online copy (exact images) if there is one, otherwise this device's copy (texts, redrawn)
+  var dayDrawn = false;
+  function dayImgData(url){ return fetch(url).then(function(r){ return r.blob(); }).then(function(b){ return new Promise(function(ok){ var fr = new FileReader(); fr.onload = function(){ ok(fr.result); }; fr.onerror = function(){ ok(""); }; fr.readAsDataURL(b); }); }).catch(function(){ return ""; }); }
   (function(){
     dDate.value = addDays(isoLocal(new Date()), 1);
     var b = store.get("dayBatch");
     if (b && Array.isArray(b.items) && b.items.length && b.date >= isoLocal(new Date())){
       day.date = b.date; dDate.value = b.date;
-      day.items = b.items.filter(function(i){ return dayT(i.t); });
+      day.items = b.items.filter(function(i){ return dayT(i.t) || (i.own && i.img); }).map(function(i){ if (i.own) i.thumb = i.img; return i; });
       dayCards();
-      var drawn = false, box = document.getElementById("tsmBox");
-      var go = function(){ if (drawn || !box.open) return; drawn = true; dayRenderAll(); };
-      box.addEventListener("toggle", go); setTimeout(go, 400);
+      var box = document.getElementById("tsmBox");
+      var go = function(){ if (dayDrawn || !box.open) return; if (dayCloud.db === null && !dayCloud.tried){ setTimeout(go, 400); return; } dayDrawn = true; dayRenderAll(); };
+      box.addEventListener("toggle", go); setTimeout(go, 1500);
     }
+    if (!(window.claude && window.claude.use)){ dayCloud.tried = true; return; }
+    Promise.all([claude.use("db"), claude.use("assets")]).then(async function(r){
+      dayCloud.db = r[0]; dayCloud.assets = r[1];
+      if (!dayCloud.db){ dayCloud.tried = true; return; }
+      var d = await dayCloud.db.doc("daybatch/current").get().catch(function(){ return null; });
+      var c = d && d.exists !== false && d.data ? d.data() : null;
+      if (c && Array.isArray(c.items)){ dayCloud.lastIds = {}; c.items.forEach(function(i){ if (i.imgId) dayCloud.lastIds[i.imgId] = 1; }); }
+      if (!c || !Array.isArray(c.items) || !c.items.length || !(c.date >= isoLocal(new Date())) || day.busy || dayDrawn){ dayCloud.tried = true; return; }
+      dayDrawn = true; dayCloud.tried = true; dSt.textContent = "Loading your saved batch…";
+      day.date = c.date; dDate.value = c.date; day.editing = -1;
+      day.items = c.items.filter(function(i){ return dayT(i.t) || i.own; });
+      for (var n = 0; n < day.items.length; n++){
+        var it = day.items[n], u = it.imgUrl || (it.imgId ? "/_blob/" + it.imgId : "");
+        if (u){ var data = await dayImgData(u); if (data){ it.img = data; it.thumb = data; it.imgUp = data; } }
+      }
+      day.items = day.items.filter(function(i){ return !i.own || i.img; });
+      store.set("dayBatch", { date:day.date, items:day.items.map(function(i){ return { t:i.t, title:i.title, f:i.f, sent:!!i.sent, fb:i.fb || "", own:i.own, type:i.type, music:i.music }; }) });
+      dayCards();
+      var missing = day.items.filter(function(i){ return !i.img; });
+      for (var k = 0; k < missing.length; k++){ await dayRenderItem(missing[k]); dayCards(); }
+      dayPrepAll(); dSt.textContent = "✓ Your saved batch for " + niceDay(day.date) + " is back."; dayCloudStatus("✓ Batch saved. It stays if you refresh.");
+    }).catch(function(){ dayCloud.tried = true; dSt.textContent = ""; });
   })();
 
   window.tsmLoad = function(o){

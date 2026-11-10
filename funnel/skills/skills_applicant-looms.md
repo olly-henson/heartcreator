@@ -1,5 +1,7 @@
 # Applicant Looms: the framework
 
+> **⚠️ CURRENT FLOW (2026-11-10): "Flow v3" near the end of this file.** Earlier step-by-step sections are kept for history; where they disagree, Flow v3 wins.
+
 How Olly turns an application for The Heart Attractor Program into a sale with one short Loom video, with no sales call.
 Built 2026-11-01 from Frankie's "close in 5-minute videos" method, adapted to our offer and argument.
 
@@ -261,6 +263,9 @@ Mark them **Not a fit**.
 - **Stuck typing dots ("..." for an hour) are an app glitch** (iMessage keeps them when someone leaves text in the box; WhatsApp needs a restart). Do nothing and don't message about it: same as no chasing.
 
 ### Never
+- Never rewrite Olly's message wording when he pastes it: build it as written, fix only typos ("Hey NAME, Hey NAME" -> once), and keep his order (WhatsApp / iMessage ALWAYS before the email).
+- Never leave an old link or step in a send button after the flow changes (2026-11-10: the Sales video button still sent the retired YouTube video). When the flow changes, grep the card for every message and the process steps box.
+- Never answer "what did Frankie say" from memory: the video-message close comes from his saved line "Price and everything's in there... Any questions, just reply here."
 - Never put an applicant's name or answers in a file in this repo (it's public). Drafts live on their Hub card (KV).
 - Never send an intro that promises something ("here's how 👇") before that thing exists.
 - Never ask applicants about price before the video (overrides the 2026-11-04/05 price check).
@@ -414,3 +419,20 @@ One video per gender, sent only once they've bought into the plan and ask "how d
 - 2026-11-10: Skill review. Added "Sales video (VSL) v2" (process, rules with reasons, example chat, Never list) from Olly's edits this session: no Loom, own tracked page; outcome titles; steps stay in the plan; end-result picture instead of member proof; his works-if, price and timeline wording; no guarantee, no 3-month minimum; one fixed layout with the webcam top-right; wide photos stay wide; words next to their photo; real screens on laptop + phone, readable, exact copies; made-up support chat instead of blur; all slides up front; playable previews. Marked the YouTube/Loom hosting plan, the 🎥 YouTube VSL button, the old VSL map and its 14-day guarantee as superseded.
 -->
 
+
+## Flow v3 (Olly's wording, 2026-11-10) - CURRENT, replaces every earlier message order
+1. WhatsApp / iMessage ALWAYS first: "Hey [Name], it's Olly Henson. / Just got your application for The Heart Attractor Program, thanks for filling it in. / Give me a few minutes, I'm recording you a quick voice note with a plan of how I'd help you with this."
+2. Voice note 1: confirms the application looks good, asks if they'd like their plan of action sent through.
+3. Email just after: "...All looks really good. / I've sent you a message on WhatsApp (or iMessage) with the next steps. / Chat soon, / Olly". No phone number = one email that asks the plan question itself.
+4. Once they reply: make + send their plan link (plan.html message unchanged), then voice note 2: "here's the plan of action I've put together for you, that we'll use to help you meet this special person. Let me know your thoughts once you've checked it out."
+5. Wait for them to check it (the card shows opens, page reached and time per page). Answer questions one by one.
+6. When they ask how to start / the price: send their own video link (/p/<code>/video) + voice note 3: "it goes through the program, the steps, the investment and how to get started... any questions, just reply here" (Frankie's saved line: "Price and everything's in there, so you can watch it in your own time... Any questions, just reply here").
+7. One follow-up idea, only if they watched. Then the join link.
+Removed from the card: "application successful" texts, the old voice note plan, email-only plan, the YouTube sales video (youtu.be/PhcbPYPfUU0).
+
+Stages (2026-11-10): New → Contacted → Replied → Plan sent → Plan read → Asked questions / next steps (Olly: after plan read) → Video sent → Video watched → Clicked Join → Joined (+ Gone quiet, Not a fit). Plan sent/read, Video watched and Clicked Join move by themselves from the tracking; Asked questions is ticked by hand.
+
+<!-- 2026-11-10 skill review: Flow v3 is current (see "Flow v3" near the end): first message -> voice note -> email; plan
++ voice note once they reply; their own video page + voice note; one follow-up idea; join link. Stages v3 add Plan sent,
+Plan read, Asked questions / next steps (Olly's), Video sent, Video watched, Clicked Join. Superseded: the voice-note-only
+plan, "application successful" texts, the master YouTube VSL message. -->

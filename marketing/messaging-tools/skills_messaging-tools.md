@@ -193,6 +193,10 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **Founder story:** only "worked on my emotional state every day, then met Jules and we both just knew". The old 7-year relationship / breakup / teachers story was removed everywhere 2026-11-05.
 
 ### Never
+- Never tell Olly a refresh or close is safe for work in progress unless that save path was tested where he uses it (2026-11-10: I said the Story batch would survive a refresh; it didn't, and he had to start again). The day batch now saves online (db doc `daybatch/current` + each image as an asset) with a "✓ Batch saved" line; browser storage is only a backup.
+- Never let a day of Stories repeat a LOOK, not just a type (Olly: "real variation ... the style of it to also be different"). Every DAY_T template has a `DAY_LOOK`; the prompt bans two of the same look in a day and asks for 3+ templates unused on recent days.
+- Never make a design element that can't be switched off when it carries a person's photo (Heart + brain got "Remove the photo"); and never make a batch Claude-only: Olly can add his own Story to it (`+ Add the Story in the maker below`).
+- Never trust the sales-video photo file names for gender: `vsl/img/pov-male.jpg` shows a WOMAN and `pov-female.jpg` a MAN (named by who is looking). Look at the image.
 - Never let a Reel hook run past 7 words, and never copy a long outlier hook at full length: trim it (2026-11-04).
 - Never make Olly go to another tab to get the words for an image he's making (meme text lived in the hidden Memes channel while the Story maker only had a blank editor, 2026-11-02).
 
@@ -350,3 +354,9 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **2026-11-04 (later): Skill review.** Rules: Reel hooks 4 to 7 words (ideal "How to attract your person - scientifically"), overriding 5 to 11; proven hooks always trimmed; match Olly's own Reel titles on the calendar (calBrief). Never: a Reel hook over 7 words. Examples: the ideal-length hook plus two of his calendar titles. Process: a publish to WsnecJvYahvCKVDevtrUqc from a new session is refused once and shows the live diff; if the diff is only my own edits, publish again unchanged.
 
 - 2026-11-05 skill review: Reels switched to hooks only with FEELING default and "Add all to calendar" (Olly: "I only need the cover photo with the hook... add all 6 to calendar"), noted why the email prompt carries Reel titles, and replaced the founder story everywhere.
+
+<!-- 2026-11-10 skill review: Story day batch: 29 designs with looks (lead_feeling/notes/player, belief mythtruth/post/
+photo/dm/notes, science heart/sync/table/photo), new science style "Heart + brain" (sync) with a photo toggle, add-your-own,
+batch saved online after a refresh lost one. Reels tab takes "An applicant's words" (reelVoiceBrief: hooks from their pain
++ outcomes, stage says Pain:/Outcome:). Lessons: don't promise persistence you haven't tested; variety means look, not type;
+VSL photo names are swapped. -->

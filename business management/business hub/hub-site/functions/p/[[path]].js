@@ -10,6 +10,16 @@
 // The code is 10 random characters, so a link can't be guessed. Nothing here is in the repo.
 
 import { pushAll } from "../../lib/webpush.js";
+import { isOwner } from "../../lib/owner.js";
+// Olly's own opens never count (2026-11-10): the Hub login cookie, OR his internet address (saved each time he opens
+// the Hub, lib/owner.js), which also catches links he taps inside WhatsApp's own browser (no Hub cookie there).
+async function ownerView(env, request) {
+  return /(?:^|;\s*)CF_Authorization=/.test(request.headers.get("cookie") || "") || (await isOwner(env, request).catch(function () { return false; }));
+}
+function device(request) {
+  const ua = request.headers.get("user-agent") || "";
+  return /iPhone/.test(ua) ? "iPhone" : /iPad/.test(ua) ? "iPad" : /Android/.test(ua) ? "Android" : /Macintosh/.test(ua) ? "Mac" : /Windows/.test(ua) ? "Windows" : "other";
+}
 
 function json(body, status) {
   return new Response(JSON.stringify(body), {
@@ -55,16 +65,41 @@ export async function onRequest({ request, env, params }) {
     if (!id) return json({ ok: false }, 404);
     // Olly's own opens never count (2026-11-08): only he can log in to the Hub, so a Cloudflare Access
     // login cookie on this request means it's him (the cookie is set for the whole hub.ollyhenson.com site).
-    if (/(?:^|;\s*)CF_Authorization=/.test(request.headers.get("cookie") || "")) return json({ ok: true, owner: true });
+    if (await ownerView(env, request)) return json({ ok: true, owner: true });
     const what = (await request.text()).trim();
     if (what !== "open" && what !== "pdf") return json({ ok: false }, 400);
     const key = "planview:" + id;
     const cur = await env.HUB_KV.getWithMetadata(key);
     const m = Object.assign({ sent: null, opens: 0, first: null, last: null, pdf: 0 }, cur.metadata || {});
     const now = new Date().toISOString();
-    if (what === "open") { m.opens = (m.opens || 0) + 1; m.first = m.first || now; m.last = now; }
+    let val = {}; try { val = JSON.parse(cur.value || "{}") || {}; } catch { val = {}; }
+    if (what === "open") {
+      m.opens = (m.opens || 0) + 1; m.first = m.first || now; m.last = now; m.dev = device(request);
+      val.visits = (val.visits || []).concat([{ t: now, dev: m.dev }]).slice(-30);
+    }
     else { m.pdf = (m.pdf || 0) + 1; }
-    await env.HUB_KV.put(key, "", { metadata: m });
+    await env.HUB_KV.put(key, JSON.stringify(val), { metadata: m });
+    return json({ ok: true });
+  }
+
+  // Reading heat map (2026-11-10): POST /p/<code>/pseen {secs:[per page], far, n}. Totals in plantime:<id>,
+  // furthest page + total read time on planview:<id> metadata (so the Hub's one list call shows them).
+  if (action === "pseen" && request.method === "POST") {
+    if (!id) return json({ ok: false }, 404);
+    if (await ownerView(env, request)) return json({ ok: true, owner: true });
+    let b = {};
+    try { b = JSON.parse((await request.text()).slice(0, 4000)); } catch { return json({ ok: false }, 400); }
+    const n = Math.max(1, Math.min(40, b.n | 0)), add = (Array.isArray(b.secs) ? b.secs : []).slice(0, n).map(function (s) { return Math.max(0, Math.min(120, +s || 0)); });
+    const tk = "plantime:" + id;
+    let t = {}; try { t = JSON.parse((await env.HUB_KV.get(tk)) || "{}") || {}; } catch { t = {}; }
+    t.secs = Array.isArray(t.secs) && t.secs.length === n ? t.secs : new Array(n).fill(0);
+    add.forEach(function (s, i) { t.secs[i] = Math.round((t.secs[i] + s) * 10) / 10; });
+    t.far = Math.max(t.far || 0, Math.min(n, b.far | 0)); t.n = n;
+    await env.HUB_KV.put(tk, JSON.stringify(t));
+    const key = "planview:" + id, cur = await env.HUB_KV.getWithMetadata(key);
+    const m = Object.assign({}, cur.metadata || {});
+    m.far = t.far; m.pages = n; m.read = Math.round(t.secs.reduce(function (a, s) { return a + s; }, 0));
+    await env.HUB_KV.put(key, cur.value || "", { metadata: m });
     return json({ ok: true });
   }
 
@@ -117,7 +152,7 @@ export async function onRequest({ request, env, params }) {
 
   if (action === "vseen" && request.method === "POST") {
     if (!id) return json({ ok: false }, 404);
-    if (/(?:^|;\s*)CF_Authorization=/.test(request.headers.get("cookie") || "")) return json({ ok: true, owner: true });
+    if (await ownerView(env, request)) return json({ ok: true, owner: true });
     let b = {};
     try { b = JSON.parse(await request.text()); } catch { return json({ ok: false }, 400); }
     if (!/^(open|tick|end|join)$/.test(b.ev || "")) return json({ ok: false }, 400);

@@ -63,6 +63,10 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 - **Old fixed link https://hub.ollyhenson.com/api/track/upload** (Olly's phone bookmark) now 302s to https://upload.ollyhenson.com (2026-11-08). `?lan=1` = the old Wi-Fi jump: upload_server `report_ip()` sends the Wi-Fi address (`wifi_ip()`, skips VPN adapters) to the Hub every 2 min when it changes; functions/api/track/upload.js stores KV `uploadip` (private IPv4 only, POST needs REELS_KEY). Keep the home Wi-Fi on **Public**: the Python firewall rules only allow Public (switching to Private blocked the phone, 2026-11-08). Tailscale is no longer needed (the tunnel does "reachable anywhere").
 
 ### Never
+- Never leave the first frame to chance: it IS the cover. cover_pick.make_cover() picks his best expression (FER+ model, eyes open, no hand, still) and the editor draws it into frame 0 in its one encode (Olly 2026-11-10: "some of the expressions are a bit too awful").
+- Never add a step that re-decodes every frame of the 4K HEVC raw or re-encodes the finished video: the first cover version added ~3 min a Reel and Olly said "that takes way too long" / "hurry up". Time any new step on a real 3-minute raw before rolling it out (keyframes only = 15 s).
+- Never judge an expression picker by one frame: compare old vs new stills side by side on 2+ Reels (simple Haar smile checks picked another mid-word frown; the first model pick had his hand in shot).
+- Never run reel_editor.py with `python -I` and assume local imports work: it puts its own folder on sys.path for cover_pick.
 - Never let one day take more than 6 Reels (`MAX_A_DAY`), and never change it in one place only: Hub `DAILY_REEL_TARGET` must match.
 - Never put a new hook over old footage or splice a new opener on to "freshen" a Reel. Olly: "I tie my content into the hook itself throughout": the hook and the whole video are one piece. Recycle = the same video unchanged.
 - Never cut silences, pauses, misspeaks or retakes from the middle, except shortening pauses to fit 2:59.
@@ -114,7 +118,7 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 - Closing the app stopped the upload; picking again did nothing: wake lock + Options→Current tip + 20s watchdog.
 - Process lessons: GHL rejects cover fields on scheduled posts (test with real scheduled posts); GHL swaps posts on publish (parentPostId); Cloudflare 403s Python's UA; emoji crashed the cp1252 print; heredoc backslashes.
 - "A tad wide ... right tight on the edge of the screen": HOOK_MAX 940 -> 780 (phones crop the sides) + shrink-to-fit. Overridden: 940px.
-- Dropped by Olly: mid-blink first frame is fine (the hook matters more); no YouTube cover work.
+- Dropped by Olly: no YouTube cover work. ("Mid-blink first frame is fine" was OVERRIDDEN 2026-11-10: see Cover still.)
 -->
 <!-- 2026-11-04 (review 4, recycling talk): "I tie my content into the hook itself throughout" -> Never rule: no new hooks / spliced openers on old footage. Overridden: my suggestions "new hook text", "record a 5-second new opener", "start from a later sentence". Olly's call: occasional unchanged repost after 90+ days. -->
 
@@ -125,3 +129,20 @@ Olly only records. His day: push hooks from the content generator to the Hub cal
 <!-- 2026-11-07 skill review: Max 6 Reels a day (MAX_A_DAY in ghl_poster.py + Hub DAILY_REEL_TARGET); a full calendar day now pushes the next Reel to the following day (before, a matched Reel always went on its own date, so 7 uploads all went out the same day and Olly thought he was behind). Added how to answer "where am I up to" (GHL scheduled posts, Windhoek time, parentPostId upload time) and the safe way to move a scheduled Reel (unschedule + schedule, hub_stage). Overridden: max 10 a day. -->
 
 <!-- 2026-11-08 skill review (Cloudflare Tunnel session): (1) Olly read "100 MB cap" as "I can't upload all my videos" -> Rule + Example: lead with what a limit means for him. (2) He mixed up Drive vs the link -> Rule: Drive = getting videos to the laptop, link = approving. (3) Deleted dud kept its calendar hook so the re-take couldn't match -> code fix (Delete frees the hook), Process step 3 recovery steps, Never rule. (4) "Lost count of uploads" -> Rule: check reels.json yourself, report, name the duplicate-check limit. (5) Login tab closed / landed on dashboard, old Access URL 404 -> Rule: screenshot before naming buttons, re-open the login link, Recents -> Applications. (6) Auto-start: classifier blocked the Windows service; the service also died (1067) -> Never rule widened: Olly runs install scripts via `!`, tunnel rides on Start Reel Upload.bat. (7) Heredoc mangled `\t` paths 3 more times -> Never rule reinforced. Removed/overridden: "review ... home Wi-Fi only", "phone + laptop must share a Wi-Fi", "Tailscale later", 20s watchdog (now 30s + per-piece retries). Moved 4 non-"Never" notes (rebalance, Drive folder, fixed link) out of the Never list into Rules. -->
+
+## Cover still (2026-11-10)
+- Olly: "a rule that ... chooses the best photo/still of me with the hook. Some of the expressions are a bit too awful."
+- SPEED v2 (same day, Olly: "that takes way too long"): reel_editor.py calls cover_pick.make_cover() BEFORE its one encode and
+  overlays the still on frame 0 inside that encode (no second save). ffmpeg decodes keyframes only (-skip_frame nokey, about
+  1 a second). Adds ~25 s to an edit (was ~3 min). reel_editor puts its own folder on sys.path so `python -I` finds cover_pick.
+- (v1, replaced) reel_editor.py ended by calling cover_pick.apply(out, raw): ffmpeg pulled 5 small frames a second from the trimmed raw clip,
+  each is scored (FER+ emotion model in reels/models/emotion-ferplus-8.onnx: happy best, neutral fine, frown/sad/angry
+  penalised; both eyes open required; hand beside the face and movement penalised), the winner is drawn full size with
+  the same hook box and becomes frame 0 (1/30 s, invisible in playback). Instagram's cover = first frame, so that's the cover.
+- Result saved in the plan as "cover". Any failure keeps the normal first frame.
+- Already-edited Reels: python reels/recover_ready.py (ready/editing only; scheduled ones are already in GHL).
+
+<!-- 2026-11-10 skill review: Cover still added (cover_pick.py, FER+ model in reels/models, recover_ready.py for Reels
+already edited). Olly's feedback: expressions "too awful" -> pick the best still; "takes way too long" -> keyframe-only scan
+inside the one encode (+25 s). Process lessons: time it on a real raw first; compare stills visually; -I hides local
+imports. Scheduled Reels in GHL keep their old covers unless Olly asks to re-upload. -->
