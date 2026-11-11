@@ -127,6 +127,7 @@ Notes on fields that aren't obvious:
 ## 4. House conventions (follow these, don't reinvent)
 
 ### Never
+- Never open a day's content below the calendar on the phone without bringing it on screen (2026-11-11: the carousel calendar "nothing is happening" on mobile; the panel opened off-screen). Any tap that reveals content scrolls it into view (dayIntoView).
 - Never put long machine text in a box Olly reads while writing (2026-11-10: a full UTM link inside an email draft made him ask "is this how it's supposed to look?"). Store a short token (`[here](apply)`) and expand it at send time (`emExpand()`); that also keeps the link's tracking in step with the subject if he changes it later.
 - Never count Olly's own visits. Funnel pages: `/api/track` skips his IPs (`lib/owner.js`, saved each time he opens the Hub). Plan + video pages: `ownerView()` in `functions/p/[[path]].js` = Hub cookie OR his IP, because links he taps inside WhatsApp open in its own browser with no Hub cookie (2026-11-10: "is their opening definitely them or is it me?").
 - Never write `planview:<id>` with a fixed value (`""` / `"x"`): its value now holds the open log (`{visits:[{t,dev}]}`). Every writer keeps `cur.value`.
@@ -555,3 +556,5 @@ rule, already marked overridden and now superseded by the three tables. -->
 <!-- 2026-11-10 skill review: added the /api/track-only rule for artifact-facing endpoints, the secret hand-off command (Claude is blocked from secrets; npx EBUSY), and curl-the-custom-domain. Strengthened the heredoc pitfall after it recurred in the generator. Why: the live email-stats build hit all three. -->
 
 <!-- 2026-11-11 skill review: KV free-plan write cap. Replaced the overridden "never add autosave" rule with how autosave really works (20s debounce + save on hide). Added the KV budget rule (1,000 writes/day, once-a-minute tracking max, estimate writes before adding beacons) and the plan-view.html builder gap. Why: Cloudflare warned at 50% of the daily cap; hitting it would stop Hub saves and prospect tracking. -->
+
+<!-- 2026-11-11 skill review: Never list + design note: day panels (carousel, email, YouTube) scroll into view when a day is tapped, because on the phone they opened off-screen and Olly thought nothing happened. Not tested on a real phone by Claude; Olly to confirm. -->

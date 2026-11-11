@@ -272,6 +272,7 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
             <option value="apply">Apply for The Heart Attractor Program</option>
           </select></label>
           <div class="f full" id="crsShotWrap" hidden><span>Member screenshot</span><span class="hint">One real message or post, shared with permission. Names and profile photos get covered for you: check the covers, then press Generate.</span><div class="row"><label class="tsmfile">Upload the screenshot<input type="file" id="crsShot" accept="image/*"></label></div><div id="crsShotHost"></div></div>
+          <label class="f full" id="crsPostWrap" hidden>Your post or email <span class="hint">Paste the whole thing. The carousel tells the same story in short slides, in your words, and ends on Comment EMOTION. Nothing gets added that isn't in it.</span><textarea id="crsPost" rows="8" placeholder="Paste your post or email here"></textarea><span class="row"><button type="button" class="btn small" id="crsPostClear">Clear</button></span></label>
           <label class="f full" id="emailResultWrap" hidden>A real result to share <span class="hint">Optional. Paste a member's win or message (with their permission, name left out). Mixed week then includes one email built around it, or pick Results share to write it on its own.</span><textarea id="emailResult" rows="3" placeholder="e.g. I went on a date at the weekend and for the first time I didn't overthink a single text"></textarea></label>
           <label class="f full" id="emailVoiceWrap" hidden>An applicant's words, for inspiration <span class="hint">Optional. In the Hub: Sales, open an applicant, tap 💡 Copy for content ideas, then paste here. Names and personal details are already taken out. Emails use their feelings and patterns as the angle; Reel hooks are built from their pain and the outcomes they want. Never their story or their details. Clear it when you're done.</span><textarea id="emailVoice" rows="4" placeholder="Paste from the Hub's 💡 Copy for content ideas"></textarea><span class="row"><button type="button" class="btn small" id="emailVoiceClear">Clear</button></span></label>
           <div class="f full" id="reelCtaWrap"><span>Call to action (on every Reel)</span><p class="ctabox" id="reelCta"></p></div>
@@ -1053,7 +1054,8 @@ Object.assign(POST_TYPES, {
     rule:"Use only what's in the core message (emotional contagion; HeartMath's early, small studies). Present it simply and honestly. Never claim the heart's field attracts a partner."},
   "Carousel · Personal story": {group:"Carousel", desc:"Olly's real story as the belief shift.",
     formats:["The thing that changed before I met my wife", "What I focused on every day before I met my wife"],
-    rule:"Only Olly's real story: before he met his wife Jules he was dating and enjoying himself, not trying to settle down, and focusing every day on keeping himself in a better emotional state; when they met they both just knew it was different. The key was working on his emotional state every day, not learning more or fixing himself. Never mention a past relationship, a breakup, 2019 or any teachers or techniques he tried (Olly 2026-11-05: the old story is out of the messaging). Never invent details: use [placeholders] for anything not given."}
+    rule:"Only Olly's real story: before he met his wife Jules he was dating and enjoying himself, not trying to settle down, and focusing every day on keeping himself in a better emotional state; when they met they both just knew it was different. The key was working on his emotional state every day, not learning more or fixing himself. Never mention a past relationship, a breakup, 2019 or any teachers or techniques he tried (Olly 2026-11-05: the old story is out of the messaging). Never invent details: use [placeholders] for anything not given."},
+  "Carousel · From my post": {group:"Carousel", desc:"Paste one of your posts or emails below and it becomes a story carousel in your words, ending on Comment EMOTION for The Feeling Finder.", formats:[], rule:"FROMPOST"}
 });
 /* YouTube community posts (2026-10-28). Same type names as the Hub's YouTube community calendar (after "YouTube · "). */
 Object.assign(POST_TYPES, {
@@ -1140,7 +1142,9 @@ const cImg = (function(){
   // your uploads first (newest first), then the built-in photos
   const photos = () => (window.cigGallery ? window.cigGallery() : []).concat(BUILT.map(n => "cig-assets/" + n + ".jpg"));
   const st = {style: store.get("crs-style2", "photo"), size: Number(store.get("crs-size", 100)) || 100, dy: Number(store.get("crs-dy", 0)) || 0,
-    photo: store.get("crs-photo", ""), per: {}, target: "all", slides: [], idea: null};
+    photo: store.get("crs-photo", ""), per: {}, target: "all", slides: [], idea: null,
+    // Same top line (Olly, 2026-11-11): every slide's text starts at the same height and shrinks to fit below it
+    topOn: !!store.get("crs-top-on", false), topY: Number(store.get("crs-top-y", 300)) || 300};
   const box = el("details", "card"); box.id = "crsBox"; box.hidden = true;
   const sum = el("summary"); sum.append(el("b", "", "Carousel maker · v2026-11-04f"), el("span", "hint", " 1080 × 1440 a slide. Press Make carousel on an idea, pick your photo, edit any slide below, then save the slides."));
   const inner = el("div", "stack"); inner.style.marginTop = "14px";
@@ -1374,11 +1378,18 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
     }
   }
   function slideSrc(n){ return st.per[n] || st.photo || photos()[0]; }
+  // Photo zoom and position per slide (Olly, 2026-11-11): sl.pz = zoom % (100 = fills the slide), sl.px / sl.py = -100..100,
+  // a share of the spare photo on each side, so the photo always covers the whole slide (no gaps).
+  function photoBox(img, sl){
+    const z = Math.max(1, (Number(sl.pz) || 100) / 100), sc = Math.max(W / img.width, H / img.height) * z;
+    const w = img.width * sc, h = img.height * sc, sx = (w - W) / 2, sy = (h - H) / 2;
+    return {w, h, sx, sy, x: -sx + (Number(sl.px) || 0) / 100 * sx, y: -sy + (Number(sl.py) || 0) / 100 * sy};
+  }
   async function background(ctx, n){
     if (st.style === "photo") {
       try {
-        const img = await loadI(slideSrc(n)), sc = Math.max(W / img.width, H / img.height);
-        ctx.drawImage(img, (W - img.width * sc) / 2, (H - img.height * sc) / 2, img.width * sc, img.height * sc);
+        const img = await loadI(slideSrc(n)), b = photoBox(img, st.slides[n] || {});
+        ctx.drawImage(img, b.x, b.y, b.w, b.h);
         return;
       } catch {}
     }
@@ -1414,14 +1425,22 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
     ctx.save(); ctx.shadowColor = "rgba(0,0,0,.45)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 12; ctx.fillStyle = "#fff"; rr(ctx, x, y, w, h, 28); ctx.fill(); ctx.restore();
     ctx.save(); rr(ctx, x, y, w, h, 28); ctx.clip(); ctx.drawImage(img, x, y, w, h); ctx.restore();
   }
+  // where slide 1's text starts (Olly, 2026-11-11: "adjust the height from the first slide and that sets the height")
+  function firstTop(ctx){
+    const sl = st.slides[0] || {}, beats = (sl.beats || []).filter(b => String(b).trim());
+    if (st.shot || !beats.length) return st.topY;
+    const L = layout(ctx, beats, (Number(sl.sz) || 100) / 100, 0);
+    return sl.c ? Math.round((H - L.h) / 2) : Math.min(H - L.h - 40, Math.max(40, H * 0.56 - L.h / 2 + st.dy + (Number(sl.dy) || 0)));
+  }
   function beatsOn(ctx, beats, sl, top){
     if (top) return; // slide 1 of a Member win: shotOn draws its caption
     sl = sl || {};
-    const L = layout(ctx, beats, (Number(sl.sz) || 100) / 100, top ? H * 0.24 : 0);
+    const n = st.slides.indexOf(sl), ty = st.topOn && n > 0 ? firstTop(ctx) : null;
+    const L = layout(ctx, beats, (Number(sl.sz) || 100) / 100, ty != null ? H - 60 - ty : 0);
     ctx.font = "700 " + L.sz + "px Poppins, sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
     const widest = Math.max(0, ...L.blocks.flat().map(t => ctx.measureText(t).width)) + L.pad * 2;
     const x = sl.c ? Math.round((W - widest) / 2) : Math.max(16, Math.min(W - widest - 16, 56 + (Number(sl.dx) || 0)));
-    let y = top ? Math.max(40, 64 + (Number(sl.dy) || 0)) : sl.c ? Math.round((H - L.h) / 2) : Math.min(H - L.h - 40, Math.max(40, H * 0.56 - L.h / 2 + st.dy + (Number(sl.dy) || 0)));
+    let y = ty != null ? ty : sl.c ? Math.round((H - L.h) / 2) : Math.min(H - L.h - 40, Math.max(40, H * 0.56 - L.h / 2 + st.dy + (Number(sl.dy) || 0)));
     L.blocks.forEach(ls => {
       ctx.fillStyle = "#ffffff"; blob(ctx, x, y, ls.map(line => ctx.measureText(line).width + L.pad * 2), L.lh, L.sz * 0.3); ctx.fill();
       ls.forEach((line, i) => { ctx.fillStyle = "#111111"; ctx.fillText(line, x + L.pad, y + i * L.lh + L.lh * 0.72); });
@@ -1526,13 +1545,69 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
     buildEditors(); later();
     if (btn) { btn.textContent = "✓ Every slide centred"; setTimeout(() => { btn.textContent = "Centre text on every slide"; }, 1500); }
   }
+  // Swipe preview (Olly, 2026-11-11): the finished slides as Instagram shows them, before downloading. Swipe, arrows,
+  // arrow keys or the dots; the caption sits underneath like a post. Closes on ✕, Escape or a tap outside.
+  async function swipePreview(btn){
+    if (btn) btn.textContent = "Getting slides ready…";
+    try { await draw(); } catch {}
+    if (btn) btn.textContent = "▶ Preview as a swipe";
+    const imgs = cvs.slice(0, st.slides.length).map(cv => { try { return cv.toDataURL("image/jpeg", 0.85); } catch { return ""; } });
+    if (!imgs.length) return;
+    let cap = ""; try { cap = capTA.value || ""; } catch {}
+    const ov = el("div"); ov.setAttribute("role", "dialog"); ov.setAttribute("aria-label", "Carousel swipe preview");
+    ov.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto";
+    const ph = el("div"); ph.style.cssText = "width:min(420px,100%);background:#fff;color:#111;border-radius:14px;overflow:hidden;font:14px/1.4 system-ui,sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.5);max-height:calc(100vh - 32px);display:flex;flex-direction:column";
+    const top = el("div"); top.style.cssText = "display:flex;align-items:center;gap:8px;padding:10px 12px;font-weight:600";
+    const av = el("img"); av.src = "cig-assets/olly-pfp-circle.jpg"; av.alt = ""; av.style.cssText = "width:30px;height:30px;border-radius:50%;object-fit:cover;background:#ddd";
+    const cnt = el("span", "", "1/" + imgs.length); cnt.style.cssText = "margin-left:auto;font-weight:500;font-size:12px;background:rgba(0,0,0,.65);color:#fff;border-radius:10px;padding:2px 8px";
+    const x = el("button", "", "✕"); x.type = "button"; x.setAttribute("aria-label", "Close preview"); x.style.cssText = "border:0;background:none;font-size:20px;cursor:pointer;color:#111;padding:0 2px";
+    top.append(av, el("span", "", "attractwitholly"), cnt, x);
+    const vp = el("div"); vp.style.cssText = "position:relative;flex:none";
+    const strip = el("div"); strip.style.cssText = "display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;aspect-ratio:3/4;background:#000";
+    imgs.forEach((u, n) => { const im = el("img"); im.src = u; im.alt = "Slide " + (n + 1); im.draggable = false; im.style.cssText = "flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start"; strip.appendChild(im); });
+    const arrow = (s, d) => { const b = el("button", "", s); b.type = "button"; b.setAttribute("aria-label", d < 0 ? "Previous slide" : "Next slide"); b.style.cssText = "position:absolute;top:50%;transform:translateY(-50%);" + (d < 0 ? "left:8px" : "right:8px") + ";width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.85);color:#111;font-size:16px;cursor:pointer"; b.onclick = () => go(cur + d); return b; };
+    const prev = arrow("‹", -1), next = arrow("›", 1);
+    vp.append(strip, prev, next);
+    const dots = el("div"); dots.style.cssText = "display:flex;justify-content:center;gap:4px;padding:8px 0 4px";
+    const ds = imgs.map((_, n) => { const d = el("span"); d.style.cssText = "width:6px;height:6px;border-radius:50%;background:#c7c7c7;cursor:pointer"; d.onclick = () => go(n); dots.appendChild(d); return d; });
+    // the caption is editable here and stays in step with the maker's Caption box (Olly, 2026-11-11)
+    const cp = el("div"); cp.style.cssText = "padding:4px 12px 14px;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:4px";
+    const ct = document.createElement("textarea"); ct.value = cap; ct.placeholder = "Write your caption"; ct.setAttribute("aria-label", "Caption");
+    ct.style.cssText = "width:100%;box-sizing:border-box;min-height:160px;border:1px solid #dbdbdb;border-radius:8px;padding:8px;font:14px/1.4 system-ui,sans-serif;color:#111;background:#fff;resize:vertical";
+    ct.oninput = () => { try { capTA.value = ct.value; capTA.oninput(); } catch {} };
+    const ch = el("span", "", "Edits here save to your caption."); ch.style.cssText = "font-size:12px;color:#737373";
+    cp.append(el("b", "", "attractwitholly"), ct, ch);
+    ph.append(top, vp, dots, cp); ov.appendChild(ph); document.body.appendChild(ov);
+    let cur = 0;
+    const show = n => { cur = n; cnt.textContent = (n + 1) + "/" + imgs.length; ds.forEach((d, i) => d.style.background = i === n ? "#0095f6" : "#c7c7c7"); prev.style.visibility = n > 0 ? "visible" : "hidden"; next.style.visibility = n < imgs.length - 1 ? "visible" : "hidden"; };
+    const go = n => { n = Math.max(0, Math.min(imgs.length - 1, n)); strip.scrollTo({left: n * strip.clientWidth, behavior: "smooth"}); show(n); };
+    strip.addEventListener("scroll", () => { const n = Math.round(strip.scrollLeft / (strip.clientWidth || 1)); if (n !== cur) show(n); });
+    // mouse drag to swipe on a computer
+    let md = null;
+    strip.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") return; md = {x: e.clientX, n: cur}; e.preventDefault(); });
+    const up = e => { if (!md) return; const dx = e.clientX - md.x; if (Math.abs(dx) > 40) go(md.n + (dx < 0 ? 1 : -1)); md = null; };
+    window.addEventListener("pointerup", up);
+    const close = () => { ov.remove(); document.removeEventListener("keydown", key); window.removeEventListener("pointerup", up); };
+    const key = e => { if (e.key === "Escape") close(); else if (e.target === ct) return; else if (e.key === "ArrowRight") go(cur + 1); else if (e.key === "ArrowLeft") go(cur - 1); };
+    document.addEventListener("keydown", key);
+    x.onclick = close; ov.addEventListener("click", e => { if (e.target === ov) close(); });
+    show(0); x.focus();
+  }
   function buildEditors(){
     eds.textContent = ""; previews = [];
     if (st.slides.length) {
       const ar = el("div", "row"), ab = el("button", "btn small primary", "Centre text on every slide");
       ab.type = "button"; ab.onclick = () => centreAll(ab);
-      ar.append(ab, el("span", "hint", "Puts each slide's text in the exact middle, whatever the box sizes."));
+      const sw = el("button", "btn small", "▶ Preview as a swipe"); sw.type = "button"; sw.onclick = () => swipePreview(sw);
+      ar.append(ab, sw, el("span", "hint", "Puts each slide's text in the exact middle, whatever the box sizes."));
       eds.appendChild(ar);
+      // Same top line: every slide's text starts where slide 1's does; long slides shrink to fit under it
+      const tw = el("div", "stack"), tl = el("label", "tsmchk"), tc = document.createElement("input");
+      tw.style.gap = "4px"; tc.type = "checkbox"; tc.checked = st.topOn;
+      tl.append(tc, document.createTextNode(" Every slide's text starts at slide 1's height"));
+      tc.onchange = () => { st.topOn = tc.checked; store.set("crs-top-on", st.topOn); buildEditors(); later(); };
+      tw.append(tl, el("span", "hint", "Move slide 1's text up or down (drag it or use its slider) and every other slide follows. Slides with lots of text get smaller so they don't run off the bottom."));
+      eds.appendChild(tw);
     }
     st.slides.forEach((sl, n) => {
       const row = el("div", "crsrow"), pv = el("img"), side = el("div", "stack");
@@ -1586,6 +1661,7 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
       };
       const ce = el("button", "btn small primary", sl.c ? "✓ Centred" : "Centre this slide's text"); ce.type = "button";
       const szR = slider("sz", "text size", 50, 160, 5, 100), dxR = slider("dx", "move text left or right", -500, 500, 10, 0), mv = slider("dy", "move text up or down", -700, 700, 10, 0);
+      if (st.topOn && n > 0) mv.disabled = true; // slide 1 sets the height
       const rs = el("button", "btn small", "Reset this slide's text"); rs.type = "button"; rs.style.alignSelf = "flex-start";
       rs.onclick = () => { delete sl.sz; delete sl.dx; delete sl.dy; delete sl.c; ce.textContent = "Centre this slide's text"; szR.value = "100"; dxR.value = "0"; mv.value = "0"; later(); };
       ce.onclick = async () => { try { await document.fonts.load("700 40px Poppins"); } catch {} centreSlide(n); const o = centreOffsets(n); dxR.value = String(o.dx); mv.value = String(o.dy); ce.textContent = "✓ Centred"; later(); };
@@ -1593,6 +1669,22 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
       const pl = el("label", "tsmchk"), pc = document.createElement("input"); pc.type = "checkbox"; pc.checked = pfpShown(n);
       pc.onchange = () => { sl.pfp = pc.checked; later(); };
       pl.append(pc, document.createTextNode(" Profile photo on slide " + (n + 1))); mvW.appendChild(pl);
+      // this slide's photo: zoom and move in any direction (Olly, 2026-11-11)
+      const phW = el("div", "stack"), dc = document.createElement("input");
+      phW.style.cssText = "gap:4px;margin-top:6px";
+      const pslider = (key, label, min, max, def) => {
+        const lb = el("label", "label", "Slide " + (n + 1) + ": " + label), r = document.createElement("input");
+        r.type = "range"; r.min = min; r.max = max; r.step = "1"; r.value = String(sl[key] != null ? Number(sl[key]) : def); r.id = "crs-" + key + "-" + n; lb.htmlFor = r.id;
+        r.style.cssText = "width:100%;accent-color:var(--heart)";
+        r.oninput = () => { sl[key] = Number(r.value); later(); };
+        phW.append(lb, r); return r;
+      };
+      const pzR = pslider("pz", "photo zoom", 100, 300, 100), pxR = pslider("px", "move photo left or right", -100, 100, 0), pyR = pslider("py", "move photo up or down", -100, 100, 0);
+      const dl = el("label", "tsmchk"); dc.type = "checkbox"; dl.append(dc, document.createTextNode(" Drag on the preview moves the photo (not the text)"));
+      const pr2 = el("button", "btn small", "Reset this slide's photo"); pr2.type = "button"; pr2.style.alignSelf = "flex-start";
+      pr2.onclick = () => { delete sl.pz; delete sl.px; delete sl.py; pzR.value = "100"; pxR.value = "0"; pyR.value = "0"; later(); };
+      phW.append(dl, el("span", "hint", "The photo always fills the slide, so zoom in to move it further."), pr2);
+      if (st.style === "photo") mvW.appendChild(phW);
       let drag = null;
       pv.title = "Drag to move this slide's text";
       pv.addEventListener("pointerdown", e => {
@@ -1601,7 +1693,12 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
         if (pfpShown(n) && Math.hypot(px - st.pfp.x, py - st.pfp.y) <= st.pfp.size / 2 + 10) {
           drag = {pfp: true, x: e.clientX, y: e.clientY, px: st.pfp.x, py: st.pfp.y, k: kk}; pv.setPointerCapture(e.pointerId); e.preventDefault(); return;
         }
-        if (sl.c) { uncentre(n); ce.textContent = "Centre this slide's text"; } drag = {x: e.clientX, y: e.clientY, dx: Number(sl.dx) || 0, dy: Number(sl.dy) || 0, k: H / (pv.clientHeight || H)}; pv.setPointerCapture(e.pointerId); e.preventDefault(); });
+        if (dc.checked && st.style === "photo") {
+          drag = {photo: true, x: e.clientX, y: e.clientY, px: Number(sl.px) || 0, py: Number(sl.py) || 0, k: kk, sx: 0, sy: 0};
+          const d0 = drag; loadI(slideSrc(n)).then(img => { const b = photoBox(img, sl); d0.sx = b.sx; d0.sy = b.sy; }).catch(() => {});
+          pv.setPointerCapture(e.pointerId); e.preventDefault(); return;
+        }
+        if (sl.c) { uncentre(n); ce.textContent = "Centre this slide's text"; } drag = {x: e.clientX, y: e.clientY, dx: Number(sl.dx) || 0, dy: Number(sl.dy) || 0, ty: st.topY, k: H / (pv.clientHeight || H)}; pv.setPointerCapture(e.pointerId); e.preventDefault(); });
       pv.addEventListener("pointermove", e => {
         if (!drag) return;
         if (drag.pfp) {
@@ -1609,7 +1706,13 @@ Reply as JSON: {"picks":[the image number for slide 1, for slide 2, ...]} with e
           st.pfp.y = Math.max(0, Math.min(H, Math.round(drag.py + (e.clientY - drag.y) * drag.k)));
           pfpSync(); pfpSave(); later(); return;
         }
+        if (drag.photo) {
+          if (drag.sx > 0) sl.px = Math.max(-100, Math.min(100, Math.round(drag.px + (e.clientX - drag.x) * drag.k / drag.sx * 100)));
+          if (drag.sy > 0) sl.py = Math.max(-100, Math.min(100, Math.round(drag.py + (e.clientY - drag.y) * drag.k / drag.sy * 100)));
+          pxR.value = String(Number(sl.px) || 0); pyR.value = String(Number(sl.py) || 0); later(); return;
+        }
         sl.dx = Math.max(-500, Math.min(500, Math.round((drag.dx + (e.clientX - drag.x) * drag.k) / 10) * 10));
+        if (st.topOn && n > 0) { dxR.value = String(sl.dx); later(); return; } // slide 1 sets the height
         sl.dy = Math.max(-700, Math.min(700, Math.round((drag.dy + (e.clientY - drag.y) * drag.k) / 10) * 10));
         dxR.value = String(sl.dx); mv.value = String(sl.dy); later();
       });
@@ -2208,6 +2311,7 @@ function syncFormats(keep){
   if (keep && t.formats.includes(keep)) f.value = keep;
   $("typeHint").textContent = t.desc;
   $("crsShotWrap").hidden = !(channel === "carousels" && t.rule === "RESULT");
+  $("crsPostWrap").hidden = !(channel === "carousels" && t.rule === "FROMPOST");
 }
 function saveForm(){ store.set("cig-form", {channel, hook:$("hook").value, type:$("type").value, format:$("format").value, part:$("part").value, storyCta:$("storyCta").value, emailCta:$("emailCta").value, ytCta:$("ytCta").value, topic:$("topic").value, count:$("count").value}); }
 $("type").addEventListener("change", () => { syncFormats(); syncHooks(); saveForm(); });
@@ -2280,6 +2384,58 @@ async function resultCarousel(signal){
   const out = (await Promise.all(jobs)).flatMap(r => ((r && r.ideas) || []).slice(0, 1));
   if (!out.length) throw new Error("none");
   return out.map(i => Object.assign(i, {type: "Carousel · Member win", shot: shot.data}));
+}
+/* Carousel from Olly's own post or email (2026-11-11: "can we not just give this to the carousel maker?").
+   The pasted text stays on this device until he clears it. */
+try { $("crsPost").value = store.get("crs-post", "") || ""; } catch (e) {}
+$("crsPost").addEventListener("input", () => store.set("crs-post", $("crsPost").value));
+$("crsPostClear").onclick = () => { $("crsPost").value = ""; store.set("crs-post", ""); };
+function fromPostPrompt(post, k, n){
+  return `You turn Olly Henson's own post or email into an Instagram story carousel. Olly (The Attraction Formula) helps singles attract a genuine, committed relationship by shifting into the right emotional state around love.
+${CORE}
+
+${RULES}
+
+STORY CAROUSEL FROM OLLY'S POST (follow it exactly)
+- Tell the SAME story as the post, in order, in Olly's own words wherever they fit. Shorten, never add: no new events, details, numbers, people, studies or timeframes that aren't in the post.
+- The look is raw: white text boxes over a photo of Olly, like he's talking to you. No headings, no titles, no numbered lists, no emojis or hashtags on the slides.
+- 8 to 10 slides. Each slide is 1 to 4 short beats. A beat is one sentence or phrase (3 to 18 words) and gets its own text box. Beats can run on with "..." to pull the reader to the next slide.
+- Slide 1 (cover): the hook, 4 to 7 words, outcome-led and in first person or about Olly, e.g. "How a massive overthinker met his wife". One more short beat is allowed if it makes them swipe.
+- Slide 2: a second hook that makes them keep swiping (the surprising turn or the question the story answers).
+- Middle slides: the story beats, one moment per slide: where he was, what it cost him, what he changed, what changed in him, the moment it paid off.
+- Second to last slide: the takeaway for the reader, from the post ("If I could do it, so can you" style).
+- Last slide: the call to action, 2 to 3 beats: The Feeling Finder helps them find the feeling of the relationship they want (free, 2 minutes), then: Comment "EMOTION" and I'll send it to you.
+- His story rules: only what's in the post. Never mention a past relationship, a breakup, 2019 or any teachers or techniques by name. If the post names his wife, call her Jules and keep her private (no details beyond the post).
+- Science, not manifestation: never say the feeling makes it "happen" or "manifests" it. It changes who you notice, who you're drawn to and how you show up.
+- No em dashes. No comma before "and" or "or". "program" not "programme", "practice" with a C (also as a verb); otherwise British English. Never call the change easy. Never say the right partner feels boring.
+- caption: Olly's voice, short lines with a blank line between them: line 1 = the hook plus 💜, then the story in 4 to 7 short lines from the post, then "👇 Comment ‘EMOTION’ and I’ll send you my free Feeling Finder", then "(If you’d rather keep it private, DM me ‘EMOTION’)", then "#Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner". 3 to 5 subtle emojis in total besides 💜 (✨ 🤍 🌿 🙏 💫 👇 🫶, at most one per line, never 🔥 💯 🚀). No em dashes.
+${n > 1 ? "\nTHIS IS VERSION " + (k + 1) + " OF " + n + ". Give it its own cover hook and second hook; the story stays the same.\n" : ""}
+OLLY'S POST:
+"""
+${post}
+"""
+
+Give:
+- hook: the cover's first beat
+- slides: every slide, each {"beats":["",""]}
+- caption: the Instagram caption (use \\n for line breaks)
+- type: "From my post"
+- stage: the part of the core message the story shows, in a few words
+- why: one sentence on why this story makes them want The Feeling Finder
+
+Reply as JSON: {"ideas":[{"hook":"","slides":[{"beats":["",""]}],"caption":"","type":"","stage":"","why":""}]}`;
+}
+// one request per version, all at once (up to 3)
+async function fromPostCarousel(signal){
+  const post = $("crsPost").value.trim();
+  if (post.length < 40) throw Object.assign(new Error("nopost"), {code: "nopost"});
+  const n = Math.min(3, Number($("count").value) || 1);
+  const jobs = Array.from({length: n}, (_, k) => sampleFn.json(fromPostPrompt(post, k, n), {signal, cache: false}));
+  const res = await Promise.allSettled(jobs);
+  if (signal.aborted) throw new Error("aborted");
+  const out = res.filter(r => r.status === "fulfilled" && r.value && r.value.ideas && r.value.ideas[0] && Array.isArray(r.value.ideas[0].slides)).map(r => r.value.ideas[0]);
+  if (!out.length) throw (res[0] && res[0].reason) || new Error("none");
+  return out.map(i => Object.assign(i, {type: "From my post"}));
 }
 $("hook").addEventListener("change", () => { hookHint(); saveForm(); });
 ["format","part","storyCta","ytCta","topic","count"].forEach(id => $(id).addEventListener("input", saveForm));
@@ -2757,7 +2913,8 @@ $("go").onclick = async () => {
   const mine = ctl = new AbortController();
   $("go").disabled = true; st.className = "status"; st.textContent = "Writing ideas…";
   try {
-    const ideas = channel === "carousels" && (POST_TYPES[$("type").value] || {}).rule === "RESULT" ? await resultCarousel(mine.signal)
+    const ideas = channel === "carousels" && (POST_TYPES[$("type").value] || {}).rule === "FROMPOST" ? await fromPostCarousel(mine.signal)
+      : channel === "carousels" && (POST_TYPES[$("type").value] || {}).rule === "RESULT" ? await resultCarousel(mine.signal)
       : channel === "email" && (Number($("count").value) || 3) > 1
       ? await emailBatch(mine.signal)
       : channel === "carousels" && (Number($("count").value) || 3) > 1 ? await carouselBatch(mine.signal)
@@ -2769,7 +2926,7 @@ $("go").onclick = async () => {
   } catch (e) {
     if (mine.signal.aborted) return;
     st.className = "status err";
-    st.textContent = e && e.code === "noshot" ? "Upload the member's screenshot first." : e && e.code === "rate_limited" ? "Too many requests just now. Wait a minute and try again." : e && e.code === "not_granted" ? "Claude access wasn't allowed for this page." : "That didn't work. Try again.";
+    st.textContent = e && e.code === "noshot" ? "Upload the member's screenshot first." : e && e.code === "nopost" ? "Paste your post or email in the box first." : e && e.code === "rate_limited" ? "Too many requests just now. Wait a minute and try again." : e && e.code === "not_granted" ? "Claude access wasn't allowed for this page." : e && e.code ? "That didn't work (" + e.code + "). Try again." : "That didn't work. Try again.";
   } finally { if (ctl === mine) { ctl = null; $("go").disabled = false; } }
 };
 function frameLines(f, n){
