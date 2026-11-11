@@ -334,7 +334,7 @@ Email: subject "Your plan of action", same text + "Olly" (both Claude's wording,
 - Never brainwaves (high beta, alpha), default mode network, nervous system or fight or flight in client documents.
 - Never italics, never text shrunk to fit a phone.
 - Never commas inside one must-have (the list is joined with " · ").
-- Never hand-edit `hub-site/public/plan.html` or `plan-view.html`: they're generated from the template.
+- Never hand-edit `hub-site/public/plan.html` or `plan-view.html`: they're generated from the template (per-person wording edits are made on the page in the Hub, see Plan v3.1).
 - Never send the sales video before they've had the plan and said it sounds possible for them.
 
 ---
@@ -436,3 +436,31 @@ Stages (2026-11-10): New → Contacted → Replied → Plan sent → Plan read �
 + voice note once they reply; their own video page + voice note; one follow-up idea; join link. Stages v3 add Plan sent,
 Plan read, Asked questions / next steps (Olly's), Video sent, Video watched, Clicked Join. Superseded: the voice-note-only
 plan, "application successful" texts, the master YouTube VSL message. -->
+
+### Plan v3.1 (2026-11-11): personal note + edit on the page (CURRENT editor)
+**Process (Hub > Sales > applicant card > 📄 Plan of action):**
+1. Check the auto-filled answers (sidebar or on the pages, they stay in sync).
+2. Click the dimmed **personal note** page (before the closing page: "A personal note from me / What We're Going To Do For You") and write Olly's own summary of what he'll do for this person, tied to their application. Enter = new line.
+3. Click any other text on any page and type over it to personalise it (shaded pink once changed). "Where you are now" / "Where we're going" on the pages write back into their sidebar boxes.
+4. Save changes, then Make their link / send as before. Every edit shows on the same link.
+
+**Rules:**
+- **Edits happen in the document, always on, no mode button.** Why: Olly asked to "make edits within the document itself, rather than having to do it in the sidebar"; a toggle was one step too many.
+- **Edits are per person, never the template.** Why: Olly edits "not very often, just to make it personal". Stored as JSON in the hidden `edits` field, keyed by a hash of the template wording, so a later template change to that line drops the old edit instead of landing on the wrong line. Undo all wording edits restores the standard plan.
+- **The note page only reaches the applicant when written.** Empty = hidden on their link, left out of the page count, images and PDF; in the editor it shows dimmed with a prompt so Olly can click into it. Page numbers ("Page X of Y") are counted live (13 without a note, 14 with).
+- **Keep the sidebar working.** Why: Olly said "keep everything as it is, but also..."; new editing is added beside the old, never replacing it.
+- Pasted text comes in plain; only bold/italic/line breaks survive (no outside formatting or code on their link).
+- If Olly types "You want ..." on the page, it's stripped from the send message's goal (no "get you to you want a ...").
+- Editing a heading that contains their name freezes the name in that heading (later name-box changes won't update it). Tell Olly if he renames someone after editing a heading.
+- /api/plan limits: `edits` 30,000 chars, `note` 6,000, other fields 2,000.
+- **The builder owns plan-view.html completely.** The read-tracking + heat-map JS now lives in `tools/build_hub_plan.py`. Why: running the builder this session wiped the live tracker (it had been hand-added to the output); it was restored from git and ported. After any builder change, `git diff` plan-view.html should show only the intended change.
+
+### Never (plan v3.1)
+- Never make Olly switch on an edit mode or go to the sidebar to change wording on a page.
+- Never apply one applicant's wording edits to the template or another applicant.
+- Never show an empty note page (or "…") to the applicant.
+- Never add JS by hand to `plan-view.html` / `plan.html`: put it in the builder, then rebuild.
+
+<!-- 2026-11-11 skill review: added Plan v3.1 (personal note page + per-person wording edits, then always-on editing on the
+page per Olly's follow-up). Removed the same-day "✏️ Edit the wording" button rule (overridden: no mode button). Added the
+builder-owns-plan-view rule after a rebuild wiped the read tracker. New Never list for v3.1. -->

@@ -31,7 +31,7 @@ export async function onRequestPut({ request, env }) {
   try { body = await request.json(); } catch { return json({ ok: false, error: "Bad JSON." }, 400); }
   const clean = {};
   Object.keys(body || {}).slice(0, 40).forEach(function (k) {
-    if (/^[a-z0-9]{1,20}$/i.test(k) && typeof body[k] === "string") clean[k] = body[k].slice(0, 2000);
+    if (/^[a-z0-9]{1,20}$/i.test(k) && typeof body[k] === "string") clean[k] = body[k].slice(0, k === "edits" ? 30000 : k === "note" ? 6000 : 2000); // edits = JSON of per-person wording changes (2026-11-11)
   });
   let old = null;
   try { old = JSON.parse((await env.HUB_KV.get("plan:" + id)) || "null"); } catch { old = null; }

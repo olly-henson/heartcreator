@@ -250,7 +250,76 @@ button:disabled { opacity: .6; cursor: wait; }
 .junction h2 { font-size: 38px; line-height: 1.15; }
 .junction .jarrow { margin: 34px auto auto; width: 64px; height: 64px; line-height: 64px; font-size: 32px; }
 .viewwrap .junction { min-height: 70vh; display: flex; flex-direction: column; }
+/* Personal note page + per-person wording edits (Olly 2026-11-11) */
+.pg[hidden] { display: none !important; }
+.note-pg h2 { margin-top: 14px; }
+.notebox { margin-top: 20px; background: #faf6ff; border: 1px solid #e4d8f3; border-radius: 14px; padding: 18px 20px; }
+.pg .notebox p.steptext { margin: 0; white-space: pre-line; }
+.note-pg .signoff { margin-top: 22px; }
+body.wording #stage [data-ed], body.wording #stage [data-inl] { cursor: text; border-radius: 4px; outline-offset: 3px; }
+body.wording #stage [data-ed]:hover, body.wording #stage [data-inl]:hover { outline: 2px dashed #d946ef; }
+body.wording #stage [data-ed]:focus, body.wording #stage [data-inl]:focus { outline: 2px solid #d946ef; }
+#stage .pg.emptynote { opacity: .55; }
+#stage .pg.emptynote .notebox p:empty::before { content: "Click here to write your personal note. This page stays hidden from them until you do."; color: #8a7f99; }
+@media print { #stage .pg.emptynote { display: none !important; } }
+#stage [data-ed].edited { background: rgba(217, 70, 239, .1); }
+@media print { #stage [data-ed] { outline: none !important; background: none !important; } }
 </style>
+<script>
+/* Per-person wording edits (Olly 2026-11-11: "edit any part of the plan for anyone's plan ... just to make it personal").
+   Each text block on the pages gets a key from its TEMPLATE wording (+ which copy it is), so a later template change to
+   that block quietly drops the old edit instead of landing on the wrong line. Edits are saved as JSON in the "edits" field.
+   Only b / strong / em / i / br (and span class="k") survive, with no other attributes. */
+window.PlanEdits = (function () {
+  var SEL = 'h2, p, .eyebrow, .solpill, .head', list = [];
+  function hash(t) { var h = 5381; for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function norm(h) { return String(h || '').replace(/\s+/g, ' ').trim(); }
+  function init() {
+    if (list.length) return list;
+    var seen = {};
+    [].slice.call(document.querySelectorAll('#stage ' + SEL)).forEach(function (el) {
+      if (el.hasAttribute('data-v') || el.closest('.foot')) return;
+      var k = hash(norm(el.innerHTML)); seen[k] = (seen[k] || 0) + 1;
+      el.__orig = el.innerHTML; el.__key = k + '.' + seen[k]; el.setAttribute('data-ed', '');
+      list.push(el);
+    });
+    return list;
+  }
+  function parse(v) { try { var o = JSON.parse(v || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
+  function clean(h) {
+    var d = new DOMParser().parseFromString('<div>' + String(h || '') + '</div>', 'text/html').body.firstChild;
+    (function walk(n) {
+      [].slice.call(n.childNodes).forEach(function (c) {
+        if (c.nodeType === 3) return;
+        if (c.nodeType !== 1) { c.remove(); return; }
+        walk(c);
+        var t = c.tagName, keepK = t === 'SPAN' && c.classList.contains('k');
+        if (/^(B|STRONG|EM|I|BR)$/.test(t) || keepK) { [].slice.call(c.attributes).forEach(function (a) { c.removeAttribute(a.name); }); if (keepK) c.className = 'k'; return; }
+        var f = document.createDocumentFragment();
+        if ((t === 'DIV' || t === 'P') && c.previousSibling) f.appendChild(document.createElement('br'));
+        while (c.firstChild) f.appendChild(c.firstChild);
+        c.replaceWith(f);
+      });
+    })(d);
+    return d.innerHTML.replace(/(<br>\s*)+$/, '').trim();
+  }
+  // apply the saved edits (after the person's answers are filled in); mark = shade the changed blocks (editor only)
+  function apply(v, mark) {
+    var e = parse(v);
+    init().forEach(function (el) {
+      var has = Object.prototype.hasOwnProperty.call(e, el.__key);
+      if (has && document.activeElement !== el) el.innerHTML = clean(e[el.__key]);
+      if (mark) el.classList.toggle('edited', has);
+    });
+  }
+  // "Page X of Y" counts only the pages showing (the note page only shows when there's a note)
+  function nums() {
+    var pgs = [].slice.call(document.querySelectorAll('#stage .pg')).filter(function (p) { return !p.hidden && !p.classList.contains('emptynote'); });
+    pgs.forEach(function (p, i) { var s = p.querySelector('.foot span'); if (s && /^Page \d+ of \d+$/.test(s.textContent.trim())) s.textContent = 'Page ' + (i + 1) + ' of ' + pgs.length; });
+  }
+  return { init: init, apply: apply, nums: nums, clean: clean, parse: parse };
+})();
+</script>
 
 <style>
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -449,6 +518,15 @@ html { font-size: 112.5%; }
         <p class="steptext">You'll have private DM support every day on the way to meeting your person. This includes getting text replies from me as well as video feedback. You'll constantly be supported as you work your way through the materials, meet your person and make it real.</p>
         <div class="foot"><span>Page 12 of 13</span><span>The Heart Attractor Program</span></div>
       </section>
+      <!-- Personal note (Olly 2026-11-11): his own summary of what he'll do for this person. Shows only when written. -->
+      <section class="pg note-pg" data-show="note">
+        <div class="eyebrow">A personal note from me</div>
+        <h2 class="sm">What We're Going To Do For <em>You</em></h2>
+        <div class="notebox"><p class="steptext" data-v="note"></p></div>
+        <div class="signoff"><img data-img="olly.jpg" alt="Olly Henson"><div><b>Olly Henson</b><span>The Heart Attractor Program</span></div></div>
+        <div class="foot"><span>Page 13 of 14</span><span>The Heart Attractor Program</span></div>
+      </section>
+
       <!-- Closing page (Olly 2026-11-09) -->
       <section class="pg closing">
         <div class="eyebrow">Your plan</div>
@@ -466,6 +544,7 @@ html { font-size: 112.5%; }
   var code = (location.pathname.split('/')[2] || ''), preview = /[?&]preview/.test(location.search);
   try { if (localStorage.getItem('hubOwner')) preview = true; } catch (e) {}
   var stage = document.getElementById('stage'), msg = document.getElementById('msg');
+  PlanEdits.init(); [].forEach.call(document.querySelectorAll('[data-ed]'), function (el) { el.removeAttribute('data-ed'); });
   function seen(w) { if (preview) return; try { fetch('/p/' + code + '/seen', { method: 'POST', body: w, keepalive: true }); } catch (e) {} }
   function fit() {}
   window.addEventListener('resize', fit);
@@ -502,11 +581,12 @@ html { font-size: 112.5%; }
   fetch('/p/' + code + '/data', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
     if (!d || !d.ok) throw new Error('missing');
     var p = d.plan;
-    Object.keys(p).forEach(function (k) { set(k, String(p[k] || '').trim()); });
+    Object.keys(p).forEach(function (k) { if (k !== 'edits') set(k, String(p[k] || '').trim()); });
     set('nowYou', toYou(p.now)); set('wantYou', wantYou(p.want)); set('pron', /^m/i.test(p.gender || '') ? 'His' : 'Her');
     set('qlist', [p.q1, p.q2, p.q3, p.q4].map(function (x) { return String(x || '').trim(); }).filter(Boolean).join(' · '));
     document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !String(p[s.dataset.show] || '').trim(); });
-    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(p.gender || '') ? 'male' : 'female') + '.jpg' : im.dataset.img.replace('{g}', /^m/i.test(p.gender || '') ? 'male' : 'female'); im.onerror = function () { im.parentElement.hidden = true; }; im.src = '/p/' + code + '/img/' + n + '?v=1794251297'; });
+    PlanEdits.apply(p.edits); PlanEdits.nums();
+    document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(p.gender || '') ? 'male' : 'female') + '.jpg' : im.dataset.img.replace('{g}', /^m/i.test(p.gender || '') ? 'male' : 'female'); im.onerror = function () { im.parentElement.hidden = true; }; im.src = '/p/' + code + '/img/' + n + '?v=1794400024'; });
     function getv(k) { return p[k]; }
     // No feeling yet (Feeling Finder "I'm not sure", 2026-11-09): say we'll find it together, and don't put "I'm not sure" in a sentence
     (function(){

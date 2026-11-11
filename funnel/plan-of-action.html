@@ -244,7 +244,76 @@ button:disabled { opacity: .6; cursor: wait; }
 .junction h2 { font-size: 38px; line-height: 1.15; }
 .junction .jarrow { margin: 34px auto auto; width: 64px; height: 64px; line-height: 64px; font-size: 32px; }
 .viewwrap .junction { min-height: 70vh; display: flex; flex-direction: column; }
+/* Personal note page + per-person wording edits (Olly 2026-11-11) */
+.pg[hidden] { display: none !important; }
+.note-pg h2 { margin-top: 14px; }
+.notebox { margin-top: 20px; background: #faf6ff; border: 1px solid #e4d8f3; border-radius: 14px; padding: 18px 20px; }
+.pg .notebox p.steptext { margin: 0; white-space: pre-line; }
+.note-pg .signoff { margin-top: 22px; }
+body.wording #stage [data-ed], body.wording #stage [data-inl] { cursor: text; border-radius: 4px; outline-offset: 3px; }
+body.wording #stage [data-ed]:hover, body.wording #stage [data-inl]:hover { outline: 2px dashed #d946ef; }
+body.wording #stage [data-ed]:focus, body.wording #stage [data-inl]:focus { outline: 2px solid #d946ef; }
+#stage .pg.emptynote { opacity: .55; }
+#stage .pg.emptynote .notebox p:empty::before { content: "Click here to write your personal note. This page stays hidden from them until you do."; color: #8a7f99; }
+@media print { #stage .pg.emptynote { display: none !important; } }
+#stage [data-ed].edited { background: rgba(217, 70, 239, .1); }
+@media print { #stage [data-ed] { outline: none !important; background: none !important; } }
 </style>
+<script>
+/* Per-person wording edits (Olly 2026-11-11: "edit any part of the plan for anyone's plan ... just to make it personal").
+   Each text block on the pages gets a key from its TEMPLATE wording (+ which copy it is), so a later template change to
+   that block quietly drops the old edit instead of landing on the wrong line. Edits are saved as JSON in the "edits" field.
+   Only b / strong / em / i / br (and span class="k") survive, with no other attributes. */
+window.PlanEdits = (function () {
+  var SEL = 'h2, p, .eyebrow, .solpill, .head', list = [];
+  function hash(t) { var h = 5381; for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function norm(h) { return String(h || '').replace(/\s+/g, ' ').trim(); }
+  function init() {
+    if (list.length) return list;
+    var seen = {};
+    [].slice.call(document.querySelectorAll('#stage ' + SEL)).forEach(function (el) {
+      if (el.hasAttribute('data-v') || el.closest('.foot')) return;
+      var k = hash(norm(el.innerHTML)); seen[k] = (seen[k] || 0) + 1;
+      el.__orig = el.innerHTML; el.__key = k + '.' + seen[k]; el.setAttribute('data-ed', '');
+      list.push(el);
+    });
+    return list;
+  }
+  function parse(v) { try { var o = JSON.parse(v || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
+  function clean(h) {
+    var d = new DOMParser().parseFromString('<div>' + String(h || '') + '</div>', 'text/html').body.firstChild;
+    (function walk(n) {
+      [].slice.call(n.childNodes).forEach(function (c) {
+        if (c.nodeType === 3) return;
+        if (c.nodeType !== 1) { c.remove(); return; }
+        walk(c);
+        var t = c.tagName, keepK = t === 'SPAN' && c.classList.contains('k');
+        if (/^(B|STRONG|EM|I|BR)$/.test(t) || keepK) { [].slice.call(c.attributes).forEach(function (a) { c.removeAttribute(a.name); }); if (keepK) c.className = 'k'; return; }
+        var f = document.createDocumentFragment();
+        if ((t === 'DIV' || t === 'P') && c.previousSibling) f.appendChild(document.createElement('br'));
+        while (c.firstChild) f.appendChild(c.firstChild);
+        c.replaceWith(f);
+      });
+    })(d);
+    return d.innerHTML.replace(/(<br>\s*)+$/, '').trim();
+  }
+  // apply the saved edits (after the person's answers are filled in); mark = shade the changed blocks (editor only)
+  function apply(v, mark) {
+    var e = parse(v);
+    init().forEach(function (el) {
+      var has = Object.prototype.hasOwnProperty.call(e, el.__key);
+      if (has && document.activeElement !== el) el.innerHTML = clean(e[el.__key]);
+      if (mark) el.classList.toggle('edited', has);
+    });
+  }
+  // "Page X of Y" counts only the pages showing (the note page only shows when there's a note)
+  function nums() {
+    var pgs = [].slice.call(document.querySelectorAll('#stage .pg')).filter(function (p) { return !p.hidden && !p.classList.contains('emptynote'); });
+    pgs.forEach(function (p, i) { var s = p.querySelector('.foot span'); if (s && /^Page \d+ of \d+$/.test(s.textContent.trim())) s.textContent = 'Page ' + (i + 1) + ' of ' + pgs.length; });
+  }
+  return { init: init, apply: apply, nums: nums, clean: clean, parse: parse };
+})();
+</script>
 
 <div class="wrap">
   <form class="panel" id="form" autocomplete="off">
@@ -284,6 +353,14 @@ button:disabled { opacity: .6; cursor: wait; }
     <label for="f-moments">Their moments to anchor the feeling <small>from their answers: where they get pulled into their head</small>
       <input id="f-moments" data-k="moments" value="before a date, and when a message takes a while to come back">
     </label>
+    <label for="f-note">Your personal note <small>its own page before the last one: a real summary of what you'll do for them, from their application. Leave it empty and the page doesn't show.</small>
+      <textarea id="f-note" data-k="note" rows="8" placeholder="e.g. From what you wrote about the dating apps, the first thing we'll do is..."></textarea>
+    </label>
+    <textarea id="f-edits" data-k="edits" hidden aria-hidden="true"></textarea>
+    <p class="note" id="editHint">✏️ You can also click any text on the pages and type straight over it. It only changes this person's plan. Changed wording is shaded pink. Then Save changes.</p>
+    <div class="btns" id="wordBtns">
+      <button type="button" class="ghost" id="undoWords" hidden>Undo all wording edits</button>
+    </div>
 
     <div class="btns">
       <button type="button" id="makeImgs">Make images for WhatsApp</button>
@@ -412,6 +489,15 @@ button:disabled { opacity: .6; cursor: wait; }
         <p class="steptext">You'll have private DM support every day on the way to meeting your person. This includes getting text replies from me as well as video feedback. You'll constantly be supported as you work your way through the materials, meet your person and make it real.</p>
         <div class="foot"><span>Page 12 of 13</span><span>The Heart Attractor Program</span></div>
       </section>
+      <!-- Personal note (Olly 2026-11-11): his own summary of what he'll do for this person. Shows only when written. -->
+      <section class="pg note-pg" data-show="note">
+        <div class="eyebrow">A personal note from me</div>
+        <h2 class="sm">What We're Going To Do For <em>You</em></h2>
+        <div class="notebox"><p class="steptext" data-v="note"></p></div>
+        <div class="signoff"><img data-img="olly.jpg" alt="Olly Henson"><div><b>Olly Henson</b><span>The Heart Attractor Program</span></div></div>
+        <div class="foot"><span>Page 13 of 14</span><span>The Heart Attractor Program</span></div>
+      </section>
+
       <!-- Closing page (Olly 2026-11-09) -->
       <section class="pg closing">
         <div class="eyebrow">Your plan</div>
@@ -438,13 +524,14 @@ button:disabled { opacity: .6; cursor: wait; }
 var PRESET = null;
 (function () {
   var inputs = document.querySelectorAll('[data-k]');
+  PlanEdits.init();
   if (PRESET) {
     inputs.forEach(function (el) { if (PRESET[el.dataset.k] != null) el.value = PRESET[el.dataset.k]; });
     document.getElementById('exampleNote').textContent = 'Filled in from ' + (PRESET.name || 'their') + "'s answers. Edit anything before sending.";
   }
   function val(k) { var el = document.querySelector('[data-k="' + k + '"]'); return el ? el.value.trim() : ''; }
   function list(a) { a = a.filter(Boolean); return a.length < 2 ? (a[0] || '…') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
-  function set(k, v) { document.querySelectorAll('[data-v="' + k + '"]').forEach(function (s) { s.textContent = v; }); }
+  function set(k, v) { document.querySelectorAll('[data-v="' + k + '"]').forEach(function (s) { if (s !== document.activeElement) s.textContent = v; }); }
   // First person -> second person for the cover (Olly, 2026-11-09: "you want xyz")
   function toYou(t) {
     t = String(t || '').trim().replace(/^["'“”]+|["'“”]+$/g, '').trim();
@@ -469,16 +556,19 @@ var PRESET = null;
   }
   function wantYou(t) {
     t = String(t || '').trim().replace(/^["'“”]+|["'“”]+$/g, '').replace(/^(i\s+(really\s+)?(want|would like)\s+(to\s+(have|find|be in|meet)\s+)?)/i, '').trim();
+    // already typed as "You want ..." (2026-11-10): drop it, and a doubled "a a"
+    t = t.replace(/^you\s+(really\s+)?want\s+/i, '').replace(/^(a|an|the)\s+(a|an|the)\s+/i, '$1 ').trim();
     if (!t) return '…';
     return 'You want ' + toYou(t).replace(/^./, function (c) { return c.toLowerCase(); });
   }
   var IMG_BASE = window.PLAN_IMG_BASE || '/plan-img/';
   function fill() {
     document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(val('gender')) ? 'male' : 'female') + '.jpg' : im.dataset.img.replace('{g}', /^m/i.test(val('gender')) ? 'male' : 'female'); if (im.getAttribute('data-n') !== n) { im.setAttribute('data-n', n); im.parentElement.hidden = false; im.onerror = function () { im.parentElement.hidden = true; }; im.src = IMG_BASE + n; } });
-    inputs.forEach(function (el) { set(el.dataset.k, el.value.trim() || '…'); });
+    inputs.forEach(function (el) { set(el.dataset.k, el.dataset.k === 'note' ? el.value.trim() : (el.value.trim() || '…')); });
     set('nowYou', toYou(val('now'))); set('wantYou', wantYou(val('want'))); set('pron', /^m/i.test(val('gender')) ? 'His' : 'Her');
     set('qlist', [val('q1'), val('q2'), val('q3'), val('q4')].filter(Boolean).join(' · ') || '…');
-    document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !val(s.dataset.show); });
+    document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = false; s.classList.toggle('emptynote', !val(s.dataset.show)); });
+    PlanEdits.apply(val('edits'), true); PlanEdits.nums();
 
     // No feeling yet (Feeling Finder "I'm not sure", 2026-11-09): say we'll find it together, and don't put "I'm not sure" in a sentence
     (function(){
@@ -490,6 +580,46 @@ var PRESET = null;
   }
   inputs.forEach(function (el) { el.addEventListener('input', function () { document.getElementById('exampleNote').hidden = true; fill(); }); });
   fill();
+
+  // Wording edit mode (2026-11-11): type straight onto the pages; each change is kept in the hidden "edits" field
+  // Always on (Olly 2026-11-11: "make edits within the document itself"): every text block is typeable straight away.
+  var edBox = document.getElementById('f-edits'), undoBtn = document.getElementById('undoWords');
+  var PT = (function () { var d = document.createElement('div'); d.setAttribute('contenteditable', 'plaintext-only'); return d.contentEditable === 'plaintext-only' ? 'plaintext-only' : 'true'; })();
+  document.body.classList.add('wording');
+  PlanEdits.init().forEach(function (el) { el.setAttribute('contenteditable', 'true'); });
+  function showUndo() { undoBtn.hidden = !Object.keys(PlanEdits.parse(edBox.value)).length; }
+  edBox.addEventListener('input', showUndo); showUndo();
+  // before making images / printing: drop the cursor so no outline gets captured, and refit the pages
+  window.planWording = function () { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); planFit(); };
+  document.getElementById('stage').addEventListener('focusout', function () { setTimeout(planFit, 0); });
+  // Their answers on the pages (where they are now / where we're going / the note) edit the sidebar box behind them
+  var INL = { nowYou: 'now', wantYou: 'want', note: 'note' };
+  document.querySelectorAll('#stage [data-v]').forEach(function (el) {
+    var k = INL[el.dataset.v]; if (!k) return;
+    el.setAttribute('contenteditable', PT); el.setAttribute('data-inl', '');
+    el.addEventListener('input', function () {
+      var v = el.innerText.replace(/\u00a0/g, ' ');
+      if (k !== 'note') v = v.replace(/\s*\n\s*/g, ' ').trim();
+      var box = document.querySelector('[data-k="' + k + '"]'); box.value = v;
+      box.dispatchEvent(new Event('input'));
+    });
+    if (k !== 'note') el.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); el.blur(); } });
+  });
+  PlanEdits.init().forEach(function (el) {
+    el.addEventListener('input', function () {
+      var e = PlanEdits.parse(edBox.value);
+      e[el.__key] = PlanEdits.clean(el.innerHTML); edBox.value = JSON.stringify(e);
+      el.classList.add('edited'); showUndo();
+    });
+    // paste as plain text so no outside formatting comes in
+    el.addEventListener('paste', function (ev) { ev.preventDefault(); document.execCommand('insertText', false, (ev.clipboardData || window.clipboardData).getData('text')); });
+  });
+  undoBtn.addEventListener('click', function () {
+    if (!confirm('Put all the wording back to the standard plan for this person?')) return;
+    edBox.value = '';
+    PlanEdits.init().forEach(function (el) { el.innerHTML = el.__orig; el.classList.remove('edited'); });
+    fill(); showUndo();
+  });
 
   document.getElementById('reset').addEventListener('click', function () {
     inputs.forEach(function (el) { el.value = ''; });
@@ -514,7 +644,8 @@ var PRESET = null;
     box.innerHTML = '';
     try {
       await document.fonts.ready;
-      var pages = stage.querySelectorAll('.pg');
+      if (window.planWording) window.planWording(false);
+      var pages = [].filter.call(stage.querySelectorAll('.pg'), function (p) { return !p.hidden && !p.classList.contains('emptynote'); });
       for (var i = 0; i < pages.length; i++) {
         off.innerHTML = '';
         var c = pages[i].cloneNode(true);

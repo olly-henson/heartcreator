@@ -36,7 +36,7 @@ s = s.replace('<div class="note" id="exampleNote">This is filled in with an exam
               '<div class="note" id="exampleNote">Loading their answers…</div>', 1)
 
 # buttons
-old_btns = re.search(r'<div class="btns">.*?</p>', s, flags=re.S).group(0)
+old_btns = re.search(r'<div class="btns">\s*<button type="button" id="makeImgs">.*?</p>', s, flags=re.S).group(0)
 new_btns = '''<div class="btns">
       <button type="button" id="linkPlan">Make their link</button>
       <button type="button" class="ghost" id="savePlan">Save changes</button>
@@ -110,7 +110,7 @@ LOADER = r'''
       moments: 'catching yourself overthinking about love' + (apps ? ', and opening a dating app' : '')
     };
   }
-  function mark() { inputs.forEach(function (el) { el.classList.toggle('miss', !el.value.trim() && el.dataset.k !== 'q4'); }); }
+  function mark() { inputs.forEach(function (el) { el.classList.toggle('miss', !el.value.trim() && !/^(q4|note|edits)$/.test(el.dataset.k)); }); }
   function apply(v) {
     inputs.forEach(function (el) { el.value = v[el.dataset.k] != null ? v[el.dataset.k] : ''; });
     inputs[0].dispatchEvent(new Event('input')); note.hidden = false; mark();
@@ -150,7 +150,7 @@ LOADER = r'''
         var url = location.origin + '/p/' + d.code;
         document.getElementById('linkUrl').textContent = url;
         // Olly's message, word for word (2026-11-08). Only the first name and the link change.
-        var goal = (document.querySelector('[data-k="want"]').value || '').trim().replace(/[.!]+$/, '');
+        var goal = (document.querySelector('[data-k="want"]').value || '').trim().replace(/[.!]+$/, '').replace(/^you\s+(really\s+)?want\s+(to\s+(have|find|be in|meet)\s+)?/i, '');
         goal = goal ? goal.charAt(0).toLowerCase() + goal.slice(1) : 'where you want to be with your person';
         var msg = 'Hey ' + (who || 'there') + ', so I\u2019ve just reviewed your application and it all looks good.\n\nSo I\u2019ve put together a plan of action of how we can get you to ' + goal + '.\n\n' + url + '\n\nHave a look and let me know if you think this is possible for you.';
         document.getElementById('linkMsgText').value = msg; setLinks();
@@ -187,7 +187,8 @@ LOADER = r'''
 
   async function pageFiles() {
     await document.fonts.ready;
-    var off = document.getElementById('offscreen'), pages = document.querySelectorAll('#stage .pg'), files = [];
+    if (window.planWording) window.planWording(false);
+    var off = document.getElementById('offscreen'), pages = [].filter.call(document.querySelectorAll('#stage .pg'), function (p) { return !p.hidden && !p.classList.contains('emptynote'); }), files = [];
     for (var i = 0; i < pages.length; i++) {
       off.innerHTML = ''; var c = pages[i].cloneNode(true); c.style.margin = '0'; c.style.boxShadow = 'none'; off.appendChild(c);
       var canvas = await html2canvas(c, { scale: 2, backgroundColor: '#080010', logging: false });
@@ -212,7 +213,7 @@ LOADER = r'''
     } catch (e) { say(e && e.name === 'AbortError' ? 'Share cancelled.' : 'Something went wrong. Try Save images instead.'); }
     b.disabled = false;
   });
-  document.getElementById('pdfPlan').addEventListener('click', function () { say('In the print window, choose Save as PDF.'); window.print(); });
+  document.getElementById('pdfPlan').addEventListener('click', function () { if (window.planWording) window.planWording(false); say('In the print window, choose Save as PDF.'); window.print(); });
   // "Save images" downloads the PNGs (the template's own button only shows them on the page)
   var mk = document.getElementById('makeImgs'), mk2 = mk.cloneNode(true); mk.parentNode.replaceChild(mk2, mk);
   mk2.addEventListener('click', async function () {
@@ -315,6 +316,7 @@ VIEW_JS = r'''
   var code = (location.pathname.split('/')[2] || ''), preview = /[?&]preview/.test(location.search);
   try { if (localStorage.getItem('hubOwner')) preview = true; } catch (e) {}
   var stage = document.getElementById('stage'), msg = document.getElementById('msg');
+  PlanEdits.init(); [].forEach.call(document.querySelectorAll('[data-ed]'), function (el) { el.removeAttribute('data-ed'); });
   function seen(w) { if (preview) return; try { fetch('/p/' + code + '/seen', { method: 'POST', body: w, keepalive: true }); } catch (e) {} }
   function fit() {}
   window.addEventListener('resize', fit);
@@ -343,16 +345,19 @@ VIEW_JS = r'''
   }
   function wantYou(t) {
     t = String(t || '').trim().replace(/^["'“”]+|["'“”]+$/g, '').replace(/^(i\s+(really\s+)?(want|would like)\s+(to\s+(have|find|be in|meet)\s+)?)/i, '').trim();
+    // already typed as "You want ..." (2026-11-10: an applicant's plan read "You want a you want a"): drop it, and a doubled "a a"
+    t = t.replace(/^you\s+(really\s+)?want\s+/i, '').replace(/^(a|an|the)\s+(a|an|the)\s+/i, '$1 ').trim();
     if (!t) return '…';
     return 'You want ' + toYou(t).replace(/^./, function (c) { return c.toLowerCase(); });
   }
   fetch('/p/' + code + '/data', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
     if (!d || !d.ok) throw new Error('missing');
     var p = d.plan;
-    Object.keys(p).forEach(function (k) { set(k, String(p[k] || '').trim()); });
+    Object.keys(p).forEach(function (k) { if (k !== 'edits') set(k, String(p[k] || '').trim()); });
     set('nowYou', toYou(p.now)); set('wantYou', wantYou(p.want)); set('pron', /^m/i.test(p.gender || '') ? 'His' : 'Her');
     set('qlist', [p.q1, p.q2, p.q3, p.q4].map(function (x) { return String(x || '').trim(); }).filter(Boolean).join(' · '));
     document.querySelectorAll('[data-show]').forEach(function (s) { s.hidden = !String(p[s.dataset.show] || '').trim(); });
+    PlanEdits.apply(p.edits); PlanEdits.nums();
     document.querySelectorAll('[data-img]').forEach(function (im) { var n = im.dataset.img === 'pov' ? 'pov-' + (/^m/i.test(p.gender || '') ? 'male' : 'female') + '.jpg' : im.dataset.img.replace('{g}', /^m/i.test(p.gender || '') ? 'male' : 'female'); im.onerror = function () { im.parentElement.hidden = true; }; im.src = '/p/' + code + '/img/' + n + '?v=__BUILDV__'; });
     function getv(k) { return p[k]; }
     // No feeling yet (Feeling Finder "I'm not sure", 2026-11-09): say we'll find it together, and don't put "I'm not sure" in a sentence
@@ -366,8 +371,73 @@ VIEW_JS = r'''
     if (p.name) document.title = p.name + "'s Plan of Action";
     msg.hidden = true; stage.hidden = false; fit();
     seen('open');
+    readTrack();
+    heatView();
   }).catch(function () { msg.textContent = "This plan couldn't load. Please ask Olly for a new link."; });
   document.getElementById('pdfBtn').addEventListener('click', function () { seen('pdf'); window.print(); });
+  // Reading heat map (Olly, 2026-11-10: "how far they scrolled and the heat map for their plan"). A page counts as being
+  // read while at least half of it is on screen and the tab is in front. Seconds per page + the furthest page go to
+  // /p/<code>/pseen every 10 s and when they leave (only the new seconds each time).
+  // Heat map ON the plan (Olly, 2026-11-10: "see it more in-depth and actually on the document"). Opened from the Hub card
+  // as /p/<code>?preview=1&heat=<contactId>. The numbers come from /api/planviews, which only answers Olly (Hub login).
+  function heatView() {
+    var hid = (location.search.match(/[?&]heat=([^&]+)/) || [])[1];
+    if (!hid) return;
+    var bar = document.createElement('div');
+    bar.style.cssText = 'position:sticky;top:0;z-index:50;background:#1d1527;color:#fff;font:600 14px/1.4 system-ui,sans-serif;padding:10px 14px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.25)';
+    bar.textContent = 'Loading the reading heat map…';
+    document.body.insertBefore(bar, document.body.firstChild);
+    fetch('/api/planviews?id=' + encodeURIComponent(decodeURIComponent(hid)), { cache: 'no-store', credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var secs = (d && d.secs) || [];
+        if (!secs.length) { bar.textContent = 'No reading tracked on this plan yet.'; return; }
+        var pgs = [].slice.call(document.querySelectorAll('.pg')).filter(function (p) { return !p.hidden && p.offsetParent !== null; });
+        var mx = Math.max.apply(null, secs.concat([1])), total = secs.reduce(function (a, s) { return a + s; }, 0);
+        var top3 = secs.map(function (s, i) { return [s, i]; }).filter(function (x) { return x[0] > 0; }).sort(function (a, b) { return b[0] - a[0]; }).slice(0, 3).map(function (x) { return x[1]; });
+        function dur(s) { s = Math.round(s); return s < 60 ? s + 's' : Math.floor(s / 60) + ' min ' + (s % 60) + 's'; }
+        bar.innerHTML = 'Reading heat map: read to page ' + (d.far || 0) + ' of ' + (d.n || pgs.length) + ' · ' + dur(total) + ' in total'
+          + '<br><span style="font-weight:400;opacity:.85">Pink glow = time spent on that page (brighter = longer). Grey = not read. Only you can see this.</span>';
+        pgs.forEach(function (pg, i) {
+          var s = secs[i] || 0, k = s > 0 ? 0.25 + 0.75 * Math.min(1, s / mx) : 0;
+          pg.style.boxShadow = k ? 'inset 0 0 0 ' + Math.round(3 + 9 * k) + 'px rgba(217,70,239,' + k.toFixed(2) + ')' : 'inset 0 0 0 4px rgba(120,110,130,.6)';
+          if (!s) { var wash = document.createElement('div'); wash.style.cssText = 'position:absolute;inset:0;background:rgba(60,55,70,.55);z-index:20;pointer-events:none'; pg.appendChild(wash); }
+          var tag = document.createElement('div');
+          var rank = top3.indexOf(i);
+          tag.style.cssText = 'position:absolute;top:10px;right:10px;z-index:21;font:700 13px/1.2 system-ui,sans-serif;padding:6px 10px;border-radius:999px;color:#fff;background:' + (s ? 'rgba(162,28,175,' + Math.max(.75, k).toFixed(2) + ')' : '#4b4556');
+          tag.textContent = 'Page ' + (i + 1) + ' · ' + (s ? dur(s) : 'not read') + (rank === 0 ? ' · most read 🔥' : rank > 0 ? ' · top 3' : '');
+          pg.appendChild(tag);
+        });
+      })
+      .catch(function () { bar.textContent = "Couldn't load the heat map. Open the Hub first so you're logged in, then try again."; });
+  }
+
+  function readTrack() {
+    if (preview || !('IntersectionObserver' in window)) return;
+    var pgs = [].slice.call(document.querySelectorAll('.pg')).filter(function (p) { return !p.hidden && p.offsetParent !== null; });
+    var n = pgs.length, secs = new Array(n).fill(0), on = new Array(n).fill(false), far = 0, last = Date.now();
+    function tick() {
+      var now = Date.now(), dt = Math.min(5, (now - last) / 1000); last = now;
+      if (document.visibilityState !== 'visible') return;
+      on.forEach(function (v, i) { if (v) secs[i] += dt; });
+    }
+    var io = new IntersectionObserver(function (es) {
+      tick();
+      es.forEach(function (e) { var i = pgs.indexOf(e.target); if (i < 0) return; on[i] = e.intersectionRatio >= 0.5 || e.intersectionRect.height >= window.innerHeight * 0.6; /* a page taller than the screen counts while it fills most of it */ if (on[i]) far = Math.max(far, i + 1); });
+    }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] });
+    pgs.forEach(function (p) { io.observe(p); });
+    function send() {
+      tick();
+      var out = secs.map(function (s) { return Math.round(s * 10) / 10; });
+      if (!out.some(function (s) { return s > 0; }) && !far) return;
+      secs = new Array(n).fill(0);
+      try { fetch('/p/' + code + '/pseen', { method: 'POST', body: JSON.stringify({ secs: out, far: far, n: n }), keepalive: true }); } catch (e) {}
+    }
+    setInterval(tick, 1000);
+    setInterval(send, 60000);   // was 10s: 2 KV writes each, ran the free daily write cap down (2026-11-11)
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') send(); else last = Date.now(); });
+    window.addEventListener('pagehide', send);
+  }
 })();
 </script>
 '''
