@@ -233,7 +233,8 @@ def worker():
                 length = round(pj.get("length") or pj["trim"][1] - pj["trim"][0], 1)
             except Exception:
                 length = 0
-            update(job["id"], status="ready", file=job["id"] + ".mp4", hook=hook, length=length, caption=cap, captions=caps, offer=job.get("offer"), finished=time.time())
+            update(job["id"], status="ready", media_url="", media_id="", thumb_url="", file=job["id"] + ".mp4", hook=hook, length=length, caption=cap, captions=caps, offer=job.get("offer"), finished=time.time())
+            # 2026-11-11: a re-edit must re-upload, or GHL posts the OLD video (media_url was kept from the first approve)
             if job.get("match"):
                 hub_stage(job["match"], "edited")
         except Exception as e:
@@ -637,7 +638,8 @@ def poster():
                 print("rebalance failed:", e)
         with lock:
             items = load()
-            job = next((it for it in items if it["status"] == "approved"), None)
+            # soonest slot first (2026-11-11: a Reel due at 1am waited behind ones for Saturday; each upload is ~300 MB)
+            job = min((it for it in items if it["status"] == "approved"), key=lambda it: it.get("slot") or "9", default=None)
             if job:
                 job["status"] = "scheduling"
                 save(items)

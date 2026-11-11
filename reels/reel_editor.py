@@ -15,7 +15,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-FONT = os.path.join(HERE, "fonts", "Figtree.ttf")
+FONT = os.path.join(HERE, "fonts", "Figtree.ttf")       # captions (= Edits auto-captions)
+HOOK_FONT = os.path.join(HERE, "fonts", "Inter.ttf")    # hooks (= Edits "Classic" text, Apple's system font; Inter is its free twin)
 EMOJI = "C:/Windows/Fonts/seguiemj.ttf"
 W, H = 1080, 1920
 BOX_TOP = 289          # caption box top (px)
@@ -24,7 +25,9 @@ PAD_X = 24             # text inset from box edge
 RADIUS = 18
 STRIP_Y, STRIP_H = 240, 320   # captions only ever sit in this band; overlay just this strip (much faster)
 FONT_PX = 66
-WEIGHT = 850
+WEIGHT = 740          # Olly 2026-11-11: measured off his Edits Reel (sample/Final.mp4); was 850 = too bold
+HOOK_PX = 61.5        # Inter at this size = the Edits hook letter height + line width (measured 2026-11-11)
+HOOK_WEIGHT = 740
 GREEN = (16, 208, 93)
 MAX_CHARS = 22         # caption chunk length
 PAUSE_SPLIT = 0.35     # a pause this long starts a new caption
@@ -33,16 +36,21 @@ TERMS = ["intellectualization", "emotional resonance"]
 CTA_WORDS = {"feeling", "emotion", "video", "attract", "scale"}  # keywords: green when comment / DM / message is up to 3 words before
 
 
-def font(px):
-    f = ImageFont.truetype(FONT, px)
+def font(px, hook=False):
+    """Captions: Figtree. hook=True: Inter (display cut). f.base = the full size, for emoji + stroke scaling."""
+    f = ImageFont.truetype(HOOK_FONT if hook else FONT, px)
     vals = []
     for a in f.get_variation_axes():
-        vals.append(WEIGHT if "eight" in str(a["name"]) else a["default"])
+        n = str(a["name"]).lower()
+        vals.append((HOOK_WEIGHT if hook else WEIGHT) if "eight" in n else
+                    min(max(px, a["minimum"]), a["maximum"]) if "optic" in n or "opsz" in n else a["default"])
     f.set_variation_by_axes(vals)
+    f.base, f.hook = (HOOK_PX if hook else FONT_PX), hook
     return f
 
 
 F = font(FONT_PX)
+FH = font(HOOK_PX, hook=True)
 FE = ImageFont.truetype(EMOJI, 109)  # Segoe emoji only renders at 109px; scaled down after
 
 
@@ -78,7 +86,9 @@ def speech_onset(audio, sr, near):
     Olly: the hook must be heard the instant the video starts.) Needs 60ms above the level, so a click or gust
     isn't taken for speech; starts 50ms before it so the first consonant isn't clipped."""
     hop = int(sr * 0.01)
-    a, b = max(0, int((near - 1.5) * sr)), int((near + 0.6) * sr)
+    # 2026-11-11: whisper can put the first word 0.7s+ BEFORE he speaks; a +0.6s window then found nothing and the
+    # fallback kept ~0.7s of silence at the start (Olly: "it needs to start as soon as the person speaks"). Look to +2.5s.
+    a, b = max(0, int((near - 1.5) * sr)), int((near + 2.5) * sr)
     seg = audio[a:b]
     rms = np.sqrt(np.convolve(seg ** 2, np.ones(hop) / hop, "same"))[::hop]
     noise, peak = np.percentile(rms, 20), rms.max()
@@ -113,7 +123,22 @@ def fix_words(words):
             w = dict(w, w=m.group(1) + core + m.group(3))
             fixed = True
         out.append(w)
+    # 2026-11-11: the CTA gets misheard too ("hear me / dare me the word feeling" for "DM me", "comment, feel below"
+    # for "comment feeling"), so its FEELING wasn't green. Fixed only next to a CTA cue, so normal speech is untouched.
+    core = lambda k: re.sub(r"[^a-z]", "", out[k]["w"].lower()) if 0 <= k < len(out) else ""
+    cue = lambda k: any(core(m) in ("comment", "word", "dm", "feeling") for m in range(k - 8, k + 9) if m != k)
+    for k in range(len(out)):
+        c = core(k)
+        if c in DM_MISHEARD and core(k + 1) == "me" and cue(k):
+            out[k] = dict(out[k], w=re.sub(r"[A-Za-z]+", "DM", out[k]["w"], count=1))
+            fixed = True
+        elif c in ("feel", "feelin", "feelings") and (core(k - 1) in ("comment", "word") or core(k - 2) == "comment"):
+            out[k] = dict(out[k], w=re.sub(r"[A-Za-z]+", "feeling", out[k]["w"], count=1))
+            fixed = True
     return out, fixed
+
+
+DM_MISHEARD = {"hear", "dare", "dear", "deem", "diem", "team", "deeam", "beam", "de", "d", "dee", "dean"}
 
 
 def plan(words):
@@ -178,8 +203,30 @@ def plan(words):
     for j, x in enumerate(rest):
         # 5 words back (Olly 2026-11-05): "send me a DM with the word feeling" has DM 4 words before the keyword, so the
         # DM keyword wasn't green while the comment one was. Both must always be highlighted.
-        if low[j] in CTA_WORDS and any(low[k] in ("dm", "dms", "comment", "message") for k in range(max(0, j - 5), j)):
+        # 12 words back + "the word X" (Olly 2026-11-11: "send me a DM if you want to keep it private with the word
+        # feeling" has DM 11 words before it, so FEELING wasn't green on 3 Reels). The keyword must ALWAYS be green.
+        if low[j] in CTA_WORDS and any(low[k] in ("dm", "dms", "comment", "message", "word") for k in range(max(0, j - 12), j)):
             green.add(id(x))
+    # SAFETY NET (Olly 2026-11-11: "I can't go through every single video checking ... these need to always be that way"):
+    # every comment / DM cue in the closing CTA must be followed by a green keyword; if the transcript mangled it, the
+    # nearest "feel…" word after the cue becomes FEELING in green. Logged so a miss shows in the edit log.
+    for k in range(max(0, len(rest) - 80), len(rest)):
+        if low[k] not in ("comment", "dm", "dms", "message"):
+            continue
+        after = range(k + 1, min(len(rest), k + 13))
+        if any(id(rest[m]) in green for m in after):
+            continue
+        m = next((m for m in after if low[m].startswith("feel")), None)
+        if m is not None:
+            rest[m] = dict(rest[m], w=re.sub(r"[A-Za-z]+", "feeling", rest[m]["w"], count=1))
+            for c in caps:
+                for n, x in enumerate(c if not isinstance(c[0], tuple) else []):
+                    if x is not rest[m] and x["s"] == rest[m]["s"] and x["e"] == rest[m]["e"]:
+                        c[n] = rest[m]
+            green.add(id(rest[m]))
+            print("green safety net: forced", rest[m]["w"], "after", rest[k]["w"])
+        else:
+            print("WARNING green safety net: no keyword after", rest[k]["w"], "at", round(rest[k]["s"], 1))
     # Every mention of a TERM is green too (Olly 2026-11-04: "always highlighted even if mentioned more than once"):
     # "something called X" / its own sentence gets its own caption box (solo, above); any other mention is green in line
     for j, term in terms_at.items():
@@ -220,6 +267,43 @@ def emoji_img(ch, size):
     return im.resize((int(im.width * r), size), Image.LANCZOS)
 
 
+def _stem(f):
+    """Ink width of a lower-case 'l' = the stroke thickness of this font."""
+    im = Image.new("L", (int(f.size * 2), int(f.size * 2)))
+    ImageDraw.Draw(im).text((int(f.size // 2), int(f.size // 4)), "l", font=f, fill=255)
+    rows = [r for r in (im.crop((0, y, im.width, y + 1)).getdata() for y in range(im.height)) if max(r) > 127]
+    return sum(v > 127 for v in rows[len(rows) // 2])
+
+
+SS = 4                       # supersample factor for shrunk text
+_BIG = {}
+
+
+def draw_text(canvas, d, x, y, t, f, fill):
+    """Full-size text draws as normal. Shrunk hook text (Olly 2026-11-11: long hooks looked "thinner" than his Edits
+    Reels) keeps the SAME stroke thickness as the 66px text: drawn 4x bigger with an outline that tops the stem back
+    up to the 66px stem, then scaled down smoothly. Letter shapes and spacing stay as they were."""
+    if f.size >= f.base:
+        d.text((x, y), t, font=f, fill=fill)
+        return
+    big = _BIG.get((f.hook, f.size)) or _BIG.setdefault((f.hook, f.size), font(f.size * SS, f.hook))
+    target = _BIG.get(("stem", f.hook)) or _BIG.setdefault(("stem", f.hook), _stem(font(f.base * SS, f.hook)))  # full-size stem, at 4x
+    # top up to the 66px stem, but never more than ~0.5px a side at 1x: more fills the gaps between small letters
+    stroke = max(0, min(SS // 4, round((target - _stem(big)) / 2)))   # max 0.25px a side (0.5 was "too bold")
+    pad = stroke + 8 * SS
+    asc, desc = big.getmetrics()
+    lw, lh = int(big.getlength(t)) + pad * 2, asc + desc + pad * 2
+    layer = Image.new("RGBA", (lw, lh), (0, 0, 0, 0))
+    ImageDraw.Draw(layer).text((pad, pad), t, font=big, fill=fill, stroke_width=stroke, stroke_fill=fill)
+    small = layer.resize((round(lw / SS), round(lh / SS)), Image.LANCZOS)
+    canvas.alpha_composite(small, (round(x - pad / SS), round(y - pad / SS)))
+
+
+def egap(f):
+    """Gap before the end emoji: a space, but never tighter than on the Edits Reels (Inter's space is narrow)."""
+    return max(f.getlength(" "), 0.27 * f.size, 16)   # 0.27 = the 21px gap measured on his Edits Reel at full size
+
+
 def draw_line(canvas, y, parts, heart=False, box=True, text=True, f=None):
     """One caption line centred at y (box top). parts = [(text, green)]. f = a smaller font for a long hook."""
     f = f or F
@@ -229,8 +313,8 @@ def draw_line(canvas, y, parts, heart=False, box=True, text=True, f=None):
     tw = sum(tw_(t) for t, _ in parts) + sp * (len(parts) - 1)
     hw = 0
     if heart:
-        heart_im = emoji_img(heart if isinstance(heart, str) else "\u2764\ufe0f", round(46 * f.size / FONT_PX))
-        hw = sp + heart_im.width
+        heart_im = emoji_img(heart if isinstance(heart, str) else "\u2764\ufe0f", round(46 * f.size / f.base))
+        hw = egap(f) + heart_im.width
     bw = tw + hw + PAD_X * 2
     x0 = (W - bw) / 2
     if box:
@@ -241,10 +325,10 @@ def draw_line(canvas, y, parts, heart=False, box=True, text=True, f=None):
     ty = y + BOX_H / 2 - (asc + desc) / 2 + 4
     x = x0 + PAD_X
     for t, g in parts:
-        d.text((x, ty), t, font=f, fill=GREEN if g else "black")
+        draw_text(canvas, d, x, ty, t, f, GREEN if g else "black")
         x += tw_(t) + sp
     if heart:
-        canvas.alpha_composite(heart_im, (int(x), int(y + BOX_H / 2 - heart_im.height / 2 + 2)))
+        canvas.alpha_composite(heart_im, (int(x - sp + egap(f)), int(y + BOX_H / 2 - heart_im.height / 2 + 2)))
     return x0, bw
 
 
@@ -303,8 +387,10 @@ def merge_hook(spoken, calendar):
     own = END_EMOJI.search(calendar)
     emo = own.group(1) if own else ""
     cal_text = calendar[:own.start()].rstrip() if own else calendar.strip()
+    # 2026-11-11: a fast "how to" comes out as "have a"/"how a"/"how do" — word ratios can't catch it, so fix it here
+    spoken = re.sub(r"^(?:have|how|half) (?:a|to|do)\b", "How to", spoken.strip(), flags=re.I) if re.match(r"how to\b", cal_text, re.I) else spoken
     sw, cw = spoken.split(), cal_text.split()
-    key = lambda w: re.sub(r"[^a-z0-9]", "", w.lower().replace("’", "'"))
+    key =lambda w: re.sub(r"[^a-z0-9]", "", w.lower().replace("’", "'"))
     out = []
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, [key(w) for w in sw], [key(w) for w in cw], autojunk=False).get_opcodes():
         if op == "equal":
@@ -342,16 +428,24 @@ def hook_png(text, path):
 
 HOOK_MAX = 780   # widest hook line incl. the end emoji. Instagram/TikTok crop ~100px off each side on tall phones
                  # (Olly 2026-11-04: 940 sat "right tight on the edge"), so the box keeps ~125px clear of each edge
-HOOK_MIN_PX = 54  # a long hook's text may shrink to this (from 66) to stay two lines inside the safe width
-PYRAMID_MIN_PX = 48  # shrink only SLIGHTLY for the pyramid (Olly 2026-11-06: 40px was "too small"); a hook too long for that keeps 54px+ and the most even split
+HOOK_MIN_PX = 54 * HOOK_PX / FONT_PX  # a long hook's text may shrink to this (from 66) to stay two lines inside the safe width
+PYRAMID_MIN_PX = 48 * HOOK_PX / FONT_PX  # shrink only SLIGHTLY for the pyramid (Olly 2026-11-06: 40px was "too small"); a hook too long for that keeps 54px+ and the most even split
+
+
+def hook_sizes(lo):
+    """Full hook size, then 2px-ish steps down (same steps as the old 66 -> 48 range, scaled to HOOK_PX)."""
+    out, px = [], HOOK_PX
+    while px >= lo - 0.01:
+        out.append(px); px = round(px - 2 * HOOK_PX / FONT_PX, 2)
+    return out
 
 
 def hook_lines(words, f=None):
     """ALWAYS two lines (Olly 2026-11-04: three starts covering his head). Returns (lines, is_pyramid, fits).
     Inverted pyramid where it fits: top line at least as wide as the bottom one (which counts its end emoji), both
     within HOOK_MAX, most balanced split wins. Else the fitting split with the least extra width at the bottom."""
-    f = f or F
-    ew = f.getlength(" ") + 46 * f.size / FONT_PX   # the end emoji
+    f = f or FH
+    ew = egap(f) + 46 * f.size / f.base   # the end emoji
     wd = lambda ws, last: f.getlength(" ".join(ws)) + (ew if last else 0)
     if len(words) < 2:
         return [" ".join(words)], True, wd(words, True) <= HOOK_MAX
@@ -374,8 +468,8 @@ def hook_fit(words):
     fallback = None
     # RULE (Olly 2026-11-06): the top line is ALWAYS wider than the bottom. Shrink further (to PYRAMID_MIN_PX) before
     # ever giving up the pyramid; "How to attract your life partner / without more effort" needed 50px, not 54.
-    for px in range(FONT_PX, PYRAMID_MIN_PX - 1, -2):
-        f = F if px == FONT_PX else font(px)
+    for px in hook_sizes(PYRAMID_MIN_PX):
+        f = FH if px == HOOK_PX else font(px, hook=True)
         lines, pyramid, fits = hook_lines(words, f)
         if pyramid:
             return lines, f
@@ -384,9 +478,9 @@ def hook_fit(words):
     # Too long for a two-line pyramid at a readable size: THREE lines, still a pyramid (each line at least as wide as
     # the one below it, the bottom counting its end emoji), at the biggest size that fits. Olly chose this 2026-11-06
     # for "You don't need another plan to attract a committed relationship" over smaller text or a wider top line below.
-    for px in range(FONT_PX, HOOK_MIN_PX - 1, -2):
-        f = F if px == FONT_PX else font(px)
-        ew = f.getlength(" ") + 46 * f.size / FONT_PX
+    for px in hook_sizes(HOOK_MIN_PX):
+        f = FH if px == HOOK_PX else font(px, hook=True)
+        ew = egap(f) + 46 * f.size / f.base
         best = None
         for i in range(1, len(words) - 1):
             for j in range(i + 1, len(words)):

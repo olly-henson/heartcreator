@@ -31,4 +31,4 @@ Read this at the start of every session. Keep it short; build details live in th
 - TEST: the Edits-app Reel ("How to find an emotional connection") did well. To tell Edits vs today's batch (white t-shirt, hat, jacket), today's 7 Reels go out Thu 1am to Fri 4am via GHL, with older ones mixed in. Compare their reach with the Edits one once they've had ~48h.
 - Hook fix: "Have a stop doubting" became "How to stop doubting that you'll meet someone" (merge_hook now maps a misheard "have a/how a" to "How to").
 - Green FEELING: 5 Reels had it black (mishearing "hear me/dare me" for DM, and the 5-word window). Fixed with fix_words, a 12-word/"the word" window and a safety net in plan(); the 5 were re-edited. Audit greens after every batch (skills_reel-editor.md rule 9).
-- upload_server.py now clears media_url when a re-edit finishes, so GHL never posts the old video. NEEDS A SERVER RESTART to take effect (do it when nothing is editing or uploading).
+- upload_server.py now clears media_url when a re-edit finishes, so GHL never posts the old video. Server restarted 2026-11-11 20:37, live. Poster now books the soonest slot first.
