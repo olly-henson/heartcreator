@@ -582,7 +582,7 @@ html { font-size: 112.5%; }
       try { fetch('/p/' + code + '/pseen', { method: 'POST', body: JSON.stringify({ secs: out, far: far, n: n }), keepalive: true }); } catch (e) {}
     }
     setInterval(tick, 1000);
-    setInterval(send, 10000);
+    setInterval(send, 60000);   // was 10s: 2 KV writes each, ran the free daily write cap down (2026-11-11)
     document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') send(); else last = Date.now(); });
     window.addEventListener('pagehide', send);
   }

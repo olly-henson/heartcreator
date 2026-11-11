@@ -2865,7 +2865,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function autoSoon(){
     if (autoOff) return;
     clearTimeout(autoT);
-    autoT = setTimeout(function(){ if (tabDirty) saveNow(); }, 2000);
+    autoT = setTimeout(function(){ if (tabDirty) saveNow(); }, 20000);   // 20s after the last edit (was 2s: one KV write per edit hit the free daily cap, 2026-11-11); leaving the tab still saves at once
   }
   document.addEventListener("visibilitychange", function(){
     if (document.visibilityState === "hidden" && !autoOff && tabDirty){ clearTimeout(autoT); saveNow(); }
@@ -6769,11 +6769,19 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Copy email = formatted text in Arial 18px, line height 1.5 (Olly, 2026-10-28), so it pastes into GHL in that style.
   // Blank line = new paragraph, single line break = <br>. Plain text goes on the clipboard too, as a fallback.
   var EMAIL_STYLE = "font-family:Arial, Helvetica, sans-serif;font-size:18px;line-height:1.5;";
+  // Bold + italic (Olly, 2026-11-11): **word** = bold, *word* = italic in the email box. Copy email and Send to GHL
+  // turn them into real bold/italic; YouTube posts and plain text drop the stars. Runs on already-escaped HTML.
+  function emFmt(h){
+    return String(h).replace(/\*\*(?=\S)([^*\n]+?)\*\*/g, "<strong>$1</strong>").replace(/(^|[^*])\*(?=[^\s*])([^*\n]+?)\*(?!\*)/g, "$1<em>$2</em>");
+  }
+  function emNoFmt(t){
+    return String(t).replace(/\*\*(?=\S)([^*\n]+?)\*\*/g, "$1").replace(/(^|[^*])\*(?=[^\s*])([^*\n]+?)\*(?!\*)/g, "$1$2");
+  }
   function emailHtml(text){
     var esc = function(s){ return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
     return String(text).replace(/\r/g, "").trim().split(/\n\s*\n/).map(function(par){
       // [word](url) becomes a hyperlink, like Send to GHL does (2026-11-10)
-      return '<p style="' + EMAIL_STYLE + 'margin:0 0 18px;">' + esc(par.trim()).replace(/\n/g, "<br>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)"]+)\)/g, '<a href="$2" style="color:#0b57d0;">$1</a>') + "</p>";
+      return '<p style="' + EMAIL_STYLE + 'margin:0 0 18px;">' + emFmt(esc(par.trim()).replace(/\n/g, "<br>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)"]+)\)/g, '<a href="$2" style="color:#0b57d0;">$1</a>')) + "</p>";
     }).join("");
   }
   function copyEmailRich(text, btn){
@@ -6793,12 +6801,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var ok = false;
       try { ok = document.execCommand("copy"); } catch (err) {}
       sel.removeAllRanges(); box.remove();
-      if (ok) done(); else copyToClipboard(text, btn);
+      if (ok) done(); else copyToClipboard(emNoFmt(text), btn);
     }
     if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem){
       navigator.clipboard.write([new ClipboardItem({
         "text/html": new Blob([html], { type: "text/html" }),
-        "text/plain": new Blob([text], { type: "text/plain" })
+        "text/plain": new Blob([emNoFmt(text)], { type: "text/plain" })
       })]).then(done, legacy);
     } else legacy();
   }
@@ -6811,6 +6819,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     t = t.replace(/^\s*(hey|hi|hello|so)?\s*(\{\{\s*contact\.first_name\s*\}\}|FIRSTNAME)\s*[,.!]?[ \t]*\n+/i, "");
     t = t.replace(/[ \t]*,?[ \t]*(\{\{\s*contact\.first_name\s*\}\}|FIRSTNAME)/g, "");
     t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, "$1 ($2)"); // YouTube posts can't hyperlink a word
+    t = emNoFmt(t); // ...or bold/italic
     return t.replace(/\n{3,}/g, "\n\n").trim();
   }
   function emYtSync(){
@@ -6904,7 +6913,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       });
       if (dayEm.length > 3){ var more = document.createElement("div"); more.className = "calitem"; more.style.color = "var(--text-muted)"; more.textContent = "+" + (dayEm.length - 3) + " more"; wrap.appendChild(more); }
       cell.appendChild(wrap);
-      if (!outside) cell.addEventListener("click", function(){ emCalSel = emCalSel === cellISO ? null : cellISO; renderEmailCalendar(); });
+      if (!outside) cell.addEventListener("click", function(){ emCalSel = emCalSel === cellISO ? null : cellISO; renderEmailCalendar(); dayIntoView("emCalDay", emCalSel); });
       grid.appendChild(cell);
     }
     renderEmailDay();
@@ -7043,7 +7052,34 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         }
         if (!n) lst.innerHTML = '<span class="hint">Select a word above, then Add link. It shows as [word](address) in the box and as a normal hyperlink in GHL.</span>';
       }
-      lrow.append(lb2); item.appendChild(lrow); item.appendChild(pick); item.appendChild(lst);
+      function wrapSel(mk){
+        var s0 = body.selectionStart, s1 = body.selectionEnd, v = body.value, sel = v.slice(s0, s1);
+        var lead = sel.match(/^\s*/)[0], trail = sel.match(/\s*$/)[0], core = sel.slice(lead.length, sel.length - trail.length);
+        var ins, a, b;
+        if (core && core.slice(0, mk.length) === mk && core.slice(-mk.length) === mk && core.length > mk.length * 2){
+          ins = core.slice(mk.length, -mk.length); a = s0 + lead.length; b = a + ins.length; // already formatted: undo it
+        } else if (v.slice(s0 - mk.length, s0) === mk && v.slice(s1, s1 + mk.length) === mk && core){
+          body.value = v.slice(0, s0 - mk.length) + sel + v.slice(s1 + mk.length);
+          body.selectionStart = s0 - mk.length; body.selectionEnd = s1 - mk.length;
+          body.focus(); body.dispatchEvent(new Event("input", { bubbles:true })); return;
+        } else { ins = mk + core + mk; a = s0 + lead.length + mk.length; b = a + core.length; }
+        body.value = v.slice(0, s0) + lead + ins + trail + v.slice(s1);
+        body.focus(); body.selectionStart = a; body.selectionEnd = b;
+        body.dispatchEvent(new Event("input", { bubbles:true }));
+      }
+      var bb = document.createElement("button"); bb.type = "button"; bb.className = "copybtn"; bb.innerHTML = "<b>B</b> Bold";
+      bb.title = "Select words first. Shows as **words** here and as bold in GHL (Ctrl/Cmd + B).";
+      var ib = document.createElement("button"); ib.type = "button"; ib.className = "copybtn"; ib.innerHTML = "<i>I</i> Italic";
+      ib.title = "Select words first. Shows as *words* here and as italic in GHL (Ctrl/Cmd + I).";
+      [bb, ib].forEach(function(x){ x.addEventListener("mousedown", function(ev){ ev.preventDefault(); }); });
+      bb.addEventListener("click", function(){ wrapSel("**"); });
+      ib.addEventListener("click", function(){ wrapSel("*"); });
+      body.addEventListener("keydown", function(ev){
+        if (!(ev.ctrlKey || ev.metaKey) || ev.altKey) return;
+        var k = ev.key.toLowerCase();
+        if (k === "b"){ ev.preventDefault(); wrapSel("**"); } else if (k === "i"){ ev.preventDefault(); wrapSel("*"); }
+      });
+      lrow.append(bb, ib, lb2); item.appendChild(lrow); item.appendChild(pick); item.appendChild(lst);
       emLinksDraw();
       var acts = document.createElement("div"); acts.className = "emrow";
       var cs = document.createElement("button"); cs.type = "button"; cs.className = "copybtn"; cs.textContent = "Copy subject";
@@ -7216,7 +7252,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         it.title = (p.type ? p.type + ": " : "") + p.title; it.append(dot, lb); wrap.appendChild(it);
       });
       cell.appendChild(wrap);
-      if (!outside) cell.addEventListener("click", function(){ ytCalSel = ytCalSel === cellISO ? null : cellISO; renderYtCalendar(); });
+      if (!outside) cell.addEventListener("click", function(){ ytCalSel = ytCalSel === cellISO ? null : cellISO; renderYtCalendar(); dayIntoView("ytCalDay", ytCalSel); });
       grid.appendChild(cell);
     }
     renderYtDay();
@@ -7549,6 +7585,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (wasClean) saveNow();
     renderCarCalendar();
   }
+  // Tapping a day opens its panel under the calendar; on a phone that's off-screen, so it looked like nothing happened
+  // (Olly, 2026-11-11, carousel calendar). Scroll the panel into view when a day is opened.
+  function dayIntoView(id, sel){
+    if (!sel) return;
+    setTimeout(function(){ var bx = document.getElementById(id); if (!bx || bx.hidden) return;
+      var r = bx.getBoundingClientRect(); if (r.top < 0 || r.top > window.innerHeight * 0.6) bx.scrollIntoView({ behavior:"smooth", block:"start" }); }, 60);
+  }
   function renderCarCalendar(){
     var grid = document.getElementById("carCalendar");
     if (!grid) return;
@@ -7578,7 +7621,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         it.title = (p.type ? p.type + ": " : "") + p.title; it.append(dot, lb); wrap.appendChild(it);
       });
       cell.appendChild(wrap);
-      if (!outside) cell.addEventListener("click", function(){ carCalSel = carCalSel === cellISO ? null : cellISO; renderCarCalendar(); });
+      if (!outside) cell.addEventListener("click", function(){ carCalSel = carCalSel === cellISO ? null : cellISO; renderCarCalendar(); dayIntoView("carCalDay", carCalSel); });
       grid.appendChild(cell);
     }
     renderCarDay();
@@ -8942,13 +8985,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var g = state.ghlSources && state.ghlSources.fetchedAt;
     var days = g ? Math.floor((Date.now() - new Date(g).getTime()) / 86400000) : null;
     if (days == null || days >= 7) out.push({ text:"Pull from GHL to refresh opt-ins, applications and traffic" + (days == null ? "" : " (last pulled " + days + " days ago)"), tab:"overview", pull:true });
-    var weekAgo = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10), today = todayISO();
-    var noViews = ((state.content && state.content.ideas) || []).filter(function(i){
-      if (!i.posted || !i.date || i.date < weekAgo || i.date > today) return false;
-      var o = ((state.content && state.content.outlierList) || []).filter(function(x){ return x.title === i.title; })[0];
-      return !o || !(Number(o.views) > 0);
-    }).length;
-    if (noViews) out.push({ text:"Add the views for " + noViews + " Reel" + (noViews === 1 ? "" : "s") + " published in the last 2 weeks", tab:"content" });
+    // "Add the views for N Reels" to-do removed (Olly, 2026-11-11): he doesn't log Reel views by hand.
     var fu = ((state.sales && state.sales.leads) || []).filter(function(l){ return l.followUp && l.followUp <= today && !LEAD_CLOSED[l.stage] && (l.name || "").trim(); }).length;
     return out;
   }

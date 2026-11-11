@@ -47,9 +47,13 @@ function inline(t) {
   }
   return out + esc(t.slice(last));
 }
+// **bold** and *italic* from the Hub email box (2026-11-11). Runs on escaped HTML.
+function fmt(h) {
+  return h.replace(/\*\*(?=\S)([^*\n]+?)\*\*/g, "<strong>$1</strong>").replace(/(^|[^*])\*(?=[^\s*])([^*\n]+?)\*(?!\*)/g, "$1<em>$2</em>");
+}
 export function bodyHtml(text) {
   return String(text).replace(/\r/g, "").trim().split(/\n\s*\n/).filter(Boolean).map(function (par) {
-    return '<p style="line-height: 1.5;"><span style="font-size: 18px">' + par.trim().split("\n").map(inline).join("<br>") + "</span></p>";
+    return '<p style="line-height: 1.5;"><span style="font-size: 18px">' + par.trim().split("\n").map(function (l) { return fmt(inline(l)); }).join("<br>") + "</span></p>";
   }).join("");
 }
 

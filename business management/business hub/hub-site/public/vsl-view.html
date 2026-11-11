@@ -89,7 +89,7 @@ h1 em { font-style:normal; color:var(--purple); }
   });
   v.addEventListener("seeking", function () { last = null; });
   function flush(beacon) { var b = Object.keys(pending).map(Number); if (!b.length) return; pending = {}; send("tick", { bins: b }, beacon); }
-  setInterval(function () { if (!v.paused) flush(false); }, 15000);
+  setInterval(function () { if (!v.paused) flush(false); }, 60000);   // was 15s: 1 KV write each (free cap, 2026-11-11)
   v.addEventListener("pause", function () { flush(false); });
   v.addEventListener("ended", function () { flush(false); send("end"); endBox.classList.add("on"); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {} });
   addEventListener("pagehide", function () { flush(true); });
