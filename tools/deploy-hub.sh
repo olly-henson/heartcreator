@@ -3,6 +3,11 @@
 # Usage: bash deploy-hub.sh
 set -e
 HUB="/c/Users/Olly/AI OS/heartattractor/business management/business hub/hub-site"
+# 2026-11-12: a script crashed mid-write, left index.html EMPTY, and jscheck passed it (0 scripts) so a blank Hub went live.
+# Never deploy a page that's suspiciously small. Restore from the last good deploy URL (curl it) if this fires.
+for f in index.html plan.html; do
+  n=$(wc -c < "$HUB/public/$f"); if [ "$n" -lt 50000 ]; then echo "STOP: $f is only $n bytes. Not deploying."; exit 1; fi
+done
 node "$(dirname "$0")/jscheck.js" "$HUB/public/index.html"
 # the generated plan pages too (a broken plan.html went live on 2026-11-08 because only index.html was checked)
 node "$(dirname "$0")/jscheck.js" "$HUB/public/plan.html"

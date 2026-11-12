@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Your Plan Of Action</title>
+<meta property="og:title" content="Your plan of action">
+<meta property="og:description" content="From Olly Henson">
+<!-- Plan of action v4, IMAGE version (Olly, 2026-11-12). Served at /p/<code> by functions/p/[[path]].js when the applicant
+     has page images saved (KV planimgs:<contactId> = page count, planimg:<contactId>:NN = jpg). Built per person (stick-figure
+     diagnosis pages + photo steps), so nothing personal is in this file or the repo. Tracking is the same as plan-view.html:
+     POST /seen "open" once, then /pseen {secs per page, far, n}, so the Sales card's Plan read / heat map work unchanged. -->
+<style>
+  :root { --bg:#f3eef9; --ink:#1d1527; --purple:#6b21a8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:620px; margin:0 auto; padding:12px 0 40px; }
+  .pg { display:block; width:100%; height:auto; aspect-ratio:4/5; background:#fff; margin:0 0 10px; }
+  @media (min-width:640px) { main { padding:24px 0 48px; } .pg { border-radius:14px; box-shadow:0 2px 18px rgba(40,10,70,.10); margin-bottom:18px; } }
+  .msg { text-align:center; padding:40px 16px; color:#5d5070; }
+</style></head>
+<body>
+<main id="pages" aria-label="Your plan of action"></main>
+<script>
+(function(){
+  var code = (location.pathname.split("/")[2] || "").replace(/[^a-z0-9]/g, ""), base = "/p/" + code;
+  var box = document.getElementById("pages");
+  fetch(base + "/pages", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){
+    var N = (d && d.n) | 0;
+    if (!N) { box.innerHTML = '<p class="msg">This plan isn\'t ready yet. Please ask Olly for a new link.</p>'; return; }
+    var imgs = [];
+    for (var i = 0; i < N; i++){
+      var im = document.createElement("img"); im.className = "pg"; im.alt = "Page " + (i + 1) + " of " + N;
+      im.src = base + "/page/" + String(i + 1).padStart(2, "0") + ".jpg"; im.loading = i < 2 ? "eager" : "lazy"; im.decoding = "async";
+      im.width = 1080; im.height = 1350; box.appendChild(im); imgs.push(im);
+    }
+    try { fetch(base + "/seen", { method:"POST", body:"open", keepalive:true }); } catch (e) {}
+    if (!("IntersectionObserver" in window)) return;
+    // seconds per page: counts while at least half of the page (or 60% of the screen) shows and the tab is visible
+    var secs = new Array(N).fill(0), far = 0, onScr = new Array(N).fill(false), last = Date.now();
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ var k = imgs.indexOf(e.target);
+      onScr[k] = e.intersectionRatio >= .5 || e.intersectionRect.height >= innerHeight * .6;
+      if (onScr[k]) far = Math.max(far, k + 1); }); }, { threshold:[0, .25, .5, .75, 1] });
+    imgs.forEach(function(im){ io.observe(im); });
+    setInterval(function(){ var now = Date.now(), dt = Math.min(3, (now - last) / 1000); last = now;
+      if (document.visibilityState !== "visible") return; onScr.forEach(function(v, k){ if (v) secs[k] += dt; }); }, 1000);
+    function flush(){ if (!secs.some(function(s){ return s > 0; })) return;
+      var out = secs.map(function(s){ return Math.round(s * 10) / 10; }); secs = new Array(N).fill(0);
+      try { fetch(base + "/pseen", { method:"POST", body:JSON.stringify({ secs:out, far:far, n:N }), keepalive:true }); } catch (e) {} }
+    setInterval(flush, 10000);
+    document.addEventListener("visibilitychange", function(){ if (document.visibilityState === "hidden") flush(); else last = Date.now(); });
+    addEventListener("pagehide", flush);
+  }).catch(function(){ box.innerHTML = '<p class="msg">Something went wrong loading your plan. Please refresh the page.</p>'; });
+})();
+</script>
+</body></html>

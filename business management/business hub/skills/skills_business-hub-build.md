@@ -569,3 +569,18 @@ rule, already marked overridden and now superseded by the three tables. -->
 broke silently), replaced images need a new id (immutable cache), specific click handlers before the generic .lmcon a,
 countries shown in full (lmCountry). Design principle: every Sales-card follow-up asset gets its own tracked status
 (the Step-by-step guide pattern: guideviews / gseen / guide-view.html). -->
+
+### Never (added 2026-11-12)
+- **Never write index.html (or any page) from a script that can crash mid-write.** Build the whole new text first, write `file.tmp`, then `os.replace`. Why: a Python edit crashed on an emoji escape after `open(p,'w')`, left index.html at 0 bytes, jscheck passed it (0 scripts) and a blank Hub went live. deploy-hub.sh now refuses pages under 50 KB.
+- **Never put unicode/emoji escapes inside a bash heredoc Python script.** Bash collapsed the double backslashes and Python got raw surrogates. Use the Write tool for a .py file with literal characters or \U0001F49C-style escapes.
+- **Recovering a broken page:** `curl -s https://<last-good-deploy>.hub-ollyhenson.pages.dev/ -o good.html` (every deploy prints its URL), check size + tail, copy back, jscheck, redeploy.
+- **Never restore index.html with git checkout** without diffing first: HEAD can be behind the live page.
+
+### Added 2026-11-12 (plan requests, image plans, bio copy, to-dos from Claude)
+- Sales board shows contacts tagged `plan request` too (applicants.js searches both tags, `planRequest` flag, card label "📩 Plan request (DM)"). Push: `/api/track/new-application?key=…&type=plan` → "New plan request".
+- Plan v4 image plans: `/p/<code>` serves public/plan-img-view.html when KV `planimgs:<id>` > 0; pages from `planimg:<id>:NN`; plan.html (card editor) swaps its template for the images. Built by tools/build_plan_v4.py (funnel/skills/skills_plan-v4.md).
+- Links groups can carry `copyText` (textarea + Copy button), e.g. the Instagram bio with a U+2800 blank line Instagram keeps.
+- Adding a to-do for Olly from Claude: wrangler `kv key get record` → insert into `state.todos` ({text, pri:"do", who:"us", done:false, ts}) → rev+1 → `kv key put record --path`. Then tell Olly to refresh before editing, or an older open tab overwrites it.
+
+<!-- 2026-11-12 skill review (2): Never rules for crash-safe page writes, no escapes in heredoc Python, recovering from the
+last good deploy URL; added plan-request board/push, v4 image-plan routes, Links copyText, and adding to-dos via KV. -->

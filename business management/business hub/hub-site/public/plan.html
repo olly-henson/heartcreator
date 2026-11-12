@@ -829,6 +829,15 @@ var PRESET = null;
     var v = auto(a); if (saved) Object.keys(saved).forEach(function (k) { if (k.charAt(0) !== '_') v[k] = saved[k]; });
     apply(v);
     document.title = who + "'s Plan of Action";
+    // Plan v4 (2026-11-12): a personal image plan built by tools/build_plan_v4.py replaces the template pages here,
+    // so Olly sees exactly what their link shows. The template boxes on the left don't change those pages.
+    if (saved && saved._code) fetch('/p/' + saved._code + '/pages', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+      var n = (d && d.n) | 0; if (!n) return;
+      var st = document.getElementById('stage'), h = '';
+      for (var i = 1; i <= n; i++) h += '<img src="/p/' + saved._code + '/page/' + String(i).padStart(2, '0') + '.jpg" alt="Page ' + i + '" style="display:block;width:540px;max-width:100%;height:auto;margin:0 auto 22px;border-radius:12px;box-shadow:0 2px 18px rgba(40,10,70,.12)" loading="lazy">';
+      st.innerHTML = h;
+      note.textContent = who + "'s personal plan (" + n + ' pages), exactly as their link shows it. To change the wording, ask Claude to rebuild it. The boxes on the left do not change these pages.';
+    }).catch(function () {});
     note.textContent = (saved ? 'Your saved version for ' + who + '. Orange boxes are still empty.' : 'Filled in from ' + who + "'s answers. Check anything in orange, then save.") + ' Images and wording are set for a ' + (/^m/i.test(v.gender) ? 'man' : 'woman') + ' (change "They are a" if that is wrong).';
   }).catch(function () { note.textContent = "Couldn't reach GHL. If you've been away a while, reload to log in again."; apply({}); });
 

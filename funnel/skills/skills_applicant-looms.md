@@ -1,5 +1,6 @@
 # Applicant Looms: the framework
 
+> **⚠️ THE PLAN ITSELF (2026-11-12): Plan v4, the personal diagnosis plan: `funnel/skills/skills_plan-v4.md` (builder tools/build_plan_v4.py).**
 > **⚠️ CURRENT FLOW (2026-11-10): "Flow v3" near the end of this file.** Earlier step-by-step sections are kept for history; where they disagree, Flow v3 wins.
 
 How Olly turns an application for The Heart Attractor Program into a sale with one short Loom video, with no sales call.
@@ -489,4 +490,5 @@ The plan's wording should follow the guide's argument (pages 2, 3, 7, 9 change; 
 tracked link because a PDF can't be tracked, own status on the card, owner opens skipped, show where a new row is). Added
 the plan-sync rules (preview changed pages only, state side effects, approval before patch + rebuild). -->
 
-
+<!-- 2026-11-12 skill review: the plan pages are now Plan v4 (funnel/skills/skills_plan-v4.md): a personal 20-page
+diagnosis plan built per applicant. Plan v3.1's template pages are overridden for applicants; the flow (Flow v3) stays. -->

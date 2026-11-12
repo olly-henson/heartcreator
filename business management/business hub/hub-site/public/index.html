@@ -5315,6 +5315,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
   // ── Links tab (2026-10-27) ── Every link Olly copies and sends. When a GHL redirect gets made, set made:true.
   var LINK_GROUPS = [
+    { title:"Instagram bio", blurb:"Your bio text with the gap between the lines. The gap line holds an invisible character, so Instagram keeps it. Copy, then paste over your whole bio.", sections:[],
+      copyText:"Attract someone you can marry, have children with and build a life with 💜\n\u2800\nFree resources 👇" },
+    { title:"Plan of action (DM)", blurb:"The free personal plan form. Send it in the DMs once someone wants a plan (script: funnel/skills/skills_dm-plan-setting.md).", sections:[
+      { title:"Instagram", items:[
+        { name:"DM (by hand)", note:"Paste into the chat when they say yes to a plan.", short:"ollyhenson.com/plan-dm", made:true, long:"https://ollyhenson.com/plan?utm_source=instagram&utm_medium=dm&utm_campaign=plan_request" }
+      ]}
+    ]},
     { title:"Attract training", blurb:"The newest free training. Keyword ATTRACT.", sections:[
       { title:"Instagram", items:[
         { name:"DM (ManyChat)", note:"Sent automatically for ATTRACT. Covers Facebook too.", long:"https://ollyhenson.com/attract?utm_source=instagram&utm_medium=dm&utm_campaign=scientifically_attract_training&utm_content=attract_keyword" },
@@ -5922,7 +5929,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       (lmPV[a.id] && lmPV[a.id].sent ? '<span class="lmtag" style="margin:0;' + (lmPV[a.id].opens ? 'background:rgba(74,222,128,.18);color:#4ade80">📄 Plan opened' + (lmPV[a.id].opens > 1 ? " " + lmPV[a.id].opens + "×" : "") : 'background:rgba(251,191,36,.16);color:#fbbf24">📄 Plan sent, not opened') + "</span>" : "") +
       lmVslTag(a.id) + lmGuideTag(a.id) +
       (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the first message", replied:"After replying", plan_sent:"After the plan was sent", plan_read:"After reading the plan", asked:"After asking questions", loom:"After the video was sent", watched:"After watching the video", joinclick:"After clicking Join" }[lmStage(a, true)] || "") + "</span>" : "");
-    return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, place].filter(Boolean).join(" · ")) + "</span>" +
+    return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([a.planRequest ? "📩 Plan request (DM)" : "", d, place].filter(Boolean).join(" · ")) + "</span>" +
       (tags ? '<span class="lmbcrow">' + tags + "</span>" : "") + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";
   }
   // the per-applicant mind map (unchanged from the Loom days), now shown inside the pop-up
@@ -5969,7 +5976,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var mo = lmMoney(), vsl = live.filter(function(a){ var b = lmStage(a, true); return b === "loom" || b === "watched" || b === "joinclick" || b === "joined"; }).length;
     // money + pipeline at a glance
     var K = [
-      ["Applications", live.length, counts["new"] + " new"],
+      ["Applications", live.length, counts["new"] + " new" + (function(n){ return n ? " · " + n + " plan requests (DM)" : ""; })(live.filter(function(a){ return a.planRequest; }).length)],
       ["In progress", counts.contacted + counts.replied + counts.plan_sent + counts.plan_read + counts.asked + counts.loom + counts.watched + counts.joinclick,
         (counts.plan_sent + counts.plan_read + counts.asked) + " on their plan · " + (counts.loom + counts.watched + counts.joinclick) + " on their video"],
       ["Joined", counts.joined, mo.m + " monthly · " + mo.y + " annual"],
@@ -6067,6 +6074,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
           if (sec.title){ var h = document.createElement("p"); h.className = "lksec"; h.textContent = sec.title; body.appendChild(h); }
           sec.items.forEach(function(it){ body.appendChild(lkRow(it)); });
         });
+        // plain text to copy as it is (2026-11-12: Instagram bio with a kept blank line)
+        if (g.copyText){
+          var ct = document.createElement("textarea"); ct.readOnly = true; ct.rows = 4; ct.value = g.copyText;
+          ct.style.cssText = "width:100%; box-sizing:border-box; resize:vertical; background:var(--surface); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px; font:inherit; font-size:15px; line-height:1.5;";
+          var cb = document.createElement("button"); cb.type = "button"; cb.className = "copybtn"; cb.textContent = "Copy bio"; cb.style.marginTop = "10px";
+          cb.addEventListener("click", function(){ copyToClipboard(g.copyText, cb); });
+          body.appendChild(ct); body.appendChild(cb);
+        }
         // the long YouTube description (edited and saved as templates on the hidden YouTube tab)
         if (g.ytDescription){
           var dh = document.createElement("p"); dh.className = "lksec"; dh.textContent = "Training video description"; body.appendChild(dh);

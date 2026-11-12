@@ -22,9 +22,11 @@ export async function onRequestPost({ request, env }) {
   const first = String(b.first_name || b.firstName || b.first || c.first_name || c.firstName || "").trim();
   const last = String(b.last_name || b.lastName || b.last || c.last_name || c.lastName || "").trim();
   const name = (first + " " + last).trim() || String(b.full_name || b.name || c.name || "").trim() || "someone new";
+  // ?type=plan = a plan of action request from the Instagram DM form (2026-11-12), not an application
+  const plan = new URL(request.url).searchParams.get("type") === "plan";
   const r = await pushAll(env, {
-    title: "New application: " + name,
-    body: "Tap to open their Looms screen and review it.",
+    title: (plan ? "New plan request: " : "New application: ") + name,
+    body: plan ? "Tap to open their card and make their plan." : "Tap to open their Looms screen and review it.",
     url: "/#looms" + (id ? "=" + id : ""),
     tag: "app-" + (id || Date.now()),
   });

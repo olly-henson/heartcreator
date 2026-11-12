@@ -13,6 +13,7 @@
 const API = "https://services.leadconnectorhq.com";
 const LOCATION_ID = "LRqVZmxns8f3xcJLHzBK";
 const TAG_APPLIED = "heart attractor applicant";
+const TAG_PLAN = "plan request";   // plan of action request from the Instagram DM form (2026-11-12): shown on the Sales board too
 const TAG_LOOM = "loom video sent";
 const TAG_JOINED = "joined heart attractor program";
 
@@ -44,16 +45,18 @@ function hasTag(c, tag) {
 
 // Same approach as ghl-sources.js: search by tag, else page through everyone and filter here.
 async function applicants(env) {
-  const out = [];
+  const out = [], seen = {};
   try {
-    for (let page = 1; page <= 50; page++) {
-      const data = await ghl(env, "/contacts/search", {
-        method: "POST",
-        body: JSON.stringify({ locationId: LOCATION_ID, page, pageLimit: 100, filters: [{ field: "tags", operator: "eq", value: TAG_APPLIED }] }),
-      });
-      const batch = data.contacts || [];
-      out.push(...batch);
-      if (batch.length < 100) break;
+    for (const tag of [TAG_APPLIED, TAG_PLAN]) {
+      for (let page = 1; page <= 50; page++) {
+        const data = await ghl(env, "/contacts/search", {
+          method: "POST",
+          body: JSON.stringify({ locationId: LOCATION_ID, page, pageLimit: 100, filters: [{ field: "tags", operator: "eq", value: tag }] }),
+        });
+        const batch = data.contacts || [];
+        batch.forEach(function (c) { if (!seen[c.id]) { seen[c.id] = 1; out.push(c); } });
+        if (batch.length < 100) break;
+      }
     }
     return out;
   } catch (e) {
@@ -67,7 +70,7 @@ async function applicants(env) {
       if (batch.length < 100 || !meta.startAfterId) break;
       after = "&startAfterId=" + encodeURIComponent(meta.startAfterId) + "&startAfter=" + encodeURIComponent(meta.startAfter);
     }
-    return all.filter(function (c) { return hasTag(c, TAG_APPLIED); });
+    return all.filter(function (c) { return hasTag(c, TAG_APPLIED) || hasTag(c, TAG_PLAN); });
   }
 }
 
@@ -98,6 +101,7 @@ export async function onRequestGet({ env }) {
         dateAdded: c.dateAdded || "",
         loomSent: hasTag(c, TAG_LOOM),
         joined: hasTag(c, TAG_JOINED),
+        planRequest: hasTag(c, TAG_PLAN) && !hasTag(c, TAG_APPLIED),   // came in through the DM plan form, not the application
         removed: hasTag(c, "removed - not a fit"),   // Remove from GHL (2026-11-05): left out of every Hub stat
         fields,
       };

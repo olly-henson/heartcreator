@@ -84,9 +84,25 @@ export async function onRequest({ request, env, params }) {
     return json({ ok: true });
   }
 
+  // ---- Plan v4, image version (2026-11-12): a plan built per person as page images (stick-figure diagnosis + photo steps).
+  //   KV planimgs:<contactId> = page count, planimg:<contactId>:NN = jpg. When it exists, /p/<code> shows the images instead.
+  //   GET /p/<code>/pages -> { n }   GET /p/<code>/page/NN.jpg -> the page image
+  if (action === "pages" && request.method === "GET") {
+    if (!id) return json({ ok: false }, 404);
+    return json({ ok: true, n: parseInt((await env.HUB_KV.get("planimgs:" + id)) || "0", 10) || 0 });
+  }
+  if (action === "page" && request.method === "GET") {
+    const f = parts[2] || "";
+    if (!id || !/^\d\d\.jpg$/.test(f)) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    const buf = await env.HUB_KV.get("planimg:" + id + ":" + f.slice(0, 2), "arrayBuffer");
+    if (!buf) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    return new Response(buf, { status: 200, headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=600", "x-robots-tag": "noindex" } });
+  }
+
   if (!action && request.method === "GET") {
     if (!id) return new Response("This link isn't valid any more. Please ask Olly for a new one.", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
-    const page = await env.ASSETS.fetch(new URL("/plan-view.html", request.url));
+    const imgPlan = parseInt((await env.HUB_KV.get("planimgs:" + id)) || "0", 10) > 0;
+    const page = await env.ASSETS.fetch(new URL(imgPlan ? "/plan-img-view.html" : "/plan-view.html", request.url));
     return new Response(page.body, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
   }
 
