@@ -2,6 +2,7 @@
 
 > What the audience tells us in their own answers. Content, emails and the generator draw from this.
 > PUBLIC REPO: counts and themes only. No names, no quotes that could identify someone.
+> Source order for all content (Olly, 2026-11-12): the best client (primary avatar) first, then the core argument, then good applicants, then other applicants and Feeling Finder answers. Never invent a pain point.
 > Refresh: rerun the GHL pull (Feeling Finder + application fields) every 2 weeks and update the counts.
 
 ---
@@ -40,4 +41,4 @@
 4. **You've tried everything (therapy, attachment styles, manifestation):** they work on the past or the wish. None of them train the feeling daily.
 5. **Safety is the feeling you're after:** what it's like to feel safe and chosen, and how to feel it before they arrive.
 6. **"The field gets smaller":** the circumstances story, and why it's a belief, not a fact.
-7. **Impatience:** checking the phone and counting the years, and what impatience tells your nervous system.
+7. **Impatience:** counting the years single (7 of 9 applicants single 5+ years) and what impatience tells your nervous system.

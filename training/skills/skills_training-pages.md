@@ -544,13 +544,13 @@ Used in `about-page-video.html` and `the-attraction-formula.html`. A distinct fo
 
 ---
 
-## Variant: Teaching Slides for Google Vids (square webcam), member trainings from 2026-11-10
+## Variant: Teaching Slides for Google Vids (landscape webcam), member trainings from 2026-11-10
 
 **Use this for every new member training recorded in Google Vids.** Reference file: `training/how-to-control-your-mental-attention.html` (copy its CSS/JS verbatim). Preview: artifact GLBY4zyN4gCBNrBJTDz8tj.
 
 ### Layout (one fixed frame, 1280x720, scaled to the screen)
-- **Webcam:** square top right (x1020 y40, 220x220). Olly sets it once in Google Vids. Never move it and never put anything in that corner. `?cam` draws a dashed guide; it is not on the real slide.
-- **Head:** eyebrow + Title Case h1 (54px Playfair, purple `<em>` highlight) beside the webcam (x40 y40, 940 wide).
+- **Webcam:** LANDSCAPE 16:9 top right, x916 y94, 320x180 (25% of the width, square corners), measured 2026-11-12 from the real Google Vids recordings (`marketing/assets/sales-video/recordings/*.mp4`, ffmpeg frame grab). The old square 220x220 guess was wrong. Olly sets it once; never move it, never put anything in that corner. `?cam` draws a dashed guide. Why: Olly, "take into account previous screen recordings where you'll better see the size and shape of the webcam".
+- **Head:** eyebrow + Title Case h1 (54px Playfair, purple `<em>` highlight) beside the webcam (x40 y40, 840 wide so it never runs under the webcam).
 - **Board:** the whole lower slide (x40 y290, 1200x390) for the teaching: diagrams, step cards, compare boxes, examples, checklists.
 - White slide, dark text, purple accents, problem = red pill, solution = green pill (same look as the VSL and plan of action).
 - Keys: arrows/space/click = next, F = full screen, `?all` = every slide, `?s=N` = start on slide N.
@@ -568,8 +568,8 @@ Used in `about-page-video.html` and `the-attraction-formula.html`. A distinct fo
 - **Exercise wording is Olly's words, trimmed only to fit 1-2 lines.** "Feel like you're touching it with your mind. Keep your touch on it." When he gives replacement wording, use it exactly ("Sense the space around you"), even if it runs to 3 lines. Put it only on the slide whose target it names ("the whole wall" = the whole-wall slide), then list the other slides that share the old line and ask whether they change too. Why: 2026-11-12 the old line sat on 5 slides; "whole wall" fitted one.
 - **No timings in the steps.** Olly removed "for 1 minute" from every step. Don't add durations unless he gives one.
 - **Head still, facing forward** is step 1 on every step where attention moves without the eyes (left, right, ceiling, space around). Why: Olly, "they need to keep their head in the same space".
-- **"Keep your focus light"** goes on the space-around-you step, in bold purple. Why: Olly asked for it "at this stage".
-- **The space-around-you visual = a game-style aura:** glowing ring on the floor rising to a second ring just above the head (not up to the ceiling), thick glowing edges, translucent purple fill, ripple. Why: Olly, "like the aura/ring that surrounds players in video games", then "just above their head tall and make it thicker".
+- **The touch is soft and steady, not forced** on EVERY exercise step ("Keep the touch soft and steady, not forced", bold purple). Why: Olly, "it's not hardcore focus but it's not too light either". This replaced "Keep your focus light" (too light) and "Keep your touch on it" (too forced).
+- **The space-around-you visual = a soft breathing field:** blurred radial glow whose outline slowly morphs (SVG `<animate d>`) and breathes, a faint inner outline, gentle waves flowing out across the floor. No rings, columns, hard edges or rising dots. Why: Olly said the column was "a little too rigid" and asked for "more fluid", then removed the rising dots.
 - Steps stay short: 4-5 rows max in the How panel (`.ex-rows` 22px; `.tight` 21px for a 6-item recap).
 - Copy rules still apply: Title Case titles, "practice" with a C, no comma before and/or, science limited to intellectualization (high beta) and Emotional Resonance (alpha).
 
@@ -583,7 +583,37 @@ Steps 9-11 (added 2026-11-12, after the eyes-closed recap): Sense The Space Comp
 - Never put durations ("for 1 minute") in exercise steps unless Olly gives them.
 - Never cover or move the webcam corner.
 - Never show left/right/ceiling attention in a side view (it can't be seen).
-- Never let an aura/column run to the ceiling: it stops just above the head.
+- Never draw attention fields as rigid rings/columns or add rising dots; keep them soft and fluid.
+- Never put the breathing in/out arrows anywhere but straight through the centre of the heart, side view, one in and one out (Olly).
+- Never lay out a recorded deck from a guessed webcam size: measure a frame of the latest recording.
+
+## Variant: Stick-Figure Explainer Deck (no webcam) — "the master explanation", 2026-11-12
+
+**Use this to explain what we do** (the argument as a story). Approved file: `training/meet-your-person-simple.html`, built by `tools/build_simple_explainer.py` (which reuses all drawing helpers from `tools/build_argument_explainer.py`). Edit the builder, re-run, then publish the HTML (slideshow artifact SN4cagEnMgnHisy1yNrEyu) and `python tools/training_preview.py <html> <out>` (desktop+phone preview 7Y6ghuPPZHWDzLsRK2QjJR). Olly: "this will be like the template now of explaining everything that we do".
+
+### Flow (the best client's journey; each slide answers the question the last one raised)
+1. Outcome title (couple holding hands) → 2. Does This Sound Like You? (5 real pains) → 3. You've Tried Everything (her own list) → 4. Your Friends Didn't Need Any Of This (the crack) → 5. It's Not What You Know. It's What You Believe. (the reveal) → 6. That's Why Learning Hasn't Helped (intellectualization loop) → 7. Your Belief Shapes What Happens (notice/think/do loop) → 8. Where You Lost Your Belief (red equation) → 9. When You Act From The Negative Belief (side-on date) → 10. How To Reverse It (green equation) → 11. When You Act From The Positive Belief (same date) → 12. Then Things Start To Unfold Naturally → 13. Nothing To Fix (couple walks in and holds hands) → 14. Meet Emotional Resonance LAST (the solution is revealed at the end). Next planned: a CTA slide (Feeling Finder, comment EMOTION).
+
+### Process
+1. **Source every pain line** in Olly's order: best client (primary avatar file, her own quoted words, not the file's summaries) > core argument v6 > good applicants > other applicants / Feeling Finder. If it isn't in a source, don't write it. Say where each line came from when asked.
+2. **Show, then explain.** Name the problem before the term; give the term one plain sentence. Every slide has one idea.
+3. **Beliefs as equations** (Thought + Feeling + Repetition = Belief) in red for the old belief and green for the new; the result card is identity-based ("I'm someone who can't find love" / "I'm someone who finds love"). The thought is an *early* observation ("I never seem to meet the right person"), not the belief itself.
+4. **Loops are circular** (3 cards in a triangle, centred text, numbered circles on the card edge, arrows edge to edge, figure + "Round and round" in the middle).
+5. **Practical examples = same scene twice** (side-on first date, two chairs facing each other, thought bubbles above the person we follow only).
+6. **No webcam** in decks Olly won't record over: header sizes to its text, board fills the rest (`FILL` CSS in the builder), bigger type. Check a full contact sheet of every slide after layout changes.
+7. Slideshow controls: arrows, dots, swipe, F for full screen (`CAROUSEL` block in the builder).
+
+### Rules (with why)
+- Titles state the point plainly: "When You Act From The Negative Belief" beat "When You Act From Doubt" (Olly: "easier to make it obvious").
+- Don't restate the obvious ("Belief is built the same way" was cut: "of course it is").
+- Psychiatrists' definition stays accurate; how it applies to our people goes in its own sentence.
+- Keep bubbles/pills inside the frame: equal-width pills in even columns.
+- v6 limits: "the right people start showing up" is the safe promise. Olly chose firmer lines on slides 13-14; flag it once, don't keep re-raising.
+
+### Never
+- Never invent a pain point (the "overthink every text" line came from the old invented avatar and spread through the messaging).
+- Never name the best client in anything committed to the public repo (use "the best client").
+- Never leave webcam space in a deck that won't be recorded over.
 
 ## Fixed webcam placeholder (scroll pages recorded with a webcam overlay)
 
@@ -833,3 +863,9 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 - Process 7: the working shot.js command (relative path + ?s=N).
 - Example: steps 9-11 moved from Rules to the Example section (it's a description, not a rule).
 - No corrections from Olly on the slides this session; nothing overridden.
+
+### 2026-11-12 — Mental attention training + the stick-figure explainer decks (skill review)
+- Teaching slides: webcam corrected to landscape 16:9 (x916 y94, 320x180) measured from recordings; head narrowed to 840. Overridden: the square 220x220 webcam.
+- Teaching rules: "soft and steady, not forced" on every step (overrides "Keep your focus light" and "Keep your touch on it"); space-around-you = soft breathing field (overrides the game-style aura/column); breathe arrows straight through the heart, side view.
+- New variant **Stick-Figure Explainer Deck (no webcam)**: approved 14-slide flow, process (source order, equations, circular loops, same-scene examples, fill layout), rules and Never list from Olly's edits.
+- Why: Olly's corrections this session ("too rigid", "make it obvious", "of course it is", invented pain line, webcam shape, no webcam needed).

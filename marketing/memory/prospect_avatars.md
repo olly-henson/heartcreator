@@ -1,5 +1,8 @@
 # Prospect Avatars — Heart Attractor
 
+> ⚠️ **SUPERSEDED 2026-11-12 (Olly). Do not take pain points or wording from this file.** "Analytical Amy" and "The Chaser" were written before we had real member data; lines like "overanalyses every text" are not from any client, applicant or Feeling Finder answer.
+> **Where all messaging comes from now, in this order:** (1) the best client (primary avatar file); (2) the core argument (`argument_sheet_heart_attractor.md`, Messaging Center QPbzwHtvFExE8qqZKbB8ea), in the way the best client relates to it; (3) good applicants who match the best client and the argument; (4) other applicants and Feeling Finder answers (`memory_audience-insights.md`). Never invent a pain point.
+
 > Real prospect profiles. Use these when writing Reel headlines, captions, emails, and any content where a specific person needs to be held in mind. Content must speak to *these* people — not a generic manifestation audience.
 
 ---
