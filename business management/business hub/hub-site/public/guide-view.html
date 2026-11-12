@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Step-By-Step Guide</title>
+<meta property="og:title" content="Your step-by-step guide">
+<meta property="og:description" content="From Olly Henson">
+<!-- Step-by-step guide, personal tracked link (Olly, 2026-11-12). Served at /p/<code>/guide by functions/p/[[path]].js.
+     The 15 pages (images from marketing/carousels/meet-your-person, built by tools/build_ig_carousel.py) stacked for phone
+     scrolling. Tracks opens, seconds per page (page at least half on screen, tab visible) and furthest page -> /p/<code>/gseen. -->
+<style>
+  :root { --bg:#f3eef9; --ink:#1d1527; --purple:#6b21a8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:620px; margin:0 auto; padding:12px 0 40px; }
+  .pg { display:block; width:100%; height:auto; aspect-ratio:4/5; background:#fff; margin:0 0 10px; }
+  @media (min-width:640px) { main { padding:24px 0 48px; } .pg { border-radius:14px; box-shadow:0 2px 18px rgba(40,10,70,.10); margin-bottom:18px; } }
+  .dl { display:block; margin:18px 16px 0; padding:16px; border-radius:14px; background:var(--purple); color:#fff; text-align:center; font-weight:700; font-size:17px; text-decoration:none; }
+</style></head>
+<body>
+<main id="pages" aria-label="Step-by-step guide"></main>
+<script>
+(function(){
+  var N = 15, code = (location.pathname.split("/")[2] || "").replace(/[^a-z0-9]/g, ""), base = "/p/" + code;
+  var box = document.getElementById("pages"), imgs = [];
+  var alts = ["A step-by-step guide to meeting someone you can settle down and build your life with", "Does this sound like you?", "You've tried everything",
+    "Your friends didn't need any of this", "It's not what you know. It's what you believe", "That's why learning hasn't helped", "Your belief shapes what happens",
+    "Where you lost your belief", "When you act from the negative belief", "How to reverse it", "When you act from the positive belief",
+    "Then things start to unfold naturally", "Nothing to fix. Nothing more to learn", "Meet Emotional Resonance", "Emotional Resonance is what we build with you personally"];
+  for (var i = 0; i < N; i++){
+    var im = document.createElement("img"); im.className = "pg"; im.alt = alts[i] || ("Page " + (i + 1));
+    im.src = "/p/guide/" + String(i + 1).padStart(2, "0") + ".jpg"; im.loading = i < 2 ? "eager" : "lazy"; im.decoding = "async";
+    im.width = 1080; im.height = 1350; box.appendChild(im); imgs.push(im);
+  }
+  var dl = document.createElement("a"); dl.className = "dl"; dl.href = "/p/guide"; dl.textContent = "Download as a PDF";
+  dl.addEventListener("click", function(){ send({ ev:"pdf", secs:[], far:far, n:N }); });
+  box.appendChild(dl);
+
+  function send(o){ try { o.dev = /iPhone|iPad|Android/.test(navigator.userAgent) ? "phone" : "computer"; var b = JSON.stringify(o);
+    if (navigator.sendBeacon && o.ev !== "open") navigator.sendBeacon(base + "/gseen", new Blob([b], { type:"text/plain" }));
+    else fetch(base + "/gseen", { method:"POST", body:b, keepalive:true }); } catch (e) {} }
+  // seconds per page: a page counts while at least half of it is on screen (or it fills 60% of the screen) and the tab is visible
+  var secs = new Array(N).fill(0), far = 0, onScr = new Array(N).fill(false), last = Date.now();
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ var k = imgs.indexOf(e.target);
+      onScr[k] = e.intersectionRatio >= .5 || e.intersectionRect.height >= innerHeight * .6;
+      if (onScr[k]) far = Math.max(far, k + 1); }); }, { threshold:[0, .25, .5, .75, 1] });
+    imgs.forEach(function(im){ io.observe(im); });
+  }
+  setInterval(function(){ var now = Date.now(), d = Math.min(3, (now - last) / 1000); last = now;
+    if (document.visibilityState !== "visible") return; onScr.forEach(function(v, k){ if (v) secs[k] += d; }); }, 1000);
+  function flush(){ if (!secs.some(function(s){ return s > 0; })) return; send({ ev:"tick", secs:secs.map(function(s){ return Math.round(s * 10) / 10; }), far:far, n:N }); secs = new Array(N).fill(0); }
+  setInterval(flush, 15000);
+  document.addEventListener("visibilitychange", function(){ if (document.visibilityState === "hidden") flush(); });
+  addEventListener("pagehide", flush);
+  send({ ev:"open", secs:[], far:0, n:N });
+})();
+</script>
+</body></html>

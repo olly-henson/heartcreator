@@ -464,3 +464,29 @@ plan, "application successful" texts, the master YouTube VSL message. -->
 <!-- 2026-11-11 skill review: added Plan v3.1 (personal note page + per-person wording edits, then always-on editing on the
 page per Olly's follow-up). Removed the same-day "✏️ Edit the wording" button rule (overridden: no mode button). Added the
 builder-owns-plan-view rule after a rebuild wiped the read tracker. New Never list for v3.1. -->
+
+### Step-by-step guide follow-up (2026-11-12, LIVE on every Sales card)
+File: `marketing/carousels/meet-your-person/Step-By-Step Guide - Olly Henson.pdf` (15 pages: the approved "Meet your person" explainer + closing page "Emotional Resonance Is What We Build With You Personally / Inside The Heart Attractor Program, so you build the belief you need to meet your person"). Rebuild: `python tools/build_ig_carousel.py`, `node tools/export_pdf.js marketing/carousels/meet-your-person/guide-pdf.html "<out>.pdf"`, copy to hub-site/public/guide/step-by-step-guide.pdf, deploy. Pages as images: `JPG=1 node tools/export_carousel.js marketing/carousels/meet-your-person/guide-pdf.html "business management/business hub/hub-site/public/guide"` (delete the contact sheet it writes there). TRACKED (2026-11-12): card '📘 Step-by-step guide follow-up (make their link)' -> POST /api/guideviews?id= makes their code (reuses the plan code if they have one) -> their page https://hub.ollyhenson.com/p/<code>/guide (public/guide-view.html: 15 page images stacked, Download as a PDF) logs opens, furthest page, seconds per page -> KV guideview:<id>; card line + heat bar (lmGuideLine), push 'Guide opened' on first open; tapping WhatsApp/Email/Copy marks sent. Olly's own views skipped. Plain PDF (untracked) stays at https://hub.ollyhenson.com/p/guide.
+- Olly's rules: any stage, for anyone who's gone quiet (plan sent and no reply, or plan offered and no reply), roughly 2 to 3 days. Not a stage on the board.
+- NO message text, ever: the card's WhatsApp/iMessage/Email buttons open with only their guide link in; Olly writes his own words around it for where they are in the funnel.
+- Closing page = one line only. Never list what's inside the program (trainings, meditation, calls, community) and never add a call to action like "get back to me".
+
+**Process (how it was built, with why)**
+1. Talk it through and check with Olly before building ("just check with me before that you can build it"), then show a preview of the PDF before it goes live.
+2. Portrait 4:5 pages so it reads on a phone. Olly asked if it was landscape: check the page sizes before answering (a desktop viewer made it look wide).
+3. Tracked per-person link, not the bare PDF. Why: a PDF can't report opens and Olly asked for "if they've clicked it, how much they read", like the plan.
+4. It lives on their card as its own thing with its own status: "📘 Guide sent, not opened" (amber) → "📘 Guide opened N× · page X/15" (green). Not a board stage.
+5. Olly's own phone and laptop never count as an open (Access cookie or his saved IP).
+6. When he can't see a new card row, show him exactly where it is (pop-up → Details → Send column) with a screenshot of a test applicant, don't just say it's deployed.
+
+### Syncing the plan of action to the guide (2026-11-12, preview sent, waiting for approval)
+The plan's wording should follow the guide's argument (pages 2, 3, 7, 9 change; photos and design stay). Rules:
+- Before/after preview of only the changed pages first, side by side (`planshot.js` pattern). Nothing changes on the template or Hub until Olly approves.
+- Tell him the side effects up front: already-sent plan links show the new wording; per-person edits on those exact lines drop back to the standard text; anything removed (brainwave lines) is said out loud with an offer to keep it.
+- After approval: patch `funnel/plan-of-action.html`, `python -I tools/build_hub_plan.py` (never hand-edit plan-view.html), diff, jscheck, `tools/deploy-hub.sh`, open one live plan.
+
+<!-- 2026-11-12 skill review: Step-by-step guide follow-up: added the build process and why (check before building, portrait,
+tracked link because a PDF can't be tracked, own status on the card, owner opens skipped, show where a new row is). Added
+the plan-sync rules (preview changed pages only, state side effects, approval before patch + rebuild). -->
+
+

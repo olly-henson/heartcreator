@@ -35,7 +35,54 @@ async function contactFor(env, code) {
 export async function onRequest({ request, env, params }) {
   const parts = [].concat(params.path || []);
   const code = parts[0] || "", action = parts[1] || "";
+  // Step-by-step guide PDF (Olly, 2026-11-12): one public link for every applicant, sent as a follow-up when they go quiet
+  if (code === "guide" && !action && request.method === "GET") {
+    const r = await env.ASSETS.fetch(new URL("/guide/step-by-step-guide.pdf", request.url));
+    return new Response(r.body, { status: r.status, headers: { "content-type": "application/pdf", "content-disposition": 'inline; filename="Step-By-Step Guide - Olly Henson.pdf"', "cache-control": "public, max-age=600", "x-robots-tag": "noindex" } });
+  }
+  // the guide's page images (public, same for everyone): /p/guide/01.jpg ... 15.jpg
+  if (code === "guide" && /^\d\d\.jpg$/.test(action) && request.method === "GET") {
+    const r = await env.ASSETS.fetch(new URL("/guide/" + action, request.url));
+    if (!/image/i.test(r.headers.get("content-type") || "")) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    return new Response(r.body, { status: 200, headers: { "content-type": "image/jpeg", "cache-control": "public, max-age=3600" } });
+  }
   const id = await contactFor(env, code);
+
+  // ---- Step-by-step guide, personal tracked link (2026-11-12) ------------------------------------
+  //   GET  /p/<code>/guide  -> public/guide-view.html (the 15 pages stacked, Download PDF)
+  //   POST /p/<code>/gseen  -> JSON { ev:"open"|"tick"|"pdf", secs:[seconds per page since last tick], far, n, dev }
+  // KV guideview:<contactId>: value = { secs:[per page], visits:[{t,dev}] },
+  //   metadata = { code, sent, opens, first, last, far, pages, read, pdf, dev } (read by /api/guideviews).
+  if (action === "guide" && request.method === "GET") {
+    if (!id) return new Response("This link isn't valid any more. Please ask Olly for a new one.", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
+    const page = await env.ASSETS.fetch(new URL("/guide-view.html", request.url));
+    return new Response(page.body, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
+  }
+  if (action === "gseen" && request.method === "POST") {
+    if (!id) return json({ ok: false }, 404);
+    if (await ownerView(env, request)) return json({ ok: true, owner: true });
+    let b = {};
+    try { b = JSON.parse((await request.text()).slice(0, 4000)); } catch { return json({ ok: false }, 400); }
+    if (!/^(open|tick|pdf)$/.test(b.ev || "")) return json({ ok: false }, 400);
+    const key = "guideview:" + id, cur = await env.HUB_KV.getWithMetadata(key);
+    let v = {}; try { v = JSON.parse(cur.value || "{}") || {}; } catch { v = {}; }
+    const m = Object.assign({ opens: 0, first: null, last: null, far: 0, pages: 0, read: 0, pdf: 0, dev: "" }, cur.metadata || {});
+    const n = Math.max(1, Math.min(40, b.n | 0)), now = new Date().toISOString();
+    v.secs = Array.isArray(v.secs) && v.secs.length === n ? v.secs : new Array(n).fill(0);
+    v.visits = v.visits || [];
+    (Array.isArray(b.secs) ? b.secs : []).slice(0, n).forEach(function (s, i) { v.secs[i] = Math.round((v.secs[i] + Math.max(0, Math.min(120, +s || 0))) * 10) / 10; });
+    m.pages = n; m.far = Math.max(m.far || 0, Math.min(n, b.far | 0)); m.read = Math.round(v.secs.reduce(function (a, s) { return a + s; }, 0)); m.last = now;
+    let note = null;
+    if (b.ev === "open") {
+      m.opens++; m.first = m.first || now; m.dev = device(request);
+      v.visits.push({ t: now, dev: m.dev }); v.visits = v.visits.slice(-30);
+      if (m.opens === 1) note = { title: "Guide opened", body: "Someone just opened their step-by-step guide. Tap to see who.", url: "/#looms", tag: "guide-" + id };
+    }
+    if (b.ev === "pdf") m.pdf = (m.pdf || 0) + 1;
+    await env.HUB_KV.put(key, JSON.stringify(v), { metadata: m });
+    if (note) { try { await pushAll(env, note); } catch (e) {} }
+    return json({ ok: true });
+  }
 
   if (!action && request.method === "GET") {
     if (!id) return new Response("This link isn't valid any more. Please ask Olly for a new one.", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });

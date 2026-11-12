@@ -5503,7 +5503,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       lmLoading = false;
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
       lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
-      lmPlanViews(); lmVslViews();
+      lmPlanViews(); lmVslViews(); lmGuideViews();
       // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
       if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmOpen = w.id; lmView = "info"; lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
       renderLooms();
@@ -5584,6 +5584,45 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     } else if (v.opens) bits.push("Reading not tracked yet (opened before 10 Nov tracking)");
     return '<small style="flex-basis:100%;opacity:.85">' + lmEsc(bits.join(" · ")) + "</small>" + bar;
   }
+  // Step-by-step guide follow-up views (2026-11-12): /api/guideviews -> { contactId: { code, sent, opens, first, last, far, pages, read, pdf, dev } }
+  var lmGV = {}, lmGH = {}, lmGHOpen = {};
+  var LM_GUIDE_PAGES = ["Title", "Does This Sound Like You?", "You've Tried Everything", "Your Friends Didn't Need Any Of This", "It's Not What You Know", "That's Why Learning Hasn't Helped",
+    "Your Belief Shapes What Happens", "Where You Lost Your Belief", "Acting From The Negative Belief", "How To Reverse It", "Acting From The Positive Belief",
+    "Things Start To Unfold Naturally", "Nothing To Fix", "Meet Emotional Resonance", "What We Build With You"];
+  function lmGuideViews(){ fetch("/api/guideviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmGV = d.views || {}; lmGH = {}; renderLooms(); } }).catch(function(){}); }
+  // the guide's own status on the board card (Olly, 2026-11-12): sent / not opened / opened N× / how far they read
+  function lmGuideTag(id){
+    var v = lmGV[id]; if (!v || !v.sent) return "";
+    if (!v.opens) return '<span class="lmtag" style="margin:0;background:rgba(251,191,36,.16);color:#fbbf24">📘 Guide sent, not opened</span>';
+    return '<span class="lmtag" style="margin:0;background:rgba(74,222,128,.18);color:#4ade80">📘 Guide opened' + (v.opens > 1 ? " " + v.opens + "×" : "")
+      + (v.far ? " · page " + v.far + "/" + (v.pages || 15) : "") + "</span>";
+  }
+  function lmGuideLine(id){
+    var v = lmGV[id]; if (!v || !v.code) return "";
+    var bits = [v.sent ? "Sent " + lmWhen(v.sent) : "Link made, not sent yet"];
+    if (v.sent || v.opens) bits.push(v.opens ? "Opened " + v.opens + "×, last " + lmWhen(v.last) + (v.dev ? " on " + v.dev : "") : "Not opened yet");
+    if (v.pdf) bits.push("PDF downloaded");
+    var bar = "";
+    if (v.far){
+      bits.push("Read to page " + v.far + " of " + (v.pages || 15) + (v.read ? " · " + lmDur(v.read) + " reading" : ""));
+      if (lmGH[id] === undefined){ lmGH[id] = null; fetch("/api/guideviews?id=" + encodeURIComponent(id), { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ lmGH[id] = (d && d.secs) || []; renderLooms(); }).catch(function(){}); }
+      else if (lmGH[id] && lmGH[id].length){
+        var hs = lmGH[id], mx = Math.max.apply(null, hs.concat([1])), names = hs.length === LM_GUIDE_PAGES.length ? LM_GUIDE_PAGES : null;
+        var shade = function(s){ var k = s <= 0 ? 0 : 0.25 + 0.75 * Math.min(1, s / mx); return k ? "rgba(217,70,239," + k.toFixed(2) + ")" : "#3f3a48"; };
+        bar = '<details style="flex-basis:100%;width:100%" ' + (lmGHOpen[id] ? "open " : "") + 'ontoggle="lmGHOpen[\'' + id + '\']=this.open" onclick="event.stopPropagation()">'
+          + '<summary style="cursor:pointer;list-style:none"><span style="display:flex;gap:2px;height:16px;margin-top:4px">' + hs.map(function(s, i){
+            return '<i title="Page ' + (i + 1) + ": " + lmDur(s) + '" style="flex:1;border-radius:3px;background:' + shade(s) + '"></i>'; }).join("") + "</span>"
+          + '<small style="display:block;opacity:.7;margin-top:2px">Page 1 → ' + hs.length + '. Brighter = longer on that page, grey = not read. <u>Tap for page by page</u></small></summary>'
+          + '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;margin:8px 0 2px;font-size:13px">'
+          + hs.map(function(s, i){ var w = s > 0 ? Math.max(4, Math.round(s / mx * 100)) : 0;
+            return '<span style="opacity:.6;font-variant-numeric:tabular-nums">' + (i + 1) + "</span>"
+              + '<span style="min-width:0"><span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + lmEsc(names ? names[i] : "Page " + (i + 1)) + "</span>"
+              + '<span style="display:block;height:6px;border-radius:3px;background:#3f3a48;margin-top:2px"><span style="display:block;height:6px;border-radius:3px;width:' + w + "%;background:" + shade(s) + '"></span></span></span>'
+              + '<span style="font-variant-numeric:tabular-nums;opacity:' + (s > 0 ? ".9" : ".5") + '">' + (s > 0 ? lmDur(s) : "not read") + "</span>"; }).join("") + "</div></details>";
+      }
+    }
+    return '<small style="flex-basis:100%;opacity:.85">📘 ' + lmEsc(bits.join(" · ")) + "</small>" + bar;
+  }
   function lmBranches(a){
     var used = {};
     var tried = lmAns(a, /tried/i, used), ints = lmAns(a, /^FF Intentions/i, used), now = lmAns(a, /^FF Current Emotion/i, used), emo = lmAns(a, /^FF Resonance/i, used);
@@ -5591,7 +5630,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       { title:"Where you are", c:"#7dd3fc", x:40, y:40, cards:[["Right now", lmAns(a, /status|right now|situation/i, used)], ["Looking for", lmAns(a, /how long/i, used)], ["What still isn't happening", lmAns(a, /not happening|isn.t happening/i, used)], ["The Love Scale", [lmAns(a, /^Scale Result/i, used), lmAns(a, /^Scale Feelings/i, used)].filter(Boolean).join(" · ")]] },
       { title:"What's in the way", c:"#f87171", x:40, y:430, cards:[["How you feel about love", lmAns(a, /feel/i, used), "hot"], ["Where it goes wrong", lmAns(a, /^Scale Biggest Gap/i, used), "hot"],["\u201cI'll meet the right person once I\u2026\u201d", lmAns(a, /once/i, used), "hot"], ["Already tried", tried ? { chips:tried.split(/\s*,\s*/) } : ""]] },
       { title:"Where you want to be", c:"#4ade80", x:1090, y:40, cards:[["What you want", lmAns(a, /want/i, used)], ["The Feeling Finder", (now || emo) ? { ff:[now || "?", emo || "?"] } : "Not done yet"], ["Your intentions", ints ? { chips:ints.split(/\s*[·|]\s*/) } : ""]] },
-      { title:"Fit for the program", c:"#fbbf24", x:1090, y:470, cards:[["Priority", lmAns(a, /priority/i, used)], ["Implementation, not information", lmAns(a, /implementation|daily|information/i, used)], ["Willing to invest", lmAns(a, /invest/i, used)], ["Based in · Work", [[a.city, a.country].filter(Boolean).join(", "), lmAns(a, /profession|work/i, used)].filter(Boolean).join(" · ")], ["Anything else", lmAns(a, /anything/i, used)]] }
+      { title:"Fit for the program", c:"#fbbf24", x:1090, y:470, cards:[["Priority", lmAns(a, /priority/i, used)], ["Implementation, not information", lmAns(a, /implementation|daily|information/i, used)], ["Willing to invest", lmAns(a, /invest/i, used)], ["Based in · Work", [[a.city, lmCountry(a.country)].filter(Boolean).join(", "), lmAns(a, /profession|work/i, used)].filter(Boolean).join(" · ")], ["Anything else", lmAns(a, /anything/i, used)]] }
     ];
     // any other HA answers, so nothing they wrote is lost
     Object.keys(a.fields || {}).forEach(function(n){ if (!used[n] && /^HA /i.test(n) && !/utm|plan|date|variant/i.test(n)) B[3].cards.push([n.replace(/^HA /i, ""), a.fields[n]]); });
@@ -5656,8 +5695,22 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (ph || a.email) h += '<div class="lmcon">' + (ph ? '<button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + "</button>" : "")
       + (a.email ? '<button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + "</button>" : "") + "</div>";
 
+    // Step-by-step guide follow-up (Olly, 2026-11-12): any stage, for anyone who's gone quiet (~2-3 days). NO message text:
+    // WhatsApp / iMessage / Email open with only their personal guide link in, and Olly writes his own words around it.
+    // Their link (/p/<code>/guide) tracks opens, how far they read and time per page (lmGuideLine). Tapping a send button marks it sent.
+    h += lmHead("Any time: if they've gone quiet");
+    var gv = lmGV[a.id], gurl = gv && gv.code ? "https://hub.ollyhenson.com/p/" + gv.code + "/guide" : "";
+    if (!gurl) h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy lmguidemake" data-id="' + lmEsc(a.id) + '">📘 Step-by-step guide follow-up (make their link)</button>'
+      + '<small style="flex-basis:100%;opacity:.75">Makes their own guide link, so you can see when they open it and how far they read.</small></div>';
+    else h += '<div class="lmcon lmmsg"><span style="font-weight:600;font-size:13px;align-self:center">📘 Step-by-step guide follow-up</span>'
+      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(gurl) + '" target="_blank" rel="noopener" data-guide="' + lmEsc(a.id) + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
+      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?body=' + encodeURIComponent(gurl) + '" data-guide="' + lmEsc(a.id) + '" onclick="event.stopPropagation()">Email</a>' : "")
+      + '<button type="button" class="lmcopy" data-copy="' + gurl + '" data-guide="' + lmEsc(a.id) + '">🔗 Copy link</button>'
+      + '<a href="' + gurl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>'
+      + lmGuideLine(a.id) + "</div>";
+
     // 1. First contact
-    var first = "Hey " + nm + ", it's Olly Henson.\n\nJust got your application for The Heart Attractor Program, thanks for filling it in.\n\nGive me a few minutes, I'm recording you a quick voice note with a plan of how I'd help you with this.";
+    var first ="Hey " + nm + ", it's Olly Henson.\n\nJust got your application for The Heart Attractor Program, thanks for filling it in.\n\nGive me a few minutes, I'm recording you a quick voice note with a plan of how I'd help you with this.";
     var vn1 = ["Hey " + nm + ", it's Olly. I've been through your application and it all looks really good.", seen,
       "I'd love to put together a plan of action for you, of exactly how we'd help you meet this person.", "Would you like me to send it through?"].filter(Boolean).join("\n\n");
     var mail1 = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nAll looks really good.\n\nI've sent you a message on " + app + " with the next steps.\n\nChat soon,\n\nOlly";
@@ -5709,10 +5762,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return h;
   }
   document.addEventListener("click", function(e){
+    var gs = e.target.closest && e.target.closest("[data-guide]");
+    if (gs){ var sid = gs.getAttribute("data-guide");
+      if (!(lmGV[sid] && lmGV[sid].sent)) fetch("/api/guideviews?id=" + encodeURIComponent(sid) + "&sent=1", { method:"POST" }).then(function(r){ return r.json(); }).then(function(d){
+        if (d && d.ok){ lmGV[sid] = Object.assign(lmGV[sid] || {}, { code:d.code, sent:d.sent }); setTimeout(renderLooms, 300); } }).catch(function(){});
+      if (gs.tagName === "A") return; }
     var l = e.target.closest && e.target.closest(".lmcon a");
     if (l){ var a3 = lmById(l.getAttribute("data-id")); if (a3){ lmStore(a3.id)[l.getAttribute("data-k")] = true; markDirty(); if (lmFilter !== "board") lmFilter = lmStage(a3); setTimeout(renderLooms, 300); } return; }
+    var gm = e.target.closest && e.target.closest(".lmguidemake");
+    if (gm){ e.stopPropagation(); var gid = gm.getAttribute("data-id"); gm.textContent = "Making their link…";
+      fetch("/api/guideviews?id=" + encodeURIComponent(gid), { method:"POST" }).then(function(r){ return r.json(); }).then(function(d){
+        if (d && d.ok){ lmGV[gid] = Object.assign(lmGV[gid] || {}, { code:d.code }); renderLooms(); } else gm.textContent = "Couldn't make the link, try again";
+      }).catch(function(){ gm.textContent = "Couldn't make the link, try again"; });
+      return; }
     var b = e.target.closest && e.target.closest(".lmcopy"); if (!b) return;
-    e.stopPropagation(); var v = b.getAttribute("data-copy"), txt = b.textContent;
+    e.stopPropagation(); var v =b.getAttribute("data-copy"), txt = b.textContent;
     function done(){ b.textContent = "Copied ✓"; setTimeout(function(){ b.textContent = txt; }, 1200); }
     if (navigator.clipboard) navigator.clipboard.writeText(v).then(done, done); else done();
   }, true);
@@ -5839,21 +5903,31 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     lmData.forEach(function(a){ if (lmStage(a) !== "joined") return; if (lmStore(a.id).product === "annual") y++; else m++; });
     return { m:m, y:y, cash:m * 497 + y * 2500, mrr:m * 497 + y * 2500 / 12 };
   }
+  // Country in full (Olly, 2026-11-12: "when someone comes through as from CA - where is that?"). Applicants pick their
+  // country on the application form (full names, or type their own); GHL stores it as a 2-letter code (Canada -> CA).
+  // withSource = the pop-up header adds where it came from.
+  var LM_CN = (function(){ try { return new Intl.DisplayNames(["en"], { type:"region" }); } catch(e){ return null; } })();
+  function lmCountry(c, withSource){
+    c = String(c || "").trim(); if (!c) return "";
+    var full = c;
+    if (/^[A-Za-z]{2}$/.test(c)){ var up = c.toUpperCase(); try { full = (LM_CN && LM_CN.of(up)) || up; } catch(e){ full = up; } if (up === "GB") full = "United Kingdom"; if (up === "US") full = "United States"; if (up === "HK") full = "Hong Kong"; }
+    return withSource ? full + " (their answer on the application)" : full;
+  }
   function lmName(a){ return (a.firstName + " " + a.lastName).trim() || a.email; }
   function lmCardHtml(a){
-    var s = lmStore(a.id), r = s.rating, d = String(a.dateAdded || "").slice(0, 10), place = [a.city, a.country].filter(Boolean).join(", ");
+    var s = lmStore(a.id), r = s.rating, d = String(a.dateAdded || "").slice(0, 10), place = [a.city, lmCountry(a.country)].filter(Boolean).join(", ");
     var tags = (r ? '<span class="lmr lmr-' + r + '">' + { good:"Good", okay:"Okay", bad:"Not good" }[r] + "</span>" : "") +
       (lmStage(a) === "joined" ? '<span class="lmtag" style="margin:0">' + (s.product === "annual" ? "Annual $2,500" : "Monthly $497") + "</span>" : "") +
       (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL</span>' : "") +
       (lmPV[a.id] && lmPV[a.id].sent ? '<span class="lmtag" style="margin:0;' + (lmPV[a.id].opens ? 'background:rgba(74,222,128,.18);color:#4ade80">📄 Plan opened' + (lmPV[a.id].opens > 1 ? " " + lmPV[a.id].opens + "×" : "") : 'background:rgba(251,191,36,.16);color:#fbbf24">📄 Plan sent, not opened') + "</span>" : "") +
-      lmVslTag(a.id) +
+      lmVslTag(a.id) + lmGuideTag(a.id) +
       (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the first message", replied:"After replying", plan_sent:"After the plan was sent", plan_read:"After reading the plan", asked:"After asking questions", loom:"After the video was sent", watched:"After watching the video", joinclick:"After clicking Join" }[lmStage(a, true)] || "") + "</span>" : "");
     return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, place].filter(Boolean).join(" · ")) + "</span>" +
       (tags ? '<span class="lmbcrow">' + tags + "</span>" : "") + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";
   }
   // the per-applicant mind map (unchanged from the Loom days), now shown inside the pop-up
   function lmMapHtml(a){
-    var B = lmBranches(a), name = lmName(a), want = lmAns(a, /want/i), place = [a.city, a.country].filter(Boolean).join(", ");
+    var B = lmBranches(a), name = lmName(a), want = lmAns(a, /want/i), place = [a.city, lmCountry(a.country)].filter(Boolean).join(", ");
     var html = '<div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen</button><button type="button" class="copybtn" id="lmClear">Clear the plan</button><span class="hint">Click a plan step to type. Enter adds a step.</span></div>';
     var st = '<svg viewBox="0 0 1600 900" aria-hidden="true">';
     [[610, 320, 510, 200], [610, 375, 510, 620], [990, 320, 1090, 200], [990, 375, 1090, 640], [800, 458, 800, 512]].forEach(function(p, i){
@@ -5915,7 +5989,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (lmOpen && !a) lmOpen = null;
     if (a){
       var s = lmStore(a.id), r = s.rating, d = String(a.dateAdded || "").slice(0, 10);
-      html += '<div class="lmmodal" id="lmModal"><div class="lmsheet" role="dialog" aria-label="' + lmEsc(lmName(a)) + '"><div class="lmsheethead"><div class="lmwho"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, [a.city, a.country].filter(Boolean).join(", "), (LM_STAGES.filter(function(x){ return x[0] === lmStage(a); })[0] || [])[1]].filter(Boolean).join(" · ")) + "</span></div>" +
+      html += '<div class="lmmodal" id="lmModal"><div class="lmsheet" role="dialog" aria-label="' + lmEsc(lmName(a)) + '"><div class="lmsheethead"><div class="lmwho"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([d, [a.city, lmCountry(a.country, true)].filter(Boolean).join(", "), (LM_STAGES.filter(function(x){ return x[0] === lmStage(a); })[0] || [])[1]].filter(Boolean).join(" · ")) + "</span></div>" +
         '<div class="lmtabs"><button type="button" data-v="info" aria-pressed="' + (lmView === "info") + '">Details</button><button type="button" data-v="map" aria-pressed="' + (lmView === "map") + '">Mind map</button></div><button type="button" class="lmx" aria-label="Close">✕</button></div><div class="lmsheetbody">';
       if (lmView === "map") html += lmMapHtml(a);
       else html += '<div class="lmapp lmdetail" data-id="' + a.id + '"><div class="lmdcol"><small class="lmdh">Rating</small><div class="lmrate">' +

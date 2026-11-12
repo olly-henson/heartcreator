@@ -615,6 +615,30 @@ Steps 9-11 (added 2026-11-12, after the eyes-closed recap): Sense The Space Comp
 - Never name the best client in anything committed to the public repo (use "the best client").
 - Never leave webcam space in a deck that won't be recorded over.
 
+### Instagram carousel from an explainer deck (2026-11-12, "How to meet someone you can settle down with", POSTED)
+Builder: `tools/build_ig_carousel.py` (execs the explainer builder, keeps every slide's wording, redraws the boards). Export: `node tools/export_carousel.js <page>.html <outdir>` (PNGs + `contact-sheet.png` + overflow report). Output: `marketing/carousels/meet-your-person/` (01–15.png, caption.txt). The same builder makes the PDF guide (`guide-pdf.html` → `tools/export_pdf.js`), see skills_applicant-looms.md "Step-by-step guide follow-up".
+
+**Process**
+1. 1080x1350 (4:5) portrait. **Redraw each board for portrait** (stacked equations, bigger loops, bigger bubbles beside the person); never shrink the landscape slide. Why: Olly asked for it redesigned to read on a phone.
+2. Slide 1 = the hook (outcome title + grid picture). Footer on every slide: `@attractwitholly · n / 15 →`.
+3. Last slide = the CTA slide (not in the deck): eyebrow "Your Next Step", one question headline, one sentence on the free tool, then the button.
+4. Contact sheet of every slide FIRST, check the overflow report, then export and give the folder path.
+5. Caption follows the slides in order and ends on the **same CTA as the last slide**, hashtags under it (`caption.txt`).
+6. Add it to the Hub carousel calendar (status, type, caption, images). Replacing an image = upload under a NEW image id and delete the old key (image GETs are cached forever).
+7. Wording changes to a slide: preview the changed slide first, wait for approval, then re-export and replace it in the calendar.
+
+**Rules (with why)**
+- CTA wording, final (overrides "Comment EMOTION below"): button "Comment or DM me **EMOTION** below" + "and I'll send it to you". Why: Olly wants DMs as well as comments, and both trigger the ManyChat flow.
+- Approved CTA slide copy: "Want To Build Your Belief Using *Emotional Resonance?*" / "Use my free tool, **The Feeling Finder**, to find the emotion that builds the belief you need to attract the relationship you want." Olly gave a rough line and asked for it "a little bit better": tighten his words, keep his meaning and order.
+- The button text must sit optically centred: one font (Inter) for every part, flex-centred, keyword in its own pill. Why: mixed fonts made it look "skewed slightly".
+- Freeze animations for export, and force on anything whose base state is `opacity:0` (`.floatup` hearts vanished).
+- Random drawings (scribbles) are matched by regex when re-used, never regenerated (they change every run).
+- "Is it landscape?" — check the real page size before answering (every page was 4:5; a desktop PDF viewer made it look wide).
+
+**Never**
+- Never add a CTA slide wording that only says "comment" (DMs count too).
+- Never post a changed slide without updating the calendar image and caption to match.
+
 ## Fixed webcam placeholder (scroll pages recorded with a webcam overlay)
 
 When Olly wants a webcam box that stays put while he scrolls between slides, put it **outside `.steps`** with `position:fixed`. Never put it inside each `<section>` (it would scroll away and sit differently per slide). Approved values from `choose-your-relationship.html`:
@@ -869,3 +893,8 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 - Teaching rules: "soft and steady, not forced" on every step (overrides "Keep your focus light" and "Keep your touch on it"); space-around-you = soft breathing field (overrides the game-style aura/column); breathe arrows straight through the heart, side view.
 - New variant **Stick-Figure Explainer Deck (no webcam)**: approved 14-slide flow, process (source order, equations, circular loops, same-scene examples, fill layout), rules and Never list from Olly's edits.
 - Why: Olly's corrections this session ("too rigid", "make it obvious", "of course it is", invented pain line, webcam shape, no webcam needed).
+
+<!-- 2026-11-12 skill review: added "Instagram carousel from an explainer deck" under the Stick-Figure variant (portrait
+redraw not shrink, hook slide 1, CTA slide, contact sheet first, caption ends on the slide's CTA, calendar image swap = new
+id). CTA wording now "Comment or DM me EMOTION below / and I'll send it to you" (overrides "Comment EMOTION below"); button
+text one font and flex-centred after Olly saw it skewed; check page size before answering "is it landscape?". -->

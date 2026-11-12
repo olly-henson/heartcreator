@@ -180,7 +180,13 @@ Notes on fields that aren't obvious:
 - Never write to the KV record from outside the app without bumping `rev` and telling Olly to press Refresh before saving (his open Hub would otherwise hit a save conflict).
 - Never auto-pull GHL data on load: a pull calls `markDirty()`, so auto-pulling would leave the Hub permanently "unsaved". Pulls are a button press (on Overview, Sales and Email).
 
+- Never run `wrangler kv key put --metadata '<json>'` through a shell string from Python on Windows: the quoting breaks the JSON and the upload fails silently (2026-11-12, a carousel image never arrived). Call it with a list: `['npx.cmd','--yes','wrangler','kv','key','put',key,'--path',f,'--metadata',json.dumps(m),'--namespace-id',NS,'--remote']`, then check with `kv key list`. Ignore the libuv "Assertion failed" exit.
+- Never replace a Hub image under the same id: `/api/img` GETs are cached immutable, so Olly keeps seeing the old one. New uuid, update the record (bump `rev`), delete the old `img:` key.
+- Never put a specific link's click handler after the generic `.lmcon a` handler: the generic one wins. The guide's `[data-guide]` handler (marks it sent) sits before it.
+- Never show a country as GHL's 2-letter code (2026-11-12, Olly: "from CA - where is that?"). Use `lmCountry(c)` (Intl.DisplayNames, GB/US/HK spelled out) everywhere a city/country is shown; the pop-up header adds "(their answer on the application)".
+
 ### Design principles from past corrections
+- **Every follow-up asset on a Sales card gets its own tracked status (2026-11-12).** The Step-by-step guide: `/api/guideviews` makes the per-person code (reuses the plan code), `/p/<code>/guide` serves `guide-view.html`, `POST /p/<code>/gseen` logs opens, furthest page and seconds per page into `guideview:<id>` (owner skipped, push on first open); the card shows a tag and a heat bar. Same pattern for any future follow-up.
 
 - **Stories stay manual (Olly 2026-11-04: "I want to be able to add the trending music to stories").** GHL/Meta API Stories are plain images (no music, link/poll/question stickers or mentions) and TikTok has no Stories API at all. Don't re-offer Story auto-posting unless the APIs gain music; if Olly asks, the code is there to switch back on.
 - **Pitch days are planned on the Email calendar, never left to memory.** Each pitch day says who gets what (pitch -> Warm, daily -> Cold) so the list split is decided once, not every Thursday.
@@ -558,3 +564,8 @@ rule, already marked overridden and now superseded by the three tables. -->
 <!-- 2026-11-11 skill review: KV free-plan write cap. Replaced the overridden "never add autosave" rule with how autosave really works (20s debounce + save on hide). Added the KV budget rule (1,000 writes/day, once-a-minute tracking max, estimate writes before adding beacons) and the plan-view.html builder gap. Why: Cloudflare warned at 50% of the daily cap; hitting it would stop Hub saves and prospect tracking. -->
 
 <!-- 2026-11-11 skill review: Never list + design note: day panels (carousel, email, YouTube) scroll into view when a day is tapped, because on the phone they opened off-screen and Olly thought nothing happened. Not tested on a real phone by Claude; Olly to confirm. -->
+
+<!-- 2026-11-12 skill review: Never rules for wrangler KV puts from Python (list args, not a shell string: metadata JSON
+broke silently), replaced images need a new id (immutable cache), specific click handlers before the generic .lmcon a,
+countries shown in full (lmCountry). Design principle: every Sales-card follow-up asset gets its own tracked status
+(the Step-by-step guide pattern: guideviews / gseen / guide-view.html). -->
