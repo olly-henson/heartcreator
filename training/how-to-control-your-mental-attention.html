@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unshakeable Belief Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* MEMBER TRAINING, TEACHING LAYOUT (Google Vids, square webcam). Built 2026-11-10.
+   Same look as the VSL slides (white, dark text, purple accents, Title Case) but laid out for teaching:
+     WEBCAM = landscape 16:9 top-right (x916 y94, 320x180 = 25% of the width), measured from the Google Vids sales-video recordings 2026-11-12. Set once, never moved, never covered.
+     HEAD   = eyebrow + title beside the webcam (x40 y40, 840 wide, ends by y260).
+     BOARD  = the whole lower slide for the teaching (x40 y290, 1200x390): diagrams, step cards, comparisons, examples.
+   Text is big on purpose (members watch on phones). Images go in "how to control your mental attention images/".
+   Keys: right/space/click = next, left = back, F = full screen. ?all = every slide, ?s=N = start on slide N, ?cam = draw the webcam box. */
+:root { --ink:#1d1527; --soft:#4a4057; --purple:#6b21a8; --violet:#7c3aed; --line:#ece6f3; --tint:#f5f0fb;
+  --red:#b42318; --redbg:#fdecec; --redline:#f3c1bd; --green:#1a7f37; --greenbg:#e7f6ec; --greenline:#b7e2c3;
+  --display:"Playfair Display", Georgia, serif; --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif; --letterbox:#14101a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --letterbox:#14101a; } }
+:root[data-theme="dark"] { --letterbox:#14101a; }
+html, body { margin:0; height:100%; background:var(--letterbox); font-family:var(--body); color:var(--ink); }
+.fsbtn { position:fixed; right:16px; bottom:16px; z-index:10; border:0; border-radius:10px; background:rgba(255,255,255,.92); color:#1d1527; font:600 14px var(--body); padding:10px 14px; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,.25); transition:opacity .4s; }
+.count { position:fixed; left:16px; bottom:16px; z-index:10; color:#cfc6dc; font:600 13px var(--body); letter-spacing:.08em; transition:opacity .4s; }
+body.idle .fsbtn, body.idle .count, :fullscreen .fsbtn, :fullscreen .count { opacity:0; pointer-events:none; }
+.stage { position:fixed; inset:0; overflow:hidden; }
+.slide { width:1280px; height:720px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(var(--k,1));
+  background:#fff; overflow:hidden; display:none; box-shadow:0 4px 30px rgba(30,10,50,.12); font-family:var(--body); color:var(--ink); }
+.slide, .slide * { box-sizing:border-box; }
+.slide.on { display:block; }
+body.all .stage { position:static; padding:20px 0; }
+body.all .slide { display:block; position:relative; left:auto; top:auto; transform:none; margin:0 auto 24px; }
+
+/* the fixed frame */
+.cam { position:absolute; left:916px; top:94px; width:320px; height:180px; border-radius:4px; display:none;
+  border:3px dashed #cbb8e6; color:#9a86b8; font:600 15px var(--body); place-items:center; text-align:center; background:rgba(255,255,255,.6); }
+body.showcam .cam { display:grid; }
+.head { position:absolute; left:40px; top:40px; width:840px; height:220px; display:flex; flex-direction:column; justify-content:center; }
+.eyebrow { font-size:17px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--purple); }
+.slide h1 { font-family:var(--display); font-weight:900; font-size:54px; line-height:1.08; margin:12px 0 0; text-wrap:balance; }
+.slide h1 em { font-style:normal; color:var(--purple); }
+.head .sub { font-size:25px; line-height:1.4; margin:14px 0 0; color:var(--soft); }
+.board { position:absolute; left:40px; top:290px; width:1200px; height:390px; }
+.center { display:flex; align-items:center; justify-content:center; }
+b.p { color:var(--purple); }
+
+/* wide photo strip */
+.strip { width:100%; height:100%; border-radius:22px; overflow:hidden; background:#f3eff8; border:1px solid var(--line); }
+.strip img { width:100%; height:100%; object-fit:cover; display:block; }
+.ph-box { display:none; width:100%; height:100%; place-items:center; color:#8a7f99; font:600 18px var(--body); border:2px dashed #d9c7f0; border-radius:inherit; }
+
+/* chain: A -> B -> C */
+.chain { display:flex; align-items:center; gap:18px; height:100%; }
+.chain .box { flex:1; height:250px; border-radius:22px; background:var(--tint); border:2px solid #e2d4f4; display:flex; flex-direction:column; justify-content:center; padding:0 30px; }
+.chain .box.end { background:var(--purple); border-color:var(--purple); color:#fff; }
+.chain .box small { font-size:16px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--purple); }
+.chain .box.end small { color:#e3d2fb; }
+.chain .box strong { font-family:var(--display); font-size:38px; line-height:1.1; margin-top:8px; }
+.chain .box span { font-size:21px; line-height:1.35; margin-top:10px; color:var(--soft); }
+.chain .box.end span { color:#f1e8fd; }
+.arrow { flex:none; width:44px; height:44px; color:var(--violet); }
+
+/* cards row */
+.cards { display:grid; gap:18px; height:100%; }
+.cards.c3 { grid-template-columns:repeat(3,1fr); } .cards.c4 { grid-template-columns:repeat(4,1fr); } .cards.c2 { grid-template-columns:repeat(2,1fr); }
+.card { border-radius:22px; background:var(--tint); border:2px solid #e2d4f4; padding:30px 26px; display:flex; flex-direction:column; }
+.card .n { width:52px; height:52px; border-radius:50%; background:var(--purple); color:#fff; font:700 24px var(--body); display:grid; place-items:center; }
+.card strong { font-family:var(--display); font-size:34px; line-height:1.1; margin-top:18px; }
+.card span { font-size:22px; line-height:1.38; margin-top:12px; color:var(--ink); }
+.card q { font-size:23px; line-height:1.35; margin-top:14px; font-weight:600; color:var(--purple); quotes:"\201C" "\201D"; }
+.card.on { background:var(--purple); border-color:var(--purple); color:#fff; }
+.card.on span, .card.on strong { color:#fff; } .card.on .n { background:#fff; color:var(--purple); }
+.card.dim { opacity:.45; }
+
+/* compare: problem vs solution */
+.compare { display:grid; grid-template-columns:1fr 1fr; gap:22px; height:100%; }
+.side { border-radius:22px; padding:30px 32px; border:2px solid; display:flex; flex-direction:column; }
+.side.prob { background:#fff8f7; border-color:var(--redline); } .side.sol { background:#f6fcf8; border-color:var(--greenline); }
+.pill { align-self:flex-start; font-size:15px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:7px 14px; border-radius:999px; border:1px solid; }
+.prob .pill { background:var(--redbg); color:var(--red); border-color:var(--redline); }
+.sol .pill { background:var(--greenbg); color:var(--green); border-color:var(--greenline); }
+.side strong { font-family:var(--display); font-size:36px; line-height:1.1; margin-top:14px; }
+.side span { font-size:22px; line-height:1.4; margin-top:10px; }
+.side .wave { margin-top:auto; font-size:18px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.prob .wave { color:var(--red); } .sol .wave { color:var(--green); }
+
+/* big statement */
+.statement { height:100%; border-radius:22px; background:var(--tint); display:flex; flex-direction:column; justify-content:center; padding:0 70px; }
+.statement p { font-family:var(--display); font-weight:900; font-size:46px; line-height:1.18; margin:0; }
+.statement p em { font-style:normal; color:var(--purple); }
+.statement small { font-size:23px; line-height:1.4; color:var(--soft); margin-top:18px; }
+
+/* example / how-to panel with a side note */
+.split { display:grid; grid-template-columns:1.25fr 1fr; gap:22px; height:100%; }
+.example { border-radius:22px; background:#fff; border:2px solid var(--line); border-left:8px solid var(--violet); padding:30px 34px; display:flex; flex-direction:column; justify-content:center; }
+.example small, .note small { font-size:16px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--purple); }
+.example p { font-size:27px; line-height:1.4; margin:12px 0 0; }
+.note { border-radius:22px; background:var(--tint); padding:30px 32px; display:flex; flex-direction:column; justify-content:center; }
+.note p { font-size:24px; line-height:1.4; margin:12px 0 0; }
+.chips { display:flex; flex-direction:column; gap:12px; margin-top:16px; }
+.chips span { align-self:flex-start; font-size:25px; font-weight:600; color:var(--purple); background:#fff; border:2px solid #e2d4f4; border-radius:999px; padding:10px 22px; }
+
+/* numbered how-to rows */
+.rows { display:flex; flex-direction:column; gap:14px; margin-top:6px; }
+.rows div { display:flex; gap:16px; align-items:center; font-size:25px; line-height:1.3; }
+.rows i { flex:none; font-style:normal; width:44px; height:44px; border-radius:50%; border:2px solid var(--violet); color:var(--purple); font:700 20px var(--body); display:grid; place-items:center; background:#fff; }
+
+/* timeline walk-through */
+.walk { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; height:100%; }
+.walk .card small { font-size:15px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--purple); margin-top:16px; }
+.walk .card strong { margin-top:4px; }
+
+/* checklist */
+.check { display:flex; flex-direction:column; gap:20px; justify-content:center; height:100%; border-radius:22px; background:var(--tint); padding:0 50px; }
+.check div { display:flex; gap:20px; align-items:center; font-size:28px; line-height:1.3; }
+.check div::before { content:"✓"; flex:none; width:48px; height:48px; border-radius:50%; background:#fff; border:3px solid var(--violet); color:var(--purple); font-size:24px; font-weight:700; display:grid; place-items:center; }
+
+/* exercise: stick figure at a desk focusing on a spot (2D line drawing) */
+.ex { display:grid; grid-template-columns:620px 1fr; gap:22px; height:100%; }
+.ex-rows { gap:12px; } .ex-rows div { font-size:22px; } .ex-rows i { width:40px; height:40px; font-size:18px; }
+.wallglow { animation:wg 2.4s ease-in-out infinite; }
+@keyframes wg { 0%,100% { opacity:.55; } 50% { opacity:1; } }
+.cone { fill:var(--violet); opacity:.12; }
+.ripple { transform-box:fill-box; transform-origin:center; animation:ripple 2.6s ease-out infinite; }
+@keyframes ripple { from { transform:scale(.85); opacity:.8; } to { transform:scale(1.35); opacity:0; } }
+.ex-rows.tight { gap:7px; margin-top:4px; } .ex-rows.tight div { font-size:21px; } .ex-rows.tight i { width:34px; height:34px; font-size:16px; }
+.note .intro { font-size:22px; line-height:1.35; margin:10px 0 6px; }
+.scene { border-radius:22px; background:var(--tint); overflow:hidden; }
+.scene svg { width:100%; height:100%; display:block; }
+.fig { stroke:var(--ink); stroke-width:7; stroke-linecap:round; stroke-linejoin:round; fill:none; }
+.furn { stroke:#9b86b8; stroke-width:7; stroke-linecap:round; stroke-linejoin:round; fill:none; }
+.sight { stroke:var(--violet); stroke-width:4; stroke-dasharray:4 14; stroke-linecap:round; animation:sight 1.2s linear infinite; }
+@keyframes sight { to { stroke-dashoffset:-18; } }
+.ring { fill:none; stroke:var(--violet); stroke-width:3; transform-origin:666px 128px; animation:ring 2.4s ease-out infinite; }
+@keyframes ring { from { transform:scale(.6); opacity:.9; } to { transform:scale(2.4); opacity:0; } }
+/* belief loop slide: thought + feeling + repeat = belief */
+.loop { padding:24px 30px; gap:10px; }
+.loop .pill { margin-bottom:6px; }
+.eq { display:grid; grid-template-columns:118px 1fr; align-items:baseline; gap:12px; font-size:23px; line-height:1.3; }
+.eq b { font-size:15px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.prob .eq b { color:var(--red); } .sol .eq b { color:var(--green); }
+.eq.res { margin-top:auto; padding-top:12px; border-top:2px solid; }
+.prob .eq.res { border-color:var(--redline); } .sol .eq.res { border-color:var(--greenline); }
+.eq.res span { font-family:var(--display); font-weight:900; font-size:30px; }
+.research { margin:16px 0 0; font-size:19px; color:var(--soft); text-align:center; }
+/* why-it-works slide: scattered vs coherent waves */
+.waves { width:100%; height:96px; margin:10px 0 4px; overflow:hidden; }
+.glide { animation:glide 4s linear infinite; }
+@keyframes glide { from { transform:translateX(0); } to { transform:translateX(-160px); } }
+/* title slide: full-height photo left, title under the webcam on the right */
+.cover-photo { position:absolute; left:0; top:0; width:560px; height:720px; overflow:hidden; background:#f3eff8; }
+.cover-photo img { width:100%; height:100%; object-fit:cover; object-position:67% center; display:block; }
+.cover-photo::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,255,255,0) 82%, #fff 100%); }
+.cover-text { position:absolute; left:610px; top:280px; width:630px; height:400px; display:flex; flex-direction:column; justify-content:center; }
+.cover-text h1 { font-size:46px !important; line-height:1.1 !important; margin-top:14px !important; }
+.cover-rule { display:block; width:64px; height:5px; border-radius:3px; background:var(--violet); margin:22px 0 18px; }
+.cover-text p { font-size:21px; line-height:1.45; color:var(--soft); margin:0; text-wrap:pretty; }
+.why .side { padding:22px 30px; } .why .side strong { font-size:32px; margin-top:10px; } .why .waves { height:78px; margin:8px 0 2px; } .why .side span { font-size:21px; }
+/* eyes-closed recap: every step's picture in a grid */
+.stepgrid { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:8px; padding:10px; height:100%; box-sizing:border-box; }
+.gcell { position:relative; background:#fff; border-radius:12px; overflow:hidden; border:1px solid #e2d4f4; min-height:0; }
+.gcell svg { width:100%; height:100%; display:block; }
+.ex:has(.stepgrid) { grid-template-rows:390px; }
+.gcell.eyes { display:grid; place-items:center; background:var(--purple); color:#fff; font:700 17px var(--body); text-align:center; line-height:1.25; }
+.recap .intro { font-size:20px !important; margin:6px 0 4px !important; }
+.recap .ex-rows.tight { gap:4px; } .recap .ex-rows.tight div { font-size:19px; } .recap .ex-rows.tight i { width:30px; height:30px; font-size:14px; }
+.gcell i { position:absolute; left:6px; top:6px; font-style:normal; width:24px; height:24px; border-radius:50%; background:var(--purple); color:#fff; font:700 13px var(--body); display:grid; place-items:center; }
+/* breathe in / out of the heart (side view): in-arrow then out-arrow, heart grows on the in-breath */
+.flowdash { stroke-dasharray:14 12; animation:flowdash 1.1s linear infinite; }
+@keyframes flowdash { to { stroke-dashoffset:-26; } }
+.bin { animation:bin 8s ease-in-out infinite; } .bout { animation:bout 8s ease-in-out infinite; }
+@keyframes bin { 0%,100% { opacity:.18; } 8%,44% { opacity:1; } 54%,92% { opacity:.18; } }
+@keyframes bout { 0%,44% { opacity:.18; } 54%,92% { opacity:1; } 100% { opacity:.18; } }
+.hb8 { transform-box:fill-box; transform-origin:center; animation:hb8 8s ease-in-out infinite; }
+@keyframes hb8 { 0%,100% { transform:scale(.85); } 48% { transform:scale(1.28); } }
+.street { stroke-dasharray:28 14; animation:street 1.6s linear infinite; }
+@keyframes street { to { stroke-dashoffset:42; } }
+/* step 6: soft breathing field of attention */
+.breathe { transform-box:fill-box; transform-origin:center; animation:breathe 6s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { transform:scale(.94); opacity:.8; } 50% { transform:scale(1.04); opacity:1; } }
+.flow { transform-box:fill-box; transform-origin:center; animation:flow 6s ease-out infinite; opacity:0; }
+@keyframes flow { 0% { transform:scale(.6); opacity:0; } 20% { opacity:.7; } 100% { transform:scale(2.3); opacity:0; } }
+/* steps 9-11: relaxed space, relationship space, breathe through the heart */
+.slow { animation-duration:10s; }
+.floatup { transform-box:fill-box; transform-origin:center; animation:floatup 4.5s ease-out infinite; opacity:0; }
+@keyframes floatup { 0% { transform:translateY(20px) scale(.7); opacity:0; } 25% { opacity:.9; } 100% { transform:translateY(-90px) scale(1.1); opacity:0; } }
+.heartbreath { transform-box:fill-box; transform-origin:center; animation:heartbreath 6s ease-in-out infinite; }
+@keyframes heartbreath { 0%,100% { transform:scale(.85); } 50% { transform:scale(1.25); } }
+</style></head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 1 · Title -->
+  <section class="slide" data-n="1">
+    <div class="cover-photo"><img src="how to control your mental attention images/Belief Cover.jpg" alt="A woman on her sofa by the window, eyes closed, hand on the centre of her chest, smiling calmly" onerror="this.style.display='none'"></div>
+    <div class="cam">Webcam</div>
+    <div class="cover-text">
+      <div class="eyebrow">Heart Attractor Training</div>
+      <h1>How To Build <em>Unshakeable Belief</em> That You Will Meet Your Life Partner</h1>
+      <span class="cover-rule"></span>
+      <p>In this training you will learn how to consciously feel any elevated emotional state on command so that you can create unshakeable belief in yourself that you can meet your life partner</p>
+    </div>
+  </section>
+
+  <!-- 2 · What a belief is: thought + feeling + repetition (both directions) -->
+  <section class="slide" data-n="2">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Before We Start</div>
+      <h1>What A Belief <em>Actually Is</em></h1>
+      <p class="sub">A belief is a thought you keep thinking with a feeling you keep feeling, until it feels true.</p>
+    </div>
+    <div class="board"><div class="compare" style="height:338px">
+      <div class="side prob loop"><span class="pill">How Doubt Is Built</span>
+        <div class="eq"><b>Thought</b><span>&ldquo;I&rsquo;ll end up alone&rdquo;</span></div>
+        <div class="eq"><b>Feeling</b><span>Fear and heaviness</span></div>
+        <div class="eq"><b>Repeat</b><span>Over and over, day after day</span></div>
+        <div class="eq res"><b>Belief</b><span>&ldquo;It&rsquo;ll never happen for me&rdquo;</span></div>
+      </div>
+      <div class="side sol loop"><span class="pill">How Belief Is Built</span>
+        <div class="eq"><b>Thought</b><span>&ldquo;I&rsquo;m with my person&rdquo;</span></div>
+        <div class="eq"><b>Feeling</b><span>Warmth and calm</span></div>
+        <div class="eq"><b>Repeat</b><span>Over and over, day after day</span></div>
+        <div class="eq res"><b>Belief</b><span>&ldquo;It&rsquo;s going to happen&rdquo;</span></div>
+      </div>
+    </div>
+    <p class="research">Harvard research: the more you imagine an emotional future, the more likely it feels. Every time you feel it, you&rsquo;re building the belief.</p></div>
+  </section>
+
+  <!-- 3 · Transition: attention decides the thought + feeling you repeat -->
+  <section class="slide" data-n="3">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Why We Start With Attention</div>
+      <h1>It All Starts With <em>Your Attention</em></h1>
+      <p class="sub">Your attention decides which thought you keep thinking and which feeling you keep feeling.</p>
+    </div>
+    <div class="board"><div class="chain">
+      <div class="box"><small>1</small><strong>Control Your Attention</strong><span>Choose the thought you keep coming back to</span></div>
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+      <div class="box"><small>2</small><strong>Feel The Outcome</strong><span>Feel the emotions of it already being real</span></div>
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+      <div class="box end"><small>3</small><strong>Unshakeable Belief</strong><span>Repeat it until it feels true</span></div>
+    </div></div>
+  </section>
+
+  <!-- 4 · What we're doing now: the progressive exercise in 4 stages -->
+  <section class="slide" data-n="4">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">What We're Doing Now</div>
+      <h1>Let's Train <em>Your Attention</em></h1>
+      <p class="sub">A progressive exercise to build and strengthen your attention, so you can feel emotional states on command and create this belief.</p>
+    </div>
+    <div class="board"><div class="cards c3">
+      <div class="card" style="padding-top:70px"><div class="n">1</div><strong style="font-size:40px">Sense Your Body</strong></div>
+      <div class="card" style="padding-top:70px"><div class="n">2</div><strong style="font-size:40px">Sense The Area Surrounding You</strong></div>
+      <div class="card" style="padding-top:70px"><div class="n">3</div><strong style="font-size:40px">Sense The Area Close To You</strong></div>
+    </div></div>
+  </section>
+
+  <!-- 5 · Why the exercises work: quiet the analytical mind, brain works more coherently -->
+  <section class="slide" data-n="5">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Why These Exercises Work</div>
+      <h1>They Quiet <em>The Analytical Mind</em></h1>
+      <p class="sub" style="font-size:21px;line-height:1.35;margin-top:10px">Moving your attention away from everything going on in your life and focusing your collective attention on one thing slows down your analytical mind. Your brainwaves shift from high beta to alpha and theta. In this state, we have greater access to the subconscious mind. From this point you can hold clear intentions and maintain defined emotional states without losing your focus or becoming distracted.</p>
+    </div>
+    <div class="board why" style="top:330px;height:350px"><div class="compare">
+      <div class="side prob"><span class="pill">Your Busy Mind</span><strong>Scattered</strong>
+        <svg class="waves" viewBox="0 0 480 130" preserveAspectRatio="none" aria-label="Three jagged brain-wave lines, all out of sync"><path d="M0,21.5 L6,25.5 L12,40.4 L18,30.6 L24,37.0 L30,27.7 L36,14.1 L42,16.1 L48,2.6 L54,10.1 L60,6.7 L66,13.7 L72,27.8 L78,42.1 L84,31.5 L90,32.5 L96,35.7 L102,34.9 L108,20.2 L114,11.0 L120,20.3 L126,4.2 L132,25.7 L138,22.0 L144,26.3 L150,30.4 L156,35.1 L162,41.8 L168,23.1 L174,23.3 L180,17.8 L186,8.9 L192,12.6 L198,7.3 L204,14.2 L210,24.6 L216,39.9 L222,37.5 L228,33.8 L234,34.0 L240,24.1 L246,13.8 L252,18.3 L258,14.9 L264,8.7 L270,21.1 L276,27.7 L282,41.4 L288,42.8 L294,34.5 L300,44.3 L306,20.8 L312,19.1 L318,19.4 L324,4.4 L330,11.8 L336,7.7 L342,27.2 L348,36.5 L354,38.4 L360,46.4 L366,33.3 L372,35.2 L378,25.8 L384,18.3 L390,11.2 L396,17.8 L402,23.1 L408,20.2 L414,31.5 L420,26.3 L426,42.6 L432,41.2 L438,43.8 L444,33.5 L450,15.4 L456,11.4 L462,14.3 L468,3.2 L474,16.9 L480,18.5" fill="none" stroke="#b42318" stroke-width="4" stroke-linejoin="round"/><path d="M0,71.4 L6,68.9 L12,80.0 L18,63.6 L24,61.3 L30,59.4 L36,64.6 L42,45.6 L48,50.7 L54,52.0 L60,59.4 L66,60.6 L72,65.1 L78,58.0 L84,65.4 L90,68.7 L96,82.8 L102,86.8 L108,72.1 L114,72.2 L120,71.3 L126,68.1 L132,68.8 L138,66.1 L144,55.2 L150,46.1 L156,51.2 L162,48.7 L168,52.5 L174,61.6 L180,59.3 L186,59.9 L192,66.5 L198,72.3 L204,64.3 L210,84.3 L216,83.9 L222,86.3 L228,83.8 L234,73.3 L240,69.7 L246,59.5 L252,65.2 L258,49.5 L264,46.0 L270,46.3 L276,44.4 L282,48.5 L288,44.9 L294,47.3 L300,54.5 L306,58.2 L312,67.9 L318,65.2 L324,84.7 L330,81.1 L336,71.9 L342,72.2 L348,71.1 L354,67.3 L360,58.0 L366,67.6 L372,66.2 L378,52.7 L384,51.1 L390,42.9 L396,44.5 L402,51.8 L408,54.1 L414,69.6 L420,61.3 L426,62.9 L432,84.7 L438,78.7 L444,72.1 L450,79.1 L456,66.8 L462,73.1 L468,77.6 L474,70.6 L480,62.8" fill="none" stroke="#d4553f" stroke-width="4" stroke-linejoin="round"/><path d="M0,100.9 L6,93.3 L12,84.6 L18,99.0 L24,102.9 L30,117.8 L36,115.1 L42,112.1 L48,116.0 L54,109.2 L60,99.2 L66,97.7 L72,104.4 L78,112.9 L84,111.3 L90,119.2 L96,110.9 L102,94.7 L108,85.5 L114,86.7 L120,90.0 L126,107.6 L132,122.6 L138,117.8 L144,125.2 L150,117.9 L156,107.1 L162,89.0 L168,86.8 L174,94.3 L180,103.9 L186,111.7 L192,120.9 L198,120.2 L204,109.0 L210,93.3 L216,94.1 L222,101.8 L228,97.4 L234,118.0 L240,127.0 L246,121.2 L252,111.6 L258,96.4 L264,85.0 L270,98.7 L276,97.9 L282,117.2 L288,127.4 L294,115.9 L300,109.0 L306,109.5 L312,97.2 L318,84.9 L324,89.9 L330,100.3 L336,123.9 L342,125.0 L348,107.6 L354,111.4 L360,104.9 L366,94.1 L372,91.1 L378,103.7 L384,105.5 L390,109.1 L396,126.5 L402,112.3 L408,99.7 L414,100.6 L420,90.6 L426,105.9 L432,115.2 L438,111.3 L444,113.9 L450,109.2 L456,98.3 L462,96.1 L468,86.3 L474,93.5 L480,97.2" fill="none" stroke="#e8907e" stroke-width="4" stroke-linejoin="round"/></svg>
+        <span>Thinking about everything going on in your life. Hard to focus.</span><div class="wave">Brainwaves: high beta</div></div>
+      <div class="side sol"><span class="pill">After The Exercises</span><strong>Coherent</strong>
+        <svg class="waves" viewBox="0 0 480 130" preserveAspectRatio="none" aria-label="Three smooth brain-wave lines moving together in sync"><g class="glide"><path d="M0,25.0 L6,28.0 L12,30.9 L18,33.4 L24,35.5 L30,37.0 L36,37.8 L42,38.0 L48,37.4 L54,36.1 L60,34.2 L66,31.8 L72,29.0 L78,26.0 L84,23.0 L90,20.0 L96,17.4 L102,15.1 L108,13.4 L114,12.4 L120,12.0 L126,12.4 L132,13.4 L138,15.1 L144,17.4 L150,20.0 L156,23.0 L162,26.0 L168,29.0 L174,31.8 L180,34.2 L186,36.1 L192,37.4 L198,38.0 L204,37.8 L210,37.0 L216,35.5 L222,33.4 L228,30.9 L234,28.0 L240,25.0 L246,22.0 L252,19.1 L258,16.6 L264,14.5 L270,13.0 L276,12.2 L282,12.0 L288,12.6 L294,13.9 L300,15.8 L306,18.2 L312,21.0 L318,24.0 L324,27.0 L330,30.0 L336,32.6 L342,34.9 L348,36.6 L354,37.6 L360,38.0 L366,37.6 L372,36.6 L378,34.9 L384,32.6 L390,30.0 L396,27.0 L402,24.0 L408,21.0 L414,18.2 L420,15.8 L426,13.9 L432,12.6 L438,12.0 L444,12.2 L450,13.0 L456,14.5 L462,16.6 L468,19.1 L474,22.0 L480,25.0 L486,28.0 L492,30.9 L498,33.4 L504,35.5 L510,37.0 L516,37.8 L522,38.0 L528,37.4 L534,36.1 L540,34.2 L546,31.8 L552,29.0 L558,26.0 L564,23.0 L570,20.0 L576,17.4 L582,15.1 L588,13.4 L594,12.4 L600,12.0 L606,12.4 L612,13.4 L618,15.1 L624,17.4 L630,20.0 L636,23.0 L642,26.0 L648,29.0 L654,31.8 L660,34.2" fill="none" stroke="#1a7f37" stroke-width="4" stroke-linecap="round"/><path d="M0,65.0 L6,68.0 L12,70.9 L18,73.4 L24,75.5 L30,77.0 L36,77.8 L42,78.0 L48,77.4 L54,76.1 L60,74.2 L66,71.8 L72,69.0 L78,66.0 L84,63.0 L90,60.0 L96,57.4 L102,55.1 L108,53.4 L114,52.4 L120,52.0 L126,52.4 L132,53.4 L138,55.1 L144,57.4 L150,60.0 L156,63.0 L162,66.0 L168,69.0 L174,71.8 L180,74.2 L186,76.1 L192,77.4 L198,78.0 L204,77.8 L210,77.0 L216,75.5 L222,73.4 L228,70.9 L234,68.0 L240,65.0 L246,62.0 L252,59.1 L258,56.6 L264,54.5 L270,53.0 L276,52.2 L282,52.0 L288,52.6 L294,53.9 L300,55.8 L306,58.2 L312,61.0 L318,64.0 L324,67.0 L330,70.0 L336,72.6 L342,74.9 L348,76.6 L354,77.6 L360,78.0 L366,77.6 L372,76.6 L378,74.9 L384,72.6 L390,70.0 L396,67.0 L402,64.0 L408,61.0 L414,58.2 L420,55.8 L426,53.9 L432,52.6 L438,52.0 L444,52.2 L450,53.0 L456,54.5 L462,56.6 L468,59.1 L474,62.0 L480,65.0 L486,68.0 L492,70.9 L498,73.4 L504,75.5 L510,77.0 L516,77.8 L522,78.0 L528,77.4 L534,76.1 L540,74.2 L546,71.8 L552,69.0 L558,66.0 L564,63.0 L570,60.0 L576,57.4 L582,55.1 L588,53.4 L594,52.4 L600,52.0 L606,52.4 L612,53.4 L618,55.1 L624,57.4 L630,60.0 L636,63.0 L642,66.0 L648,69.0 L654,71.8 L660,74.2" fill="none" stroke="#3c9a57" stroke-width="4" stroke-linecap="round"/><path d="M0,105.0 L6,108.0 L12,110.9 L18,113.4 L24,115.5 L30,117.0 L36,117.8 L42,118.0 L48,117.4 L54,116.1 L60,114.2 L66,111.8 L72,109.0 L78,106.0 L84,103.0 L90,100.0 L96,97.4 L102,95.1 L108,93.4 L114,92.4 L120,92.0 L126,92.4 L132,93.4 L138,95.1 L144,97.4 L150,100.0 L156,103.0 L162,106.0 L168,109.0 L174,111.8 L180,114.2 L186,116.1 L192,117.4 L198,118.0 L204,117.8 L210,117.0 L216,115.5 L222,113.4 L228,110.9 L234,108.0 L240,105.0 L246,102.0 L252,99.1 L258,96.6 L264,94.5 L270,93.0 L276,92.2 L282,92.0 L288,92.6 L294,93.9 L300,95.8 L306,98.2 L312,101.0 L318,104.0 L324,107.0 L330,110.0 L336,112.6 L342,114.9 L348,116.6 L354,117.6 L360,118.0 L366,117.6 L372,116.6 L378,114.9 L384,112.6 L390,110.0 L396,107.0 L402,104.0 L408,101.0 L414,98.2 L420,95.8 L426,93.9 L432,92.6 L438,92.0 L444,92.2 L450,93.0 L456,94.5 L462,96.6 L468,99.1 L474,102.0 L480,105.0 L486,108.0 L492,110.9 L498,113.4 L504,115.5 L510,117.0 L516,117.8 L522,118.0 L528,117.4 L534,116.1 L540,114.2 L546,111.8 L552,109.0 L558,106.0 L564,103.0 L570,100.0 L576,97.4 L582,95.1 L588,93.4 L594,92.4 L600,92.0 L606,92.4 L612,93.4 L618,95.1 L624,97.4 L630,100.0 L636,103.0 L642,106.0 L648,109.0 L654,111.8 L660,114.2" fill="none" stroke="#7cc391" stroke-width="4" stroke-linecap="round"/></g></svg>
+        <span>Your brain firing together. Focused on what you want, without distraction.</span><div class="wave">Brainwaves: alpha and theta</div></div>
+    </div></div>
+  </section>
+
+  <!-- 2 · Exercise 1 step 1: hand on the centre of the chest, then take it away and notice where it was (front view) -->
+  <section class="slide" data-n="6">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 1</div>
+      <h1>Notice Where <em>Your Hand Is</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Two stick figures from the front: one with a hand over the centre of the chest, one with the hand taken away and a soft glow where it was">
+        <line x1="60" y1="312" x2="640" y2="312" stroke="#d9c7f0" stroke-width="4"/>
+        <!-- hand on -->
+        <circle cx="175" cy="200" r="34" fill="var(--violet)" opacity=".18"/>
+        <circle class="fig" cx="175" cy="88" r="34" fill="var(--tint)"/>
+        <circle cx="163" cy="84" r="4" fill="var(--ink)"/><circle cx="187" cy="84" r="4" fill="var(--ink)"/>
+        <path class="fig" d="M175 122 V300 M118 165 Q175 150 232 165 M118 165 L104 296 M232 165 L252 236 L186 202"/>
+        <ellipse cx="180" cy="200" rx="16" ry="12" fill="var(--ink)"/>
+        <text x="175" y="356" text-anchor="middle" font-size="24" font-weight="700" fill="var(--purple)">Hand on</text>
+        <!-- arrow -->
+        <path d="M318 200 H372 M356 184 L374 200 L356 216" fill="none" stroke="var(--violet)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- hand away: glow where it was -->
+        <circle cx="525" cy="200" r="30" fill="var(--violet)" opacity=".28" class="wallglow"/>
+        <circle class="ripple" cx="525" cy="200" r="30" fill="none" stroke="var(--violet)" stroke-width="3"/>
+        <circle class="fig" cx="525" cy="88" r="34" fill="var(--tint)"/>
+        <circle cx="513" cy="84" r="4" fill="var(--ink)"/><circle cx="537" cy="84" r="4" fill="var(--ink)"/>
+        <path class="fig" d="M525 122 V300 M468 165 Q525 150 582 165 M468 165 L454 296 M582 165 L596 296"/>
+        <text x="525" y="356" text-anchor="middle" font-size="24" font-weight="700" fill="var(--purple)">Hand away</text>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your eyes open</div><div><i>2</i>Place your hand over the centre of your chest</div><div><i>3</i>Notice where your hand is</div><div><i>4</i>Take your hand away</div><div><i>5</i>Notice where your hand was</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- 2 · Exercise 1: focus on a spot on the wall (stick figure at a desk) -->
+  <section class="slide" data-n="7">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 2</div>
+      <h1>Focus On <em>A Spot On The Wall</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="A stick figure sat at a desk, looking at a purple spot on the wall">
+        <rect x="690" y="0" width="10" height="390" fill="#e2d4f4"/>
+        <line x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <!-- chair -->
+        <path class="furn" d="M150 120 V262 H232 M160 262 V350 M226 262 V350"/>
+        <!-- desk -->
+        <path class="furn" d="M300 222 H520 M318 222 V350 M502 222 V350"/>
+        <!-- figure, sitting, facing the wall -->
+        <circle class="fig" cx="212" cy="96" r="30"/>
+        <path class="fig" d="M206 127 L196 250 L292 252 L300 348 L326 348"/>
+        <path class="fig" d="M204 158 L262 206 L332 214"/>
+        <circle cx="228" cy="92" r="4.5" fill="var(--ink)"/>
+        <!-- line of sight + the spot -->
+        <line class="sight" x1="252" y1="96" x2="650" y2="126"/>
+        <circle class="ring" cx="666" cy="128" r="16"/>
+        <circle cx="666" cy="128" r="13" fill="var(--purple)"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Sit at a desk or table</div><div><i>2</i>Pick one small spot on the wall</div><div><i>3</i>Rest your attention on it</div><div><i>4</i><span>Feel like you're touching it with your mind. <b class="p">Soft and steady: not hard focus, not too light</b></span></div><div><i>5</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- 3 · Exercise 1 step 2: widen to the whole wall -->
+  <section class="slide" data-n="8">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 3</div>
+      <h1>Focus On <em>The Whole Wall</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="The same stick figure, now taking in the whole wall with their attention">
+        <polygon class="cone" points="252,96 680,4 680,350"/>
+        <rect class="wallglow" x="680" y="0" width="20" height="352" fill="var(--purple)"/>
+        <line x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <path class="furn" d="M150 120 V262 H232 M160 262 V350 M226 262 V350"/>
+        <path class="furn" d="M300 222 H520 M318 222 V350 M502 222 V350"/>
+        <circle class="fig" cx="212" cy="96" r="30"/>
+        <path class="fig" d="M206 127 L196 250 L292 252 L300 348 L326 348"/>
+        <path class="fig" d="M204 158 L262 206 L332 214"/>
+        <circle cx="228" cy="92" r="4.5" fill="var(--ink)"/>
+        <line class="sight" x1="252" y1="92" x2="672" y2="8"/>
+        <line class="sight" x1="252" y1="100" x2="672" y2="344"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Let your attention widen from the spot to the whole wall</div><div><i>2</i><span>Feel like you're touching and sensing the whole wall with your mind. <b class="p">Keep the touch soft and steady, not forced</b></span></div><div><i>3</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- 4 · Exercise 1 step 4: the wall to the left (seen from behind) -->
+  <section class="slide" data-n="9">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 4</div>
+      <h1>Focus On <em>The Wall To Your Left</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Seen from behind: the stick figure at the desk, attention on the wall to their left">
+        <polygon points="0,0 230,60 230,250 0,390" class="wallglow" fill="var(--purple)" opacity=".85"/>
+        <polygon class="cone" points="350,238 0,30 0,360"/>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+        <line class="sight" x1="322" y1="232" x2="60" y2="200"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your head still, facing forward</div><div><i>2</i>Move your attention to the wall or space on your left</div><div><i>3</i><span>Feel like you're touching it with your mind. <b class="p">Keep the touch soft and steady, not forced</b></span></div><div><i>4</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- 5 · Exercise 1 step 5: the wall to the right (seen from behind) -->
+  <section class="slide" data-n="10">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 5</div>
+      <h1>Focus On <em>The Wall To Your Right</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Seen from behind: the stick figure at the desk, attention on the wall to their right">
+        <polygon points="700,0 470,60 470,250 700,390" class="wallglow" fill="var(--purple)" opacity=".85"/>
+        <polygon class="cone" points="350,238 700,30 700,360"/>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+        <line class="sight" x1="378" y1="232" x2="640" y2="200"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your head still, facing forward</div><div><i>2</i>Move your attention to the wall or space on your right</div><div><i>3</i><span>Feel like you're touching it with your mind. <b class="p">Keep the touch soft and steady, not forced</b></span></div><div><i>4</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- 6 · Exercise 1 step 5: the ceiling above them (seen from behind) -->
+  <section class="slide" data-n="11">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 6</div>
+      <h1>Focus On <em>The Ceiling Above You</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Seen from behind: the stick figure at the desk, attention on the ceiling above them">
+        <polygon points="0,0 700,0 470,60 230,60" class="wallglow" fill="var(--purple)" opacity=".85"/>
+        <polygon class="cone" points="350,238 120,20 580,20"/>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+        <line class="sight" x1="350" y1="208" x2="350" y2="34"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your head still, facing forward</div><div><i>2</i>Move your attention to the ceiling above you</div><div><i>3</i><span>Feel like you're touching it with your mind. <b class="p">Keep the touch soft and steady, not forced</b></span></div><div><i>4</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- Exercise 1: the wall behind them (side view, attention flows back behind the head) -->
+  <section class="slide" data-n="12">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 7</div>
+      <h1>Focus On <em>The Wall Behind You</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Side view: the stick figure at the desk facing forward, attention flowing back to the glowing wall behind them">
+        <rect class="wallglow" x="0" y="0" width="20" height="352" fill="var(--purple)"/>
+        <polygon class="cone" points="182,96 20,4 20,350"/>
+        <rect x="690" y="0" width="10" height="390" fill="#e2d4f4"/>
+        <line x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <path class="furn" d="M150 120 V262 H232 M160 262 V350 M226 262 V350"/>
+        <path class="furn" d="M300 222 H520 M318 222 V350 M502 222 V350"/>
+        <circle class="fig" cx="212" cy="96" r="30" fill="var(--tint)"/>
+        <path class="fig" d="M206 127 L196 250 L292 252 L300 348 L326 348"/>
+        <path class="fig" d="M204 158 L262 206 L332 214"/>
+        <circle cx="228" cy="92" r="4.5" fill="var(--ink)"/>
+        <line class="sight" x1="180" y1="92" x2="28" y2="8"/>
+        <line class="sight" x1="180" y1="100" x2="28" y2="344"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your head still, facing forward</div><div><i>2</i>Move your attention to the wall behind you</div><div><i>3</i><span>Feel like you're touching it with your mind. <b class="p">Keep the touch soft and steady, not forced</b></span></div><div><i>4</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- 7 · Exercise 1 step 6: the space all around them (game-style ring / aura) -->
+  <section class="slide" data-n="13">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 8</div>
+      <h1>Focus On <em>The Space Around You</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Seen from behind: the stick figure at the desk inside a soft glowing field of attention that slowly breathes and flows out into the room">
+        <defs>
+          <radialGradient id="field" cx="50%" cy="55%" r="50%"><stop offset="0" stop-color="#a78bfa" stop-opacity=".55"/><stop offset=".6" stop-color="#a78bfa" stop-opacity=".22"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+          <filter id="softer" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <!-- soft field of attention: an organic shape that slowly changes and breathes, no hard edges -->
+        <g class="breathe">
+          <path fill="url(#field)" filter="url(#soft)" d="M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z">
+            <animate attributeName="d" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1" keyTimes="0;.33;.66;1" values="
+              M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z;
+              M350 88 C505 62 600 178 568 268 C548 362 455 386 350 386 C238 398 100 340 132 236 C150 132 218 98 350 88Z;
+              M350 62 C462 84 568 136 592 242 C602 346 478 398 350 388 C212 384 132 368 110 262 C100 158 240 50 350 62Z;
+              M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z"/>
+          </path>
+          <path fill="none" stroke="var(--violet)" stroke-width="3" opacity=".45" filter="url(#softer)" d="M350 120 C450 112 530 180 528 258 C526 336 446 362 350 362 C254 362 172 336 172 258 C172 178 250 128 350 120Z">
+            <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" keyTimes="0;.5;1" values="
+              M350 120 C450 112 530 180 528 258 C526 336 446 362 350 362 C254 362 172 336 172 258 C172 178 250 128 350 120Z;
+              M350 108 C462 126 542 170 536 266 C528 346 440 372 350 356 C246 366 160 330 166 250 C170 168 242 102 350 108Z;
+              M350 120 C450 112 530 180 528 258 C526 336 446 362 350 362 C254 362 172 336 172 258 C172 178 250 128 350 120Z"/>
+          </path>
+        </g>
+        <!-- gentle waves flowing out across the floor -->
+        <ellipse class="flow" cx="350" cy="352" rx="150" ry="30" fill="none" stroke="var(--violet)" stroke-width="3" filter="url(#softer)"/>
+        <ellipse class="flow" style="animation-delay:-2s" cx="350" cy="352" rx="150" ry="30" fill="none" stroke="var(--violet)" stroke-width="3" filter="url(#softer)"/>
+        <ellipse class="flow" style="animation-delay:-4s" cx="350" cy="352" rx="150" ry="30" fill="none" stroke="var(--violet)" stroke-width="3" filter="url(#softer)"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your head still, facing forward</div><div><i>2</i>Sense the general space around you</div><div><i>3</i><span><b class="p">Keep the touch soft and steady, not forced</b> as you sense it</span></div><div><i>4</i>When your mind wanders, bring it back to the space around you again</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- 8 · Exercise 1 step 7: the same steps with eyes closed (side view, eyes shut) -->
+  <section class="slide" data-n="14">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 9</div>
+      <h1>Now Do It <em>With Your Eyes Closed</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><div class="stepgrid"><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <line x1="60" y1="312" x2="640" y2="312" stroke="#d9c7f0" stroke-width="4"/>
+        <!-- hand on -->
+        <circle cx="175" cy="200" r="34" fill="var(--violet)" opacity=".18"/>
+        <circle class="fig" cx="175" cy="88" r="34" fill="var(--tint)"/>
+        <circle cx="163" cy="84" r="4" fill="var(--ink)"/><circle cx="187" cy="84" r="4" fill="var(--ink)"/>
+        <path class="fig" d="M175 122 V300 M118 165 Q175 150 232 165 M118 165 L104 296 M232 165 L252 236 L186 202"/>
+        <ellipse cx="180" cy="200" rx="16" ry="12" fill="var(--ink)"/>
+        <text x="175" y="356" text-anchor="middle" font-size="24" font-weight="700" fill="var(--purple)">Hand on</text>
+        <!-- arrow -->
+        <path d="M318 200 H372 M356 184 L374 200 L356 216" fill="none" stroke="var(--violet)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- hand away: glow where it was -->
+        <circle cx="525" cy="200" r="30" fill="var(--violet)" opacity=".28" class="wallglow"/>
+        <circle class="ripple" cx="525" cy="200" r="30" fill="none" stroke="var(--violet)" stroke-width="3"/>
+        <circle class="fig" cx="525" cy="88" r="34" fill="var(--tint)"/>
+        <circle cx="513" cy="84" r="4" fill="var(--ink)"/><circle cx="537" cy="84" r="4" fill="var(--ink)"/>
+        <path class="fig" d="M525 122 V300 M468 165 Q525 150 582 165 M468 165 L454 296 M582 165 L596 296"/>
+        <text x="525" y="356" text-anchor="middle" font-size="24" font-weight="700" fill="var(--purple)">Hand away</text>
+      </svg><i>1</i></div><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <rect x="690" y="0" width="10" height="390" fill="#e2d4f4"/>
+        <line x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <!-- chair -->
+        <path class="furn" d="M150 120 V262 H232 M160 262 V350 M226 262 V350"/>
+        <!-- desk -->
+        <path class="furn" d="M300 222 H520 M318 222 V350 M502 222 V350"/>
+        <!-- figure, sitting, facing the wall -->
+        <circle class="fig" cx="212" cy="96" r="30"/>
+        <path class="fig" d="M206 127 L196 250 L292 252 L300 348 L326 348"/>
+        <path class="fig" d="M204 158 L262 206 L332 214"/>
+        <circle cx="228" cy="92" r="4.5" fill="var(--ink)"/>
+        <!-- line of sight + the spot -->
+        <line class="sight" x1="252" y1="96" x2="650" y2="126"/>
+        <circle class="ring" cx="666" cy="128" r="16"/>
+        <circle cx="666" cy="128" r="13" fill="var(--purple)"/>
+      </svg><i>2</i></div><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <polygon class="cone" points="252,96 680,4 680,350"/>
+        <rect class="wallglow" x="680" y="0" width="20" height="352" fill="var(--purple)"/>
+        <line x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <path class="furn" d="M150 120 V262 H232 M160 262 V350 M226 262 V350"/>
+        <path class="furn" d="M300 222 H520 M318 222 V350 M502 222 V350"/>
+        <circle class="fig" cx="212" cy="96" r="30"/>
+        <path class="fig" d="M206 127 L196 250 L292 252 L300 348 L326 348"/>
+        <path class="fig" d="M204 158 L262 206 L332 214"/>
+        <circle cx="228" cy="92" r="4.5" fill="var(--ink)"/>
+        <line class="sight" x1="252" y1="92" x2="672" y2="8"/>
+        <line class="sight" x1="252" y1="100" x2="672" y2="344"/>
+      </svg><i>3</i></div><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <polygon points="0,0 230,60 230,250 0,390" class="wallglow" fill="var(--purple)" opacity=".85"/>
+        <polygon class="cone" points="350,238 0,30 0,360"/>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+        <line class="sight" x1="322" y1="232" x2="60" y2="200"/>
+      </svg><i>4</i></div><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <polygon points="700,0 470,60 470,250 700,390" class="wallglow" fill="var(--purple)" opacity=".85"/>
+        <polygon class="cone" points="350,238 700,30 700,360"/>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+        <line class="sight" x1="378" y1="232" x2="640" y2="200"/>
+      </svg><i>5</i></div><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <polygon points="0,0 700,0 470,60 230,60" class="wallglow" fill="var(--purple)" opacity=".85"/>
+        <polygon class="cone" points="350,238 120,20 580,20"/>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+        <line class="sight" x1="350" y1="208" x2="350" y2="34"/>
+      </svg><i>6</i></div><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <rect class="wallglow" x="0" y="0" width="20" height="352" fill="var(--purple)"/>
+        <polygon class="cone" points="182,96 20,4 20,350"/>
+        <rect x="690" y="0" width="10" height="390" fill="#e2d4f4"/>
+        <line x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <path class="furn" d="M150 120 V262 H232 M160 262 V350 M226 262 V350"/>
+        <path class="furn" d="M300 222 H520 M318 222 V350 M502 222 V350"/>
+        <circle class="fig" cx="212" cy="96" r="30" fill="var(--tint)"/>
+        <path class="fig" d="M206 127 L196 250 L292 252 L300 348 L326 348"/>
+        <path class="fig" d="M204 158 L262 206 L332 214"/>
+        <circle cx="228" cy="92" r="4.5" fill="var(--ink)"/>
+        <line class="sight" x1="180" y1="92" x2="28" y2="8"/>
+        <line class="sight" x1="180" y1="100" x2="28" y2="344"/>
+      </svg><i>7</i></div><div class="gcell"><svg viewBox="0 0 700 390" aria-hidden="true">
+        <defs>
+          <radialGradient id="field" cx="50%" cy="55%" r="50%"><stop offset="0" stop-color="#a78bfa" stop-opacity=".55"/><stop offset=".6" stop-color="#a78bfa" stop-opacity=".22"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+          <filter id="softer" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <!-- soft field of attention: an organic shape that slowly changes and breathes, no hard edges -->
+        <g class="breathe">
+          <path fill="url(#field)" filter="url(#soft)" d="M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z">
+            <animate attributeName="d" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1" keyTimes="0;.33;.66;1" values="
+              M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z;
+              M350 88 C505 62 600 178 568 268 C548 362 455 386 350 386 C238 398 100 340 132 236 C150 132 218 98 350 88Z;
+              M350 62 C462 84 568 136 592 242 C602 346 478 398 350 388 C212 384 132 368 110 262 C100 158 240 50 350 62Z;
+              M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z"/>
+          </path>
+          <path fill="none" stroke="var(--violet)" stroke-width="3" opacity=".45" filter="url(#softer)" d="M350 120 C450 112 530 180 528 258 C526 336 446 362 350 362 C254 362 172 336 172 258 C172 178 250 128 350 120Z">
+            <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" keyTimes="0;.5;1" values="
+              M350 120 C450 112 530 180 528 258 C526 336 446 362 350 362 C254 362 172 336 172 258 C172 178 250 128 350 120Z;
+              M350 108 C462 126 542 170 536 266 C528 346 440 372 350 356 C246 366 160 330 166 250 C170 168 242 102 350 108Z;
+              M350 120 C450 112 530 180 528 258 C526 336 446 362 350 362 C254 362 172 336 172 258 C172 178 250 128 350 120Z"/>
+          </path>
+        </g>
+        <!-- gentle waves flowing out across the floor -->
+        <ellipse class="flow" cx="350" cy="352" rx="150" ry="30" fill="none" stroke="var(--violet)" stroke-width="3" filter="url(#softer)"/>
+        <ellipse class="flow" style="animation-delay:-2s" cx="350" cy="352" rx="150" ry="30" fill="none" stroke="var(--violet)" stroke-width="3" filter="url(#softer)"/>
+        <ellipse class="flow" style="animation-delay:-4s" cx="350" cy="352" rx="150" ry="30" fill="none" stroke="var(--violet)" stroke-width="3" filter="url(#softer)"/>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+      </svg><i>8</i></div><div class="gcell eyes">Eyes closed.<br>Sense each<br>one again</div></div></div>
+      <div class="note recap"><small>How</small>
+        <p class="intro">Close your eyes and sense each one again, with a <b class="p">soft, steady touch</b>:</p>
+        <div class="rows ex-rows tight"><div><i>1</i>Where your hand was on your chest</div><div><i>2</i>A spot on the wall</div><div><i>3</i>The whole wall</div><div><i>4</i>The wall to your left</div><div><i>5</i>The wall to your right</div><div><i>6</i>The ceiling above you</div><div><i>7</i>The wall behind you</div><div><i>8</i>The general space around you</div></div></div>
+    </div></div>
+  </section>
+
+  <section class="slide" data-n="15">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 10</div>
+      <h1>Sense The Space <em>Completely Relaxed</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Seen from behind: the stick figure inside a slow, soft field of calm">
+        <defs>
+          <radialGradient id="fieldCalm" cx="50%" cy="55%" r="50%"><stop offset="0" stop-color="#a78bfa" stop-opacity=".55"/><stop offset=".6" stop-color="#a78bfa" stop-opacity=".22"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+          <filter id="fieldCalmBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+        </defs>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <g class="breathe slow"><path fill="url(#fieldCalm)" filter="url(#fieldCalmBlur)" d="M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z"/></g>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your eyes closed</div><div><i>2</i><span>Sense the space around you with a <b class="p">soft, steady touch</b></span></div><div><i>3</i>Sense what it would feel like if you were completely relaxed</div><div><i>4</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <section class="slide" data-n="16">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 11</div>
+      <h1>Sense The Space <em>In Your Perfect Relationship</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Seen from behind: the stick figure inside a warm pink field with small hearts rising">
+        <defs>
+          <radialGradient id="fieldLove" cx="50%" cy="55%" r="50%"><stop offset="0" stop-color="#f472b6" stop-opacity=".55"/><stop offset=".6" stop-color="#f472b6" stop-opacity=".22"/><stop offset="1" stop-color="#f472b6" stop-opacity="0"/></radialGradient>
+          <filter id="fieldLoveBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+        </defs>
+        <path d="M0 0 L230 60 M700 0 L470 60 M0 390 L230 250 M700 390 L470 250" stroke="#c9b6e4" stroke-width="4" fill="none"/>
+        <rect x="230" y="60" width="240" height="190" fill="none" stroke="#c9b6e4" stroke-width="4"/>
+        <g class="breathe"><path fill="url(#fieldLove)" filter="url(#fieldLoveBlur)" d="M350 70 C480 70 585 160 585 255 C585 360 470 392 350 392 C220 392 115 350 115 255 C115 150 220 70 350 70Z"/></g>
+        <g transform="translate(200 250) scale(1)"><path class="floatup" style="animation-delay:0s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".8"/></g>
+        <g transform="translate(500 240) scale(1.2)"><path class="floatup" style="animation-delay:-1.5s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".8"/></g>
+        <g transform="translate(280 170) scale(0.9)"><path class="floatup" style="animation-delay:-3s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".8"/></g>
+        <g transform="translate(430 160) scale(1)"><path class="floatup" style="animation-delay:-2.2s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".8"/></g>
+        <g transform="translate(160 150) scale(0.8)"><path class="floatup" style="animation-delay:-3.6s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".8"/></g>
+        <g transform="translate(540 140) scale(0.9)"><path class="floatup" style="animation-delay:-0.8s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".8"/></g>
+        <path class="furn" d="M240 286 H460 M256 286 V340 M444 286 V340"/>
+        <rect x="312" y="330" width="76" height="70" rx="6" class="furn"/>
+        <circle class="fig" cx="350" cy="238" r="28" fill="var(--tint)"/>
+        <path class="fig" d="M350 266 V330 M306 300 Q350 284 394 300 M306 300 L296 286 M394 300 L404 286"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your eyes closed</div><div><i>2</i>Sense what the space around you would feel like if you were in your perfect relationship right now</div><div><i>3</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <section class="slide" data-n="17">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Exercise 1 · Step 12</div>
+      <h1>Breathe It <em>In And Out Of Your Heart</em></h1>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Side view, eyes closed: the stick figure sits on a chair with a glowing heart in the chest. One arrow flows into the heart on the breath in, the other flows out on the breath out">
+        <defs>
+          <marker id="ahIn" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#ec4899"/></marker>
+        </defs>
+        <line x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <path class="furn" d="M150 120 V262 H232 M160 262 V350 M226 262 V350"/>
+        <circle class="hb8" cx="226" cy="178" r="46" fill="#f472b6" opacity=".22"/>
+        <circle class="fig" cx="212" cy="96" r="30" fill="var(--tint)"/>
+        <path d="M220 92 Q227 99 234 92" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+        <path class="fig" d="M206 127 L196 250 L292 252 L300 348 L326 348"/>
+        <path class="fig" d="M204 158 L246 214 L284 244"/>
+        <g transform="translate(226 166) scale(1.3)"><path class="hb8" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899"/></g>
+        <g class="bin">
+          <path class="flowdash" d="M600 170 L262 170" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round" marker-end="url(#ahIn)"/>
+          <text x="600" y="146" text-anchor="end" font-size="26" font-weight="700" fill="var(--purple)">Breathe in</text>
+        </g>
+        <g class="bout">
+          <path class="flowdash" d="M258 190 L596 190" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round" marker-end="url(#ahIn)"/>
+          <text x="600" y="232" text-anchor="end" font-size="26" font-weight="700" fill="var(--purple)">Breathe out</text>
+        </g>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Feel the sense that you're in your perfect relationship</div><div><i>2</i>As the emotion picks up, sense and feel it in your heart</div><div><i>3</i>Breathe that feeling in and out of your heart</div><div><i>4</i>When your mind wanders, bring it back</div></div></div>
+    </div></div>
+  </section>
+
+  <!-- In your day: eyes open, walking about, sense the space as if in your perfect relationship -->
+  <section class="slide" data-n="18">
+    <div class="cam">Webcam</div>
+    <div class="head">
+      <div class="eyebrow">Take It Into Your Day</div>
+      <h1>Now Do It <em>With Your Eyes Open</em></h1>
+      <p class="sub">As you go about your life, sense what the space around you would feel like if you were in your perfect relationship.</p>
+    </div>
+    <div class="board"><div class="ex">
+      <div class="scene"><svg viewBox="0 0 700 390" role="img" aria-label="Side view: the stick figure walking with eyes open, surrounded by a soft warm pink field that moves with them">
+        <defs>
+          <radialGradient id="fieldDay" cx="50%" cy="55%" r="50%"><stop offset="0" stop-color="#f472b6" stop-opacity=".5"/><stop offset=".6" stop-color="#f472b6" stop-opacity=".2"/><stop offset="1" stop-color="#f472b6" stop-opacity="0"/></radialGradient>
+          <filter id="fieldDayBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+        </defs>
+        <path d="M40 352 V250 H110 V352 M130 352 V200 H200 V352 M560 352 V230 H650 V352" fill="none" stroke="#e2d4f4" stroke-width="4"/>
+        <path d="M520 352 V170 M520 170 H548" fill="none" stroke="#d9c7f0" stroke-width="5" stroke-linecap="round"/>
+        <g class="breathe"><ellipse cx="335" cy="225" rx="200" ry="150" fill="url(#fieldDay)" filter="url(#fieldDayBlur)"/></g>
+        <g transform="translate(220 230) scale(0.8)"><path class="floatup" style="animation-delay:0s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".7"/></g><g transform="translate(450 210) scale(0.9)"><path class="floatup" style="animation-delay:-1.6s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".7"/></g><g transform="translate(270 140) scale(0.7)"><path class="floatup" style="animation-delay:-3s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".7"/></g><g transform="translate(410 130) scale(0.8)"><path class="floatup" style="animation-delay:-2.3s" d="M0 4 C-2 -4 -14 -4 -14 6 C-14 14 -4 18 0 24 C4 18 14 14 14 6 C14 -4 2 -4 0 4Z" fill="#ec4899" opacity=".7"/></g>
+        <line class="street" x1="0" y1="352" x2="700" y2="352" stroke="#d9c7f0" stroke-width="4"/>
+        <circle class="fig" cx="335" cy="108" r="30" fill="var(--tint)"/>
+        <circle cx="350" cy="104" r="4.5" fill="var(--ink)"/>
+        <path class="fig" d="M333 139 L327 248 M330 168 L302 214 L292 240 M330 168 L360 210 L384 226 M327 248 L298 300 L282 346 L262 346 M327 248 L356 296 L372 346 L394 346"/>
+      </svg></div>
+      <div class="note"><small>How</small>
+        <div class="rows ex-rows"><div><i>1</i>Keep your eyes open as you go about your day</div><div><i>2</i><span>Sense what the space around you would feel like if you were in your perfect relationship</span></div><div><i>3</i><span><b class="p">Keep the touch soft and steady, not forced</b></span></div><div><i>4</i>When your mind wanders, bring it back to that feeling</div></div></div>
+    </div></div>
+  </section>
+
+
+</div>
+<button class="fsbtn" id="fsbtn" type="button">&#x26F6; Full screen (F)</button>
+<div class="count" id="count"></div>
+<script>
+(function(){
+  var q = window.VSL_Q || location.search, slides = [].slice.call(document.querySelectorAll('.slide')), i = 0;
+  if (/[?&]all/.test(q)) document.body.classList.add('all');
+  if (/[?&]cam/.test(q)) document.body.classList.add('showcam');
+  var m = q.match(/[?&]s=(\d+)/); if (m) i = Math.min(slides.length - 1, Math.max(0, +m[1] - 1));
+  function fit(){ var k = Math.min(innerWidth / 1280, innerHeight / 720); document.documentElement.style.setProperty('--k', k); }
+  var count = document.getElementById('count');
+  function show(){ slides.forEach(function(s, n){ s.classList.toggle('on', n === i); }); if (count) count.textContent = (i + 1) + ' / ' + slides.length + '  ·  arrows or click to move'; }
+  function fs(){ try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (err) {} }
+  document.getElementById('fsbtn').addEventListener('click', function(e){ e.stopPropagation(); fs(); });
+  document.getElementById('stage').addEventListener('click', function(){ if (document.body.classList.contains('all')) return; i = Math.min(slides.length - 1, i + 1); show(); });
+  var idleT; function wake(){ document.body.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(function(){ document.body.classList.add('idle'); }, 2500); }
+  addEventListener('mousemove', wake); wake();
+  addEventListener('resize', fit);
+  addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { i = Math.min(slides.length - 1, i + 1); show(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { i = Math.max(0, i - 1); show(); e.preventDefault(); }
+    if (e.key === 'f' || e.key === 'F') fs();
+  });
+  fit(); show();
+})();
+</script>
+</body></html>

@@ -201,10 +201,12 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 - **All subscribers** = everyone with tag `daily email list`. Never send to it; it's only the total.
 - **Applicants**, **Members**, **Old Clients**: not part of the daily system. Never pitch Applicants.
 - The first pitch waits 14 days from the list start (29 Oct) so scores can build; only pitch if the **Pitch** list has 15+, else move it a week.
+- **Measuring a pitch:** count applications from people who were on the Pitch list in the 2–3 days after (they've already seen the results page, so an application = the email worked). New-lead applications in the same days = the results page; report them separately. First pitch 12 Nov 2026 went to 39; estimate given 1–3. Pitch size = `engaged recently` + Engagement Score (custom field) 6+ minus applicants/members/DND; count it by API when asked.
 - **Weekly email = a rotating set, never one email repeated** (Olly asked 2026-11-04 about repeating the same one): ~11 evergreen best emails (no dates, no "this week") in a 'Weekly email' workflow, Sundays, exits on the first open (goal: `engaged recently` added), week 12 = "still want these?", no open in 7 days -> remove `daily email list`. Why: the same subject every week reads as spam and hurts delivery.
 
 ### How the list setup works in GHL (built 2026-10-29 + 2026-11-04)
 - `engaged recently` = opened/clicked in the last 14 days. 'Email engagement' workflow (open +1, click +3, Last Engaged = today) removes + re-adds the contact to 'Engaged recently timer' (add tag, wait 14 days, remove tag). 'Start engaged timer for new subscribers' starts the timer when `daily email list` is added (skips `attract with olly`).
+- **Unsubscribes (2026-11-12):** 'Unsubscribed → clean up lists' workflow (LIVE). Triggers: Email DND enabled OR tag `unsubscribed` added. Removes `daily email list` + `engaged recently` and removes them from Engaged recently timer / Weekly email / Email engagement. Why: the smart lists never checked DND, and clicking the unsubscribe link counts as a click (+3 score, `engaged recently` re-added), so unsubscribers sat on Pitch and inflated the count. 22 old ones cleaned by API the same day.
 - Claude agent key (marketing\.env) has contacts.write + workflows.readonly since 2026-11-04, so Claude adds/removes tags itself. New scopes take ~1 minute to work.
 
 ### Scheduling the daily email + checking what's scheduled (2026-11-07)
@@ -219,7 +221,9 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 2. Recency = a tag + a timer workflow. GHL smart-list date filters only offer is / is not / empty: never plan "within the last N days".
 3. Every workflow = one copy-ready AI builder prompt FIRST (never click-by-click), then a short check list, then Draft -> Publish + Save.
 4. Smart lists: one action per message ("step by step"), filters joined by AND go in ONE box (Add nested filter); separate boxes = OR.
-5. Count check after every list change: the lists must add up (e.g. Daily email = Pitch + Daily email (pitch day) + engaged members).
+5. Count check after every list change: the lists must add up (e.g. Daily email = Pitch + Daily email (pitch day) + engaged members). Leave out Email DND / `unsubscribed` / `removed - not a fit` contacts when counting. Why: 2026-11-12 the Pitch smart list held 22 unsubscribers and looked bigger than it was.
+6. **After a bulk tag change, verify on the live contact records** (GET /contacts/{id}), not the search. Why: 2026-11-12 /contacts/search still showed removed tags minutes later.
+7. **Someone with `unsubscribed` but Email DND OFF = Olly turned them back on** (they got back in touch). Ask before touching their list tags. To finish a restore: DND off + remove `unsubscribed` (else they read as an unsubscriber in stats). Why: 2026-11-12 an applicant was restored this way and I nearly took them off the lists.
 
 ### Weekly email (dormant) workflow (LIVE 2026-11-05)
 - Trigger: `engaged recently` removed (filter: has `daily email list`, not joined). Wait until Sunday 09:00, then 12 emails a week apart (11 evergreen + week 12 "should I stop emailing you?"), then if still not engaged remove `daily email list`. Goal: `engaged recently` added = exit back to the daily email. 75 contacts bulk-added via **Trigger automation**, all at once.
@@ -238,6 +242,8 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 - Never use the old list names (Engaged / Warm List / Cold List / Dormant / Daily Email List). Olly: "Use the new names please from now on."
 - Never remove a condition from an OR box by deleting only its filter: what's left can match everyone (2026-11-04: the leftover "daily email list + not joined" box would have sent pitch-day email to the whole list). Delete the WHOLE box (Remove Filter), then re-check every remaining box.
 - Never send to All subscribers.
+- Never assume a smart list leaves out unsubscribers. GHL won't email DND contacts but still counts them, and clicking the unsubscribe link counts as a click (+3 score, `engaged recently` re-added). The 'Unsubscribed → clean up lists' workflow now strips the list tags.
+- Never say the emails caused applications without checking. Until 2026-11-12 every application came from the Feeling Finder results page invite, which only reaches NEW leads (it tells them a program exists so a later pitch isn't out of the blue).
 - Resend winning emails every **90 days** with a new subject line, body unchanged (Olly 2026-11-04: "definitely with emails for sure especially every 90 days").
 
 Separate from the nurture sequence. Broadcast emails are one-off sends to a wider list — old clients, old leads, people who downloaded the meditation but did not join, people who finished the nurture sequence but haven't joined the Community. Written fresh for email, not repurposed from another channel. Stored in the **Email Broadcast Campaigns** Notion database (`36e30e58-6a0d-811c-b455-ce8fe3da15be`).
@@ -915,6 +921,9 @@ CTA, soft sign-off, or open loop - see Section 5.
 ---
 
 ## Changelog
+
+**2026-11-12 — Unsubscribers on Pitch + measuring a pitch**
+Olly spotted an unsubscriber on Pitch. Lesson: lists never checked DND and the unsubscribe click re-adds `engaged recently`. Added: Process steps 5–7 (count without DND, verify live records, `unsubscribed` + DND off = restored, ask first), two Never (lists) rules (unsubscribers in smart lists; don't credit emails for applications), and a 'Measuring a pitch' rule. Olly's corrections behind them: the restored applicant ("we turned his back on"), applications come from the results page, and the results page only reaches new leads. Nothing overridden.
 
 **2026-07-29 — Nurture sequence replaced with v4; two process lessons added**
 Section 7 fully replaced with the v4 sequence (10 emails, 0-9, no gaps) — primary mechanism language moved from "closed-off heart"/Heart Coherence to "survival mode → creative mode," product renamed Heart Creator Program → The Creation Formula, new Email 9 transitions contacts to the broadcast list, Email 0 adds a reply-YES deliverability mechanic. Avatar & Rationale section rewritten to match. Full detail in `project_email_sequence_v4_rewrite` memory.

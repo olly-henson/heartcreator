@@ -22,6 +22,9 @@ Read this at the start of every session. Keep it short; build details live in th
 
 **2026-11-10 — CARRY ON HERE (new session):** Plan of action v3 is DONE, deployed and SENT to the first applicant (13 pages; full spec + rules in funnel/skills/skills_applicant-looms.md "Plan v3"; template funnel/plan-of-action.html; preview artifact V5MKRLjJVWgp8NZL8t4qJi). NEXT JOB: the personal Loom-style sales videos in the same style. (1) Rebuild the sales video slides (marketing/assets/sales-video/Sales Video Slides.html) to match the plan's white design, page titles, pills, POV images and copy; (2) private video page per applicant (like /p/<code>): tracks that they watched and how far (Hub shows it on the Sales card), with a Join button inside/under the video that goes straight to checkout/join; (3) decide hosting (Loom vs our own player) so watch % can be tracked. Still open after that: photo sets by age/ethnicity (idea only), pinned comment links for the new YouTube training, Overview traffic sources in plain English, follow-ups 1 vs 3, email subject + sign-off.
 
+## 2026-11-12 — Unsubscribers were on Pitch (FIXED)
+Smart lists never checked Email DND, and clicking unsubscribe counts as a click, so unsubscribers kept `engaged recently` and sat on Pitch. Built + published 'Unsubscribed → clean up lists' workflow (detail in marketing/skills/skills_email-creation.md, section 6). Removed list tags from 22 unsubscribers by API (verified live). One applicant had been turned back on by Olly (got back in touch, interested): stays on the lists, stale `unsubscribed` tag removed.
+
 ## 2026-11-11 — Cloudflare KV write cap (free plan, 1,000 writes/day) hit 50%
 - Cause: Hub autosave (1 write per edit, 2s debounce) + plan read tracking (2 writes / 10s) + VSL tracking (1 write / 15s).
 - Fixed + deployed: autosave 20s after last edit (still saves on tab hide); plan-view.html pings every 60s; vsl-view.html every 60s.

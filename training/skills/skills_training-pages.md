@@ -33,6 +33,7 @@ Standalone HTML pages used two ways: (1) Olly records Loom videos while scrollin
 | `the-attraction-formula-meditation-steps.html` | Image+text steps, purple | **2026-10-19, lesson 3; rebuilt 2026-10-21.** Three parts: 1 Slow Down ("Turn down the overthinking mind and regather your attention."), 2 Focus ("Recall and focus on your intentions. Get into them."), 3 Feel ("Feel your emotional state to make it real right now."). 7 steps: Close Your Eyes, Relax Your Body, Sense The Space Around You / Recall Your Symbol, Your Intentions / Feel Your Emotion, Give Thanks. Images in `how to do the attraction formula meditation images/` (1024x1024; new: `Sensing Space.jpg`, `Feeling The Emotion In Your Heart.png`). Preview JXWWHoTRJwk87fjau1mQsr |
 | `how-to-anchor-your-state.html` | Image+text steps, purple | **2026-10-19, lesson 5.** 2 steps: Recall Your Symbol, then Feel Your Emotion ("Feel your intention and the emotion.", 2026-10-21). Images `anchoring your state images/Step 1.jpg`, `Step 2.jpg` (1024x1024). Preview Qh3j15gLyKaw6RLn4Coops |
 | `how-to-use-emotional-resonance.html` | Text slides, purple (copy of training 1's format) | **2026-10-23, free lead-magnet video training "How To Attract A Genuine And Committed Long-Term Relationship Using Emotional Resonance"** (title changed late 2026-10-23; the filename kept the old wording). Ending reworked: the how-to steps were removed, Sunday "picture this" moment, See Love Through This Lens, Inside The Heart Attractor Program, The Attraction Formula (Find It / Embody It), Small Shifts Every Day, final slide "find out more in the description" (no button). Photo frames scale with `vh`; images in `how to use emotional resonance images/` keep Olly's own file names. for The Heart Attractor Program, recorded for YouTube. 21 slides: the problem (from training 1, plus "they're not flawless" and "They Just Felt A Connection"), What Is Emotional Resonance, the science line, Wife photo, Find Your Resonance 1-3 (Sunday, 11 emotion tags, Peace picked), How To Use It (Slow Down / Focus / Feel), Bring It Back All Day, What To Expect, Doubt Is Normal, The Hard Part, Book A Free Call (CTA link `#ctaLink` still `#`). Reuses `how to attract a committed relationship images/`. Long title uses `data-lines` (hand-set pyramid lines, font shrunk to fit) inside `buildTitlePyramid()`. Preview Q4A6r8xPK7sGso3pfZ2UWS (base64 copy, images shrunk to 720-768px) |
+| `how-to-control-your-mental-attention.html` | **Teaching Slides for Google Vids** (square webcam top right, full-width board) | **2026-11-10, first member training in the new layout.** Exercise 1 (slides 2-8): stick-figure SVG steps, spot → whole wall → left → right → ceiling → space around you → eyes closed; then why attention matters, Intellectualization vs Emotional Resonance, Notice / Name / Bring It Back, Saturday-night walkthrough, practice. Still being edited slide by slide. Preview GLBY4zyN4gCBNrBJTDz8tj. `training-slides-template.html` = the earlier VSL-style template (superseded for teaching) |
 
 When asked for "another training like the others," these are the pattern to copy — don't design from a blank page.
 
@@ -543,6 +544,47 @@ Used in `about-page-video.html` and `the-attraction-formula.html`. A distinct fo
 
 ---
 
+## Variant: Teaching Slides for Google Vids (square webcam), member trainings from 2026-11-10
+
+**Use this for every new member training recorded in Google Vids.** Reference file: `training/how-to-control-your-mental-attention.html` (copy its CSS/JS verbatim). Preview: artifact GLBY4zyN4gCBNrBJTDz8tj.
+
+### Layout (one fixed frame, 1280x720, scaled to the screen)
+- **Webcam:** square top right (x1020 y40, 220x220). Olly sets it once in Google Vids. Never move it and never put anything in that corner. `?cam` draws a dashed guide; it is not on the real slide.
+- **Head:** eyebrow + Title Case h1 (54px Playfair, purple `<em>` highlight) beside the webcam (x40 y40, 940 wide).
+- **Board:** the whole lower slide (x40 y290, 1200x390) for the teaching: diagrams, step cards, compare boxes, examples, checklists.
+- White slide, dark text, purple accents, problem = red pill, solution = green pill (same look as the VSL and plan of action).
+- Keys: arrows/space/click = next, F = full screen, `?all` = every slide, `?s=N` = start on slide N.
+
+### Process
+1. **A template first, if Olly asks for one.** He stopped the first build ("can you just build a template first") before content. Template = the frame + one example of each slide type with placeholder words.
+2. **Teaching ≠ sales.** The VSL frame (640px photo box left, words right) was "a good start" but "needs to be different in terms of layout and for teaching". Use the head + full-width board above.
+3. **Exercises are drawn, not photographed.** Olly asked for "almost like a stick figure sat down in 2D at a desk". Inline SVG, line-drawn figure, soft purple scene panel (`.scene`, 620px) beside a "How" panel (`.note` + `.ex-rows`).
+4. **One exercise step = one slide.** Olly adds steps one at a time ("next is…"). Add each as a new slide straight after the last exercise slide, label it "Exercise N · Step M", renumber `data-n`, and preview only the slides being worked on (`tools/vsl_preview.py` on a scratchpad copy filtered to those slides; rename the phone title + button to the training's title / "Mark As Complete").
+5. **Pick the view that can show the thing.** Side view for front-facing targets (a spot, the whole wall). Behind view (one-point perspective room: front wall, left/right walls, ceiling) for left, right, ceiling and the space around them. Say so when switching views.
+6. **When a step repeats earlier steps** (e.g. eyes closed), make one recap slide listing them, not a copy of every slide.
+7. **Check every edit with a screenshot before publishing** (`node tools/shot.js "training/<file>.html?s=N" OUT 1280`: relative path; a file:// or absolute path with the space in "AI OS" fails) (bold text inside a flex row split into columns once; wrap row text in `<span>` when it has inline tags).
+
+### Rules (with why)
+- **Exercise wording is Olly's words, trimmed only to fit 1-2 lines.** "Feel like you're touching it with your mind. Keep your touch on it." When he gives replacement wording, use it exactly ("Sense the space around you"), even if it runs to 3 lines. Put it only on the slide whose target it names ("the whole wall" = the whole-wall slide), then list the other slides that share the old line and ask whether they change too. Why: 2026-11-12 the old line sat on 5 slides; "whole wall" fitted one.
+- **No timings in the steps.** Olly removed "for 1 minute" from every step. Don't add durations unless he gives one.
+- **Head still, facing forward** is step 1 on every step where attention moves without the eyes (left, right, ceiling, space around). Why: Olly, "they need to keep their head in the same space".
+- **"Keep your focus light"** goes on the space-around-you step, in bold purple. Why: Olly asked for it "at this stage".
+- **The space-around-you visual = a game-style aura:** glowing ring on the floor rising to a second ring just above the head (not up to the ceiling), thick glowing edges, translucent purple fill, ripple. Why: Olly, "like the aura/ring that surrounds players in video games", then "just above their head tall and make it thicker".
+- Steps stay short: 4-5 rows max in the How panel (`.ex-rows` 22px; `.tight` 21px for a 6-item recap).
+- Copy rules still apply: Title Case titles, "practice" with a C, no comma before and/or, science limited to intellectualization (high beta) and Emotional Resonance (alpha).
+
+### Example (approved 2026-11-10): Exercise 1 in "How To Control Your Mental Attention"
+Step 1 Focus On A Spot On The Wall (side view, dotted line to a pulsing spot) → Step 2 The Whole Wall (cone to the whole glowing wall) → Step 3 The Wall To Your Left → Step 4 The Wall To Your Right → Step 5 The Ceiling Above You (behind view, head still) → Step 6 The Space Around You (aura column, "Keep your focus light as you sense it") → Step 7 Now Do It With Your Eyes Closed (closed-eye figure, recap list of the 6).
+
+Steps 9-11 (added 2026-11-12, after the eyes-closed recap): Sense The Space Completely Relaxed (behind view, slow purple field) → Sense The Space In Your Perfect Relationship (pink field + rising hearts) → Breathe It In And Out Of Your Heart (front view, eyes closed, glowing heart that breathes, dotted in/out lines). Pink `#ec4899`/`#f472b6` only on the relationship and heart steps. Steps after the eyes-closed slide start with "Keep your eyes closed" (my default; Olly hasn't confirmed).
+
+### Never (teaching slides)
+- Never use the VSL photo-left layout for a teaching slide.
+- Never put durations ("for 1 minute") in exercise steps unless Olly gives them.
+- Never cover or move the webcam corner.
+- Never show left/right/ceiling attention in a side view (it can't be seen).
+- Never let an aura/column run to the ceiling: it stops just above the head.
+
 ## Fixed webcam placeholder (scroll pages recorded with a webcam overlay)
 
 When Olly wants a webcam box that stays put while he scrolls between slides, put it **outside `.steps`** with `position:fixed`. Never put it inside each `<section>` (it would scroll away and sit differently per slide). Approved values from `choose-your-relationship.html`:
@@ -565,6 +607,8 @@ A bigger `right` value moves it further **left**. (The old `translateX(9%)` shif
 ---
 
 ## Recording Safe Area (all Heart Attractor trainings, 2026-10-21)
+
+> **Scope (2026-11-10):** this 820px column is for the scroll-page trainings recorded with a cropped webcam overlay. Google Vids teaching slides use their own fixed 1280x720 frame (see "Teaching Slides for Google Vids").
 
 Olly crops his screen recordings to the centre of the slide. **Every slide's content must sit inside one 820px-wide centre column**, the same as `how-to-attract-a-committed-relationship.html` (`.step-inner{ max-width:820px }`). That includes the title slide, worksheet slides, example slides and path slide. Nothing wider: no 1000/1100/1280px containers, no inline `style="max-width:..."` overrides, no `translateX` shifts.
 
@@ -777,3 +821,15 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 - The 3 steps are the *what* (as in the Reels); the meditation's how stays inside the program (rule 24).
 - Checked with a per-slide script at 1280x640 and 1440x900: fits the slide, inside 820px, titles inverted pyramids. A title that can't split as a pyramid without a lone word goes on one line (slide 25, nowrap + smaller clamp).
 - Olly 2026-11-03: emotion lists on slides use emotions only (Love, Joy, Peace, Gratitude, Excitement, Appreciation), never feelings like "safe" or "wanted". Removed the "Step 3 Is Where Most People Get Stuck" slide (35 slides now).
+
+### 2026-11-10/11 — Teaching slides for Google Vids (`how-to-control-your-mental-attention.html`) skill review
+- New variant section **Teaching Slides for Google Vids**: fixed frame (webcam top right, head beside it, full-width board), process (template first when asked; teaching layout not the VSL layout; drawn stick-figure exercises; one step per slide; side vs behind view; recap slide for repeats; screenshot every edit), rules with Olly's reasons (his wording, no timings, head still, "keep your focus light", game-style aura just above the head and thick), the approved Exercise 1 sequence as the example, and a Never list.
+- Existing Trainings table: added the new training (and noted the VSL-style `training-slides-template.html` is superseded for teaching).
+- Recording Safe Area: scoped to scroll pages, since Google Vids slides use their own frame.
+- Overridden: using the VSL slide layout for member trainings (Olly: "needs to be different in terms of layout and for teaching"); "for 1 minute" timings in exercise steps (Olly removed them).
+
+### 2026-11-12 — Wording change + steps 9-11 (`how-to-control-your-mental-attention.html`)
+- Rules: Olly's replacement wording goes in exactly even at 3 lines, only on the slide it names; ask about the other slides that share the old line.
+- Process 7: the working shot.js command (relative path + ?s=N).
+- Example: steps 9-11 moved from Rules to the Example section (it's a description, not a rule).
+- No corrections from Olly on the slides this session; nothing overridden.
