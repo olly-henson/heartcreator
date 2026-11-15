@@ -84,12 +84,18 @@
   .lmcentre .want{ font-weight:600; font-size:16px; line-height:1.4; margin-top:12px; }
   .lmcentre .want small, .lmcard small{ display:block; font-weight:700; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
   .lmcentre .want small{ color:#e1a6ff; margin-bottom:6px; }
+  .lmcentre .want p{ margin:0; overflow:hidden; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; }
+  .lmcentre.open .want p{ display:block; -webkit-line-clamp:unset; overflow:visible; }
+  .lmcentre.open{ z-index:5; }
   .lmbr{ position:absolute; width:470px; display:flex; flex-direction:column; gap:10px; }
   .lmbr h3{ margin:0 0 2px; font-weight:700; font-size:15px; letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:10px; }
   .lmbr h3 i{ width:12px; height:12px; border-radius:50%; display:inline-block; }
   .lmcard{ background:rgba(22,16,32,.92); border:1px solid #2e2340; border-left:4px solid var(--c); border-radius:12px; padding:9px 14px; }
   .lmcard small{ color:#9c8bb0; margin-bottom:3px; }
   .lmcard p{ margin:0; font-size:15px; line-height:1.4; font-family:Inter, system-ui, sans-serif; overflow:hidden; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; }
+  .lmcard.open p{ display:block; -webkit-line-clamp:unset; overflow:visible; }
+  .lmcard.open{ position:relative; z-index:5; background:#161020; box-shadow:0 8px 30px rgba(0,0,0,.55); }
+  .lmmore{ background:none; border:0; padding:4px 0 0; color:#e9a8ff; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
   .lmcard.hot{ background:rgba(60,18,40,.92); border-color:rgba(248,113,113,.5); border-left-color:#f87171; }
   .lmchips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
   .lmchips span{ font-size:13px; padding:3px 9px; border-radius:999px; border:1px solid #2e2340; background:#1f1630; color:#d6c8e4; font-family:Inter, system-ui, sans-serif; }
@@ -2929,6 +2935,25 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   document.addEventListener("visibilitychange", function(){
     if (document.visibilityState === "visible" && dirtyGet() === null) pullServerState();
   });
+  // New version check (Olly, 2026-11-15: the phone app kept running old code after deploys, so card taps saved the
+  // wrong flags). Remember the page's ETag on load; when the app comes back to the front, ask for it again (a static
+  // file, no KV cost). If it changed and nothing here is unsaved, reload to pick up the new code.
+  var hubTag = null, hubTagAt = 0;
+  function hubEtag(){
+    return fetch("/", { method:"HEAD", cache:"no-store", credentials:"same-origin" }).then(function(r){
+      var t = r.ok ? (r.headers.get("etag") || r.headers.get("last-modified") || "") : "";
+      if (t || !r.ok) return t;
+      return fetch("/", { cache:"no-store", credentials:"same-origin" }).then(function(g){ return g.ok ? g.text() : ""; }).then(function(x){ return x ? "len" + x.length : ""; });
+    }).catch(function(){ return ""; });
+  }
+  hubEtag().then(function(t){ hubTag = t; hubTagAt = Date.now(); });
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState !== "visible" || !hubTag || Date.now() - hubTagAt < 60000) return;
+    hubTagAt = Date.now();
+    hubEtag().then(function(t){
+      if (t && t !== hubTag && dirtyGet() === null && !tabDirty) location.replace(location.pathname + "?r=" + Date.now() + location.hash);
+    });
+  });
 
   // `onDone(ok)` is optional — used by the day modal's own Save button so
   // it can reflect the real outcome (saved vs. error) instead of guessing
@@ -5448,7 +5473,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var s = lmStore(a.id), pv = (typeof lmPV === "object" && lmPV[a.id]) || {}, vv = (typeof lmVV === "object" && lmVV[a.id]) || {};
     function f(k, auto){ return s[k] === false ? false : !!(s[k] || auto); }
     return {
-      planSent: f("planSent", pv.sent),
+      planSent: f("planSent", pv.sent || (s.waSent && pv.code && typeof lmPV === "object" && !!lmPV[a.id + "-full"])), // 2026-11-15: in the new format (short + full plan) the first message (1a) IS the plan link
       planRead: f("planRead", pv.far && pv.far >= Math.ceil((pv.pages || 13) * 0.6)),
       asked: !!s.asked,
       loom: s.loom === false ? false : !!(s.loom || a.loomSent),
@@ -5504,7 +5529,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // find an answer by the GHL field name (HA … / FF …), e.g. "HA Feelings About Love"
   // Love Scale fields ("Scale …") only match patterns that ask for them by name
   function lmAns(a, re, used){ var k = Object.keys(a.fields || {}).filter(function(n){ return re.test(n) && (!/^Scale /i.test(n) || /^\^Scale/.test(re.source)); })[0]; if (k && used) used[k] = 1; return k ? a.fields[k] : ""; }
-  function lmLoad(){
+  // KV budget (2026-11-15): app resumes and tab taps reload at most every 3 min (lmLoadAuto); the Refresh button
+  // always reloads and asks the server to skip its 2-min stats cache (?fresh=1, lib/cache.js).
+  var lmLastLoad = 0, lmFresh = "";
+  function lmLoadAuto(){ if (Date.now() - lmLastLoad > 180000) lmLoad(); else renderLooms(); }
+  function lmLoad(force){
+    lmFresh = force ? "?fresh=1" : ""; lmLastLoad = Date.now();
     lmLoading = true; lmErr = ""; renderLooms();
     fetch("/api/applicants", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){
       lmLoading = false;
@@ -5520,7 +5550,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Mark this device as Olly's, so opening an applicant's plan link here never counts as their open (2026-11-08)
   try { localStorage.setItem("hubOwner", "1"); } catch(e){}
   var lmPV = {};
-  function lmPlanViews(){ fetch("/api/planviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmPV = d.views || {}; lmPH = {}; renderLooms(); } }).catch(function(){}); }
+  function lmPlanViews(){ fetch("/api/planviews" + lmFresh, { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmPV = d.views || {}; lmPH = {}; renderLooms(); } }).catch(function(){}); }
   // Sales video (VSL) views (2026-11-10): /api/vslviews -> { contactId: { opens, first, last, pct, far, done, join, joinAt, dev } }
   // pct = share of the video actually played (skips don't count), far = furthest point reached. Link = /p/<plan code>/video.
   var lmVV = {}, lmVB = {}, lmPH = {};
@@ -5530,7 +5560,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     "The Attraction Formula trainings", "How to do the meditation", "Practising the meditation", "Anchoring your emotional resonance",
     "As your confidence builds", "Help with the early steps", "With you all of the way", "Your plan"];
   function lmDur(s){ s = Math.round(s || 0); return s < 60 ? s + "s" : Math.floor(s / 60) + " min" + (s % 60 >= 30 ? " " + (s % 60) + "s" : ""); }
-  function lmVslViews(){ fetch("/api/vslviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmVV = d.views || {}; lmVB = {}; renderLooms(); } }).catch(function(){}); }
+  function lmVslViews(){ fetch("/api/vslviews" + lmFresh, { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmVV = d.views || {}; lmVB = {}; renderLooms(); } }).catch(function(){}); }
   function lmVslTag(id){
     var v = lmVV[id]; if (!v || !v.opens) return "";
     if (v.join) return '<span class="lmtag" style="margin:0;background:rgba(74,222,128,.22);color:#4ade80">🎬 Clicked Join</span>';
@@ -5596,7 +5626,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var LM_GUIDE_PAGES = ["Title", "Does This Sound Like You?", "You've Tried Everything", "Your Friends Didn't Need Any Of This", "It's Not What You Know", "That's Why Learning Hasn't Helped",
     "Your Belief Shapes What Happens", "Where You Lost Your Belief", "Acting From The Negative Belief", "How To Reverse It", "Acting From The Positive Belief",
     "Things Start To Unfold Naturally", "Nothing To Fix", "Meet Emotional Resonance", "What We Build With You"];
-  function lmGuideViews(){ fetch("/api/guideviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmGV = d.views || {}; lmGH = {}; renderLooms(); } }).catch(function(){}); }
+  function lmGuideViews(){ fetch("/api/guideviews" + lmFresh, { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmGV = d.views || {}; lmGH = {}; renderLooms(); } }).catch(function(){}); }
   // the guide's own status on the board card (Olly, 2026-11-12): sent / not opened / opened N× / how far they read
   function lmGuideTag(id){
     var v = lmGV[id]; if (!v || !v.sent) return "";
@@ -5648,9 +5678,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var v = c[1], body;
     if (v && v.chips) body = '<div class="lmchips">' + v.chips.filter(Boolean).map(function(x){ return "<span>" + lmEsc(x) + "</span>"; }).join("") + "</div>";
     else if (v && v.ff) body = '<div class="lmff"><span style="color:#f87171">' + lmEsc(v.ff[0]) + '</span><span style="color:#9c8bb0; font-weight:500">now \u2192 you need to feel</span><span style="color:#4ade80">' + lmEsc(v.ff[1]) + "</span></div>";
-    else body = "<p>" + lmEsc(v) + "</p>";
+    // long answers get See more / See less (Olly, 2026-11-13: in-depth answers were cut off at 4 lines)
+    else body = "<p>" + lmEsc(v) + "</p>" + (String(v).length > 150 ? '<button type="button" class="lmmore">See more</button>' : "");
     return '<div class="lmcard' + (c[2] === "hot" ? " hot" : "") + '" style="--c:' + col + '"><small>' + lmEsc(c[0]) + "</small>" + body + "</div>";
   }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest(".lmmore"); if (!b) return;
+    e.stopPropagation(); var c = b.closest(".lmcard, .lmcentre"), on = c.classList.toggle("open"); b.textContent = on ? "See less" : "See more";
+  }, true);
   function lmFit(){ var box = document.getElementById("lmBox"), st = document.getElementById("lmStage"); if (box && st) st.style.zoom = box.clientWidth / 1600; }
   window.addEventListener("resize", lmFit);
   document.addEventListener("fullscreenchange", function(){ setTimeout(lmFit, 60); });
@@ -5716,8 +5751,46 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + '<a href="' + gurl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>'
       + lmGuideLine(a.id) + "</div>";
 
+    // Plan request flow v2 (Olly, 2026-11-13): people from the Instagram DM plan form (tag "plan request") asked for a FREE plan.
+    // 1 check they got the message (don't build anything until they reply) -> 2 part 1 of the plan (their diagnosis, ends "does this
+    // sound like your situation?") -> 3 when they ask how: offer the program part -> 4 part 2 (the steps; KV id <contactId>-program)
+    // -> 5 any questions: their video -> 6 follow-up + join. Both parts are built by tools/build_plan_v4.py with "kind": "request".
+    if (a.planRequest){
+      var pr1 = "Hey " + nm + ", it's Olly from Instagram 👋\n\nJust got your request for your plan of action through.\n\nJust reply to this message so I know it's reached you, and I'll put it together and send it over.";
+      var prMail = "Hey " + nm + ",\n\nI've just dropped you a message on " + app + " about the plan I'm putting together for you.\n\nDrop me a reply there and I'll send it over.\n\nChat soon,\n\nOlly";
+      var prMailOnly = "Hey " + nm + ",\n\nJust got your request for your plan of action through.\n\nJust reply to this email so I know it's reached you, and I'll put it together and send it over.\n\nChat soon,\n\nOlly";
+      h += lmHead("1. When they request it: check they got your message");
+      if (ph){
+        h += lmTxt("👋 1a. First message", pr1, lmWa(pr1, "waSent"));
+        if (a.email) h += lmTxt("✉️ 1b. Email (after the " + app + ")", prMail, lmMail("Your plan of action", prMail, "emSent"));
+      } else if (a.email) h += lmTxt("✉️ 1. Email (no phone number)", prMailOnly, lmMail("Your plan of action", prMailOnly, "emSent"));
+      var prVn2 = ["Hey " + nm + ", here's your plan of action.", seen ? "I've put it together from everything you shared. " + seen : "I've put it together from everything you shared.",
+        "Have a read through and let me know your thoughts. Does it sound like your situation?"].join("\n\n");
+      h += lmHead("2. Once they reply: ask Claude to build their plan, then send part 1");
+      h += '<div class="lmcon lmmsg" style="flex-wrap:wrap"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 2a. Plan part 1 (send their link)</a>' + lmPlanLine(a.id) + '</div>';
+      h += lmVn("🎙️ 2b. Voice note after the plan", prVn2);
+      var prAsk = "So glad it sounds like you " + nm + " 🙏\n\nI have a program that takes you through this process step by step. Would you like me to send you the details?";
+      var prAskVn = "Hey " + nm + ", great question. This is exactly what we do inside The Heart Attractor Program, step by step, so it becomes your normal.\n\nI can send you the next part of your plan, which shows you exactly how we'd do it together. Would you like me to send it over?";
+      h += lmHead("3. When they reply: if they haven't asked for the details, offer them");
+      h += lmTxt("💬 3a. Would they like to see it?", prAsk, lmWa(prAsk));
+      h += lmVn("🎙️ 3b. Voice note version", prAskVn);
+      var pid = a.id + "-program", pv2 = lmPV[pid], purl = pv2 && pv2.code ? "https://hub.ollyhenson.com/p/" + pv2.code : "";
+      h += lmHead("4. When they want the details: plan part 2 (the program)");
+      if (!purl) h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">📄 Part 2 is made with part 1: ask Claude to build their plan and its link shows here.</small></div>';
+      else {
+        var p2 = "Here's how we'd do it together " + nm + ", step by step.\n\n" + purl + "\n\nHave a read and let me know if you've got any questions.";
+        var p2line = pv2.opens ? "Opened " + pv2.opens + "×, last " + lmWhen(pv2.last) + (pv2.dev ? " on " + pv2.dev : "") + (pv2.far ? " · read to page " + pv2.far + " of " + (pv2.pages || 13) + (pv2.read ? " · " + lmDur(pv2.read) + " reading" : "") : "") : "Not opened yet";
+        h += lmTxt("📄 4a. Send plan part 2", p2, lmWa(p2) + lmMail(nm + ", how we'd do it together", p2 + "\n\nOlly"))
+          .replace("</div>", '<a href="' + purl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a><small style="flex-basis:100%;opacity:.85">' + lmEsc(p2line) + "</small></div>");
+      }
+        } else {
     // 1. First contact
-    var first ="Hey " + nm + ", it's Olly Henson.\n\nJust got your application for The Heart Attractor Program, thanks for filling it in.\n\nGive me a few minutes, I'm recording you a quick voice note with a plan of how I'd help you with this.";
+    // First message = their short plan link (Olly, 2026-11-15: every good applicant gets this first; Claude builds the plan,
+    // short version on KV id <contactId>, full version on <contactId>-full, see funnel/skills/skills_plan-v4.md)
+    // a re-made short plan for someone who already had an old plan lives on <id>-short (2026-11-15)
+    var sp = lmPV[a.id + "-short"] || lmPV[a.id], spUrl = sp && sp.code ? "https://hub.ollyhenson.com/p/" + sp.code : "";
+    var fp = lmPV[a.id + "-full"], fpUrl = fp && fp.code ? "https://hub.ollyhenson.com/p/" + fp.code : "";
+    var first = "Hey " + nm + ", so I\u2019ve looked through your application and all looks good.\n\nHere\u2019s exactly what you need to do to attract this relationship that you want:\n\n" + spUrl + "\n\nLet me know if you\u2019d like the next steps";
     var vn1 = ["Hey " + nm + ", it's Olly. I've been through your application and it all looks really good.", seen,
       "I'd love to put together a plan of action for you, of exactly how we'd help you meet this person.", "Would you like me to send it through?"].filter(Boolean).join("\n\n");
     var mail1 = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nAll looks really good.\n\nI've sent you a message on " + app + " with the next steps.\n\nChat soon,\n\nOlly";
@@ -5725,8 +5798,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       "I'd love to put together a plan of action for you, of exactly how we'd help you meet this person. Would you like me to send it through? Just reply to this email.", "Chat soon,", "Olly"].join("\n\n");
     h += lmHead("1. When they apply");
     if (ph){
-      h += lmTxt("👋 1a. First message", first, lmWa(first, "waSent"));
-      h += lmVn("🎙️ 1b. Voice note: their plan?", vn1);
+      if (spUrl) h += lmTxt("👋 1a. First message (their plan)", first, lmWa(first, "waSent,planSent")).replace("</div>", '<a href="' + spUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>' + lmPlanLine(lmPV[a.id + "-short"] ? a.id + "-short" : a.id) + "</div>");
+      else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.8">👋 1a. First message: ask Claude to build ' + lmEsc(a.firstName || "their") + '\u2019s plan. The message with their link shows here once it\u2019s made.</small></div>';
       if (a.email) h += lmTxt("✉️ 1c. Email (after the " + app + ")", mail1, lmMail("Got your application", mail1, "emSent"));
     } else if (a.email) h += lmTxt("✉️ 1. Email (no phone number)", mailOnly, lmMail("Got your application", mailOnly, "emSent"));
 
@@ -5736,26 +5809,31 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it: ' + lmEsc(dr.subject || "") + '</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(dr.body) + "</p></details></div>";
 
     // 2. Once they reply: the plan of action (its own page makes the link + message), then a voice note
-    var vn2 = "Hey " + nm + ", here's the plan of action I've put together for you, that we'll use to help you meet this special person.\n\nLet me know your thoughts once you've checked it out.";
-    h += lmHead("2. Once they reply: their plan");
-    h += '<div class="lmcon lmmsg" style="flex-wrap:wrap"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 2a. Plan of action (make + send their link)</a>' + lmPlanLine(a.id) + '</div>';
-    h += lmVn("🎙️ 2b. Voice note after the plan", vn2);
+    // 2. Follow-up: the full 16-page plan, for anyone who wants more detail (Olly, 2026-11-15)
+    h += lmHead("2. If they want more detail: the full plan");
+    if (fpUrl){
+      var full2 = "Hey " + nm + ", here\u2019s the full version of your plan, with every step in detail:\n\n" + fpUrl + "\n\nLet me know if you\u2019ve got any questions.";
+      var fpLine = fp.opens ? "Opened " + fp.opens + "\u00d7, last " + lmWhen(fp.last) + (fp.dev ? " on " + fp.dev : "") + (fp.far ? " \u00b7 read to page " + fp.far + " of " + (fp.pages || 16) : "") : "Not opened yet";
+      h += lmTxt("📄 2a. Send the full plan", full2, lmWa(full2) + lmMail(nm + ", your full plan", full2 + "\n\nOlly"))
+        .replace("</div>", '<a href="' + fpUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a><small style="flex-basis:100%;opacity:.85">' + lmEsc(fpLine) + "</small></div>");
+    } else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.8">📄 The full plan is built with the short one: ask Claude and its link shows here.</small></div>';
+    }
 
     // 3. Once they've checked the plan (ideally replied): their own video page + a voice note
-    h += lmHead("3. After they've seen the plan: their video");
+    h += lmHead(a.planRequest ? "5. Once they've asked any questions: their video" : "3. After they've seen the plan: their video");
     var pv0 = lmPV[a.id], vurl = pv0 && pv0.code ? "https://hub.ollyhenson.com/p/" + pv0.code + "/video" : "";
     if (vurl){
       var vtxt = "Hey " + nm + ", here's the video I've made for you.\n\n" + vurl + "\n\nIt goes through the program, the steps, the investment and how to get started. Watch it in your own time, and if you have any questions, just reply here.";
-      h += lmTxt("🎬 3a. Send their video", vtxt, lmWa(vtxt, "loom") + lmMail(nm + ", here's your video", vtxt + "\n\nOlly", "loom"));
+      h += lmTxt(a.planRequest ? "🎬 5a. Send their video" : "🎬 3a. Send their video", vtxt, lmWa(vtxt, "loom") + lmMail(nm + ", here's your video", vtxt + "\n\nOlly", "loom"));
     }
     var vn3 = "Hey " + nm + ", I've just sent you a video. It goes through the program, the steps, the investment and how to get started.\n\nHave a watch in your own time, and if you have any questions, just reply here.";
-    h += lmVn("🎙️ 3b. Voice note with the video", vn3);
+    h += lmVn(a.planRequest ? "🎙️ 5b. Voice note with the video" : "🎙️ 3b. Voice note with the video", vn3);
     h += lmVslRow(a);
     // Email ideas from this applicant (Olly, 2026-11-09): their answers with personal details taken out, for the content generator.
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for content ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator, Email or Reels tab, “An applicant’s words”: emails use their feelings, Reel hooks are built from their pain and the outcomes they want.</small></div>';
-    h += lmHead("4. After the video");
+    h += lmHead(a.planRequest ? "6. After the video" : "4. After the video");
     // Follow-up (2026-11-06, Frankie: "go deeper, never chase"): ONE idea message, only if they watched the video.
-    var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : "your application") + ". If I were you, "
+    var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : (a.planRequest ? "your plan" : "your application")) + ". If I were you, "
       + (feel ? "the feeling I'd start practicing first is " + feel + ", because that's the one that" : "I'd start by practicing how you'd feel with them every day, because that's what")
       + " changes who you notice and who you're drawn to.\n\nExcited to help you get there.";
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(fol) + '">💡 Follow-up idea (only if they watched)</button>' + lmWa(fol) + lmMail("An idea for you", fol + "\n\nOlly") + "</div>";
@@ -5775,7 +5853,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         if (d && d.ok){ lmGV[sid] = Object.assign(lmGV[sid] || {}, { code:d.code, sent:d.sent }); setTimeout(renderLooms, 300); } }).catch(function(){});
       if (gs.tagName === "A") return; }
     var l = e.target.closest && e.target.closest(".lmcon a");
-    if (l){ var a3 = lmById(l.getAttribute("data-id")); if (a3){ lmStore(a3.id)[l.getAttribute("data-k")] = true; markDirty(); if (lmFilter !== "board") lmFilter = lmStage(a3); setTimeout(renderLooms, 300); } return; }
+    if (l){ var a3 = lmById(l.getAttribute("data-id")); if (a3){ l.getAttribute("data-k").split(",").forEach(function(k){ lmStore(a3.id)[k] = true; }); markDirty(); if (lmFilter !== "board") lmFilter = lmStage(a3); setTimeout(renderLooms, 300); } return; }
     var gm = e.target.closest && e.target.closest(".lmguidemake");
     if (gm){ e.stopPropagation(); var gid = gm.getAttribute("data-id"); gm.textContent = "Making their link…";
       fetch("/api/guideviews?id=" + encodeURIComponent(gid), { method:"POST" }).then(function(r){ return r.json(); }).then(function(d){
@@ -5805,7 +5883,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       (lmWant ? '<span class="hint">Waiting for GHL to finish saving the new application…</span>' : "") + (lmErr ? '<span class="hint">' + lmEsc(lmErr) + "</span>" : "") + "</div>";
   }
   // coming back to the Hub with the Looms tab open fetches the latest applicants
-  document.addEventListener("visibilitychange", function(){ var t = document.getElementById("tab-looms"); if (!document.hidden && t && !t.hidden && lmData && !lmLoading) lmLoad(); });
+  document.addEventListener("visibilitychange", function(){ var t = document.getElementById("tab-looms"); if (!document.hidden && t && !t.hidden && lmData && !lmLoading) lmLoadAuto(); });
   function openLoomsFor(id){
     lmWant = id || null;
     goTab("looms");
@@ -5935,17 +6013,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // the per-applicant mind map (unchanged from the Loom days), now shown inside the pop-up
   function lmMapHtml(a){
     var B = lmBranches(a), name = lmName(a), want = lmAns(a, /want/i), place = [a.city, lmCountry(a.country)].filter(Boolean).join(", ");
-    var html = '<div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen</button><button type="button" class="copybtn" id="lmClear">Clear the plan</button><span class="hint">Click a plan step to type. Enter adds a step.</span></div>';
+    var html = '<div class="lmbar"><button type="button" class="copybtn" id="lmFull">Full screen</button></div>';
     var st = '<svg viewBox="0 0 1600 900" aria-hidden="true">';
-    [[610, 320, 510, 200], [610, 375, 510, 620], [990, 320, 1090, 200], [990, 375, 1090, 640], [800, 458, 800, 512]].forEach(function(p, i){
+    [[610, 320, 510, 200], [610, 375, 510, 620], [990, 320, 1090, 200], [990, 375, 1090, 640]].forEach(function(p, i){
       var col = ["#7dd3fc", "#f87171", "#4ade80", "#fbbf24", "#e04fd6"][i], mx = (p[0] + p[2]) / 2;
       var d2 = i === 4 ? "M" + p[0] + " " + p[1] + " L " + p[2] + " " + p[3] : "M" + p[0] + " " + p[1] + " C " + mx + " " + p[1] + ", " + mx + " " + p[3] + ", " + p[2] + " " + p[3];
       st += '<path d="' + d2 + '" fill="none" stroke="' + col + '" stroke-width="3" stroke-opacity=".6"/>';
     });
-    st += '</svg><div class="lmcentre"><div class="nm">' + lmEsc(a.firstName || name) + '</div><div class="meta">' + lmEsc(place || a.email) + '</div>' + (want ? '<div class="want"><small>What you want</small>' + lmEsc(want) + "</div>" : "") + "</div>";
+    st += '</svg><div class="lmcentre"><div class="nm">' + lmEsc(a.firstName || name) + '</div><div class="meta">' + lmEsc(place || a.email) + '</div>' + (want ? '<div class="want"><small>What you want</small><p>' + lmEsc(want) + "</p>" + (want.length > 150 ? '<button type="button" class="lmmore">See more</button>' : "") + "</div>" : "") + "</div>";
     B.forEach(function(b){ st += '<div class="lmbr" style="left:' + b.x + "px; top:" + b.y + 'px"><h3 style="color:' + b.c + '"><i style="background:' + b.c + '"></i>' + lmEsc(b.title) + "</h3>" + b.cards.map(function(c){ return lmCard(c, b.c); }).join("") + "</div>"; });
-    var plan = lmStore(a.id).plan || ["", "", ""];
-    st += '<div class="lmplan"><h3 style="margin:0 0 8px; font-weight:700; font-size:15px; letter-spacing:.1em; text-transform:uppercase; color:#e04fd6">Your plan of action</h3><div class="lmcard" style="--c:#e04fd6"><small>The Attraction Formula, for ' + lmEsc(a.firstName || name) + '</small><ol id="lmPlan">' + plan.map(function(p){ return '<li contenteditable="true">' + lmEsc(p) + "</li>"; }).join("") + "</ol></div></div>";
     html += '<div class="lmbox" id="lmBox"><div class="lmstage" id="lmStage">' + st + "</div></div>";
     var sk = '<div class="lmcard" style="--c:#e04fd6"><small>' + lmEsc(place) + '</small><p style="font-weight:800; font-size:20px">' + lmEsc(name) + "</p>" + (want ? "<p>" + lmEsc(want) + "</p>" : "") + "</div>";
     B.forEach(function(b){ sk += '<b style="color:' + b.c + '; font-size:13px; letter-spacing:.08em; text-transform:uppercase">' + lmEsc(b.title) + "</b>" + b.cards.map(function(c){ return lmCard(c, b.c); }).join(""); });
@@ -5966,7 +6042,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var host = document.getElementById("loomsBody"); if (!host) return;
     if (!lmData){
       host.innerHTML = '<div class="lmbar"><button type="button" class="copybtn" id="lmRefresh">' + (lmLoading ? "Loading…" : "Load applications from GHL") + "</button>" + (lmErr ? '<span class="hint">' + lmEsc(lmErr) + "</span>" : "") + "</div>";
-      document.getElementById("lmRefresh").addEventListener("click", lmLoad);
+      document.getElementById("lmRefresh").addEventListener("click", function(){ lmLoad(true); });
       if (!lmLoading && !lmErr) lmLoad();
       return;
     }
@@ -6039,7 +6115,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         markDirty(); renderLooms();
       }); });
     });
-    document.getElementById("lmRefresh").addEventListener("click", lmLoad);
+    document.getElementById("lmRefresh").addEventListener("click", function(){ lmLoad(true); });
     var full = document.getElementById("lmFull"); if (full) full.addEventListener("click", function(){ var bx = document.getElementById("lmBox"); if (bx && bx.requestFullscreen) bx.requestFullscreen().catch(function(){}); });
     var clr = document.getElementById("lmClear"); if (clr) clr.addEventListener("click", function(){ if (!lmOpen) return; lmStore(lmOpen).plan = ["", "", ""]; markDirty(); renderLooms(); });
     var ol = document.getElementById("lmPlan");
@@ -8828,6 +8904,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (s === "(earlier)") return "Before tracking started (no info)";
     if (s === "test") return "Your own test visits";
     if (s === "app.gohighlevel.com") return "Clicked from inside GHL (probably you testing)";
+    if (c === "plan_request") return "Instagram DM: asked for a free plan of action";
     if (s === "feeling_finder") return "Did the Feeling Finder, then clicked the link on their results";
     if (s === "scale_check") return "Did the Love Scale, then clicked the link on their results";
     if (s === "youtube.com" || s === "youtu.be") return "YouTube: clicked a link (YouTube didn't say which one)";
@@ -8929,14 +9006,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
   // 1. New leads: opt-ins to the three freebies, from people who weren't on the list yet
   function ovLeadsTable(){
-    var raw = ovRawRows(["optin", "feeling", "scale"], ["optins", "feeling", "scale"]);
-    var fields = ["visits", "optins", "feeling", "scale"];
+    var raw = ovRawRows(["optin", "feeling", "scale"], ["optins", "feeling", "scale", "planLeads"]);
+    var fields = ["visits", "optins", "feeling", "scale", "planLeads"];
     var rows = ovMergeByLabel(raw.filter(function(r){ return !ovIsExistingLead(r.source); }), ovLabel, fields, function(){ return 0; });
-    rows.forEach(function(r){ r.leads = r.optins + r.feeling + r.scale; });
+    rows.forEach(function(r){ r.leads = r.optins + r.feeling + r.scale + (r.planLeads || 0); });
     // only places that brought in at least one lead (Olly, 2026-11-10: just where the opt-ins came from)
     rows = rows.filter(function(r){ return r.leads > 0; }).sort(function(a, b){ return b.leads - a.leads; });
     var old = ovSumRows(raw.filter(function(r){ return ovIsExistingLead(r.source); }), fields, "");
-    old.leads = old.optins + old.feeling + old.scale;
+    old.leads = old.optins + old.feeling + old.scale + (old.planLeads || 0);
     var intro = document.createElement("div");
     var top = ovTopLine(rows, "leads", "new leads"); if (top) intro.appendChild(top);
     if (old.leads){
@@ -8952,13 +9029,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
 
   // 2. Applications: where they were when they clicked through to apply (here coming from your emails is the point)
   function ovAppsTable(){
-    var fields = ["visits", "applied", "joined"];
-    var rows = ovMergeByLabel(ovRawRows(["apply"], ["applied", "joined"]), ovLabel, fields,
-      function(a, b){ return ((b.applied || 0) - (a.applied || 0)) || (b.visits - a.visits); });
+    // plan requests (Instagram DM form, 2026-11-13) sit beside applications, never added to them
+    var fields = ["visits", "applied", "plans", "joined"];
+    var rows = ovMergeByLabel(ovRawRows(["apply"], ["applied", "plans", "joined"]), ovLabel, fields,
+      function(a, b){ return (((b.applied || 0) + (b.plans || 0)) - ((a.applied || 0) + (a.plans || 0))) || (b.visits - a.visits); });
     var intro = ovTopLine(rows, "applied", "applications");
-    return ovPlainTable("Where your applications came from", intro,
-      ["Where they came from", "Visitors", "Applied", "Out of every 100 visitors", "Sales made"], rows,
-      function(r){ return [r.label, fmtInt(r.visits), fmtInt(r.applied || 0), ovPer100(r.applied || 0, r.visits), fmtInt(r.joined || 0)]; },
+    return ovPlainTable("Where your applications and plan requests came from", intro,
+      ["Where they came from", "Visitors", "Applied", "Out of every 100 visitors", "Plan requests", "Sales made"], rows,
+      function(r){ return [r.label, fmtInt(r.visits), fmtInt(r.applied || 0), ovPer100(r.applied || 0, r.visits), fmtInt(r.plans || 0), fmtInt(r.joined || 0)]; },
       rows.length ? ovSumRows(rows, fields, "Total") : null);
   }
 
@@ -10435,8 +10513,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function pullFromGhl(btn, status){
     btn.disabled = true;
     status.textContent = "Pulling from GHL…";
-    // Page views come from the Hub's own counter (/api/track), read alongside.
-    fetch("/api/pageviews", { cache:"no-store" })
+    // Page views come from the Hub's own counter (/api/track), read alongside. The button skips the 10-min server cache.
+    fetch("/api/pageviews?fresh=1", { cache:"no-store" })
       .then(function(r){ return r.json(); })
       .then(function(p){ if (p && p.ok){ state.pageViews = p.months; if (p.sources) state.pageSources = p.sources; if (p.days) state.pageViewDays = p.days; if (p.daySources) state.pageSourceDays = p.daySources; } })
       .catch(function(){ /* counter not reachable — keep the last numbers */ })
@@ -10649,7 +10727,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (btn.dataset.tab === "audience") renderAudience();
       if (btn.dataset.tab === "links") renderLinks();
       if (btn.dataset.tab === "record") { recIdx = 0; recList = []; renderRecord(); }
-      if (btn.dataset.tab === "looms") { lmFilter = "newest"; if (lmData && !lmLoading) lmLoad(); else renderLooms(); }
+      if (btn.dataset.tab === "looms") { lmFilter = "newest"; if (lmData && !lmLoading) lmLoadAuto(); else renderLooms(); }
       uiSave({ tab: btn.dataset.tab });
     });
   });

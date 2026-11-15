@@ -1,25 +1,68 @@
-# Plan of action v4: the personal diagnosis plan (applicants)
+# Plan of action: applicants (v5 = short plan first, full plan as follow-up)
 
-> **⚠️ FIRST MESSAGE TO EVERY GOOD APPLICANT (Olly, 2026-11-15):** "Hey <Name>, so I’ve looked through your application and all looks good.
+> **CURRENT FORMAT (Olly, 2026-11-15). Read this section first. The v4 builder notes further down are kept for reference and for DM plan requests (part 1 / part 2), not for applicants.**
 
-Here’s exactly what you need to do to attract this relationship that you want:
+## The flow
+1. Applicant applies (tag `heart attractor applicant`), Olly rates them good.
+2. **Claude builds their short plan (5 pages) AND full plan (16 pages) BEFORE Olly messages them.**
+3. Olly sends the first message from Hub > Sales card **1a** (WhatsApp tap marks Messaged + Plan sent):
+   "Hey <Name>, so I’ve looked through your application and all looks good.\n\nHere’s exactly what you need to do to attract this relationship that you want:\n\n<short plan link>\n\nLet me know if you’d like the next steps"
+   The email (1c) is unchanged. The old 1b voice note ("would you like a plan?") is gone.
+4. If they want more detail, or as a follow-up: Sales card **section 2** sends the full plan link.
+5. "Next steps" = the sales video (funnel/sales-video-women-transcript.md is what it says).
 
-<short plan link>
+## What each version holds
+**Short (5 pages, send first):** cover ("<Name>, Here's Your Path To The Relationship You Want", Olly's photo, Where you are now → Where we're going) · You're Stuck In Your Head (overthinking, catastrophizing, feeling you have to fix yourself, "Believing comes from feeling", <their emotion> → <their feeling>) · Feel <Feeling> Before He Arrives (photo = the text from their person, partner-text.jpg; "From overthinking it to feeling it.") · How We'll Do It Together (5 steps with timings + daily DM support "me, not AI") · What I Need From You (3 conditions) + "If you'd like me to send over the details for the program, let me know." + Olly sign-off.
+**Full (16 pages, follow-up):** cover · The Man You Want (their 4 intentions) · Where You Are Right Now (their words, their sticking point, what they tried) · You're Stuck In Your Head · Emotional Resonance · The Shift · Your 3 Steps (1-2 Done, 3 Together) · The Exact Steps We'll Follow Together · Steps 1-5 with photos (access + trainings / meditation / anchoring / meeting people or keep dating / support) · When You Feel <Feeling> · What I Need From You · Here's What We're Going To Do + the same closing line.
 
-Let me know if you’d like the next steps". Hub Sales card 1a builds it from their short plan (lmPV[id].code); 1b voice note removed; email 1c unchanged; section 2 = full plan follow-up (lmPV[id+"-full"]). So build their plan (short + full) BEFORE Olly messages them.
+## Process (about 10 minutes per applicant)
+1. Pull them from GHL (`contacts_get-contacts` by name). Fields: FF Current Emotion (Trbe…), FF Resonance = the feeling (RArd…), FF Intentions = their 4 wants in a partner (2V06…), feelings about love (RcZw…), relationship wanted (az4f…), what's not happening (Ysl9…), tried (bCuu…), status (BlwA…), how long (X9Lz…), priority (OtktG…).
+2. **Check for an existing plan first**: `wrangler kv key list --prefix planview:<contactId>`. If it has `sent` or opens, the new plans go on `<id>-short` and `<id>-full` (never overwrite a plan they've read). The Sales card prefers `<id>-short` for 1a.
+3. Copy `pages.html, short.html, og.html, upload.py, make_text.py` from the most recent applicant with the same feeling (or the closest), into `funnel/applicant-guides/<first-last>/pages/` (git-ignored, never committed).
+4. Write `personalise.py` (copy the last one): a list of exact old → new replacements with `assert` on every one, so a missed line stops the build. Every new line traces to their answers.
+5. Run it, then grep for the previous person's words (name, feeling, emotion, partner traits, contact id). Must be 0 everywhere.
+6. `python make_text.py` (their phone text), then render: `node tools/plan_v5_shoot.js <folder>` (full), `... short.html short-out`, `... og.html og-out .og` and save og-out/01.jpg as og.jpg.
+7. Look at a contact sheet of the short pages + the personal full pages (2, 3, 4, 12, 14). Gap 0 on a cover usually means the footer was pushed off: trim their longest answer on the cover.
+8. Preview artifact (short first, then full) for Olly. Upload: `python upload.py short-out 5 [-short]` and `python upload.py out 16 -full`. Check both: `curl /p/<code>/pages` (n = 5 / 16) and `/p/<code>/og.jpg` 200.
+9. If their card already had `waSent` from the OLD first message, set `state.looms[id].planSent = false` in the record (rev+1), or the new rule marks them Plan sent before Olly sends anything.
+10. Log their links in NEXT.md (local only, never committed: it holds names and private links).
 
-> **⚠️ NEW DEFAULT (Olly, 2026-11-15): SHORT PLAN FIRST, FULL PLAN AS FOLLOW-UP.** Every applicant first gets a 5-page short plan (cover · You're Stuck In Your Head + their emotion → resonance feeling · Feel <Feeling> Before He/She Arrives (photo = the personalised text from their person, partner-text.jpg, Olly 2026-11-15) · How We'll Do It Together = 5 steps with timings + daily DM support · What I Need From You + "If you'd like me to send over the details for the program, let me know."). The 16-page full plan goes on a second link (KV id `<contactId>-full`) to send if they want more or as a follow-up. Both must cover everything the sales video assumes (funnel/sales-video-women-transcript.md). First built by hand for the first applicant this way: `funnel/applicant-guides/<first applicant of 2026-11-15>/pages/ (see NEXT.md for the folder)` (short.html, pages.html, og.html = 1200x630 link thumbnail, upload.py). The builder below does NOT make these yet: next job = turn those files into a builder that fills from GHL.
+## Rules (from Olly's corrections, 2026-11-15)
+- The title is the outcome: "Path To The Relationship You Want", never the feeling ("Path To Peace"). Why: the outcome is what they want; the feeling is the method.
+- "What psychiatrists call intellectualization" inside the sentence. Never a standalone "It's the psychiatrist's term." Why: Olly: it needs to blend into the sentence.
+- Brainwaves: at most "we move up into our head". No alpha/theta/high beta detail. Simplify everything as far as it goes. Why: "too wordy around the brainwave pattern stuff".
+- Closing line is always "If you'd like me to send over the details for the program, let me know." Never "Next, I'll send you a video". Why: they ask for the next step, Olly doesn't push it.
+- The plan must set up everything the sales video assumes (it opens "you've got your plan now"): intellectualization (overthinking, catastrophizing, always fixing yourself), emotional resonance ("from overthinking it to feeling it"), the 3 conditions, the 5 steps, daily DM support (text + video, "me, not AI"), the 2 weeks / 12 weeks / rest of the year timeline. Why: Olly: the applicant must know the problem, the fix, the steps, what's inside the program and the support.
+- Photos are the POV plan photos from `hub-site/public/plan-img/`, shown with `object-fit: cover`. Faces fully in frame (`pov-female.jpg` needs `object-position: 50% 12%`). Why: the restaurant man's head was cut off.
+- Short page 3 shows their personalised text from their person (partner-text.jpg). Why: Olly wanted them to see the exact message they'd want from their person.
+- Their person's text: ordinary plans that show what they want without saying it (picks you up, pays, family wants to meet you, asks about your week). Keep it short enough for the bubble (4-5 lines).
+- Already dating → step 4 = "Keep Dating, As Yourself". Not dating → "Take Early Steps And Start Meeting People".
+- Priority line uses their answer: "main focus" → "You told me it's your main focus in life right now, so I know it is."; "one of my top priorities" → "...For this to work, it needs to be the one."
+- Crude or explicit words in their answers get a respectful paraphrase ("🔥 in the bed" → "real chemistry"), and Olly is told what was changed.
+- Every link gets the dedicated 1200x630 thumbnail (og.html: name + title + Olly's photo, byline "With Olly Henson"), not a crop of the cover. Why: the cover is too tall to crop without losing the photo or the title.
+
+## Never
+- Never use `plan-img/join.jpg`: the screenshot inside it is stretched. Use `step1-classroom.jpg` for the classroom. Why: Olly: "the last image looks extremely stretched", then "it still doesn't look good".
+- Never overwrite a plan someone has already been sent or has read: use `<id>-short` / `<id>-full`.
+- Never put applicant names, words or plan links in a committed file (skills, code comments, NEXT.md): the repo is public.
+- Never tap Copy / WhatsApp on the old 📄 plan page (plan.html) to "just look": it stamps the plan as sent. Use 👀 Preview on the card.
+- Never write a Python edit with unicode escapes in a bash heredoc (bash mangles them): write a .py file with the Write tool.
+
+## Examples (approved 2026-11-15)
+- Cover: "<Name>, Here's Your Path To The Relationship You Want" · Where you are now: "You've been single for more than 5 years. When you think about love, you feel worried and sad." · Where we're going: "Someone to settle down with and build a life together. Marriage."
+- Head page: "You're stuck in what psychiatrists call intellectualization. When we worry about love, we move up into our head. The overthinking and catastrophizing get loud."
+- Partner texts: "Hey, I've booked us a table for Saturday at 7. I'll pick you up. Dinner's on me." (wants a man who plans, calls, pays) · "...Want me to bring something for the boys?" (protect and provide for her and her kids) · "Hey, my sister just asked if you're coming to her birthday next month. I told her yes, hope that's ok!" (commitment).
+
+---
+
+# Plan v4 builder (reference; DM plan requests still use it)
+
+> **Overridden 2026-11-15 for applicants:** the "simple plan" and "simple + program (20 pages)" defaults and the old flow (message → voice note → they say yes → plan) are replaced by the v5 short + full plans above. Applicants who already got a v4 plan keep it; new plans for them go on `<id>-short` / `<id>-full`.
 
 > **Link preview thumbnail (Olly, 2026-11-14):** every plan link shows a picture when sent (WhatsApp, email, iMessage): the top of their cover (their name + title + Olly's photo) at 1200x630, title "<Name>, here's your plan of action". `--upload` makes it automatically (KV `planog:<id>`, served public at /p/<code>/og.jpg; tags added in functions/p/[[path]].js). Nothing to do by hand.
 
-Built 2026-11-12 with Olly on the first applicant. **This is the plan every applicant now gets** (replaces the template pages of Plan v3.1 in `skills_applicant-looms.md`; the flow around it, Flow v3, is unchanged: message → voice note → they say yes → plan → video → join).
-
 **Builder:** `tools/build_plan_v4.py SPEC.json OUTDIR [--upload]` (+ `tools/plan_v4_shoot.js`, `tools/export_carousel.js`).
 **Private data:** the spec and the output hold the applicant's words. Keep them in `funnel/applicant-guides/<first-last>/` (git-ignored, survives between sessions: spec.json there, build output in `out/`). Never anywhere committed: the repo is public.
-
-> **⚠️ UPDATE 2026-11-14: APPLICANTS (tag `heart attractor applicant`) get the simple diagnosis + the program steps in ONE plan: spec `"kind": "simple", "program": true` (or `--simple --program`) = 20 pages: cover, told me, belief, shows up, core 'You Need To Feel X Every Day', the belief you'll build IN THE PROGRAM, what changes, unfold, junction, steps 1-8 (write `steps` personalised as before, step 6 phone text), What I Need From You, note, closing. Simple without program (10 pages) was used once (sent before this rule). Plan requests (DM) keep part 1 / part 2.**
-
-> Simple without program (`"kind": "simple"`, 10 pages) is only used if Olly asks for it (one applicant had it, 2026-11-14).
 
 ---
 
@@ -132,3 +175,11 @@ shows image pages). Removed the first applicant's name from the spec path (publi
 - Examples: a plan request's corrected belief; the approved core page wording.
 - Removed the "DEFAULT = SIMPLE (10 pages)" block (overridden the same day by the simple + program rule) and the old "applicants always get the full 20-page plan" line in the request note.
 - Link preview thumbnail note added at the top (built this session). -->
+
+<!-- 2026-11-15 skill review (v5 short + full plans, built with Olly on six applicants): added the v5 section on top (flow,
+what each version holds, 10-step process, rules, Never, examples). Rules from Olly's edits: outcome title not the feeling,
+"what psychiatrists call intellectualization" blended in, brainwave detail cut, closing line "If you'd like me to send over
+the details for the program, let me know.", plan synced to the sales video transcript, partner text on short page 3, faces
+in frame, dedicated og thumbnail, keep-dating step for daters, paraphrase crude answers and say so. Never: join.jpg (stretched),
+overwriting a read plan, names/links in committed files, test taps on plan.html. Removed as overridden: the simple-plan and
+simple+program applicant defaults and the voice-note-first flow. New tool: tools/plan_v5_shoot.js. -->

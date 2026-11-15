@@ -3,6 +3,7 @@
 //   GET            -> { ok, views: { contactId: { opens, first, last, pct, far, done, join, joinAt, dev } } }  (one KV list call)
 //   GET ?id=<cid>  -> { ok, meta, bins:[100], visits, joins }  (the watch map for one applicant)
 // Written by POST /p/<code>/vseen (functions/p/[[path]].js).
+import { cached } from "../../lib/cache.js";
 
 function json(body) {
   return new Response(JSON.stringify(body), { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
@@ -15,6 +16,7 @@ export async function onRequestGet({ env, request }) {
     let v = {}; try { v = JSON.parse(cur.value || "{}") || {}; } catch { v = {}; }
     return json({ ok: true, meta: cur.metadata || null, bins: v.bins || [], visits: v.visits || [], joins: v.joins || [] });
   }
+  return cached(request, 120, async function () {   // 2 min (lib/cache.js, KV list budget)
   const views = {};
   let cursor;
   for (let i = 0; i < 20; i++) {
@@ -24,4 +26,5 @@ export async function onRequestGet({ env, request }) {
     cursor = page.cursor;
   }
   return json({ ok: true, views });
+  });
 }

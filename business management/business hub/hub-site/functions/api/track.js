@@ -41,18 +41,18 @@ export async function onRequestPost({ request, env }) {
   const day = new Date(Date.now() + 2 * 3600 * 1000).toISOString().slice(0, 10);
   const key = "pv:" + page + ":" + day;
   const n = Number(await env.HUB_KV.get(key)) || 0;
-  await env.HUB_KV.put(key, String(n + 1));
+  await env.HUB_KV.put(key, String(n + 1), { metadata: { n: n + 1 } });   // count in metadata too, so /api/pageviews needs no read per key (2026-11-15)
   // Where the visit came from (pages updated 2026-10-25 send this; older
   // copies send just the page name and only count as a view).
   if (parts.length > 1) {
     const src = (clean(parts[1]) || "(direct)") + "|" + clean(parts[2]) + "|" + clean(parts[3]);
     const skey = "ps:" + page + ":" + day.slice(0, 7) + ":" + src;
     const m = Number(await env.HUB_KV.get(skey)) || 0;
-    await env.HUB_KV.put(skey, String(m + 1));
+    await env.HUB_KV.put(skey, String(m + 1), { metadata: { n: m + 1 } });
     // per day as well (2026-10-27), so the Hub's Overview can show a week
     const dkey = "psd:" + page + ":" + day + ":" + src;
     const dn = Number(await env.HUB_KV.get(dkey)) || 0;
-    await env.HUB_KV.put(dkey, String(dn + 1));
+    await env.HUB_KV.put(dkey, String(dn + 1), { metadata: { n: dn + 1 } });
   }
   return done();
 }

@@ -64,7 +64,8 @@ export async function onRequestGet({ env }) {
       topAge: topAge, topAgeShare: ageTotal ? num(ages[topAge]) / ageTotal * 100 : 0,
     };
     if (env.HUB_KV) {
-      try { await env.HUB_KV.put("socialstats:" + out.fetchedAt.slice(0, 10), JSON.stringify(out)); } catch (e) {}
+      // one write per day, not one per Hub open (2026-11-15, KV free-plan write budget)
+      try { const dk = "socialstats:" + out.fetchedAt.slice(0, 10); if (!(await env.HUB_KV.get(dk))) await env.HUB_KV.put(dk, JSON.stringify(out)); } catch (e) {}
     }
     return json(out);
   } catch (e) {

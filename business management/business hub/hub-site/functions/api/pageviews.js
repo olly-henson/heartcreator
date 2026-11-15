@@ -9,11 +9,19 @@
 // Auth: behind Cloudflare Access like the rest of the zone (only /api/track
 // is exempt).
 
+import { cached } from "../../lib/cache.js";
+
+// Counts written since 2026-11-15 also sit in each key's metadata ({n}), so the list alone gives them and no
+// per-key read is needed. Older keys have no metadata and still cost one read each.
+function countsFor(env, keys) {
+  return Promise.all(keys.map(function (k) { return k.metadata && k.metadata.n != null ? k.metadata.n : env.HUB_KV.get(k.name); }));
+}
+
 async function sumPrefix(env, prefix, add) {
   let cursor;
   do {
     const list = await env.HUB_KV.list({ prefix, cursor });
-    const vals = await Promise.all(list.keys.map(function (k) { return env.HUB_KV.get(k.name); }));
+    const vals = await countsFor(env, list.keys);
     list.keys.forEach(function (k, i) { add(k.name, Number(vals[i]) || 0); });
     cursor = list.list_complete ? null : list.cursor;
   } while (cursor);
@@ -23,7 +31,11 @@ async function sumPrefix(env, prefix, add) {
 // dividing BOTH variants' sign-ups by variant A's visits (showed ~72% opt-in, real ~40%). Fold B into "feeling" (2026-11-10).
 function pageKey(p) { return p === "feelingb" ? "feeling" : p; }
 
-export async function onRequestGet({ env }) {
+export function onRequestGet({ env, request }) {
+  return cached(request, 600, function () { return build(env); });   // 10 min (lib/cache.js)
+}
+
+async function build(env) {
   const sources = {};
   await sumPrefix(env, "ps:", function (name, n) {
     const i = name.indexOf(":", 3), j = name.indexOf(":", i + 1);   // ps:page:YYYY-MM:src
@@ -45,7 +57,7 @@ export async function onRequestGet({ env }) {
   let cursor;
   do {
     const list = await env.HUB_KV.list({ prefix: "pv:", cursor });
-    const vals = await Promise.all(list.keys.map(function (k) { return env.HUB_KV.get(k.name); }));
+    const vals = await countsFor(env, list.keys);
     list.keys.forEach(function (k, i) {
       const parts = k.name.split(":");   // pv, page, YYYY-MM-DD
       const ym = parts[2].slice(0, 7);

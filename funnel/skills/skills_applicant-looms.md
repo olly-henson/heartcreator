@@ -1,5 +1,13 @@
 # Applicant Looms: the framework
 
+> **⚠️ FIRST MESSAGE TO EVERY GOOD APPLICANT (Olly, 2026-11-15):** "Hey <Name>, so I’ve looked through your application and all looks good.
+
+Here’s exactly what you need to do to attract this relationship that you want:
+
+<short plan link>
+
+Let me know if you’d like the next steps". Hub Sales card 1a builds it from their short plan (lmPV[id].code); 1b voice note removed; email 1c unchanged; section 2 = full plan follow-up (lmPV[id+"-full"]). So build their plan (short + full) BEFORE Olly messages them.
+
 > **⚠️ THE PLAN ITSELF (2026-11-12): Plan v4, the personal diagnosis plan: `funnel/skills/skills_plan-v4.md` (builder tools/build_plan_v4.py).**
 > **⚠️ CURRENT FLOW (2026-11-10): "Flow v3" near the end of this file.** Earlier step-by-step sections are kept for history; where they disagree, Flow v3 wins.
 
@@ -492,3 +500,6 @@ the plan-sync rules (preview changed pages only, state side effects, approval be
 
 <!-- 2026-11-12 skill review: the plan pages are now Plan v4 (funnel/skills/skills_plan-v4.md): a personal 20-page
 diagnosis plan built per applicant. Plan v3.1's template pages are overridden for applicants; the flow (Flow v3) stays. -->
+
+<!-- 2026-11-15 skill review: first message to every good applicant is now the short plan link (note at the top); the 1b
+"would you like a plan?" voice note is retired; full plan = section 2 follow-up. Full process: funnel/skills/skills_plan-v4.md v5 section. -->

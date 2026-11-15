@@ -4,6 +4,7 @@
 //   POST /api/guideviews?id=<id>    -> { ok, code }: their private link code (reuses the plan's code if they have one).
 //        &sent=1 also records the sent date (called when Olly taps WhatsApp / Email / Copy link on the card).
 // Metadata = { code, sent, opens, first, last, far, pages, read, pdf, dev }. The applicant-facing side is functions/p/[[path]].js.
+import { cached } from "../../lib/cache.js";
 
 function json(body, status) {
   return new Response(JSON.stringify(body), { status: status || 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
@@ -19,6 +20,7 @@ export async function onRequestGet({ env, request }) {
     let v = {}; try { v = JSON.parse((await env.HUB_KV.get("guideview:" + one)) || "{}") || {}; } catch { v = {}; }
     return json({ ok: true, secs: v.secs || [], n: (v.secs || []).length });
   }
+  return cached(request, 120, async function () {   // 2 min (lib/cache.js, KV list budget)
   const views = {};
   let cursor;
   for (let i = 0; i < 20; i++) {
@@ -28,6 +30,7 @@ export async function onRequestGet({ env, request }) {
     cursor = page.cursor;
   }
   return json({ ok: true, views });
+  });
 }
 
 export async function onRequestPost({ env, request }) {
