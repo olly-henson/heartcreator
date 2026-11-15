@@ -2,17 +2,111 @@
 
 Built 2026-11-12. For Olly or a DM setter. Turns people who asked for the Feeling Finder into plan of action requests.
 The goal of the DM is NOT an application or a sale. It's one thing: they fill in the plan form.
-After the form, it's the normal sales flow from Flow v3 step 4 (`skills_applicant-looms.md`): make their plan, send it with a voice note, video, join link.
+After the form, their Hub Sales card (tag `plan request`, label '📩 Plan request (DM)', `a.planRequest`) shows its OWN messages (2026-11-13, lmContact in hub index.html): (v2, Olly's order) 1 'just reply so I know it's reached you' WhatsApp + email: build NOTHING until they reply → 2 Claude builds the plan (skills_plan-v4.md, kind request), send PART 1 (diagnosis, ends 'does this sound like your situation?') + voice note → 3 when they ask how/what to do: 'I can show you how we'd do this together in the program, want me to send it over?' → 4 on a yes, PART 2 (the program steps) → 5 any questions, their video → 6 follow-up idea + join link.
 
 **Form link:** `ollyhenson.com/plan-dm` (form = funnel/sections/plan-request.html, page /plan, not live yet). Asks: name/email, where things are, how long, relationship wanted, tried, feelings about love, "once I…", priority, profession, WhatsApp (country worked out from its code + browser timezone) (no Instagram username: Olly 2026-11-12).
 
 ---
 
+## v2: the belief-led DM (Olly 2026-11-13)
+
+**Why it changed:** the plan is a diagnosis (their thought + their feeling, repeated = their belief, then the counter belief). So the DM is the plan, reverse engineered: every question collects one piece of it, and the chat ends with THEM saying "yes, that's the belief". Then the plan is the obvious next step: "I can show you exactly what this belief is and the counter belief to change it." Olly: get them to the point that they admit they have a belief issue, then give the solution.
+
+### What each question collects (DM → plan page)
+
+| DM step | You ask about | It becomes in the plan |
+|---|---|---|
+| 1 Where things are | how long single, dating or not | Cover "Where you are now", page 2 |
+| 2 What they want | the relationship + how it would feel day to day | Cover "Where we're going", the feeling they'll build (pages 5, 8, steps) |
+| 3 What's in the way | what's stopping it, what they've tried | Page 2 rows, page 4 "What's Happening" |
+| 4 The thought | what goes through their head | Page 3 "The Thought" + page 4 bubbles |
+| 5 The feeling | how that thought makes them feel | Page 3 "The Feeling" |
+| 6 The belief (the admission) | what that adds up to | Page 3 "The Belief" + the counter belief on page 5 |
+| 7 Invitation | the plan | the plan |
+
+### Flow
+
+0. **Check-in (ManyChat, automatic, unchanged):** "Hey, hope that link came through all right 🙏 How are things for you right now with love and dating?"
+
+1. **Where things are.** Reflect, then one level deeper:
+   > Thanks for sharing that, I really appreciate it. How long have you been single now?
+   >
+   > And are you dating at the moment, or taking a bit of a break from it?
+
+2. **What they want.**
+   > And if things went exactly how you wanted, what kind of relationship would you love to be in?
+   >
+   > Love that. What would it feel like day to day being with them?
+
+   Their feeling word (safety, belonging, excitement, peace…) is the feeling the plan builds. If they did the Feeling Finder, it should match their result.
+
+3. **What's in the way.**
+   > What do you feel has been getting in the way so far?
+   >
+   > And what have you tried already?
+
+4. **The thought (new).** Get the exact words that run through their head:
+   > When you think about meeting someone, or a date doesn't go anywhere, what's the thought that usually pops into your head?
+
+   If it's vague, give them a nudge with real examples: "Like 'will this one last?', 'this probably won't go anywhere' or 'why can't I find someone who has everything I want?'"
+
+5. **The feeling (new).**
+   > And when that thought comes up, how does it make you feel?
+
+   (Real answers: impatience, loneliness, anxiety and doubt, pessimism, frustration.)
+
+6. **The belief: they say it, not you (new).** Ask permission, play it back in their words, then let them name it:
+   > Can I share what I think might be going on?
+
+   On a yes:
+   > So the thought "[their thought]" and that feeling of [their feeling] have come up again and again for [how long].
+   >
+   > When a thought and a feeling repeat for long enough, they turn into a belief. Not something you'd say out loud, it just sits underneath. Things like "maybe I'm not enough", "maybe I'm too much" or "maybe it can happen for others but not for me".
+   >
+   > If you had to put it into words, what would you say yours is?
+
+   Whatever they say IS the belief in their plan, word for word. Then confirm it's the real problem:
+   > That makes so much sense. And when that belief is running, it decides who you notice, who you're drawn to and how you show up. That's why all the work you've done hasn't changed it: it's a belief, not something to fix.
+   >
+   > Does that feel true for you?
+
+   - **Yes / "wow, that's it"** → step 7.
+   - **"I don't think I have one"** → "Fair enough. What do you feel it is then?" Use their answer. If it's still not a belief, take it in their words and keep going.
+   - **Gets emotional** → slow down, thank them, voice note. Don't rush to the invite in the same message.
+
+7. **Invitation: the plan as the fix.**
+   > The good news is a belief can be trained, the same way this one was built.
+   >
+   > If you'd like, I can put together a plan of action for you. It shows you exactly what this belief is, the counter belief to replace it with and the steps I'd take in your shoes to meet [their words: "someone who fully chooses you"].
+   >
+   > No cost, just a few questions so I can make it about you.
+
+   On a yes:
+   > Amazing. Fill this in and I'll put it together for you 👇
+   >
+   > ollyhenson.com/plan-dm
+   >
+   > Once it's done I'll send it over to you on WhatsApp.
+
+   If they ask what it is:
+   > It's a short personal plan, a few pages. The belief that's been holding you back, the one you'll build instead and the steps I'd take to get you there. You can keep it either way.
+
+### Rules for v2
+- **They name the belief, you never tell them.** Offer examples, then ask. It's their words on page 3, and admitting it themselves is what makes them want the fix.
+- **Never call the belief a flaw.** "It's not something wrong with you, it's a thought and a feeling repeated."
+- **Write down their exact words for steps 2, 4, 5 and 6** (feeling, thought, feeling, belief) in the GHL contact note, so the plan uses them. Until the form asks for the thought + belief itself (Hub to-do), Claude asks Olly for them when building the plan.
+- **The invitation only comes after the "yes, that's true".** No admission = keep listening, not pitching.
+- All the old rules still apply: one question per message, use their words, never the program or price, no chasing, kind exit if not a fit.
+
+---
+
+## v1 (kept for reference: steps 1 to 3 live on inside v2; v1 step 4 mini-value lines are still good after step 6 if they fit)
+
 ## The flow at a glance
 
 1. They comment FEELING → ManyChat sends the Feeling Finder link (unchanged).
 2. **ManyChat, ~2 hours after they click "yes" (automatic):** the check-in below.
-3. They reply → you take over by hand with the 5 steps: Where things are → Goals → Challenges → Mini-value → Invitation.
+3. They reply → you take over by hand with the v2 steps above.
 4. They fill in the form → their card appears in Hub > Sales → plan as normal.
 
 ## The rules
@@ -131,6 +225,10 @@ If they hesitate / ask what it is:
 4. Send the link on WhatsApp (their number is on the card; no number = in the Instagram DM) + voice note: "Here's the plan of action I've put together for you, that we'll use to help you meet this special person. Let me know your thoughts once you've checked it out."
 5. From here it's Flow v3 steps 5 to 7 (`skills_applicant-looms.md`): wait for them to read it, answer questions, their own video when they ask how to start, join link.
 
+## Lists + emails (workflow 'Plan Of Action Requests', 2026-11-13)
+Existing steps (webhook → contact + HA fields → tag `plan request` → Hub push) then If/Else 'Where are they?': Member (`joined heart attractor program`) end / Already on list (`daily email list`) end / Did Feeling Finder (`feeling finder`, that workflow already sends its bonus + list) end / None → wait 1 day → template 'Plan request: bonus training' (video training youtu.be/PPiqFhUhypo; made by marketing/email-sequences/make_plan_request_bonus.py) → wait 1 day → `daily email list`. No branch in other workflows offers the plan (it's only offered in DMs).
+Hub Overview: plan requests = own column beside applications ('Where your applications and plan requests came from'), and a NEW lead only when no freebie tag came first (ghl-sources.js plans / planLeads; label 'Instagram DM: asked for a free plan of action').
+
 ## Sources for every pain line
 
 - Done the work, worked everywhere but love; friends didn't do the work; fear of being hurt; "doesn't feel it can happen": Catrin (`marketing/memory/avatar-catrin.md`) + core argument v6 (`argument_sheet_heart_attractor.md`).
@@ -155,3 +253,5 @@ Add real replies and what worked here as they come in. Don't rewrite the framewo
 
 <!-- 2026-11-12 skill review: added form rules from Olly's edits (free plan not application, derive country from WhatsApp,
 no Instagram field, one-box profession, no money questions, click-through previews, short link) and the refine note. -->
+
+<!-- 2026-11-15 skill review: v2 (belief-led DM) was written this session at Olly's request ("reverse engineer this so that the plan makes sense that they want to learn it"). No corrections from Olly on it yet, so no rules changed. Still open (Hub to-do): add current emotional state + current belief questions to the plan form and the application, so the plan's diagnosis has their own words. -->

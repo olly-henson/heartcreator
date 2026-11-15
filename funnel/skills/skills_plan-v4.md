@@ -1,9 +1,25 @@
 # Plan of action v4: the personal diagnosis plan (applicants)
 
+> **⚠️ FIRST MESSAGE TO EVERY GOOD APPLICANT (Olly, 2026-11-15):** "Hey <Name>, so I’ve looked through your application and all looks good.
+
+Here’s exactly what you need to do to attract this relationship that you want:
+
+<short plan link>
+
+Let me know if you’d like the next steps". Hub Sales card 1a builds it from their short plan (lmPV[id].code); 1b voice note removed; email 1c unchanged; section 2 = full plan follow-up (lmPV[id+"-full"]). So build their plan (short + full) BEFORE Olly messages them.
+
+> **⚠️ NEW DEFAULT (Olly, 2026-11-15): SHORT PLAN FIRST, FULL PLAN AS FOLLOW-UP.** Every applicant first gets a 5-page short plan (cover · You're Stuck In Your Head + their emotion → resonance feeling · Feel <Feeling> Before He/She Arrives (photo = the personalised text from their person, partner-text.jpg, Olly 2026-11-15) · How We'll Do It Together = 5 steps with timings + daily DM support · What I Need From You + "If you'd like me to send over the details for the program, let me know."). The 16-page full plan goes on a second link (KV id `<contactId>-full`) to send if they want more or as a follow-up. Both must cover everything the sales video assumes (funnel/sales-video-women-transcript.md). First built by hand for the first applicant this way: `funnel/applicant-guides/<first applicant of 2026-11-15>/pages/ (see NEXT.md for the folder)` (short.html, pages.html, og.html = 1200x630 link thumbnail, upload.py). The builder below does NOT make these yet: next job = turn those files into a builder that fills from GHL.
+
+> **Link preview thumbnail (Olly, 2026-11-14):** every plan link shows a picture when sent (WhatsApp, email, iMessage): the top of their cover (their name + title + Olly's photo) at 1200x630, title "<Name>, here's your plan of action". `--upload` makes it automatically (KV `planog:<id>`, served public at /p/<code>/og.jpg; tags added in functions/p/[[path]].js). Nothing to do by hand.
+
 Built 2026-11-12 with Olly on the first applicant. **This is the plan every applicant now gets** (replaces the template pages of Plan v3.1 in `skills_applicant-looms.md`; the flow around it, Flow v3, is unchanged: message → voice note → they say yes → plan → video → join).
 
 **Builder:** `tools/build_plan_v4.py SPEC.json OUTDIR [--upload]` (+ `tools/plan_v4_shoot.js`, `tools/export_carousel.js`).
 **Private data:** the spec and the output hold the applicant's words. Keep them in `funnel/applicant-guides/<first-last>/` (git-ignored, survives between sessions: spec.json there, build output in `out/`). Never anywhere committed: the repo is public.
+
+> **⚠️ UPDATE 2026-11-14: APPLICANTS (tag `heart attractor applicant`) get the simple diagnosis + the program steps in ONE plan: spec `"kind": "simple", "program": true` (or `--simple --program`) = 20 pages: cover, told me, belief, shows up, core 'You Need To Feel X Every Day', the belief you'll build IN THE PROGRAM, what changes, unfold, junction, steps 1-8 (write `steps` personalised as before, step 6 phone text), What I Need From You, note, closing. Simple without program (10 pages) was used once (sent before this rule). Plan requests (DM) keep part 1 / part 2.**
+
+> Simple without program (`"kind": "simple"`, 10 pages) is only used if Olly asks for it (one applicant had it, 2026-11-14).
 
 ---
 
@@ -31,29 +47,40 @@ Built 2026-11-12 with Olly on the first applicant. **This is the plan every appl
 
 ## Writing the spec (Claude does this from their GHL answers)
 
+**Step 0: pick the plan type from their tags BEFORE writing anything** (Olly 2026-11-13: "it's a plan request, not an application request, but you built the plan with all the steps"). Tag `plan request` (DM, free plan form) = `"kind": "request"` (part 1 sent first, part 2 only if they say they're interested). Tag `heart attractor applicant` = the applicant defaults at the top of this file. Say which one you're building in your first line to Olly.
+
+**Step 0b: check whether they did the Feeling Finder** (FF fields filled, tag `feeling finder`) and tell Olly if not: without it the feeling and current emotion come from the plan form / application words only.
+
 Pull the contact (GHL `contacts_get-contacts` by name): HA fields (status, how long, relationship wanted, tried, not happening, feelings about love, meet right person once, priority, profession) + FF fields (FF Current Emotion, FF Resonance = the feeling they want, FF Intentions = what they want in a partner). Map field ids with `locations_get-custom-fields`.
 
 Copy the last applicant's `funnel/applicant-guides/<first-last>/spec.json` and rewrite every value. Rules:
 
 1. **Only their words.** Every line traces to an answer. Nothing invented (`feedback_messaging_source_order`). If an answer is missing, leave that idea out.
 2. **Diagnosis is direct, not hedged** (Olly: "you're just being honest"): intro starts "Based on your answers, my understanding is that there's a belief running underneath…". Title is always "The Belief That's Holding You Back".
-   - thought = what they'd think in the moment (from "not happening"), feeling = FF Current Emotion + the feeling words in "feelings about love", repetition = their pattern, belief = closest to their own words (e.g. "doubts of whether I can be loved" → "I'm not sure I can be loved as I am").
+   - thought = what they'd think in the moment (from "not happening"), feeling = FF Current Emotion + the feeling words in "feelings about love", repetition = the thought + feeling repeated, NEVER an action or outcome (Olly 2026-11-13: "it's not the action, it's just the repeated thought"; e.g. "You think and feel this, again and again"), belief = closest to their own words (e.g. "doubts of whether I can be loved" → "I'm not sure I can be loved as I am").
 3. **The new belief** comes from what they want ("loves me because of me" → "I'm loved for who I am"); the thought adds their "once I…" answer ("I'm with my person and I can be myself").
 4. **The feeling** = FF Resonance (e.g. Belonging). It's the word used on pages 5, 8, 9 and the steps.
 5. **Every training step (2-5) names BOTH**: the feeling they're building AND keeping THEIR negative emotion at bay (anxiety and doubt / loneliness / frustration…), not generic "intellectualizing" (Olly 2026-11-12).
-6. **Steps 6-7 fit where they are**: dating already → "keep dating as yourself"; not dating → small steps within your comfort zone. Step 7 names their sticking point (e.g. "the 2 to 3 month point"). Give step 7 a title if the default doesn't fit.
+6. **Step 7 = we guide them through the process**, never a skill they must manage (Olly 2026-11-13: not "you'll know how much to share", "they're not overthinking what to share"). **Steps 6-7 fit where they are**: dating already → "keep dating as yourself"; not dating → small steps within your comfort zone. Step 7 names their sticking point (e.g. "the 2 to 3 month point"). Give step 7 a title if the default doesn't fit.
 7. **Never promise an outcome** ("things have room to keep growing", not "you'll get past 3 months"). v6 rules: "the right people start showing up", never frequency/manifesting.
-8. **The text message (Step 6 phone)**: what their person would actually send, about real plans, showing what they want *without saying it*. Ordinary, short, never a line or a therapy word. Commitment example Olly approved: "Hey, my sister just asked if you're coming to her birthday next month. I told her yes, hope that's ok! Still on for dinner Saturday?" (rejected: "I feel like I can just be myself with you", too on the nose). No emoji (the font can't draw them). Images: `gender` female = male partner photos, male = female.
+8. **The text message (Step 6 phone)**: what their person would actually send, about real plans, showing what they want *without saying it*. Keep it universal (family, dinner, everyday plans), never a specific hobby or activity they didn't name (Olly 2026-11-13: a hike "might not strike a chord"). Ordinary, short, never a line or a therapy word. Commitment example Olly approved: "Hey, my sister just asked if you're coming to her birthday next month. I told her yes, hope that's ok! Still on for dinner Saturday?" (rejected: "I feel like I can just be myself with you", too on the nose). No emoji (the font can't draw them). Images: `gender` female = male partner photos, male = female.
 9. **commit_priority_line** ties to their priority answer ("You told me it's your main focus, so I know it is."). If they said "it matters, but other things come first", write it honestly ("You told me other things come first right now, so this is the one thing to be sure about.").
 10. **Note**: draft in Olly's voice from their answers, 3 short paragraphs (`\n` = new paragraph); Olly rewrites it.
-11. Copy rules: no comma before and/or, "program", "practice", no dashes as separators, plain English. `<b>` allowed in step text. Straight quotes in the spec become curly on the stick pages.
+11. **When Olly changes the thought or the belief, rebuild everything that hangs off it** in the same pass (feeling words, repetition, new belief, new thought, how-it-shows-up bubbles, steps), without being asked twice. Why: Olly changed a plan request's thought, then had to ask "adjust the feelings and reverse beliefs accordingly".
+12. **Write the cover lines in second person with a capital at every sentence start** ("You've been looking…"). Why: the builder swaps I→you, and a lowercase "you've" slipped onto a cover.
+13. **Keep the core page short** (intro 1 to 2 sentences, each point 1 to 2 short sentences, their resonance intro under ~25 words). Why: long text makes the page auto-shrink (an applicant's first build).
+14. Copy rules: no comma before and/or, "program", "practice", no dashes as separators, plain English. `<b>` allowed in step text. Straight quotes in the spec become curly on the stick pages.
 
 ## Run it
 
 ```
 python tools/build_plan_v4.py funnel/applicant-guides/<first-last>/spec.json funnel/applicant-guides/<first-last>/out
 ```
-→ `out/preview.html`. Publish it as a private artifact for Olly (it embeds their words, so it stays private). Check every page image yourself first (overflow warnings in the output are usually false alarms on the head; look anyway).
+→ `out/preview.html`. Publish it as a private artifact for Olly (it embeds their words, so it stays private). Check every page image yourself first (overflow warnings in the output are usually false alarms on the head; look anyway). Look specifically at: every speech bubble sits inside its scene and never crosses both heads (long bubbles wrap automatically above ~32 characters; shorten the line if it still looks crowded), and the 3 pills on Things Start To Unfold hold their text (they widen together up to 900px automatically). Why: Olly caught both on a plan request (2026-11-13).
+
+**Presenting a plan request preview:** say plainly "pages 1 to 10 = part 1, the only part you send now; pages 11 to 23 = part 2, sent only if they say they're interested". Why: the preview shows both parts stacked and Olly thought it was all going out at once.
+
+**After upload, say where it is and how to send it:** "on their Sales card > 📄 Plan of action, Send on WhatsApp or Copy link" (Copy link for email-only people). Why: Olly: "just make sure it's in her card"; sending from the card marks it sent and tracks opens.
 
 When Olly approves:
 ```
@@ -67,17 +94,20 @@ A change after upload = edit the spec, rerun with `--upload` (same link). The te
 
 ## Next (agreed, not built yet)
 
-- **Plan requests** (people from the DM form, `skills_dm-plan-setting.md`): a shorter personal plan that sells the plan, not the program. Then: "would you like to see how the program does this?" → if yes, a second plan = the program (steps + commitment) → any questions → their video. One extra step before the pitch.
+- ~~Plan requests~~ BUILT 2026-11-13: put `"kind": "request"` in the spec (or `--request`). Part 1 = cover + 7 diagnosis pages (page 5 'The Belief You'll Build', page 8 eyebrow 'How It Works', no 'In The Program') + 'What I'd Do If I Were You' (Olly's first-person summary, 5 steps: build a new belief (their new belief) / practice it every day (their thought + feeling, 'as part of a daily meditation practice': never '10-minute' in part 1's steps, Olly 2026-11-13: part 2 takes them through the meditation specifics) / anchor it when the doubt comes up (their negative emotion + old thought) / act from that place / meet someone from a good place; NO program, NO screenshots; spec `request_summary` [[title, text]x5] overrides with their own words) + 'Name, Does This Sound Like Your Situation?': 'This is what I'd do, and these are the steps. Let me know your thoughts.' + 'If you'd like some help with this, I have a program that takes you through it step by step, and I can send you more information about it. Just let me know if that's something you're interested in.' (10 pages). Part 2 opens with 'Part 2 of your plan / Name, Here's How We'd Do This Together' ('You've seen your plan and the steps I'd take in your shoes...') then the 12 program pages (13 total). Olly's aim: they read it and think 'this person knows me better than I do'. Part 2 = junction + 8 steps + What I Need From You + note + closing (12 pages, own link, KV id `<contactId>-program`). Preview shows both; `--upload` prints both links. The Sales card shows part 2's link + opens at step 4. Applicants (tag `heart attractor applicant`) never get the split: see the defaults at the top.
 - Hub button to build v4 from the card (today Claude builds it from the spec).
 
 ---
 
-## Never (from Olly's corrections, 2026-11-12)
+## Never (from Olly's corrections, 2026-11-12 to 2026-11-14)
 - Never hedge the diagnosis ("might be", "if this belief is running"). Say "Based on your answers, my understanding is…". Why: Olly: "You're just being honest."
 - Never say "the belief we'll build for you". It's "The Belief You'll Build In The Program" and "the feeling you'll build". Why: they do the work inside the program; the plan sells the program.
 - Never keep generic argument pages an applicant already accepts (tried everything / The Truth, friends, not what you know). Why: "she probably already understands that. It needs to be more tailored to her."
 - Never write a phone text that names the coaching outcome ("I can just be myself with you", "you make me feel I belong"). Why: Olly: "I don't think that's what she'd want… it needs to be subtle. Not robotic." Show it through ordinary plans instead.
 - Never leave a step on generic wording ("keep the intellectualizing at bay"). Name their own emotion.
+- Never title page 4 after the emotion ("When The Impatience Is Running"). It's **"When This Belief / Is Running"** (`shows_up.title_a` = "When This Belief", `title_b` = "Is Running"). Why: Olly 2026-11-13: "Wouldn't it be when the negative belief is running?" The page shows how the belief plays out.
+- Never write "10-minute" in a plan request's part 1 steps. Say "as part of a daily meditation practice". Why: Olly 2026-11-13: part 2 takes them through the meditation specifics.
+- Never build an applicant's plan as a plan request or the other way round. Check the tag first (Step 0).
 - Never send Olly to the old template editor for a v4 person: the card now shows the image pages (he hard-refreshed, saw the old template and thought the plan hadn't changed).
 
 ## Examples (approved for the first applicant)
@@ -86,7 +116,19 @@ A change after upload = edit the spec, rerun with `--upload` (same link). The te
 - Step 5: "In this final training you'll learn how to anchor belonging at any point in your day. This keeps the anxiety and doubt at bay, so when they show up, on a date or a few months in, you can come back to feeling like yourself."
 - Phone text (commitment, shown not said): "Hey, my sister just asked if you're coming to her birthday next month. I told her yes, hope that's ok! Still on for dinner Saturday?"
 - Cover: "Name, Here's Your Plan Of Action To Meet Your Person" (Olly's exact wording).
+- Belief in their own words (Olly's correction, plan request 2026-11-13): thought "Why can't I find someone who has everything that I want?" = belief "Maybe I'm not enough to have what I want". The belief names doubt about themselves, not about the dating pool.
+- Core page (approved simple plan, 2026-11-14): "To create the relationship you want, you need to feel <feeling> every day. Not just think about it. Actually feel it." Then: feel it every day · there's less room for <negative emotion> · a thought and a feeling repeated every day become a belief.
 
 <!-- 2026-11-12 skill review: added Never list + approved examples from the first applicant's build (direct diagnosis,
 "you'll build in the program", cut generic pages, subtle phone text, personalised steps, cover wording, Hub editor
 shows image pages). Removed the first applicant's name from the spec path (public repo). -->
+
+<!-- 2026-11-15 skill review (session: one plan request, two applicants):
+- Added Step 0 (pick request vs applicant from the tag) after a plan request was first built as a full applicant plan.
+- Added Step 0b (check Feeling Finder) after Olly asked whether a plan request had done it.
+- Spec rules 11-13: rebuild everything when Olly changes the thought/belief; second-person capitalised cover lines; keep the core page short.
+- Run it: visual checks for bubbles and pills, how to present a part 1 / part 2 preview, where the uploaded plan lives and how to send it.
+- Never: no "10-minute" in part 1; never mix up request vs applicant.
+- Examples: a plan request's corrected belief; the approved core page wording.
+- Removed the "DEFAULT = SIMPLE (10 pages)" block (overridden the same day by the simple + program rule) and the old "applicants always get the full 20-page plan" line in the request note.
+- Link preview thumbnail note added at the top (built this session). -->
