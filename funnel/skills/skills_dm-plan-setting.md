@@ -219,15 +219,22 @@ If they hesitate / ask what it is:
 
 ## After the form
 
-1. Their card lands in Hub > Sales, tagged as a DM plan request, stage **Plan requested**.
-2. Reply in the DM straight away: "Got it, thank you! I'll get your plan over to you shortly 🙏"
-3. Hub > Sales > card > 📄 Plan of action → check answers → personal note → Make their link.
-4. Send the link on WhatsApp (their number is on the card; no number = in the Instagram DM) + voice note: "Here's the plan of action I've put together for you, that we'll use to help you meet this special person. Let me know your thoughts once you've checked it out."
-5. From here it's Flow v3 steps 5 to 7 (`skills_applicant-looms.md`): wait for them to read it, answer questions, their own video when they ask how to start, join link.
+(Rewritten 2026-11-15 to Olly's corrected order of 2026-11-13; the old "send the plan straight away" steps are gone.)
+1. Their card lands in Hub > Sales, labelled '📩 Plan request (DM)', stage **Plan requested**. The card's steps are the plan-request ones, not the applicant ones.
+2. **Check-in first, build nothing yet:** WhatsApp "Hey <name>, it's Olly from Instagram 👋 Just got your request for your plan of action through. Just reply to this message so I know it's reached you, and I'll put it together and send it over." + the matching email (card step 1).
+3. **When they reply**, Olly says "<Name>'s plan needs to be built" and Claude builds it (`skills_plan-v4.md`, `"kind": "request"`). Send **part 1 only** + the voice note ending "Does it sound like your situation?".
+4. **If they don't ask how, offer it:** "So glad it sounds like you <name> 🙏 I have a program that takes you through this process step by step. Would you like me to send you the details?"
+5. **On a yes, part 2** (the program, its own link, KV id `<contactId>-program`), then their video, then the follow-up + join link (Flow v3 steps 5 to 7, `skills_applicant-looms.md`).
 
 ## Lists + emails (workflow 'Plan Of Action Requests', 2026-11-13)
 Existing steps (webhook → contact + HA fields → tag `plan request` → Hub push) then If/Else 'Where are they?': Member (`joined heart attractor program`) end / Already on list (`daily email list`) end / Did Feeling Finder (`feeling finder`, that workflow already sends its bonus + list) end / None → wait 1 day → template 'Plan request: bonus training' (video training youtu.be/PPiqFhUhypo; made by marketing/email-sequences/make_plan_request_bonus.py) → wait 1 day → `daily email list`. No branch in other workflows offers the plan (it's only offered in DMs).
 Hub Overview: plan requests = own column beside applications ('Where your applications and plan requests came from'), and a NEW lead only when no freebie tag came first (ghl-sources.js plans / planLeads; label 'Instagram DM: asked for a free plan of action').
+
+### Never (Olly's corrections, 2026-11-13)
+- Never build or send a plan before they've replied to the check-in. Why: Olly: "just reply to this message so I know it's reached you, and I'll put it together"; a plan sent to a dead number or an unread DM is wasted work.
+- Never put the program, its steps or screenshots in part 1. Part 1 makes them think "this person knows me better than I do", ends on "What I'd Do If I Were You" in Olly's order (new belief → daily thought + feeling in a meditation → anchor it when the doubt comes up → act from that place → meet someone from a good place) and a soft offer. Why: the first build showed the program and Olly said it should be the plan only, with the program as a separate step they ask for.
+- Never give a plan requester the applicant 20-page plan (or the other way round). Check the tag: an applicant once got split into part 1 / part 2 by mistake.
+- Never make the plan-request bonus email the Feeling Finder. Why: Olly: most plan requesters come from FEELING, so they've already done it; the bonus is the video training (youtu.be/PPiqFhUhypo) in Olly's own wording (`make_plan_request_bonus.py`).
 
 ## Sources for every pain line
 
@@ -255,3 +262,5 @@ Add real replies and what worked here as they come in. Don't rewrite the framewo
 no Instagram field, one-box profession, no money questions, click-through previews, short link) and the refine note. -->
 
 <!-- 2026-11-15 skill review: v2 (belief-led DM) was written this session at Olly's request ("reverse engineer this so that the plan makes sense that they want to learn it"). No corrections from Olly on it yet, so no rules changed. Still open (Hub to-do): add current emotional state + current belief questions to the plan form and the application, so the plan's diagnosis has their own words. -->
+
+<!-- 2026-11-15 skill review (session 2026-11-13): "After the form" rewritten to the corrected v2 order (check-in reply first, part 1 only, offer the details, part 2 on a yes); the old "reply 'I'll get your plan over shortly' and send the link straight away" steps removed as overridden. Added a Never list: no plan before the reply, no program in part 1, check the tag, bonus = video training. -->

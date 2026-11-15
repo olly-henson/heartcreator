@@ -596,3 +596,11 @@ last good deploy URL; added plan-request board/push, v4 image-plan routes, Links
 link (1a) with Plan sent on the WhatsApp tap, full-plan follow-up in section 2, plan-sent rule for the short+full format and
 its edge case (old waSent), clearing a stray plan.html "sent" stamp, self-reload after deploys, -short ids. Applicant names
 removed from these notes (public repo). -->
+
+### Never (added 2026-11-15, from the 2026-11-13 session)
+- Never fix one truncated box and leave its siblings. When text is cut off, every box of that kind gets a See more, including the different-looking ones (the mind map's centre "What you want" box). Why: Olly asked for See more on the answers, then had to ask again for the centre box ("This needs to be applied to the middle section too").
+- Never fall back to an old template when a person has no data of the new kind. plan.html shows "<who> doesn't have a personal plan yet… Ask Claude" when there's no saved v4 plan. Why: an applicant's card showed the old template and Olly thought the new builder hadn't been deployed.
+- Never give a plan-request card the applicant steps. `a.planRequest` cards have their own steps (check-in reply → part 1 → offer → part 2 `<id>-program` → video → join).
+- Removed from the mind map (Olly 2026-11-13): the "Your plan of action" 3-step section. Don't add it back; the plan lives in the plan pages.
+
+<!-- 2026-11-15 skill review: added the Never block above (See more on every truncated box incl. the centre, no fallback to the old plan template, plan-request card steps, mind map plan section removed). -->

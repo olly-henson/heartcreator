@@ -831,8 +831,16 @@ var PRESET = null;
     document.title = who + "'s Plan of Action";
     // Plan v4 (2026-11-12): a personal image plan built by tools/build_plan_v4.py replaces the template pages here,
     // so Olly sees exactly what their link shows. The template boxes on the left don't change those pages.
-    if (saved && saved._code) fetch('/p/' + saved._code + '/pages', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
-      var n = (d && d.n) | 0; if (!n) return;
+    // No personal plan yet (Olly 2026-11-13): never fall back to the old template, say what to do instead
+    function noPlan() {
+      document.getElementById('stage').innerHTML = '<div style="max-width:540px;margin:40px auto;padding:28px;border-radius:16px;background:#fff;color:#1d1527;box-shadow:0 2px 18px rgba(40,10,70,.12);font:17px/1.55 Inter,system-ui,sans-serif">'
+        + '<b style="font-size:20px;display:block;margin-bottom:8px">' + who + " doesn't have a personal plan yet</b>"
+        + 'Personal plans are written from their answers by Claude. Ask Claude: <b>&ldquo;Build ' + who + '&rsquo;s personal plan&rdquo;</b>. It works for any applicant, new or old. Once it&rsquo;s uploaded, refresh this page and their pages show here, ready to send.</div>';
+      note.textContent = 'No personal plan for ' + who + ' yet. Ask Claude to build it.';
+    }
+    if (!(saved && saved._code)) { noPlan(); return; }
+    fetch('/p/' + saved._code + '/pages', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+      var n = (d && d.n) | 0; if (!n) { noPlan(); return; }
       var st = document.getElementById('stage'), h = '';
       for (var i = 1; i <= n; i++) h += '<img src="/p/' + saved._code + '/page/' + String(i).padStart(2, '0') + '.jpg" alt="Page ' + i + '" style="display:block;width:540px;max-width:100%;height:auto;margin:0 auto 22px;border-radius:12px;box-shadow:0 2px 18px rgba(40,10,70,.12)" loading="lazy">';
       st.innerHTML = h;

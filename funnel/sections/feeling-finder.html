@@ -141,8 +141,8 @@
     <section class="ohc-screen" id="ohc_start">
       <span class="ohc-badge">The Feeling Finder · Free</span>
       <h1 class="ohc-h1 ohc-big ohc-pyr"><span>Find The Exact Feeling</span><span>That <span class="ohc-grad">Attracts</span></span><span class="ohc-grad">Your Person</span></h1>
-      <p class="ohc-sub ohc-pyr ohc-desk"><span>In 2 minutes, find the exact feeling</span><span>that will attract your perfect</span><span>relationship.</span></p>
-      <p class="ohc-sub ohc-pyr ohc-phone"><span>In 2 minutes, find the exact feeling</span><span>that will attract your perfect</span><span>relationship.</span></p>
+      <p class="ohc-sub ohc-pyr ohc-desk"><span>In 2 minutes, find the feeling that attracts</span><span>someone you can marry, have children</span><span>with and build a life with.</span></p>
+      <p class="ohc-sub ohc-pyr ohc-phone"><span>In 2 minutes, find the feeling that attracts</span><span>someone you can marry, have children</span><span>with and build a life with.</span></p>
       <button class="ohc-btn" type="button" id="ohc_begin">Find My Feeling</button>
       <div class="ohc-trust"><span>3 quick steps</span><span>About 2 minutes</span><span>Free</span></div>
     </section>
@@ -172,7 +172,7 @@
     <section class="ohc-screen" id="ohc_email" hidden>
       <button class="ohc-back" type="button" id="ohc_eback">&#8592; Back</button><br>
       <span class="ohc-badge">Your emotion is ready</span>
-      <h2 class="ohc-h1" style="font-size:clamp(22px,5.8vw,30px);">Ready to see the feeling you need to attract your perfect relationship <span class="ohc-grad">and the plan of action to make it happen?</span></h2>
+      <h2 class="ohc-h1" style="font-size:clamp(22px,5.8vw,30px);">Ready to see the feeling that attracts your life partner <span class="ohc-grad">and the plan of action to make it happen?</span></h2>
       <p class="ohc-sub">You'll see it straight away, and I'll email you a copy so you can come back to it.</p>
       <div class="ohc-card">
         <div class="ohc-names">
@@ -191,7 +191,7 @@
       <div class="ohc-res">
         <span class="ohc-badge" id="ohc_rname">Your emotion is</span>
         <div class="ohc-h1 ohc-big"><span class="ohc-grad" id="ohc_rfeel"></span></div>
-        <p>This is the emotion you will feel with your perfect partner.</p>
+        <p>This is the emotion you will feel with your life partner.</p>
       </div>
 
       <div class="ohc-sec"><h3>You're here. This is where you need to be.</h3>
@@ -271,7 +271,7 @@
     var iw = $("ohc_intents"); iw.hidden = !S.text; iw.innerHTML = "";
     if (S.text) {
       var ord = ["first","second","third","fourth"];
-      var ex = document.createElement("p"); ex.className = "ohc-ex"; ex.textContent = "For example: someone who's emotionally available and ready to commit"; iw.appendChild(ex);
+      var ex = document.createElement("p"); ex.className = "ohc-ex"; ex.textContent = "For example: someone who wants to get married and have children"; iw.appendChild(ex);
       for (var k = 0; k < S.text; k++) (function(k){
         var inp = document.createElement("input"); inp.className = "ohc-input"; inp.type = "text"; inp.maxLength = 60; inp.id = "ohc_who" + k;
         inp.placeholder = "Your " + ord[k] + " intention"; inp.setAttribute("aria-label", "Intention " + (k + 1)); inp.value = picks.who[k] || "";
@@ -327,8 +327,8 @@
     $("ohc_mnow").style.top = pos(Math.round(nowAvg)); $("ohc_mwant").style.top = pos(Math.round(wantAvg));
     var feel = list(top).toLowerCase();
     $("ohc_gap").textContent = nowAvg < 10.5
-      ? "Right now you feel " + nowWord.toLowerCase() + ", below the line in the survival-based emotions. " + feel.charAt(0).toUpperCase() + feel.slice(1) + ", the emotion you'll feel with your perfect partner, sits above it. Closing that gap is what changes who you attract."
-      : "Right now you feel " + nowWord.toLowerCase() + ", already above the line. The emotion you'll feel with your perfect partner is " + feel + ". The key is making that your everyday state.";
+      ? "Right now you feel " + nowWord.toLowerCase() + ", below the line in the survival-based emotions. " + feel.charAt(0).toUpperCase() + feel.slice(1) + ", the emotion you'll feel with your life partner, sits above it. Closing that gap is what changes who you attract."
+      : "Right now you feel " + nowWord.toLowerCase() + ", already above the line. The emotion you'll feel with your life partner is " + feel + ". The key is making that your everyday state.";
     var ul = $("ohc_rwho"); ul.innerHTML = ""; picks.who.filter(function(x){ return x; }).forEach(function(w){ var li = document.createElement("li"); li.textContent = w; ul.appendChild(li); });
     $("ohc_apply").href = APPLY_URL;
     return top;

@@ -206,6 +206,7 @@ Then re-count the Skool limits (section 5) and republish each tool you changed.
 - **Founder story:** only "worked on my emotional state every day, then met Jules and we both just knew". The old 7-year relationship / breakup / teachers story was removed everywhere 2026-11-05.
 
 ### Never
+- Never write "attract your perfect relationship/partner" in the generator's hooks, 'who' lines, captions or Feeling Finder descriptions. It's "your life partner" and the who line is "someone you can marry, have children with and build a life with"; caption line 1 = "💜 Attract someone you can marry, have children with and build a life with" (v229, 2026-11-13). Why: the best applicants all say this; it's the big positioning priority (memory project_life_partner_positioning).
 - Never let keyboard shortcuts on an overlay act while he's typing in a text box (2026-11-11: the swipe preview's arrow keys changed slides while he edited the caption). Check `e.target` first.
 - Never add a separate carousel-wide control when an existing slide can set it (slide 1 sets the top line; a stand-alone slider was rejected).
 - Never hand Olly slide-by-slide copy to paste into a tool that can write it from his source text (Process 15).
@@ -382,3 +383,5 @@ batch saved online after a refresh lost one. Reels tab takes "An applicant's wor
 VSL photo names are swapped. -->
 
 <!-- 2026-11-11 skill review: Process 15-17 (build "from my post" into the generator instead of chat copy to paste; walkthroughs say what's read-only; paste steps carry the text in a code block). Carousel maker principles: slide 1 controls every-slide layout (separate top-line slider v223 overridden by v224), per-slide photo zoom/move, swipe preview with editable caption (v222-228). Never: overlay shortcuts while typing, stand-alone global controls, hand-pasted slides. Example: overthinker-to-wife story carousel. Why: Olly's corrections this session ("pointless having a generator otherwise", "I meant from the post", "adjust the height from the first slide"). -->
+
+<!-- 2026-11-15 skill review (session 2026-11-13): Never rule for the life-partner wording that went into the generator (v229). -->

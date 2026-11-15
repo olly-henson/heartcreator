@@ -26,8 +26,11 @@ Current lead magnets (keep this table updated):
 | Free video training v2 "How To Attract Your Person Scientifically" (2026-11-03, alongside the old one) | ollyhenson.com/attract (`sections/scientifically-attract-optin.html`) | `scientifically attract training` | `.../webhook-trigger/mUGZ0Ey3v3Vbq2vLX9Am` ("Scientifically Attract Training Opt-in") | Redirects to the YouTube video youtu.be/PPiqFhUhypo |
 | **The Feeling Finder** (main lead magnet from 2026-10-28, keyword FEELING; A/B variant B = `sections/feeling-finder-image-variant.html`) | ollyhenson.com/feeling (`sections/feeling-finder.html`) | `feeling finder` | `.../webhook-trigger/27fecd84-c766-4400-81f4-d420327376ad` ("Feeling Finder") | Result page → Find Out More (apply) |
 | The Love Scale (RETIRED 2026-10-28: page stays live, not promoted, not in content) | ollyhenson.com/scale (`sections/emotional-scale-check.html`) | `emotional scale check` | `.../webhook-trigger/d2d567ec-81e9-4b28-9e5a-151273a0c42a` ("Emotional Scale Check") | Result page → Apply button |
+| Free personal plan of action (DM only, 2026-11-12; not a public lead magnet) | ollyhenson.com/plan-dm → /plan (`sections/plan-request.html`) | `plan request` | `.../webhook-trigger/jDxQnt2NA8MypgWQ1wgT` ("Plan Of Action Requests") | Hub Sales card; If/Else Member / On list / Did Feeling Finder → end, None → 1 day → "Plan request: bonus training" → 1 day → `daily email list` |
 
 Webhook base: `https://services.leadconnectorhq.com/hooks/LRqVZmxns8f3xcJLHzBK/webhook-trigger/`
+
+**Pick the bonus email by where they came from** (Olly 2026-11-13): the bonus should be the freebie they most likely haven't had. Plan requesters mostly come in from FEELING, so their bonus is the video training, not the Feeling Finder, and anyone who did the Feeling Finder skips it (that workflow already sends its bonus).
 
 ---
 
@@ -147,3 +150,5 @@ Make the word "here" a link to: <tracked link>
 - **2026-10-26 skill review:** Added page rules from The Love Scale build (lean result pages, one next step per traffic source, plain instructions, product-name buttons, catchy tool name with internal names kept, SEO copy), preview-before-copy, mirrored bonus emails, short links with one-redirect-per-medium, and made the Hub beacon + track/ghl-sources update a required step. Why: each came from a correction or request from Olly while building The Love Scale.
 - **2026-10-29: Skill review.** Added "Webhook payload checks": no inline comments on payload lines; test-submit and check every field after any page change. Why: the Feeling Finder stopped sending current emotion after the A/B edit and Olly spotted it in GHL a day later.
 - **2026-10-30: Skill review.** Added "Per-content tracking through ManyChat": no post ID (tested), per-post automations only for tested Reels, a keyword per content type with exact-match DMs, DM leads aren't tied to a Reel. Why: the carousel EMOTION setup and the post-ID test.
+
+- **2026-11-15: Skill review.** Added the DM plan request to the lead magnet table (own tag, joins the ecosystem like the others) and the rule to pick the bonus by where they came from. Why: Olly: "make sure these people are on the right lists and segmented the same way", and he chose the video training as their bonus because they've usually done the Feeling Finder.

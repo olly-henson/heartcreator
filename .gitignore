@@ -45,3 +45,6 @@ business management/business hub/hub-site/public/vsl/
 
 # 35 MB expression model for the Reel cover (download URL in reels/cover_pick.py)
 reels/models/
+
+# Cloud backups: contacts, Hub data, .env copy (private, never commit) (2026-11-13)
+backups/

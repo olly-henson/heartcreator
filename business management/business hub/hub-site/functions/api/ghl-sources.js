@@ -24,6 +24,7 @@ const TAG_LOOM = "loom video sent";
 const TAG_CANCELLED = "cancelled heart attractor program";   // added by Olly when a member leaves (2026-10-27)   // added by Olly when he sends an applicant a Loom (2026-10-27)   // The Love Scale sign-ups (2026-10-26)
 const TAG_APPLIED = "heart attractor applicant";
 const TAG_JOINED = "joined heart attractor program";
+const TAG_PLAN = "plan request";   // free plan of action request from the Instagram DM form (2026-11-13: counted on the Overview)
 // The daily email list. Olly's plan called it "daily email"; the opt-in
 // workflow actually applies "daily email list" — count either.
 const TAGS_EMAIL = ["daily email list", "daily email"];
@@ -162,11 +163,11 @@ export async function onRequestGet({ env }) {
   allCache = null;
   try {
     const { ids, ha, dates } = await utmFieldIds(env);
-    const [optins1, optins2, applied, scale, feeling, loom, joined] = await Promise.all([contactsWithTag(env, TAG_OPTIN), contactsWithTag(env, TAG_OPTIN2), contactsWithTag(env, TAG_APPLIED), contactsWithTag(env, TAG_SCALE), contactsWithTag(env, TAG_FEELING), contactsWithTag(env, TAG_LOOM), contactsWithTag(env, TAG_JOINED)]);
+    const [plans, optins1, optins2, applied, scale, feeling, loom, joined] = await Promise.all([contactsWithTag(env, TAG_PLAN), contactsWithTag(env, TAG_OPTIN), contactsWithTag(env, TAG_OPTIN2), contactsWithTag(env, TAG_APPLIED), contactsWithTag(env, TAG_SCALE), contactsWithTag(env, TAG_FEELING), contactsWithTag(env, TAG_LOOM), contactsWithTag(env, TAG_JOINED)]);
 
     const optins = optins1.concat(optins2);
     const byId = {};
-    optins.concat(applied, scale, feeling, loom, joined).forEach(function (c) { byId[c.id] = c; });
+    optins.concat(applied, scale, feeling, loom, joined, plans).forEach(function (c) { byId[c.id] = c; });
 
     const groups = {};
     function bump(c, set, what, when) {
@@ -180,13 +181,19 @@ export async function onRequestGet({ env }) {
         content: fieldValue(c, set.content),
       };
       const k = [row.day, row.source, row.medium, row.campaign, row.content].join("|");
-      if (!groups[k]) groups[k] = Object.assign(row, { optins: 0, applied: 0, joined: 0, scale: 0, feeling: 0, loom: 0 });
+      if (!groups[k]) groups[k] = Object.assign(row, { optins: 0, applied: 0, joined: 0, scale: 0, feeling: 0, loom: 0, plans: 0, planLeads: 0 });
       groups[k][what]++;
     }
     Object.values(byId).forEach(function (c) {
       if (hasTag(c, TAG_OPTIN) || hasTag(c, TAG_OPTIN2)) bump(c, ids, "optins");
       if (hasTag(c, TAG_SCALE)) bump(c, ids, "scale");
       if (hasTag(c, TAG_FEELING)) bump(c, ids, "feeling");
+      // plan requests (2026-11-13): counted where they asked (the form fills the HA fields); a NEW lead only if no freebie brought them in first
+      if (hasTag(c, TAG_PLAN) && !hasTag(c, TAG_APPLIED)) {
+        const planSet = (ha.source && fieldValue(c, ha.source)) ? ha : ids;
+        bump(c, planSet, "plans");
+        if (!hasTag(c, TAG_OPTIN) && !hasTag(c, TAG_OPTIN2) && !hasTag(c, TAG_SCALE) && !hasTag(c, TAG_FEELING)) bump(c, planSet, "planLeads");
+      }
       if (hasTag(c, TAG_APPLIED)) {
         // applications count where the application came from; older applicants (before the HA fields) fall back to the opt-in UTMs
         const appliedSet = (ha.source && fieldValue(c, ha.source)) ? ha : ids;

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training Slides Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* MEMBER TRAINING SLIDES TEMPLATE (Google Vids, square webcam). Built 2026-11-10 from the sales video (VSL) slides.
+   Copy this file for every new training: training/<name>.html + a sibling "<name> images/" folder.
+   ONE FIXED LAYOUT on every slide (same as the VSL, Olly: "it looks all over the place" otherwise):
+     LEFT  = media box, x40 y40, 640x640 (one big POV image, two halves, or a text card)
+     RIGHT = webcam square top-right (x1020 y40, 220x220, set once in Google Vids, never moved, never covered)
+             + brand line beside it, then eyebrow / title / words from y300, x720, 520 wide.
+   White, dark text, purple accents, Title Case titles, problem = red pill, solution = green pill.
+   Keys: right/space/click = next, left = back, F = full screen. ?all = every slide, ?s=N = start on slide N, ?cam = draw the webcam box. */
+:root { --ink:#1d1527; --soft:#4a4057; --purple:#6b21a8; --violet:#7c3aed; --line:#ece6f3; --tint:#f5f0fb;
+  --display:"Playfair Display", Georgia, serif; --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif; }
+html, body { margin:0; height:100%; background:var(--letterbox); font-family:var(--body); color:var(--ink); }
+:root { --letterbox:#14101a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --letterbox:#14101a; } }
+:root[data-theme="dark"] { --letterbox:#14101a; }
+.fsbtn { position:fixed; right:16px; bottom:16px; z-index:10; border:0; border-radius:10px; background:rgba(255,255,255,.92); color:#1d1527; font:600 14px var(--body); padding:10px 14px; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,.25); transition:opacity .4s; }
+.count { position:fixed; left:16px; bottom:16px; z-index:10; color:#cfc6dc; font:600 13px var(--body); letter-spacing:.08em; transition:opacity .4s; }
+body.idle .fsbtn, body.idle .count, :fullscreen .fsbtn, :fullscreen .count { opacity:0; pointer-events:none; }
+.stage { position:fixed; inset:0; overflow:hidden; }
+.slide { width:1280px; height:720px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(var(--k,1));
+  background:#fff; overflow:hidden; display:none; box-shadow:0 4px 30px rgba(30,10,50,.12); font-family:var(--body); color:var(--ink); }
+.slide, .slide * { box-sizing:border-box; }
+.slide.on { display:block; }
+body.all .stage { position:static; padding:20px 0; }
+body.all .slide { display:block; position:relative; left:auto; top:auto; transform:none; margin:0 auto 24px; }
+
+/* the fixed frame */
+.media { position:absolute; left:40px; top:40px; width:640px; height:640px; border-radius:22px; overflow:hidden; background:#f7f5fa; border:1px solid var(--line); }
+.media > img { width:100%; height:100%; object-fit:cover; display:block; }
+.brand { position:absolute; left:720px; top:46px; font-size:14px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--purple); line-height:1.5; }
+.brand span { display:block; color:#8a7f99; font-weight:600; letter-spacing:.1em; }
+.cam { position:absolute; left:1020px; top:40px; width:220px; height:220px; border-radius:16px; display:none;
+  border:3px dashed #cbb8e6; color:#9a86b8; font:600 15px var(--body); place-items:center; text-align:center; background:rgba(255,255,255,.6); }
+body.showcam .cam { display:grid; }
+.words { position:absolute; left:720px; top:300px; width:520px; }
+.eyebrow { font-size:15px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--purple); }
+.slide h1 { font-family:var(--display); font-weight:900; font-size:42px; line-height:1.1; margin:12px 0 0; text-wrap:balance; }
+.slide h1 em { font-style:normal; color:var(--purple); }
+.line { font-size:22px; line-height:1.42; margin:16px 0 0; color:var(--ink); }
+.line b { color:var(--purple); }
+.rule { width:64px; height:4px; border-radius:2px; background:var(--violet); margin-top:20px; }
+
+/* lists */
+.ticks, .nums { list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+.ticks li, .nums li { display:flex; gap:12px; align-items:flex-start; font-size:20px; line-height:1.35; }
+.ticks li::before { content:"✓"; flex:none; width:30px; height:30px; border-radius:50%; background:var(--tint); border:2px solid var(--violet); color:var(--purple); font-size:16px; font-weight:700; display:grid; place-items:center; }
+.nums { counter-reset:n; gap:10px; }
+.nums li { counter-increment:n; }
+.nums li::before { content:counter(n); flex:none; width:30px; height:30px; border-radius:50%; background:#fff; border:2px solid var(--violet); color:var(--purple); font-size:15px; font-weight:700; display:grid; place-items:center; }
+
+/* pills (plan colours) */
+.pill { display:inline-block; font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:6px 13px; border-radius:999px; background:#e7f6ec; color:#1a7f37; border:1px solid #b7e2c3; }
+.pill.prob { background:#fdecec; color:#b42318; border-color:#f3c1bd; }
+.ps p { margin:8px 0 0; font-size:19px; line-height:1.4; }
+.ps + .ps { margin-top:22px; }
+
+/* media variants */
+.halves { display:grid; grid-template-rows:1fr 1fr; gap:8px; height:100%; background:#fff; }
+.halves div { position:relative; overflow:hidden; }
+.halves img { width:100%; height:100%; object-fit:cover; display:block; }
+.halves .pill { position:absolute; left:14px; bottom:14px; }
+.combo { position:relative; height:100%; }
+.combo .lap { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:62% center; }
+.combo .ph { position:absolute; left:18px; bottom:18px; width:232px; height:478px; object-fit:cover; border-radius:16px; border:4px solid #fff; box-shadow:0 8px 28px rgba(20,10,40,.35); }
+.phones { display:grid; grid-template-columns:1fr 1fr; gap:8px; height:100%; background:#fff; }
+.phones div { position:relative; overflow:hidden; } .phones img { width:100%; height:100%; object-fit:cover; display:block; }
+.phones .tag { position:absolute; left:12px; top:12px; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:rgba(29,21,39,.72); padding:5px 10px; border-radius:999px; }
+
+/* timeline card (media box) */
+.tl { background:var(--tint); height:100%; padding:56px 52px; }
+.tl ol { list-style:none; margin:0; padding:0 0 0 44px; position:relative; display:flex; flex-direction:column; gap:40px; }
+.tl ol::before { content:""; position:absolute; left:12px; top:12px; bottom:14px; width:3px; border-radius:2px; background:#d9c7f0; }
+.tl li { position:relative; }
+.tl li::before { content:""; position:absolute; left:-44px; top:4px; width:27px; height:27px; border-radius:50%; background:#fff; border:3px solid var(--violet); }
+.tl li:last-child::before { background:var(--violet); }
+.tl b { display:block; font-size:18px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); }
+.tl span { display:block; font-size:23px; line-height:1.38; margin-top:6px; color:var(--ink); }
+
+/* price */
+.price { font-family:var(--display); font-weight:900; font-size:50px; line-height:1; margin-top:12px; }
+.price small { display:block; font-family:var(--body); font-weight:500; font-size:19px; line-height:1.4; color:var(--soft); margin-top:10px; }
+.get { margin-top:18px; font-size:14px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--purple); }
+.get + .ticks { margin-top:10px; gap:9px; } .get + .ticks li { font-size:18px; }
+.cover h1 { font-size:54px; }
+.ps-rows { display:grid; grid-template-rows:1fr 1fr; height:100%; background:#fff; }
+.ps-rows .row { display:grid; grid-template-columns:330px 1fr; align-items:center; }
+.ps-rows .row + .row { border-top:1px solid var(--line); }
+.ps-rows img { width:330px; height:100%; object-fit:cover; display:block; }
+.ps-rows .txt { padding:0 24px; }
+.ps-rows h2 { font-family:var(--display); font-weight:900; font-size:27px; line-height:1.1; margin:10px 0 0; }
+.ps-rows p { margin:8px 0 0; font-size:17px; line-height:1.42; color:var(--ink); } .ps-rows p b { color:var(--purple); }
+
+/* image placeholder (shows until the real file is dropped into the images folder) */
+.ph-box { display:none; width:100%; height:100%; place-items:center; text-align:center; padding:30px; background:#f3eff8; color:#8a7f99; font:600 18px var(--body); border:2px dashed #d9c7f0; border-radius:inherit; }
+.halves .ph-box, .ps-rows .ph-box { font-size:14px; padding:12px; }
+</style></head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- Cover: training title -->
+  <section class="slide cover" data-n="1">
+    <div class="media"><img src="training-slides-template images/Cover.jpg" alt="Cover photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Cover.jpg</div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">Heart Attractor Training</div>
+      <h1>How To <em>Training Title</em></h1>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <!-- Image + one idea -->
+  <section class="slide" data-n="2">
+    <div class="media"><img src="training-slides-template images/Slide 2.jpg" alt="One big POV photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Slide 2.jpg</div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">Small Label</div>
+      <h1>One Big Idea <em>In Title Case</em></h1>
+      <p class="line">One or two short lines that back the title up.</p>
+    </div>
+  </section>
+
+  <!-- Problem -> solution (each photo with its own words) -->
+  <section class="slide" data-n="3">
+    <div class="media"><div class="ps-rows">
+      <div class="row"><div style="height:100%"><img src="training-slides-template images/Problem.jpg" alt="Problem photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Problem.jpg</div></div>
+        <div class="txt"><span class="pill prob">The Problem</span><h2>Problem Name</h2><p>One line on what it looks like. Linked to fight or flight: <b>high beta</b>.</p></div></div>
+      <div class="row"><div style="height:100%"><img src="training-slides-template images/Solution.jpg" alt="Solution photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Solution.jpg</div></div>
+        <div class="txt"><span class="pill">The Solution</span><h2>Solution Name</h2><p>One line on what it feels like. Linked to calm: <b>alpha</b>.</p></div></div>
+    </div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">Small Label</div>
+      <h1>From <em>This</em> To <em>That</em></h1>
+    </div>
+  </section>
+
+  <!-- Steps overview (numbered list) -->
+  <section class="slide" data-n="4">
+    <div class="media"><img src="training-slides-template images/Steps.jpg" alt="POV photo for the steps" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Steps.jpg</div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">How It Works</div>
+      <h1>The <em>3 Steps</em></h1>
+      <ol class="nums">
+        <li><span>Step one, a few words</span></li>
+        <li><span>Step two, a few words</span></li>
+        <li><span>Step three, a few words</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- One step (repeat per step) -->
+  <section class="slide" data-n="5">
+    <div class="media"><img src="training-slides-template images/Step 1.jpg" alt="POV photo for step 1, hands in shot" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Step 1.jpg</div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">Step 1</div>
+      <h1><em>Verb</em> The Thing</h1>
+      <p class="line">One or two short lines on exactly what they do.</p>
+    </div>
+  </section>
+
+  <!-- Ticks (when / where / signs) -->
+  <section class="slide" data-n="6">
+    <div class="media"><img src="training-slides-template images/Slide 6.jpg" alt="POV photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Slide 6.jpg</div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">Small Label</div>
+      <h1>Title For <em>The List</em></h1>
+      <ul class="ticks">
+        <li><span>First short point</span></li>
+        <li><span>Second short point</span></li>
+        <li><span>Third short point</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Text card instead of a photo (timeline / stages) -->
+  <section class="slide" data-n="7">
+    <div class="media"><div class="tl"><ol>
+      <li><b>Stage One</b><span>One or two lines on this stage</span></li>
+      <li><b>Stage Two</b><span>One or two lines on this stage</span></li>
+      <li><b>Stage Three</b><span>One or two lines on this stage</span></li>
+    </ol></div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">Small Label</div>
+      <h1>Title For <em>The Stages</em></h1>
+      <p class="line">One short line.</p>
+    </div>
+  </section>
+
+  <!-- Close: your practice -->
+  <section class="slide" data-n="8">
+    <div class="media"><img src="training-slides-template images/Close.jpg" alt="Closing POV photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'"><div class="ph-box">Image: Close.jpg</div></div>
+    <div class="brand">The Heart Attractor<span>Program</span></div><div class="cam">Webcam</div>
+    <div class="words">
+      <div class="eyebrow">Your Practice</div>
+      <h1>Put It Into <em>Practice</em></h1>
+      <ul class="ticks">
+        <li><span>What to do every day</span></li>
+        <li><span>What to do when it comes up</span></li>
+        <li><span>Message me in the community if you need help</span></li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+<button class="fsbtn" id="fsbtn" type="button">&#x26F6; Full screen (F)</button>
+<div class="count" id="count"></div>
+<script>
+(function(){
+  var q = window.VSL_Q || location.search, slides = [].slice.call(document.querySelectorAll('.slide')), i = 0;
+  if (/[?&]all/.test(q)) document.body.classList.add('all');
+  if (/[?&]cam/.test(q)) document.body.classList.add('showcam');
+  var m = q.match(/[?&]s=(\d+)/); if (m) i = Math.min(slides.length - 1, Math.max(0, +m[1] - 1));
+  function fit(){ var k = Math.min(innerWidth / 1280, innerHeight / 720); document.documentElement.style.setProperty('--k', k); }
+  var count = document.getElementById('count');
+  function show(){ slides.forEach(function(s, n){ s.classList.toggle('on', n === i); }); if (count) count.textContent = (i + 1) + ' / ' + slides.length + '  ·  arrows or click to move'; }
+  function fs(){ try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (err) {} }
+  document.getElementById('fsbtn').addEventListener('click', function(e){ e.stopPropagation(); fs(); });
+  document.getElementById('stage').addEventListener('click', function(){ if (document.body.classList.contains('all')) return; i = Math.min(slides.length - 1, i + 1); show(); });
+  var idleT; function wake(){ document.body.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(function(){ document.body.classList.add('idle'); }, 2500); }
+  addEventListener('mousemove', wake); wake();
+  addEventListener('resize', fit);
+  addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { i = Math.min(slides.length - 1, i + 1); show(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { i = Math.max(0, i - 1); show(); e.preventDefault(); }
+    if (e.key === 'f' || e.key === 'F') fs();
+  });
+  fit(); show();
+})();
+</script>
+</body></html>

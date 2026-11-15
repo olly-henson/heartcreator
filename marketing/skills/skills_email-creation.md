@@ -63,7 +63,8 @@ Vary the type across the sequence — never run the same type twice in a row.
 ### Step 1 — Load the foundation files
 Before writing, read:
 - `memory/argument_sheet.md` — the email must connect to at least one stage of the argument
-- `memory/prospect_avatars.md` / `memory/avatar-rachel.md` — picture which avatar this email is primarily for
+- `memory/avatar-catrin.md` — the reader is Catrin (real member, primary avatar; Rachel/Amy and prospect_avatars.md are superseded)
+- **The outcome, in the best applicants' words (2026-11-13):** she wants a life partner, "someone I can marry, have children with and build a life with". When an email names what she wants, use this (all three parts, no comma before "and"), not "a relationship" or "the one".
 - `memory/prospect_intel.md` — check for recent real prospect language to weave in
 - Section 7 of this file (live nurture sequence) — for nurture emails, confirm you're not duplicating an existing email's angle
 - Section 8 of this file (Email Player Secrets) — for subject line technique and content-type variety, always, not just when asked
@@ -788,6 +789,12 @@ Adapt every example — never copy Ben's wording or crude examples directly. Kee
 
 These come from real prospects or top-performing content. They outperform paraphrases.
 
+**Bonus email Olly rewrote himself (2026-11-13, "Plan request: bonus training"): use as the model for bonus/welcome emails.** What he changed: the ➡️ lines name what the training explains in the reader's own outcome (settle down, marry, have children), not the method; one line on what it does for them ("make it really clear about what's been going wrong and how you can begin to change things, quickly"); then the link.
+> I know I've been putting together your personal plan of action… It's my free training: How To Attract Your Person, Scientifically. In it I show you:
+> ➡️ why more inner work hasn't helped you find someone to settle down with
+> ➡️ why changing your emotional state is the key to finding someone you can marry and have children with
+> This training will make it really clear about what's been going wrong and how you can begin to change things, quickly. You can watch it ===> here
+
 - "I just want to enjoy life again and not endure it" — Elizabeth
 - "I know the old happy me is still inside me somewhere" — Elizabeth
 - "I cannot make it work for me" — Isabell
@@ -816,6 +823,7 @@ These come from real prospects or top-performing content. They outperform paraph
 - Never run the same email type twice in a row
 - Never overpromise — always pair hope with honest expectation management
 - Never use a comma before 'and' or 'or'
+- Never write "perfect partner" or "perfect relationship" as the outcome. Say life partner, or the applicants' own words: "someone you can marry, have children with and build a life with" (2026-11-13: the best applicants all say this; "perfect" is the old wording still sitting in the Feeling Finder emails)
 - Never use em-dashes as clause separators
 - Never use crude language, aggressive urgency, or dismiss named competitors/teachers (see Section 8.5)
 - Never repeat the same subject line technique from Section 8.3 twice in a row across a batch — pick a different one each time even if a technique performed well last time
@@ -967,3 +975,5 @@ Extracted from ~40 pages of screenshots of "The Email Player's Playbook" by Ben 
 from "5-9 words" (overridden by his 2026-10-26 short-lowercase style) to the real open-rate pattern, with the winners as examples;
 Database "Preview" field corrected to empty (overridden 2026-11-03); added how to pull opens/clicks (tools/ghl-email-stats.mjs).
 Why: subjects should follow what his list actually opens, and the old examples contradicted his current style. -->
+
+<!-- 2026-11-15 skill review (session 2026-11-13): Never list + "perfect partner/relationship" (life-partner positioning); §9 adds Olly's own rewrite of the plan request bonus email as the model, with why it works. The Catrin avatar pointer + outcome line were already updated that day. -->

@@ -131,6 +131,8 @@ python tools/build_plan_v4.py <spec> <out> --upload
 ```
 → stores the 20 pages in the Hub (KV `planimg:<contactId>:NN`, `planimgs:<contactId>` = 20) and prints `https://hub.ollyhenson.com/p/<code>` (reuses their existing code if they have one). Their Hub card's 📄 Plan of action shows these pages and the usual Send on WhatsApp / Copy link buttons (those mark "Plan sent"). Opens, pages reached and time per page track exactly like v3.
 
+**Verify every upload yourself before saying it's live:** `curl hub.ollyhenson.com/p/<code>/pages` returns the right `{n}` AND every `/p/<code>/page/NN.jpg` returns 200. Why: an applicant's upload failed silently twice (wrangler output came back empty, then a relative `--path` didn't resolve from the Hub folder), so every KV put failed while the script looked fine.
+
 A change after upload = edit the spec, rerun with `--upload` (same link). The template boxes in the Hub editor do NOT change a v4 plan.
 
 ---
@@ -138,7 +140,7 @@ A change after upload = edit the spec, rerun with `--upload` (same link). The te
 ## Next (agreed, not built yet)
 
 - ~~Plan requests~~ BUILT 2026-11-13: put `"kind": "request"` in the spec (or `--request`). Part 1 = cover + 7 diagnosis pages (page 5 'The Belief You'll Build', page 8 eyebrow 'How It Works', no 'In The Program') + 'What I'd Do If I Were You' (Olly's first-person summary, 5 steps: build a new belief (their new belief) / practice it every day (their thought + feeling, 'as part of a daily meditation practice': never '10-minute' in part 1's steps, Olly 2026-11-13: part 2 takes them through the meditation specifics) / anchor it when the doubt comes up (their negative emotion + old thought) / act from that place / meet someone from a good place; NO program, NO screenshots; spec `request_summary` [[title, text]x5] overrides with their own words) + 'Name, Does This Sound Like Your Situation?': 'This is what I'd do, and these are the steps. Let me know your thoughts.' + 'If you'd like some help with this, I have a program that takes you through it step by step, and I can send you more information about it. Just let me know if that's something you're interested in.' (10 pages). Part 2 opens with 'Part 2 of your plan / Name, Here's How We'd Do This Together' ('You've seen your plan and the steps I'd take in your shoes...') then the 12 program pages (13 total). Olly's aim: they read it and think 'this person knows me better than I do'. Part 2 = junction + 8 steps + What I Need From You + note + closing (12 pages, own link, KV id `<contactId>-program`). Preview shows both; `--upload` prints both links. The Sales card shows part 2's link + opens at step 4. Applicants (tag `heart attractor applicant`) never get the split: see the defaults at the top.
-- Hub button to build v4 from the card (today Claude builds it from the spec).
+- ~~Hub button to build v4 from the card~~ DECIDED AGAINST (Olly 2026-11-13: "let's just do it here through you"). Olly says "<Name>'s plan needs to be built" in the terminal; Claude pulls their GHL answers, writes the spec, publishes a private preview, uploads on his OK, then verifies the link. Works for any applicant, old or new.
 
 ---
 
@@ -151,6 +153,8 @@ A change after upload = edit the spec, rerun with `--upload` (same link). The te
 - Never title page 4 after the emotion ("When The Impatience Is Running"). It's **"When This Belief / Is Running"** (`shows_up.title_a` = "When This Belief", `title_b` = "Is Running"). Why: Olly 2026-11-13: "Wouldn't it be when the negative belief is running?" The page shows how the belief plays out.
 - Never write "10-minute" in a plan request's part 1 steps. Say "as part of a daily meditation practice". Why: Olly 2026-11-13: part 2 takes them through the meditation specifics.
 - Never build an applicant's plan as a plan request or the other way round. Check the tag first (Step 0).
+- Never assume someone on the Sales board already has a personal plan. Why: an applicant's card showed the old template because nobody had built hers yet (Olly: "why was hers the old type?"). If a card shows no plan, build the spec; the Hub now says "<who> doesn't have a personal plan yet, ask Claude" instead of falling back to the template.
+- Never write a speech bubble that crowds or crosses its scene: check every bubble on the page images, shorten the line if it still overflows after the auto-wrap. Why: Olly 2026-11-13: "the speech bubbles, the text… doesn't actually look right".
 - Never send Olly to the old template editor for a v4 person: the card now shows the image pages (he hard-refreshed, saw the old template and thought the plan hadn't changed).
 
 ## Examples (approved for the first applicant)
@@ -183,3 +187,9 @@ the details for the program, let me know.", plan synced to the sales video trans
 in frame, dedicated og thumbnail, keep-dating step for daters, paraphrase crude answers and say so. Never: join.jpg (stretched),
 overwriting a read plan, names/links in committed files, test taps on plan.html. Removed as overridden: the simple-plan and
 simple+program applicant defaults and the voice-note-first flow. New tool: tools/plan_v5_shoot.js. -->
+
+<!-- 2026-11-15 skill review (session: plan request part 1/part 2, an applicant's plan, relaunch kit):
+- Removed the "Hub button to build v4" to-do: Olly decided against it ("let's just do it here through you"); the terminal trigger is written in its place.
+- Run it: verify every page with curl after --upload (an applicant's upload failed silently twice).
+- Never: assume a board card already has a v4 plan (an applicant's card showed the old template); crowded speech bubbles.
+- Repetition = thought + feeling, universal phone text and step 7 = guidance were already in the spec rules from the corrections on an applicant's plan; checked, not duplicated. -->
