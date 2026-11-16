@@ -8,7 +8,46 @@ After the form, their Hub Sales card (tag `plan request`, label '📩 Plan reque
 
 ---
 
-## v2: the belief-led DM (Olly 2026-11-13)
+## ⚠️ v3 (CURRENT, Olly 2026-11-15, tightened same day): they ASK for help, you never pitch
+
+**Why:** Olly: "I want them to get to the point where they want to ask me if I can help them or ask more about if I have a program." People ask when (1) they feel understood (their words played back), (2) they've named the real cause (their emotional state, and what they've tried can't fix it), (3) they know it's fixable but not HOW. Explaining the how = pitching. Naming the cause, hinting it's fixable, then stopping = they ask.
+**Tightened (Olly):** many never open or finish the Feeling Finder, so nothing depends on it. Only the key questions: goal, what's in the way, what they've tried, how love feels right now. How long, dating or not etc. come later from the plan form.
+**Messaging map:** goal → pain → crack (tried) → current state → real cause → fixable (no how) + proof → THEY ASK. Pain lines only from Catrin / core argument / real applicants.
+
+**Rules:** one question per message. Their exact words back every time. Never explain the method in the DM. Never mention the program first. Nothing after step 6 until they reply.
+
+1. **Reel comment →** "Can you send me a DM?" **They DM →** "Hey, are you looking for the Feeling Finder tool?" → send it (whether they use it or not doesn't matter).
+2. **They reply (thanks or anything) →**
+   > You're welcome. So what's the relationship goal right now?
+3. **What's in the way →**
+   > Love that. What do you feel has been getting in the way?
+4. **What they've tried →**
+   > What have you tried so far?
+5. **How it feels →**
+   > And when you think about love right now, how does it honestly feel?
+6. **The cause + the open loop, one message, then STOP →**
+   > That makes so much sense. Who you attract isn't really about what you know. It's your emotional state.
+   >
+   > When [their feeling] is running, it decides who you notice, who you're drawn to and how you show up. That's why [what they tried] hasn't changed it.
+   >
+   > The good news is that feeling can be trained. It's exactly what changed things for me before I met Jules.
+   Nothing after this. Expected replies: "how do I do that?", "how did you do it?", "do you help people with this?"
+   - Quiet for a day → ONE nudge, no offer: "Does that sound like what's been going on for you?"
+7. **They ask →**
+   > It's what I take people through every day. I could put together exactly what it'd look like for you, if you want?
+   On a yes → plan form (ollyhenson.com/plan) → their **short plan**, which ends "If you'd like me to send over the details for the program, let me know." → **they ask again** → only then the sales video.
+
+**Never (Olly's corrections, 2026-11-15):**
+- Never build a step on the Feeling Finder result. Many never open or finish it. Why: Olly: "they might not have said or done the feeling finder."
+- Never ask more than the 4 key questions (goal, what's in the way, what they've tried, how love feels) before the cause message. How long they've been single and whether they're dating come from the plan form. Why: Olly: "reduce the amount of questions to the key ones."
+- Removed as overridden (first v3 draft): "how long have you been looking?", "has any of it changed how you feel?", the Feeling Finder result questions and the "can I share something?" permission step.
+
+**Kills the ask:** teaching the how · mentioning the program first · two questions in one message · adding anything after step 6.
+**Helps the ask:** bio line naming the outcome + a Story highlight of member wins (people check the profile mid-chat).
+
+---
+
+## v2 (superseded by v3 for the ending): the belief-led DM (Olly 2026-11-13)
 
 **Why it changed:** the plan is a diagnosis (their thought + their feeling, repeated = their belief, then the counter belief). So the DM is the plan, reverse engineered: every question collects one piece of it, and the chat ends with THEM saying "yes, that's the belief". Then the plan is the obvious next step: "I can show you exactly what this belief is and the counter belief to change it." Olly: get them to the point that they admit they have a belief issue, then give the solution.
 
@@ -264,3 +303,7 @@ no Instagram field, one-box profession, no money questions, click-through previe
 <!-- 2026-11-15 skill review: v2 (belief-led DM) was written this session at Olly's request ("reverse engineer this so that the plan makes sense that they want to learn it"). No corrections from Olly on it yet, so no rules changed. Still open (Hub to-do): add current emotional state + current belief questions to the plan form and the application, so the plan's diagnosis has their own words. -->
 
 <!-- 2026-11-15 skill review (session 2026-11-13): "After the form" rewritten to the corrected v2 order (check-in reply first, part 1 only, offer the details, part 2 on a yes); the old "reply 'I'll get your plan over shortly' and send the link straight away" steps removed as overridden. Added a Never list: no plan before the reply, no program in part 1, check the tag, bonus = video training. -->
+
+<!-- 2026-11-16 skill review (session 2026-11-15): v3 written from Olly's ask ("get them to ask me if I have a program"), then tightened on his
+correction: no step depends on the Feeling Finder, only 4 questions before the cause + open loop. Added a v3 Never list; the first draft's extra
+questions and permission step removed as overridden. -->

@@ -69,6 +69,28 @@ async function build(env) {
     });
     cursor = list.list_complete ? null : list.cursor;
   } while (cursor);
+  // Since 2026-11-15: one "pvx:<page>:<YYYY-MM-DD>" key per page per day, value { n, s: { src: count } } (1 KV write per visit).
+  cursor = undefined;
+  do {
+    const list = await env.HUB_KV.list({ prefix: "pvx:", cursor });
+    const vals = await Promise.all(list.keys.map(function (k) { return env.HUB_KV.get(k.name); }));
+    list.keys.forEach(function (k, i) {
+      let rec = null; try { rec = JSON.parse(vals[i] || "null"); } catch { rec = null; }
+      if (!rec) return;
+      const parts = k.name.split(":");   // pvx, page, YYYY-MM-DD
+      const pg = pageKey(parts[1]), d = parts[2], ym = d.slice(0, 7), n = Number(rec.n) || 0;
+      months[ym] = months[ym] || {}; months[ym][pg] = (months[ym][pg] || 0) + n;
+      days[d] = days[d] || {}; days[d][pg] = (days[d][pg] || 0) + n;
+      Object.keys(rec.s || {}).forEach(function (src) {
+        const c = Number(rec.s[src]) || 0;
+        sources[ym] = sources[ym] || {}; sources[ym][pg] = sources[ym][pg] || {};
+        sources[ym][pg][src] = (sources[ym][pg][src] || 0) + c;
+        daySources[d] = daySources[d] || {}; daySources[d][pg] = daySources[d][pg] || {};
+        daySources[d][pg][src] = (daySources[d][pg][src] || 0) + c;
+      });
+    });
+    cursor = list.list_complete ? null : list.cursor;
+  } while (cursor);
   return new Response(JSON.stringify({ ok: true, months, sources, days, daySources }), {
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });

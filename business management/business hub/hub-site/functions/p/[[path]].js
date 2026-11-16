@@ -87,21 +87,42 @@ export async function onRequest({ request, env, params }) {
   // ---- Plan v4, image version (2026-11-12): a plan built per person as page images (stick-figure diagnosis + photo steps).
   //   KV planimgs:<contactId> = page count, planimg:<contactId>:NN = jpg. When it exists, /p/<code> shows the images instead.
   //   GET /p/<code>/pages -> { n }   GET /p/<code>/page/NN.jpg -> the page image
+  // 2026-11-15 (KV write limit): plan images now ship as static files public/pi/<id>/NN.jpg + og.jpg (git-ignored, behind
+  // Cloudflare Access so only this function can read them, via env.ASSETS). Older plans still come from KV planimg:/planog:.
+  async function planAsset(env, request, id, name) {
+    try {
+      const r = await env.ASSETS.fetch(new URL("/pi/" + encodeURIComponent(id) + "/" + name, request.url));
+      if (!r.ok || !/image\/jpeg/.test(r.headers.get("content-type") || "")) return null; // Pages answers unknown paths with index.html
+      return await r.arrayBuffer();
+    } catch { return null; }
+  }
   if (action === "pages" && request.method === "GET") {
     if (!id) return json({ ok: false }, 404);
-    return json({ ok: true, n: parseInt((await env.HUB_KV.get("planimgs:" + id)) || "0", 10) || 0 });
+    // v = version of the static page files (their ETag), so the viewer asks for ?v=<new> after a re-upload and
+    // nobody sees a cached old page (2026-11-15: Olly couldn't see an updated plan after a hard refresh).
+    const n = parseInt((await env.HUB_KV.get("planimgs:" + id)) || "0", 10) || 0;
+    let v = "";
+    try {
+      const tags = await Promise.all(Array.from({ length: n }, function (_, k) {
+        return env.ASSETS.fetch(new URL("/pi/" + encodeURIComponent(id) + "/" + String(k + 1).padStart(2, "0") + ".jpg", request.url), { method: "HEAD" })
+          .then(function (r) { return r.ok && /image\/jpeg/.test(r.headers.get("content-type") || "") ? (r.headers.get("etag") || "") : ""; });
+      }));
+      const all = tags.join("|");
+      if (all.replace(/\|/g, "")) { let h = 0; for (let k = 0; k < all.length; k++) h = (h * 31 + all.charCodeAt(k)) >>> 0; v = h.toString(36); }
+    } catch {}
+    return json({ ok: true, n, v });
   }
   // the link preview thumbnail (2026-11-14): planog:<id>, else their cover page. Public so link previews can fetch it.
   if (action === "og.jpg" && request.method === "GET") {
     if (!id) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
-    const buf = (await env.HUB_KV.get("planog:" + id, "arrayBuffer")) || (await env.HUB_KV.get("planimg:" + id + ":01", "arrayBuffer"));
+    const buf = (await planAsset(env, request, id, "og.jpg")) || (await env.HUB_KV.get("planog:" + id, "arrayBuffer")) || (await planAsset(env, request, id, "01.jpg")) || (await env.HUB_KV.get("planimg:" + id + ":01", "arrayBuffer"));
     if (!buf) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
     return new Response(buf, { status: 200, headers: { "content-type": "image/jpeg", "content-length": String(buf.byteLength), "cache-control": "public, max-age=3600", "x-robots-tag": "noindex" } });
   }
   if (action === "page" && request.method === "GET") {
     const f = parts[2] || "";
     if (!id || !/^\d\d\.jpg$/.test(f)) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
-    const buf = await env.HUB_KV.get("planimg:" + id + ":" + f.slice(0, 2), "arrayBuffer");
+    const buf = (await planAsset(env, request, id, f)) || (await env.HUB_KV.get("planimg:" + id + ":" + f.slice(0, 2), "arrayBuffer"));
     if (!buf) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
     return new Response(buf, { status: 200, headers: { "content-type": "image/jpeg", "cache-control": "private, max-age=600", "x-robots-tag": "noindex" } });
   }
@@ -198,7 +219,37 @@ export async function onRequest({ request, env, params }) {
   if (action === "video" && request.method === "GET") {
     if (!id) return new Response("This link isn't valid any more. Please ask Olly for a new one.", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
     const page = await env.ASSETS.fetch(new URL("/vsl-view.html", request.url));
-    return new Response(page.body, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
+    // Link preview (Olly, 2026-11-15): thumbnail + their name when the video link is posted anywhere
+    // (WhatsApp, iMessage, email, Instagram, Facebook, X, LinkedIn, Slack...). Image = /p/<code>/video-og.jpg.
+    let nm = "";
+    try { nm = String((JSON.parse((await env.HUB_KV.get("plan:" + id)) || "{}") || {}).name || "").trim().slice(0, 40); } catch {}
+    const esc = function (t) { return t.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+    const title = esc((nm ? nm + ", here's" : "Here's") + " your video");
+    const desc = "How to get started with The Heart Attractor Program, from Olly Henson";
+    const img = new URL("/p/" + code + "/video-og.jpg", request.url).href, url = new URL("/p/" + code + "/video", request.url).href;
+    let html = await page.text();
+    html = html.replace(/<meta (property|name)="(og|twitter):[^"]*"[^>]*>/g, "").replace("</head>",
+      '<meta name="description" content="' + desc + '">' +
+      '<meta property="og:title" content="' + title + '"><meta property="og:description" content="' + desc + '">' +
+      '<meta property="og:site_name" content="Olly Henson"><meta property="og:type" content="website"><meta property="og:url" content="' + url + '">' +
+      '<meta property="og:image" content="' + img + '"><meta property="og:image:secure_url" content="' + img + '">' +
+      '<meta property="og:image:type" content="image/jpeg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">' +
+      '<meta property="og:image:alt" content="Play the video">' +
+      '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="' + title + '">' +
+      '<meta name="twitter:description" content="' + desc + '"><meta name="twitter:image" content="' + img + '"></head>');
+    return new Response(html, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
+  }
+
+  // the video link's preview thumbnail (2026-11-15): poster frame + play button, men's or women's video. Public so
+  // link previews can fetch it; content-length set because some crawlers (WhatsApp) skip images without it.
+  if (action === "video-og.jpg" && request.method === "GET") {
+    if (!id) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    let g = "female";
+    try { const p = JSON.parse((await env.HUB_KV.get("plan:" + id)) || "{}"); if (/^m/i.test(p.gender || "")) g = "male"; } catch {}
+    const r = await env.ASSETS.fetch(new URL("/vsl/og-" + (g === "male" ? "men" : "women") + ".jpg", request.url));
+    if (!/image/i.test(r.headers.get("content-type") || "")) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
+    const buf = await r.arrayBuffer();
+    return new Response(buf, { status: 200, headers: { "content-type": "image/jpeg", "content-length": String(buf.byteLength), "cache-control": "public, max-age=3600", "x-robots-tag": "noindex" } });
   }
 
   // the file name carries a version (vsl-<n>.mp4) so a new upload never meets an old copy in Cloudflare's cache (2026-11-10:

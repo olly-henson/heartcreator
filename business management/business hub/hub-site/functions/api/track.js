@@ -39,21 +39,22 @@ export async function onRequestPost({ request, env }) {
   if (await isOwner(env, request)) return done();
   // Day in South Africa time (Olly's time zone), so months line up with his.
   const day = new Date(Date.now() + 2 * 3600 * 1000).toISOString().slice(0, 10);
-  const key = "pv:" + page + ":" + day;
-  const n = Number(await env.HUB_KV.get(key)) || 0;
-  await env.HUB_KV.put(key, String(n + 1), { metadata: { n: n + 1 } });   // count in metadata too, so /api/pageviews needs no read per key (2026-11-15)
-  // Where the visit came from (pages updated 2026-10-25 send this; older
-  // copies send just the page name and only count as a view).
+  // ONE key per page per day (2026-11-15, KV write limit: was up to 3 writes per visit, now 1):
+  // "pvx:<page>:<YYYY-MM-DD>" = JSON { n: visits, s: { "<source>|<medium>|<content>": visits } }, metadata { n }.
+  // The old pv:/ps:/psd: keys are no longer written; /api/pageviews still reads them for the days before.
+  const key = "pvx:" + page + ":" + day;
+  let rec = null;
+  try { rec = JSON.parse((await env.HUB_KV.get(key)) || "null"); } catch { rec = null; }
+  if (!rec || typeof rec !== "object") rec = { n: 0, s: {} };
+  rec.n = (Number(rec.n) || 0) + 1;
+  rec.s = rec.s && typeof rec.s === "object" ? rec.s : {};
+  // Where the visit came from (pages updated 2026-10-25 send this; older copies send just the page name and only count as a view).
   if (parts.length > 1) {
     const src = (clean(parts[1]) || "(direct)") + "|" + clean(parts[2]) + "|" + clean(parts[3]);
-    const skey = "ps:" + page + ":" + day.slice(0, 7) + ":" + src;
-    const m = Number(await env.HUB_KV.get(skey)) || 0;
-    await env.HUB_KV.put(skey, String(m + 1), { metadata: { n: m + 1 } });
-    // per day as well (2026-10-27), so the Hub's Overview can show a week
-    const dkey = "psd:" + page + ":" + day + ":" + src;
-    const dn = Number(await env.HUB_KV.get(dkey)) || 0;
-    await env.HUB_KV.put(dkey, String(dn + 1), { metadata: { n: dn + 1 } });
+    if (rec.s[src] || Object.keys(rec.s).length < 200) rec.s[src] = (rec.s[src] || 0) + 1;
+    else rec.s["(other)||"] = (rec.s["(other)||"] || 0) + 1;
   }
+  await env.HUB_KV.put(key, JSON.stringify(rec), { metadata: { n: rec.n } });
   return done();
 }
 

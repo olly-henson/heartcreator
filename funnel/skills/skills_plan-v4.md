@@ -5,9 +5,7 @@
 ## The flow
 1. Applicant applies (tag `heart attractor applicant`), Olly rates them good.
 2. **Claude builds their short plan (5 pages) AND full plan (16 pages) BEFORE Olly messages them.**
-3. Olly sends the first message from Hub > Sales card **1a** (WhatsApp tap marks Messaged + Plan sent):
-   "Hey <Name>, so I’ve looked through your application and all looks good.\n\nHere’s exactly what you need to do to attract this relationship that you want:\n\n<short plan link>\n\nLet me know if you’d like the next steps"
-   The email (1c) is unchanged. The old 1b voice note ("would you like a plan?") is gone.
+3. **Qualify first (Olly, 2026-11-15):** Sales card **1a** = the qualifying text, Olly's words verbatim, signed "Olly Henson": "Hey <Name>, just got your application through for The Heart Attractor Program. All looks good. / Just want to confirm that this is something that you're really committed to make happen? / Olly Henson". WhatsApp by default, iMessage and Email beside it. It ticks Messaged + qualSent, never Plan sent. **Once they say yes, 1b** sends the plan (ticks Plan sent): "Love that <Name> 🙏 / Here's exactly what you need to do to attract this relationship that you want: / <short plan link> / Let me know if you'd like the next steps". 1c = the email after the application. Why: Olly wants their commitment confirmed before he sends the plan. (The old "so I've looked through your application" opener and the voice note are gone.)
 4. If they want more detail, or as a follow-up: Sales card **section 2** sends the full plan link.
 5. "Next steps" = the sales video (funnel/sales-video-women-transcript.md is what it says).
 
@@ -17,13 +15,13 @@
 
 ## Process (about 10 minutes per applicant)
 1. Pull them from GHL (`contacts_get-contacts` by name). Fields: FF Current Emotion (Trbe…), FF Resonance = the feeling (RArd…), FF Intentions = their 4 wants in a partner (2V06…), feelings about love (RcZw…), relationship wanted (az4f…), what's not happening (Ysl9…), tried (bCuu…), status (BlwA…), how long (X9Lz…), priority (OtktG…).
-2. **Check for an existing plan first**: `wrangler kv key list --prefix planview:<contactId>`. If it has `sent` or opens, the new plans go on `<id>-short` and `<id>-full` (never overwrite a plan they've read). The Sales card prefers `<id>-short` for 1a.
+2. **Check for an existing plan first**: `wrangler kv key list --prefix planview:<contactId>`. If it has `sent` or opens, the new plans go on `<id>-short` and `<id>-full` (never overwrite a plan they've read). The Sales card prefers `<id>-short` for 1b (the plan message).
 3. Copy `pages.html, short.html, og.html, upload.py, make_text.py` from the most recent applicant with the same feeling (or the closest), into `funnel/applicant-guides/<first-last>/pages/` (git-ignored, never committed).
 4. Write `personalise.py` (copy the last one): a list of exact old → new replacements with `assert` on every one, so a missed line stops the build. Every new line traces to their answers.
 5. Run it, then grep for the previous person's words (name, feeling, emotion, partner traits, contact id). Must be 0 everywhere.
-6. `python make_text.py` (their phone text), then render: `node tools/plan_v5_shoot.js <folder>` (full), `... short.html short-out`, `... og.html og-out .og` and save og-out/01.jpg as og.jpg.
+6. `python make_text.py` (their phone text), then render: `node tools/plan_v5_shoot.js "<ABSOLUTE Windows path to the folder>"` (full; a relative path fails with ERR_FILE_NOT_FOUND), `... short.html short-out`, `... og.html og-out .og` and save og-out/01.jpg as og.jpg.
 7. Look at a contact sheet of the short pages + the personal full pages (2, 3, 4, 12, 14). Gap 0 on a cover usually means the footer was pushed off: trim their longest answer on the cover.
-8. Preview artifact (short first, then full) for Olly. Upload: `python upload.py short-out 5 [-short]` and `python upload.py out 16 -full`. Check both: `curl /p/<code>/pages` (n = 5 / 16) and `/p/<code>/og.jpg` 200.
+8. Preview artifact (short first, then full) for Olly. Upload: `python upload.py short-out 5 [-short]` and `python upload.py out 16 -full`, then `bash tools/deploy-hub.sh` (a re-upload shows on Olly's phone and laptop with no hard refresh, because the viewer loads `page/NN.jpg?v=<hash>`; check `/p/<code>/pages` returns a new `v`) (since 2026-11-15 page images + og.jpg are static files in hub-site/public/pi/<id>/, git-ignored, served by /p/ via env.ASSETS; only 4 KV writes per upload, was N+5: the KV daily write cap hit 90%). Never re-upload a version that hasn't changed. Check both: `curl /p/<code>/pages` (n = 5 / 16) and `/p/<code>/og.jpg` 200.
 9. If their card already had `waSent` from the OLD first message, set `state.looms[id].planSent = false` in the record (rev+1), or the new rule marks them Plan sent before Olly sends anything.
 10. Log their links in NEXT.md (local only, never committed: it holds names and private links).
 
@@ -39,6 +37,10 @@
 - Already dating → step 4 = "Keep Dating, As Yourself". Not dating → "Take Early Steps And Start Meeting People".
 - Priority line uses their answer: "main focus" → "You told me it's your main focus in life right now, so I know it is."; "one of my top priorities" → "...For this to work, it needs to be the one."
 - Crude or explicit words in their answers get a respectful paraphrase ("🔥 in the bed" → "real chemistry"), and Olly is told what was changed.
+- **Transactional → emotional connection (Olly, 2026-11-15, every plan from 2026-11-15 on):** say that dating has become transactional and this work builds a real emotional connection with the person they want. Four places: full p4 ("When <emotion> is running, dating turns transactional: profiles, small talk, ticking boxes..."), full p6 The Shift ("...so dating stops being transactional and becomes a real emotional connection"), full p14 tick ("You build a real emotional connection with him, not another transactional date"), short p3 ("Not transactional, a real emotional connection."). Copy them from the latest plan that has them. Why: Olly asked for it on an unsent plan.
+- Priority "It matters, but other things come first" → "You told me other things come first right now. For this to work, it needs to be the one."
+- A new feeling (the source plan had a different one): put every form of the word in one FEEL list (noun, "feel loved", headings, "Feel X Every Day", "Anchor X"), then grep the old feeling word: must be 0.
+- When a page overflows (contact sheet: text near the footer, or gap 0): merge two sentences into one or trim their longest list (what they tried). Never shrink the font. Why: four pages overflowed on 2026-11-15.
 - Every link gets the dedicated 1200x630 thumbnail (og.html: name + title + Olly's photo, byline "With Olly Henson"), not a crop of the cover. Why: the cover is too tall to crop without losing the photo or the title.
 
 ## Never
@@ -47,11 +49,14 @@
 - Never put applicant names, words or plan links in a committed file (skills, code comments, NEXT.md): the repo is public.
 - Never tap Copy / WhatsApp on the old 📄 plan page (plan.html) to "just look": it stamps the plan as sent. Use 👀 Preview on the card.
 - Never write a Python edit with unicode escapes in a bash heredoc (bash mangles them): write a .py file with the Write tool.
+- Never ask Olly to hard refresh to see a re-uploaded plan: re-upload, deploy-hub, check the `v` changed. Why: he couldn't see an updated plan even after hard refreshing (fixed with the version hash).
+- Never mark Plan sent from the qualifying text (1a): only 1b sends the plan.
 
 ## Examples (approved 2026-11-15)
 - Cover: "<Name>, Here's Your Path To The Relationship You Want" · Where you are now: "You've been single for more than 5 years. When you think about love, you feel worried and sad." · Where we're going: "Someone to settle down with and build a life together. Marriage."
 - Head page: "You're stuck in what psychiatrists call intellectualization. When we worry about love, we move up into our head. The overthinking and catastrophizing get loud."
 - Partner texts: "Hey, I've booked us a table for Saturday at 7. I'll pick you up. Dinner's on me." (wants a man who plans, calls, pays) · "...Want me to bring something for the boys?" (protect and provide for her and her kids) · "Hey, my sister just asked if you're coming to her birthday next month. I told her yes, hope that's ok!" (commitment).
+- Transactional line (full p4): "Fear also decides how you show up. When fear is running, dating turns transactional: profiles, small talk, ticking boxes. It's hard to be yourself, so things fizzle out before the right man gets to see the real you."
 
 ---
 
@@ -193,3 +198,8 @@ simple+program applicant defaults and the voice-note-first flow. New tool: tools
 - Run it: verify every page with curl after --upload (an applicant's upload failed silently twice).
 - Never: assume a board card already has a v4 plan (an applicant's card showed the old template); crowded speech bubbles.
 - Repetition = thought + feeling, universal phone text and step 7 = guidance were already in the spec rules from the corrections on an applicant's plan; checked, not duplicated. -->
+
+<!-- 2026-11-16 skill review (session 2026-11-15, 8 plans built): step 3 rewritten to the qualifying text (1a) → plan on a yes (1b) → email (1c),
+the old "so I've looked through your application" first text removed as overridden. Added: transactional / emotional-connection lines in 4 places
+(Olly's request), "other things come first" priority line, FEEL list for a new feeling, overflow fixes (merge or trim, never shrink), absolute path
+for plan_v5_shoot.js, re-upload shows without a hard refresh (?v= hash). Never: hard-refresh advice, Plan sent from 1a. -->
