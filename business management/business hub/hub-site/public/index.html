@@ -5465,9 +5465,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Flags in state.looms[id]: waSent, emSent, waReply, emReply, product ("monthly" | "annual").
   // Stages v3 (Olly, 2026-11-10): plan + video steps, and "Asked questions / next steps" after the plan is read.
   // Plan sent, Plan read, Video watched and Clicked Join also move on their own from the tracking (lmPV / lmVV).
-  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"], ["asked", "Asked questions / next steps"],
+  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["confirmed", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"],
     ["loom", "Video sent"], ["watched", "Video watched"], ["joinclick", "Clicked Join"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
-  var LM_ORDER = ["new", "contacted", "replied", "plan_sent", "plan_read", "asked", "loom", "watched", "joinclick", "joined"];
+  var LM_ORDER = ["new", "contacted", "replied", "confirmed", "plan_sent", "plan_read", "loom", "watched", "joinclick", "joined"];
   // each step = ticked on the card, or seen by the tracking; an explicit false (unticked or dragged back) beats the tracking
   function lmFlags(a){
     var s = lmStore(a.id), pv = (typeof lmPV === "object" && lmPV[a.id]) || {}, vv = (typeof lmVV === "object" && lmVV[a.id]) || {};
@@ -5475,7 +5475,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return {
       planSent: f("planSent", pv.sent || (s.waSent && !s.qualSent && pv.code && typeof lmPV === "object" && !!lmPV[a.id + "-full"])), // 2026-11-15: in the new format (short + full plan) the first message (1a) IS the plan link
       planRead: f("planRead", pv.far && pv.far >= Math.ceil((pv.pages || 13) * 0.6)),
-      asked: !!s.asked,
+      confirmed: !!s.confirmed,
       loom: s.loom === false ? false : !!(s.loom || a.loomSent),
       watched: f("watched", (vv.pct || 0) >= 50 || vv.done),
       joinClick: f("joinClick", (vv.join || 0) > 0)
@@ -5494,9 +5494,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (F.joinClick) return "joinclick";
     if (F.watched) return "watched";
     if (F.loom) return "loom";
-    if (F.asked) return "asked";
     if (F.planRead) return "plan_read";
     if (F.planSent) return "plan_sent";
+    if (F.confirmed) return "replied";   // the Confirmed step was removed 2026-11-16
     if (s.waReply || s.emReply) return "replied";
     if (s.waSent || s.emSent) return "contacted";
     return "new";
@@ -5511,16 +5511,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmStageBox(a){
     var s = lmStore(a.id), st = lmStage(a);
     var F = lmFlags(a);
-    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, planSent:F.planSent, planRead:F.planRead, asked:F.asked, loom:F.loom, watched:F.watched, joinClick:F.joinClick, monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived, quiet:!!s.quiet && !s.archived };
+    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, planSent:F.planSent, planRead:F.planRead, committed:!!(s.waReply || s.emReply), confirmed:F.confirmed, loom:F.loom, watched:F.watched, joinClick:F.joinClick, monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived, quiet:!!s.quiet && !s.archived };
     function btn(k, label){ return '<button type="button" data-act="' + k + '" aria-pressed="' + !!on[k] + '">' + label + "</button>"; }
     function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
     return '<div class="lmstg">' +
-      row("1", "I messaged them", btn("waSent", lmUsesIm(a) ? "iMessage" : "WhatsApp") + btn("emSent", "Email")) +
-      row("2", "They replied", btn("waReply", lmUsesIm(a) ? "iMessage" : "WhatsApp") + btn("emReply", "Email")) +
-      row("3", "Their plan", btn("planSent", "Plan sent") + btn("planRead", "Plan read")) +
-      row("4", "After the plan", btn("asked", "Asked questions / next steps")) +
-      row("5", "Their video", btn("loom", "Video sent") + btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
-      row("6", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
+      // Olly, 2026-11-16: simpler. Tick whichever way you contacted them (message and/or email), then "They replied".
+      row("1", "First contact (tick how you sent it)", btn("waSent", "Message sent") + btn("emSent", "Email sent") + btn("committed", "They replied")) +
+      row("2", "Their plan", btn("planSent", "Plan sent") + btn("planRead", "Plan read")) +
+      row("3", "Their sales video", btn("loom", "Video sent") + btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
+      row("✓", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
       '<small style="display:block;opacity:.65;margin:2px 0 6px">Plan sent, Plan read, Watched and Clicked Join tick themselves from the tracking. Untick one to override it.</small>' +
       '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("nofit", "Not a fit") + "</div>" +
       (s.archived ? '<div class="lmstep">' + (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL ✓</span>'
@@ -5666,9 +5665,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var tried = lmAns(a, /tried/i, used), ints = lmAns(a, /^FF Intentions/i, used), now = lmAns(a, /^FF Current Emotion/i, used), emo = lmAns(a, /^FF Resonance/i, used);
     var B = [
       { title:"Where you are", c:"#7dd3fc", x:40, y:40, cards:[["Right now", lmAns(a, /status|right now|situation/i, used)], ["Looking for", lmAns(a, /how long/i, used)], ["What still isn't happening", lmAns(a, /not happening|isn.t happening/i, used)], ["The Love Scale", [lmAns(a, /^Scale Result/i, used), lmAns(a, /^Scale Feelings/i, used)].filter(Boolean).join(" · ")]] },
-      { title:"What's in the way", c:"#f87171", x:40, y:430, cards:[["How you feel about love", lmAns(a, /feel/i, used), "hot"], ["Where it goes wrong", lmAns(a, /^Scale Biggest Gap/i, used), "hot"],["\u201cI'll meet the right person once I\u2026\u201d", lmAns(a, /once/i, used), "hot"], ["Already tried", tried ? { chips:tried.split(/\s*,\s*/) } : ""]] },
+      { title:"What's in the way", c:"#f87171", x:40, y:430, cards:[["Stuck in their head?", lmAns(a, /stuck in head/i, used), "hot"], ["How you feel about love", lmAns(a, /feel/i, used), "hot"], ["Where it goes wrong", lmAns(a, /^Scale Biggest Gap/i, used), "hot"],["\u201cI'll meet the right person once I\u2026\u201d", lmAns(a, /once/i, used), "hot"], ["Already tried", tried ? { chips:tried.split(/\s*,\s*/) } : ""]] },
       { title:"Where you want to be", c:"#4ade80", x:1090, y:40, cards:[["What you want", lmAns(a, /want/i, used)], ["The Feeling Finder", (now || emo) ? { ff:[now || "?", emo || "?"] } : "Not done yet"], ["Your intentions", ints ? { chips:ints.split(/\s*[·|]\s*/) } : ""]] },
-      { title:"Fit for the program", c:"#fbbf24", x:1090, y:470, cards:[["Priority", lmAns(a, /priority/i, used)], ["Implementation, not information", lmAns(a, /implementation|daily|information/i, used)], ["Willing to invest", lmAns(a, /invest/i, used)], ["Based in · Work", [[a.city, lmCountry(a.country)].filter(Boolean).join(", "), lmAns(a, /profession|work/i, used)].filter(Boolean).join(" · ")], ["Anything else", lmAns(a, /anything/i, used)]] }
+      { title:"Fit for the program", c:"#fbbf24", x:1090, y:470, cards:[["Priority", lmAns(a, /priority/i, used)], ["Is emotional resonance what they want?", lmAns(a, /implementation|resonance fit|daily|information/i, used)], ["Willing to invest", lmAns(a, /invest/i, used)], ["Based in · Work", [[a.city, lmCountry(a.country)].filter(Boolean).join(", "), lmAns(a, /profession|work/i, used)].filter(Boolean).join(" · ")], ["Anything else", lmAns(a, /anything/i, used)]] }
     ];
     // any other HA answers, so nothing they wrote is lost
     Object.keys(a.fields || {}).forEach(function(n){ if (!used[n] && /^HA /i.test(n) && !/utm|plan|date|variant/i.test(n)) B[3].cards.push([n.replace(/^HA /i, ""), a.fields[n]]); });
@@ -5791,50 +5790,54 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // a re-made short plan for someone who already had an old plan lives on <id>-short (2026-11-15)
     var sp = lmPV[a.id + "-short"] || lmPV[a.id], spUrl = sp && sp.code ? "https://hub.ollyhenson.com/p/" + sp.code : "";
     var fp = lmPV[a.id + "-full"], fpUrl = fp && fp.code ? "https://hub.ollyhenson.com/p/" + fp.code : "";
-    // Qualifying text first (Olly, 2026-11-15): confirm they're committed BEFORE the plan goes out. Ticks Messaged + qualSent
-    // (qualSent stops the auto "Plan sent" rule in lmFlags firing off this message). The plan message is now 1b, once they say yes.
-    var qual = "Hey " + nm + ", just got your application through for The Heart Attractor Program. All looks good.\n\nJust want to confirm that this is something that you\u2019re really committed to make happen?\n\nOlly Henson";
-    var first = "Love that " + nm + " \ud83d\ude4f\n\nHere\u2019s exactly what you need to do to attract this relationship that you want:\n\n" + spUrl + "\n\nLet me know if you\u2019d like the next steps";
-    var vn1 = ["Hey " + nm + ", it's Olly. I've been through your application and it all looks really good.", seen,
-      "I'd love to put together a plan of action for you, of exactly how we'd help you meet this person.", "Would you like me to send it through?"].filter(Boolean).join("\n\n");
-    var mail1 = "Hey " + nm + ",\n\nJust got your application, thanks for filling it in.\n\nAll looks really good.\n\nI've sent you a message on " + app + " with the next steps.\n\nChat soon,\n\nOlly";
-    var mailOnly = ["Hey " + nm + ",", "Just got your application, thanks for filling it in.", "All looks really good." + (seen ? " " + seen : ""),
-      "I'd love to put together a plan of action for you, of exactly how we'd help you meet this person. Would you like me to send it through? Just reply to this email.", "Chat soon,", "Olly"].join("\n\n");
-    // Plan by email (Olly, 2026-11-15): for when their mobile can't be reached, the same first message goes by email and ticks Email sent + Plan sent.
-    var firstMail = first + "\n\nOlly", firstSubj = nm + ", here’s your plan";
-    h += lmHead("1. When they apply");
-    if (ph || a.email) h += lmTxt("👋 1a. First message: are they committed?", qual, lmWa(qual, "waSent,qualSent") + lmMail("Your application", qual, "emSent,qualSent"));
-    if (ph || (a.email && spUrl)){
-      if (spUrl) h += lmTxt("📄 1b. Once they say yes: their plan", first, lmWa(first, "waSent,planSent") + lmMail(firstSubj, firstMail, "emSent,planSent")).replace("</div>", '<a href="' + spUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>' + lmPlanLine(lmPV[a.id + "-short"] ? a.id + "-short" : a.id) + "</div>");
-      else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.8">📄 1b. Their plan: ask Claude to build ' + lmEsc(a.firstName || "their") + '\u2019s plan. The message with their link shows here once it\u2019s made.</small></div>';
-      if (a.email && ph) h += lmTxt("✉️ 1c. Email (after the " + app + ")", mail1, lmMail("Got your application", mail1, "emSent"));
-    }
+    // Applicant flow (Olly, 2026-11-16): 1 application successful -> 2 once they reply, the 5-page plan -> 3 when they ask, the video.
+    // Every step: WhatsApp (iMessage twin added automatically) + an email version. qualSent stops the auto "Plan sent" rule.
+    var msg1 = "Hey " + nm + ", just got your application through for The Heart Attractor Program. It\u2019s been successful \ud83d\ude4f\n\nPlease just reply to this message to let me know you got it and I\u2019ll send you the next steps.\n\nOlly Henson";
+    var mail1 = ph
+      ? "Hey " + nm + ",\n\nYour application for The Heart Attractor Program was successful.\n\nI\u2019ve just sent you a message on " + app + " with the next steps. Please reply to my message there.\n\nSpeak soon,\n\nOlly"
+      : "Hey " + nm + ",\n\nYour application for The Heart Attractor Program was successful.\n\nPlease just reply to this email to let me know you got it and I\u2019ll send you the next steps.\n\nSpeak soon,\n\nOlly";
+    h += lmHead("1. Application successful");
+    if (ph) h += lmTxt("👋 1a. Message: your application was successful", msg1, lmWa(msg1, "waSent,qualSent"));
+    if (a.email) h += lmTxt(ph ? "✉️ 1b. Email follow-up" : "✉️ 1. Email (no phone number)", mail1, lmMail("Your application was successful", mail1, "emSent,qualSent"));
+    // Email-only route (Olly, 2026-11-16): for people with no WhatsApp and no iMessage. Steps 2 and 3 already have stand-alone emails.
+    var mailOnly1 = "Hey " + nm + ",\n\nJust got your application through for The Heart Attractor Program. It\u2019s been successful \ud83d\ude4f\n\nPlease just reply to this email to let me know you got it and I\u2019ll send you the next steps.\n\nSpeak soon,\n\nOlly";
+    if (a.email && ph) h += lmTxt("✉️ 1c. Email only (no WhatsApp or iMessage)", mailOnly1, lmMail("Your application was successful", mailOnly1, "emSent,qualSent"));
+    // 2. Once they reply: the generic 5-page plan
+    var first = "Love that " + nm + " \ud83d\ude4f\n\nHave a look through this plan. It\u2019s a short 5-page summary of how I can help you find the relationship you want. It\u2019s exactly what we\u2019ll do within the program.\n\n" + spUrl + "\n\nLet me know your thoughts once you\u2019ve read it.";
+    var firstMail = "Hey " + nm + ",\n\nHere\u2019s your plan. It\u2019s a short 5-page summary of how I can help you find the relationship you want. It\u2019s exactly what we\u2019ll do within the program.\n\n" + spUrl + "\n\nLet me know your thoughts once you\u2019ve read it.\n\nOlly";
+    var firstSubj = nm + ", here\u2019s your plan";
+    h += lmHead("2. Once they reply: their plan");
+    if (spUrl) h += lmTxt("📄 2a. Send their plan (message or email)", first, (ph ? lmWa(first, "planSent") : "") + lmMail(firstSubj, firstMail, "emSent,planSent")).replace("</div>", '<a href="' + spUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>' + lmPlanLine(lmPV[a.id + "-short"] ? a.id + "-short" : a.id) + "</div>");
+    else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.8">📄 2a. Their plan: ask Claude to make ' + lmEsc(a.firstName || "their") + '’s plan. The message with their link shows here once it’s made.</small></div>';
 
     // Personal email Claude drafted for this applicant (2026-11-07): stored in KV as state.looms[id].draftEmail = { subject, body }, never in this file (public repo)
     var dr = lmStore(a.id).draftEmail;
     if (dr && dr.body) h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(dr.body) + '">✍️ Personal email for ' + lmEsc(a.firstName || "them") + ' (copy)</button>' + lmMail(dr.subject || "Got your application", dr.body, "emSent")
       + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it: ' + lmEsc(dr.subject || "") + '</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(dr.body) + "</p></details></div>";
 
-    // 2. Once they reply: the plan of action (its own page makes the link + message), then a voice note
-    // 2. Follow-up: the full 16-page plan, for anyone who wants more detail (Olly, 2026-11-15)
-    h += lmHead("2. If they want more detail: the full plan");
+    // Optional: the full 16-page plan, only shown when one was built
     if (fpUrl){
-      var full2 = "Hey " + nm + ", here\u2019s the full version of your plan, with every step in detail:\n\n" + fpUrl + "\n\nLet me know if you\u2019ve got any questions.";
-      var fpLine = fp.opens ? "Opened " + fp.opens + "\u00d7, last " + lmWhen(fp.last) + (fp.dev ? " on " + fp.dev : "") + (fp.far ? " \u00b7 read to page " + fp.far + " of " + (fp.pages || 16) : "") : "Not opened yet";
-      h += lmTxt("📄 2a. Send the full plan", full2, lmWa(full2) + lmMail(nm + ", your full plan", full2 + "\n\nOlly"))
+      var full2 = "Hey " + nm + ", here’s the full version of your plan, with every step in detail:\n\n" + fpUrl + "\n\nLet me know if you’ve got any questions.";
+      var fpLine = fp.opens ? "Opened " + fp.opens + "×, last " + lmWhen(fp.last) + (fp.dev ? " on " + fp.dev : "") + (fp.far ? " · read to page " + fp.far + " of " + (fp.pages || 16) : "") : "Not opened yet";
+      h += lmTxt("📄 2b. Optional: the full plan", full2, lmWa(full2) + lmMail(nm + ", your full plan", full2 + "\n\nOlly"))
         .replace("</div>", '<a href="' + fpUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a><small style="flex-basis:100%;opacity:.85">' + lmEsc(fpLine) + "</small></div>");
-    } else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.8">📄 The full plan is built with the short one: ask Claude and its link shows here.</small></div>';
+    }
     }
 
     // 3. Once they've checked the plan (ideally replied): their own video page + a voice note
-    h += lmHead(a.planRequest ? "5. Once they've asked any questions: their video" : "3. After they've seen the plan: their video");
-    var pv0 = lmPV[a.id], vurl = pv0 && pv0.code ? "https://hub.ollyhenson.com/p/" + pv0.code + "/video" : "";
-    if (vurl){
+    h += lmHead(a.planRequest ? "5. Once they've asked any questions: their video" : "3. When they ask for the video");
+    var pv0 = lmPV[a.id] || lmPV[a.id + "-short"], vurl = pv0 && pv0.code ? "https://hub.ollyhenson.com/p/" + pv0.code + "/video" : "";
+    if (vurl && !a.planRequest){
+      // Olly, 2026-11-16: "here's the video, it takes you through everything you need, let me know if you have any questions"
+      var vtxt = "Hey " + nm + ", here\u2019s the video \ud83d\ude4f\n\n" + vurl + "\n\nIt takes you through everything you need: how the program works, the investment and how to get started. Let me know if you have any questions.";
+      var vmail = "Hey " + nm + ",\n\nHere\u2019s the video:\n\n" + vurl + "\n\nIt takes you through everything you need: how the program works, the investment and how to get started. Let me know if you have any questions.\n\nOlly";
+      h += lmTxt("🎬 3a. Send the video (message or email)", vtxt, (ph ? lmWa(vtxt, "loom") : "") + lmMail(nm + ", here\u2019s the video", vmail, "emSent,loom"));
+    } else if (vurl){
       var vtxt = "Hey " + nm + ", here's the video I've made for you.\n\n" + vurl + "\n\nIt goes through the program, the steps, the investment and how to get started. Watch it in your own time, and if you have any questions, just reply here.";
-      h += lmTxt(a.planRequest ? "🎬 5a. Send their video" : "🎬 3a. Send their video", vtxt, lmWa(vtxt, "loom") + lmMail(nm + ", here's your video", vtxt + "\n\nOlly", "loom"));
+      h += lmTxt("🎬 5a. Send their video", vtxt, lmWa(vtxt, "loom") + lmMail(nm + ", here's your video", vtxt + "\n\nOlly", "loom"));
+      var vn3 = "Hey " + nm + ", I've just sent you a video. It goes through the program, the steps, the investment and how to get started.\n\nHave a watch in your own time, and if you have any questions, just reply here.";
+      h += lmVn("🎙️ 5b. Voice note with the video", vn3);
     }
-    var vn3 = "Hey " + nm + ", I've just sent you a video. It goes through the program, the steps, the investment and how to get started.\n\nHave a watch in your own time, and if you have any questions, just reply here.";
-    h += lmVn(a.planRequest ? "🎙️ 5b. Voice note with the video" : "🎙️ 3b. Voice note with the video", vn3);
     h += lmVslRow(a);
     // Email ideas from this applicant (Olly, 2026-11-09): their answers with personal details taken out, for the content generator.
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for content ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator, Email or Reels tab, “An applicant’s words”: emails use their feelings, Reel hooks are built from their pain and the outcomes they want.</small></div>';
@@ -5979,7 +5982,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       })
       .catch(function(){ btn.disabled = false; btn.textContent = "Remove from GHL"; window.alert("Couldn't reach the Hub. Reload and try again."); });
   }
-  var LM_COLS = [["new", "New applications"], ["contacted", "Messaged"], ["replied", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"], ["asked", "Asked questions / next steps"],
+  var LM_COLS = [["new", "New applications"], ["contacted", "Contacted"], ["replied", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"],
     ["loom", "Video sent"], ["watched", "Video watched"], ["joinclick", "Clicked Join"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
   var lmOpen = null, lmView = "info", lmDrag = null;
   function lmMoneyFmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
@@ -5997,7 +6000,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (st === "contacted"){ if (!sent) s.waSent = true; s.waReply = s.emReply = false; }
     if (i >= 2){ if (!sent) s.waSent = true; if (!rep) s.waReply = true; }
     // later steps: true up to this column, explicit false after it (so the tracking doesn't pull them forward again)
-    s.planSent = i >= 3; s.planRead = i >= 4; s.asked = i >= 5; s.loom = i >= 6; s.watched = i >= 7; s.joinClick = i >= 8;
+    s.confirmed = i >= 3; s.planSent = i >= 4; s.planRead = i >= 5; s.loom = i >= 6; s.watched = i >= 7; s.joinClick = i >= 8;
     s.product = st === "joined" ? (s.product || "monthly") : "";
   }
   function lmMoney(){
@@ -6078,8 +6081,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // money + pipeline at a glance
     var K = [
       ["Applications", live.length, counts["new"] + " new" + (function(n){ return n ? " · " + n + " plan requests (DM)" : ""; })(live.filter(function(a){ return a.planRequest; }).length)],
-      ["In progress", counts.contacted + counts.replied + counts.plan_sent + counts.plan_read + counts.asked + counts.loom + counts.watched + counts.joinclick,
-        (counts.plan_sent + counts.plan_read + counts.asked) + " on their plan · " + (counts.loom + counts.watched + counts.joinclick) + " on their video"],
+      ["In progress", counts.contacted + counts.replied + counts.confirmed + counts.plan_sent + counts.plan_read + counts.loom + counts.watched + counts.joinclick,
+        (counts.confirmed + counts.plan_sent + counts.plan_read) + " on their plan · " + (counts.loom + counts.watched + counts.joinclick) + " on their video"],
       ["Joined", counts.joined, mo.m + " monthly · " + mo.y + " annual"],
       ["Close rate", vsl ? Math.round(counts.joined / vsl * 100) + "%" : "—", "of videos sent"],
       ["Cash collected", lmMoneyFmt(mo.cash), "all time, first payments"],
@@ -6135,6 +6138,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         if (k === "monthly" || k === "annual") s4.product = s4.product === k ? "" : k;
         else if (k === "nofit"){ s4.archived = !s4.archived; if (s4.archived) s4.quiet = false; }
         else if (k === "quiet"){ s4.quiet = !s4.quiet; if (s4.quiet) s4.archived = false; }
+        else if (k === "committed"){ var cm = !(s4.waReply || s4.emReply); s4.waReply = cm; s4.emReply = false; if (cm && !s4.waSent && !s4.emSent) s4.waSent = true; }
         else if (k === "loom" || k === "planSent" || k === "planRead" || k === "watched" || k === "joinClick") s4[k] = !(b.getAttribute("aria-pressed") === "true"); // unticking an automatic step = explicit false
         else s4[k] = !s4[k];
         markDirty(); renderLooms();

@@ -207,7 +207,7 @@ Notes on fields that aren't obvious:
 - **Notifications come from the Hub and open the exact screen (2026-11-02).** Olly turned down LeadConnector's in-app notifications: "I'd rather this come from the hub so that I can open their loom screen". New applications push to his iPhone via the Hub (Home Screen app), and a tap opens `/#looms=<contactId>` on that person.
 - **Long pages fold away like the Audience tab (2026-11-02).** Olly: "To save scrolling" … "so much better". Stacked sections become `.audbox` boxes (header button + body), closed by default, open state remembered per device (localStorage, not `state`), and a deep link (`#addreel` etc.) opens its own box.
 - **The main action sits at the top on the phone.** "Refresh from GHL" was below the applicant list on the phone and Olly couldn't find it; it now leads the Looms tab.
-- **Status = a numbered checklist in plain words (2026-11-01, Olly: "I'm a bit confused about what means what").** Label each step as what happened ("1 I messaged them", "2 They replied", "3 Loom", "4 They joined"), not as an action or a stage name, and explain the buttons in one short table when handing it over.
+- **Status = a numbered checklist in plain words (2026-11-01, Olly: "I'm a bit confused about what means what").** Label each step as what happened (since 2026-11-16: "1 First contact: are they committed?", "2 Confirmed what we're doing (Emotional Resonance)", "3 Their plan", "4 Their sales video", then "✓ They joined"), not as an action or a stage name, and explain the buttons in one short table when handing it over.
 - **Buttons that do the obvious next thing record it too:** tapping WhatsApp or Email on an applicant card ticks "I messaged them" for that channel, so Olly never logs the same action twice.
 - **Prefilled messages use Olly's exact wording** with only the first name swapped in (fallback "there"). Applicant email: subject "Your application was successful"; WhatsApp: "Hey {name}, it's Olly Henson here. Your application for the Heart Attractor Program was successful..." Both live in `lmContact()`; change them there, never reword them.
 - **Phone-first means a filter row, not a forced Trello board:** stage buttons with counts filter the list; a Board button gives the side-by-side columns for desktop. The Loom mind map must keep working underneath any pipeline view.
@@ -610,7 +610,7 @@ removed from these notes (public repo). -->
 <!-- 2026-11-15 skill review: added the Never block above (See more on every truncated box incl. the centre, no fallback to the old plan template, plan-request card steps, mind map plan section removed). -->
 
 ### Added 2026-11-15 (later): qualifying text, iMessage on every step, Gmail, plan tag
-- **Applicant Sales card order:** 1a qualifying text (Olly's exact words, signed "Olly Henson"; WhatsApp + iMessage + Email; `data-k="waSent,qualSent"` / `"emSent,qualSent"`) → 1b the plan once they say yes ("Love that <Name> 🙏 ...", `waSent,planSent` / `emSent,planSent`) → 1c email after the application. The email buttons exist whenever there's an email, so the plan can go by email when Olly can't reach their phone.
+- **Applicant Sales card order (OVERRIDDEN 2026-11-16, see the block at the bottom):** was 1a qualifying text → 1b plan → 1c email. Plan sent now lives in step 3, after the Confirm step.
 - **Desktop email = Gmail.** On desktop (`!matchMedia("(pointer:coarse)")`) every `mailto:` is rewritten to the Gmail compose URL (`mail.google.com/mail/?authuser=<Olly's address>&view=cm&fs=1&to=...&su=...&body=...`, new tab). Phones keep `mailto:`. Why: mailto opened Outlook on his laptop.
 - **Plan tag on the card front:** `lmCardPlanTag(a)` shows "📄 Plan sent, not opened" / "📄 Plan opened" whenever `planSent` (or the planview `sent` stamp), with opens from `<id>-short` first. Why: "plan sent still isn't showing" on cards that were sent.
 - **Names in messages** are capitalised per part (`anna` → `Anna`, `anna-lee` → `Anna-Lee`).
@@ -625,3 +625,24 @@ removed from these notes (public repo). -->
 <!-- 2026-11-16 skill review (session 2026-11-15): Workers Paid note (the free-plan cap line was overridden), msgApp switch replaced by iMessage
 twins on every wa.me button, Plan sent moved from 1a to 1b (qualifying text is now 1a, auto rule skips qualSent), Gmail on desktop, card plan tag,
 capitalised names, video link preview. Never list for the same. -->
+
+### Never (added 2026-11-16)
+- Never edit index.html by writing straight onto the real file from Python. A non-raw string with a JS emoji escape (backslash-u-d83d) becomes a lone surrogate, the write fails half way and leaves index.html EMPTY (happened 2026-11-16; deploy-hub's size check stopped it going live). Write to a scratch copy, check it encodes as UTF-8 and passes jscheck, then copy it into place. Keep JS escapes in raw strings.
+- If the local file is lost: the last good deploy is downloadable from its own deploy URL (https://<hash>.hub-ollyhenson.pages.dev/, not behind Access). git HEAD can be older than what's live.
+
+### Sales card = 4 steps (added 2026-11-17, from the 2026-11-16 session)
+Olly asked for the card to read as a checklist of his actual sales process, in this order. The checklist rows, the message sections and the board columns all follow the same 4 steps, so what he ticks matches what he sends.
+- **Step 1 First contact / commitment:** buttons WhatsApp (`waSent`), Email follow-up (`emSent`), Committed (`committed` = `waReply || emReply`; ticking sets `waReply`, unticking clears both). Messages: 1a qualifying text (`waSent,qualSent`), 1b email that sends them to WhatsApp (`mail1`, `emSent`).
+- **Step 2 Confirm what we're doing:** flag `s.confirmed`, stage `confirmed` ("Committed" → "Confirmed" → "Plan sent" on the board). Message 2a starts "Love that <Name> 🙏" and puts Emotional Resonance first: intellectualization ("the psychiatrist's term") keeps you in your head; Emotional Resonance changes who you notice, who you're drawn to and how you show up; adds "For you, that's <FF Resonance>." when the answer is 4 words or less; ends "Sound good?". Sending it ticks `confirmed`.
+- **Step 3 Their plan:** 3a short plan ("Here's your plan <Name> 🙏 ...", `planSent`), 3b full plan if they want more detail.
+- **Step 4 Their sales video:** 4a video, 4b voice note; then 5 After the video (follow-up idea + checkout).
+- The old `asked` stage ("Asked questions / next steps") is gone from LM_STAGES, LM_COLS, LM_ORDER and the board counts; old `s.asked` values are ignored. Plan-request (DM) cards keep their own messages but share the checklist.
+
+### Never (added 2026-11-17)
+- Never weight the steps equally in the Confirm message: Emotional Resonance is the main thing (Olly: "I want to give more weight to Emotional Resonance"). Intellectualization is one line of contrast only.
+- Never send the plan before the Confirm step on applicant cards, and never open the plan message with "Love that" (that line now opens the Confirm message, so it would repeat).
+- Never let a checklist row and the message sections drift apart: renumbering one means renumbering the other (labels 1a/1b, 2a, 3a/3b, 4a/4b, 5).
+- Never write a JS string with backslash-u escapes into a Python patch script via the Write tool and expect it to match index.html: the tool can turn the escapes into real characters. Find such lines by a plain-text prefix (`s.index('    var first = "Love that ')`) instead.
+
+<!-- 2026-11-17 skill review (session 2026-11-16): one request, no corrections from Olly. Added the 4-step Sales card spec + Confirm message (Emotional Resonance weighted),
+marked the 2026-11-15 card order (1a/1b plan/1c) as overridden, updated the plain-word checklist example, Never rules for step order, label sync and the Write-tool escape gotcha. -->
