@@ -64,7 +64,7 @@ def accounts():
     return out
 
 
-MIN_A_DAY = 4  # Olly 2026-11-04: minimum 4 a day
+MIN_A_DAY = 6  # Olly 2026-11-17: a day with no number set in the Hub gets 6 (was 4)
 MAX_A_DAY = 6  # Olly 2026-11-07: maximum 6 a day (was 10), so a batch of recordings lasts longer. A full day pushes to the next.
 
 # Spacing by how many Reels the day has (Olly 2026-11-04: "space out the reels better depending on how many are
@@ -148,8 +148,25 @@ def cover(path):
     return out
 
 
+GHL_MAX_BYTES = 450 * 1024 * 1024  # GHL's media library drops uploads over ~500 MB (WinError 10053 mid-upload, 2026-11-17)
+
+
+def shrink(path):
+    """A copy of an oversized Reel at ~17 Mbps (same length, size and audio) that fits GHL. Busy outdoor shots at the
+    editor's quality setting came out at 562 MB on 2026-11-17. Returns the new path (next to the original)."""
+    small = os.path.splitext(path)[0] + ".small.mp4"
+    for enc in (["-c:v", "h264_qsv", "-preset", "medium"], ["-c:v", "libx264", "-preset", "veryfast"]):
+        r = subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, *enc, "-b:v", "17M", "-maxrate", "19M", "-bufsize", "38M",
+                            "-c:a", "copy", "-movflags", "+faststart", small], capture_output=True)
+        if r.returncode == 0 and os.path.exists(small) and os.path.getsize(small) < GHL_MAX_BYTES:
+            return small
+    raise RuntimeError("Reel is over 450 MB and couldn't be made smaller for GHL")
+
+
 def upload(path, ctype="video/mp4"):
     """Upload a file to the GHL media library -> public URL."""
+    if ctype.startswith("video") and os.path.getsize(path) > GHL_MAX_BYTES:
+        path = shrink(path)
     b = "----reel" + uuid.uuid4().hex
     name = os.path.basename(path)
     head = (f"--{b}\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nreel-{name}\r\n"

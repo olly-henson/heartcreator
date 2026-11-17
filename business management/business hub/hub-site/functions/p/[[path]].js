@@ -226,7 +226,7 @@ export async function onRequest({ request, env, params }) {
     const esc = function (t) { return t.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
     const title = esc((nm ? nm + ", here's" : "Here's") + " your video");
     const desc = "How to get started with The Heart Attractor Program, from Olly Henson";
-    const img = new URL("/p/" + code + "/video-og.jpg", request.url).href, url = new URL("/p/" + code + "/video", request.url).href;
+    const img = new URL("/p/" + code + "/video-og-3.jpg", request.url).href, url = new URL("/p/" + code + "/video", request.url).href;
     let html = await page.text();
     html = html.replace(/<meta (property|name)="(og|twitter):[^"]*"[^>]*>/g, "").replace("</head>",
       '<meta name="description" content="' + desc + '">' +
@@ -242,7 +242,7 @@ export async function onRequest({ request, env, params }) {
 
   // the video link's preview thumbnail (2026-11-15): poster frame + play button, men's or women's video. Public so
   // link previews can fetch it; content-length set because some crawlers (WhatsApp) skip images without it.
-  if (action === "video-og.jpg" && request.method === "GET") {
+  if (/^video-og(-[a-z0-9]+)?\.jpg$/.test(action) && request.method === "GET") {
     if (!id) return new Response("", { status: 404, headers: { "cache-control": "no-store" } });
     let g = "female";
     try { const p = JSON.parse((await env.HUB_KV.get("plan:" + id)) || "{}"); if (/^m/i.test(p.gender || "")) g = "male"; } catch {}
@@ -309,7 +309,9 @@ export async function onRequest({ request, env, params }) {
       v.visits.push({ t: now, dev: m.dev }); v.visits = v.visits.slice(-30);
       if (m.opens === 1) note = { title: "Video opened", body: "Someone just opened their sales video. Tap to see who.", url: "/#looms", tag: "vsl-" + id };
     }
-    if ((b.ev === "end" || m.pct >= 90) && !m.done) { m.done = true; note = { title: "Video watched to the end", body: "An applicant just finished their sales video (" + m.pct + "% watched). Tap to see who.", url: "/#looms", tag: "vsl-" + id }; }
+    // Finished = 90% of the video actually played. Reaching the end alone doesn't count: skipping to the end fires
+    // "end" too (2026-11-17: an applicant played 7%, skipped to the end and showed as "finished").
+    if (m.pct >= 90 && !m.done) { m.done = true; note = { title: "Video watched to the end", body: "An applicant just finished their sales video (" + m.pct + "% watched). Tap to see who.", url: "/#looms", tag: "vsl-" + id }; }
     if (b.ev === "join") {
       m.join++; m.joinAt = m.joinAt || now; v.joins.push({ t: now, at: Math.round(pos) }); v.joins = v.joins.slice(-20);
       note = { title: "Someone clicked Join 🎉", body: "An applicant just clicked Join on their sales video. Tap to see who.", url: "/#looms", tag: "vsl-join-" + id };

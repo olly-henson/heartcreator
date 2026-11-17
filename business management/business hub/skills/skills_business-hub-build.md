@@ -313,6 +313,8 @@ Notes on fields that aren't obvious:
 - **New Pages secrets: Claude is blocked from writing them.** Give Olly one `!` command that pipes the value from `marketing\.env` into `pages secret put` with the cached wrangler (`node <npm-cache>/_npx/<id>/node_modules/wrangler/bin/wrangler.js`), because `npx wrangler` hits EBUSY. Then redeploy: a secret only reaches new deployments. `GHL_EMAIL_TOKEN` = the Claude agent key (has the read-only email scopes).
 - **Before declaring an endpoint live, curl the custom domain**, not just the `*.pages.dev` deploy link: the first test of `hub.ollyhenson.com` returned the Hub page until the new deploy was serving.
 
+- **Sales video "finished" (2026-11-17):** An applicant played 7%, skipped to the end and showed as "finished" / Video watched, because the `end` event alone set `done`. Now `done` = 90% of the video actually played (`vseen` in functions/p/[[path]].js); `pct` = seconds really played (skips mark nothing), `far` = furthest point reached. When Olly says tracking looks wrong, read `vslview:<id>` metadata (opens, first/last, pct, far, done, join) and compare the time between first and last with the video length (6:48) before touching code. Owner views are skipped only when logged into the Hub on that device.
+
 ## 6. Quick reference — where things are in the code
 
 | Feature | Key functions |
@@ -630,19 +632,24 @@ capitalised names, video link preview. Never list for the same. -->
 - Never edit index.html by writing straight onto the real file from Python. A non-raw string with a JS emoji escape (backslash-u-d83d) becomes a lone surrogate, the write fails half way and leaves index.html EMPTY (happened 2026-11-16; deploy-hub's size check stopped it going live). Write to a scratch copy, check it encodes as UTF-8 and passes jscheck, then copy it into place. Keep JS escapes in raw strings.
 - If the local file is lost: the last good deploy is downloadable from its own deploy URL (https://<hash>.hub-ollyhenson.pages.dev/, not behind Access). git HEAD can be older than what's live.
 
-### Sales card = 4 steps (added 2026-11-17, from the 2026-11-16 session)
-Olly asked for the card to read as a checklist of his actual sales process, in this order. The checklist rows, the message sections and the board columns all follow the same 4 steps, so what he ticks matches what he sends.
-- **Step 1 First contact / commitment:** buttons WhatsApp (`waSent`), Email follow-up (`emSent`), Committed (`committed` = `waReply || emReply`; ticking sets `waReply`, unticking clears both). Messages: 1a qualifying text (`waSent,qualSent`), 1b email that sends them to WhatsApp (`mail1`, `emSent`).
-- **Step 2 Confirm what we're doing:** flag `s.confirmed`, stage `confirmed` ("Committed" → "Confirmed" → "Plan sent" on the board). Message 2a starts "Love that <Name> 🙏" and puts Emotional Resonance first: intellectualization ("the psychiatrist's term") keeps you in your head; Emotional Resonance changes who you notice, who you're drawn to and how you show up; adds "For you, that's <FF Resonance>." when the answer is 4 words or less; ends "Sound good?". Sending it ticks `confirmed`.
-- **Step 3 Their plan:** 3a short plan ("Here's your plan <Name> 🙏 ...", `planSent`), 3b full plan if they want more detail.
-- **Step 4 Their sales video:** 4a video, 4b voice note; then 5 After the video (follow-up idea + checkout).
-- The old `asked` stage ("Asked questions / next steps") is gone from LM_STAGES, LM_COLS, LM_ORDER and the board counts; old `s.asked` values are ignored. Plan-request (DM) cards keep their own messages but share the checklist.
+### Sales card = 3 steps (2026-11-17, from the 2026-11-16 session; REPLACES the 4-step card)
+Olly: the confirm step was dropped. The card, checklist and board follow: 1 Application successful → 2 plan once they reply → 3 video when they ask. Full message wording in funnel/skills/skills_plan-v4.md ("Sales card flow").
+- **Row 1 "First contact (tick how you sent it)":** Message sent / Email sent / They replied. Messages 1a WhatsApp (`waSent,qualSent`), 1b email follow-up (`mail1`), 1c "Email only (no WhatsApp or iMessage)" (`mailOnly1`) for people with no phone.
+- **Row 2 plan:** 2a "Love that <Name> 🙏 … short 5-page summary …" + email; 2b full plan (optional). **Row 3 video:** 3a "Hey <Name>, here's the video 🙏 …" + email (video URL falls back to the `-short` plan code).
+- Board columns Contacted / Replied (Confirmed column gone; old `s.confirmed` counts as replied).
+- Every step has an email alternative (Olly: "some people I'm only able to send an email").
 
 ### Never (added 2026-11-17)
-- Never weight the steps equally in the Confirm message: Emotional Resonance is the main thing (Olly: "I want to give more weight to Emotional Resonance"). Intellectualization is one line of contrast only.
-- Never send the plan before the Confirm step on applicant cards, and never open the plan message with "Love that" (that line now opens the Confirm message, so it would repeat).
-- Never let a checklist row and the message sections drift apart: renumbering one means renumbering the other (labels 1a/1b, 2a, 3a/3b, 4a/4b, 5).
+- Never send the plan before they've replied to the first message (2026-11-17; the Confirm step is gone).
+- Never let a checklist row and the message sections drift apart: renumbering one means renumbering the other (labels 1a/1b/1c, 2a/2b, 3a).
 - Never write a JS string with backslash-u escapes into a Python patch script via the Write tool and expect it to match index.html: the tool can turn the escapes into real characters. Find such lines by a plain-text prefix (`s.index('    var first = "Love that ')`) instead.
 
 <!-- 2026-11-17 skill review (session 2026-11-16): one request, no corrections from Olly. Added the 4-step Sales card spec + Confirm message (Emotional Resonance weighted),
 marked the 2026-11-15 card order (1a/1b plan/1c) as overridden, updated the plain-word checklist example, Never rules for step order, label sync and the Write-tool escape gotcha. -->
+
+### Never (added 2026-11-17, from the 2026-11-16 session)
+- Never move an email in the content calendar AND push it to GHL in one go: move it, leave it a draft (no ghlTpl), and let Olly send it to GHL himself (he asked "Don't send it to GHL just yet").
+- Never deploy a hub-site file with a Pages asset over 25 MiB (deploy fails; re-encode videos first).
+<!-- 2026-11-17 skill review (session 2026-11-16): 4-step Sales card replaced by the 3-step flow + email-only alternative (Olly's ask); Confirm-message Never rules removed (overridden); calendar move without GHL; 25 MiB assets. -->
+
+<!-- 2026-11-17 skill review (2nd session): pitfall added: video "finished" needs 90% played, not the end event (an applicant at 7% showed as watched); how to check a vslview record first. -->
