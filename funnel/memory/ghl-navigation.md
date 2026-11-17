@@ -57,3 +57,6 @@
 ## Notes
 - Always confirm new navigation paths via screenshot before documenting here
 - UI changes frequently — treat paths as "last confirmed on [date]" not permanent
+
+## Instagram DMs in GHL (2026-11-17)
+Settings → Integrations (not Private Integrations) → Instagram → "Enable messaging + automation" ON → Save. Full notes + dead ends: marketing/software-navigation/ghl-instagram-messaging-navigation.md
