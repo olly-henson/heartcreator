@@ -42,7 +42,12 @@ After the form, their Hub Sales card (tag `plan request`, label '📩 Plan reque
 - Never ask more than the 4 key questions (goal, what's in the way, what they've tried, how love feels) before the cause message. How long they've been single and whether they're dating come from the plan form. Why: Olly: "reduce the amount of questions to the key ones."
 - Removed as overridden (first v3 draft): "how long have you been looking?", "has any of it changed how you feel?", the Feeling Finder result questions and the "can I share something?" permission step.
 
-**Kills the ask:** teaching the how · mentioning the program first · two questions in one message · adding anything after step 6.
+**Entry point (Olly 2026-11-17): ManyChat is CANCELLED.** Olly replies to keyword comments and DMs by hand, and it works better: "because it's not automatic, people are weirdly more interested when I do respond, because I think they realize it's not an auto DM." A GHL replacement is being set up (heartattractor/NEXT.md, 2026-11-17 entry).
+- Any automated first message must read like Olly typed it: plain text, no buttons, his wording, sent after a short random delay (minutes, never instant).
+- Automation only ever covers the first reply to a keyword comment. From their first reply onwards, Claude drafts each message from this framework and Olly approves every send.
+- Meta's rule, stated exactly: a keyword comment allows ONE automatic DM to that person; more messages only after they reply or tap; nobody can be DM'd who hasn't commented or messaged. Why: Olly corrected a vaguer version ("that's not true... ManyChat will send them a DM, that's the whole point").
+
+**Kills the ask:** teaching the how · mentioning the program first · two questions in one message · adding anything after step 6 · anything that looks like an auto-DM (buttons, instant replies, template wording).
 **Helps the ask:** bio line naming the outcome + a Story highlight of member wins (people check the profile mid-chat).
 
 ---
@@ -154,14 +159,14 @@ After the form, their Hub Sales card (tag `plan request`, label '📩 Plan reque
 - **Use their words back to them.** If they say "I keep attracting unavailable men", that's the phrase you use from then on.
 - **Listen more than you teach.** Mini-value is two or three lines, not a lesson.
 - **Never pitch the program in the DM.** No price, no "apply". The only offer is the plan.
-- **No reply = no chase.** One check-in only (ManyChat sends it). If they go quiet mid-chat, one nudge after 2 days max, then leave it.
+- **No reply = no chase.** One check-in only (sent by hand since ManyChat was cancelled 2026-11-17). If they go quiet mid-chat, one nudge after 2 days max, then leave it.
 - **Not a fit = kind exit, no form.** In a relationship and trying to fix it, wants an ex back, wants texting scripts: answer warmly, point them to the daily emails / Feeling Finder, stop there.
 - Voice notes are great once they're chatting (steps 3 to 5). Text for the first two.
 - No dashes as separators, no comma before "and"/"or", "program" not "programme".
 
 ---
 
-## Message 1 (automatic, ManyChat): the check-in
+## Message 1: the check-in (was automatic in ManyChat; ManyChat cancelled 2026-11-17, now sent by hand)
 
 > Hey, hope that link came through all right 🙏
 >
@@ -307,3 +312,7 @@ no Instagram field, one-box profession, no money questions, click-through previe
 <!-- 2026-11-16 skill review (session 2026-11-15): v3 written from Olly's ask ("get them to ask me if I have a program"), then tightened on his
 correction: no step depends on the Feeling Finder, only 4 questions before the cause + open loop. Added a v3 Never list; the first draft's extra
 questions and permission step removed as overridden. -->
+
+<!-- 2026-11-17 skill review: ManyChat cancelled (Olly). Added "Entry point" under v3: hand replies outperform auto-DMs, so any automation
+must read like Olly (plain text, no buttons, delay) and only covers the first reply; Claude drafts the rest, Olly approves each send.
+Meta's one-auto-DM rule stated exactly after Olly corrected a vague version. "ManyChat sends it" references marked overridden. -->
