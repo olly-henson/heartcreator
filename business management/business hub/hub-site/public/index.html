@@ -3680,7 +3680,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // happening twice if the date gets changed later.
   var DOW_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
   var DAILY_REEL_TARGET = 6; // most a day fills to (Olly 2026-11-07: 6, was 10) so a recording batch lasts; reels/ghl_poster.py MAX_A_DAY matches
-  var DAILY_REEL_MIN = 4;
+  var DAILY_REEL_MIN = 6;   // Olly 2026-11-17: days with no number set default to 6 (was 4); reels/ghl_poster.py MIN_A_DAY + /api/track/reels defaultTarget match
   // Per-day Reel number (Olly 2026-11-04: "for each day ... a drop-down of how many, 0 up to 10"): state.reelDayTarget
   // = { "YYYY-MM-DD": n }. Unset days = DAILY_REEL_MIN. Drives the calendar count, auto-slotting, the consistency score
   // and (via /api/track/reels) which days the laptop tops up with late Reels. 0 = a rest day.
@@ -3944,7 +3944,33 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     ideas.forEach(function(idea){ if (idea.title && idea.date && idea.date >= today) over[idea.date] = 1; });
     var moved = 0;
     Object.keys(over).sort().forEach(function(iso){ moved += pushOverflowReels(iso); });
-    return late.length + moved;
+    return late.length + moved + packReels();
+  }
+
+  // Olly 2026-11-17: "I need it stacked so that the next six are always filled up" -> 6/6, 6/6, then the remainder, never
+  // 4/6, 4/6, 4/6. Draft Reels from today on are packed into the earliest days in their current order, each day up to its
+  // number (rest days skipped). Recorded / Scheduled / Published / skipped Reels never move and use up their day's room.
+  // Returns how many moved.
+  function packReels(){
+    var ideas = state.content && state.content.ideas || [], today = todayISO();
+    var drafts = [], isDraft = {}, fixed = {};
+    ideas.forEach(function(idea, idx){
+      if (idea.title && idea.date && idea.date >= today && !idea.skipped && reelState(idea) === "draft"){ drafts.push(idx); isDraft[idx] = 1; }
+    });
+    if (!drafts.length) return 0;
+    ideas.forEach(function(idea, idx){ if (idea.title && idea.date && idea.date >= today && !isDraft[idx]) fixed[idea.date] = (fixed[idea.date] || 0) + 1; });
+    drafts.sort(function(a, b){ return ideas[a].date < ideas[b].date ? -1 : ideas[a].date > ideas[b].date ? 1 : a - b; });
+    var tp = today.split("-"), d = new Date(+tp[0], +tp[1]-1, +tp[2]), k = 0, moved = 0;
+    for (var i = 0; i < 730 && k < drafts.length; i++){
+      var iso = isoDate(d), room = Math.min(DAILY_REEL_TARGET, reelTarget(iso)) - (fixed[iso] || 0);
+      while (room > 0 && k < drafts.length){
+        var ix = drafts[k++];
+        if (ideas[ix].date !== iso){ ideas[ix].date = iso; moved++; }
+        room--;
+      }
+      d.setDate(d.getDate() + 1);
+    }
+    return moved;
   }
 
   // Olly 2026-11-08: "if I change how many reels to post on a day (if I reduce the number) the spares automatically get
@@ -4081,12 +4107,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     tgtSel.addEventListener("change", function(){
       if (!state.reelDayTarget) state.reelDayTarget = {};
       state.reelDayTarget[dayModalDate] = Number(tgtSel.value);
-      var pushed = pushOverflowReels(dayModalDate);
+      var pushed = pushOverflowReels(dayModalDate) + packReels();
       markDirty(); renderIdeasAndWeek(); if (typeof renderToday === "function") renderToday();
       renderDayModal();
       if (pushed){
         var pn = document.createElement("p"); pn.className = "hint";
-        pn.textContent = "Moved " + pushed + " Reel" + (pushed === 1 ? "" : "s") + " to the next free days.";
+        pn.textContent = "Moved " + pushed + " Reel" + (pushed === 1 ? "" : "s") + " so every day fills up in order.";
         document.getElementById("dayModalBody").insertBefore(pn, document.getElementById("dayModalBody").children[1] || null);
       }
     });
@@ -5516,11 +5542,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
     return '<div class="lmstg">' +
       // Olly, 2026-11-16: simpler. Tick whichever way you contacted them (message and/or email), then "They replied".
-      row("1", "First contact (tick how you sent it)", btn("waSent", "Message sent") + btn("emSent", "Email sent") + btn("committed", "They replied")) +
-      row("2", "Their plan", btn("planSent", "Plan sent") + btn("planRead", "Plan read")) +
-      row("3", "Their sales video", btn("loom", "Video sent") + btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
+      // Olly, 2026-11-17: steps 1 and 2 merged. The first message carries the plan link.
+      row("1", "Successful + their plan (tick how you sent it)", btn("waSent", "Message sent") + btn("emSent", "Email sent") + btn("planRead", "Plan read") + btn("committed", "They replied")) +
+      row("2", "Their sales video", btn("loom", "Video sent") + btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
       row("✓", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
-      '<small style="display:block;opacity:.65;margin:2px 0 6px">Plan sent, Plan read, Watched and Clicked Join tick themselves from the tracking. Untick one to override it.</small>' +
+      '<small style="display:block;opacity:.65;margin:2px 0 6px">Plan read, Watched and Clicked Join tick themselves from the tracking. Untick one to override it.</small>' +
       '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("nofit", "Not a fit") + "</div>" +
       (s.archived ? '<div class="lmstep">' + (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL ✓</span>'
         : '<button type="button" data-act="ghlremove" style="border-color:#f87171;color:#f87171">Remove from GHL</button><small style="flex-basis:100%;opacity:.7">Takes them off every list, turns on Do Not Disturb and leaves them out of all stats.</small>') + "</div>" : "") + "</div>";
@@ -5548,7 +5574,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Plan of action link views (2026-11-08): /api/planviews -> { contactId: { sent, opens, first, last, pdf } }
   // Mark this device as Olly's, so opening an applicant's plan link here never counts as their open (2026-11-08)
   try { localStorage.setItem("hubOwner", "1"); } catch(e){}
-  var lmPV = {};
+  var lmPV = {}, lmPC = {};
+  // 2026-11-18: each card also looks up its own plan code (plan:<id>-short, then plan:<id>: KV reads, not a list),
+  // so the opening message shows even when /api/planviews is missing someone (KV list lag / daily list cap).
+  function lmPlanCode(id){
+    if (lmPC[id] === undefined){ lmPC[id] = null;
+      var get = function(k){ return fetch("/api/plan?id=" + encodeURIComponent(k), { cache:"no-store" }).then(function(r){ return r.ok ? r.json() : {}; }).then(function(d){ return (d && d.plan && d.plan._code) || ""; }).catch(function(){ return ""; }); };
+      get(id + "-short").then(function(c){ return c || get(id); }).then(function(c){ lmPC[id] = c; renderLooms(); });
+    }
+    return lmPC[id] || "";
+  }
   function lmPlanViews(){ fetch("/api/planviews" + lmFresh, { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmPV = d.views || {}; lmPH = {}; renderLooms(); } }).catch(function(){}); }
   // Sales video (VSL) views (2026-11-10): /api/vslviews -> { contactId: { opens, first, last, pct, far, done, join, joinAt, dev } }
   // pct = share of the video actually played (skips don't count), far = furthest point reached. Link = /p/<plan code>/video.
@@ -5788,27 +5823,26 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // First message = their short plan link (Olly, 2026-11-15: every good applicant gets this first; Claude builds the plan,
     // short version on KV id <contactId>, full version on <contactId>-full, see funnel/skills/skills_plan-v4.md)
     // a re-made short plan for someone who already had an old plan lives on <id>-short (2026-11-15)
-    var sp = lmPV[a.id + "-short"] || lmPV[a.id], spUrl = sp && sp.code ? "https://hub.ollyhenson.com/p/" + sp.code : "";
+    var sp = lmPV[a.id + "-short"] || lmPV[a.id], spCode = (sp && sp.code) || lmPlanCode(a.id), spUrl = spCode ? "https://hub.ollyhenson.com/p/" + spCode : "";
     var fp = lmPV[a.id + "-full"], fpUrl = fp && fp.code ? "https://hub.ollyhenson.com/p/" + fp.code : "";
-    // Applicant flow (Olly, 2026-11-16): 1 application successful -> 2 once they reply, the 5-page plan -> 3 when they ask, the video.
+    // Applicant flow (Olly, 2026-11-17): 1 application successful + their 5-page plan link in ONE message -> 2 when they ask for next steps, the video.
     // Every step: WhatsApp (iMessage twin added automatically) + an email version. qualSent stops the auto "Plan sent" rule.
-    var msg1 = "Hey " + nm + ", just got your application through for The Heart Attractor Program. It\u2019s been successful \ud83d\ude4f\n\nPlease just reply to this message to let me know you got it and I\u2019ll send you the next steps.\n\nOlly Henson";
-    var mail1 = ph
-      ? "Hey " + nm + ",\n\nYour application for The Heart Attractor Program was successful.\n\nI\u2019ve just sent you a message on " + app + " with the next steps. Please reply to my message there.\n\nSpeak soon,\n\nOlly"
-      : "Hey " + nm + ",\n\nYour application for The Heart Attractor Program was successful.\n\nPlease just reply to this email to let me know you got it and I\u2019ll send you the next steps.\n\nSpeak soon,\n\nOlly";
-    h += lmHead("1. Application successful");
-    if (ph) h += lmTxt("👋 1a. Message: your application was successful", msg1, lmWa(msg1, "waSent,qualSent"));
-    if (a.email) h += lmTxt(ph ? "✉️ 1b. Email follow-up" : "✉️ 1. Email (no phone number)", mail1, lmMail("Your application was successful", mail1, "emSent,qualSent"));
-    // Email-only route (Olly, 2026-11-16): for people with no WhatsApp and no iMessage. Steps 2 and 3 already have stand-alone emails.
-    var mailOnly1 = "Hey " + nm + ",\n\nJust got your application through for The Heart Attractor Program. It\u2019s been successful \ud83d\ude4f\n\nPlease just reply to this email to let me know you got it and I\u2019ll send you the next steps.\n\nSpeak soon,\n\nOlly";
-    if (a.email && ph) h += lmTxt("✉️ 1c. Email only (no WhatsApp or iMessage)", mailOnly1, lmMail("Your application was successful", mailOnly1, "emSent,qualSent"));
-    // 2. Once they reply: the generic 5-page plan
-    var first = "Love that " + nm + " \ud83d\ude4f\n\nHave a look through this plan. It\u2019s a short 5-page summary of how I can help you find the relationship you want. It\u2019s exactly what we\u2019ll do within the program.\n\n" + spUrl + "\n\nLet me know your thoughts once you\u2019ve read it.";
-    var firstMail = "Hey " + nm + ",\n\nHere\u2019s your plan. It\u2019s a short 5-page summary of how I can help you find the relationship you want. It\u2019s exactly what we\u2019ll do within the program.\n\n" + spUrl + "\n\nLet me know your thoughts once you\u2019ve read it.\n\nOlly";
-    var firstSubj = nm + ", here\u2019s your plan";
-    h += lmHead("2. Once they reply: their plan");
-    if (spUrl) h += lmTxt("📄 2a. Send their plan (message or email)", first, (ph ? lmWa(first, "planSent") : "") + lmMail(firstSubj, firstMail, "emSent,planSent")).replace("</div>", '<a href="' + spUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>' + lmPlanLine(lmPV[a.id + "-short"] ? a.id + "-short" : a.id) + "</div>");
-    else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.8">📄 2a. Their plan: ask Claude to make ' + lmEsc(a.firstName || "their") + '’s plan. The message with their link shows here once it’s made.</small></div>';
+    // Olly, 2026-11-17: ONE first message = application successful + their plan link (was 3 steps: successful -> reply -> plan).
+    // "Here's a step-by-step of exactly what's in the program. Please read through it, and if it's right for you, let me know if you'd like the next steps."
+    // Olly, 2026-11-18: new opening wording.
+    var msg1 = "Hi " + nm + ",\n\nI’ve looked through your application for The Heart Attractor Program and all looks good 🙏\n\nHere’s a short summary of what’s involved in the program:\n\n" + spUrl + "\n\nHave a read through, let me know if you have any questions and if you’d like the next steps.\n\nOlly Henson";
+    var mail1 = "Hi " + nm + ",\n\nI’ve looked through your application for The Heart Attractor Program and all looks good 🙏\n\nHere’s a short summary of what’s involved in the program:\n\n" + spUrl + "\n\nHave a read through, let me know if you have any questions and if you’d like the next steps.\n\nOlly Henson";
+    h += lmHead("1. Application successful + their plan");
+    if (spUrl){
+      if (ph) h += lmTxt("👋 1a. Opening message + their plan", msg1, lmWa(msg1, "waSent,qualSent,planSent")).replace("</div>", '<a href="' + spUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>' + lmPlanLine(lmPV[a.id + "-short"] ? a.id + "-short" : a.id) + "</div>");
+      // Follow-up email after the message (Olly, 2026-11-17: put back): names the app the message went on. One button per app, their app first.
+      if (ph && a.email){
+        var fuMail = function(appName){ return "Hey " + nm + ",\n\nYour application for The Heart Attractor Program was successful.\n\nI’ve just sent you a message on " + appName + " with a step-by-step of exactly what’s in the program.\n\nPlease reply to my message there.\n\nSpeak soon,\n\nOlly Henson"; };
+        var fuBtn = function(appName){ return lmMail("Your application was successful", fuMail(appName), "emSent,qualSent").replace(">Email</a>", ">Email: sent on " + appName + "</a>"); };
+        h += lmTxt("✉️ 1b. Follow-up email: “I’ve messaged you on " + app + "”", fuMail(app), im ? fuBtn("iMessage") + fuBtn("WhatsApp") : fuBtn("WhatsApp") + fuBtn("iMessage"));
+      }
+      if (a.email) h += lmTxt(ph ? "✉️ 1c. Email only, with the plan (no WhatsApp or iMessage)" : "✉️ 1. Email (no phone number)", mail1, lmMail("Your application was successful", mail1, "emSent,qualSent,planSent"));
+    } else h += '<div class="lmcon lmmsg"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 Plan of action: make their link</a><small style="flex-basis:100%;opacity:.75">' + (lmPC[a.id] === null ? "Looking for their plan link…" : "No plan link yet. Tap to make their link (the opening message appears here once it exists), or ask Claude to build their plan.") + "</small></div>";
 
     // Personal email Claude drafted for this applicant (2026-11-07): stored in KV as state.looms[id].draftEmail = { subject, body }, never in this file (public repo)
     var dr = lmStore(a.id).draftEmail;
@@ -5819,19 +5853,19 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (fpUrl){
       var full2 = "Hey " + nm + ", here’s the full version of your plan, with every step in detail:\n\n" + fpUrl + "\n\nLet me know if you’ve got any questions.";
       var fpLine = fp.opens ? "Opened " + fp.opens + "×, last " + lmWhen(fp.last) + (fp.dev ? " on " + fp.dev : "") + (fp.far ? " · read to page " + fp.far + " of " + (fp.pages || 16) : "") : "Not opened yet";
-      h += lmTxt("📄 2b. Optional: the full plan", full2, lmWa(full2) + lmMail(nm + ", your full plan", full2 + "\n\nOlly"))
+      h += lmTxt("📄 1d. Optional: the full plan", full2, lmWa(full2) + lmMail(nm + ", your full plan", full2 + "\n\nOlly"))
         .replace("</div>", '<a href="' + fpUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a><small style="flex-basis:100%;opacity:.85">' + lmEsc(fpLine) + "</small></div>");
     }
     }
 
     // 3. Once they've checked the plan (ideally replied): their own video page + a voice note
-    h += lmHead(a.planRequest ? "5. Once they've asked any questions: their video" : "3. When they ask for the video");
+    h += lmHead(a.planRequest ? "5. Once they've asked any questions: their video" : "2. When they ask for the next steps: the video");
     var pv0 = lmPV[a.id] || lmPV[a.id + "-short"], vurl = pv0 && pv0.code ? "https://hub.ollyhenson.com/p/" + pv0.code + "/video" : "";
     if (vurl && !a.planRequest){
       // Olly, 2026-11-16: "here's the video, it takes you through everything you need, let me know if you have any questions"
       var vtxt = "Hey " + nm + ", here\u2019s the video \ud83d\ude4f\n\n" + vurl + "\n\nIt takes you through everything you need: how the program works, the investment and how to get started. Let me know if you have any questions.";
       var vmail = "Hey " + nm + ",\n\nHere\u2019s the video:\n\n" + vurl + "\n\nIt takes you through everything you need: how the program works, the investment and how to get started. Let me know if you have any questions.\n\nOlly";
-      h += lmTxt("🎬 3a. Send the video (message or email)", vtxt, (ph ? lmWa(vtxt, "loom") : "") + lmMail(nm + ", here\u2019s the video", vmail, "emSent,loom"));
+      h += lmTxt("🎬 2a. Send the video (message or email)", vtxt, (ph ? lmWa(vtxt, "loom") : "") + lmMail(nm + ", here\u2019s the video", vmail, "emSent,loom"));
     } else if (vurl){
       var vtxt = "Hey " + nm + ", here's the video I've made for you.\n\n" + vurl + "\n\nIt goes through the program, the steps, the investment and how to get started. Watch it in your own time, and if you have any questions, just reply here.";
       h += lmTxt("🎬 5a. Send their video", vtxt, lmWa(vtxt, "loom") + lmMail(nm + ", here's your video", vtxt + "\n\nOlly", "loom"));
@@ -5841,7 +5875,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     h += lmVslRow(a);
     // Email ideas from this applicant (Olly, 2026-11-09): their answers with personal details taken out, for the content generator.
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for content ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator, Email or Reels tab, “An applicant’s words”: emails use their feelings, Reel hooks are built from their pain and the outcomes they want.</small></div>';
-    h += lmHead(a.planRequest ? "6. After the video" : "4. After the video");
+    h += lmHead(a.planRequest ? "6. After the video" : "3. After the video");
     // Follow-up (2026-11-06, Frankie: "go deeper, never chase"): ONE idea message, only if they watched the video.
     var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : (a.planRequest ? "your plan" : "your application")) + ". If I were you, "
       + (feel ? "the feeling I'd start practicing first is " + feel + ", because that's the one that" : "I'd start by practicing how you'd feel with them every day, because that's what")
@@ -9241,6 +9275,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     ["c_yt", "YouTube: write and schedule today's community post"]
   ];
   var TARGETS = [["Reels", 4, 28], ["Stories", 7, 49], ["Emails", 1, 7], ["YouTube posts", 1, 7]];
+  // Olly, 2026-11-18: YouTube community posts PAUSED for now (no sign-ups from them; energy goes into Instagram + email).
+  // Hidden from the routine and the weekly targets, nothing deleted. Set to false to bring them back.
+  var YT_COMMUNITY_PAUSED = true;
+  if (YT_COMMUNITY_PAUSED) { ROUTINE = ROUTINE.filter(function(r){ return r[0] !== "c_yt"; }); TARGETS = TARGETS.filter(function(t){ return t[0] !== "YouTube posts"; }); }
   var ROUTINE_START = "2026-10-29";
   var coreWeek = null;
   function coreStore(){
@@ -10025,7 +10063,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // with the keyword ending per platform. Instagram and TikTok: comment or DM the keyword. Facebook adds the title first.
   // YouTube Shorts links aren't clickable: the training link or the short /feel address. Same body as the content generator.
   var REEL_TAGS = "#Soulmate #ManifestLove #AttractLove #LawOfAttraction #LifePartner";
-  var REEL_BODY = "💜 Attract a genuine, committed relationship with someone you can build a life with\n\nFor people who want to meet someone special and settle down, but nothing is changing.\n\nThe 3 steps:\n\n✅ Step 1: Get clear on exactly who you want and what your life together looks like\n\n✅ Step 2: Define the emotions you’d feel with them\n\n✅ Step 3: Embody those emotions every day so the right person is drawn to you\n\n♥️ This is how I met my wife\n\n";
+  var REEL_BODY = "💜 Attract someone that you can marry, have children with and build a life with\n\nFor people who want to meet someone special and settle down, but nothing is changing.\n\nThe 3 steps:\n\n✅ Step 1: Get clear on exactly who you want and what your life together looks like\n\n✅ Step 2: Define the emotions you’d feel with them\n\n✅ Step 3: Embody those emotions every day so the right person is drawn to you\n\n♥️ This is how I met my wife\n\n";
   var FEELING_ASK = "👇 Comment ‘FEELING’ and I’ll send you my free tool to help with steps 1 and 2\n\n(If you’d rather keep it private, DM me ‘FEELING’)\n\n";
   var ATTRACT_ASK = "👇 Comment ‘ATTRACT’ and I’ll send you my free training on how to do this\n\n(If you’d rather keep it private, DM me ‘ATTRACT’)\n\n";
   var VIDEO_ASK = "👇 Comment ‘VIDEO’ and I’ll send you my free training on how to do this\n\n(If you’d rather keep it private, DM me ‘VIDEO’)\n\n";

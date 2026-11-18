@@ -274,7 +274,12 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           <div class="f full" id="crsShotWrap" hidden><span>Member screenshot</span><span class="hint">One real message or post, shared with permission. Names and profile photos get covered for you: check the covers, then press Generate.</span><div class="row"><label class="tsmfile">Upload the screenshot<input type="file" id="crsShot" accept="image/*"></label></div><div id="crsShotHost"></div></div>
           <label class="f full" id="crsPostWrap" hidden>Your post or email <span class="hint">Paste the whole thing. The carousel tells the same story in short slides, in your words, and ends on Comment EMOTION. Nothing gets added that isn't in it.</span><textarea id="crsPost" rows="8" placeholder="Paste your post or email here"></textarea><span class="row"><button type="button" class="btn small" id="crsPostClear">Clear</button></span></label>
           <label class="f full" id="emailResultWrap" hidden>A real result to share <span class="hint">Optional. Paste a member's win or message (with their permission, name left out). Mixed week then includes one email built around it, or pick Results share to write it on its own.</span><textarea id="emailResult" rows="3" placeholder="e.g. I went on a date at the weekend and for the first time I didn't overthink a single text"></textarea></label>
+          <label class="f full" id="emailThemeWrap" hidden>Best applicants' themes <span class="hint">What the strongest applicants keep saying (12 best applications, 2026-11-18). Each email takes its angle from one theme.</span><select id="emailTheme">
+            <option value="any">Mix them (a different theme per email)</option>
+            <option value="off">Off</option>
+          </select><span class="row" style="gap:8px;align-items:center"><input type="checkbox" id="emailThemeOnly" style="width:auto;margin:0"><span>Only use this (ignore every other option: type, format, part of the message, topic, call to action and the pasted boxes)</span></span></label>
           <label class="f full" id="emailVoiceWrap" hidden>An applicant's words, for inspiration <span class="hint">Optional. In the Hub: Sales, open an applicant, tap 💡 Copy for content ideas, then paste here. Names and personal details are already taken out. Emails use their feelings and patterns as the angle; Reel hooks are built from their pain and the outcomes they want. Never their story or their details. Clear it when you're done.</span><textarea id="emailVoice" rows="4" placeholder="Paste from the Hub's 💡 Copy for content ideas"></textarea><span class="row"><button type="button" class="btn small" id="emailVoiceClear">Clear</button></span></label>
+          <label class="f full" id="reelBestWrap" hidden><span class="row" style="gap:8px;align-items:center"><input type="checkbox" id="reelBest" style="width:auto;margin:0"><span><b>Aim at my best applicants</b> (life-partner professionals who've tried everything; core message, rules and CTA still apply)</span></span></label>
           <div class="f full" id="reelCtaWrap"><span>Call to action (on every Reel)</span><p class="ctabox" id="reelCta"></p></div>
           <label class="f full">Topic or angle <span class="hint">Optional. Something you want to talk about, a question you've been asked, or a word to build on.</span><input type="text" id="topic" placeholder="e.g. why the people you like won't commit"></label>
           <label class="f" id="countWrap">How many ideas<select id="count"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
@@ -629,7 +634,7 @@ const POST_TYPES = {
     formats:["Poll: which one do you feel most about dating right now?","Quiz: what do impatience, envy and exhaustion have in common?","This or that: learn one more thing, or feel a little better today?","When dating started to feel like a chore for me","One small step up the scale today"],
     rule:"Keep it warm and normal: everyone feels these. One feeling, named simply, then the reveal that it's fear underneath, then one small practical step up the emotional scale. Olly can share when he felt it himself. Never heavy, never shaming."},
   "Science": {group:"Connection", desc:"Show the science behind the right emotional state (brainwaves, heart rhythm, what changes in the body) so it never feels vague.",
-    formats:["Your brain on worry vs your brain on calm","What dating anxiety does to your heart rhythm","Overthinking has a brainwave","Same heart, two very different rhythms","What happens in our body when we think about dating","Survival state vs elevated state","Why slow breathing changes how we feel","What 'the right emotional state' actually looks like"],
+    formats:["Your brain on worry vs your brain on calm","What worrying about love does to your heart rhythm","Overthinking has a brainwave","Same heart, two very different rhythms","What happens in our body when we worry about meeting someone","Survival state vs elevated state","Why slow breathing changes how we feel","What 'the right emotional state' actually looks like"],
     rule:"This type is the one exception to 'don't teach': teach ONE small piece of science in plain words, then tie it to the right emotional state in a line. Use only these facts, worded carefully ('linked with', 'tends to'), never stronger: Brainwaves (EEG): beta (about 13 to 30 Hz) is normal busy waking thinking, and high beta is linked with stress, anxiety and overthinking; alpha (about 8 to 12 Hz) is linked with being relaxed, calm and present, and tends to rise with slow breathing and meditation; theta (about 4 to 8 Hz) shows up in deep relaxation and drowsiness. Heart rhythm (HeartMath Institute research): frustration, anxiety and worry give an erratic, jagged heart rhythm (incoherence); appreciation, love and care give a smooth, steady one (heart coherence), linked with feeling calm, safe and connected; slow breathing with attention on the heart helps. Stress puts the body in fight or flight; feeling safe brings rest and digest. Emotional contagion and what we notice are in the core message. Never claim brainwaves, the heart's field or heart rhythm pull a partner in, never invent numbers or studies, and say it's 'after HeartMath research' if their chart is used. Olly's Story Image Maker has a Science tab with Brainwaves, Heart rhythm, Two states and Photo layouts: say which one fits."},
   "Aspiration": {group:"Connection", desc:"Paint the vision: the calm, ordinary everyday relationship they want, so they feel the excitement and keep seeing it.",
     formats:["An ordinary Sunday","Breakfast together","Dinner with friends, and your person beside you","A family of your own","Coming home to someone","The little everyday moments","What calm love actually looks like","It's closer than it feels"],
@@ -797,7 +802,7 @@ Object.assign(POST_TYPES, {
   "Tuxedo Winnie the Pooh": {group:"Meme", desc:"Plain Pooh on top, fancy Pooh in a tuxedo underneath.", formats:MEME_PLACES,
     rule:"Two panels: Plain Pooh (the everyday or old way of saying it) and Tuxedo Pooh (the classy, new-belief version)."},
   "Charlie's conspiracy board": {group:"Meme", desc:"Charlie from It's Always Sunny frantically explaining a wall of papers and red string.", formats:MEME_PLACES,
-    rule:"Two parts: a top line (what we're doing, e.g. me working out why they didn't text back) and the board (a few overthinking notes pinned up). This shows overanalysing, the old state."},
+    rule:"Two parts: a top line (what we're doing, e.g. me working out what's wrong with me) and the board (a few overthinking notes pinned up). This shows overanalysing, the old state."},
   "They don't know": {group:"Meme", desc:"A man standing alone in the corner at a party, thinking a secret to himself.", formats:MEME_PLACES,
     rule:"One panel: 'They don't know...' plus a quiet win, e.g. he's feeling calm about love now. Warm, a bit smug, never mocking anyone."},
   // Added 2026-10-29 for Catrin's crowd (women in their 30s and 40s): the templates they share with friends
@@ -810,7 +815,7 @@ Object.assign(POST_TYPES, {
   "Sad Pablo Escobar": {group:"Meme", desc:"Pablo Escobar alone and waiting in three scenes: on a swing, at a table, by an empty pool.", formats:MEME_PLACES,
     rule:"One top line about waiting in the old state, e.g. \"Me waiting for the right one after my 14th self-development book\". The wait is the joke; the feeling is the fix."},
   "Is this a pigeon?": {group:"Meme", desc:"An anime man points at a butterfly and asks \"Is this a pigeon?\", getting it wrong.", formats:MEME_PLACES,
-    rule:"Three labels: the man (me, or most of us, e.g. me after one good date), the butterfly (what's really there, e.g. a man who texts back on time) and the question at the bottom (the wrong read, e.g. \"Is this… a red flag?\"). It shows how fear misreads good things, like a consistent man giving the ick."}
+    rule:"Three labels: the man (me, or most of us, e.g. me after another self-help book), the butterfly (what's really there, e.g. someone who feels like home) and the question at the bottom (the wrong read, e.g. \"Is this… a red flag?\"). It shows how fear misreads good things, like a consistent man giving the ick."}
 });
 // Meme order (Olly, 2026-10-29): templates for Catrin's crowd first; the gamer/male-coded ones are retired from the lists
 const MEME_RETIRED = ["Bell curve", "Buff Doge vs Cheems", "Galaxy brain", "Gru's plan", "Charlie's conspiracy board"];
@@ -842,7 +847,7 @@ Object.assign(POST_TYPES, {
     formats:["An ordinary Sunday","Coming home to someone","What calm love actually looks like","Being fully yourself with someone","Breakfast together, no games","It's closer than it feels"],
     rule:"One small, specific everyday moment, never fireworks or fantasy. Warm and close. Tie it lightly to the right emotional state: this is the life that state makes room for. Being fully yourself (vulnerable, outgoing, playful) fits here."},
   "Email · Science": {group:"Email", desc:"Soft-teach one piece of the science (heart rhythm, brainwaves, emotional contagion) so the emotional state never feels vague.",
-    formats:["What dating anxiety does to your heart rhythm","Overthinking has a brainwave","Why positive thinking fades and this doesn't","Survival state vs elevated state"],
+    formats:["What worrying about love does to your heart rhythm","Overthinking has a brainwave","Why positive thinking fades and this doesn't","Survival state vs elevated state"],
     rule:"Infotainment, not a lecture: one fact, explained in plain words, then what it means for who they notice and attract. Only these facts, worded carefully ('linked with', 'tends to'): beta brainwaves (about 13 to 30 Hz) are busy waking thought and high beta is linked with stress, anxiety and overthinking; alpha (about 8 to 12 Hz) is linked with feeling relaxed, calm and present and tends to rise with slow breathing and meditation; HeartMath Institute research: frustration and anxiety give an erratic heart rhythm, appreciation and care a smooth one (heart coherence), linked with feeling calm, safe and connected; stress means fight or flight, feeling safe means rest and digest; emotional contagion as in the core message. Never claim brainwaves or the heart's field pull a partner in. Never invent numbers or studies.\n" + RESEARCH_FACTS},
   "Email · Q&A": {group:"Email", desc:"Answer a question people really ask, without giving away the whole how-to.",
     formats:["\"So I just sit and wait?\"","\"But I'm happy most of the time\"","\"I've tried feeling good. It never sticks.\"","\"Isn't this just another method?\"","\"How do I know which emotional state is right for me?\"","\"What if it never happens for me?\""],
@@ -2263,7 +2268,7 @@ function setChannel(ch, keepType, keepFormat){
   cImg.show(channel === "carousels"); $("carouselNote").hidden = channel !== "carousels";
   $("tab-memes").setAttribute("aria-selected", String(channel === "memes"));
   $("tab-email").setAttribute("aria-selected", String(channel === "email"));
-  $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email"; $("emailVoiceWrap").hidden = channel !== "email" && channel !== "reels"; // Reel hooks from an applicant's pain + outcomes (Olly, 2026-11-10)
+  $("emailNote").hidden = channel !== "email"; $("emailCtaWrap").hidden = channel !== "email"; $("emailResultWrap").hidden = channel !== "email"; $("emailThemeWrap").hidden = channel !== "email"; $("reelBestWrap").hidden = channel !== "reels"; if (typeof themeOnlyUi === "function") themeOnlyUi(); $("emailVoiceWrap").hidden = channel !== "email" && channel !== "reels"; // Reel hooks from an applicant's pain + outcomes (Olly, 2026-11-10)
   document.querySelector(".seg").hidden = !ig; $("balance").hidden = !ig;
   // Stories (Olly, 2026-11-02): no idea writer, just the Story Image Maker
   { const sty = channel === "stories" || channel === "ytpost"; if (sty) $("balance").hidden = true; document.querySelector(".form").hidden = sty; $("go").parentNode.hidden = sty;
@@ -2551,7 +2556,13 @@ async function refreshEmailStats(){
 }
 refreshEmailStats();
 function emailPrompt(type, t, fmt, n, part, topic){
-  const cta = $("emailCta").value;
+  // "Only use this" (Olly, 2026-11-18): the best applicants' theme alone decides the email; every other option is ignored.
+  const only = themeOnly();
+  if (only) {
+    t = { rule: "Let the best applicants' theme decide everything (see WHAT THE BEST APPLICANTS SAY above): pick whichever email type tells it best (belief breaking, free value, mechanism, science, personal story...). Name the type you chose.", formats: [] };
+    fmt = "whatever format tells the theme best"; part = "whichever part of the core message the theme leads into most naturally"; topic = "";
+  }
+  const cta = only ? "auto" : $("emailCta").value;
   const ctaRule = {
     auto: n > 1
       ? "Mix them like a normal week: most emails have no call to action, one may ask for a reply, and at most ONE in the batch invites people to apply (as the closing line or a P.S.). Say which is which."
@@ -2570,7 +2581,7 @@ ${RULES}
 WHO GETS THESE EMAILS
 - People who signed up for Olly's free video training: "How To Attract A Committed Relationship (Without More Inner Work or Dating Rules)". Some watched it, some didn't. They're on his daily list, 3 to 7 emails a week.
 - They aren't members. Never mention the free trial, Skool, the ATTRACTION or VIDEO keywords, or prices.
-- The only offer is The Heart Attractor Program, by application. Most emails don't mention it at all.
+- The only offer is The Heart Attractor Program, by application. Most emails don't mention it at all.${applicantThemesBrief(n)}
 
 HOW OLLY WRITES EMAILS (match this exactly)
 - Every email breaks a belief or gives real value. That's the job. Connection is worked in, not the point: a moment from Olly's life, an everyday scene they'll recognise, a line that shows he's been where they are.
@@ -2598,7 +2609,7 @@ Format: ${fmt || "pick the best fit from: " + t.formats.join(" / ")}`}
 Part of the message to connect to: ${part}
 ${topic ? "Topic or angle: " + topic : ""}
 Call to action: ${ctaRule}
-${voiceBrief()}${$("emailResult").value.trim() ? "REAL RESULT TO SHARE (a real member's words, shared with permission; quote it exactly, never add to it or invent details, no name): \"" + $("emailResult").value.trim() + "\"" + (t.rule === "MIXED" ? "\nMake exactly one email in the set a Results share built around it." : "") : ""}
+${only ? "" : voiceBrief()}${!only && $("emailResult").value.trim() ? "REAL RESULT TO SHARE (a real member's words, shared with permission; quote it exactly, never add to it or invent details, no name): \"" + $("emailResult").value.trim() + "\"" + (t.rule === "MIXED" ? "\nMake exactly one email in the set a Results share built around it." : "") : ""}
 Write ${n} different emails.${n > 1 ? " They go out on different days, so vary the angle, opening and subject technique across the batch." : ""}
 
 For each email give:
@@ -2715,6 +2726,57 @@ async function emailBatch(signal){
   const ok = res.filter(r => r.status === "fulfilled" && r.value).map(r => r.value);
   if (!ok.length && res[0] && res[0].reason) throw res[0].reason;
   return ok;
+}
+/* Best applicants' themes (Olly, 2026-11-18: "add this to the email generator"). Patterns from the 12 strongest applications
+   (most detail, best careers, best fit), paraphrased: this file is in a public repo, so no names, jobs or word-for-word answers.
+   Source order still applies: Catrin > core argument > these themes. */
+const APPLICANT_THEMES = [
+  { id:"life", name:"They want a life partner, not just dating (9 of 12)", brief:"They want marriage, to settle down and build a life with someone; many name children. Not casual dating, not just 'a relationship'." },
+  { id:"stopped", name:"Most have stopped dating (10 of 12)", brief:"Single and not really dating any more. They haven't stopped wanting it; they've pulled back because putting themselves out there kept hurting." },
+  { id:"hopeless", name:"Hopeless and pessimistic about love", brief:"Hopelessness, frustration, impatience, loneliness: a quiet fear that it may never happen for them and that time is running out for a family." },
+  { id:"tried", name:"They've tried everything (apps, therapy, books, manifesting)", brief:"Dating apps, therapy, books and courses, manifesting, inner child work, attachment styles, dating coaches. Effort isn't the problem; the effort itself is exhausting them. Love has started to feel like one more thing to work at." },
+  { id:"meet", name:"\"I don't meet the right people\"", brief:"They rarely meet anyone they're attracted to, and the ones they meet aren't emotionally available, aren't ready, or don't want the same things." },
+  { id:"last", name:"When it starts, it doesn't last", brief:"Things start well, then fade after a couple of months, or the other person doesn't stick around or doesn't choose them. The same story keeps repeating." },
+  { id:"belong", name:"What they want to feel: belonging, safety and peace", brief:"Their emotion with their person is mostly belonging, then peace, love and safety. They want someone emotionally available, consistent, loyal and trustworthy: someone they feel safe and at peace around (never boring: safe AND fun)." },
+  { id:"inside", name:"They half-know the answer is inside them", brief:"Asked what has to happen before they meet their person, they say: calm down and trust it, stop doubting myself, stop trying so hard, learn to love myself, let their nervous system relax from the search. Some have lost hope altogether." },
+  { id:"achiever", name:"High achievers: love is the one area effort doesn't fix", brief:"Educated professionals with good careers (law, finance, medicine, engineering) who have a lot to offer. Hard work got them everything else, so they apply it to love, and it backfires." }
+];
+{ const sel = document.getElementById("emailTheme");
+  if (sel) { APPLICANT_THEMES.forEach(t => { const o = document.createElement("option"); o.value = t.id; o.textContent = t.name; sel.appendChild(o); });
+    sel.value = store.get("cig-theme", "any") || "any"; if (!sel.value) sel.value = "any";
+    sel.addEventListener("change", () => { store.set("cig-theme", sel.value); themeOnlyUi(); }); }
+  const only = document.getElementById("emailThemeOnly");
+  if (only) { only.checked = !!store.get("cig-theme-only", false); only.addEventListener("change", () => { store.set("cig-theme-only", only.checked); themeOnlyUi(); }); }
+  setTimeout(themeOnlyUi, 0); }
+// "Only use this" (Olly, 2026-11-18): the theme alone drives the email; every other option is ignored and greyed out.
+function themeOnly(){ const o = document.getElementById("emailThemeOnly"), t = document.getElementById("emailTheme"); return !!(o && o.checked && t && t.value !== "off"); }
+function themeOnlyUi(){
+  const on = themeOnly() && channel === "email";
+  ["type", "format", "part", "hook", "emailCta", "emailResult", "emailVoice"].forEach(id => { const el = document.getElementById(id); if (!el) return;
+    const box = el.closest("label") || el.parentElement; if (box) { box.style.opacity = on ? ".35" : ""; box.style.pointerEvents = on ? "none" : ""; } });
+}
+function applicantThemesBrief(n){
+  const v = ($("emailTheme") && $("emailTheme").value) || "any";
+  if (v === "off") return "";
+  const one = APPLICANT_THEMES.find(t => t.id === v);
+  const list = (one ? [one] : APPLICANT_THEMES).map(t => "- " + t.name + ": " + t.brief).join("\n");
+  return "\n\nWHAT THE BEST APPLICANTS SAY (the readers Olly most wants: patterns from his strongest applications, private)\n" + list + "\n"
+    + (one ? "Build " + (n > 1 ? "every email" : "this email") + " around this theme: open on it in words the reader will recognise in themselves, then connect it to the core message."
+           : "Build each email's angle from ONE of these themes, " + (n > 1 ? "a different theme for each email in the batch," : "") + " in words the reader will recognise in themselves, then connect it to the core message.")
+    + " Never mention applicants, applications or anyone's story. Speak to everyone who feels this.";
+}
+/* "Aim at my best applicants" tick box for Reels + Stories (Olly, 2026-11-18): same themes, everything else (core message,
+   rules, Story topic rules, CTA) still applies. Saved per tool: cig-best-reels / cig-best-stories. */
+function bestAudOn(kind){ const el = document.getElementById(kind === "reels" ? "reelBest" : "day-best"); return !!(el && el.checked); }
+function bestAudBrief(kind){
+  if (!bestAudOn(kind)) return "";
+  return "\n\nAIM AT OLLY'S BEST APPLICANTS (Olly ticked this: write to attract the people most likely to apply and be a great fit)\n"
+    + "Who they are: educated professionals with good careers (law, finance, medicine, engineering) who want marriage, children and a life partner, not casual dating. Most have stopped dating, have tried everything (apps, therapy, books, manifesting) and feel quietly hopeless. Hard work got them everything else; love is the one area it doesn't fix.\n"
+    + APPLICANT_THEMES.map(t => "- " + t.name + ": " + t.brief).join("\n") + "\n"
+    + (kind === "reels"
+      ? "Write every hook so THIS person stops scrolling: their words, their situation, the outcome they want (a life partner, settling down, feeling belonging and peace). Spread the hooks across different themes. Everything else above still applies exactly (core message, hook rules and length, the CTA)."
+      : "Write the day's Stories so THIS person feels seen: their words, their situation, the life they want. Spread the Stories across different themes. Everything else above still applies exactly (core message, the Story topic rules: still no dating tactics, the templates and the mix).")
+    + " Never mention applicants, applications or anyone's story.";
 }
 /* Applicant voice (Olly, 2026-11-09): "inspiration for the daily emails that go to engaged people". The Hub's Sales card
    copies an applicant's answers with names and personal details taken out; pasted here, every email uses their feelings
@@ -2875,6 +2937,12 @@ ${CORE}
 ${RULES}
 
 STORIES ARE DIFFERENT FROM REELS
+STORY TOPICS (Olly, 2026-11-17, overrides every example and bank)
+- NO dating tactics. Never red flags / green flags, texting, texting back, ghosting, matches going quiet, dating apps, first dates, dating rules or what to do on a date. It's deeper than dating.
+- Belief, question and relate Stories are about INTELLECTUALIZATION vs EMOTIONAL RESONANCE, so people recognise themselves. Intellectualization: operating from survival emotions (worrying, doubting and stressing about meeting someone), thinking something might be wrong with us, trying to fix ourselves, learning more and trying to control the outcome. Emotional resonance: embodying our highest emotional state every day, so we build the confidence, energy and belief to meet someone and it unfolds naturally.
+- Aspiration Stories show the life they want: their life partner, someone to marry, have children with and build a life with. Ordinary, happy, committed and still fun.
+- Science Stories stay as they are: what the right emotional state looks like in the body (brainwaves, heart rhythm, heart and brain coherence).
+- Questions invite people to relate to the above (how they feel about love, believing it will happen, overthinking, trying to fix themselves, the life they picture), never to dating logistics.
 - Stories are Olly's CONNECTION content. Reels carry the argument; Stories make people feel he understands them, is a normal person like them, and has been where they are. Don't lecture or teach the whole argument. Show, don't sell.
 - Mostly Olly talking to camera on his phone, or a photo or clip from his day. Freestyled, never scripted.
 - Keep it simple: one clear idea Olly can film in a minute, not a frame-by-frame plan.
@@ -2969,17 +3037,20 @@ const REEL_PARTS = [
 ];
 const REEL_KEYS = ["who", "symptom", "name", "missing", "steps", "proof", "cta", "caption", "offer", "research"];
 // The page picks the opener and the lived moment for each Reel in a batch, so a day of Reels never sounds the same
-// The 8 hooks from his outlier Reels (Sep-Oct 2026), word for word. Each new Reel takes the next one in turn and
-// varies it slightly (a few words, the order), never a new pattern (Olly, 2026-10-30: "use the hooks that work").
+// His proven hooks, word for word, best first. Refreshed 2026-11-16 from the Meta export (28 Oct - 16 Nov: 74 Reels,
+// middle Reel ~1,550 views / 5 follows). Each new Reel takes the next one in turn and varies it slightly (a few words,
+// the order), never a new pattern (Olly, 2026-10-30: "use the hooks that work"). The "You don't need..." and
+// "Why X is repelling love" hooks were dropped: they sat at the bottom of the Nov data (under 600 views, 0 follows).
 const REEL_OPENERS = [
-  "The fastest way to eliminate doubts if you're trying to attract your life partner (2 Sep, his best ever: 6,841 views)",
-  "Without a doubt, the fastest way to find someone who's fun and committed to a long-term relationship (7 Oct: 5,449 views)",
-  "The scientific way to attract your soulmate 🧪 (27 Sep: 5,564 views)",
-  "This works way better than manifestation for attracting a great relationship (25 Oct: 20 comments)",
-  "How to attract your life partner, scientifically 🧪 (25 Sep: 4,003 views)",
-  "You don't need to learn more to attract a great relationship (19 Oct: 20 comments)",
-  "You don't need a manifestation technique to attract someone, you need this (7 Sep: 3,997 views)",
-  "Before you give up trying to manifest love, watch this video (2 Sep: 2,880 views)"
+  "Before you give up on finding love, try this (3 Nov: 65,396 views, 561 follows, 3,663 saves, his best ever)",
+  "How to stop doubting that you'll meet someone (11 Nov: 64,360 views, 332 follows, 348 comments)",
+  "How to attract your person, scientifically 🧪 (30 Oct: 15,689 views, 180 follows)",
+  "The fastest way to feel sure that love will happen (14 Nov: 9,606 views, 493 saves)",
+  "The scientific way to attract a committed relationship 🧪 (30 Oct: 7,862 views)",
+  "The fastest way to eliminate doubts if you're trying to attract your life partner (2 Sep: 6,841 views)",
+  "If you're worried you won't find love, watch this (12 Nov: 3,010 views)",
+  "How to believe that you'll find love (5 Nov: 2,833 views)",
+  "The fastest way to attract someone who will love you (8 Nov: 2,618 views)"
 ];
 const REEL_MOMENTS = ["a friend's engagement post", "rereading a text three times before sending it", "the dread before a first date", "scrolling a dating app at 11pm", "being the friend everyone asks for relationship advice", "a date who ticked every box on paper but felt flat in person", "someone who seemed perfect, then went quiet", "a family gathering where everyone asks if she's seeing anyone", "planning love the way she planned her career"];
 const REEL_STANDARD = `hook: (left out on purpose: build yours on the opener you're given)
@@ -3097,7 +3168,7 @@ async function reelBatch(signal){
   const n = Math.max(1, Number($("count").value) || 3), type = $("type").value, t = POST_TYPES[type];
   const part = (PARTS.find(p => p[0] === $("part").value) || PARTS[0])[1], topic = $("topic").value.trim();
   const ops = reelRotate("cig-reel-op", REEL_OPENERS, n), recent = recentReelHooks();
-  const r = await sampleFn.json(reelHookPrompt(type, t, n, part, topic, ops, recent) + reelVoiceBrief() + outlierBrief() + rejectBrief() + calBrief(), {signal, cache:false});
+  const r = await sampleFn.json(reelHookPrompt(type, t, n, part, topic, ops, recent) + reelVoiceBrief() + bestAudBrief("reels") + outlierBrief() + rejectBrief() + calBrief(), {signal, cache:false});
   if (signal.aborted) throw new Error("aborted");
   return ((r && r.ideas) || []).filter(x => x && x.hook).map(x => ({hook:String(x.hook).trim(), stage:x.stage || "", who:"", steps:"", offer:"scale"}));
 }
@@ -4253,31 +4324,31 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     ["Most of us think we're not ready for love yet.", "Ready isn't the missing piece."]
   ];
   // Banks for the other Story types (Olly, 2026-10-25). Same Story rules: short, "we/most people", no manifestation words.
-  var LIFESTYLE = ["A normal Sunday with my wife", "Where I did my 10 minutes today", "Me in 2019 vs me now", "Little moments I didn't think I'd have", "How I unwind after a long week", "What calm love looks like day to day"];
-  var QUESTIONS = ["How do you feel when you think about dating?", "Fill in the blank: dating is ___", "What's the worst dating advice you've been given?", "Be honest: do you reread their texts?", "One word for how you want love to feel?", "Dating apps: love them or hate them?", "Do you feel like yourself on a date?", "When do you feel most like yourself?"];
+  var LIFESTYLE = ["A normal Sunday with my wife", "Where I did my 10 minutes today", "Little moments I didn't think I'd have", "How I unwind after a long week", "What calm love looks like day to day"];
+  var QUESTIONS = ["How do you feel when you think about love right now?", "Fill in the blank: love is ___", "Be honest: do you overthink love?", "One word for how you want love to feel?", "Do you ever feel like something’s wrong with you?", "What would your life look like with your person?", "When do you feel most like yourself?"];  // no dating tactics (Olly, 2026-11-17)
   // Questions written for Catrin's crowd (Olly, 2026-10-29): [sticker, question, what to put on the sticker]
   var ENG_PICKS = [
     ["Poll", "Be honest: do you believe your person is out there?", "Yes / Some days"],
-    ["Poll", "Have you ever felt \u201cthe ick\u201d with someone who was actually lovely?", "Yes, guilty / Never"],
+    ["Poll", "Do you ever feel like you need to fix yourself before love can happen?", "Yes / Not anymore"],
     ["Poll", "Steady and consistent, or exciting and unpredictable. Which one have you usually fallen for?", "Steady / Exciting"],
     ["Poll", "How many books, podcasts or courses on relationships have you done?", "A few / Too many to count"],
     ["Poll", "Your friends who found their person. Did they do loads of \u201cwork\u201d first?", "Not really / Yes"],
-    ["Poll", "When you think about dating right now, what do you feel?", "Hopeful / Tired"],
+    ["Poll", "When you think about love right now, what do you feel?", "Hopeful / Tired"],
     ["Poll", "Do you know exactly what you want in a partner?", "Crystal clear / Still working it out"],
     ["Question box", "Describe your dream Sunday with your person in 3 words.", ""],
-    ["Question box", "One word for how you feel when a match goes quiet.", ""],
-    ["Question box", "What's the one dating \u201crule\u201d you're sick of hearing?", ""],
+    ["Question box", "One word for how you feel when you think about meeting your person.", ""],
+    ["Question box", "What's the one piece of love advice you're sick of hearing?", ""],
     ["Question box", "What's the most \u201cyou\u201d thing you'd want your partner to love about you?", ""],
     ["Question box", "When did you last feel genuinely excited about love?", ""],
     ["Slider", "How much do you believe it'll happen for you this year?", "\ud83d\ude0d"],
-    ["Slider", "How safe do you feel being fully yourself on a first date?", "\ud83d\udc9c"]
+    ["Slider", "How much do you overthink love?", "\ud83e\udd2f"]
   ];
   QUESTIONS = ENG_PICKS.map(function(q){ return q[1]; }).concat(QUESTIONS);
   // Belief breaking: [the old belief, the crack in it]. Cracks fit nearly everyone and tie straight back to the old belief.
   var BELIEFS = [
     // the argument in 14 points (2026-10-30): intellectualization, then feeling first
     ["If I learn enough about love, I'll finally get it right.", "But you can't think your way into a feeling."],
-    ["I just need to understand why it hasn't happened yet.", "Psychologists call that intellectualization. Thinking about love instead of feeling it."],
+    ["I just need to understand why it hasn't happened yet.", "Psychiatrists call that intellectualization. Thinking about love instead of feeling it."],
     ["I'll believe it when I see it.", "Feel it first. Then the belief follows. Then the relationship happens."],
     ["Once I've fixed what's wrong with me, I'll meet my person.", "My friends who settled down weren't even trying."],
     ["You have to heal everything before love finds you.", "The happy couples I know still have their baggage. They just felt a connection."],
@@ -4291,7 +4362,6 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     ["I keep attracting the wrong people because of my patterns.", "We're drawn to what matches how we feel. Change the feeling and that changes."],
     ["Just think positive and love will come.", "Positive thinking happens in our heads. Love responds to how we actually feel."],
     ["I'm happy most of the time, so it can't be my state.", "It's how we feel about love that counts, not life in general."],
-    ["Dating apps are the problem.", "The apps make it harder. The state we bring to them matters more."],
     ["I just need to put myself out there more.", "More dates in the same state bring more of the same people."],
     ["I need to push myself out of my comfort zone to find love.", "The right relationship starts from calm, not from forcing it."],
     ["Expecting the worst is just me being intuitive.", "Running the worst case is the old feeling talking, not intuition."],
@@ -4303,7 +4373,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     ["I have to act a certain way on dates to be liked.", "In the right state we don't have to act. We get to be ourselves."]
   ];
   // Aspiration: the promised land as calm, ordinary everyday life (Olly, 2026-10-25: "create the aspiration, the excitement, the vision, and keep reaffirming it").
-  var ASPIRE = ["An ordinary Sunday. Nothing missing.", "Breakfast together. No games. No guessing.", "This is what calm love looks like", "Laughing at the kitchen table on a Sunday morning", "The quiet kind of love that feels like home", "Dinner with friends, and our person beside us", "Coffee, conversation and someone who stays", "Safe enough to be fully ourselves", "Playful, silly and completely ourselves", "It's closer than it feels right now"];
+  var ASPIRE = ["An ordinary Sunday. Nothing missing.", "Breakfast together. The life we always wanted.", "This is what calm love looks like", "Laughing at the kitchen table on a Sunday morning", "The quiet kind of love that feels like home", "Dinner with friends, and our person beside us", "Coffee, conversation and someone who stays", "Safe enough to be fully ourselves", "Playful, silly and completely ourselves", "It's closer than it feels right now", "Building a home together", "The family we always pictured", "Someone we get to marry"];
   // The training's everyday-life images (how to use emotional resonance images). Not Olly's family, so the words stay about the vision.
   var ASPIRE_PHOTOS = [{"label": "Family Sunday", "dy": 0, "src": "cig-assets/family-sunday.jpg"}, {"label": "Friends at dinner", "dy": 0, "src": "cig-assets/friends-at-dinner.jpg"}, {"label": "Breakfast together", "dy": 0, "src": "cig-assets/breakfast-together.jpg"}, {"label": "Coffee date", "dy": 0, "src": "cig-assets/coffee-date.jpg"}];
   // The two opt-in pages at phone width (ollyhenson.com/training and /scale, 2026-10-28), for the Opt-in page layouts.
@@ -4328,7 +4398,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   var SCALE_LEAD_HOOKS = [SCALE_LEAD_TITLE, "Part of you doesn't believe it will happen. Here's why.", "What emotion do you feel when you think about dating?",
     "Which emotion attracts your person?", "Find your emotion in 2 minutes", "Where are you right now, and where do you need to be?",
     "The emotion you date from decides who shows up", "3 quick steps to the emotion that attracts your person"];
-  var SCALE_HOOKS = ["Which half are we dating from?", "The state we date from decides who shows up", "Most of us are dating from the bottom half",
+  var SCALE_HOOKS = ["Which half are we living in around love?", "The state we're in decides who shows up", "Most of us think about love from the bottom half",
     "Same person. Different state. Different partners.", "Who we attract depends on where we are on this", "Time wasters live at the bottom of this", "The right person shows up up here"];
   var SCALE_BOTTOM = ["We attract people who match how we feel.", "The good news: the top half can be practised.", "It's not what we know. It's how we feel around love.", "Change the state and who shows up changes."];
   // Science (Olly, 2026-10-25: "so it doesn't feel too vague"): what the right emotional state looks like in the body.
@@ -4339,8 +4409,8 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     { label:"Head to heart", src:"cig-assets/head-to-heart.jpg" },
     { label:"Picturing the future", src:"cig-assets/picturing-the-future.jpg" },
     { label:"Heart field", src:"cig-assets/heart-field.jpg" }];
-  var SCI_HOOKS = ["What the right emotional state actually looks like", "Your brain on worry vs your brain on calm", "What dating anxiety does to your heart rhythm",
-    "Calm isn't just a feeling. It's measurable.", "What happens in our body when we think about dating", "Overthinking has a brainwave",
+  var SCI_HOOKS = ["What the right emotional state actually looks like", "Your brain on worry vs your brain on calm", "What worrying about love does to your heart rhythm",
+    "Calm isn't just a feeling. It's measurable.", "What happens in our body when we worry about meeting someone", "Overthinking has a brainwave",
     "Same heart. Two very different rhythms.", "The science behind feeling safe in love"];
   var SCI_BOTTOM = ["That's what we mean by the right emotional state.", "It's not positive thinking. It's how your body actually feels.",
     "You can't think your way there. You can practise it.", "Slow breathing and appreciation move us towards the calm side.", "10 minutes a day trains the second one.", "It's not one good meditation. It's the state we practise every day."];
@@ -4349,7 +4419,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
 
   // the line at the top of each belief style (editable, Olly 2026-10-25) and whether to leave room for a sticker
   var LEADS = { told:"Most of us were told", crossed:"What most of us were told", post:"Most of us were told", photo:"Most of us were told", dm:"A question I get asked a lot", unpop:"Unpopular opinion", bnotes:"Something most of us were told" };
-  var st = { kind:"lead", layout:"page", bstyle:"told", lead:JSON.parse(JSON.stringify(LEADS)), stk:true, sc:"", scStyle:"full", scRing:"", scNote:"Most of us date from here", scBottom:"", sci:"", sciStyle:"waves", sciBottom:"", sciRows:SCI_ROWS, sciW1:"Stressed, overthinking", sciW1s:"Fast, busy beta waves", sciW2:"Calm, present", sciW2s:"Slower, smoother alpha waves", sciPhoto:0, sciMv:{}, thumb:THUMB,hook:"", scHook:"", mythA:"", mythB:"", life:"", asp:"",q:"", oldB:"", crack:"", res:"", shot:"", photo:PHOTOS[0].src, dy:PHOTOS[0].dy, frame:false };
+  var st = { kind:"lead", layout:"page", bstyle:"told", lead:JSON.parse(JSON.stringify(LEADS)), stk:true, sc:"", scStyle:"full", scRing:"", scNote:"Most of us think about love from here", scBottom:"", sci:"", sciStyle:"waves", sciBottom:"", sciRows:SCI_ROWS, sciW1:"Stressed, overthinking", sciW1s:"Fast, busy beta waves", sciW2:"Calm, present", sciW2s:"Slower, smoother alpha waves", sciPhoto:0, sciMv:{}, thumb:THUMB,hook:"", scHook:"", mythA:"", mythB:"", life:"", asp:"",q:"", oldB:"", crack:"", res:"", shot:"", photo:PHOTOS[0].src, dy:PHOTOS[0].dy, frame:false };
   var $ = function(id){ return document.getElementById(id); };
   var store = {
     get:function(k){ try { return JSON.parse(localStorage.getItem("tsm-" + k)); } catch(e){ return null; } },
@@ -5208,14 +5278,16 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   var KT = {
     e_tot: { nophoto:1, hint:"This or that: two options side by side. Add Instagram's poll sticker in the marked space so people vote with a tap.",
       fields:[["top", "Top line", 1], ["a", "Option 1", 2], ["b", "Option 2", 2]],
-      bank:[["Texting all day", "One long call at night"], ["Coffee date", "Dinner date"], ["Meet on an app", "Meet in real life"], ["Say “I love you” first", "Wait for them to say it"],
-        ["A big wedding", "A tiny wedding"], ["Sunday in", "Sunday out"], ["Slow burn", "Instant spark"], ["A planned date", "A spontaneous date"]]
+      // Olly, 2026-11-17: no dating tactics. Intellectualization vs emotional resonance, plus the life they want.
+      bank:[["Overthink it", "Feel it out"], ["Read another book on love", "Practise feeling how love will feel"], ["Fix myself first", "Feel it first"],
+        ["Plan every step", "Trust it to unfold"], ["Worry it won’t happen", "Feel like it’s on its way"], ["A big wedding", "A tiny wedding"],
+        ["Sunday in with our person", "Sunday out with friends"], ["Slow burn", "Instant spark"], ["A house full of kids", "A cosy home for two"]]
         .map(function(p, i){ return { top:i % 2 ? "Be honest. Which one?" : "This or that?", a:p[0], b:p[1] }; }) },
-    e_rate: { nophoto:1, hint:"Popular dating advice for people to rate. Add Instagram's emoji slider sticker in the marked space.",
+    e_rate: { nophoto:1, hint:"Popular love advice that keeps us in our heads (fixing, learning, waiting), for people to rate. Add Instagram's emoji slider sticker in the marked space.",
       fields:[["top", "Top line", 1], ["advice", "The advice", 2], ["note", "Line at the bottom (optional)", 1]],
-      bank:["Never text first.", "Wait three days before texting back.", "Play hard to get.", "Just stop looking and it'll happen.", "Nobody can love you until you love yourself.",
-        "Keep your options open until it's official.", "Lower your standards a bit.", "Don't talk about the future on the first few dates."]
-        .map(function(a, i){ return { top:i % 2 ? "Rate this advice out of 10" : "Rate this dating advice 1 to 10", advice:a, note:"Slide to rate it" }; }) },
+      bank:["You have to love yourself before anyone else can.", "Heal everything first, then love will find you.", "Just stop looking and it’ll happen.",
+        "Work out what’s wrong with you first.", "Read up on your attachment style.", "Keep working on yourself and it’ll happen.", "Lower your standards a bit.", "Get clearer on your type."]
+        .map(function(a, i){ return { top:i % 2 ? "Rate this advice out of 10" : "Rate this love advice 1 to 10", advice:a, note:"Slide to rate it" }; }) },
     e_flags: { nophoto:1, hint:"Red flag or green flag: two cards. Add a poll sticker in the marked space (e.g. Been there / Never).",
       fields:[["top", "Top line", 1], ["red", "Red flag", 2], ["green", "Green flag", 2]],
       bank:[["They keep us guessing where we stand.", "We always know where we stand."], ["Love bombing in week one.", "Steady effort, week after week."],
@@ -5244,13 +5316,13 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       bank:["Little moments I didn't think I'd have", "Recent moments. Nothing missing.", "A few of my favourite ordinary days", "The calm kind of love, in photos"].map(function(t){ return { line:t }; }) },
     a_ba: { nophoto:1, hint:"Before / after: the same moment in a survival state, then in an elevated state. Keep the second one ordinary and good, never flat.",
       fields:[["top", "Top line", 2], ["la", "First label", 1], ["a", "Survival side", 3], ["lb", "Second label", 1], ["b", "Elevated side", 3]],
-      bank:[{ top:"Same Sunday. Two different states.", la:"Survival", a:"Checking if they've seen my Story. Rereading the last text. Wondering what I did wrong.", lb:"Elevated", b:"Coffee in the sun. Phone in the other room. Excited about tonight, not anxious about it." },
-        { top:"A Sunday in survival vs a Sunday in calm", la:"Survival", a:"Scrolling the apps out of boredom. Comparing ourselves to every couple at brunch.", lb:"Elevated", b:"Brunch with friends. Happy for the couples. Quietly sure ours is on the way." },
-        { top:"Same date. Two different states.", la:"Survival", a:"Rehearsing what to say. Reading every pause as a bad sign.", lb:"Elevated", b:"Laughing, curious and fully ourselves. Whatever happens, we're fine." }] },
+      bank:[{ top:"Same Sunday. Two different states.", la:"Survival", a:"Worrying it’ll never happen. Wondering what’s wrong with us. Planning how to fix it.", lb:"Elevated", b:"Coffee in the sun. Feeling like it’s on its way. Excited, not anxious." },
+        { top:"Same wedding invite. Two different states.", la:"Survival", a:"Happy for them. Quietly wondering why it’s never us.", lb:"Elevated", b:"Happy for them. Quietly sure ours is on the way." },
+        { top:"Same evening. Two different states.", la:"Survival", a:"Another podcast on why we’re still single. Overthinking all of it.", lb:"Elevated", b:"Ten minutes feeling how life with our person will feel. Then a great night." }] },
     a_check: { nophoto:1, hint:"Checklist: what calm love looks like, ticked off. One item per line, 3 to 6 items.",
       fields:[["title", "Title", 1], ["items", "Items (one per line)", 6]],
-      bank:[{ title:"Calm love checklist", items:"Always knows where we stand\nTexts back without games\nSafe to be fully ourselves\nPlans the future together\nLaughs at the kitchen table" },
-        { title:"Signs it's the right kind of love", items:"No guessing, no games\nThey show up when they say they will\nWe feel calm after every date\nWe can be silly together\nIt feels like home" },
+      bank:[{ title:"The life we’re building towards", items:"Someone to marry\nA home that feels like us\nThe family we pictured\nSafe to be fully ourselves\nLaughing at the kitchen table" },
+        { title:"Signs it’s the right kind of love", items:"It feels like home\nCommitted and still fun\nWe can be silly together\nWe plan a future together\nWe both just knew" },
         { title:"What I want love to feel like", items:"Safe\nPlayful\nSteady and exciting\nCompletely ourselves\nNothing missing" }] },
     s_dyk: { hint:"Did you know: one finding from the research list, worded carefully. Never add a number or say a study measured attracting a partner. The bottom line bridges to the daily practice.",
       fields:[["top", "Top line", 1], ["num", "Big number", 1], ["fact", "The finding", 4], ["src", "Source line", 1]],
@@ -5267,12 +5339,12 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   };
   // the Template row inside each type ("" = the type's original design)
   var KSTY = {
-    engagement:[["", "Question"], ["e_tot", "This or that"], ["e_rate", "Rate it 1-10"], ["e_flags", "Red flag / green flag"]],
+    engagement:[["", "Question"], ["e_tot", "This or that"], ["e_rate", "Rate it 1-10"]],
     lifestyle:[["", "Photo"], ["l_pov", "POV"], ["l_dump", "Photo dump"]],
     aspire:[["", "Photo"], ["a_ba", "Before / after"], ["a_check", "Checklist"]],
     results:[["", "Card"], ["r_imsg", "iMessage"]]
   };
-  st.ks = store.get("ks") || {}; Object.keys(st.ks).forEach(function(k){ if (st.ks[k] && !KT[st.ks[k]]) st.ks[k] = ""; });
+  st.ks = store.get("ks") || {}; Object.keys(st.ks).forEach(function(k){ if (st.ks[k] && (!KT[st.ks[k]] || st.ks[k] === "e_flags")) st.ks[k] = ""; });  // e_flags retired 2026-11-17
   st.kt = store.get("kt") || {};
   function kst(){ return typeof KSTY === "object" && KSTY && KSTY[st.kind] && st.ks ? (st.ks[st.kind] || "") : ""; }
   function ktKey(){ var k = drawKey(); return typeof KT === "object" && KT && KT[k] ? k : ""; }
@@ -6253,7 +6325,6 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     { id:"question", kind:"engagement", style:"", hint:KINDS.engagement.hint, fields:[["text", "The question, under 12 words"]], ex:QUESTIONS },
     { id:"e_tot", kind:"engagement", style:"e_tot" },
     { id:"e_rate", kind:"engagement", style:"e_rate" },
-    { id:"e_flags", kind:"engagement", style:"e_flags" },
     { id:"aspire_photo", kind:"aspire", style:"", hint:KINDS.aspire.hint, fields:[["text", "Text on the image, under 10 words"]], ex:ASPIRE },
     { id:"a_ba", kind:"aspire", style:"a_ba" },
     { id:"a_check", kind:"aspire", style:"a_check" },
@@ -6385,9 +6456,9 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   function dayPrompt(date, n, extra){
     return "You plan Olly Henson's Instagram Stories for one day (The Attraction Formula: he helps singles attract a committed relationship by getting into the right emotional state around love). Each Story becomes a finished 1080 x 1920 image in his Story Image Maker: you pick a template and write its text. The maker sizes and places the text, so your only job is the words.\n\n"
       + CORE + "\n\n" + RULES + "\n\n" + RESEARCH_FACTS
-      + "\n\nSTORY RULES\n- Stories are connection content. Reels carry the argument; Stories make people feel understood and keep them coming back. Show, don't lecture.\n- Use \"we\", \"us\" or \"most people\", never a \"you\" call-out that makes someone feel judged.\n- Every line must be short enough to read in two seconds. Respect each field's word limit; shorter is better.\n- Never the old story: no past relationship, breakup, 2019, years of trying or any teachers. Olly's only story: he worked on his emotional state every day, met his wife Jules and they both just knew.\n- Never say the right partner feels boring, flat or less exciting. Calm love is committed AND fun.\n- No manifestation words. Science only from the research list, worded carefully.\n- Engagement templates leave space for Instagram's poll, slider or question sticker; write lines that make a tap easy.\n"
+      + "\n\nSTORY TOPICS (Olly, 2026-11-17, overrides every example and bank)\n- NO dating tactics. Never red flags / green flags, texting, texting back, ghosting, matches going quiet, dating apps, first dates, dating rules or what to do on a date. It's deeper than dating.\n- Belief, question and relate Stories are about INTELLECTUALIZATION vs EMOTIONAL RESONANCE, so people recognise themselves. Intellectualization: operating from survival emotions (worrying, doubting and stressing about meeting someone), thinking something might be wrong with us, trying to fix ourselves, learning more and trying to control the outcome. Emotional resonance: embodying our highest emotional state every day, so we build the confidence, energy and belief to meet someone and it unfolds naturally.\n- Aspiration Stories show the life they want: their life partner, someone to marry, have children with and build a life with. Ordinary, happy, committed and still fun.\n- Science Stories stay as they are: what the right emotional state looks like in the body (brainwaves, heart rhythm, heart and brain coherence).\n- Questions invite people to relate to the above (how they feel about love, believing it will happen, overthinking, trying to fix themselves, the life they picture), never to dating logistics.\n\nSTORY RULES\n- Stories are connection content. Reels carry the argument; Stories make people feel understood and keep them coming back. Show, don't lecture.\n- Use \"we\", \"us\" or \"most people\", never a \"you\" call-out that makes someone feel judged.\n- Every line must be short enough to read in two seconds. Respect each field's word limit; shorter is better.\n- Never the old story: no past relationship, breakup, 2019, years of trying or any teachers. Olly's only story: he worked on his emotional state every day, met his wife Jules and they both just knew.\n- Never say the right partner feels boring, flat or less exciting. Calm love is committed AND fun.\n- No manifestation words. Science only from the research list, worded carefully.\n- Engagement templates leave space for Instagram's poll, slider or question sticker; write lines that make a tap easy.\n"
       + "\nTHE DAY: " + niceDay(date) + ". " + (n === 7 ? "Plan 7 Stories in posting order (first thing to evening). Mix: exactly 1 Lead gen (lead_attract most days; lead_feeling, lead_notes, lead_player or lead_video now and then), at least 5 different types across the 7 (Lead gen, Questions / entertainment, Aspiration, Belief breaking, Emotional scale, Science), never the same template twice in the day. VARIETY OF LOOK: every Story in the day must have a different look (the look in brackets below), so the day never feels like the same format repeated. Pick at least 3 templates that weren't used on the recent days listed, and favour the ones used least. Science most days, rotating its looks (heart + brain image, heart rhythm chart, full photo, table, brainwave chart, big number); heart and brain coherence and heart rhythm patterns are good topics. Open with something light that gets a tap, put the Lead gen in the second half, and let the day build: relate, crack a belief, show the vision, invite." : "")
-      + dayContext(date) + (extra || "")
+      + dayContext(date) + (extra || "") + bestAudBrief("stories")
       + "\n\nTEMPLATES (use the id exactly; fill every field it lists):\n" + dayTemplates()
       + "\n\nReply as JSON only: {\"stories\":[{\"t\":\"template id\",\"title\":\"a 3 to 7 word label for the calendar\",\"f\":{\"field name\":\"text\"}}]}. Use \\n inside a field only where the field asks for one item per line.";
   }
@@ -6420,11 +6491,14 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     + '<h4>Make a day of Stories</h4><p class="hint">7 different Stories for one day, made in this maker so the text fits. Check each one, press Edit to change it below (then Save to batch), or write feedback and press Redo. Add to calendar sends it to that day in the Hub.</p>'
     + '<div class="dayrow"><label class="label" for="day-date">Day</label><input type="date" id="day-date"><button type="button" class="btn primary" id="day-go">Write 7 Stories</button><span class="status" id="day-st" role="status"></span></div>'
     + '<textarea id="day-note" rows="2" placeholder="Optional: anything for this day (a topic, a mood, what to avoid). Saved as feedback for future batches too."></textarea>'
+    + '<label class="dayrow" style="gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="day-best" style="width:auto;margin:0"><span><b>Aim at my best applicants</b> (life-partner professionals who’ve tried everything; core message and Story rules still apply)</span></label>'
     + '<div class="dayrow"><button type="button" class="btn" id="day-own">+ Add the Story in the maker below</button><button type="button" class="btn" id="day-savenow">Save batch</button><span class="status" id="day-saved"></span><span class="hint">Make any Story yourself in the maker below, then press this to put it in this day\'s batch.</span></div>'
     + '<div id="day-editbar" class="dayedit" hidden></div>'
     + '<div class="daygrid" id="day-grid"></div>'
     + '<div class="dayrow" id="day-foot" hidden><span id="day-all" style="display:flex;gap:8px;flex-wrap:wrap"></span><button type="button" class="btn" id="day-redraw">Redraw all</button><span class="hint">Add to calendar opens the Hub. Leave that tab open: each next one lands in the same tab.</span></div>';
   $("tsm-kinds").before(dayBox);
+  [["reelBest", "cig-best-reels"], ["day-best", "cig-best-stories"]].forEach(function(p){ var el = document.getElementById(p[0]); if (!el) return;
+    el.checked = !!store.get(p[1], false); el.addEventListener("change", function(){ store.set(p[1], el.checked); }); });
   var dSt = dayBox.querySelector("#day-st"), dGrid = dayBox.querySelector("#day-grid"), dDate = dayBox.querySelector("#day-date");
 
   function dayLink(it){
@@ -6522,7 +6596,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   function dayErr(e){ return e && e.code === "rate_limited" ? "Too many requests just now. Try again in a minute." : e && e.code === "timeout" ? "Claude took too long. Try again." : (e && e.message) || "Something went wrong. Try again."; }
   dayBox.querySelector("#day-go").onclick = async function(){
     var b = this; if (day.busy) return;
-    var date = dDate.value || addDays(isoLocal(new Date()), 1);
+    var date = dDate.value || isoLocal(new Date());
     var note = dayBox.querySelector("#day-note").value.trim();
     b.disabled = true; day.busy = true; dSt.className = "status"; dSt.textContent = "Writing 7 Stories for " + niceDay(date) + "…";
     try {
@@ -6569,7 +6643,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   dayBox.querySelector("#day-own").onclick = async function(){
     if (day.busy) return;
     if (day.editing >= 0){ dSt.textContent = "Save or cancel the Story you're editing first."; return; }
-    if (!day.items.length) day.date = dDate.value || addDays(isoLocal(new Date()), 1);
+    if (!day.items.length) day.date = dDate.value || isoLocal(new Date());
     await render();
     var k = KINDS[st.kind] || {}, kk = ktKey(), kv = kk && !KT[kk].hook ? ktv(kk)[KT[kk].fields[0][0]] : "";
     var title = String(st.calTitle || kv || (k.text ? st[k.text] : st.kind === "belief" ? st.oldB : "") || "").replace(/\s+/g, " ").trim();
@@ -6583,8 +6657,17 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   // reopen on the last batch: the online copy (exact images) if there is one, otherwise this device's copy (texts, redrawn)
   var dayDrawn = false;
   function dayImgData(url){ return fetch(url).then(function(r){ return r.blob(); }).then(function(b){ return new Promise(function(ok){ var fr = new FileReader(); fr.onload = function(){ ok(fr.result); }; fr.onerror = function(){ ok(""); }; fr.readAsDataURL(b); }); }).catch(function(){ return ""; }); }
+  // Olly, 2026-11-18: "my batch of Stories isn't going to today's calendar date". The batch was locked to the day it was
+  // written for (the picker defaulted to tomorrow). Now the picker defaults to today, and changing it moves the whole
+  // batch (and its Add to calendar buttons) to the new day.
+  dDate.addEventListener("change", function(){
+    if (!dDate.value || day.busy || !day.items.length || dDate.value === day.date) return;
+    day.date = dDate.value; day.items.forEach(function(i){ i.sent = false; });
+    daySave(); dayCards(); dayPrepAll();
+    dSt.className = "status"; dSt.textContent = "✓ Batch moved to " + niceDay(day.date) + ". Add to calendar now sends it there.";
+  });
   (function(){
-    dDate.value = addDays(isoLocal(new Date()), 1);
+    dDate.value = isoLocal(new Date());
     var b = store.get("dayBatch");
     if (b && Array.isArray(b.items) && b.items.length && b.date >= isoLocal(new Date())){
       day.date = b.date; dDate.value = b.date;

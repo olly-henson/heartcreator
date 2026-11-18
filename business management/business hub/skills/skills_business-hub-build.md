@@ -127,6 +127,8 @@ Notes on fields that aren't obvious:
 ## 4. House conventions (follow these, don't reinvent)
 
 ### Never
+- Never write JS string edits from a bash heredoc with `\n` inside Python strings: they became real newlines and broke index.html (2026-11-18). Write the patch .py with the Write tool, or build `\\n` from chr(92)+'n', then run jscheck before deploy.
+- Never pause a feature by deleting it: use a flag (e.g. `YT_COMMUNITY_PAUSED = true` filters c_yt from ROUTINE and "YouTube posts" from TARGETS). Why: Olly 2026-11-18 "not to delete anything... just for now".
 - Never open a day's content below the calendar on the phone without bringing it on screen (2026-11-11: the carousel calendar "nothing is happening" on mobile; the panel opened off-screen). Any tap that reveals content scrolls it into view (dayIntoView).
 - Never put long machine text in a box Olly reads while writing (2026-11-10: a full UTM link inside an email draft made him ask "is this how it's supposed to look?"). Store a short token (`[here](apply)`) and expand it at send time (`emExpand()`); that also keeps the link's tracking in step with the subject if he changes it later.
 - Never count Olly's own visits. Funnel pages: `/api/track` skips his IPs (`lib/owner.js`, saved each time he opens the Hub). Plan + video pages: `ownerView()` in `functions/p/[[path]].js` = Hub cookie OR his IP, because links he taps inside WhatsApp open in its own browser with no Hub cookie (2026-11-10: "is their opening definitely them or is it me?").
@@ -653,3 +655,5 @@ marked the 2026-11-15 card order (1a/1b plan/1c) as overridden, updated the plai
 <!-- 2026-11-17 skill review (session 2026-11-16): 4-step Sales card replaced by the 3-step flow + email-only alternative (Olly's ask); Confirm-message Never rules removed (overridden); calendar move without GHL; 25 MiB assets. -->
 
 <!-- 2026-11-17 skill review (2nd session): pitfall added: video "finished" needs 90% played, not the end event (an applicant at 7% showed as watched); how to check a vslview record first. -->
+
+<!-- 2026-11-18 skill review: Sales card 1a/1c/1b wording = Olly's exact text (see funnel/skills/skills_plan-v4.md); lmPlanCode() reads each card's plan code from /api/plan?id= when /api/planviews misses it, else a 'make their link' button; YT_COMMUNITY_PAUSED flag. Nevers: heredoc \n in JS strings; pausing by deleting. tools/patch.py removes its .bak on success, so keep your own copy before a risky multi-step edit. -->

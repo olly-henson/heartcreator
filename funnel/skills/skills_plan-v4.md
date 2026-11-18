@@ -21,7 +21,8 @@ The 2026-11-16 three-message flow (successful text → plan on reply → video) 
 - Never write "The Attraction Formula" in a plan again (renamed 2026-11-16). Why: Olly: people are buying into the term Emotional Resonance.
 
 ## ⚠️ FIRST MESSAGE = SUCCESSFUL + PLAN (Olly 2026-11-17)
-- One first message (Sales card 1a, email twin 1b): "Hey <Name>, just got your application through for The Heart Attractor Program. It's been successful 🙏 / Here's a step-by-step of exactly what's in the program: <short plan link> / Please read through it, and if it's right for you, let me know if you'd like the next steps." Then 2 = the video when they ask. Why: the 3-step version (successful → reply → plan) took too long. So the plan must exist BEFORE Olly messages them.
+- **UPDATED 2026-11-18 (Olly's screenshots, LIVE in the Hub): 1a message / 1c email = "Hi <Name>, / I’ve looked through your application for The Heart Attractor Program and all looks good 🙏 / Here’s a short summary of what’s involved in the program: / <link> / Have a read through, let me know if you have any questions and if you’d like the next steps. / Olly Henson" (blank line between each; "Have a read through," added 2026-11-18). 1b follow-up email (subject "Your application was successful") = "Hey <Name>, / Your application for The Heart Attractor Program was successful. / I’ve just sent you a message on <WhatsApp|iMessage> with a step-by-step of exactly what’s in the program. / Please reply to my message there. / Speak soon, / Olly Henson". The wording below is superseded.**
+- The plan must exist BEFORE Olly messages them (the first message carries the link). The 2026-11-17 "Hey <Name>, just got your application through... It's been successful" wording is overridden by the line above.
 
 ## The flow
 1. Applicant applies (tag `heart attractor applicant`), Olly rates them good.
@@ -45,6 +46,9 @@ The 2026-11-16 three-message flow (successful text → plan on reply → video) 
 8. Preview artifact (short first, then full) for Olly. Upload: `python upload.py short-out 5 [-short]` and `python upload.py out 16 -full`, then `bash tools/deploy-hub.sh` (a re-upload shows on Olly's phone and laptop with no hard refresh, because the viewer loads `page/NN.jpg?v=<hash>`; check `/p/<code>/pages` returns a new `v`) (since 2026-11-15 page images + og.jpg are static files in hub-site/public/pi/<id>/, git-ignored, served by /p/ via env.ASSETS; only 4 KV writes per upload, was N+5: the KV daily write cap hit 90%). Never re-upload a version that hasn't changed. Check both: `curl /p/<code>/pages` (n = 5 / 16) and `/p/<code>/og.jpg` 200.
 9. If their card already had `waSent` from the OLD first message, set `state.looms[id].planSent = false` in the record (rev+1), or the new rule marks them Plan sent before Olly sends anything.
 10. Log their links in NEXT.md (local only, never committed: it holds names and private links).
+11. **No phone number in GHL = no WhatsApp/iMessage button** (only "✉️ 1. Email (no phone number)"). Tell Olly in the same reply: send by email or paste the copied message into their Instagram DM. Why: 2026-11-18 Olly hard-refreshed looking for a text button that can't exist.
+12. **"Make the plans for the people in New applications"**: find them from the data, don't ask. Hub record `state.looms[id]` (KV key `record`) with no waSent/emSent/reply/plan/loom flags + GHL tag `heart attractor applicant`, minus `removed - not a fit` / joined / `loom video sent`. Then check `plan:<id>` for each. Why: 2026-11-18 Olly said "three of them" and the data found exactly three.
+13. **Gender from the request, not the name:** if Olly says "the guys" casually it means "the people"; build the default woman version and say so, ask him to flag any man (one line). Never infer gender from a first name in what you tell him.
 
 ## Rules (from Olly's corrections, 2026-11-15)
 - The title is the outcome: "Path To The Relationship You Want", never the feeling ("Path To Peace"). Why: the outcome is what they want; the feeling is the method.
@@ -72,6 +76,8 @@ The 2026-11-16 three-message flow (successful text → plan on reply → video) 
 - Never write a Python edit with unicode escapes in a bash heredoc (bash mangles them): write a .py file with the Write tool.
 - Never ask Olly to hard refresh to see a re-uploaded plan: re-upload, deploy-hub, check the `v` changed. Why: he couldn't see an updated plan even after hard refreshing (fixed with the version hash).
 - Never mark Plan sent from the qualifying text (1a): only 1b sends the plan.
+- Never rely on /api/planviews alone to show the first message: it is a KV list (lags, daily list cap) and the card stayed empty for 3 new plans. The card now reads `plan:<id>-short` / `plan:<id>` `_code` itself (lmPlanCode) and shows "📄 Plan of action: make their link" when there is none. Why: Olly 2026-11-18 "I still can't send the first text for these 3 people".
+- Never change the message wording from memory or a paraphrase: Olly sends screenshots or pasted text of the exact layout; copy it line for line (blank line between lines, "Olly Henson" sign-off). Why: two rounds on 2026-11-18 (screenshots, then "Have a read through,").
 
 ## Examples (approved 2026-11-15)
 - Cover: "<Name>, Here's Your Path To The Relationship You Want" · Where you are now: "You've been single for more than 5 years. When you think about love, you feel worried and sad." · Where we're going: "Someone to settle down with and build a life together. Marriage."
@@ -226,3 +232,5 @@ the old "so I've looked through your application" first text removed as overridd
 for plan_v5_shoot.js, re-upload shows without a hard refresh (?v= hash). Never: hard-refresh advice, Plan sent from 1a. -->
 
 <!-- 2026-11-17 skill review (2nd session, 3 generic plans): top Sales card flow replaced with the 2026-11-17 one (successful + plan in one message → video on request); "Qualify first" step 3 removed (overridden). Added the generic short plan step-by-step and the gender-unknown rule (Olly didn't know one applicant's; build woman, flag, easy switch). -->
+
+<!-- 2026-11-18 skill review: FIRST MESSAGE section now = Olly's exact 1a/1c + 1b wording (screenshots, then "Have a read through,"); the 2026-11-17 "just got your application through... successful" line removed as overridden. Added process 11-13 (no phone = email/IG DM, find New applications from the record, gender from the request) and two Nevers (planviews-only first message; wording from memory). -->

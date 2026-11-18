@@ -239,6 +239,11 @@ Every channel gets its own UTM. Never copy an Instagram UTM into an email.
 - **Write new emails from his recent Reel transcripts** (`reels\inbox\*.words.json`): same 3 steps (clear intentions, the emotions, embody daily), same phrases ("under the level of intellect", "we just felt it", "the psychiatrist's term").
 - **Founder story = only** "I worked on my emotional state every day, then met Jules and we both just knew". Never the old 7-year relationship / breakup / teachers story.
 
+### Checking the weekly (cold) workflow and pitch tracking (2026-11-18)
+- Weekly workflow sent? Pull contacts on `daily email list` without `engaged recently`, read their conversations: outbound EMAIL messages with source `workflow` and the weekly subjects (weekly-email-final/wNN.json). Came back = got a weekly email AND has `engaged recently` (an open counts; GHL gives no per-message open status).
+- Pitch link check: campaign `downloadUrl`/`templateDataDownloadUrl` from /emails/schedule; the link must be /apply with utm_content = the email slug; curl the link.kourse.com tracking URL and confirm the 302 keeps the UTMs.
+- Applications by email = HA UTM Source `email` (Medium `daily_email` + utm_content slug, or `feeling_finder_result`). Contact dateAdded is when they FIRST joined, not when they applied: never date an application by it (an applicant looked like 30 Oct but came from the 12 Nov pitch).
+
 ### Never (lists)
 - Never use the old list names (Engaged / Warm List / Cold List / Dormant / Daily Email List). Olly: "Use the new names please from now on."
 - Never remove a condition from an OR box by deleting only its filter: what's left can match everyone (2026-11-04: the leftover "daily email list + not joined" box would have sent pitch-day email to the whole list). Delete the WHOLE box (Remove Filter), then re-check every remaining box.
@@ -977,3 +982,5 @@ Database "Preview" field corrected to empty (overridden 2026-11-03); added how t
 Why: subjects should follow what his list actually opens, and the old examples contradicted his current style. -->
 
 <!-- 2026-11-15 skill review (session 2026-11-13): Never list + "perfect partner/relationship" (life-partner positioning); §9 adds Olly's own rewrite of the plan request bonus email as the model, with why it works. The Catrin avatar pointer + outcome line were already updated that day. -->
+
+<!-- 2026-11-18 skill review: added how to verify the weekly workflow (first 2 Sundays sent; 16 of 68 re-engaged), how to check a pitch email's tracked link, and that dateAdded is not the application date (Olly corrected an applicant's source). -->
