@@ -317,6 +317,14 @@ Notes on fields that aren't obvious:
 
 - **Sales video "finished" (2026-11-17):** An applicant played 7%, skipped to the end and showed as "finished" / Video watched, because the `end` event alone set `done`. Now `done` = 90% of the video actually played (`vseen` in functions/p/[[path]].js); `pct` = seconds really played (skips mark nothing), `far` = furthest point reached. When Olly says tracking looks wrong, read `vslview:<id>` metadata (opens, first/last, pct, far, done, join) and compare the time between first and last with the video length (6:48) before touching code. Owner views are skipped only when logged into the Hub on that device.
 
+### Added 2026-11-19 (Sales search, multi-day Story batches)
+- **Sales tab search** (`#lmQ`, `lmQ`, `lmHay()`, `lmSearchApply()`): filters the board in place (hides cards and any column with no match, shows "N matches") and never re-renders per key, so typing keeps focus. Re-applied at the end of `renderLooms()`. Searches name, email, phone (also digits only, leading zeros ignored), city, country (code and full name) and notes. Every word must match. Why: Olly, "a lot of applications now and it's getting hard to find".
+- **`#addstories` is a queue** (`pendingBatch = []`, `batchBusy`): the generator now sends one link per day of Stories; a day tapped while the previous one is still uploading waits its turn instead of replacing it.
+
+### Never (added 2026-11-19)
+- Never add a function or variable to index.html without grepping the name first. The app is one IIFE: the new `function lmFilter()` was silently replaced by an existing `var lmFilter = "newest"`, so every keystroke threw "lmFilter is not a function". Olly: "doesn't do anything when I search". Use a unique name (now `lmSearchApply`).
+- Never call a Hub feature done on jscheck alone. Drive it: serve `hub-site/public` with `python -m http.server`, answer `/api/applicants` (and other /api/ calls) from puppeteer request interception, type or click, read the result. The search went out broken because only the syntax check ran; the local test found the clash in one run.
+
 ## 6. Quick reference — where things are in the code
 
 | Feature | Key functions |
@@ -657,3 +665,5 @@ marked the 2026-11-15 card order (1a/1b plan/1c) as overridden, updated the plai
 <!-- 2026-11-17 skill review (2nd session): pitfall added: video "finished" needs 90% played, not the end event (an applicant at 7% showed as watched); how to check a vslview record first. -->
 
 <!-- 2026-11-18 skill review: Sales card 1a/1c/1b wording = Olly's exact text (see funnel/skills/skills_plan-v4.md); lmPlanCode() reads each card's plan code from /api/plan?id= when /api/planviews misses it, else a 'make their link' button; YT_COMMUNITY_PAUSED flag. Nevers: heredoc \n in JS strings; pausing by deleting. tools/patch.py removes its .bak on success, so keep your own copy before a risky multi-step edit. -->
+
+<!-- 2026-11-19 skill review: Sales search (lmSearchApply, filters in place) + the name-clash lesson (a function lost to an existing var: grep names, drive the feature locally before saying done); #addstories queue for per-day Story sends. -->

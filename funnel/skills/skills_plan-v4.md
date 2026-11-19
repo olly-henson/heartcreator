@@ -50,6 +50,8 @@ The 2026-11-16 three-message flow (successful text → plan on reply → video) 
 12. **"Make the plans for the people in New applications"**: find them from the data, don't ask. Hub record `state.looms[id]` (KV key `record`) with no waSent/emSent/reply/plan/loom flags + GHL tag `heart attractor applicant`, minus `removed - not a fit` / joined / `loom video sent`. Then check `plan:<id>` for each. Why: 2026-11-18 Olly said "three of them" and the data found exactly three.
 13. **Gender from the request, not the name:** if Olly says "the guys" casually it means "the people"; build the default woman version and say so, ask him to flag any man (one line). Never infer gender from a first name in what you tell him.
 
+14. **Spelling of the name:** Olly types names as he hears them (a dropped or swapped letter). If the GHL search finds nothing, try the usual spellings of the name before saying they're not there. Why: 2026-11-19, the first search came back empty.
+
 ## Rules (from Olly's corrections, 2026-11-15)
 - The title is the outcome: "Path To The Relationship You Want", never the feeling ("Path To Peace"). Why: the outcome is what they want; the feeling is the method.
 - "What psychiatrists call intellectualization" inside the sentence. Never a standalone "It's the psychiatrist's term." Why: Olly: it needs to blend into the sentence.
@@ -234,3 +236,5 @@ for plan_v5_shoot.js, re-upload shows without a hard refresh (?v= hash). Never: 
 <!-- 2026-11-17 skill review (2nd session, 3 generic plans): top Sales card flow replaced with the 2026-11-17 one (successful + plan in one message → video on request); "Qualify first" step 3 removed (overridden). Added the generic short plan step-by-step and the gender-unknown rule (Olly didn't know one applicant's; build woman, flag, easy switch). -->
 
 <!-- 2026-11-18 skill review: FIRST MESSAGE section now = Olly's exact 1a/1c + 1b wording (screenshots, then "Have a read through,"); the 2026-11-17 "just got your application through... successful" line removed as overridden. Added process 11-13 (no phone = email/IG DM, find New applications from the record, gender from the request) and two Nevers (planviews-only first message; wording from memory). -->
+
+<!-- 2026-11-19 skill review: generic short plan built in ~5 min with the step-by-step (no corrections from Olly); process 14 added: try name spellings in GHL search before saying not found. -->

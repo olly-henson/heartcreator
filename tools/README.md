@@ -35,3 +35,6 @@ Gotcha (2026-11-10): deploy-hub.sh failed with npm EBUSY on workerd.exe (old `wr
 | `build_ig_carousel.py` | Instagram carousel (1080x1350) from the approved "Meet your person" explainer: portrait redraws, frozen animations, CTA slide | `python tools/build_ig_carousel.py` -> marketing/carousels/meet-your-person/carousel.html (2026-11-12) |
 | `export_carousel.js` | One PNG per `.slide` at its exact size + a contact sheet, flags anything running off a slide | `node tools/export_carousel.js PAGE.html OUTDIR` (2026-11-12) |
 | `export_pdf.js` | Print 1080x1350 `.slide` pages to a PDF (vector text), e.g. the guide PDF from build_ig_carousel.py | `node tools/export_pdf.js PAGE.html OUT.pdf` (2026-11-12) |
+
+Gotcha (2026-11-19): `sed -i` in Git Bash rewrote a CRLF file (the generator) as LF. For CRLF files use a .py edit that keeps line endings (or the Edit tool), then check `file X` still says CRLF. Fix if it happens: python, read bytes, replace LF with CRLF.
+Gotcha (2026-11-19): a backslash-n in a heredoc that writes a .py turned into a real line break again (unterminated string). Write the .py with the Write tool and use chr(13)/chr(10) instead of escapes.

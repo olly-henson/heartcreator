@@ -115,6 +115,10 @@
   .lmkpi span{ display:block; font-size:12px; opacity:.65; }
   .lmboard2{ display:grid; grid-auto-flow:column; grid-auto-columns:minmax(145px, 1fr); gap:10px; overflow-x:auto; padding-bottom:8px; align-items:start; }
   @media (max-width:760px){ .lmboard2{ grid-auto-columns:82vw; scroll-snap-type:x mandatory; } .lmcol2{ scroll-snap-align:start; } }
+  .lmsearch{ display:flex; align-items:center; gap:10px; margin:0 0 12px; }
+  .lmsearch input{ flex:1; min-width:0; box-sizing:border-box; padding:11px 14px; border-radius:10px; border:1px solid var(--border-soft); background:var(--surface); color:var(--text); font:inherit; font-size:16px; }
+  .lmsearch input:focus{ outline:none; border-color:#e04fd6; }
+  .lmsearch span{ font-size:13px; opacity:.7; white-space:nowrap; }
   .lmcol2{ background:var(--surface); border:1px solid var(--border-soft); border-radius:12px; padding:8px; min-height:160px; }
   .lmcol2.over{ border-color:#e04fd6; background:rgba(224,79,214,.08); }
   .lmcol2 h4{ display:flex; align-items:center; gap:8px; margin:2px 2px 10px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; }
@@ -6123,6 +6127,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       ["MRR", lmMoneyFmt(mo.mrr), "annual counted as $208/mo"]
     ];
     var html = lmTop() + '<div class="lmkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
+    // Search (Olly, 2026-11-19: "a lot of applications now, hard to find"): filters the board as you type
+    html += '<div class="lmsearch"><input type="search" id="lmQ" placeholder="🔍 Search applicants: name, email, phone, place, notes" aria-label="Search applicants" value="' + lmEsc(lmQ || "") + '" autocomplete="off"><span id="lmQn"></span></div>';
     html += '<div class="lmboard2">' + LM_COLS.map(function(c){
       var items = lmData.filter(function(a){ return lmStage(a) === c[0]; });
       var val = c[0] === "joined" && mo.cash ? '<em>' + lmMoneyFmt(mo.cash) + "</em>" : "";
@@ -6187,7 +6193,30 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       ol.addEventListener("input", save);
       ol.addEventListener("keydown", function(e){ if (e.key !== "Enter") return; e.preventDefault(); var li = document.createElement("li"); li.contentEditable = "true"; e.target.closest("li").after(li); li.focus(); save(); });
     }
+    var qi = document.getElementById("lmQ");
+    if (qi){ qi.addEventListener("input", function(){ lmQ = qi.value; lmSearchApply(); }); lmSearchApply(); }
     lmFit();
+  }
+  // Search: hides cards that don't match and columns with no matches, so results sit side by side (also on the phone)
+  var lmQ = "";
+  function lmHay(a){
+    var s = lmStore(a.id), ph = String(a.phone || "");
+    return [lmName(a), a.email, ph, ph.replace(/\D/g, ""), a.city, a.country, lmCountry(a.country), s.note].join(" ").toLowerCase();
+  }
+  function lmSearchApply(){
+    var host = document.getElementById("loomsBody"); if (!host) return;
+    var words = lmQ.toLowerCase().trim().split(/\s+/).filter(Boolean), found = 0;
+    host.querySelectorAll(".lmcol2").forEach(function(col){
+      var n = 0;
+      col.querySelectorAll(".lmbc2").forEach(function(c){
+        var a = lmById(c.dataset.id), hay = a ? lmHay(a) : "";
+        var ok = !words.length || words.every(function(w){ return hay.indexOf(w) >= 0 || (/^\d+$/.test(w) && hay.indexOf(w.replace(/^0+/, "")) >= 0); });
+        c.hidden = !ok; if (ok) n++;
+      });
+      col.hidden = !!words.length && !n; found += n;
+    });
+    var out = document.getElementById("lmQn");
+    if (out) out.textContent = words.length ? (found ? found + (found === 1 ? " match" : " matches") : "No one matches") : "";
   }
 
   // one collapsible box per platform, like the Audience tab
@@ -8549,18 +8578,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // hub.ollyhenson.com/#addstories=<JSON {date, items:[{title, type, image, music}]}> (Olly, 2026-11-06): the generator's
   // "Add all to calendar" for a day of Stories. Every Story goes on that date in order, images uploaded one by one,
   // then the day opens. Pressing it twice doesn't double up: a Story with the same title on that day is skipped.
-  var pendingBatch = null;
+  // Multi-day batches (Olly, 2026-11-19: 35 Stories over 5 days): one #addstories per day, queued and placed one after another
+  var pendingBatch = [], batchBusy = false;
   function importStoryBatchFromHash(){
     var m = /^#addstories=(.+)$/.exec(location.hash || "");
     if (!m) return;
     var data = null;
     try { data = JSON.parse(decodeURIComponent(m[1])); } catch (err) { data = null; }
     try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
-    if (data && Array.isArray(data.items) && data.items.length) pendingBatch = data;
+    if (data && Array.isArray(data.items) && data.items.length) pendingBatch.push(data);
   }
   function placePendingBatch(){
-    if (!pendingBatch) return;
-    var data = pendingBatch; pendingBatch = null;
+    if (batchBusy || !pendingBatch.length) return;
+    batchBusy = true;
+    var data = pendingBatch.shift();
     var want = /^\d{4}-\d{2}-\d{2}$/.test(data.date || "") && data.date >= todayISO() ? data.date : findNextStoryDate();
     var failed = 0, added = 0, chain = Promise.resolve();
     data.items.forEach(function(it){
@@ -8586,6 +8617,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var d = new Date(want + "T00:00:00"); storyCalCursor = new Date(d.getFullYear(), d.getMonth(), 1); renderStoryCalendar();
       openStoryModal(want);
       if (failed) window.alert(failed + (failed === 1 ? " image" : " images") + " couldn't upload. Those Stories are on the calendar without their image: save them from the generator and add them in the day panel.");
+      batchBusy = false; placePendingBatch();
     });
   }
   function importStoryFromHash(){

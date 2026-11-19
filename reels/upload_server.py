@@ -626,6 +626,52 @@ def rebalance():
     return moved
 
 
+MIX_STATE = os.path.join(READY, "mix.json")
+
+
+def remix():
+    """Variation (Olly, 2026-11-19: two near-identical "life partner" Reels went out back to back). Once a new batch is
+    fully booked, swap which booked Reel goes in which slot (reel_mix.plan) so neighbours differ in theme, hook opener,
+    words and recording session. Days keep their numbers. Only Reels more than an hour away move, and only when
+    there are Reels it hasn't mixed before. Moved ones go back through the normal poster path (approved + slot kept),
+    which re-creates their GHL posts from the uploaded video and tells the Hub the new day."""
+    import reel_mix
+    with lock:
+        items = load()
+    if any(it["status"] in ("approved", "scheduling") for it in items):
+        return 0   # still booking a batch: mix once it's all in
+    now = gp.datetime.now(gp.timezone.utc)
+    safe = (now + gp.timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    mov = [it["id"] for it in items if it["status"] == "scheduled" and it.get("slot", "") > safe]
+    try:
+        seen = set(json.load(open(MIX_STATE, encoding="utf-8")).get("ids", []))
+    except Exception:
+        seen = set()
+    if not mov or set(mov) <= seen:
+        return 0
+    ctx = [it["id"] for it in sorted((it for it in items if it.get("slot") and it["slot"] <= safe and it["status"] != "post_failed"),
+                                     key=lambda it: it["slot"])][-2:]
+    moves = reel_mix.plan(items, mov, ctx)
+    by_id = {it["id"]: it for it in items}
+    done = []
+    for rid in moves:
+        left = gp.unschedule(by_id[rid])
+        if left:   # part of it already went out or GHL refused: it stays where it is
+            update(rid, ghl=left, post_error="Couldn't move it for variety: " + ", ".join(left))
+        else:
+            done.append(rid)
+    if len(done) < len(moves):   # some stayed put: mix only the ones that came off, among their own slots
+        moves = reel_mix.plan(items, done, [i for i in mov if i not in done] + ctx)
+    for rid in done:
+        old = by_id[rid]["slot"]
+        update(rid, status="approved", slot=moves.get(rid, old), ghl={}, post_error="", mixed_from=old)
+        print("mixed", rid, old, "->", moves.get(rid, old))
+    json.dump({"ids": sorted(set(mov)), "at": now.isoformat(), "moved": len(done)}, open(MIX_STATE, "w", encoding="utf-8"))
+    if done:
+        pwake.set()
+    return len(done)
+
+
 def poster():
     last_check = 0
     last_bal = 0
@@ -636,6 +682,10 @@ def poster():
                 rebalance()
             except Exception as e:
                 print("rebalance failed:", e)
+            try:
+                remix()   # a new batch fully booked? mix it so neighbours differ (2026-11-19)
+            except Exception as e:
+                print("remix failed:", e)
         with lock:
             items = load()
             # soonest slot first (2026-11-11: a Reel due at 1am waited behind ones for Saturday; each upload is ~300 MB)
