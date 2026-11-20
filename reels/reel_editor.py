@@ -23,7 +23,7 @@ BOX_TOP = 289          # caption box top (px)
 BOX_H = 120            # single-line caption box height
 PAD_X = 24             # text inset from box edge
 RADIUS = 18
-STRIP_Y, STRIP_H = 240, 320   # captions only ever sit in this band; overlay just this strip (much faster)
+STRIP_Y, STRIP_H = 60, 640    # hook + captions only ever sit in this band (60..700, they move with his head since 2026-11-16); overlay just this strip
 FONT_PX = 66
 WEIGHT = 740          # Olly 2026-11-11: measured off his Edits Reel (sample/Final.mp4); was 850 = too bold
 HOOK_PX = 61.5        # Inter at this size = the Edits hook letter height + line width (measured 2026-11-11)
@@ -332,9 +332,31 @@ def draw_line(canvas, y, parts, heart=False, box=True, text=True, f=None):
     return x0, bw
 
 
-def caption_png(parts, path):
+TPL_HOOK_GAP, TPL_CAP_GAP = -1.6, 66.9   # head top minus hook bottom / caption bottom on the best Reel (see place()); hook from its first 5 s
+SAFE = 45   # (25 -> 45 2026-11-16: two long hooks still sat on his hair)
+# the head-top estimate (from the face box) can be ~20px off on a clip; this keeps the hook clear of his hair (Olly 2026-11-16)
+
+
+def place(hook_text, head, head_hook=None):
+    """(hook_top, caption_top) in px. Olly 2026-11-16: "a nice even symmetrical space between my head and the [top of
+    the] reel", for the hook AND for the (one-line, thinner) captions, each centred on its own between the top of the
+    video and the top of his head. No head found: the old fixed place."""
+    if not head:
+        return BOX_TOP - 4, BOX_TOP
+    own = END_EMOJI.search(hook_text)
+    words = tidy_hook(hook_text[:own.start()] if own else hook_text).replace("'", "\u2019").split()
+    n = len(hook_fit(words)[0]) if words else 1
+    # Olly 2026-11-16 (final rule, overrides the centring): the SAME distance from the top of his head to the bottom of
+    # the hook, and to the bottom of the captions, as on his best Reel "How to stop doubting that you'll meet someone"
+    # (8f3a3969693b, measured over the whole clip: head 475.9px, hook bottom 480, caption bottom 409). Space above: free.
+    hook_top = (head_hook or head) - TPL_HOOK_GAP - SAFE - (75 * (n - 1) + BOX_H)
+    cap_top = head - TPL_CAP_GAP - SAFE - BOX_H
+    return int(round(max(STRIP_Y, hook_top))), int(round(max(STRIP_Y, cap_top)))
+
+
+def caption_png(parts, path, top=None):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    draw_line(im, BOX_TOP, parts)
+    draw_line(im, BOX_TOP if top is None else top, parts)
     im.crop((0, STRIP_Y, W, STRIP_Y + STRIP_H)).save(path)
 
 
@@ -401,6 +423,8 @@ def merge_hook(spoken, calendar):
             out += sw[i1:i2]   # extra / different words he said stay ("delete" = only in the spoken words)
         # "insert" = calendar words he didn't say: left out
     text = " ".join(out).strip().rstrip(",;:.-–— ")
+    # a filler he says straight after the hook ("...won't work, okay") is not part of it (2026-11-16)
+    text = re.sub(r"(?:[\s,]+(?:okay|ok|so|right|um|uh|yeah|alright))+$", "", text, flags=re.I).rstrip(",;:.-–— ")
     text = text[:1].upper() + text[1:]
     return text + (" " + emo if emo else "")
 
@@ -408,13 +432,18 @@ def merge_hook(spoken, calendar):
 END_EMOJI = re.compile(r"\s*((?:[☀-➿\U0001F000-\U0001FAFF][️‍]?)+)\s*$")
 
 
-def hook_png(text, path):
+def tidy_hook(t):
+    """Olly 2026-11-19: the cover read "self -development". A hyphen with a space on one side only joins the words."""
+    return re.sub(r"(\w) +-(?=\w)|(\w)- +(?=\w)", lambda m: (m.group(1) or m.group(2)) + "-", t)
+
+
+def hook_png(text, path, top=None):
     # a calendar hook can carry its own end emoji (Olly 2026-11-04: the emoji drives the first-3-second click):
     # use it as the box's end emoji instead of the default rule below
     own = END_EMOJI.search(text)
     if own:
         text = text[:own.start()].rstrip()
-    words = text.replace("'", "’").split()
+    words = tidy_hook(text).replace("'", "’").split()
     lines, f = hook_fit(words)
     # end emoji, as on Olly's posted Reels: test tube when the hook says "scientifically"/"science", else red heart
     emo = own.group(1) if own else "🧪" if re.search(r"scien", text, re.I) else "❤️"
@@ -422,13 +451,14 @@ def hook_png(text, path):
     step = 75
     for box, text in ((True, False), (False, True)):
         for n, ln in enumerate(lines):
-            draw_line(im, BOX_TOP - 4 + step * n, [(ln, False)], heart=emo if n == len(lines) - 1 else False, box=box, text=text, f=f)
+            draw_line(im, (BOX_TOP - 4 if top is None else top) + step * n, [(ln, False)], heart=emo if n == len(lines) - 1 else False, box=box, text=text, f=f)
     im.crop((0, STRIP_Y, W, STRIP_Y + STRIP_H)).save(path)
 
 
 HOOK_MAX = 780   # widest hook line incl. the end emoji. Instagram/TikTok crop ~100px off each side on tall phones
                  # (Olly 2026-11-04: 940 sat "right tight on the edge"), so the box keeps ~125px clear of each edge
 HOOK_MIN_PX = 54 * HOOK_PX / FONT_PX  # a long hook's text may shrink to this (from 66) to stay two lines inside the safe width
+TWO_LINE_MIN_PX = 58 * HOOK_PX / FONT_PX  # two lines only this close to full size (Olly 2026-11-16: smaller looked "too small")
 PYRAMID_MIN_PX = 48 * HOOK_PX / FONT_PX  # shrink only SLIGHTLY for the pyramid (Olly 2026-11-06: 40px was "too small"); a hook too long for that keeps 54px+ and the most even split
 
 
@@ -466,19 +496,48 @@ def hook_fit(words):
     """Full size if a two-line pyramid fits; otherwise shrink the text a step at a time (to HOOK_MIN_PX) until one does.
     No pyramid at any size: the largest size where two lines fit at all (same idea as Olly squeezing it by hand)."""
     fallback = None
-    # RULE (Olly 2026-11-06): the top line is ALWAYS wider than the bottom. Shrink further (to PYRAMID_MIN_PX) before
-    # ever giving up the pyramid; "How to attract your life partner / without more effort" needed 50px, not 54.
-    for px in hook_sizes(PYRAMID_MIN_PX):
+    # RULE (Olly 2026-11-06): the top line is ALWAYS wider than the bottom.
+    # Olly 2026-11-16: long hooks were shrinking to fit two lines and came out "too small" next to "How to find someone
+    # to build your life with" / "How to make yourself believe that you can find love" (both near full size). So two
+    # lines only down to TWO_LINE_MIN_PX; a longer hook goes to THREE full-size lines first, and only if that can't be
+    # a pyramid either does it shrink back to two lines.
+    for px in hook_sizes(TWO_LINE_MIN_PX):
         f = FH if px == HOOK_PX else font(px, hook=True)
         lines, pyramid, fits = hook_lines(words, f)
         if pyramid:
             return lines, f
         if fits and fallback is None:  # the largest size where two lines fit at all
             fallback = (lines, f)
+    three = hook_three(words)
+    if three:
+        return three
+    # Olly 2026-11-19: the inverted pyramid ALWAYS wins over size ("you always have inverted pyramid as the rule").
+    # A three-line layout with a narrower top line (tried the same day) is never used; hook_three_even is kept unused.
+    two = None
+    for px in hook_sizes(PYRAMID_MIN_PX):
+        f = FH if px == HOOK_PX else font(px, hook=True)
+        lines, pyramid, fits = hook_lines(words, f)
+        if pyramid:
+            two = (lines, f)
+            break
+        if fits and fallback is None:
+            fallback = (lines, f)
+    # 2026-11-19: a three-line pyramid at the same small sizes, when it comes out bigger than the two-line one
+    # ("Why do people with great careers struggle to get married and have children": 48.5px three lines vs 44.8px)
+    three = hook_three(words, PYRAMID_MIN_PX)
+    if three and (two is None or three[1].size > two[1].size):
+        return three
+    return two or fallback or (lines, f)
+
+
+def hook_three(words, lo=None):
+    """Three-line inverted pyramid at the biggest size that fits (from full size down to HOOK_MIN_PX), else None."""
+    if len(words) < 3:
+        return None
     # Too long for a two-line pyramid at a readable size: THREE lines, still a pyramid (each line at least as wide as
     # the one below it, the bottom counting its end emoji), at the biggest size that fits. Olly chose this 2026-11-06
     # for "You don't need another plan to attract a committed relationship" over smaller text or a wider top line below.
-    for px in hook_sizes(HOOK_MIN_PX):
+    for px in hook_sizes(lo or HOOK_MIN_PX):
         f = FH if px == HOOK_PX else font(px, hook=True)
         ew = egap(f) + 46 * f.size / f.base
         best = None
@@ -490,7 +549,30 @@ def hook_fit(words):
         if best:
             i, j = best[1], best[2]
             return [" ".join(words[:i]), " ".join(words[i:j]), " ".join(words[j:])], f
-    return fallback or (lines, f)
+    return None
+
+
+def hook_three_even(words):
+    """Three lines at the biggest size from full down to TWO_LINE_MIN_PX, each inside HOOK_MAX. Prefers a bottom line
+    (with its end emoji) no wider than the middle, then the smallest gap between widest and narrowest line."""
+    if len(words) < 3:
+        return None
+    for px in hook_sizes(TWO_LINE_MIN_PX):
+        f = FH if px == HOOK_PX else font(px, hook=True)
+        ew = egap(f) + 46 * f.size / f.base
+        best = None
+        for i in range(1, len(words) - 1):
+            for j in range(i + 1, len(words)):
+                a = f.getlength(" ".join(words[:i])); b = f.getlength(" ".join(words[i:j])); c = f.getlength(" ".join(words[j:])) + ew
+                if max(a, b, c) > HOOK_MAX:
+                    continue
+                key = (0 if c <= b else 1, max(a, b, c) - min(a, b, c))
+                if best is None or key < best[0]:
+                    best = (key, i, j)
+        if best:
+            i, j = best[1], best[2]
+            return [" ".join(words[:i]), " ".join(words[i:j]), " ".join(words[j:])], f
+    return None
 
 
 # ---------- main ----------
@@ -539,19 +621,44 @@ def main(src, out, hook_text=None, words_only=False):
         print(f"fit to {MAX_LEN}s: {src_len:.2f}s -> {length:.2f}s ({len(keep) - 1} pauses shortened, speed x{speed:.3f})")
     hook, caps = plan(words)
     if hook_text:  # what he SAID, spelled like the calendar where it's the same word (Olly 2026-11-04), + calendar emoji
-        hook = (merge_hook(hook[0], hook_text), hook[1], hook[2])
+        # 2026-11-16: a pause mid-hook cut it to "How to find a ♥️". If the spoken hook is much shorter than the calendar's,
+        # take his words up to the end of that first sentence (at most the calendar's length + 5 words).
+        cal_n = len(END_EMOJI.sub("", hook_text).split())
+        if len(hook[0].split()) < 0.7 * cal_n:
+            k = 0
+            while k < min(len(words), cal_n + 5):
+                k += 1
+                if re.search(r"[.?!]$", words[k - 1]["w"].strip()):
+                    break
+            hook = (" ".join(w["w"].strip() for w in words[:k]).strip(), hook[1], max(hook[2], words[k - 1]["e"]))
+        hook = (tidy_hook(merge_hook(hook[0], hook_text)), hook[1], hook[2])
+    # Olly's exact wording for one Reel (2026-11-19): <raw>.hook.txt beside the raw video wins over what he said
+    exact = src + ".hook.txt"
+    if os.path.isfile(exact):
+        hook = (open(exact, encoding="utf-8").read().strip(), hook[1], hook[2])
     json.dump({"trim": [t0, t1], "length": length, "speed": speed, "hook": hook, "captions": caps}, open(out + ".plan.json", "w"), indent=1)
 
+    # Cover still (Olly 2026-11-10): best frame of him + the hook, drawn into frame 0 in this same encode (no second pass).
+    # It also finds where his head is, which places the hook and the captions (2026-11-16).
+    cover, cover_info = None, None
+    try:
+        sys.path.insert(0, HERE)
+        import cover_pick
+        cover, cover_info = cover_pick.make_cover(src, t0, t1, hook[0])
+    except Exception as e:
+        print(f"cover: skipped ({e})")
+    hook_top, cap_top = place(hook[0], (cover_info or {}).get("head_med"), (cover_info or {}).get("head_hook"))
+    print(f"placed: hook top {hook_top}px, captions top {cap_top}px (head {(cover_info or {}).get('head_med')})")
     blank = os.path.join(tmp, "blank.png")
     Image.new("RGBA", (W, STRIP_H), (0, 0, 0, 0)).save(blank)
     hp = os.path.join(tmp, "hook.png")
-    hook_png(hook[0], hp)
+    hook_png(hook[0], hp, hook_top)
     timeline = [(hp, 0.0, hook[2])]
     for k, c in enumerate(caps):
         nxt = caps[k + 1]["s"] if k + 1 < len(caps) else length
         end = nxt if nxt - c["e"] < HIDE_GAP else c["e"] + 0.2
         p = os.path.join(tmp, f"c{k:04d}.png")
-        caption_png(c["parts"], p)
+        caption_png(c["parts"], p, cap_top)
         timeline.append((p, max(c["s"], timeline[-1][2] if timeline else 0), min(end, length)))
 
     lines, t = ["ffconcat version 1.0"], 0.0
@@ -566,14 +673,6 @@ def main(src, out, hook_text=None, words_only=False):
     lst = os.path.join(tmp, "caps.ffconcat")
     open(lst, "w").write("\n".join(l.replace("\\", "/") for l in lines))
 
-    # Cover still (Olly 2026-11-10): best frame of him + the hook, drawn into frame 0 in this same encode (no second pass)
-    cover, cover_info = None, None
-    try:
-        sys.path.insert(0, HERE)
-        import cover_pick
-        cover, cover_info = cover_pick.make_cover(src, t0, t1, hook[0])
-    except Exception as e:
-        print(f"cover: skipped ({e})")
     pre, vin, ain = "", "[0:v]", "0:a"
     if keep:  # keep-segments joined back together (+ a tiny speed-up only if the pauses weren't enough)
         for i, (a, b) in enumerate(keep):

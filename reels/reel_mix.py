@@ -52,7 +52,9 @@ def sessions(items):
         key = img_no(it)
         if last is not None:
             if key is not None and last[0] is not None:
-                if key - last[0] > 8:
+                # 2026-11-19: IMG_5569 (18 Nov) and IMG_5577 (19 Nov) are only 8 apart but two outfits, so uploads
+                # more than 3 hours apart also start a new session
+                if key - last[0] > 8 or abs((it.get("uploaded") or 0) - (last[1] or 0)) > 3 * 3600:
                     sid += 1
             elif abs((it.get("uploaded") or 0) - (last[1] or 0)) > 3 * 3600:
                 sid += 1
@@ -81,7 +83,7 @@ def clash(a, b):
     if a["words"] and b["words"]:
         c += 3.0 * len(a["words"] & b["words"]) / len(a["words"] | b["words"])
     if a["session"] is not None and a["session"] == b["session"]:
-        c += 1.0
+        c += 3.0   # same outfit: as strong as a shared theme (Olly 2026-11-19, "not all the same outfits")
     return c
 
 
