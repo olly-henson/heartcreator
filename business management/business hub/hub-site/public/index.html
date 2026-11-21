@@ -135,7 +135,8 @@
   .lmbc2 b{ font-size:14px; }
   .lmbc2 .sub{ font-size:12px; opacity:.65; }
   .lmbcrow{ display:flex; flex-wrap:wrap; gap:5px; margin-top:2px; }
-  .lmbcnote{ font-size:12px; opacity:.75; font-style:italic; }
+  .lmbcnote{ font-size:12px; opacity:.75; font-style:italic; overflow-wrap:anywhere; word-break:break-word; }
+  .lmbc2{ min-width:0; overflow:hidden; } .lmbc2 b, .lmbc2 .sub{ overflow-wrap:anywhere; }   /* long links / words in a note never spill into the next column (2026-11-21) */
   .lmr{ font-size:11px; font-weight:700; padding:2px 7px; border-radius:6px; }
   .lmr-good{ background:rgba(34,197,94,.2); color:#4ade80; } .lmr-okay{ background:rgba(251,191,36,.2); color:#fbbf24; } .lmr-bad{ background:rgba(248,113,113,.2); color:#f87171; }
   .lmmodal{ position:fixed; inset:0; z-index:1000; background:rgba(5,2,10,.7); display:flex; align-items:flex-start; justify-content:center; padding:4vh 16px; overflow-y:auto; }
@@ -151,6 +152,29 @@
   @media (max-width:760px){ .lmdetail{ grid-template-columns:minmax(0,1fr); } .lmdetail .lmdcol:last-child{ order:-1; } .lmmodal{ padding:0; } .lmsheet{ border-radius:0; min-height:100%; } .lmsheethead{ border-radius:0; } }
   /* Phone pass (2026-11-07): the Hub runs full screen under the iPhone status bar, so the X sat under the clock. Header clears the safe area, X is a big tap target, rows are tighter. */
   .lmmodal{ overscroll-behavior:contain; }
+  /* Reminders + Delivery board (2026-11-21) */
+  .rmbox{ margin-top:7px; display:flex; flex-direction:column; gap:6px; }
+  .rmrow{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:7px 9px; border:1px solid var(--border-soft); border-radius:8px; background:var(--surface); font-size:13px; margin-top:6px; }
+  .rmrow.due{ border-color:#f87171; background:rgba(248,113,113,.10); }
+  .rmrow .rmwhen{ font-weight:700; white-space:nowrap; }
+  .rmrow .rmtxt{ flex:1 1 180px; min-width:0; overflow-wrap:anywhere; }
+  .rmrow button, .rmadd button, .dvbtns button, .dvbtns a{ padding:6px 11px; border-radius:999px; border:1px solid var(--border-soft); background:transparent; color:inherit; font:inherit; font-size:12.5px; cursor:pointer; text-decoration:none; }
+  .rmadd{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .rmadd input, .dvfield input{ background:var(--surface); color:inherit; border:1px solid var(--border-soft); border-radius:8px; padding:6px 8px; font:inherit; font-size:16px; box-sizing:border-box; }
+  .rmadd input.rmtext{ flex:1 1 100%; }
+  .rmadd .rmgo, .dvbtns button[aria-pressed="true"]{ background:#e04fd6; border-color:#e04fd6; color:#fff; font-weight:700; }
+  .rmbanner{ display:block; border:1px solid rgba(248,113,113,.5); background:rgba(248,113,113,.08); border-radius:12px; padding:10px 12px; margin:0 0 12px; }
+  .rmbanner h5{ margin:0; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#f87171; }
+  .rmbanner.soon{ border-color:var(--border-soft); background:var(--surface); }
+  .rmbanner.soon summary{ cursor:pointer; font-size:13px; }
+  .dvbtns{ display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+  .dvfield{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:7px; font-size:13px; }
+  .dvkpis{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+  @media (max-width:520px){ .lmkpis.dvkpis{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
+  .dvboard{ grid-auto-columns:minmax(260px, 1fr); }
+  .lmcol2[data-st="cur"] h4{ color:#4ade80; }
+  .lmcol2[data-st="churn"]{ opacity:.8; }
+  @media (max-width:760px){ .lmdetail.dvdetail .lmdcol:last-child{ order:0; } }
   @media (max-width:760px){
     .lmsheet{ min-height:100dvh; padding-bottom:env(safe-area-inset-bottom, 0px); }
     .lmsheethead{ padding:calc(env(safe-area-inset-top, 0px) + 10px) 60px 10px 14px; gap:8px; }
@@ -1603,6 +1627,8 @@
   .camrec{ grid-column:2; width:76px; height:76px; border-radius:50%; border:4px solid #fff; background:transparent; display:flex; align-items:center; justify-content:center; padding:0; }
   .camrec i{ width:58px; height:58px; border-radius:50%; background:#e11d48; transition:all .15s; }
   .camrec.on i{ width:30px; height:30px; border-radius:6px; }
+.lmroute{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px}.lmroute button{flex:1 1 140px;border-radius:999px;padding:9px 12px;font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,.25);background:transparent;color:inherit}.lmroute button[aria-pressed="true"]{background:#6b21a8;border-color:#6b21a8;color:#fff}
+.lmrank{display:grid;gap:10px;max-width:760px}.lmrankrow{display:grid;grid-template-columns:62px minmax(0,1fr);gap:4px 10px;align-items:start}.lmrankn{text-align:center;padding-top:6px}.lmrankn b{display:block;font-size:22px;line-height:1}.lmrankn span{font-size:12px;opacity:.75}.lmrankrow .lmbc2{width:100%}.lmrankwhy{grid-column:2;display:flex;flex-wrap:wrap;gap:5px}.lmrankwhy span{font-size:12px;padding:2px 8px;border-radius:999px;background:rgba(167,139,250,.16);color:#c4b5fd}
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 </head>
@@ -1668,7 +1694,7 @@
       <select id="periodSel"><option value="2026-08">Aug 26</option><option value="2026-09">Sept 26</option></select>
     </div>
     <div class="divider"></div>
-    <span class="hint">The Heart Attractor Program: $497/month or $2,500/year (counted as $208.33/month). Fill in sign-ups and cancellations each month; members carry over automatically.</span>
+    <span class="hint">The Heart Attractor Program: $250/month or $2,500/year (counted as $208.33/month). Fill in sign-ups and cancellations each month; members carry over automatically.</span>
   </div>
 
   <p class="section-label" id="glanceLabel">This month at a glance</p>
@@ -1708,7 +1734,7 @@
         <tr>
           <th></th>
           <th>Month</th>
-          <th>New monthly ($497)</th>
+          <th>New monthly ($250)</th>
           <th>New annual ($2,500)</th>
           <th>Monthly cancelled</th>
           <th>Annual cancelled</th>
@@ -1732,9 +1758,9 @@
   <div class="glossary">
     <h2>How each figure is worked out</h2>
     <dl>
-      <div><dt>What you fill in</dt><dd>Four numbers a month: new monthly members ($497/month), new annual members ($2,500/year), monthly members who cancelled, and annual members who cancelled or didn't renew.</dd></div>
+      <div><dt>What you fill in</dt><dd>Four numbers a month: new monthly members ($250/month), new annual members ($2,500/year), monthly members who cancelled, and annual members who cancelled or didn't renew.</dd></div>
       <div><dt>Members</dt><dd>A running total: last month's members, plus this month's new ones, minus this month's cancellations. Split into monthly and annual.</dd></div>
-      <div><dt>MRR</dt><dd>Monthly members × $497, plus annual members × $208.33 ($2,500 ÷ 12). Annual is pro-rated so MRR shows the real monthly revenue, not the upfront payment.</dd></div>
+      <div><dt>MRR</dt><dd>Monthly members × $250, plus annual members × $208.33 ($2,500 ÷ 12). Annual is pro-rated so MRR shows the real monthly revenue, not the upfront payment.</dd></div>
       <div><dt>Churn</dt><dd>Members lost that month ÷ members at the start of the month. The first month shows "—" because there was nobody to lose yet.</dd></div>
       <div><dt>Retention</dt><dd>100% minus churn. The share of members who stayed.</dd></div>
       <div><dt>Avg. revenue / member</dt><dd>MRR ÷ active members.</dd></div>
@@ -2361,7 +2387,9 @@ https://www.instagram.com/attractwitholly
   </div>
 
   <div id="tab-delivery" class="tabpanel" hidden="">
-
+    <span class="hint" style="display:block; margin:0 0 14px;">Everyone in The Heart Attractor Program. Tap Monthly $250 or Annual $2,500 on a Sales card and they appear here. Tap a card for their plan, notes, reminders and the Churn button. On desktop, drag a card to the other column.</span>
+    <div id="dvBody"></div>
+    <div id="dvOld" hidden>
     <p class="section-label">Priority board</p>
     <span class="hint" style="display:block; margin:-6px 0 20px;">Eisenhower Matrix — tag each project Urgent and/or Important in the list below, and it sorts itself into a quadrant here. Work top-left to bottom-right.</span>
     <div class="quadrants">
@@ -2401,6 +2429,7 @@ https://www.instagram.com/attractwitholly
         <span class="hint">Tick Urgent and/or Important to place it on the priority board above. Tick Done to clear it off the board.</span>
         <button class="addbtn" id="projectAdd">+ Add project</button>
       </div>
+    </div>
     </div>
 
   </div>
@@ -2444,7 +2473,7 @@ https://www.instagram.com/attractwitholly
         <tbody id="salesTbody"></tbody>
       </table>
       <div class="tablefoot">
-        <span class="hint">VIDEO requests = ManyChat runs. Loom videos sent = personal Loom videos sent to applicants. New cash = monthly sales × $497 + annual sales × $2,500.</span>
+        <span class="hint">VIDEO requests = ManyChat runs. Loom videos sent = personal Loom videos sent to applicants. New cash = monthly sales × $250 + annual sales × $2,500.</span>
         <button class="addbtn" id="salesAddMonth">+ Add next month</button>
       </div>
     </div>
@@ -2747,14 +2776,14 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   }
 
   // MRR for The Heart Attractor Program (rebuilt from scratch 2026-10-24).
-  // Two price points: $497/month and $2,500/year. Annual is pro-rated to
+  // Two price points: $250/month and $2,500/year. Annual is pro-rated to
   // $2,500 ÷ 12 a month so MRR reflects the real monthly revenue.
   // Olly types in four numbers a month: new monthly sign-ups, new annual
   // sign-ups, monthly members who cancelled, annual members who cancelled
   // (or didn't renew). Active members are a running total from those, so
   // they're never typed in. The old Skool rows (state.rows) are kept in
   // storage untouched but nothing reads them any more.
-  var MRR_PRICE_MONTHLY = 497, MRR_PRICE_ANNUAL = 2500;
+  var MRR_PRICE_MONTHLY = 250, MRR_PRICE_ANNUAL = 2500;
   var MRR_FIELDS = ["newMonthly","newAnnual","lostMonthly","lostAnnual"];
 
   function computeRows(s){
@@ -5062,6 +5091,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!state.delivery) state.delivery = { projects: [] };
     renderProjects();
     renderQuadrants();
+    if (dvVisible()) renderDeliveryBoard("force");   // Delivery board (2026-11-21) redraws when the shared data arrives
   }
 
   function buildProjectRow(p, i){
@@ -5500,7 +5530,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var LM_ORDER = ["new", "contacted", "replied", "confirmed", "plan_sent", "plan_read", "loom", "watched", "joinclick", "joined"];
   // each step = ticked on the card, or seen by the tracking; an explicit false (unticked or dragged back) beats the tracking
   function lmFlags(a){
-    var s = lmStore(a.id), pv = (typeof lmPV === "object" && lmPV[a.id]) || {}, vv = (typeof lmVV === "object" && lmVV[a.id]) || {};
+    var s = lmStore(a.id), pv = (typeof lmPV === "object" && (lmPV[a.id + "-t"] || lmPV[a.id])) || {}, vv = (typeof lmVV === "object" && lmVV[a.id]) || {};
     function f(k, auto){ return s[k] === false ? false : !!(s[k] || auto); }
     return {
       planSent: f("planSent", pv.sent || (s.waSent && !s.qualSent && pv.code && typeof lmPV === "object" && !!lmPV[a.id + "-full"])), // 2026-11-15: in the new format (short + full plan) the first message (1a) IS the plan link
@@ -5534,24 +5564,26 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmLabels(a){
     var s = lmStore(a.id), L = [];
     if (s.waSent) L.push("WhatsApp sent"); if (s.emSent) L.push("Email sent"); if (s.waReply) L.push("WhatsApp reply"); if (s.emReply) L.push("Email reply");
-    if (s.product) L.push(s.product === "annual" ? "Annual $2,500" : "Monthly $497");
+    if (s.product) L.push(s.product === "annual" ? "Annual $2,500" : "Monthly $250");
     return L.map(function(x){ return '<span class="lmtag">' + x + "</span>"; }).join("");
   }
   // Checklist on each card: tap a step to tick it, tap again to untick. Pink = done.
   function lmStageBox(a){
     var s = lmStore(a.id), st = lmStage(a);
     var F = lmFlags(a);
-    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, planSent:F.planSent, planRead:F.planRead, committed:!!(s.waReply || s.emReply), confirmed:F.confirmed, loom:F.loom, watched:F.watched, joinClick:F.joinClick, monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived, quiet:!!s.quiet && !s.archived };
+    var on = { waSent:s.waSent, emSent:s.emSent, waReply:s.waReply, emReply:s.emReply, planSent:F.planSent, planRead:F.planRead, committed:!!(s.waReply || s.emReply), confirmed:F.confirmed, loom:F.loom, watched:F.watched, joinClick:F.joinClick, monthly:s.product === "monthly", annual:s.product === "annual", nofit:!!s.archived, quiet:!!s.quiet && !s.archived, coldSent:!!s.coldSent };
     function btn(k, label){ return '<button type="button" data-act="' + k + '" aria-pressed="' + !!on[k] + '">' + label + "</button>"; }
     function row(n, label, btns){ return '<div class="lmstep"><small>' + n + " " + label + "</small>" + btns + "</div>"; }
     return '<div class="lmstg">' +
       // Olly, 2026-11-16: simpler. Tick whichever way you contacted them (message and/or email), then "They replied".
       // Olly, 2026-11-17: steps 1 and 2 merged. The first message carries the plan link.
-      row("1", "Successful + their plan (tick how you sent it)", btn("waSent", "Message sent") + btn("emSent", "Email sent") + btn("planRead", "Plan read") + btn("committed", "They replied")) +
-      row("2", "Their sales video", btn("loom", "Video sent") + btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
-      row("✓", "They joined", btn("monthly", "Monthly $497") + btn("annual", "Annual $2,500")) +
+      // Olly, 2026-11-20: reach out first, the steps (plan link) only after the chat.
+      // Olly, 2026-11-21: one video message (+ follow-up email), then they watch / ask / join.
+      row("1", "Video message", btn("loom", "Video sent") + btn("emSent", "Email sent") + btn("committed", "They replied")) +
+      row("2", "Their video", btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
+      row("✓", "They joined", btn("monthly", "Monthly $250") + btn("annual", "Annual $2,500")) +
       '<small style="display:block;opacity:.65;margin:2px 0 6px">Plan read, Watched and Clicked Join tick themselves from the tracking. Untick one to override it.</small>' +
-      '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("nofit", "Not a fit") + "</div>" +
+      '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("coldSent", "🧊 Cold follow-up done") + btn("nofit", "Not a fit") + "</div>" +
       (s.archived ? '<div class="lmstep">' + (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL ✓</span>'
         : '<button type="button" data-act="ghlremove" style="border-color:#f87171;color:#f87171">Remove from GHL</button><small style="flex-basis:100%;opacity:.7">Takes them off every list, turns on Do Not Disturb and leaves them out of all stats.</small>') + "</div>" : "") + "</div>";
   }
@@ -5581,6 +5613,29 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var lmPV = {}, lmPC = {};
   // 2026-11-18: each card also looks up its own plan code (plan:<id>-short, then plan:<id>: KV reads, not a list),
   // so the opening message shows even when /api/planviews is missing someone (KV list lag / daily list cap).
+  // 2026-11-20: make an applicant's template plan link in one tap (POST /api/plan?template=woman|man), then show the steps message
+  var lmRoute = {};
+  window.lmSetRoute = function(id, r){ lmRoute[id] = r; renderLooms(); };
+  // 2026-11-20: each card's template plan. plan:<id> when it IS a template plan, else plan:<id>-t (they had an older plan, which stays live).
+  var lmTC = {};
+  function lmTplCode(id){
+    if (lmTC[id] === undefined){ lmTC[id] = null;
+      var get = function(k){ return fetch("/api/plan?id=" + encodeURIComponent(k), { cache:"no-store" }).then(function(r){ return r.ok ? r.json() : {}; }).then(function(d){ return (d && d.plan) || null; }).catch(function(){ return null; }); };
+      get(id).then(function(p){
+        if (p && p.template) return { key:id, code:p._code || "" };
+        return get(id + "-t").then(function(q){ return { key:id + "-t", code:(q && q._code) || "", old:!!p }; });
+      }).then(function(r){ lmTC[id] = r; renderLooms(); });
+    }
+    return lmTC[id] || {};
+  }
+  window.lmMakeTpl = function(id, sex, name, btn){
+    var t = lmTC[id] || {}, key = t.old ? id + "-t" : id;
+    if (btn){ btn.disabled = true; btn.textContent = "Making their link…"; }
+    fetch("/api/plan?id=" + encodeURIComponent(key) + "&template=" + sex + "&name=" + encodeURIComponent(name || ""), { method:"POST" })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (!d || !d.ok || !d.code) throw new Error((d && d.error) || "failed"); lmTC[id] = { key:key, code:d.code, old:t.old }; renderLooms(); })
+      .catch(function(e){ if (btn){ btn.disabled = false; btn.textContent = "Couldn't make it, tap to retry"; } });
+  };
   function lmPlanCode(id){
     if (lmPC[id] === undefined){ lmPC[id] = null;
       var get = function(k){ return fetch("/api/plan?id=" + encodeURIComponent(k), { cache:"no-store" }).then(function(r){ return r.ok ? r.json() : {}; }).then(function(d){ return (d && d.plan && d.plan._code) || ""; }).catch(function(){ return ""; }); };
@@ -5605,9 +5660,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return '<span class="lmtag" style="margin:0;background:rgba(167,139,250,.2);color:#c4b5fd">🎬 Video ' + (v.pct || 0) + '%</span>';
   }
   function lmVslRow(a){
-    var pv = lmPV[a.id];
-    if (!pv || !pv.code) return '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">🎬 Sales video: make their plan link first. The video link uses the same private code.</small></div>';
-    var url = "https://hub.ollyhenson.com/p/" + pv.code + "/video";
+    var pv = lmPV[a.id], code = (pv && pv.code) || (lmTC[a.id] && lmTC[a.id].code) || "";   // 2026-11-21: template link counts too
+    if (!code) return "";   // step 1 on the card makes their video link
+    var url = "https://hub.ollyhenson.com/p/" + code + "/video";
     return '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(url) + '">🎬 Copy their video link</button><a href="' + url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3b2a52">Watch it (your views don’t count)</a>' + lmVslLine(a.id) + "</div>";
   }
   function lmVslLine(id){
@@ -5752,6 +5807,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var out = rows.map(function(r){ var v = clean(lmAns(a, r[1])); return v ? r[0] + ": " + v : ""; }).filter(Boolean);
     return "Applicant's answers (name and personal details taken out):\n" + (out.length ? out.join("\n") : "(no answers yet)");
   }
+  var LM_OLD_FLOW = false;   // 2026-11-21: the plan-based card flow, switched off (not deleted) for the one-video flow
   function lmContact(a){
     var h = "", ph = (a.phone || "").replace(/[^\d]/g, ""), im = lmUsesIm(a);
     // Applicant flow v3 (Olly, 2026-11-10, his wording): WhatsApp / iMessage ALWAYS goes first, then the email.
@@ -5773,22 +5829,75 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it while recording</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(text) + "</p></details></div>"; }
     function lmTxt(label, text, links){ return '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(text) + '">' + label + "</button>" + links
       + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(text) + "</p></details></div>"; }
-    if (ph || a.email) h += '<div class="lmcon">' + (ph ? '<button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + "</button>" : "")
-      + (a.email ? '<button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + "</button>" : "") + "</div>";
+    // 2026-11-20 (Olly): contact them straight away on any channel, no set message. WhatsApp/iMessage open a blank chat
+    // (the iMessage twin is added below by the wa.me replace), Email opens a blank email (Gmail on a computer).
+    if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + "</button>"
+      + '<a href="https://wa.me/' + ph + '?text=" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a></div>';
+    if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + "</button>"
+      + '<a href="mailto:' + lmEsc(a.email) + '?subject=" onclick="event.stopPropagation()">Email</a></div>';
+    // Applicant flow v5 (Olly, 2026-11-21, with the new sales video): plain and simple. ONE message with their video link
+    // (WhatsApp shows the "Let's Help You Find Your Person" preview), made personal by Olly, then a follow-up email.
+    // Email-only people get it as one email. iMessage twin is added next to every WhatsApp button further down.
+    // The old flow (confirm where they are -> plan -> video) is kept below behind LM_OLD_FLOW = false, not deleted.
+    var tc = lmTplCode(a.id), tUrl = tc.code ? "https://hub.ollyhenson.com/p/" + tc.code : "";
+    var mkT = function(sex, label){ return '<button type="button" style="background:linear-gradient(135deg,#d946ef,#6b21a8);color:#fff;border:0" onclick="event.stopPropagation();lmMakeTpl(\'' + a.id + '\',\'' + sex + '\',' + lmEsc(JSON.stringify(a.firstName || "")) + ',this)">' + label + "</button>"; };
+    var pv0 = lmPV[a.id] || lmPV[a.id + "-short"], vcode = (pv0 && pv0.code) || tc.code || "", vurl = vcode ? "https://hub.ollyhenson.com/p/" + vcode + "/video" : "";
+    var route = !ph ? "em" : !a.email ? "wa" : (lmRoute[a.id] || "wa");
+    if (ph && a.email) h += '<div class="lmcon lmroute">' + [["wa", "📱 WhatsApp / iMessage"], ["em", "✉️ Email only"]].map(function(r){
+      return '<button type="button" aria-pressed="' + (route === r[0]) + '" onclick="event.stopPropagation();lmSetRoute(\'' + a.id + '\',\'' + r[0] + '\')">' + r[1] + "</button>"; }).join("") + "</div>";
+    h += lmHead("1. Send the video");
+    if (!vurl){
+      h += '<div class="lmcon lmmsg">' + (lmTC[a.id] === null ? '<small style="flex-basis:100%;opacity:.75">Looking for their video link…</small>'
+        : mkT("woman", "🎬 Make their video link (woman)") + mkT("man", "🎬 Make their video link (man)") + '<small style="flex-basis:100%;opacity:.75">Pick their version. The message with their video appears here straight after.</small>') + "</div>";
+    } else {
+      // Personalised from their application (Olly, 2026-11-21): where they are (intellectualization + their own answers)
+      // -> where they want to be -> the video. Every part is skipped when they left that answer blank.
+      var you = function(t){ return String(t || "").trim().replace(/[.!\s]+$/, "").replace(/\bI'm\b|\bI’m\b/g, "you're").replace(/\bmyself\b/gi, "yourself").replace(/\bmy\b/gi, "your").replace(/\bme\b/gi, "you").replace(/\bI\b/g, "you"); };
+      var low1 = function(t){ t = you(t); return t.charAt(0).toLowerCase() + t.slice(1); };
+      var listAnd = function(arr){ return arr.length > 1 ? arr.slice(0, -1).join(", ") + " and " + arr[arr.length - 1] : (arr[0] || ""); };
+      var tried = lmAns(a, /^HA Tried/i), nowEmo = lmAns(a, /^FF Current Emotion/i), feelsLove = lmAns(a, /^HA Feelings About Love/i), resWant = lmAns(a, /^FF Resonance/i);
+      var triedL = tried ? tried.split(/\s*,\s*/).filter(Boolean).slice(0, 4).map(function(x){ return x.toLowerCase(); }) : [];
+      var where = ["From what you’ve shared, it sounds like you’ve been struggling with intellectualization."];
+      if (howLong) where.push("You’ve been looking for " + howLong.replace(/[.!\s]+$/, "") + ".");
+      if (triedL.length) where.push("You’ve tried " + listAnd(triedL) + ".");
+      if (nowEmo && nowEmo.split(/\s+/).length <= 3) where.push("Right now love brings up a lot of " + nowEmo.toLowerCase() + ".");
+      var quote = feelsLove && feelsLove.length <= 180 ? "As you put it: “" + feelsLove.trim() + "”" : "";
+      var wantLine = wants ? "Where you want to be: " + low1(wants) + (resWant && resWant.split(/\s+/).length <= 2 ? ", with a real sense of " + resWant.toLowerCase() + "." : ".")
+        : "[✍️ where they want to be, e.g. You want…]";
+      var vmsg = "Hey " + nm + ",\n\nReally liked your application.\n\n" + where.join(" ") + (quote ? "\n\n" + quote : "") + "\n\n" + wantLine +
+        "\n\nThis video takes you through The Heart Attractor Program and how it will help you get there: what we’ll do, what’s included, the investment and how to get started.\n\n" + vurl +
+        "\n\nJust let me know if you have any questions.\n\nSpeak soon,\nOlly";
+      if (route === "wa"){
+        h += lmTxt("🎬 1a. Video message (personalised from their application, check it then send)", vmsg, lmWa(vmsg, "waSent,loom"));
+        if (a.email){
+          var fuV = function(appName){ return "Hey " + nm + ",\n\nReally liked your application.\n\nI’ve just sent you a video on " + appName + " with a summary of the program: what’s involved, how to get started and the investment.\n\nHere it is again if it’s easier to watch here:\n\n" + vurl + "\n\nCheck it out and let me know if you have any questions.\n\nOlly"; };
+          var fuB = function(appName){ return lmMail("Your application for The Heart Attractor Program", fuV(appName), "emSent").replace(">Email</a>", ">Email: sent on " + appName + "</a>"); };
+          h += lmTxt("✉️ 1b. Follow-up email", fuV(app), im ? fuB("iMessage") + fuB("WhatsApp") : fuB("WhatsApp") + fuB("iMessage"));
+        }
+      } else h += lmTxt("✉️ 1. Video email (personalised from their application, check it then send)", vmsg, lmMail("Your application for The Heart Attractor Program", vmsg, "emSent,loom"));
+      h += '<div class="lmcon lmmsg"><a href="' + vurl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview their video page</a></div>';
+    }
+    if (LM_OLD_FLOW){
+    // 2026-11-20 (Olly): EVERY card gets the template plan link at the top (old plans stay live, just not shown here).
+    // Lives on plan:<id> for new applicants, plan:<id>-t for anyone who already had a plan.
+    var tc = lmTplCode(a.id), tUrl = tc.code ? "https://hub.ollyhenson.com/p/" + tc.code : "";
+    var mkT = function(sex, label){ return '<button type="button" style="background:linear-gradient(135deg,#d946ef,#6b21a8);color:#fff;border:0" onclick="event.stopPropagation();lmMakeTpl(\'' + a.id + '\',\'' + sex + '\',' + lmEsc(JSON.stringify(a.firstName || "")) + ',this)">' + label + "</button>"; };
+    h += '<div class="lmcon lmmsg">' + (tUrl
+      ? '<button type="button" class="lmcopy" data-copy="' + tUrl + '">📄 Copy their plan link</button><a href="' + tUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>' + lmPlanLine(tc.key)
+      : (lmTC[a.id] === null ? '<small style="flex-basis:100%;opacity:.75">Looking for their plan link…</small>'
+        : mkT("woman", "📄 Make plan link (woman)") + mkT("man", "📄 Make plan link (man)"))) + "</div>";
 
     // Step-by-step guide follow-up (Olly, 2026-11-12): any stage, for anyone who's gone quiet (~2-3 days). NO message text:
     // WhatsApp / iMessage / Email open with only their personal guide link in, and Olly writes his own words around it.
     // Their link (/p/<code>/guide) tracks opens, how far they read and time per page (lmGuideLine). Tapping a send button marks it sent.
-    h += lmHead("Any time: if they've gone quiet");
-    var gv = lmGV[a.id], gurl = gv && gv.code ? "https://hub.ollyhenson.com/p/" + gv.code + "/guide" : "";
-    if (!gurl) h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy lmguidemake" data-id="' + lmEsc(a.id) + '">📘 Step-by-step guide follow-up (make their link)</button>'
-      + '<small style="flex-basis:100%;opacity:.75">Makes their own guide link, so you can see when they open it and how far they read.</small></div>';
-    else h += '<div class="lmcon lmmsg"><span style="font-weight:600;font-size:13px;align-self:center">📘 Step-by-step guide follow-up</span>'
-      + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent(gurl) + '" target="_blank" rel="noopener" data-guide="' + lmEsc(a.id) + '" onclick="event.stopPropagation()">WhatsApp</a>' : "")
-      + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?body=' + encodeURIComponent(gurl) + '" data-guide="' + lmEsc(a.id) + '" onclick="event.stopPropagation()">Email</a>' : "")
-      + '<button type="button" class="lmcopy" data-copy="' + gurl + '" data-guide="' + lmEsc(a.id) + '">🔗 Copy link</button>'
-      + '<a href="' + gurl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>'
-      + lmGuideLine(a.id) + "</div>";
+    // 2026-11-20 (Olly): "Gone cold follow-up" replaces the old step-by-step guide row (sent guide links still work).
+    // Short message + their template plan link, by WhatsApp / iMessage / Email depending on the contact details they gave.
+    h += lmHead("Gone cold follow-up");
+    if (tUrl){
+      var cold = "Hey " + nm + ",\n\nI know you really wanted to meet someone you could marry, have children with and build a life with.\n\nHere are the steps to follow to make that happen:\n\n" + tUrl;
+      h += lmTxt("🧊 Gone cold follow-up", cold, lmWa(cold, "planSent,coldSent") + lmMail("The steps to meet your person", cold, "emSent,planSent,coldSent"));
+    } else h += '<div class="lmcon lmmsg">' + (lmTC[a.id] === null ? '<small style="flex-basis:100%;opacity:.75">Looking for their plan link…</small>'
+      : mkT("woman", "🧊 Make plan link (woman)") + mkT("man", "🧊 Make plan link (man)") + '<small style="flex-basis:100%;opacity:.75">Makes their plan link, then the gone cold message appears here.</small>') + "</div>";
 
     // Plan request flow v2 (Olly, 2026-11-13): people from the Instagram DM plan form (tag "plan request") asked for a FREE plan.
     // 1 check they got the message (don't build anything until they reply) -> 2 part 1 of the plan (their diagnosis, ends "does this
@@ -5808,7 +5917,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       h += lmHead("2. Once they reply: ask Claude to build their plan, then send part 1");
       h += '<div class="lmcon lmmsg" style="flex-wrap:wrap"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 2a. Plan part 1 (send their link)</a>' + lmPlanLine(a.id) + '</div>';
       h += lmVn("🎙️ 2b. Voice note after the plan", prVn2);
-      var prAsk = "So glad it sounds like you " + nm + " 🙏\n\nI have a program that takes you through this process step by step. Would you like me to send you the details?";
+      var prAsk = "So glad it sounds like you " + nm + "\n\nI have a program that takes you through this process step by step. Would you like me to send you the details?";
       var prAskVn = "Hey " + nm + ", great question. This is exactly what we do inside The Heart Attractor Program, step by step, so it becomes your normal.\n\nI can send you the next part of your plan, which shows you exactly how we'd do it together. Would you like me to send it over?";
       h += lmHead("3. When they reply: if they haven't asked for the details, offer them");
       h += lmTxt("💬 3a. Would they like to see it?", prAsk, lmWa(prAsk));
@@ -5827,26 +5936,44 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // First message = their short plan link (Olly, 2026-11-15: every good applicant gets this first; Claude builds the plan,
     // short version on KV id <contactId>, full version on <contactId>-full, see funnel/skills/skills_plan-v4.md)
     // a re-made short plan for someone who already had an old plan lives on <id>-short (2026-11-15)
-    var sp = lmPV[a.id + "-short"] || lmPV[a.id], spCode = (sp && sp.code) || lmPlanCode(a.id), spUrl = spCode ? "https://hub.ollyhenson.com/p/" + spCode : "";
+    var spCode = tc.code || "", spUrl = tUrl; // 2026-11-20: the template plan (top of the card) replaces old plans here
     var fp = lmPV[a.id + "-full"], fpUrl = fp && fp.code ? "https://hub.ollyhenson.com/p/" + fp.code : "";
     // Applicant flow (Olly, 2026-11-17): 1 application successful + their 5-page plan link in ONE message -> 2 when they ask for next steps, the video.
     // Every step: WhatsApp (iMessage twin added automatically) + an email version. qualSent stops the auto "Plan sent" rule.
     // Olly, 2026-11-17: ONE first message = application successful + their plan link (was 3 steps: successful -> reply -> plan).
     // "Here's a step-by-step of exactly what's in the program. Please read through it, and if it's right for you, let me know if you'd like the next steps."
     // Olly, 2026-11-18: new opening wording.
-    var msg1 = "Hi " + nm + ",\n\nI’ve looked through your application for The Heart Attractor Program and all looks good 🙏\n\nHere’s a short summary of what’s involved in the program:\n\n" + spUrl + "\n\nHave a read through, let me know if you have any questions and if you’d like the next steps.\n\nOlly Henson";
-    var mail1 = "Hi " + nm + ",\n\nI’ve looked through your application for The Heart Attractor Program and all looks good 🙏\n\nHere’s a short summary of what’s involved in the program:\n\n" + spUrl + "\n\nHave a read through, let me know if you have any questions and if you’d like the next steps.\n\nOlly Henson";
-    h += lmHead("1. Application successful + their plan");
+    // Olly, 2026-11-20: 3 steps. 1 = a personal reach-out (no plan) + "Application status: pending" email -> in the chat Olly gets them
+    // to see intellectualization is the problem -> 2 = the steps (their short plan link) + "would you like the next steps of the full program?"
+    // -> 3 = when they say yes, the video.
+    var PB = "[✍️ your personal bit from their application]";
+    // Olly, 2026-11-20 (later): 3 steps. 1 = confirm where they are (intellectualization) + offer the solution -> 2 = the plan (is it for them?) -> 3 = the video.
+    // Olly's own wording from the Applicant Messages editor (artifact Tm4X6n6xmq1tkVVkvbmsNy), applied 2026-11-20.
+    var WHERE = "From what you’ve shared, it sounds like you’ve been really struggling with intellectualization.\n\nWould that be fair to say?";
+    var msg1 = "Hey " + nm + ",\n\nIt's Olly Henson.\n\nI’ve had a look through your application and all looks really good.\n\n" + PB + "\n\n" + WHERE;
+    var mail1 = msg1;
+    // 2026-11-20 (Olly, "too crowded on mobile"): one route per card. WhatsApp/iMessage route (they gave a phone) or Email only.
+    // Tabs switch it when they have both; the choice only lives on this screen (lmRoute), nothing is saved.
+    var route = !ph ? "em" : !a.email ? "wa" : (lmRoute[a.id] || "wa");
+    if (ph && a.email) h += '<div class="lmcon lmroute">' + [["wa", "📱 WhatsApp / iMessage"], ["em", "✉️ Email only"]].map(function(r){
+      return '<button type="button" aria-pressed="' + (route === r[0]) + '" onclick="event.stopPropagation();lmSetRoute(\'' + a.id + '\',\'' + r[0] + '\')">' + r[1] + "</button>"; }).join("") + "</div>";
+    h += lmHead("1. Confirm where they are");
+    if (route === "wa") h += lmTxt("👋 1a. First message (add your personal bit before sending)", msg1, lmWa(msg1, "waSent,qualSent"));
+    // Follow-up email after the message: names the app the message went on. One button per app, their app first.
+    if (route === "wa" && a.email){
+      var fuMail = function(appName){ return "Hey " + nm + ",\n\nI’ve just dropped you a message on " + appName + ".\n\nJust send me a reply to that message and I’ll let you know about the next steps.\n\nSpeak soon,\n\nOlly Henson"; };
+      var fuBtn = function(appName){ return lmMail("Application status: pending", fuMail(appName), "emSent,qualSent").replace(">Email</a>", ">Email: sent on " + appName + "</a>"); };
+      h += lmTxt("✉️ 1b. Follow-up email “Application status: pending”", fuMail(app), im ? fuBtn("iMessage") + fuBtn("WhatsApp") : fuBtn("WhatsApp") + fuBtn("iMessage"));
+    }
+    if (route === "em") h += lmTxt("✉️ 1. First email (add your personal bit before sending)", mail1, lmMail("Application status: pending", mail1, "emSent,qualSent"));
+
+    // 2. When they agree it's intellectualization: "I completely get it" + their plan link (message, or email for email-only people)
+    h += lmHead("2. When they agree: I get it + their plan");
     if (spUrl){
-      if (ph) h += lmTxt("👋 1a. Opening message + their plan", msg1, lmWa(msg1, "waSent,qualSent,planSent")).replace("</div>", '<a href="' + spUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a>' + lmPlanLine(lmPV[a.id + "-short"] ? a.id + "-short" : a.id) + "</div>");
-      // Follow-up email after the message (Olly, 2026-11-17: put back): names the app the message went on. One button per app, their app first.
-      if (ph && a.email){
-        var fuMail = function(appName){ return "Hey " + nm + ",\n\nYour application for The Heart Attractor Program was successful.\n\nI’ve just sent you a message on " + appName + " with a step-by-step of exactly what’s in the program.\n\nPlease reply to my message there.\n\nSpeak soon,\n\nOlly Henson"; };
-        var fuBtn = function(appName){ return lmMail("Your application was successful", fuMail(appName), "emSent,qualSent").replace(">Email</a>", ">Email: sent on " + appName + "</a>"); };
-        h += lmTxt("✉️ 1b. Follow-up email: “I’ve messaged you on " + app + "”", fuMail(app), im ? fuBtn("iMessage") + fuBtn("WhatsApp") : fuBtn("WhatsApp") + fuBtn("iMessage"));
-      }
-      if (a.email) h += lmTxt(ph ? "✉️ 1c. Email only, with the plan (no WhatsApp or iMessage)" : "✉️ 1. Email (no phone number)", mail1, lmMail("Your application was successful", mail1, "emSent,qualSent,planSent"));
-    } else h += '<div class="lmcon lmmsg"><a href="/plan.html?id=' + encodeURIComponent(a.id) + '" style="background:linear-gradient(135deg,#d946ef,#6b21a8)" onclick="event.stopPropagation()">📄 Plan of action: make their link</a><small style="flex-basis:100%;opacity:.75">' + (lmPC[a.id] === null ? "Looking for their plan link…" : "No plan link yet. Tap to make their link (the opening message appears here once it exists), or ask Claude to build their plan.") + "</small></div>";
+      var msg2 = "I completely get it.\n\nI used to struggle with this for many years too.\n\nOk, so I’ve put together a short document that will take you through the exact steps we would follow in the program, to help you attract someone that you can marry, have children with and build a life with.\n\nHave a read through it and if it resonates with what you're looking for, let me know and I'll send you all the information about the coaching program:\n\n" + spUrl;
+      if (route === "wa") h += lmTxt("📄 2. I get it + their plan", msg2, lmWa(msg2, "planSent"));
+      else h += lmTxt("✉️ 2. I get it + their plan", msg2, lmMail("Re: Application status: pending", msg2, "emSent,planSent"));
+    } else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">Make their plan link at the top of the card first. This message appears here once it exists.</small></div>';
 
     // Personal email Claude drafted for this applicant (2026-11-07): stored in KV as state.looms[id].draftEmail = { subject, body }, never in this file (public repo)
     var dr = lmStore(a.id).draftEmail;
@@ -5857,29 +5984,30 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (fpUrl){
       var full2 = "Hey " + nm + ", here’s the full version of your plan, with every step in detail:\n\n" + fpUrl + "\n\nLet me know if you’ve got any questions.";
       var fpLine = fp.opens ? "Opened " + fp.opens + "×, last " + lmWhen(fp.last) + (fp.dev ? " on " + fp.dev : "") + (fp.far ? " · read to page " + fp.far + " of " + (fp.pages || 16) : "") : "Not opened yet";
-      h += lmTxt("📄 1d. Optional: the full plan", full2, lmWa(full2) + lmMail(nm + ", your full plan", full2 + "\n\nOlly"))
+      h += lmTxt("📄 2c. Optional: the full plan", full2, lmWa(full2) + lmMail(nm + ", your full plan", full2 + "\n\nOlly"))
         .replace("</div>", '<a href="' + fpUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview</a><small style="flex-basis:100%;opacity:.85">' + lmEsc(fpLine) + "</small></div>");
     }
     }
 
     // 3. Once they've checked the plan (ideally replied): their own video page + a voice note
-    h += lmHead(a.planRequest ? "5. Once they've asked any questions: their video" : "2. When they ask for the next steps: the video");
-    var pv0 = lmPV[a.id] || lmPV[a.id + "-short"], vurl = pv0 && pv0.code ? "https://hub.ollyhenson.com/p/" + pv0.code + "/video" : "";
+    h += lmHead(a.planRequest ? "5. Once they've asked any questions: their video" : "3. When they ask for the information: the video");
+    var pv0 = lmPV[a.id] || lmPV[a.id + "-short"], vcode = (pv0 && pv0.code) || (!a.planRequest && spCode) || "", vurl = vcode ? "https://hub.ollyhenson.com/p/" + vcode + "/video" : "";
     if (vurl && !a.planRequest){
       // Olly, 2026-11-16: "here's the video, it takes you through everything you need, let me know if you have any questions"
-      var vtxt = "Hey " + nm + ", here\u2019s the video \ud83d\ude4f\n\n" + vurl + "\n\nIt takes you through everything you need: how the program works, the investment and how to get started. Let me know if you have any questions.";
-      var vmail = "Hey " + nm + ",\n\nHere\u2019s the video:\n\n" + vurl + "\n\nIt takes you through everything you need: how the program works, the investment and how to get started. Let me know if you have any questions.\n\nOlly";
-      h += lmTxt("🎬 2a. Send the video (message or email)", vtxt, (ph ? lmWa(vtxt, "loom") : "") + lmMail(nm + ", here\u2019s the video", vmail, "emSent,loom"));
+      var vtxt = "Ok great.\n\nThis video will take you through what's involved, the investment and how to get started with the program:\n\n" + vurl + "\n\nLet me know if you have any questions.";
+      var vmail = vtxt;
+      h += route === "wa" ? lmTxt("🎬 3. Send the video", vtxt, lmWa(vtxt, "loom")) : lmTxt("🎬 3. Send the video", vmail, lmMail(nm + ", here’s the video", vmail, "emSent,loom"));
     } else if (vurl){
       var vtxt = "Hey " + nm + ", here's the video I've made for you.\n\n" + vurl + "\n\nIt goes through the program, the steps, the investment and how to get started. Watch it in your own time, and if you have any questions, just reply here.";
       h += lmTxt("🎬 5a. Send their video", vtxt, lmWa(vtxt, "loom") + lmMail(nm + ", here's your video", vtxt + "\n\nOlly", "loom"));
       var vn3 = "Hey " + nm + ", I've just sent you a video. It goes through the program, the steps, the investment and how to get started.\n\nHave a watch in your own time, and if you have any questions, just reply here.";
       h += lmVn("🎙️ 5b. Voice note with the video", vn3);
     }
+    }
     h += lmVslRow(a);
     // Email ideas from this applicant (Olly, 2026-11-09): their answers with personal details taken out, for the content generator.
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for content ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator, Email or Reels tab, “An applicant’s words”: emails use their feelings, Reel hooks are built from their pain and the outcomes they want.</small></div>';
-    h += lmHead(a.planRequest ? "6. After the video" : "3. After the video");
+    h += lmHead("2. After the video");
     // Follow-up (2026-11-06, Frankie: "go deeper, never chase"): ONE idea message, only if they watched the video.
     var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : (a.planRequest ? "your plan" : "your application")) + ". If I were you, "
       + (feel ? "the feeling I'd start practicing first is " + feel + ", because that's the one that" : "I'd start by practicing how you'd feel with them every day, because that's what")
@@ -5891,6 +6019,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", great - here's the link to join: " + JOIN) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a>' : "")
       + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your link to join The Heart Attractor Program") + '&body=' + encodeURIComponent(joinMail) + '" onclick="event.stopPropagation()">Email</a>' : "")
       + "</div>";
+    if (!LM_OLD_FLOW && tUrl){
+      var cold2 = "Hey " + nm + ",\n\nI know you really wanted to meet someone you could marry, have children with and build a life with.\n\nHere are the steps to follow to make that happen:\n\n" + tUrl;
+      h += lmHead("If they go quiet");
+      h += lmTxt("🧊 Gone cold follow-up", cold2, lmWa(cold2, "coldSent") + lmMail("The steps to meet your person", cold2, "emSent,coldSent"));
+    }
     // iMessage next to every WhatsApp button (Olly, 2026-11-15): same message, same "sent" tracking (data-k / data-guide carried over).
     // Replaces the old all-or-nothing WhatsApp/iMessage switch. The app the applicant said they use goes first.
     h = h.replace(/<a href="https:\/\/wa\.me\/(\d+)\?text=([^"]*)" target="_blank" rel="noopener"([^>]*)>WhatsApp<\/a>/g, function(m, num, body, rest){
@@ -5930,11 +6063,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // the Refresh button sits at the top of the Looms tab (easy to reach on the phone) and says when it's updating
   // Sales process steps (Olly, 2026-11-06): the flow from funnel/applicant-sales-process.html, folded at the top of the Sales tab
   window.lmProcOpen = false;
-  function lmProc(){
+  function lmProc(){   // rewritten 2026-11-21 for the one-video flow
     return '<details class="audbox" style="margin:0 0 12px;padding:12px 16px"' + (window.lmProcOpen ? " open" : "") + ' ontoggle="window.lmProcOpen=this.open"><summary style="cursor:pointer;font-weight:700">The sales process, step by step</summary>'
-      + '<p style="opacity:.75;font-size:13px;margin:8px 0 0">Each applicant’s card has these with their name and answers already filled in.</p>'
-      + '<ol style="margin:12px 0 4px;padding:0"><li style="margin:0 0 14px;list-style:none"><b>1. Application comes in</b><br><span style="opacity:.8">Your phone gets a notification. Open their card and rate them Good, Okay or Not good within 24 hours.</span></li><li style="margin:0 0 14px;list-style:none"><b>2. 👋 First message on WhatsApp or iMessage (always first)</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name], it’s Olly Henson.<br><br>Just got your application for The Heart Attractor Program, thanks for filling it in.<br><br>Give me a few minutes, I’m recording you a quick voice note with a plan of how I’d help you with this.</div></li><li style="margin:0 0 14px;list-style:none"><b>3. 🎙️ Voice note</b><br><span style="opacity:.8">Confirm their application looks good and ask if they’d like you to send their plan of action through. The script is on their card.</span></li><li style="margin:0 0 14px;list-style:none"><b>4. ✉️ Email, just after</b><div style="white-space:pre-line;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin:6px 0 0;font-size:14px">Hey [Name],<br><br>Just got your application, thanks for filling it in.<br><br>All looks really good.<br><br>I’ve sent you a message on WhatsApp with the next steps.<br><br>Chat soon,<br><br>Olly</div></li><li style="margin:0 0 14px;list-style:none"><b>5. Once they reply: 📄 their plan of action + 🎙️ voice note</b><br><span style="opacity:.8">Make their plan and send the link from their card, then a voice note: here’s the plan I’ve put together to help you meet this special person, let me know your thoughts once you’ve checked it out. Their card shows when they open it and how far they read.</span></li><li style="margin:0 0 14px;list-style:none"><b>6. Answer their questions one by one</b><br><span style="opacity:.8">Wait for them to check the plan and ideally reply. When they ask how to get started or what the price is, it’s time for the video.</span></li><li style="margin:0 0 14px;list-style:none"><b>7. 🎬 Their video + 🎙️ voice note</b><br><span style="opacity:.8">Send their video link from their card, with a voice note: it goes through the program, the steps, the investment and how to get started; any questions, just reply here. Their card shows how much they watched and if they clicked Join.</span></li><li style="margin:0 0 14px;list-style:none"><b>8. 💡 One follow-up idea, only if they watched</b><br><span style="opacity:.8">Never chase. If they haven’t watched or replied, let them come back.</span></li><li style="margin:0 0 14px;list-style:none"><b>9. 🔗 Join link</b><br><span style="opacity:.8">When they say yes.</span></li></ol>'
-      + '<a href="https://claude.ai/artifact/KwpZsKFecKog5AEyzbn3GS" target="_blank" rel="noopener" style="font-size:13px">Full process with Frankie’s notes ↗</a></details>';
+      + '<ol style="margin:12px 0 4px;padding:0">'
+      + '<li style="margin:0 0 14px;list-style:none"><b>1. Application comes in</b><br><span style="opacity:.8">Open their card and rate them Good, Okay or Not good.</span></li>'
+      + '<li style="margin:0 0 14px;list-style:none"><b>2. 🎬 Send the video</b><br><span style="opacity:.8">One message on WhatsApp or iMessage with their video, made personal ("I know you want…"), then the follow-up email. No phone number: send it as one email.</span></li>'
+      + '<li style="margin:0 0 14px;list-style:none"><b>3. Answer their questions</b><br><span style="opacity:.8">The card shows when they watch and if they click Join. Send the checkout link when they’re ready.</span></li>'
+      + '<li style="margin:0;list-style:none"><b>4. They join</b><br><span style="opacity:.8">Tap Monthly $250 or Annual $2,500 and they move to the Delivery tab.</span></li></ol></details>';
   }
   function lmTop(){
     return '<div class="lmbar" style="margin:0 0 10px"><button type="button" class="copybtn" id="lmRefresh">' + (lmLoading ? "Updating from GHL…" : "Refresh from GHL") + "</button>" +
@@ -5948,6 +6083,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!lmLoading) lmLoad();
   }
   function loomsFromHash(){
+    var dm = /^#delivery(?:=([A-Za-z0-9_-]+))?$/.exec(location.hash || "");
+    if (dm){ try { history.replaceState(null, "", location.pathname + location.search); } catch(e){} dvOpen = dm[1] || null; goTab("delivery"); renderDeliveryBoard("tab"); return; }
     var m = /^#looms(?:=([A-Za-z0-9_-]+))?$/.exec(location.hash || "");
     if (!m) return;
     try { history.replaceState(null, "", location.pathname + location.search); } catch(e){}
@@ -6020,7 +6157,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       })
       .catch(function(){ btn.disabled = false; btn.textContent = "Remove from GHL"; window.alert("Couldn't reach the Hub. Reload and try again."); });
   }
-  var LM_COLS = [["new", "New applications"], ["contacted", "Contacted"], ["replied", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"],
+  // 2026-11-21: Contacted / Replied / Plan sent / Plan read (the old flow) = one column, "Spoken to, video not sent yet"
+  function lmCol(st){ return /^(contacted|replied|confirmed|plan_sent|plan_read)$/.test(st) ? "talking" : st; }
+  var LM_COLS = [["new", "New applications"], ["talking", "Spoken to, video not sent yet"],
     ["loom", "Video sent"], ["watched", "Video watched"], ["joinclick", "Clicked Join"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
   var lmOpen = null, lmView = "info", lmDrag = null;
   function lmMoneyFmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
@@ -6040,11 +6179,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // later steps: true up to this column, explicit false after it (so the tracking doesn't pull them forward again)
     s.confirmed = i >= 3; s.planSent = i >= 4; s.planRead = i >= 5; s.loom = i >= 6; s.watched = i >= 7; s.joinClick = i >= 8;
     s.product = st === "joined" ? (s.product || "monthly") : "";
+    dvJoinStamp(s);
   }
   function lmMoney(){
     var m = 0, y = 0;
-    lmData.forEach(function(a){ if (lmStage(a) !== "joined") return; if (lmStore(a.id).product === "annual") y++; else m++; });
-    return { m:m, y:y, cash:m * 497 + y * 2500, mrr:m * 497 + y * 2500 / 12 };
+    lmData.forEach(function(a){ if (lmStage(a) !== "joined" || lmStore(a.id).churned) return; if (lmStore(a.id).product === "annual") y++; else m++; });
+    var cash = 0; try { cash = memberPayments().reduce(function(t, x){ return t + x.amount; }, 0); } catch(e){}
+    return { m:m, y:y, cash:cash || (m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL), mrr:m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12 };
   }
   // Country in full (Olly, 2026-11-12: "when someone comes through as from CA - where is that?"). Applicants pick their
   // country on the application form (full names, or type their own); GHL stores it as a 2-letter code (Canada -> CA).
@@ -6068,9 +6209,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmCardHtml(a){
     var s = lmStore(a.id), r = s.rating, d = String(a.dateAdded || "").slice(0, 10), place = [a.city, lmCountry(a.country)].filter(Boolean).join(", ");
     var tags = (r ? '<span class="lmr lmr-' + r + '">' + { good:"Good", okay:"Okay", bad:"Not good" }[r] + "</span>" : "") +
-      (lmStage(a) === "joined" ? '<span class="lmtag" style="margin:0">' + (s.product === "annual" ? "Annual $2,500" : "Monthly $497") + "</span>" : "") +
+      (lmStage(a) === "joined" ? '<span class="lmtag" style="margin:0">' + (s.product === "annual" ? "Annual $2,500" : "Monthly $250") + "</span>" : "") +
       (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL</span>' : "") +
       lmCardPlanTag(a) +
+      (s.coldSent ? '<span class="lmtag" style="margin:0;background:rgba(125,211,252,.18);color:#7dd3fc">🧊 Cold follow-up done</span>' : "") +
+      rmTag(a.id) + (s.churned ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Churned</span>' : "") +
       lmVslTag(a.id) + lmGuideTag(a.id) +
       (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the first message", replied:"After replying", plan_sent:"After the plan was sent", plan_read:"After reading the plan", asked:"After asking questions", loom:"After the video was sent", watched:"After watching the video", joinclick:"After clicking Join" }[lmStage(a, true)] || "") + "</span>" : "");
     return '<button type="button" class="lmbc2" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([a.planRequest ? "📩 Plan request (DM)" : "", d, place].filter(Boolean).join(" · ")) + "</span>" +
@@ -6103,7 +6246,47 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     });
     if (changed) markDirty();
   }
+  // Ranking (Olly, 2026-11-20): "rank from best to worst so I keep on top of follow-up with the best".
+  // Best = wants marriage, children and to settle down, a job that suggests they can pay, a higher investment answer.
+  // Also counts: how much of a priority it is, how well the daily practice fits, "stuck in my head", and Olly's own rating.
+  var lmRank = false;
+  // Weights (Olly, 2026-11-20, in his order): investment > job > marriage > children > settle down, + bonuses for his Good rating
+  // and a high-income country (high median income).
+  var LM_RICH = /^(US|CA|GB|UK|IE|AU|NZ|CH|NO|DK|SE|NL|LU|DE|AT|BE|FI|IS|SG|AE|QA|KW|HK|JP|FR|IL|MC|LI)$|united states|usa|canada|united kingdom|england|scotland|wales|ireland|australia|new zealand|switzerland|norway|denmark|sweden|netherlands|luxembourg|germany|austria|belgium|finland|iceland|singapore|emirates|dubai|qatar|kuwait|hong kong|japan|france|israel|monaco|liechtenstein/i;
+  function lmScore(a){
+    var pts = 0, why = [];
+    function add(n, t){ pts += n; if (n && t) why.push(t); }
+    var inv = String(lmAns(a, /^HA Willing To Invest/i) || "");
+    if (/5,?000 or more/i.test(inv)) add(30, "Invest $5,000+");
+    else if (/2,?500 to \$?5,?000/i.test(inv)) add(26, "Invest $2,500 to $5,000");
+    else if (/1,?000 to \$?2,?500/i.test(inv)) add(18, "Invest $1,000 to $2,500");
+    else if (/500 to \$?1,?000/i.test(inv)) add(6, "Invest $500 to $1,000");
+    var job = String(lmAns(a, /^HA Profession/i) || "").trim(), jl = job.toLowerCase();
+    if (jl && !/student|unemploy|retired|between jobs|not working|stay at home|homemaker|^none|^n\/?a/.test(jl)){
+      if (/doctor|physician|surgeon|dentist|lawyer|attorney|solicitor|barrister|engineer|director|manager|executive|\bceo\b|\bcfo\b|\bcto\b|\bvp\b|founder|owner|entrepreneur|business|consult|financ|bank|accountant|invest|software|developer|programmer|architect|pharmac|psychiatr|psycholog|professor|lecturer|partner|senior|head of|\blead\b|product|real estate|property|pilot|scientist|analyst|specialist|medical|clinic/.test(jl)) add(25, job);
+      else add(12, job);
+    }
+    var want = [lmAns(a, /^HA Relationship Wanted/i), lmAns(a, /^FF Intentions/i), lmAns(a, /^HA Anything Else/i), lmAns(a, /^App Q2/i)].join(" ").toLowerCase();
+    if (/marr|husband|wife|spouse|wedding/.test(want)) add(20, "Marriage");
+    if (/child|\bkids?\b|family|bab(y|ies)|\bmum\b|\bmom\b|mother|father/.test(want)) add(15, "Children");
+    if (/settle|long[- ]?term|life ?partner|build a life|commit|forever|lifelong|life together/.test(want)) add(10, "Settle down");
+    if (lmStore(a.id).rating === "good") add(8, "You rated Good");
+    var cc = String(a.country || "").trim();
+    if (cc && LM_RICH.test(cc)) add(8, "High-income country");
+    return { pts: pts, why: why };
+  }
+  function lmRankHtml(){
+    var list = lmData.filter(function(a){ var st = lmStage(a); return !lmRemoved(a) && st !== "joined" && st !== "nofit"; })
+      .map(function(a){ return { a:a, sc:lmScore(a) }; })
+      .sort(function(x, y){ return y.sc.pts - x.sc.pts || String(y.a.dateAdded || "").localeCompare(String(x.a.dateAdded || "")); });
+    return '<p class="hint" style="margin:0 0 10px">Best first: investment answer, then job, marriage, children and settling down, plus a bonus for your Good rating and a high-income country. Joined, Not a fit and removed applicants are left out.</p>'
+      + '<div class="lmrank">' + list.map(function(x, i){
+        return '<div class="lmrankrow"><div class="lmrankn"><b>' + (i + 1) + "</b><span>" + x.sc.pts + " pts</span></div>" + lmCardHtml(x.a)
+          + (x.sc.why.length ? '<div class="lmrankwhy">' + x.sc.why.map(function(w){ return "<span>" + lmEsc(w) + "</span>"; }).join("") + "</div>" : "") + "</div>";
+      }).join("") + "</div>";
+  }
   function renderLooms(){
+    hubMemFix();
     lmStampVideos();
     var host = document.getElementById("loomsBody"); if (!host) return;
     if (!lmData){
@@ -6123,14 +6306,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         (counts.confirmed + counts.plan_sent + counts.plan_read) + " on their plan · " + (counts.loom + counts.watched + counts.joinclick) + " on their video"],
       ["Joined", counts.joined, mo.m + " monthly · " + mo.y + " annual"],
       ["Close rate", vsl ? Math.round(counts.joined / vsl * 100) + "%" : "—", "of videos sent"],
-      ["Cash collected", lmMoneyFmt(mo.cash), "all time, first payments"],
+      ["Cash collected", lmMoneyFmt(mo.cash), "all payments so far"],
       ["MRR", lmMoneyFmt(mo.mrr), "annual counted as $208/mo"]
     ];
-    var html = lmTop() + '<div class="lmkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
+    var html = lmTop() + rmBanner() + '<div class="lmkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
     // Search (Olly, 2026-11-19: "a lot of applications now, hard to find"): filters the board as you type
     html += '<div class="lmsearch"><input type="search" id="lmQ" placeholder="🔍 Search applicants: name, email, phone, place, notes" aria-label="Search applicants" value="' + lmEsc(lmQ || "") + '" autocomplete="off"><span id="lmQn"></span></div>';
+    html += '<div class="lmbar" style="margin:0 0 10px"><button type="button" class="copybtn" id="lmRankBtn">' + (lmRank ? "\u2190 Back to the board" : "\ud83c\udfc6 Rank applicants") + "</button></div>";
+    if (lmRank) html += lmRankHtml(); else
     html += '<div class="lmboard2">' + LM_COLS.map(function(c){
-      var items = lmData.filter(function(a){ return lmStage(a) === c[0]; });
+      var items = lmData.filter(function(a){ return lmCol(lmStage(a)) === c[0]; });
       var val = c[0] === "joined" && mo.cash ? '<em>' + lmMoneyFmt(mo.cash) + "</em>" : "";
       return '<div class="lmcol2" data-st="' + c[0] + '"><h4><span>' + c[1] + "</span>" + val + "<b>" + items.length + '</b></h4><div class="lmcards">' +
         (items.length ? items.map(lmCardHtml).join("") : '<span class="lmempty">Nothing here</span>') + "</div></div>";
@@ -6145,11 +6330,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (lmView === "map") html += lmMapHtml(a);
       else html += '<div class="lmapp lmdetail" data-id="' + a.id + '"><div class="lmdcol"><small class="lmdh">Rating</small><div class="lmrate">' +
         [["good", "Good"], ["okay", "Okay"], ["bad", "Not good"]].map(function(x){ return '<button type="button" data-r="' + x[0] + '" aria-pressed="' + (r === x[0]) + '">' + x[1] + "</button>"; }).join("") + '</div><small class="lmdh">Where they are</small>' + lmStageBox(a) +
-        '<small class="lmdh">Notes</small><textarea class="lmnote" rows="3" placeholder="Notes, e.g. main doubt, what they asked…" aria-label="Notes on ' + lmEsc(a.firstName || "this applicant") + '">' + lmEsc(s.note || "") + '</textarea></div><div class="lmdcol"><small class="lmdh">Send</small>' + lmContact(a) + "</div></div>";
+        '<small class="lmdh">Notes</small><textarea class="lmnote" rows="3" placeholder="Notes, e.g. main doubt, what they asked…" aria-label="Notes on ' + lmEsc(a.firstName || "this applicant") + '">' + lmEsc(s.note || "") + '</textarea>' + rmBox(a.id, lmName(a), "looms") + '</div><div class="lmdcol"><small class="lmdh">Send</small>' + lmContact(a) + "</div></div>";
       html += "</div></div></div>";
     }
     host.innerHTML = html;
     document.body.style.overflow = a ? "hidden" : "";
+    var rb = document.getElementById("lmRankBtn"); if (rb) rb.addEventListener("click", function(){ lmRank = !lmRank; renderLooms(); });
     // board: tap to open, drag to move
     host.querySelectorAll(".lmbc2").forEach(function(c){
       c.addEventListener("click", function(){ lmOpen = c.dataset.id; lmSel = c.dataset.id; lmView = "info"; renderLooms(); });
@@ -6159,7 +6345,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     host.querySelectorAll(".lmcol2").forEach(function(col){
       col.addEventListener("dragover", function(e){ if (!lmDrag) return; e.preventDefault(); col.classList.add("over"); });
       col.addEventListener("dragleave", function(e){ if (!col.contains(e.relatedTarget)) col.classList.remove("over"); });
-      col.addEventListener("drop", function(e){ e.preventDefault(); col.classList.remove("over"); var a4 = lmById(lmDrag); lmDrag = null; if (!a4 || lmStage(a4) === col.dataset.st) return; lmSetStage(a4, col.dataset.st); markDirty(); renderLooms(); });
+      col.addEventListener("drop", function(e){ e.preventDefault(); col.classList.remove("over"); var a4 = lmById(lmDrag); lmDrag = null; if (!a4 || lmCol(lmStage(a4)) === col.dataset.st) return; lmSetStage(a4, col.dataset.st === "talking" ? "replied" : col.dataset.st); markDirty(); renderLooms(); });
     });
     var md = document.getElementById("lmModal");
     if (md){
@@ -6175,7 +6361,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       el.querySelectorAll(".lmstg button").forEach(function(b){ b.addEventListener("click", function(){
         var a2 = lmById(el.dataset.id), s4 = lmStore(a2.id), k = b.dataset.act;
         if (k === "ghlremove"){ lmRemove(a2, b); return; }
-        if (k === "monthly" || k === "annual") s4.product = s4.product === k ? "" : k;
+        if (k === "monthly" || k === "annual"){ s4.product = s4.product === k ? "" : k; dvJoinStamp(s4); }
         else if (k === "nofit"){ s4.archived = !s4.archived; if (s4.archived) s4.quiet = false; }
         else if (k === "quiet"){ s4.quiet = !s4.quiet; if (s4.quiet) s4.archived = false; }
         else if (k === "committed"){ var cm = !(s4.waReply || s4.emReply); s4.waReply = cm; s4.emReply = false; if (cm && !s4.waSent && !s4.emSent) s4.waSent = true; }
@@ -6196,7 +6382,168 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var qi = document.getElementById("lmQ");
     if (qi){ qi.addEventListener("input", function(){ lmQ = qi.value; lmSearchApply(); }); lmSearchApply(); }
     lmFit();
+    if (dvVisible()) renderDeliveryBoard();
   }
+  // ── Reminders (Olly, 2026-11-21) ── a dated reminder on any Sales or Delivery card ("message a member 2 days before her
+  // 6 months end", "reach out to me in a month"). state.reminders = [{ id, cid, name, tab, at (ISO), text, done }].
+  // Due ones show in a banner at the top of Sales + Delivery until ticked Done, and functions/api/track/reminders.js
+  // pushes each one to Olly's phone when its time comes (the hub-reminders-cron Worker calls it every 10 minutes).
+  function rmAll(){ if (!Array.isArray(state.reminders)) state.reminders = []; return state.reminders; }
+  function rmFor(cid){ return rmAll().filter(function(r){ return r.cid === cid && !r.done; }).sort(function(p, q){ return p.at < q.at ? -1 : 1; }); }
+  function rmDue(r){ return Date.parse(r.at) <= Date.now(); }
+  function rmDay(iso){ var d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"short" }); }
+  function rmWhen(iso){ var d = new Date(iso); return isNaN(d) ? "" : rmDay(iso) + ", " + d.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" }); }
+  function rmTag(cid){
+    var r = rmFor(cid)[0]; if (!r) return "";
+    var due = rmDue(r);
+    return '<span class="lmtag" style="margin:0;background:' + (due ? "rgba(248,113,113,.2);color:#f87171" : "rgba(251,191,36,.16);color:#fbbf24") + '">🔔 ' + (due ? "Due " : "") + lmEsc(rmDay(r.at)) + "</span>";
+  }
+  function rmRow(r, withName){
+    return '<div class="rmrow' + (rmDue(r) ? " due" : "") + '"><span class="rmwhen">' + lmEsc(rmWhen(r.at)) + '</span><span class="rmtxt">' + (withName ? "<b>" + lmEsc(r.name || "") + "</b> · " : "") + lmEsc(r.text) + "</span>" +
+      (withName ? '<button type="button" data-rm="open" data-rid="' + r.id + '">Open card</button>' : "") + '<button type="button" data-rm="done" data-rid="' + r.id + '">✓ Done</button>' +
+      (withName ? "" : '<button type="button" data-rm="del" data-rid="' + r.id + '" aria-label="Delete reminder">✕</button>') + "</div>";
+  }
+  function rmIso(d){ return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function rmBox(cid, name, tab){
+    var t = new Date(); t.setDate(t.getDate() + 1);
+    return '<small class="lmdh">🔔 Reminders</small><div class="rmbox" data-cid="' + cid + '" data-name="' + lmEsc(name) + '" data-tab="' + tab + '">' + rmFor(cid).map(function(r){ return rmRow(r, false); }).join("") +
+      '<div class="rmadd"><input type="text" class="rmtext" placeholder="What to do, e.g. her 6 months end in 2 days, ask if she wants to continue" aria-label="Reminder"><input type="date" class="rmdate" value="' + rmIso(t) + '" aria-label="Date"><input type="time" class="rmtime" value="09:00" aria-label="Time">' +
+      '<button type="button" data-rm="in" data-days="7">+1 week</button><button type="button" data-rm="in" data-days="30">+1 month</button><button type="button" class="rmgo" data-rm="add">Add reminder</button></div>' +
+      '<span class="hint" style="display:block">Your phone gets a notification at that time. It also shows at the top of Sales and Delivery until you tick Done.</span></div>';
+  }
+  function rmBanner(){
+    var open = rmAll().filter(function(r){ return !r.done; }).sort(function(p, q){ return p.at < q.at ? -1 : 1; });
+    var due = open.filter(rmDue), soon = open.filter(function(r){ var t = Date.parse(r.at) - Date.now(); return t > 0 && t < 14 * 864e5; });
+    return (due.length ? '<div class="rmbanner"><h5>🔔 Reminders due (' + due.length + ")</h5>" + due.map(function(r){ return rmRow(r, true); }).join("") + "</div>" : "") +
+      (soon.length ? '<details class="rmbanner soon"><summary><b>🔔 Coming up</b> (' + soon.length + " in the next 2 weeks)</summary>" + soon.map(function(r){ return rmRow(r, true); }).join("") + "</details>" : "");
+  }
+  function rmRefresh(){ renderLooms(); renderDeliveryBoard("force"); }
+  document.addEventListener("click", function(e){
+    var b = e.target && e.target.closest ? e.target.closest("[data-rm]") : null; if (!b) return;
+    var k = b.dataset.rm, box = b.closest(".rmbox");
+    if (k === "in" && box){ var d = new Date(); d.setDate(d.getDate() + Number(b.dataset.days)); box.querySelector(".rmdate").value = rmIso(d); return; }
+    if (k === "add" && box){
+      var ti = box.querySelector(".rmtext"), tx = ti.value.trim(), dt = box.querySelector(".rmdate").value, tm = box.querySelector(".rmtime").value || "09:00";
+      if (!tx){ ti.focus(); ti.placeholder = "Type what the reminder is first"; return; }
+      var at = new Date(dt + "T" + tm); if (!dt || isNaN(at)) return;
+      rmAll().push({ id:"r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), cid:box.dataset.cid, name:box.dataset.name, tab:box.dataset.tab, at:at.toISOString(), text:tx, done:false, created:new Date().toISOString() });
+      markDirty(); saveNow(); rmRefresh(); return;
+    }
+    var r = rmAll().filter(function(x){ return x.id === b.dataset.rid; })[0]; if (!r) return;
+    if (k === "done"){ r.done = new Date().toISOString(); markDirty(); rmRefresh(); return; }
+    if (k === "del"){ if (!window.confirm("Delete this reminder?")) return; state.reminders = rmAll().filter(function(x){ return x !== r; }); markDirty(); saveNow(); rmRefresh(); return; }
+    if (k === "open"){
+      if (r.tab === "delivery"){ dvOpen = r.cid; goTab("delivery"); renderDeliveryBoard("force"); }
+      else { lmOpen = r.cid; lmSel = r.cid; lmView = "info"; goTab("looms"); renderLooms(); }
+    }
+  });
+
+  // ── Delivery board (Olly, 2026-11-21) ── replaces the Projects / priority board (kept hidden in #dvOld, data untouched).
+  // Members come from the Sales board: tapping Monthly $250 / Annual $2,500 ("They joined") on a Sales card puts them in
+  // Current members; Churn on their Delivery card moves them to Churned. Stored on the same per-person record as the Sales
+  // card (state.looms[id]): product, joinedAt, churned (date), note. hubMembers() feeds MRR, Overview and cash from here.
+  var dvOpen = null, dvDrag = null, hubMemMig = false;
+  function hubMemFix(){ hubMembers(); if (hubMemMig){ hubMemMig = false; applyMembersToTabs(); markDirty(); } }
+  function dvVisible(){ var t = document.getElementById("tab-delivery"); return !!(t && !t.hidden); }
+  function dvJoinStamp(s){
+    if (s.product){ if (!s.joinedAt) s.joinedAt = todayISO(); }
+    else { delete s.joinedAt; delete s.churned; }
+    try { applyMembersToTabs(); } catch(e){}
+  }
+  function hubMembers(){
+    var L = state.looms || {}, b = [];
+    Object.keys(L).forEach(function(id){ var s = L[id];
+      // joined before joinedAt existed (first member, 2026-11-21): today becomes their joined date, editable on the Delivery card
+      if (s && s.product && !s.joinedAt && !s.archived){ s.joinedAt = todayISO(); hubMemMig = true; }
+      if (s && (s.product === "monthly" || s.product === "annual") && s.joinedAt && !s.archived && !s.removed)
+        b.push({ plan:s.product, joined:s.joinedAt, cancelled:s.churned || "", source:"", medium:"", content:"" });
+    });
+    return b.length ? b : (state.ghlMembers || []);
+  }
+  function dvMembers(){ return (lmData || []).filter(function(a){ return lmStage(a) === "joined"; }); }
+  function dvDate(iso){ if (!iso) return ""; var d = new Date(iso + "T12:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }); }
+  function dvCardHtml(a){
+    var s = lmStore(a.id), place = [a.city, lmCountry(a.country)].filter(Boolean).join(", ");
+    var tags = '<span class="lmtag" style="margin:0;background:rgba(74,222,128,.18);color:#4ade80">' + (s.product === "annual" ? "Annual $2,500" : "Monthly $250") + "</span>" +
+      (s.churned ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Churned ' + lmEsc(dvDate(s.churned)) + "</span>" : "") + rmTag(a.id);
+    return '<button type="button" class="lmbc2 dvc" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([s.joinedAt ? "Joined " + dvDate(s.joinedAt) : "Joined (date not set)", place].filter(Boolean).join(" · ")) + "</span>" +
+      '<span class="lmbcrow">' + tags + "</span>" + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";
+  }
+  function dvSetChurn(id, on){ var s = lmStore(id); if (on){ if (!s.churned) s.churned = todayISO(); } else delete s.churned; dvJoinStamp(s); markDirty(); renderDeliveryBoard("force"); }
+  // mode "tab" = the tab was opened (refresh from GHL), "force" = redraw now, none = skip while he's typing in a box here
+  function renderDeliveryBoard(mode){
+    var host = document.getElementById("dvBody"); if (!host) return;
+    var ae = document.activeElement;
+    if (!mode && ae && host.contains(ae) && /^(TEXTAREA|INPUT)$/.test(ae.tagName)) return;
+    if (!lmData){
+      host.innerHTML = '<div class="lmbar"><button type="button" class="copybtn" id="dvLoad">' + (lmLoading ? "Loading members…" : "Load members") + "</button>" + (lmErr ? '<span class="hint">' + lmEsc(lmErr) + "</span>" : "") + "</div>";
+      document.getElementById("dvLoad").addEventListener("click", function(){ lmLoad(true); });
+      if (dvVisible() && !lmLoading && !lmErr) lmLoad();
+      return;
+    }
+    if (mode === "tab" && !lmLoading){ lmLoadAuto(); return; }   // redraws through renderLooms()
+    var ms = dvMembers(), cur = ms.filter(function(a){ return !lmStore(a.id).churned; }), gone = ms.filter(function(a){ return !!lmStore(a.id).churned; });
+    var m = cur.filter(function(a){ return lmStore(a.id).product !== "annual"; }).length, y = cur.length - m;
+    var cash = 0; try { cash = memberPayments().reduce(function(t, x){ return t + x.amount; }, 0); } catch(e){}
+    var K = [["Current members", cur.length, m + " monthly · " + y + " annual"], ["MRR", lmMoneyFmt(m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12), "annual counted as $208/mo"],
+      ["Cash collected", lmMoneyFmt(cash), "all payments so far"], ["Churned", gone.length, ms.length ? Math.round(gone.length / ms.length * 100) + "% of everyone who joined" : "nobody yet"]];
+    var byJoin = function(p, q){ return String(lmStore(q.id).joinedAt || "").localeCompare(String(lmStore(p.id).joinedAt || "")); };
+    var html = lmTop() + rmBanner() + '<div class="lmkpis dvkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
+    html += '<div class="lmboard2 dvboard">' + [["cur", "Current members", cur], ["churn", "Churned", gone]].map(function(c){
+      var items = c[2].slice().sort(byJoin);
+      return '<div class="lmcol2" data-st="' + c[0] + '"><h4><span>' + c[1] + "</span><b>" + items.length + '</b></h4><div class="lmcards">' +
+        (items.length ? items.map(dvCardHtml).join("") : '<span class="lmempty">' + (c[0] === "cur" ? "Nobody yet. Tap Monthly $250 or Annual $2,500 on a Sales card and they show up here." : "Nobody has churned.") + "</span>") + "</div></div>";
+    }).join("") + "</div>";
+    var a = dvOpen ? lmById(dvOpen) : null;
+    if (dvOpen && !a) dvOpen = null;
+    if (a){
+      var s = lmStore(a.id), ph = String(a.phone || "").replace(/[^\d+]/g, ""), num = ph.replace(/\D/g, "");
+      html += '<div class="lmmodal" id="dvModal"><div class="lmsheet" role="dialog" aria-label="' + lmEsc(lmName(a)) + '"><div class="lmsheethead"><div class="lmwho"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' +
+        lmEsc([s.churned ? "Churned" : "Current member", [a.city, lmCountry(a.country)].filter(Boolean).join(", ")].filter(Boolean).join(" · ")) + '</span></div><button type="button" class="lmx" aria-label="Close">✕</button></div>' +
+        '<div class="lmsheetbody"><div class="lmdetail dvdetail" data-id="' + a.id + '"><div class="lmdcol">' +
+        '<small class="lmdh">Plan</small><div class="dvbtns">' + [["monthly", "Monthly $250"], ["annual", "Annual $2,500"]].map(function(x){ return '<button type="button" data-dv="plan" data-v="' + x[0] + '" aria-pressed="' + (s.product === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</div>" +
+        '<small class="lmdh">Joined on</small><div class="dvfield"><input type="date" data-dv="joinedAt" value="' + lmEsc(s.joinedAt || "") + '" aria-label="Date they joined"></div>' +
+        '<small class="lmdh">Status</small><div class="dvbtns"><button type="button" data-dv="cur" aria-pressed="' + !s.churned + '">Current member</button><button type="button" data-dv="churn" aria-pressed="' + !!s.churned + '">Churned</button></div>' +
+        (s.churned ? '<div class="dvfield">Churned on <input type="date" data-dv="churned" value="' + lmEsc(s.churned) + '" aria-label="Date they churned"></div>' : "") +
+        '<small class="lmdh">Notes</small><textarea class="lmnote dvnote" rows="4" placeholder="Notes, e.g. 6 months agreed, how they’re getting on…" aria-label="Notes">' + lmEsc(s.note || "") + "</textarea></div>" +
+        '<div class="lmdcol"><small class="lmdh">Contact</small><div class="dvbtns">' +
+        (num ? '<a href="https://wa.me/' + num + '" target="_blank" rel="noopener">WhatsApp</a><a href="sms:+' + num + '">iMessage</a>' : "") + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '">Email</a>' : "") +
+        '<button type="button" data-dv="sales">Open their Sales card</button></div>' +
+        ((ph || a.email) ? '<span class="hint" style="display:block;margin-top:6px">' + lmEsc([ph, a.email].filter(Boolean).join(" · ")) + "</span>" : "") +
+        rmBox(a.id, lmName(a), "delivery") + "</div></div></div></div></div>";
+    }
+    host.innerHTML = html;
+    document.body.style.overflow = a ? "hidden" : "";
+    var rf = host.querySelector("#lmRefresh"); if (rf){ rf.id = "dvRefresh"; rf.addEventListener("click", function(){ lmLoad(true); }); }
+    host.querySelectorAll(".dvc").forEach(function(c){
+      c.addEventListener("click", function(){ dvOpen = c.dataset.id; renderDeliveryBoard("force"); });
+      c.addEventListener("dragstart", function(e){ dvDrag = c.dataset.id; c.classList.add("drag"); try { e.dataTransfer.setData("text/plain", dvDrag); e.dataTransfer.effectAllowed = "move"; } catch(x){} });
+      c.addEventListener("dragend", function(){ c.classList.remove("drag"); dvDrag = null; });
+    });
+    host.querySelectorAll(".dvboard .lmcol2").forEach(function(col){
+      col.addEventListener("dragover", function(e){ if (!dvDrag) return; e.preventDefault(); col.classList.add("over"); });
+      col.addEventListener("dragleave", function(e){ if (!col.contains(e.relatedTarget)) col.classList.remove("over"); });
+      col.addEventListener("drop", function(e){ e.preventDefault(); col.classList.remove("over"); var id = dvDrag; dvDrag = null; if (id) dvSetChurn(id, col.dataset.st === "churn"); });
+    });
+    var md = document.getElementById("dvModal");
+    if (md){
+      md.addEventListener("click", function(e){ if (e.target === md){ dvOpen = null; renderDeliveryBoard("force"); } });
+      md.querySelector(".lmx").addEventListener("click", function(){ dvOpen = null; renderDeliveryBoard("force"); });
+      var el = md.querySelector(".dvdetail"), id = el.dataset.id, s5 = lmStore(id);
+      el.querySelectorAll("[data-dv]").forEach(function(b){
+        var k = b.dataset.dv;
+        if (k === "joinedAt" || k === "churned"){ b.addEventListener("change", function(){ if (!b.value) return; s5[k] = b.value; dvJoinStamp(s5); markDirty(); renderDeliveryBoard("force"); }); return; }
+        b.addEventListener("click", function(){
+          if (k === "plan"){ s5.product = b.dataset.v; dvJoinStamp(s5); markDirty(); renderDeliveryBoard("force"); }
+          else if (k === "churn" || k === "cur") dvSetChurn(id, k === "churn");
+          else if (k === "sales"){ dvOpen = null; document.body.style.overflow = ""; lmOpen = id; lmSel = id; lmView = "info"; goTab("looms"); renderLooms(); }
+        });
+      });
+      var nt = el.querySelector(".dvnote"); if (nt) nt.addEventListener("input", function(){ s5.note = nt.value; markDirty(); });
+    }
+  }
+  document.addEventListener("visibilitychange", function(){ if (!document.hidden && dvVisible() && lmData && !lmLoading) lmLoadAuto(); });
+
   // Search: hides cards that don't match and columns with no matches, so results sit side by side (also on the phone)
   var lmQ = "";
   function lmHay(a){
@@ -9138,7 +9485,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // 3. Sales: each buyer's path, from where they first became a lead, to where they applied, to joining
   function ovSalesJourneyTable(){
     var week = ovDaily();
-    var rows = (state.ghlMembers || []).filter(function(m){
+    var rows = hubMembers().filter(function(m){
       return (m.plan === "monthly" || m.plan === "annual") && m.joined && (week ? ovDayIn(m.joined) : ovInPeriod(m.joined.slice(0, 7)));
     }).sort(function(a, b){ return a.joined < b.joined ? 1 : -1; });
     var anyJourney = rows.some(function(m){ return m.lead || m.app; });
@@ -9179,7 +9526,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       r.applied += Number(g.applied) || 0; r.loom += Number(g.loom) || 0; r.joined += Number(g.joined) || 0;
     });
     memberPayments().forEach(function(x){ row(x.source, x.medium, x.content).cash += x.amount; });
-    (state.ghlMembers || []).forEach(function(m){
+    hubMembers().forEach(function(m){
       if ((m.plan !== "monthly" && m.plan !== "annual") || !m.joined || m.joined > today) return;
       if (m.cancelled && m.cancelled <= today) return;
       row(m.source, m.medium, m.content).mrr += m.plan === "annual" ? MRR_PRICE_ANNUAL / 12 : MRR_PRICE_MONTHLY;
@@ -9657,7 +10004,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return out;
   }
   function ovVideoKey(x){ return [x.source, x.medium, x.content].map(function(v){ return String(v || "").toLowerCase(); }).join("|"); }
+  function ovMemIn(d){ return ovDaily() ? ovDayIn(d) : ovInPeriod(String(d).slice(0, 7)); }
   function renderOverview(){
+    hubMemFix();
     var host = document.getElementById("ovBody");
     if (!host) return;
     renderGoal(computeRows(state));   // the MRR goal bar at the top of the Overview
@@ -9690,8 +10039,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       ovCard("Total page visits", fmtInt(vO + vF + vS + vA)),
       ovCard("Opt-ins", fmtInt(sO + sF + sS)),
       ovCard("Applications", fmtInt(sAp)),
-      ovCard("Sales", fmtInt(sJ || salesN)),
-      (state.ghlMembers || []).some(function(x){ return x.plan === "monthly" || x.plan === "annual"; })
+      ovCard("Sales", fmtInt(Math.max(sJ, salesN, hubMembers().filter(function(x){ return x.joined && ovMemIn(x.joined); }).length))),
+      hubMembers().some(function(x){ return x.plan === "monthly" || x.plan === "annual"; })
         ? ovCard("Cash collected", fmtMoney(cashIn(function(d){ return ovDaily() ? ovDayIn(d) : ovInPeriod(d.slice(0,7)); })), "", "accent")
         : ovCard("New cash", fmtMoney(cashB), "", "accent")
     ]));
@@ -9742,7 +10091,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       ovCard("MRR", agg ? fmtMoney(agg.mrr) : "—", mrrSnap ? ovGrowthText(mrrSnap.growth, true) : ""),
       ovCard("Active members", agg ? fmtInt(agg.activeMembers) : "—", agg ? fmtInt(agg.activeMonthly) + " monthly · " + fmtInt(agg.activeAnnual) + " annual" : ""),
       ovCard("New members", agg ? fmtInt(agg.newMembers) : "—", agg ? fmtInt(agg.newMonthly) + " monthly · " + fmtInt(agg.newAnnual) + " annual" : ""),
-      ovCard("Retention", agg && agg.retention != null ? fmtPct(agg.retention) : "—", agg && agg.churn != null ? fmtPct(agg.churn) + " churn" : "", "accent")
+      ovCard("Retention", agg && agg.retention != null ? fmtPct(agg.retention) : "—", agg && agg.churn != null ? fmtPct(agg.churn) + " churn" : "", "accent"),
+      ovCard("Churned", fmtInt(hubMembers().filter(function(x){ return x.cancelled && ovMemIn(x.cancelled); }).length), "members who left (Delivery tab)")
     ]));
 
     // Audience: from the Audience tab's logs, growing against each platform's baseline (2026-10-27)
@@ -10274,7 +10624,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Monthly rows are typed in by hand from the GHL smart lists / ManyChat,
   // same as Instagram and Email. Leads are Olly's DM pipeline: a follow-up
   // date puts someone on the "Follow up today" list once it's due.
-  var SALES_PRICE_MONTHLY = 497, SALES_PRICE_ANNUAL = 2500;
+  var SALES_PRICE_MONTHLY = 250, SALES_PRICE_ANNUAL = 2500;
   var SALES_FIELDS = ["videoRequests","optins","applications","callsBooked","callsTaken","salesMonthly","salesAnnual"];
   var LEAD_SOURCES = ["Reel comment","DM","Story","Email","Other"];
   var LEAD_STAGES = ["Opted in","Messaged","Applied","Call booked","Joined","Not a fit"];
@@ -10538,11 +10888,11 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Email list (skipped if that month is locked).
   // ── Revenue from GHL members (2026-10-27) ──
   // Each member: { plan:"monthly"|"annual"|"", joined, cancelled, source, medium, content } (no names).
-  // Payments: monthly = $497 on the joined date and the same day each month after; annual = $2,500 on the joined
+  // Payments: monthly = $250 on the joined date and the same day each month after; annual = $2,500 on the joined
   // date and each year after. Payments stop from the cancelled date (anything already paid stays).
   function memberPayments(){
     var out = [], today = todayISO();
-    (state.ghlMembers || []).forEach(function(m){
+    hubMembers().forEach(function(m){
       if ((m.plan !== "monthly" && m.plan !== "annual") || !m.joined) return;   // free clients and unset plans pay nothing
       var step = m.plan === "annual" ? 12 : 1, amt = m.plan === "annual" ? MRR_PRICE_ANNUAL : MRR_PRICE_MONTHLY;
       var p = m.joined.split("-").map(Number);
@@ -10561,7 +10911,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Fill the MRR tab (new/lost per plan) and the Sales tab (monthly/annual sales) from the members, for months that
   // aren't locked. Members without an HA Plan are left out until it's set.
   function applyMembersToTabs(){
-    var ms = (state.ghlMembers || []).filter(function(m){ return (m.plan === "monthly" || m.plan === "annual") && m.joined; });
+    var ms = hubMembers().filter(function(m){ return (m.plan === "monthly" || m.plan === "annual") && m.joined; });
     if (!ms.length) return;
     var months = {};
     ms.forEach(function(m){ months[m.joined.slice(0,7)] = true; if (m.cancelled) months[m.cancelled.slice(0,7)] = true; });
@@ -10827,6 +11177,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (btn.dataset.tab === "links") renderLinks();
       if (btn.dataset.tab === "record") { recIdx = 0; recList = []; renderRecord(); }
       if (btn.dataset.tab === "looms") { lmFilter = "newest"; if (lmData && !lmLoading) lmLoadAuto(); else renderLooms(); }
+      if (btn.dataset.tab === "delivery") renderDeliveryBoard("tab");
       uiSave({ tab: btn.dataset.tab });
     });
   });
@@ -11161,6 +11512,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     importStoryFromHash();
     importStoryBatchFromHash();
     loomsFromHash();
+    if (dvVisible()) renderDeliveryBoard("tab");
     pushInit();
     // the Hub reopens on the last tab used: if that's Looms, load it (it used to stay blank until the tab was tapped)
     var lmTab = document.getElementById("tab-looms");

@@ -48,6 +48,14 @@ export async function onRequestPost({ request, env }) {
   if (!id) return json({ ok: false, error: "Missing contact id." }, 400);
   let plan = null;
   try { plan = JSON.parse((await env.HUB_KV.get("plan:" + id)) || "null"); } catch { plan = null; }
+  // 2026-11-20 template plan (Olly): ?template=woman|man makes a new applicant's plan in one tap from the Sales card.
+  // Only when they have no plan yet (never overwrites a built one). Pages come from public/pi/_tpl-<sex>/.
+  const sp = new URL(request.url).searchParams, tpl = sp.get("template");
+  if (!plan && (tpl === "woman" || tpl === "man")) {
+    plan = { name: String(sp.get("name") || "").slice(0, 40), gender: tpl === "man" ? "male" : "female", generic: true, template: tpl, _savedAt: new Date().toISOString() };
+    await env.HUB_KV.put("plan:" + id, JSON.stringify(plan));
+    await env.HUB_KV.put("planimgs:" + id, "5");
+  }
   if (!plan) return json({ ok: false, error: "Save the plan first." }, 400);
   let code = plan._code;
   if (!code) {

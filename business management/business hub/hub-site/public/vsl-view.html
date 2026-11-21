@@ -46,9 +46,9 @@ h1 em { font-style:normal; color:var(--purple); }
   <div class="player" id="player">
     <video id="v" controls playsinline preload="metadata"></video>
     <button class="fs" id="fs" type="button">&#x26F6; Full screen</button>
-    <div class="end" id="end"><p>Ready to get started?</p><a class="join" id="join2" href="https://ollyhenson.com/join">Join The Heart Attractor Program</a><button class="again" id="again" type="button">Watch again</button></div>
+    <div class="end" id="end"><p>Ready to get started?</p><a class="join" id="join2" href="https://ollyhenson.com/join">Start The Heart Attractor Program</a><button class="again" id="again" type="button">Watch again</button></div>
   </div>
-  <a class="join" id="join" href="https://ollyhenson.com/join">Join The Heart Attractor Program</a>
+  <a class="join" id="join" href="https://ollyhenson.com/join">Start The Heart Attractor Program</a>
   <p class="note">Any questions? Just reply to my message.</p>
   <div class="sign"><div><b>Olly Henson</b>The Heart Attractor Program</div></div>
 </div>
@@ -56,8 +56,8 @@ h1 em { font-style:normal; color:var(--purple); }
 (function () {
   var parts = location.pathname.split("/").filter(Boolean), code = parts[1] || "", base = "/p/" + code;
   var v = document.getElementById("v"), endBox = document.getElementById("end");
-  v.poster = base + "/poster-2.jpg";
-  v.src = base + "/vsl-2.mp4";   // bump the number after replacing a video file (beats Cloudflare's cache)
+  v.poster = base + "/poster-3.jpg";
+  v.src = base + "/vsl-5.mp4";   // bump the number after replacing a video file (beats Cloudflare's cache)
   v.addEventListener("error", function () { document.getElementById("player").innerHTML = '<div style="color:#fff;display:grid;place-items:center;height:100%;padding:20px;text-align:center;font:600 18px Inter,sans-serif">Your video is nearly ready. Please check back shortly, or reply to my message.</div>'; });
   var owner = false; try { owner = localStorage.getItem("hubOwner") === "1"; } catch (e) {}
   var dev = /Mobi|iPhone|Android/i.test(navigator.userAgent) ? "phone" : (/iPad|Tablet/i.test(navigator.userAgent) ? "tablet" : "computer");

@@ -89,9 +89,19 @@ export async function onRequest({ request, env, params }) {
   //   GET /p/<code>/pages -> { n }   GET /p/<code>/page/NN.jpg -> the page image
   // 2026-11-15 (KV write limit): plan images now ship as static files public/pi/<id>/NN.jpg + og.jpg (git-ignored, behind
   // Cloudflare Access so only this function can read them, via env.ASSETS). Older plans still come from KV planimg:/planog:.
+  // 2026-11-20 template plan (Olly): plan:<id>.template = "woman" | "man" -> the shared pages in public/pi/_tpl-<sex>/,
+  // so a new applicant's plan is just a few KV keys (no per-person images). Opens/reading tracked per person as before.
+  let tplCache;
+  async function piDir(env, id) {
+    if (tplCache === undefined) {
+      tplCache = "";
+      try { const t = String((JSON.parse((await env.HUB_KV.get("plan:" + id)) || "{}") || {}).template || ""); if (t === "woman" || t === "man") tplCache = t; } catch {}
+    }
+    return "/pi/" + (tplCache ? "_tpl-" + tplCache : encodeURIComponent(id)) + "/";
+  }
   async function planAsset(env, request, id, name) {
     try {
-      const r = await env.ASSETS.fetch(new URL("/pi/" + encodeURIComponent(id) + "/" + name, request.url));
+      const r = await env.ASSETS.fetch(new URL((await piDir(env, id)) + name, request.url));
       if (!r.ok || !/image\/jpeg/.test(r.headers.get("content-type") || "")) return null; // Pages answers unknown paths with index.html
       return await r.arrayBuffer();
     } catch { return null; }
@@ -102,9 +112,10 @@ export async function onRequest({ request, env, params }) {
     // nobody sees a cached old page (2026-11-15: Olly couldn't see an updated plan after a hard refresh).
     const n = parseInt((await env.HUB_KV.get("planimgs:" + id)) || "0", 10) || 0;
     let v = "";
+    const dir = await piDir(env, id);
     try {
       const tags = await Promise.all(Array.from({ length: n }, function (_, k) {
-        return env.ASSETS.fetch(new URL("/pi/" + encodeURIComponent(id) + "/" + String(k + 1).padStart(2, "0") + ".jpg", request.url), { method: "HEAD" })
+        return env.ASSETS.fetch(new URL(dir + String(k + 1).padStart(2, "0") + ".jpg", request.url), { method: "HEAD" })
           .then(function (r) { return r.ok && /image\/jpeg/.test(r.headers.get("content-type") || "") ? (r.headers.get("etag") || "") : ""; });
       }));
       const all = tags.join("|");

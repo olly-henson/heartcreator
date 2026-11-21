@@ -325,6 +325,33 @@ Notes on fields that aren't obvious:
 - Never add a function or variable to index.html without grepping the name first. The app is one IIFE: the new `function lmFilter()` was silently replaced by an existing `var lmFilter = "newest"`, so every keystroke threw "lmFilter is not a function". Olly: "doesn't do anything when I search". Use a unique name (now `lmSearchApply`).
 - Never call a Hub feature done on jscheck alone. Drive it: serve `hub-site/public` with `python -m http.server`, answer `/api/applicants` (and other /api/ calls) from puppeteer request interception, type or click, read the result. The search went out broken because only the syntax check ran; the local test found the clash in one run.
 
+### Added 2026-11-20 (Sales card rebuild: template plan, routes, gone cold, ranking) — message steps SUPERSEDED 2026-11-21 by flow v5 (template plan, routes, gone cold and ranking still used)
+- **Template plan:** POST /api/plan?id=<id>&template=woman|man&name= creates plan:<id> {template} + planimgs:<id>=5 only when no plan exists; functions/p/[[path]].js piDir() serves /pi/_tpl-<sex>/ for template plans (per-request cache). Cards look it up with lmTplCode (plan:<id> if template, else plan:<id>-t; `old` = they had an earlier plan) and lmMakeTpl writes to the right key. lmFlags reads plan tracking from <id>-t first.
+- **Card top:** quick contact (WhatsApp/iMessage blank chat via wa.me/<n>?text= so the iMessage twin replace still fires; Email via mailto:?subject= so the Gmail replace fires), then the plan link row.
+- **One route per card:** lmRoute[id] = "wa" | "em" (screen-only, not saved); no phone = email; no email = WhatsApp. Steps render only for the chosen route.
+- **Gone cold follow-up** row (replaced the step-by-step guide row) with data-k "planSent,coldSent"; checklist button coldSent + board tag "🧊 Cold follow-up done".
+- **Ranking:** lmRank toggle (#lmRankBtn) swaps the board for lmRankHtml(); lmScore weights in Olly's order (invest 30/26/18/6, job 25/12/0, marriage 20, children 15, settle 10, Good +8, LM_RICH country +8). Investment answers carry "$" on both numbers ("$2,500 to $5,000"), so the regexes need \$? before the second number (a sample test caught it scoring 0).
+- **Applicant Messages editor** (artifact Tm4X6n6xmq1tkVVkvbmsNy, db `messages`) is the source for card wording; apply = edit index.html msg1/WHERE/fuMail/mail1/msg2/vtxt/vmail/cold + lmProc, deploy, delete the applied docs.
+
+### Never (added 2026-11-20)
+- Never write Python edit scripts through a bash heredoc when the text has curly quotes, emoji or \u: the match silently fails or the script won't parse on Windows. Write the script with the Write tool (UTF-8) and run it.
+- Never put a straight apostrophe inside the single-quoted lmProc guide strings (you're / It's / I'll broke the whole script: "Unexpected identifier"). Use ’ there.
+- Never trust the Edit tool to match a JS line containing \u2019 escapes: it compares decoded text. Patch those lines by line search in Python.
+- Never remove a card feature as a side effect: ask, or replace it with what Olly asked for (the guide row became the gone cold follow-up).
+- Never print emoji from Python to the console on Windows without PYTHONIOENCODING=utf-8 (the write succeeded, the print crashed, which looked like a failed edit).
+
+### Sales card flow v5 (2026-11-21) — CURRENT
+- `lmContact()`: route tabs → "1. Send the video": no code yet = "🎬 Make their video link (woman/man)" (`lmMakeTpl`, template plan code); else 1a = `vmsg`, built from the application (`lmAns` on HA Tried, HA How Long Looking, HA Feelings About Love, HA Relationship Wanted, FF Current Emotion, FF Resonance; `you()` turns my/I/me into your/you; blank answers skipped) with data-k `waSent,loom`; 1b `fuV(app)` email (`emSent`); email-only = `vmsg` by email (`emSent,loom`). Video URL = old plan code first (`lmPV[id]`), then the template code. "2. After the video" = `lmVslRow` (now also uses the template code), follow-up idea, checkout; "If they go quiet" = gone cold.
+- Checklist: 1 Video message (loom / emSent / committed), 2 Their video (watched / joinClick), ✓ joined. Board: `lmCol()` folds contacted/replied/confirmed/plan_sent/plan_read into "talking" = "Spoken to, video not sent yet"; dropping a card there = `lmSetStage("replied")`.
+- Prices: MRR_PRICE_MONTHLY = SALES_PRICE_MONTHLY = 250 (was 497 until 2026-11-21; nobody was on $497, so nothing grandfathered). If the price changes again while members pay the old one, store the amount per member instead of changing the constant.
+
+### Never (added 2026-11-21)
+- Never add anything that records sales, members or money without wiring it into the Overview, MRR rows and Sales KPIs the same day. Why: Olly, "I've picked her money amount as 250, but it hasn't translated into the overview". Pattern: one getter (`hubMembers()`) that every stat reads.
+- Never add a field the stats depend on without back-filling records made before it existed (the first member was marked joined before `joinedAt` existed, so she was invisible). Back-fill on load (`hubMemFix()`) and say so to Olly so he can correct the date.
+- Never draw a new tab's board only from its tab click or boot check: it must redraw when the shared data arrives (`renderDelivery()` runs in rerenderAll and calls `renderDeliveryBoard("force")` when visible). First test showed an empty board with real data.
+- Never leave Olly a blank "[your personal bit]" when the application already holds the answers: write it from them, he checks and sends.
+- Never ship reminder/notification features without a non-phone channel: Olly asked for every reminder by email too (GHL `/conversations/messages` to his own contact).
+
 ## 6. Quick reference — where things are in the code
 
 | Feature | Key functions |
@@ -642,7 +669,7 @@ capitalised names, video link preview. Never list for the same. -->
 - Never edit index.html by writing straight onto the real file from Python. A non-raw string with a JS emoji escape (backslash-u-d83d) becomes a lone surrogate, the write fails half way and leaves index.html EMPTY (happened 2026-11-16; deploy-hub's size check stopped it going live). Write to a scratch copy, check it encodes as UTF-8 and passes jscheck, then copy it into place. Keep JS escapes in raw strings.
 - If the local file is lost: the last good deploy is downloadable from its own deploy URL (https://<hash>.hub-ollyhenson.pages.dev/, not behind Access). git HEAD can be older than what's live.
 
-### Sales card = 3 steps (2026-11-17, from the 2026-11-16 session; REPLACES the 4-step card)
+### Sales card = 3 steps (2026-11-17) — SUPERSEDED 2026-11-21 by flow v5, code kept behind LM_OLD_FLOW = false
 Olly: the confirm step was dropped. The card, checklist and board follow: 1 Application successful → 2 plan once they reply → 3 video when they ask. Full message wording in funnel/skills/skills_plan-v4.md ("Sales card flow").
 - **Row 1 "First contact (tick how you sent it)":** Message sent / Email sent / They replied. Messages 1a WhatsApp (`waSent,qualSent`), 1b email follow-up (`mail1`), 1c "Email only (no WhatsApp or iMessage)" (`mailOnly1`) for people with no phone.
 - **Row 2 plan:** 2a "Love that <Name> 🙏 … short 5-page summary …" + email; 2b full plan (optional). **Row 3 video:** 3a "Hey <Name>, here's the video 🙏 …" + email (video URL falls back to the `-short` plan code).
@@ -650,7 +677,6 @@ Olly: the confirm step was dropped. The card, checklist and board follow: 1 Appl
 - Every step has an email alternative (Olly: "some people I'm only able to send an email").
 
 ### Never (added 2026-11-17)
-- Never send the plan before they've replied to the first message (2026-11-17; the Confirm step is gone).
 - Never let a checklist row and the message sections drift apart: renumbering one means renumbering the other (labels 1a/1b/1c, 2a/2b, 3a).
 - Never write a JS string with backslash-u escapes into a Python patch script via the Write tool and expect it to match index.html: the tool can turn the escapes into real characters. Find such lines by a plain-text prefix (`s.index('    var first = "Love that ')`) instead.
 
@@ -667,3 +693,15 @@ marked the 2026-11-15 card order (1a/1b plan/1c) as overridden, updated the plai
 <!-- 2026-11-18 skill review: Sales card 1a/1c/1b wording = Olly's exact text (see funnel/skills/skills_plan-v4.md); lmPlanCode() reads each card's plan code from /api/plan?id= when /api/planviews misses it, else a 'make their link' button; YT_COMMUNITY_PAUSED flag. Nevers: heredoc \n in JS strings; pausing by deleting. tools/patch.py removes its .bak on success, so keep your own copy before a risky multi-step edit. -->
 
 <!-- 2026-11-19 skill review: Sales search (lmSearchApply, filters in place) + the name-clash lesson (a function lost to an existing var: grep names, drive the feature locally before saying done); #addstories queue for per-day Story sends. -->
+
+<!-- 2026-11-20 skill review: template plan serving (piDir, <id>-t, lmTplCode/lmMakeTpl), card top contact row, one route per card (lmRoute), gone cold follow-up + coldSent tag, ranking (lmScore and the $-in-answers regex lesson), Applicant Messages editor apply steps. Nevers: heredoc scripts with curly quotes, straight apostrophes in lmProc, Edit vs unicode escapes, removing card features unasked, emoji print crash. -->
+
+### Added 2026-11-21 (Delivery member board + reminders)
+- **Delivery tab = member board.** Members are Sales-board applicants with `state.looms[id].product` set. `joinedAt` is stamped by `dvJoinStamp()` whenever product changes (cleared with churned when product is unset); `churned` = date. `hubMembers()` builds `{plan, joined, cancelled}` from the board (falls back to `state.ghlMembers`) and replaced every `(state.ghlMembers || [])` read, so MRR rows, Overview and cash follow the board. `hubMemFix()` back-fills a missing joinedAt with today (runs in renderLooms/renderOverview). Old Projects/Eisenhower markup is hidden in `#dvOld`, its JS still runs.
+- **Reminders:** `state.reminders = [{id, cid, name, tab, at ISO, text, done}]`, UI `rmBox()` on Sales + Delivery pop-ups, `rmBanner()` at the top of both tabs, `rmTag()` on cards, one delegated `[data-rm]` click handler. Push: `functions/api/track/reminders.js` reads the record, pushes due + not-done + under 3 days old, remembers sent ids in KV `remind:sent` (never writes the record). Clock = Worker `hub-reminders-cron` (`business hub/reminders-cron/`, `npx wrangler deploy` there), cron */10. `#delivery=<id>` opens a member's Delivery card (loomsFromHash handles it).
+- Never redraw the Delivery board from renderLooms while Olly is typing in it: `renderDeliveryBoard()` with no mode skips when focus is in an input/textarea inside #dvBody; "force" redraws, "tab" refreshes from GHL.
+- **Reminder emails (2026-11-21):** reminders.js also emails Olly through GHL (`/conversations/messages`, type Email, to his own contact id, from olly@ollyhenson.com) with GHL_WRITE_TOKEN. Needs the Claude agent Private Integration to have **conversations/message.write** (Olly added it 2026-11-21; test email queued OK). The response lists `emailErrors`.
+- Never let text on a board card run outside the card (2026-11-21: a Stripe link in a member's note ran across the next column). `.lmbcnote`, `.lmbc2 b` and `.lmbc2 .sub` wrap anywhere; `.lmbc2` has min-width:0 + overflow:hidden. New card text keeps that.
+
+
+<!-- 2026-11-21 skill review: added Sales card flow v5 (personalised one-video message, lmCol board folding, prices 250), Delivery member board + reminders (push + GHL email, cron Worker) and five Never rules (stats wiring, back-fill new fields, redraw on data arrival, no blank personal bits, email for reminders). Marked the 2026-11-17 3-step card and the 2026-11-20 message steps as superseded; removed "never send the plan before they've replied" (overridden). Took an applicant name out of the overflow rule (public repo). -->

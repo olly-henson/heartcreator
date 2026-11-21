@@ -1,12 +1,42 @@
+# ⚠️ CURRENT APPLICANT PROCESS (2026-11-21, flow v5). Overrides every message order, plan step and follow-up below.
+
+## Process (Hub > Sales card)
+1. Open the card, rate them Good / Okay / Not good.
+2. Pick the route tab: **📱 WhatsApp / iMessage** (they gave a phone; default) or **✉️ Email only**.
+3. No video link yet → tap **🎬 Make their video link (woman / man)** (it's their template plan code; the video page is /p/<code>/video).
+4. **Step 1, send the video.** 1a is ONE message, written by the card from their application, which Olly checks then sends:
+   greeting → "Really liked your application." → where they are (intellectualization + how long they've been looking + what they've tried + Feeling Finder current emotion) → their own words about love ("As you put it: “…”") → "Where you want to be: <Relationship Wanted>, with a real sense of <FF Resonance>." → what the video covers (what we'll do, what's included, the investment, how to get started) → the link → "Just let me know if you have any questions. Speak soon, Olly".
+   WhatsApp shows the video's "Let's Help You Find Your Person" preview. iMessage twin sits next to WhatsApp.
+   WhatsApp route also sends **1b follow-up email** (subject "Your application for The Heart Attractor Program"): "I’ve just sent you a video on <app> with a summary of the program: what’s involved, how to get started and the investment." + the link again.
+   Email-only route = the same personalised message as one email.
+5. **Step 2, after the video:** the card shows watched % and Clicked Join. Answer questions, send the checkout link.
+6. **Joined:** tap Monthly $250 or Annual $2,500 → the person moves to the Delivery tab (Current members). Reminders (🔔) on the card for anything time-bound (e.g. a 6-month deal ending).
+7. **Gone cold follow-up** (bottom of the card): "I know you really wanted to meet someone you could marry, have children with and build a life with. Here are the steps…" + template plan link.
+8. **Hesitant after the offer:** write the informal 30-day "do the work" guarantee into the follow-up (memory project_hesitant_applicant_guarantee.md). Monthly is now cancel anytime, so a refund is just the first month.
+9. **Who to follow up first:** Sales tab > 🏆 Rank applicants. Older cards from the plan flow sit in "Spoken to, video not sent yet": send them the video message.
+
+## Rules
+- One message does the whole job: personal + the video. Why: Olly (2026-11-21) "I want to get more people watching this video as quickly as possible… this video is spot on". The old confirm → plan → video steps slowed it down.
+- Pull the personal part from their application, don't leave Olly a blank to fill. Why: he asked for "something like… I can see you're struggling with intellectualization… and this is where you want to be… so I can just send one message and it's personalized".
+- Skip any part whose answer is blank, and turn their words into second person (my → your, I → you). Check the result reads as English before shipping a wording change: noun-phrase answers ("Warm and stable") broke "Where you want to be is …", so it's "Where you want to be: …".
+- Every step has a WhatsApp/iMessage version AND an email-only version. Why: some applicants only give an email.
+- Show only the route that applies on each card. Why: "it's just getting very crowded" on his phone.
+- Hesitant/sceptical buyers: answer the real worry with a written conditional guarantee, not a discount. Health conditions: coaching alongside therapy, not instead of it.
+
+## Never
+- Never use the 🙏 emoji in applicant messages (2026-11-20).
+- Never send a plan before the video, and never ask "would that be fair to say?" first (overridden 2026-11-21: the video goes in the first message).
+- Never list deliverables Olly hasn't stated (no weekly live calls, no onboarding call, no price lock).
+- Never mention The Love Scale (retired).
+- Never say monthly is 12 payments: since 2026-11-21 it's $250 a month, cancel anytime (the old "12 payments of $497" rule is overridden).
+- Never delete the old flow's code when the flow changes: it sits behind LM_OLD_FLOW = false in the Hub.
+
+## Example (good): the first message as the card writes it (test applicant, 2026-11-21)
+"Hey Jane, / Really liked your application. / From what you’ve shared, it sounds like you’ve been struggling with intellectualization. You’ve been looking for more than 5 years. You’ve tried therapy or counselling, inner child or healing work, learning about attachment styles and dating apps. Right now love brings up a lot of frustration. / As you put it: “Frustrated, I put myself out there, I am trying but I get nothing in return.” / Where you want to be: someone to spend the rest of your life with, grow businesses together, travel the world and have children, with a real sense of peace. / This video takes you through The Heart Attractor Program and how it will help you get there: what we’ll do, what’s included, the investment and how to get started. / [link] / Just let me know if you have any questions. / Speak soon, Olly"
+
+---
+
 # Applicant Looms: the framework
-
-> **⚠️ FIRST MESSAGE TO EVERY GOOD APPLICANT (Olly, 2026-11-15):** "Hey <Name>, so I’ve looked through your application and all looks good.
-
-Here’s exactly what you need to do to attract this relationship that you want:
-
-<short plan link>
-
-Let me know if you’d like the next steps". Hub Sales card 1a builds it from their short plan (lmPV[id].code); 1b voice note removed; email 1c unchanged; section 2 = full plan follow-up (lmPV[id+"-full"]). So build their plan (short + full) BEFORE Olly messages them.
 
 > **⚠️ THE PLAN ITSELF (2026-11-12): Plan v4, the personal diagnosis plan: `funnel/skills/skills_plan-v4.md` (builder tools/build_plan_v4.py).**
 > **⚠️ CURRENT FLOW (2026-11-10): "Flow v3" near the end of this file.** Earlier step-by-step sections are kept for history; where they disagree, Flow v3 wins.
@@ -394,7 +424,7 @@ One video per gender, sent only once they've bought into the plan and ask "how d
 ### Process
 1. **Show every slide up front in the agreed order, then fix slide by slide** (Olly: "give me all the slides up front… it's easy to do it that way"). Don't drip one slide at a time.
 2. **The 11 slides** (`marketing/assets/sales-video/vsl/vsl-men.html` / `vsl-women.html`): 1 Let's Help You Find Your Person · 2 Problem → Solution (each photo with its own words) · 3 The End Result · 4 This Works For You If… · 5 The Exact Steps (numbered list only) · 6 The Investment · 7 The Timeline · 8 Click The Join Button · 9 Make Your Account · 10 Choose Monthly Or Annual And Add Your Card · 11 Look Out For My Email And My Message.
-3. **Preview, then final:** desktop + phone preview while editing (`tools/vsl_preview.py`), then the plain full-screen slides when Olly says he's recording ("final full screen slides with no mobile view"). Keys: F = full screen, arrows/click = next.
+3. **Preview, then final:** click-through slideshow artifact while editing (`tools/slides_artifact.py`, Olly 2026-11-21: no phone preview), then the plain full-screen slides when Olly says he's recording ("final full screen slides with no mobile view"). Keys: F = full screen, arrows/click = next.
 4. **Women's version = copy of the men's with the female photos + chat** (`vsl-women.html`). Any change goes into BOTH files.
 5. **After recording:** MP4 into `marketing/assets/sales-video/recordings/`, copy to `hub-site/public/vsl/vsl-<men|women>.mp4`, deploy, wait ~50 s, test (see "Sales video page" above).
 6. **When Olly asks to "see" the page, give a playable preview** (a small copy of the video in the artifact, tracking off). A still he can't press play on isn't a preview.
@@ -474,7 +504,7 @@ plan, "application successful" texts, the master YouTube VSL message. -->
 page per Olly's follow-up). Removed the same-day "✏️ Edit the wording" button rule (overridden: no mode button). Added the
 builder-owns-plan-view rule after a rebuild wiped the read tracker. New Never list for v3.1. -->
 
-### Step-by-step guide follow-up (2026-11-12, LIVE on every Sales card)
+### Step-by-step guide follow-up (2026-11-12; REMOVED from the cards 2026-11-20, replaced by the Gone cold follow-up)
 File: `marketing/carousels/meet-your-person/Step-By-Step Guide - Olly Henson.pdf` (15 pages: the approved "Meet your person" explainer + closing page "Emotional Resonance Is What We Build With You Personally / Inside The Heart Attractor Program, so you build the belief you need to meet your person"). Rebuild: `python tools/build_ig_carousel.py`, `node tools/export_pdf.js marketing/carousels/meet-your-person/guide-pdf.html "<out>.pdf"`, copy to hub-site/public/guide/step-by-step-guide.pdf, deploy. Pages as images: `JPG=1 node tools/export_carousel.js marketing/carousels/meet-your-person/guide-pdf.html "business management/business hub/hub-site/public/guide"` (delete the contact sheet it writes there). TRACKED (2026-11-12): card '📘 Step-by-step guide follow-up (make their link)' -> POST /api/guideviews?id= makes their code (reuses the plan code if they have one) -> their page https://hub.ollyhenson.com/p/<code>/guide (public/guide-view.html: 15 page images stacked, Download as a PDF) logs opens, furthest page, seconds per page -> KV guideview:<id>; card line + heat bar (lmGuideLine), push 'Guide opened' on first open; tapping WhatsApp/Email/Copy marks sent. Olly's own views skipped. Plain PDF (untracked) stays at https://hub.ollyhenson.com/p/guide.
 - Olly's rules: any stage, for anyone who's gone quiet (plan sent and no reply, or plan offered and no reply), roughly 2 to 3 days. Not a stage on the board.
 - NO message text, ever: the card's WhatsApp/iMessage/Email buttons open with only their guide link in; Olly writes his own words around it for where they are in the funnel.
@@ -503,3 +533,41 @@ diagnosis plan built per applicant. Plan v3.1's template pages are overridden fo
 
 <!-- 2026-11-15 skill review: first message to every good applicant is now the short plan link (note at the top); the 1b
 "would you like a plan?" voice note is retired; full plan = section 2 follow-up. Full process: funnel/skills/skills_plan-v4.md v5 section. -->
+
+## Sales video v3 (2026-11-16, ONE generic video, recorded + LIVE) - overrides the per-gender rules above
+- **One video for men and women:** `vsl-women.html` = `vsl-men.html` (identical; edit one, copy over the other). `hub-site/public/vsl/vsl-men.mp4` = `vsl-women.mp4`. Why (Olly): "just use the women's one… let's just do one generic one". Chats and images say "them/they"; the outcome picture is the hands with rings (`plan-img/hands-rings.jpg`), the intellectualization box opens with the woman image.
+- **Messaging = the plan's:** problem "You operate from survival-based emotions: worrying, doubting and stressing about meeting someone. You think something might be wrong with you, so you try to fix yourself and control the outcome. It's what keeps people single." → solution The Emotional Resonance Method → 5 steps ending "Watch the magic happen as you meet your person".
+- **Order:** the Timeline comes BEFORE the Investment (overrides "after the price"). Price: "$2,500 for the year, or $497 a month for 12 months if you'd like to split it. It's a one-year program."
+- **Slide 8:** "Click Start The Heart Attractor Program Under This Video"; the page button says "Start The Heart Attractor Program" (not Join). **Slide 12:** "I'll Give You Access To The Materials".
+- **"What you'll get" (for the next recording, Olly 2026-11-16):** **The confidence, energy and belief** you need to meet someone · **Constant support and guidance** to make sure it turns into a long-term, high-quality relationship · The Emotional Resonance Method trainings, the daily meditation, private DM support from me and access to all bonus materials.
+- **Deploy:** recordings come out ~34 MB; Pages refuses files over 25 MiB → 2-pass x264 at ~380k video bitrate (23 MB). Poster + link preview from the FIRST slide (poster-<n>.jpg, video-og-<n>.jpg); bump <n> in vsl-view.html and [[path]].js together so caches can't serve the old one.
+
+### Never (VSL v3)
+- Never make men's and women's versions again unless Olly asks.
+- Never put a comment inside a statement in functions/p/[[path]].js (it broke `url` → error 1101 on every /p/ link). Test a /p/ link after every functions deploy.
+<!-- 2026-11-17 skill review: v3 generic video from Olly's edits (one version, hands-with-ring, survival-based emotions + "you think something might be wrong with you", timeline before price, $497 x 12 + one-year line, button wording, slide 12, What you'll get); 25 MiB re-encode; 1101 comment bug. Per-gender and "timeline after the price" rules overridden. -->
+
+## Sales video v4 (2026-11-20, re-recorded + LIVE) - overrides v3 slide/price rules
+
+### Process
+- Slides: marketing/assets/sales-video/vsl/vsl-women.html (= vsl-men.html, copy one over the other). Show Olly the slides as a click-through slideshow: `python -I tools/slides_artifact.py <slides.html> <out.html>` then publish (artifact VuogCg1sq2smJqj3qq9FDj). Not tools/vsl_preview.py (desktop + phone rows) any more.
+- Replace the video: put the raw file in marketing/assets/sales-video/recordings/ (e.g. "Sales Video v2.mp4") → ffmpeg 2-pass to under 25 MB (video kbps ≈ 25 MB × 8 ÷ seconds − 96 audio: 7:09 → 300k = 21.7 MB, 9:32 → 235k = 24.3 MB, both sharp) → copy over hub-site/public/vsl/vsl-women.mp4 AND vsl-men.mp4 → bump vsl-N.mp4 in public/vsl-view.html → deploy-hub → transcribe (tools/transcribe.py on a scratch folder) into funnel/sales-video-women-transcript.md.
+
+### Rules
+- Keep the recorded slides exactly as they are; change only what Olly names. Why: "I want the exact same slides that I recorded", after I had rewritten the timeline, payment step and added slides.
+- Price slide (2026-11-21, overrides the annual-first $497 version): **Monthly $250 a month, cancel anytime** is the main card on top; **Annual $2,500 for the year** under it with a "Save $500" tag, "That's $208 a month. 2 months free."; a line under both: "The price goes up over time as more people join, so today's price is the lowest it will be." Right side unchanged: "For This You'll Get" (3 points) + green 30-Day Guarantee. Why: Olly, "497… it's putting people off. It's too much"; the high monthly meant to push people to annual backfired.
+- Timeline slide = **stages, not weeks** (2026-11-21): eyebrow "The Stages", "Here's how it unfolds, stage by stage." Stage 1: Get Clear (get into the materials, confirm your Emotional Resonance, start the daily meditation) / Stage 2: Embody It (feel the shift inside) / Stage 3: Watch It Unfold (make the right decisions, I guide you to build a long-term relationship). Why: Olly asked for stages; no "First 2 Weeks / 12 Weeks / Nine-Month Mentorship".
+- Slideshow for recording: one slide at a time, arrows / space / click; ONLY the Full screen button on screen (no Back/Next bar, no slide number). Why: Olly while recording, "remove that completely", then "I still need the full screen button, I just wanted to get rid of the middle thing".
+- A price change touches: Hub (MRR_PRICE_MONTHLY / SALES_PRICE_MONTHLY + every "$X" label), the price slide, the Skool screenshot images in the slides (vsl/img join-desktop, join-phone-tall, pay-desktop, pay-phone-tall: repaint with vsl/img/_497-originals/reprice.py, set the boxes per image), the transcript, and Olly's real Skool join page / checkout (he does that). List the ones I didn't do.
+- The 30-day "do the work" guarantee is part of the offer for every buyer (meditation daily, all trainings, message Olly weekly → full refund).
+- Step 2 of "How it works" = "Learn to embody your Emotional Resonance"; step 5 = "Have meeting someone unfold naturally".
+- Pricing advice: base it on researched comparables with sources and say which parts are guesses. Why: Olly asked what my numbers were based on.
+
+### Never
+- Never split "what you get" onto its own slide away from the price.
+- Never add deliverables (weekly live calls, onboarding call, price lock) that Olly hasn't confirmed.
+
+<!-- 2026-11-20 skill review: new CURRENT APPLICANT PROCESS at the top (Olly's editor wording: confirm intellectualization -> "I completely get it" + template plan -> video; one route per card; gone cold follow-up + tag; ranking; hesitant-buyer guarantee). Removed the overridden 2026-11-15 FIRST MESSAGE block and the 2026-11-20 interim notes (plan in first message, "Does that sound like where you are right now?", 1d offer message). Nevers: no 🙏, no invented deliverables, no Love Scale, monthly is 12 payments, ask before removing card features. -->
+
+
+<!-- 2026-11-21 skill review: CURRENT PROCESS replaced with flow v5 (one personalised video message + follow-up email, email-only version; card writes it from the application; old cards in "Spoken to, video not sent yet"). Overridden and removed: confirm-intellectualization-first step, plan before video, "never cancel anytime / 12 payments of $497". New: $250 cancel-anytime price slide, stages slide, slideshow-only previews (only the Full screen button), price-change checklist incl. repainting the Skool images, bitrate formula for longer videos. Example replaced with the personalised first message. Video v3 = 9:32. -->
