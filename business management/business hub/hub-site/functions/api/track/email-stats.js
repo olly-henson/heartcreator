@@ -7,7 +7,7 @@
 //         (same key as heartattractor\marketing\.env GHL_PIT_TOKEN). Never in a file: the repo is public.
 // Source: GET /emails/schedule?showStats=true (delivered / opened / clicked per campaign). The per-campaign
 //         /stats endpoints are 401 for private keys.
-// Rules (Olly, 2026-11-10): daily emails only (campaign name contains "daily"), last 30 days, 50+ delivered
+// Rules (Olly, 2026-11-10; 2026-11-24: last 2 weeks first, skip emails under 36 hours old as opens are still coming in): daily emails only (campaign name contains "daily"), last 30 days, 50+ delivered
 //         each so tiny early sends don't skew it. If fewer than 6 qualify, widen to 90 days / 20+ delivered.
 // Cache: KV "emailstats" for 1 hour.
 
@@ -38,7 +38,7 @@ async function pullAll(env) {
 function pick(all, days, minDelivered) {
   const since = Date.now() - days * 86400000;
   return all
-    .filter(s => s.emailStatus === "complete" && /daily/i.test(s.name || "") && (s.nextProcessingOn || 0) >= since && (s.delivered || 0) >= minDelivered)
+    .filter(s => s.emailStatus === "complete" && /daily/i.test(s.name || "") && (s.nextProcessingOn || 0) >= since && (s.nextProcessingOn || 0) <= Date.now() - 1.5 * 86400000 && (s.delivered || 0) >= minDelivered)
     .map(s => ({
       subject: String(s.subject || "").trim(),
       date: new Date(s.nextProcessingOn).toISOString().slice(0, 10),
@@ -59,7 +59,8 @@ export async function onRequestGet({ request, env }) {
   }
   try {
     const all = await pullAll(env);
-    let emails = pick(all, 30, 50), window = "last 30 days, 50+ delivered each";
+    let emails = pick(all, 14, 50), window = "last 2 weeks, 50+ delivered each, sent 36+ hours ago";
+    if (emails.length < 6) { emails = pick(all, 30, 50); window = "last 30 days, 50+ delivered each, sent 36+ hours ago"; }
     if (emails.length < 6) { emails = pick(all, 90, 20); window = "last 90 days, 20+ delivered each"; }
     const out = { ok: true, at: Date.now(), window, emails };
     await env.HUB_KV.put(CACHE_KEY, JSON.stringify(out));

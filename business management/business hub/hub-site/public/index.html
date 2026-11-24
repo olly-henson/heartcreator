@@ -186,11 +186,13 @@
     .lmdh{ margin:14px 0 4px; }
     .lmcon{ margin-top:5px; gap:5px; }
     .lmcon .lmcopy{ padding:8px 9px; }
-    .lmcon.lmmsg{ flex-wrap:nowrap; align-items:stretch; }
-    .lmcon.lmmsg .lmcopy{ flex:1 1 auto; flex-basis:auto; white-space:normal; line-height:1.3; }
-    .lmcon.lmmsg a{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; padding:7px 9px; font-size:12.5px; }
-    .lmcon.lmmsg:has(details){ flex-wrap:wrap; }
-    .lmcon.lmmsg:has(details) .lmcopy{ flex-basis:100%; }
+    /* Phone layout (Olly, 2026-11-24: rows were squashed side by side): every message row stacks.
+       Label on its own full-width line, send buttons share one row underneath, notes and stats full width below. */
+    .lmcon.lmmsg{ flex-wrap:wrap; align-items:stretch; gap:6px; margin-top:10px; }
+    .lmcon.lmmsg .lmcopy{ flex:1 1 100%; white-space:normal; line-height:1.35; font-size:14px; font-weight:600; padding:10px 12px; }
+    .lmcon.lmmsg a{ flex:1 1 0; min-width:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:11px 6px; font-size:14px; white-space:normal; line-height:1.2; }
+    .lmcon.lmmsg > small, .lmcon.lmmsg > span, .lmcon.lmmsg > div, .lmcon.lmmsg > details{ flex:1 1 100% !important; min-width:0; }
+    .lmcon.lmmsg > small{ font-size:13px; line-height:1.45; }
     .lmvn summary{ font-size:13px; padding:2px 2px 0; }
     .lmstg{ gap:8px; }
     .lmstep{ flex-wrap:nowrap; }
@@ -5601,6 +5603,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       lmLoading = false;
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
       lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
+      lmJoinSync();
       lmPlanViews(); lmVslViews(); lmGuideViews();
       // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
       if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmOpen = w.id; lmView = "info"; lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
@@ -5647,6 +5650,60 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Sales video (VSL) views (2026-11-10): /api/vslviews -> { contactId: { opens, first, last, pct, far, done, join, joinAt, dev } }
   // pct = share of the video actually played (skips don't count), far = furthest point reached. Link = /p/<plan code>/video.
   var lmVV = {}, lmVB = {}, lmPH = {};
+  // Reel library for the Sales card "Helpful Reel" (2026-11-24): /api/reel-library = published Reels {hook, url, date, score}.
+  var lmReels = null, lmReelErr = "", lmReelBusy = false;
+  function lmReelLoad(){
+    if (lmReels || lmReelBusy) return; lmReelBusy = true;
+    fetch("/api/reel-library", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){
+      lmReelBusy = false; if (d && d.ok){ lmReels = d.reels || []; } else lmReelErr = (d && d.error) || "error"; renderLooms();
+    }).catch(function(e){ lmReelBusy = false; lmReelErr = String(e && e.message || e); renderLooms(); });
+  }
+  // Each theme: [what they wrote, what the Reel hook says, weight, label]. A Reel scores the weights of every theme both sides hit,
+  // plus a small bonus for how well it did. Their own words matter most (feelings about love, current emotion, anything else).
+  var LM_REEL_THEMES = [
+    [/too late|running out|timeline|clock|older|my age|missed/, /too late|missed|running out/, 7, "worried about time"],
+    [/give up|giving up|quit|never going to happen|end up alone|alone forever/, /give up|quit|single forever/, 7, "feels like giving up"],
+    [/hopeless|pessimis/, /give up|quit|doubt|believe|belief|feel sure|trust|know that|know you/, 4, "hopeless"],
+    [/worr|anxi|panic|scared|stress|fear|uneasy/, /worr|stress|anxi/, 6, "worry"],
+    [/doubt|uncertain|not sure/, /doubt|believe|belief|feel sure|trust|know that|know you/, 5, "doubt"],
+    [/tired|exhaust|drained|fed up/, /tired/, 7, "tired of it"],
+    [/frustrat|nothing in return|put myself out/, /tired|forcing|easier|without (the )?stress|without more effort/, 4, "frustrated"],
+    [/not enough|deserv|worthy|unlovable/, /good enough|fix|accept/, 8, "not good enough"],
+    [/overwhelm|where to start/, /simple|easier|without (the )?stress|overthink|over thinker/, 6, "overwhelmed"],
+    [/overthink/, /overthink|over thinker/, 6, "overthinking"],
+    [/envy|jealous|friends/, /friends/, 8, "comparing to friends"],
+    [/stays|won.t leave|leave when|consistent|loyal|rely/, /stays|consistent|loyal/, 4, "someone who stays"],
+    [/laugh|\bfun\b|bored|playful|adventure/, /\bfun\b/, 5, "fun"],
+    [/manifest|visualis/, /visualis|manifest|planning/, 3, "tried manifesting"],
+    [/attachment/, /attachment/, 3, "attachment styles"],
+    [/therapy|healing|inner child|work on myself|books|courses/, /fix|more learning|more answers|know more|self-development/, 3, "inner work"],
+    [/dating apps|dating coach|dating rules/, /dating|date\b/, 2, "dating"],
+    [/marr|husband|wedding/, /marr/, 2, "marriage"],
+    [/child|\bkids?\b|family|bab(y|ies)/, /child|family/, 2, "children"],
+    [/settle|build a life|life partner|long.?term/, /settle|build a life|life partner|long.?term/, 2, "settle down"],
+    [/safe|secure|peace/, /safe|secure|peace/, 3, "safety"]
+  ];
+  // "a lot of impatient" -> "a lot of impatience" (2026-11-24): applicants type the emotion as an adjective sometimes.
+  function lmEmoNoun(e){ e = String(e || "").trim().toLowerCase(); return { impatient:"impatience", anxious:"anxiety", worried:"worry", sad:"sadness", frustrated:"frustration", hopeless:"hopelessness", doubtful:"doubt", lonely:"loneliness", scared:"fear", afraid:"fear", panicked:"panic", angry:"anger", bored:"boredom", envious:"envy", jealous:"jealousy", stressed:"stress", tired:"tiredness", exhausted:"exhaustion", overwhelmed:"overwhelm", hurt:"hurt", confused:"confusion", pessimistic:"pessimism", resentful:"resentment", insecure:"insecurity", ashamed:"shame", guilty:"guilt", desperate:"desperation", numb:"numbness" }[e] || e; }
+  var LM_REEL_PRO = /doctor|physician|surgeon|dentist|lawyer|attorney|counsel|engineer|director|manager|executive|founder|owner|entrepreneur|business|consult|financ|accountant|software|economist|analyst|editor|self.employed/;
+  function lmReelPick(a){
+    if (!lmReels){ lmReelLoad(); return null; }
+    var t = [/^HA Feelings About Love/i, /^FF Current Emotion/i, /^HA Anything Else/i, /^HA Relationship Wanted/i, /^FF Intentions/i, /^HA Tried/i, /^FF Resonance/i, /^App Q/i]
+      .map(function(re){ return String(lmAns(a, re) || ""); }).join(" · ").toLowerCase();
+    var pro = LM_REEL_PRO.test(String(lmAns(a, /^HA Profession/i) || "").toLowerCase());
+    var sent = (lmStore(a.id).reelsSent || []), sentU = {}; sent.forEach(function(x){ sentU[x.u] = 1; });
+    var list = lmReels.filter(function(r){ return !sentU[r.url]; }).map(function(r){
+      var hk = r.hook.toLowerCase(), pts = 0, ww = [];
+      LM_REEL_THEMES.forEach(function(th){ if (th[0].test(t) && th[1].test(hk)){ pts += th[2]; ww.push([th[2], th[3]]); } });
+      if (pro && /career|smart|great job/.test(hk)){ pts += 5; ww.push([5, "career"]); }
+      var why = ww.sort(function(x, y){ return y[0] - x[0]; }).map(function(x){ return x[1]; });
+      return { hook:r.hook, url:r.url, why:why, pts:pts + Math.min(2, Math.log(1 + (r.score || 0)) / Math.LN10) };
+    }).filter(function(x){ return x.why.length; }).sort(function(x, y){ return y.pts - x.pts; });
+    var seen = {}, picks = [];
+    list.forEach(function(x){ var k = x.why.slice(0, 2).join("|"); if (picks.length < 3 && !seen[k]){ seen[k] = 1; picks.push(x); } });
+    var hookOf = {}; lmReels.forEach(function(r){ hookOf[r.url] = r.hook; });
+    return { picks:picks, sent:sent.map(function(x){ return { u:x.u, at:x.at, hook:hookOf[x.u] || "" }; }) };
+  }
   window.lmPHOpen = window.lmPHOpen || {}; var lmPHOpen = window.lmPHOpen;
   // the plan's pages in order (public/plan-view.html), for the page-by-page heat map
   var LM_PLAN_PAGES = ["Your plan of action", "Intellectualization", "Emotional resonance", "The process", "You'll get access to the program",
@@ -5677,7 +5734,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         lmVB[id].map(function(n){ return '<i style="flex:1;background:' + (n > 1 ? "#7c3aed" : n === 1 ? "#c4b5fd" : "#3f3a48") + '"></i>'; }).join("") + "</span>" +
         '<small style="flex-basis:100%;opacity:.7">Start → end. Light = watched once, dark = watched again, grey = skipped or not reached.</small>';
     }
-    return '<small style="flex-basis:100%;opacity:.85">' + lmEsc(bits.join(" · ")) + "</small>" + bar;
+    return '<small style="flex-basis:100%;opacity:.85">' + bits.map(lmEsc).join("<br>") + "</small>" + bar;
   }
   function lmWhen(iso){ if (!iso) return ""; try { return new Date(iso).toLocaleString("en-GB", { timeZone:"Africa/Johannesburg", weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" }); } catch(e){ return ""; } }
   function lmPlanLine(id){
@@ -5713,7 +5770,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
           + "</details>";
       }
     } else if (v.opens) bits.push("Reading not tracked yet (opened before 10 Nov tracking)");
-    return '<small style="flex-basis:100%;opacity:.85">' + lmEsc(bits.join(" · ")) + "</small>" + bar;
+    return '<small style="flex-basis:100%;opacity:.85">' + bits.map(lmEsc).join("<br>") + "</small>" + bar;
   }
   // Step-by-step guide follow-up views (2026-11-12): /api/guideviews -> { contactId: { code, sent, opens, first, last, far, pages, read, pdf, dev } }
   var lmGV = {}, lmGH = {}, lmGHOpen = {};
@@ -5752,7 +5809,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
               + '<span style="font-variant-numeric:tabular-nums;opacity:' + (s > 0 ? ".9" : ".5") + '">' + (s > 0 ? lmDur(s) : "not read") + "</span>"; }).join("") + "</div></details>";
       }
     }
-    return '<small style="flex-basis:100%;opacity:.85">📘 ' + lmEsc(bits.join(" · ")) + "</small>" + bar;
+    return '<small style="flex-basis:100%;opacity:.85">📘 ' + bits.map(lmEsc).join("<br>") + "</small>" + bar;
   }
   function lmBranches(a){
     var used = {};
@@ -5857,21 +5914,21 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       var listAnd = function(arr){ return arr.length > 1 ? arr.slice(0, -1).join(", ") + " and " + arr[arr.length - 1] : (arr[0] || ""); };
       var tried = lmAns(a, /^HA Tried/i), nowEmo = lmAns(a, /^FF Current Emotion/i), feelsLove = lmAns(a, /^HA Feelings About Love/i), resWant = lmAns(a, /^FF Resonance/i);
       var triedL = tried ? tried.split(/\s*,\s*/).filter(Boolean).slice(0, 4).map(function(x){ return x.toLowerCase(); }) : [];
-      var where = ["From what you’ve shared, it sounds like you’ve been struggling with intellectualization."];
-      if (howLong) where.push("You’ve been looking for " + howLong.replace(/[.!\s]+$/, "") + ".");
-      if (triedL.length) where.push("You’ve tried " + listAnd(triedL) + ".");
-      if (nowEmo && nowEmo.split(/\s+/).length <= 3) where.push("Right now love brings up a lot of " + nowEmo.toLowerCase() + ".");
+      var where = ["From what you’ve shared, it sounds like you’ve really been struggling with intellectualization."];
+      if (howLong) where.push("I say that because you’ve been looking for " + howLong.replace(/[.!\s]+$/, "") + ".");
+      if (triedL.length) where.push((howLong ? "You’ve tried " : "I say that because you’ve tried ") + listAnd(triedL) + ".");
+      if (nowEmo && nowEmo.split(/\s+/).length <= 3) where.push(where.length > 1 ? "But even after all of this - love is still bringing up a lot of " + lmEmoNoun(nowEmo) + "." : "Right now love is bringing up a lot of " + lmEmoNoun(nowEmo) + ".");
       var quote = feelsLove && feelsLove.length <= 180 ? "As you put it: “" + feelsLove.trim() + "”" : "";
       var wantLine = wants ? "Where you want to be: " + low1(wants) + (resWant && resWant.split(/\s+/).length <= 2 ? ", with a real sense of " + resWant.toLowerCase() + "." : ".")
         : "[✍️ where they want to be, e.g. You want…]";
-      var vmsg = "Hey " + nm + ",\n\nReally liked your application.\n\n" + where.join(" ") + (quote ? "\n\n" + quote : "") + "\n\n" + wantLine +
+      var vmsg = "Hey " + nm + ",\n\nReally like your application.\n\n" + where.join("\n\n") + (quote ? "\n\n" + quote : "") + "\n\n" + wantLine +
         "\n\nThis video takes you through The Heart Attractor Program and how it will help you get there: what we’ll do, what’s included, the investment and how to get started.\n\n" + vurl +
-        "\n\nJust let me know if you have any questions.\n\nSpeak soon,\nOlly";
+        "\n\nJust let me know if you have any questions.\n\nSpeak soon,\n\nOlly Henson";
       if (route === "wa"){
         h += lmTxt("🎬 1a. Video message (personalised from their application, check it then send)", vmsg, lmWa(vmsg, "waSent,loom"));
         if (a.email){
-          var fuV = function(appName){ return "Hey " + nm + ",\n\nReally liked your application.\n\nI’ve just sent you a video on " + appName + " with a summary of the program: what’s involved, how to get started and the investment.\n\nHere it is again if it’s easier to watch here:\n\n" + vurl + "\n\nCheck it out and let me know if you have any questions.\n\nOlly"; };
-          var fuB = function(appName){ return lmMail("Your application for The Heart Attractor Program", fuV(appName), "emSent").replace(">Email</a>", ">Email: sent on " + appName + "</a>"); };
+          var fuV = function(appName){ return "Hey " + nm + ",\n\nI’ve just sent you a message on " + appName + ".\n\nIt will take you through exactly how we can help you " + (wants ? "[✍ e.g. find someone to start a marriage and have kids with - whilst feeling secure and sharing lots of laughter (which I love by the way 😎). They wrote: “" + wants.trim() + "”]" : "[✍ what they want, from their application]") + "\n\nCheck it out and let me know if you have any questions.\n\nOlly Henson"; };
+          var fuB = function(appName){ return lmMail("Your application status: pending", fuV(appName), "emSent").replace(">Email</a>", ">Email: sent on " + appName + "</a>"); };
           h += lmTxt("✉️ 1b. Follow-up email", fuV(app), im ? fuB("iMessage") + fuB("WhatsApp") : fuB("WhatsApp") + fuB("iMessage"));
         }
       } else h += lmTxt("✉️ 1. Video email (personalised from their application, check it then send)", vmsg, lmMail("Your application for The Heart Attractor Program", vmsg, "emSent,loom"));
@@ -6019,6 +6076,47 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + (ph ? '<a href="https://wa.me/' + ph + '?text=' + encodeURIComponent("Hey " + (a.firstName || "there") + ", great - here's the link to join: " + JOIN) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a>' : "")
       + (a.email ? '<a href="mailto:' + lmEsc(a.email) + '?subject=' + encodeURIComponent("Your link to join The Heart Attractor Program") + '&body=' + encodeURIComponent(joinMail) + '" onclick="event.stopPropagation()">Email</a>' : "")
       + "</div>";
+    // Helpful Reel follow-up (Olly, 2026-11-24): no pitch, no mention of the video or the program. One Reel that fits
+    // what they wrote, picked by lmReelPick(). Sending it logs the Reel in state.looms[id].reelsSent so it isn't suggested again.
+    h += lmHead("Helpful Reel (no pitch)");
+    var rp = lmReelPick(a);
+    if (!rp){
+      h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">' + (lmReelErr ? "Couldn't load your Reels: " + lmEsc(lmReelErr) : "Loading your Reels…") + "</small></div>";
+    } else {
+      // 2026-11-24 (Olly): name what they told you, then what the Reel helps with and what it gets them. Short and specific.
+      var rT = String(lmAns(a, /^HA Tried/i) || "").split(/\s*,\s*/).filter(Boolean).slice(0, 2).map(function(x){ x = x.toLowerCase().trim(); return { "therapy or counselling":"therapy", "inner child or healing work":"healing work", "manifestation or visualising":"manifesting", "meditation or breathwork":"meditation", "learning about attachment styles":"learning about attachment styles", "books and courses":"books and courses", "dating coaches or dating rules":"dating coaches", "dating apps":"dating apps" }[x] || x; });
+      var rEmo = String(lmAns(a, /^FF Current Emotion/i) || "").trim(), rLong = String(lmAns(a, /^HA How Long Looking/i) || "").trim().replace(/[.!\s]+$/, "");
+      var rAnd = function(arr){ return arr.length > 1 ? arr.slice(0, -1).join(", ") + " and " + arr[arr.length - 1] : (arr[0] || ""); };
+      var rSaid = [];
+      if (rLong) rSaid.push("you’ve been looking for " + rLong.toLowerCase());
+      if (rT.length) rSaid.push("you’ve tried " + rAnd(rT));
+      if (rEmo && rEmo.split(/\s+/).length <= 3) rSaid.push("love is bringing up a lot of " + lmEmoNoun(rEmo));
+      var rWantT = [lmAns(a, /^HA Relationship Wanted/i), lmAns(a, /^FF Intentions/i)].join(" ").toLowerCase();
+      var rM = /marr|husband|wedding/.test(rWantT), rK = /child|kids?|family|bab(y|ies)/.test(rWantT);
+      var rGoal = rM && rK ? "meet someone to marry and have children with" : rM ? "meet someone to marry" : rK ? "meet someone to start a family with"
+        : /settle|build a life|life partner|long.?term/.test(rWantT) ? "meet someone to settle down and build a life with" : "meet your person";
+      var RDEAL = { "worried about time":"stop worrying that it’s too late", "feels like giving up":"keep going when you feel like giving up",
+        "hopeless":"move past feeling hopeless about love", "worry":"let go of the worry around love", "doubt":"stop doubting that it’ll happen for you",
+        "tired of it":"deal with feeling tired of the search", "frustrated":"stop forcing it", "not good enough":"feel good enough for love",
+        "overwhelmed":"keep it simple", "overthinking":"stop overthinking love", "comparing to friends":"stop comparing yourself to friends who’ve found love",
+        "someone who stays":"attract someone who stays", "fun":"attract someone who’s committed and fun", "tried manifesting":"go beyond visualising",
+        "attachment styles":"move past attachment styles", "inner work":"stop trying to fix yourself", "career":"stop approaching love like a problem to solve",
+        "safety":"feel safe in love" };
+      var rMsg = function(r){ var d = ""; for (var i = 0; i < r.why.length && !d; i++) d = RDEAL[r.why[i]] || "";
+        return "Hey " + nm + ",\n\n" + (rSaid.length ? "You mentioned " + rAnd(rSaid) + ".\n\n" : "")
+          + "This Reel I posted recently takes you through " + (d ? "how to " + d + ", so you can " : "how to ") + rGoal + ".\n\n" + r.url; };
+      var rBtns = function(r){ var tag = ' data-reel="' + lmEsc(r.url) + '" data-k=';
+        return lmWa(rMsg(r), "reelSent").replace(" data-k=", tag) + lmMail("thought of you", rMsg(r) + "\n\nOlly", "reelSent").replace(" data-k=", tag)
+          + '<a href="' + lmEsc(r.url) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Watch</a>'; };
+      var rWhy = function(r){ return '<small style="flex-basis:100%;opacity:.75">' + lmEsc(r.hook) + (r.why.length ? " · matches: " + lmEsc(r.why.join(", ")) : "") + "</small>"; };
+      if (rp.picks.length){
+        var r0 = rp.picks[0];
+        h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(rMsg(r0)) + '">🎬 Helpful Reel</button>' + rBtns(r0) + rWhy(r0) + "</div>";
+        if (rp.picks.length > 1) h += '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%;width:100%"><summary style="cursor:pointer;opacity:.8">Other good matches</summary>'
+          + rp.picks.slice(1).map(function(r){ return '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(rMsg(r)) + '">🎬 Copy</button>' + rBtns(r) + rWhy(r) + "</div>"; }).join("") + "</details>";
+      } else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">You’ve sent them every Reel that fits. Post more and new ones show up here.</small></div>';
+      if (rp.sent.length) h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">Already sent: ' + rp.sent.map(function(x){ return lmEsc(x.hook || x.u) + " (" + String(x.at || "").slice(5, 10).split("-").reverse().join("/") + ")"; }).join(" · ") + "</small></div>";
+    }
     if (!LM_OLD_FLOW && tUrl){
       var cold2 = "Hey " + nm + ",\n\nI know you really wanted to meet someone you could marry, have children with and build a life with.\n\nHere are the steps to follow to make that happen:\n\n" + tUrl;
       h += lmHead("If they go quiet");
@@ -6044,7 +6142,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         if (d && d.ok){ lmGV[sid] = Object.assign(lmGV[sid] || {}, { code:d.code, sent:d.sent }); setTimeout(renderLooms, 300); } }).catch(function(){});
       if (gs.tagName === "A") return; }
     var l = e.target.closest && e.target.closest(".lmcon a");
-    if (l){ var a3 = lmById(l.getAttribute("data-id")); if (a3){ l.getAttribute("data-k").split(",").forEach(function(k){ lmStore(a3.id)[k] = true; }); markDirty(); if (lmFilter !== "board") lmFilter = lmStage(a3); setTimeout(renderLooms, 300); } return; }
+    if (l){ var a3 = lmById(l.getAttribute("data-id")); if (a3){ l.getAttribute("data-k").split(",").forEach(function(k){ lmStore(a3.id)[k] = true; }); lmStore(a3.id).lastContact = new Date().toISOString(); var ru = l.getAttribute("data-reel"); if (ru){ var s3 = lmStore(a3.id); s3.reelsSent = (s3.reelsSent || []).filter(function(x){ return x.u !== ru; }).concat([{ u:ru, at:new Date().toISOString() }]); } markDirty(); if (lmFilter !== "board") lmFilter = lmStage(a3); setTimeout(renderLooms, 300); } return; }
     var gm = e.target.closest && e.target.closest(".lmguidemake");
     if (gm){ e.stopPropagation(); var gid = gm.getAttribute("data-id"); gm.textContent = "Making their link…";
       fetch("/api/guideviews?id=" + encodeURIComponent(gid), { method:"POST" }).then(function(r){ return r.json(); }).then(function(d){
@@ -6213,6 +6311,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL</span>' : "") +
       lmCardPlanTag(a) +
       (s.coldSent ? '<span class="lmtag" style="margin:0;background:rgba(125,211,252,.18);color:#7dd3fc">🧊 Cold follow-up done</span>' : "") +
+      lmReelTag(s) +
       rmTag(a.id) + (s.churned ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Churned</span>' : "") +
       lmVslTag(a.id) + lmGuideTag(a.id) +
       (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the first message", replied:"After replying", plan_sent:"After the plan was sent", plan_read:"After reading the plan", asked:"After asking questions", loom:"After the video was sent", watched:"After watching the video", joinclick:"After clicking Join" }[lmStage(a, true)] || "") + "</span>" : "");
@@ -6275,15 +6374,105 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (cc && LM_RICH.test(cc)) add(8, "High-income country");
     return { pts: pts, why: why };
   }
+  // Reel follow-ups sent (2026-11-24): "🎬 Reel follow-up 2 · 24/11" on the card, from state.looms[id].reelsSent.
+  function lmReelTag(s){
+    var r = s.reelsSent || []; if (!r.length) return "";
+    var last = r[r.length - 1].at || "", dd = last ? last.slice(8, 10) + "/" + last.slice(5, 7) : "";
+    return '<span class="lmtag" style="margin:0;background:rgba(217,70,239,.16);color:#e879f9">🎬 Reel follow-up ' + r.length + (dd ? " · " + dd : "") + "</span>";
+  }
+  function lmReelDays(s){ var r = s.reelsSent || []; if (!r.length) return 999; return (Date.now() - Date.parse(r[r.length - 1].at)) / 864e5; }
+  // Most likely to join (2026-11-24, Olly): fit (lmScore) + how they engaged with the video and messages.
+  function lmEngage(a){
+    var s = lmStore(a.id), v = (typeof lmVV === "object" && lmVV[a.id]) || {}, pts = 0, why = [];
+    function add(n, t){ pts += n; why.push(t); }
+    if ((v.join || 0) > 0) add(25, "Clicked Join");
+    if (v.done || (v.pct || 0) >= 75) add(20, "Watched " + Math.max(v.pct || 0, v.done ? 90 : 0) + "%");
+    else if ((v.pct || 0) >= 40) add(12, "Watched " + v.pct + "%");
+    else if (v.opens) add(5, "Opened the video");
+    if ((v.opens || 0) >= 3) add(8, "Opened it " + v.opens + "×");
+    if (s.waReply || s.emReply) add(10, "Replied");
+    return { pts: pts, why: why };
+  }
+  // Prospect voice for the content generator (Olly, 2026-11-24): an ANONYMOUS summary of the top-ranked prospects
+  // (same ranking as 📅 Follow-up: fit + engagement; members who joined count too, they're proof of who buys).
+  // Counts and short phrases only: no names, contact details, places or job titles. Saved to KV when it changes.
+  var lmVoiceSig = "";
+  function lmVoiceBuild(){
+    var pool = lmData.filter(function(a){ return !lmRemoved(a) && lmStage(a) !== "nofit"; }).map(function(a){
+      var f = lmScore(a), e = lmEngage(a); return { a:a, pts:f.pts + e.pts + (lmStage(a) === "joined" ? 40 : 0) };
+    }).sort(function(x, y){ return y.pts - x.pts; }).slice(0, 15).map(function(x){ return x.a; });
+    if (pool.length < 5) return null;
+    function count(arr){ var c = {}; arr.forEach(function(k){ if (k) c[k] = (c[k] || 0) + 1; }); return Object.keys(c).map(function(k){ return [k, c[k]]; }).sort(function(p, q){ return q[1] - p[1]; }); }
+    var SHORT = { "therapy or counselling":"therapy", "inner child or healing work":"inner child / healing work", "manifestation or visualising":"manifesting / visualising", "meditation or breathwork":"meditation / breathwork", "learning about attachment styles":"attachment styles", "dating coaches or dating rules":"dating coaches / rules" };
+    var SECT = [[/doctor|physician|surgeon|dentist|nurse|health|medic|pharma|therap|psycholog/, "medicine and healthcare"], [/lawyer|attorney|solicitor|barrister|counsel|legal/, "law"],
+      [/financ|bank|account|invest|economist|analyst|actuar/, "finance"], [/engineer|software|developer|tech|data|it\b/, "engineering and tech"],
+      [/founder|owner|entrepreneur|self.employed|business/, "runs her own business"], [/director|manager|executive|head of|lead|hr\b|human resources|operations|production/, "management"],
+      [/teacher|lecturer|professor|education|school/, "education"], [/editor|design|artist|writer|copywriter|fashion|media|marketing/, "creative and media"], [/govt|government|council|civil serv|public sector/, "public sector"]];
+    var wants = { marriage:0, children:0, settle:0 }, emo = [], res = [], tried = [], how = [], themes = [], sect = [], phrases = [];
+    pool.forEach(function(a){
+      var w = [lmAns(a, /^HA Relationship Wanted/i), lmAns(a, /^FF Intentions/i)].join(" ").toLowerCase();
+      if (/marr|husband|wedding/.test(w)) wants.marriage++;
+      if (/child|kids?|family|bab(y|ies)/.test(w)) wants.children++;
+      if (/settle|build a life|life partner|long.?term|forever/.test(w)) wants.settle++;
+      String(lmAns(a, /^FF Current Emotion/i) || "").split(/\s*[,&\/]\s*|\s+and\s+/).forEach(function(e){ e = e.trim(); if (e && e.split(/\s+/).length <= 3) emo.push(lmEmoNoun(e)); });
+      var r = String(lmAns(a, /^FF Resonance/i) || "").trim().toLowerCase(); if (r && r.split(/\s+/).length <= 2) res.push(r);
+      String(lmAns(a, /^HA Tried/i) || "").split(/\s*,\s*/).forEach(function(x){ x = x.toLowerCase().trim(); if (x) tried.push(SHORT[x] || x); });
+      var hl = String(lmAns(a, /^HA How Long Looking/i) || "").trim().toLowerCase(); if (hl) how.push(hl);
+      var own = [lmAns(a, /^HA Feelings About Love/i), lmAns(a, /^FF Current Emotion/i), lmAns(a, /^HA Anything Else/i), lmAns(a, /^HA Relationship Wanted/i), lmAns(a, /^FF Intentions/i), lmAns(a, /^HA Tried/i), lmAns(a, /^FF Resonance/i)].join(" · ").toLowerCase();
+      LM_REEL_THEMES.forEach(function(th){ if (th[0].test(own)) themes.push(th[3]); });
+      var job = String(lmAns(a, /^HA Profession/i) || "").toLowerCase(); for (var i = 0; i < SECT.length; i++) if (SECT[i][0].test(job)){ sect.push(SECT[i][1]); break; }
+    });
+    var seen = {};
+    return { n: pool.length, wants: wants, emotions: count(emo).slice(0, 6), feelWith: count(res).slice(0, 5), tried: count(tried).slice(0, 7),
+      howLong: count(how), themes: count(themes).filter(function(t){ return ["marriage", "children", "settle down", "dating"].indexOf(t[0]) < 0; }).slice(0, 8),
+      careers: count(sect).slice(0, 6) }; // no word-for-word phrases: the summary is public (skills_messaging-tools Never: no applicant quotes)
+  }
+  function lmVoicePush(){
+    if (!lmData || !Object.keys(lmVV || {}).length) return;
+    var v = lmVoiceBuild(); if (!v) return;
+    var sig = JSON.stringify(v); if (sig === lmVoiceSig) return; lmVoiceSig = sig;
+    fetch("/api/prospect-voice", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ voice: v }) }).catch(function(){ lmVoiceSig = ""; });
+  }
+  // Last time Olly messaged them (2026-11-24): every send button stamps state.looms[id].lastContact; Reel sends have dates too.
+  // Older sends were never dated, so they count as "not recorded" (due).
+  function lmLastContact(s){
+    var t = Date.parse(s.lastContact || "") || 0;
+    (s.reelsSent || []).forEach(function(x){ t = Math.max(t, Date.parse(x.at) || 0); });
+    return t;
+  }
+  // 📅 Follow-up view (Olly, 2026-11-24; was 🏆 Rank applicants): ranked by fit + engagement, in three groups.
+  // 1 Follow up today: had their first (video) message and nothing from Olly for 3+ days. 2 Send their first message.
+  // 3 Contacted in the last 3 days. Joined, Not a fit and removed applicants are left out.
   function lmRankHtml(){
-    var list = lmData.filter(function(a){ var st = lmStage(a); return !lmRemoved(a) && st !== "joined" && st !== "nofit"; })
-      .map(function(a){ return { a:a, sc:lmScore(a) }; })
+    var rows = lmData.filter(function(a){ var st = lmStage(a); return !lmRemoved(a) && st !== "joined" && st !== "nofit"; })
+      .map(function(a){
+        var s = lmStore(a.id), f = lmScore(a), e = lmEngage(a), last = lmLastContact(s);
+        var first = !!(lmFlags(a).loom || s.waSent || s.emSent || s.qualSent);
+        var days = last ? Math.floor((Date.now() - last) / 864e5) : null;
+        // No dated contact yet: count from the day they applied, so nobody who applied in the last 3 days gets chased (Olly, 2026-11-24).
+        var applied = Date.parse(a.dateAdded || "") || 0, appDays = applied ? Math.floor((Date.now() - applied) / 864e5) : null;
+        var since = days !== null ? days : appDays;
+        return { a:a, sc:{ pts:f.pts + e.pts, why:e.why.concat(f.why) }, grp: !first ? 1 : (since !== null && since < 3 ? 2 : 0), days:days, appDays:appDays };
+      })
       .sort(function(x, y){ return y.sc.pts - x.sc.pts || String(y.a.dateAdded || "").localeCompare(String(x.a.dateAdded || "")); });
-    return '<p class="hint" style="margin:0 0 10px">Best first: investment answer, then job, marriage, children and settling down, plus a bonus for your Good rating and a high-income country. Joined, Not a fit and removed applicants are left out.</p>'
-      + '<div class="lmrank">' + list.map(function(x, i){
+    var G = [["📅 Follow up today", "Had their first message and nothing from you for 3+ days. Best first: send each one their Helpful Reel."],
+      ["✉️ Send their first message", "Applied but haven’t had their video message yet. Do this first, from their card."],
+      ["✅ Contacted or applied in the last 3 days", "Covered for now. They move back up 3 days after your last message (or after they applied, if no message is dated)."]];
+    var html = '<p class="hint" style="margin:0 0 10px">Ranked by how likely they are to join: how they engaged (clicked Join, how much of the video they watched, rewatching, replying) plus fit (investment, job, marriage, children, settling down, your Good rating, high-income country). Joined, Not a fit and removed applicants are left out.</p>';
+    G.forEach(function(g, gi){
+      var list = rows.filter(function(x){ return x.grp === gi; });
+      html += '<div style="font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin:16px 0 2px">' + g[0] + " (" + list.length + ")</div>"
+        + '<p class="hint" style="margin:0 0 6px">' + g[1] + "</p>";
+      if (!list.length){ html += '<p class="hint" style="margin:0 0 8px;opacity:.7">' + (gi === 0 ? "Nobody due today. 🎉" : "Nobody here.") + "</p>"; return; }
+      html += '<div class="lmrank">' + list.map(function(x, i){
+        var ago = function(d){ return d === 0 ? "today" : d === 1 ? "yesterday" : d + " days ago"; };
+        var lc = gi === 1 ? "" : (x.days !== null ? "Last contact " + ago(x.days) : x.appDays !== null ? "Applied " + ago(x.appDays) + " (last contact not recorded)" : "Last contact: not recorded");
+        var why = (lc ? [lc] : []).concat(x.sc.why);
         return '<div class="lmrankrow"><div class="lmrankn"><b>' + (i + 1) + "</b><span>" + x.sc.pts + " pts</span></div>" + lmCardHtml(x.a)
-          + (x.sc.why.length ? '<div class="lmrankwhy">' + x.sc.why.map(function(w){ return "<span>" + lmEsc(w) + "</span>"; }).join("") + "</div>" : "") + "</div>";
+          + (why.length ? '<div class="lmrankwhy">' + why.map(function(w, wi){ return "<span" + (wi === 0 && lc ? ' style="font-weight:700"' : "") + ">" + lmEsc(w) + "</span>"; }).join("") + "</div>" : "") + "</div>";
       }).join("") + "</div>";
+    });
+    return html;
   }
   function renderLooms(){
     hubMemFix();
@@ -6295,6 +6484,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (!lmLoading && !lmErr) lmLoad();
       return;
     }
+    lmVoicePush();
     var counts = {}; LM_STAGES.forEach(function(x){ counts[x[0]] = 0; });
     lmData.forEach(function(a){ counts[lmStage(a)]++; });
     var live = lmData.filter(function(a){ return !lmRemoved(a); });   // stats leave removed applicants out
@@ -6312,7 +6502,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var html = lmTop() + rmBanner() + '<div class="lmkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
     // Search (Olly, 2026-11-19: "a lot of applications now, hard to find"): filters the board as you type
     html += '<div class="lmsearch"><input type="search" id="lmQ" placeholder="🔍 Search applicants: name, email, phone, place, notes" aria-label="Search applicants" value="' + lmEsc(lmQ || "") + '" autocomplete="off"><span id="lmQn"></span></div>';
-    html += '<div class="lmbar" style="margin:0 0 10px"><button type="button" class="copybtn" id="lmRankBtn">' + (lmRank ? "\u2190 Back to the board" : "\ud83c\udfc6 Rank applicants") + "</button></div>";
+    html += '<div class="lmbar" style="margin:0 0 10px"><button type="button" class="copybtn" id="lmRankBtn">' + (lmRank ? "\u2190 Back to the board" : "📅 Follow-up") + "</button></div>";
     if (lmRank) html += lmRankHtml(); else
     html += '<div class="lmboard2">' + LM_COLS.map(function(c){
       var items = lmData.filter(function(a){ return lmCol(lmStage(a)) === c[0]; });
@@ -6445,6 +6635,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   var dvOpen = null, dvDrag = null, hubMemMig = false;
   function hubMemFix(){ hubMembers(); if (hubMemMig){ hubMemMig = false; applyMembersToTabs(); markDirty(); } }
   function dvVisible(){ var t = document.getElementById("tab-delivery"); return !!(t && !t.hidden); }
+  // Joined in GHL (Skool tag) but no plan saved yet: the card already shows Monthly $250, so save it, else cash/MRR skip them (2026-11-23)
+  function lmJoinSync(){
+    var ch = false;
+    (lmData || []).forEach(function(a){ if (!a.joined) return; var s = lmStore(a.id);
+      if (s.product === undefined && !s.archived && !s.removed){ s.product = "monthly"; if (!s.joinedAt) s.joinedAt = todayISO(); ch = true; } });
+    if (ch){ try { applyMembersToTabs(); } catch(e){} markDirty(); }
+  }
   function dvJoinStamp(s){
     if (s.product){ if (!s.joinedAt) s.joinedAt = todayISO(); }
     else { delete s.joinedAt; delete s.churned; }
@@ -9990,7 +10187,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Each one carries its date (loomAt, else first open) and where they applied from (their HA UTM fields).
   function ovHubVideos(){
     if (!ovVslAsked){ ovVslAsked = true; fetch("/api/vslviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok){ lmVV = d.views || {}; renderOverview(); } }).catch(function(){}); }
-    if (!lmData && !ovApplAsked){ ovApplAsked = true; fetch("/api/applicants", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok && !lmData){ lmData = d.applicants || []; renderOverview(); } }).catch(function(){}); }
+    if (!lmData && !ovApplAsked){ ovApplAsked = true; fetch("/api/applicants", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok && !lmData){ lmData = d.applicants || []; lmJoinSync(); renderOverview(); } }).catch(function(){}); }
     var out = [], L = state.looms || {}, seen = {}, byId = {};
     (lmData || []).forEach(function(a){ byId[a.id] = a; });
     function fld(a, name){ var f = (a && a.fields) || {}, k = Object.keys(f).filter(function(n){ return n.toLowerCase() === name; })[0]; return k ? f[k] : ""; }
