@@ -352,6 +352,16 @@ Notes on fields that aren't obvious:
 - Never leave Olly a blank "[your personal bit]" when the application already holds the answers: write it from them, he checks and sends.
 - Never ship reminder/notification features without a non-phone channel: Olly asked for every reminder by email too (GHL `/conversations/messages` to his own contact).
 
+### Added 2026-11-23 (Cash collected missed a member)
+- **Cash collected, MRR and churn come only from `state.looms[id].product` + `joinedAt`** (`hubMembers()` → `memberPayments()`). Once any loom record has a product, `state.ghlMembers` is ignored.
+- A Skool joiner gets the GHL tag `joined heart attractor program`. Their card *displayed* "Monthly $250" when `product` was undefined, but nothing was saved, so cash showed $250 for two members.
+- The fix is `lmJoinSync()`. It runs when applicants load (Sales tab and Overview) and saves `product:"monthly"` + `joinedAt` for any `a.joined` record with no product (not "" = deliberately unset, not archived or removed).
+- **Diagnose money numbers from the live KV record first** (`wrangler kv key get record --binding HUB_KV --remote`, then node). Olly's guess ("the one who paid outside Skool") was the member who *was* counted.
+
+### Never (added 2026-11-23)
+- Never show a default value on a card (plan, price, date) that isn't saved in the record. Counts read the record, so the screen and the totals disagree. Save the default instead.
+- Never fix a wrong total from Olly's guess about the cause. Check the live record and tell him what it actually was.
+
 ## 6. Quick reference — where things are in the code
 
 | Feature | Key functions |
@@ -705,3 +715,7 @@ marked the 2026-11-15 card order (1a/1b plan/1c) as overridden, updated the plai
 
 
 <!-- 2026-11-21 skill review: added Sales card flow v5 (personalised one-video message, lmCol board folding, prices 250), Delivery member board + reminders (push + GHL email, cron Worker) and five Never rules (stats wiring, back-fill new fields, redraw on data arrival, no blank personal bits, email for reminders). Marked the 2026-11-17 3-step card and the 2026-11-20 message steps as superseded; removed "never send the plan before they've replied" (overridden). Took an applicant name out of the overflow rule (public repo). -->
+
+<!-- 2026-11-24 skill review: added "Cash collected missed a member" (§5): totals come from looms product/joinedAt only;
+lmJoinSync saves Monthly for GHL joiners with no plan; read live KV before diagnosing. Two Never rules: no displayed
+defaults that aren't saved, and no fixing from Olly's guessed cause. -->

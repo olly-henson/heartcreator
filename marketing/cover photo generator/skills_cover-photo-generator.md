@@ -229,6 +229,16 @@ FORMULA, BONUS MATERIALS, THE CONSCIOUS CREATOR PROGRAM.
    shrinks to fit 80% width × 66% height. `|` forces a break.
 5. Thumbnail test: the mini preview at ~300 px must still read.
 
+### Lesson thumbnails for a renamed training (2026-11-23)
+
+- When a lesson is renamed, make its new cover straight away with the same
+  rules: the 1460x752 cover plus a 1280x720 copy in `16x9 video thumbnails/`.
+  Number it like its lesson (`03-how-to-feel-your-emotional-resonance.png`) in
+  that course's folder (`emotional-resonance-method-lessons/`).
+- Keep the old file; don't overwrite it. Open the folder for Olly.
+- Do the rest of the rename in the same pass: `PARTS` in the course builder,
+  the slides and NEXT.md (see `training/skills/skills_training-pages.md`).
+
 ### Improving it
 
 - Self-contained: one `render(i)`, one Google Fonts `<link>`, no build.
@@ -480,3 +490,6 @@ attract their soulmate. Portrait **1080 x 1350** so reasons read on a phone.
 - Top-of-file listing and Section E wording updated to match.
 - Added the "The Conscious Creator Program" default cover (Olly asked) and the "saved list overrides defaults" note.
 
+<!-- 2026-11-24 skill review: added "Lesson thumbnails for a renamed training" to section D. It covers the cover plus the
+16x9 copy, lesson-number file names, keeping the old file and renaming everywhere in one pass. Made for "How To Feel
+Your Emotional Resonance" (formerly elevated emotions). No corrections from Olly; it records the process he approved. -->

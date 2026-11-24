@@ -587,6 +587,31 @@ Steps 9-11 (added 2026-11-12, after the eyes-closed recap): Sense The Space Comp
 - Never put the breathing in/out arrows anywhere but straight through the centre of the heart, side view, one in and one out (Olly).
 - Never lay out a recorded deck from a guessed webcam size: measure a frame of the latest recording.
 
+### Course decks built by a script: The Emotional Resonance Method (2026-11-23)
+`training/build_emotional_resonance_method.py` builds the full deck plus the split `erm-1..6-*.html` files (one per Skool lesson). Slideshow artifact URLs are in NEXT.md.
+
+**Process**
+1. **Make every rename, removal and copy change in the builder, then rebuild.** Never hand-edit an `erm-N` file. Titles live in `PARTS`. Slides borrowed from another training are removed with the `DROP` title filter, not deleted from the source file. Why: the split files are overwritten on every rebuild, and the source training is still used on its own.
+2. **Rename a lesson everywhere in one pass**: the `PARTS` entry, the split file name (delete the old file), the slideshow copy and artifact, the classroom thumbnail (section D of `skills_cover-photo-generator.md`) and NEXT.md.
+3. **Review one lesson at a time.** Send one link, apply his edits, republish, and wait for "next".
+4. **Exercise sheet = one downloadable PDF per how-to lesson**, linked under the lesson in Skool. Use `python training/build_worksheets.py N` after the deck build. It outputs `training/pdfs/<slug>-exercise-sheet.pdf`.
+   - Pages are phone portrait, 1080x1920 (`@page`). The first try at 1080x1350 overflowed.
+   - Use the slide design: the CSS and SVG drawings are pulled from the built deck, so sheets stay in step with the slides.
+   - Use as few pages as possible: a step-by-step summary of what to do, not the whole lesson.
+   - Screenshot every page. Nothing may run into the footer, and no page may end with a big empty bottom: scale the content up instead.
+   - Skip sheets for the welcome lesson and the meditation itself.
+   - Open the PDF for Olly when it is done.
+5. **When Olly asks for "examples through the day"**, draw them as stick-figure scenes (inline SVG, 240x150, same line style). Put them in both the sheet and a slide in the lesson. Use everyday moments: coffee, walking to work, desk, queue, before a room, bed.
+
+**Rules (with why)**
+- **Condensed bullets on a slide run down columns, not across.** Use `grid-auto-flow:column`, max 840px wide so they clear the webcam, and one line each: shorten any bullet that wraps. Why: the first version spanned 1180px under the webcam and read left to right.
+- **When Olly replaces a set of steps, use his steps in his order.** Trim only to fit one line. A condition that applies to every step ("eyes open or closed") goes in the slide sub line, and his brackets stay as brackets.
+- **Recording links:** give a condensed numbered list with each lesson title, slide count and URL. Skip the lessons he makes himself (Training 5, the meditation). Add "F for full screen".
+
+**Never**
+- Never add "It's me, not AI" or any other AI disclaimer to a slide. Olly removed it from the last slide.
+- Never leave an exercise sheet as a long multi-page document when it can be fitted onto one or two phone pages.
+
 ## Variant: Stick-Figure Explainer Deck (no webcam) — "the master explanation", 2026-11-12
 
 **Use this to explain what we do** (the argument as a story). Approved file: `training/meet-your-person-simple.html`, built by `tools/build_simple_explainer.py` (which reuses all drawing helpers from `tools/build_argument_explainer.py`). Edit the builder, re-run, then publish the HTML (slideshow artifact SN4cagEnMgnHisy1yNrEyu) and `python tools/training_preview.py <html> <out>` (desktop+phone preview 7Y6ghuPPZHWDzLsRK2QjJR). Olly: "this will be like the template now of explaining everything that we do".
@@ -707,7 +732,7 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 20. **A layout fix requested for "the trainings" means every slide of every training, with no exceptions left for later.** On 2026-10-21 the 820px fix skipped training 2's title slide (inline `max-width:1000px`) "in case the long title broke", and Olly had to come back: "I thought you did that already." Before saying it's done, grep each file for `max-width:` values above 820, inline `style=` overrides and `translateX`. If one slide can't comply as-is, fix it a safer way (e.g. let the title script shrink the font) rather than leaving it wide.
 21. **Use Olly's dictated copy word for word.** Only tidy punctuation (a dash separator becomes a comma, add a closing full stop) and say what was tidied. "For step 1 / step 2" right after a parts list means that part's line on the Three Parts slide, not step slide 1.
 22. **When content is too tall for the slide, make it smaller; don't vertically centre it.** Centring an overflowing block clips it at the top and the bottom (Olly: "that's cut them off more", reverted). Top-aligned with less zoom is the fix.
-23. **When Olly asks for links, list every training in order (1-4) with its full title and URL.** He compares them side by side while recording.
+23. **When Olly asks for links, list every training in order with its full title, slide count and URL.** Skip the ones he records himself (the meditation, 2026-11-23). He works through them while recording.
 24. **Lead-magnet (free) trainings give away the *what* and the *why*, never the *how*.** On 2026-10-23 Olly cut the how-to steps (find-your-resonance worksheet, Slow Down / Focus / Feel, anchoring) from the free training: "I don't want to give away the farm." End with a "picture this" moment you talk them through while the video keeps playing (no pausing, no worksheet), then a gentle pitch of the program, not more steps.
 25. **Recorded slides never get clickable buttons.** Viewers can't click a video. The last slide says "Find out more in the description ↓" as plain text (no pill or button styling), and Olly talks over it.
 26. **Every title is an inverted pyramid, including `h2` slide titles, and never ends on a lone word.** "Inside The Heart Attractor / Program" was rejected ("one word on the second line"). Fixes, in order: put it on one line (the `data-lines` script shrinks it to fit), or hand-set `data-lines="widest line|narrower|narrowest"` (works on `h2` too), or reword. A one-line subheading under a title must be narrower than the title (smaller font + nowrap).
@@ -754,6 +779,8 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 - **When Olly overwrites an image under the same file name, the preview still holds the old base64.** Rebuild the preview copy and republish. When his new file has a different name or extension (`Step 2.png` -> `Step 2.jpg`, `Sensing Space.jpg` instead of the suggested name), point the `src` and placeholder text at the real name; don't ask him to rename it.
 - **Generated images: follow `marketing\skills\skills_image-generator-prompts.md`.** Olly names files himself; keep his names and point the `src` at them. Check every image for stray text (Gemini added "NO NEW MESSAGES" to a phone screen and readable book titles).
 - **A frame that holds a wide image (graphs, split scenes) uses `.photo-frame--wide` (16:9)**; portrait photos use the 3:4 `.photo-frame`.
+- **Python `%` string formatting breaks on CSS containing `%`** (`50%`, `100%`). Build HTML with concatenation or f-strings and doubled braces (2026-11-23, build_worksheets.py).
+- **Republishing a slideshow to an artifact made in an earlier conversation is refused until it has been read.** A refused publish counts as the read. Diff the live version against yours, then resend the same file (2026-11-23: two resends were needed).
 - **"Text is cut off" may be browser zoom.** The 2026-10-05 report turned out to be Olly zoomed in. Ask whether the page is zoomed (Ctrl+0 resets it) before changing layout for a clipping report.
 
 ---
@@ -898,3 +925,9 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 redraw not shrink, hook slide 1, CTA slide, contact sheet first, caption ends on the slide's CTA, calendar image swap = new
 id). CTA wording now "Comment or DM me EMOTION below / and I'll send it to you" (overrides "Comment EMOTION below"); button
 text one font and flex-centred after Olly saw it skewed; check page size before answering "is it landscape?". -->
+
+<!-- 2026-11-24 skill review (Emotional Resonance Method, 2026-11-23): added "Course decks built by a script" under the
+teaching-slides variant. All edits go through the builder (PARTS, DROP), exercise-sheet PDFs (1080x1920 phone pages,
+slide design, fewest pages, fill the page), stick-figure day examples, bullets down columns within 840px, his
+replacement steps in his order, no AI disclaimer. Rule 23 updated: recording links now include slide counts and skip the
+lessons he makes himself (overrides "1-4"). Two gotchas: Python % with CSS, artifact republish refused until read. -->
