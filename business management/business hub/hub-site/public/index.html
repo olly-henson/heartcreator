@@ -6412,18 +6412,20 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // and a high-income country (high median income).
   var LM_RICH = /^(US|CA|GB|UK|IE|AU|NZ|CH|NO|DK|SE|NL|LU|DE|AT|BE|FI|IS|SG|AE|QA|KW|HK|JP|FR|IL|MC|LI)$|united states|usa|canada|united kingdom|england|scotland|wales|ireland|australia|new zealand|switzerland|norway|denmark|sweden|netherlands|luxembourg|germany|austria|belgium|finland|iceland|singapore|emirates|dubai|qatar|kuwait|hong kong|japan|france|israel|monaco|liechtenstein/i;
   function lmScore(a){
-    var pts = 0, why = [];
+    var pts = 0, why = [], p0;
     function add(n, t){ pts += n; if (n && t) why.push(t); }
     var inv = String(lmAns(a, /^HA Willing To Invest/i) || "");
     if (/5,?000 or more/i.test(inv)) add(30, "Invest $5,000+");
     else if (/2,?500 to \$?5,?000/i.test(inv)) add(26, "Invest $2,500 to $5,000");
     else if (/1,?000 to \$?2,?500/i.test(inv)) add(18, "Invest $1,000 to $2,500");
     else if (/500 to \$?1,?000/i.test(inv)) add(6, "Invest $500 to $1,000");
+    var invPts = pts, invWhy = why.slice(); p0 = pts;
     var job = String(lmAns(a, /^HA Profession/i) || "").trim(), jl = job.toLowerCase();
     if (jl && !/student|unemploy|retired|between jobs|not working|stay at home|homemaker|^none|^n\/?a/.test(jl)){
       if (/doctor|physician|surgeon|dentist|lawyer|attorney|solicitor|barrister|engineer|director|manager|executive|\bceo\b|\bcfo\b|\bcto\b|\bvp\b|founder|owner|entrepreneur|business|consult|financ|bank|accountant|invest|software|developer|programmer|architect|pharmac|psychiatr|psycholog|professor|lecturer|partner|senior|head of|\blead\b|product|real estate|property|pilot|scientist|analyst|specialist|medical|clinic/.test(jl)) add(25, job);
       else add(12, job);
     }
+    var jobPts = pts - p0, jobWhy = why.slice(invWhy.length);
     var want = [lmAns(a, /^HA Relationship Wanted/i), lmAns(a, /^FF Intentions/i), lmAns(a, /^HA Anything Else/i), lmAns(a, /^App Q2/i)].join(" ").toLowerCase();
     if (/marr|husband|wife|spouse|wedding/.test(want)) add(20, "Marriage");
     if (/child|\bkids?\b|family|bab(y|ies)|\bmum\b|\bmom\b|mother|father/.test(want)) add(15, "Children");
@@ -6431,7 +6433,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (lmStore(a.id).rating === "good") add(8, "You rated Good");
     var cc = String(a.country || "").trim();
     if (cc && LM_RICH.test(cc)) add(8, "High-income country");
-    return { pts: pts, why: why };
+    return { pts: pts, why: why, invPts: invPts, jobPts: jobPts, invWhy: invWhy, jobWhy: jobWhy };
   }
   // Reel follow-ups sent (2026-11-24): "🎬 Reel follow-up 2 · 24/11" on the card, from state.looms[id].reelsSent.
   function lmReelTag(s){
@@ -6486,8 +6488,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     }
     var ad = daysSince(a.dateAdded);
     if (ad !== null) add(ad <= 3 ? 12 : ad <= 7 ? 8 : ad <= 14 ? 4 : ad <= 30 ? 2 : 0, "Applied " + ago(ad));
-    var fit = lmScore(a).pts; pts += Math.round(fit / 5);
-    return { pts: pts, why: why, fit: fit };
+    // Job + investment count in full (Olly, 2026-11-25: "add the person's job title and financial amount they can contribute");
+    // the rest of fit (marriage, children, settle down, rating, country) only breaks ties.
+    var F = lmScore(a);
+    pts += F.invPts + F.jobPts; why = why.concat(F.invWhy, F.jobWhy);
+    pts += Math.round((F.pts - F.invPts - F.jobPts) / 5);
+    return { pts: pts, why: why, fit: F.pts };
   }
   // Prospect voice for the content generator (Olly, 2026-11-24): an ANONYMOUS summary of the top-ranked prospects
   // (same ranking as 📅 Follow-up: fit + engagement; members who joined count too, they're proof of who buys).
@@ -6550,7 +6556,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       return { a:a, f:f, pts:f.pts + e.pts, fit:f.pts, eng:e.pts, why:(lab ? [lab] : []).concat(e.why, f.why), lab:lab };
     }).sort(function(x, y){ return (x.sink || 0) - (y.sink || 0) || y.pts - x.pts || String(y.a.dateAdded || "").localeCompare(String(x.a.dateAdded || "")); });
     var total = rows.length; rows = rows.filter(function(x){ return lmRFpass(x.a, x.f); });
-    var html = lmSort === "warm" ? '<p class="hint" style="margin:0 0 10px">🔥 Warmest right now, hottest first: Join click, how much of the video they watched, replies and email score, counting more the more recent it is (last video watch, last email open, when they applied). Fit only breaks ties. Members and Not a fit sit at the bottom.</p>' : '<p class="hint" style="margin:0 0 10px">The quality of everyone who has applied, best first. Score = fit (investment, job, marriage, children, settling down, your Good rating, high-income country) + engagement (video, Join click, replies, email score). Members and Not a fit are included; removed applicants are left out. For who to message, use 📅 Follow-up.</p>';
+    var html = lmSort === "warm" ? '<p class="hint" style="margin:0 0 10px">🔥 Warmest right now, hottest first: Join click, how much of the video they watched, replies and email score, counting more the more recent it is (last video watch, last email open, when they applied), plus their job and how much they can invest. The rest of fit only breaks ties. Members and Not a fit sit at the bottom.</p>' : '<p class="hint" style="margin:0 0 10px">The quality of everyone who has applied, best first. Score = fit (investment, job, marriage, children, settling down, your Good rating, high-income country) + engagement (video, Join click, replies, email score). Members and Not a fit are included; removed applicants are left out. For who to message, use 📅 Follow-up.</p>';
     html += lmRFhtml(rows.length, total);
     if (!rows.length) return html + '<p class="hint" style="opacity:.7">Nobody matches these filters.</p>';
     return html + '<div class="lmrank">' + rows.map(function(x, i){
@@ -6575,7 +6581,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var G = [["📅 Follow up today", "Had their first message and nothing from you for 3+ days. Best first: send each one their Helpful Reel."],
       ["✉️ Send their first message", "Applied but haven’t had their video message yet. Do this first, from their card."],
       ["✅ Contacted or applied in the last 3 days", "Covered for now. They move back up 3 days after your last message (or after they applied, if no message is dated)."]];
-    var html = lmSort === "warm" ? '<p class="hint" style="margin:0 0 10px">🔥 Warmest right now, hottest first in each group: Join click, how much of the video they watched, replies and email score, counting more the more recent it is (last video watch, last email open, when they applied). Fit only breaks ties. Joined, Not a fit and removed applicants are left out.</p>' : '<p class="hint" style="margin:0 0 10px">Ranked by how likely they are to join: how they engaged (clicked Join, how much of the video they watched, rewatching, replying, their email score and opening an email in the last 3 days) plus fit (investment, job, marriage, children, settling down, your Good rating, high-income country). Joined, Not a fit and removed applicants are left out.</p>';
+    var html = lmSort === "warm" ? '<p class="hint" style="margin:0 0 10px">🔥 Warmest right now, hottest first in each group: Join click, how much of the video they watched, replies and email score, counting more the more recent it is (last video watch, last email open, when they applied), plus their job and how much they can invest. The rest of fit only breaks ties. Joined, Not a fit and removed applicants are left out.</p>' : '<p class="hint" style="margin:0 0 10px">Ranked by how likely they are to join: how they engaged (clicked Join, how much of the video they watched, rewatching, replying, their email score and opening an email in the last 3 days) plus fit (investment, job, marriage, children, settling down, your Good rating, high-income country). Joined, Not a fit and removed applicants are left out.</p>';
     html += lmRFhtml(rows.length, lmRFtotal);
     G.forEach(function(g, gi){
       var list = rows.filter(function(x){ return x.grp === gi; });
