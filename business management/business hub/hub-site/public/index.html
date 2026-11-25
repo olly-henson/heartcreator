@@ -5576,6 +5576,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (s.product) L.push(s.product === "annual" ? "Annual $2,500" : "Monthly $250");
     return L.map(function(x){ return '<span class="lmtag">' + x + "</span>"; }).join("");
   }
+  // ✅ Follow-up done (Olly, 2026-11-25: manual texts the Hub can't see): pick the date, tap the button. Saved in
+  // state.looms[id].followUps ["YYYY-MM-DD", ...]; lmLastContact() counts it, so 📅 Follow-up and 🏆 Ranking treat them as contacted.
+  function lmToday(){ var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function lmFuDM(x){ return x.slice(8, 10) + "/" + x.slice(5, 7); }
+  function lmFuRow(s){
+    var f = s.followUps || [], t = lmToday();
+    return '<div class="lmstep"><small>Follow-up</small><input type="date" class="lmfudate" value="' + t + '" max="' + t + '" aria-label="Follow-up date" style="padding:6px 8px;border-radius:10px;border:1px solid var(--border-soft);background:transparent;color:inherit;font-family:inherit;font-size:13px">'
+      + '<button type="button" data-act="fudone">✅ Follow-up done</button>'
+      + (f.length ? '<small style="flex-basis:100%;opacity:.8">Logged: ' + f.map(lmFuDM).join(", ") + ' · <a href="#" data-act="fuundo" style="color:inherit">undo last</a></small>' : "") + "</div>";
+  }
   // Checklist on each card: tap a step to tick it, tap again to untick. Pink = done.
   function lmStageBox(a){
     var s = lmStore(a.id), st = lmStage(a);
@@ -5593,6 +5603,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       row("✓", "They joined", btn("monthly", "Monthly $250") + btn("annual", "Annual $2,500")) +
       '<small style="display:block;opacity:.65;margin:2px 0 6px">Plan read, Watched and Clicked Join tick themselves from the tracking. Untick one to override it.</small>' +
       '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("coldSent", "🧊 Cold follow-up done") + btn("nofit", "Not a fit") + "</div>" +
+      lmFuRow(s) +
       (s.archived ? '<div class="lmstep">' + (lmRemoved(a) ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Removed from GHL ✓</span>'
         : '<button type="button" data-act="ghlremove" style="border-color:#f87171;color:#f87171">Remove from GHL</button><small style="flex-basis:100%;opacity:.7">Takes them off every list, turns on Do Not Disturb and leaves them out of all stats.</small>') + "</div>" : "") + "</div>";
   }
@@ -6328,6 +6339,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       lmCardPlanTag(a) + lmEmailTag(a) +
       (s.coldSent ? '<span class="lmtag" style="margin:0;background:rgba(125,211,252,.18);color:#7dd3fc">🧊 Cold follow-up done</span>' : "") +
       lmReelTag(s) +
+      ((s.followUps || []).length ? '<span class="lmtag" style="margin:0;background:rgba(74,222,128,.16);color:#4ade80">✅ Followed up ' + lmFuDM(s.followUps[s.followUps.length - 1]) + "</span>" : "") +
       rmTag(a.id) + (s.churned ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Churned</span>' : "") +
       lmVslTag(a.id) + lmGuideTag(a.id) +
       (lmStage(a) === "quiet" ? '<span class="lmtag" style="margin:0">' + ({ "new":"Before any message", contacted:"After the first message", replied:"After replying", plan_sent:"After the plan was sent", plan_read:"After reading the plan", asked:"After asking questions", loom:"After the video was sent", watched:"After watching the video", joinclick:"After clicking Join" }[lmStage(a, true)] || "") + "</span>" : "");
@@ -6540,6 +6552,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function lmLastContact(s){
     var t = Date.parse(s.lastContact || "") || 0;
     (s.reelsSent || []).forEach(function(x){ t = Math.max(t, Date.parse(x.at) || 0); });
+    (s.followUps || []).forEach(function(x){ t = Math.max(t, Date.parse(x + "T12:00:00") || 0); });
     return t;
   }
   // 📅 Follow-up view (Olly, 2026-11-24; was 🏆 Rank applicants): ranked by fit + engagement, in three groups.
@@ -6552,11 +6565,13 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var rows = lmData.filter(function(a){ return !lmRemoved(a); }).map(function(a){
       var f = lmScore(a), e = lmEngage(a), st = lmStage(a);
       var lab = st === "joined" ? "Joined" : st === "nofit" ? "Not a fit" : "";
-      if (lmSort === "warm"){ var w = lmWarm(a); return { a:a, f:f, pts:w.pts, fit:f.pts, warm:true, sink:(st === "joined" || st === "nofit") ? 1 : 0, why:(lab ? [lab] : []).concat(w.why), lab:lab }; }
-      return { a:a, f:f, pts:f.pts + e.pts, fit:f.pts, eng:e.pts, why:(lab ? [lab] : []).concat(e.why, f.why), lab:lab };
+      var lc = lmLastContact(lmStore(a.id)), lcd = lc ? Math.floor((Date.now() - lc) / 864e5) : null;
+      if (!lab && lcd !== null && lcd < 3) lab = "Contacted " + (lcd === 0 ? "today" : lcd === 1 ? "yesterday" : lcd + " days ago");
+      if (lmSort === "warm"){ var w = lmWarm(a); return { a:a, f:f, pts:w.pts, fit:f.pts, warm:true, sink:(st === "joined" || st === "nofit") ? 2 : (lab ? 1 : 0), why:(lab ? [lab] : []).concat(w.why), lab:lab }; }
+      return { a:a, f:f, pts:f.pts + e.pts, fit:f.pts, eng:e.pts, sink:(st === "joined" || st === "nofit") ? 2 : (lab ? 1 : 0), why:(lab ? [lab] : []).concat(e.why, f.why), lab:lab };
     }).sort(function(x, y){ return (x.sink || 0) - (y.sink || 0) || y.pts - x.pts || String(y.a.dateAdded || "").localeCompare(String(x.a.dateAdded || "")); });
     var total = rows.length; rows = rows.filter(function(x){ return lmRFpass(x.a, x.f); });
-    var html = lmSort === "warm" ? '<p class="hint" style="margin:0 0 10px">🔥 Warmest right now, hottest first: Join click, how much of the video they watched, replies and email score, counting more the more recent it is (last video watch, last email open, when they applied), plus their job and how much they can invest. The rest of fit only breaks ties. Members and Not a fit sit at the bottom.</p>' : '<p class="hint" style="margin:0 0 10px">The quality of everyone who has applied, best first. Score = fit (investment, job, marriage, children, settling down, your Good rating, high-income country) + engagement (video, Join click, replies, email score). Members and Not a fit are included; removed applicants are left out. For who to message, use 📅 Follow-up.</p>';
+    var html = lmSort === "warm" ? '<p class="hint" style="margin:0 0 10px">🔥 Warmest right now, hottest first: Join click, how much of the video they watched, replies and email score, counting more the more recent it is (last video watch, last email open, when they applied), plus their job and how much they can invest. The rest of fit only breaks ties. Anyone you contacted in the last 3 days (incl. ✅ Follow-up done) sits lower, then members and Not a fit at the bottom.</p>' : '<p class="hint" style="margin:0 0 10px">The quality of everyone who has applied, best first. Score = fit (investment, job, marriage, children, settling down, your Good rating, high-income country) + engagement (video, Join click, replies, email score). Members and Not a fit are included; removed applicants are left out. Anyone you contacted in the last 3 days (incl. ✅ Follow-up done) sits below the rest until it’s been 3 days, then members and Not a fit. For who to message, use 📅 Follow-up.</p>';
     html += lmRFhtml(rows.length, total);
     if (!rows.length) return html + '<p class="hint" style="opacity:.7">Nobody matches these filters.</p>';
     return html + '<div class="lmrank">' + rows.map(function(x, i){
@@ -6685,9 +6700,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       el.querySelectorAll("[data-app]").forEach(function(b){ b.addEventListener("click", function(){ lmStore(el.dataset.id).msgApp = b.dataset.app; markDirty(); renderLooms(); }); });
       if (nt) nt.addEventListener("input", function(){ lmStore(el.dataset.id).note = nt.value; markDirty(); });
       el.querySelectorAll(".lmrate button").forEach(function(b){ b.addEventListener("click", function(){ var s2 = lmStore(el.dataset.id); s2.rating = s2.rating === b.dataset.r ? "" : b.dataset.r; markDirty(); renderLooms(); }); });
+      el.querySelectorAll('.lmstg a[data-act="fuundo"]').forEach(function(u){ u.addEventListener("click", function(ev){ ev.preventDefault(); var s5 = lmStore(el.dataset.id); (s5.followUps || []).pop(); markDirty(); renderLooms(); }); });
       el.querySelectorAll(".lmstg button").forEach(function(b){ b.addEventListener("click", function(){
         var a2 = lmById(el.dataset.id), s4 = lmStore(a2.id), k = b.dataset.act;
         if (k === "ghlremove"){ lmRemove(a2, b); return; }
+        if (k === "fudone"){ var di = b.parentNode.querySelector(".lmfudate"), dv = (di && di.value) || lmToday(); if (dv > lmToday()) dv = lmToday();
+          s4.followUps = (s4.followUps || []).filter(function(x){ return x !== dv; }).concat([dv]).sort(); markDirty(); renderLooms(); return; }
         if (k === "monthly" || k === "annual"){ s4.product = s4.product === k ? "" : k; dvJoinStamp(s4); }
         else if (k === "nofit"){ s4.archived = !s4.archived; if (s4.archived) s4.quiet = false; }
         else if (k === "quiet"){ s4.quiet = !s4.quiet; if (s4.quiet) s4.archived = false; }
