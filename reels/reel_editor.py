@@ -36,16 +36,22 @@ TERMS = ["intellectualization", "emotional resonance"]
 CTA_WORDS = {"feeling", "emotion", "video", "attract", "scale"}  # keywords: green when comment / DM / message is up to 3 words before
 
 
-def font(px, hook=False):
-    """Captions: Figtree. hook=True: Inter (display cut). f.base = the full size, for emoji + stroke scaling."""
+def _font_at(px, hook, weight):
     f = ImageFont.truetype(HOOK_FONT if hook else FONT, px)
     vals = []
     for a in f.get_variation_axes():
         n = str(a["name"]).lower()
-        vals.append((HOOK_WEIGHT if hook else WEIGHT) if "eight" in n else
+        vals.append(min(max(weight, a["minimum"]), a["maximum"]) if "eight" in n else
                     min(max(px, a["minimum"]), a["maximum"]) if "optic" in n or "opsz" in n else a["default"])
     f.set_variation_by_axes(vals)
-    f.base, f.hook = (HOOK_PX if hook else FONT_PX), hook
+    return f
+
+
+def font(px, hook=False):
+    """Captions: Figtree. hook=True: Inter (display cut). f.base = the full size, for emoji + stroke scaling."""
+    wt = HOOK_WEIGHT if hook else WEIGHT
+    f = _font_at(px, hook, wt)
+    f.base, f.hook, f.weight = (HOOK_PX if hook else FONT_PX), hook, wt
     return f
 
 
@@ -286,7 +292,7 @@ def draw_text(canvas, d, x, y, t, f, fill):
     if f.size >= f.base:
         d.text((x, y), t, font=f, fill=fill)
         return
-    big = _BIG.get((f.hook, f.size)) or _BIG.setdefault((f.hook, f.size), font(f.size * SS, f.hook))
+    big = _BIG.get((f.hook, f.size)) or _BIG.setdefault((f.hook, f.size), _font_at(f.size * SS, f.hook, getattr(f, "weight", WEIGHT)))  # same weight as the measured text
     target = _BIG.get(("stem", f.hook)) or _BIG.setdefault(("stem", f.hook), _stem(font(f.base * SS, f.hook)))  # full-size stem, at 4x
     # top up to the 66px stem, but never more than ~0.5px a side at 1x: more fills the gaps between small letters
     stroke = max(0, min(SS // 4, round((target - _stem(big)) / 2)))   # max 0.25px a side (0.5 was "too bold")
@@ -508,6 +514,13 @@ def hook_fit(words):
             return lines, f
         if fits and fallback is None:  # the largest size where two lines fit at all
             fallback = (lines, f)
+    # Olly 2026-11-25: a long hook must stay the SAME SIZE as the other hooks ("How to scientifically attract someone
+    # that you can marry and have children with" shrank to 44.8px; a heavier weight to make up for it looked worse).
+    # So three, then four full-size lines (still an inverted pyramid) before any shrinking.
+    for n in (3, 4):
+        full = hook_pyramid_n(words, n, FH)
+        if full:
+            return full, FH
     three = hook_three(words)
     if three:
         return three
@@ -526,8 +539,59 @@ def hook_fit(words):
     # ("Why do people with great careers struggle to get married and have children": 48.5px three lines vs 44.8px)
     three = hook_three(words, PYRAMID_MIN_PX)
     if three and (two is None or three[1].size > two[1].size):
-        return three
-    return two or fallback or (lines, f)
+        best = three
+    else:
+        best = two or fallback or (lines, f)
+    # Olly 2026-11-25: a hook shrunk well below full size looks wrong next to the others ("the text needs to be the same
+    # size as the other hooks"). When the pyramid would need that, keep FULL size over 3-4 lines, as close to a
+    # pyramid as the words allow (e.g. "scientifically" alone is too wide for a full-size pyramid).
+    if best[1].size < TWO_LINE_MIN_PX:
+        near = hook_near_pyramid(words, FH)
+        if near:
+            return near, FH
+        print("WARNING: hook can't be a full-size pyramid; shrunk to %.1fpx. Shorten it (inbox/<id>.mov.hook.txt)" % best[1].size)
+    return best
+
+
+def hook_pyramid_n(words, n, f):
+    """n lines at font f, each at least as wide as the one below (bottom counts its end emoji), all inside HOOK_MAX;
+    the most even split (smallest top-minus-bottom). None if no split works."""
+    from itertools import combinations
+    if len(words) < n:
+        return None
+    ew = egap(f) + 46 * f.size / f.base
+    best = None
+    for cuts in combinations(range(1, len(words)), n - 1):
+        idx = (0,) + cuts + (len(words),)
+        ls = [" ".join(words[idx[k]:idx[k + 1]]) for k in range(n)]
+        ws = [f.getlength(x) for x in ls]
+        ws[-1] += ew
+        if max(ws) <= HOOK_MAX and all(ws[k] >= ws[k + 1] for k in range(n - 1)) and (best is None or ws[0] - ws[-1] < best[0]):
+            best = (ws[0] - ws[-1], ls)
+    return best[1] if best else None
+
+
+def hook_near_pyramid(words, f):
+    """3 or 4 full-size lines inside HOOK_MAX, the TOP line always the widest: the least "wider than the line above"
+    below it (bottom counts its end emoji),
+    then fewest lines, then the most even widths. None if the words don't fit in 4 lines."""
+    from itertools import combinations
+    ew = egap(f) + 46 * f.size / f.base
+    best = None
+    for n in (3, 4):
+        if len(words) < n:
+            continue
+        for cuts in combinations(range(1, len(words)), n - 1):
+            idx = (0,) + cuts + (len(words),)
+            ls = [" ".join(words[idx[k]:idx[k + 1]]) for k in range(n)]
+            ws = [f.getlength(x) for x in ls]
+            ws[-1] += ew
+            if max(ws) > HOOK_MAX or ws[0] < max(ws):   # top line never narrower (Olly 2026-11-19 rejected that)
+                continue
+            key = (round(sum(max(0, ws[k + 1] - ws[k]) for k in range(n - 1)) / 20), n, max(ws) - min(ws))
+            if best is None or key < best[0]:
+                best = (key, ls)
+    return best[1] if best else None
 
 
 def hook_three(words, lo=None):
