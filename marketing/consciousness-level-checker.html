@@ -295,6 +295,10 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
           <button type="button" data-kind="belief" aria-pressed="false">Belief breaking</button>
           <button type="button" data-kind="scale" aria-pressed="false">Emotional scale</button>
           <button type="button" data-kind="science" aria-pressed="false">Science</button>
+          <button type="button" data-kind="research" aria-pressed="false">Love research</button>
+          <button type="button" data-kind="intel" aria-pressed="false">Intellectualization</button>
+          <button type="button" data-kind="eres" aria-pressed="false">Emotional Resonance</button>
+          <button type="button" data-kind="intelj" aria-pressed="false">Intellectualization (photos)</button>
           <button type="button" data-kind="engagement" aria-pressed="false">Engagement</button>
           <button type="button" data-kind="meme" aria-pressed="false">Meme</button>
           <button type="button" data-kind="results" aria-pressed="false">Results share</button>
@@ -5284,7 +5288,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   function txSave(){ store.set("txPos", st.tx || {}); }
   // Background photo on the Story types that don't use one by default (Olly, 2026-10-29): "No photo" keeps the design's own
   // background. Dark designs get a dark wash over the photo, light ones a light wash, so the text stays readable.
-  var BG_DARK = { belief:1, scale:1, science:1, results:1 }, BG_LIGHT = { b_crossed:1, b_dm:1, b_post:1 };
+  var BG_DARK = { belief:1, scale:1, science:1, results:1, research:1, intel:1, eres:1, intelj:1, lr_believe:1, lr_dial:1, lr_trained:1, lr_friends:1, lr_dyk:1 }, BG_LIGHT = { b_crossed:1, b_dm:1, b_post:1 };
   function bgOn(){ var k = drawKey(); return !!(BG_DARK[k] || BG_LIGHT[k]) && !(k === "science" && st.sciStyle === "photo"); }
   function bgSrc(){ st.bg = st.bg || store.get("bgPhoto") || {}; return st.bg[drawKey()] || ""; }
   function bgSet(src){
@@ -5375,6 +5379,10 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     engagement: { hint:"A question in one box that people answer by replying to the Story (no sticker), from where they are right now with love (never dating advice). Easy to answer in one word or one honest sentence.", text:"q", label:"Question", more:"New question", bank:QUESTIONS, key:"bank-engagement", tip:"Easy to answer with a tap or a word." },
     scale:      { hint:"The emotional scale from the training: elevated emotions attract high-quality partners, survival emotions attract low-quality ones. Use it again and again to drill the point in. Circle an emotion to point at where most of us date from.", text:"sc", label:"Top line", more:"New line", bank:SCALE_HOOKS, key:"bank-scale", tip:"Short. Let the scale do the talking." },
     science:    { hint:"The science behind the right emotional state, so it never feels vague: brainwaves, heart rhythm and what changes in the body. Stick to what's on the templates and in the core message. Never say the heart's field or your brainwaves pull a partner in.", text:"sci", label:"Top line", more:"New line", bank:SCI_HOOKS, key:"bank-science", tip:"One idea per Story. Let the chart do the explaining." },
+    research:   { hint:"Love research: real studies on how our emotional state shapes who we notice, how we come across and whether we believe love can happen. Each design lands one part of the core message. Pick a design, then edit the words or press New text." },
+    intel:      { hint:"Intellectualization, explained so people recognise themselves (from Olly's email, 2026-11-25): the panic thought, the two paths it drives (forcing ourselves to date, fixing ourselves), neither leads to love, the psychiatrist's term, what it does, then how love actually happens. We, never you. No dating tactics." },
+    eres:       { hint:"Emotional Resonance, shown as a journey (Olly, 2026-11-25): her feeling it first (hand on her heart), then meeting her person, then the life beyond dating (family on the beach). Builds the confidence, energy and belief to meet someone, then a real connection without sabotaging it or worrying it'll go wrong. We, never you. No dating tactics." },
+    intelj:     { hint:"Intellectualization as a journey, the opposite of the Emotional Resonance one (Olly, 2026-11-25): overthinking, catastrophizing and worrying, then time wasters and nothing connecting, then single and lonely for years while the worry keeps getting worse. We, never you. No dating tactics." },
     meme:       { hint:"A popular meme template on a Story-sized frame: the old belief next to the right emotional state. Pick a template, fill in the panels and save. Leave the space at the bottom for a poll or slider sticker. Press Generate meme for 3 ready-written versions, or pick Your own image to use any picture. Every line stays editable." },
     results:    { hint:"Member wins as they come in. Use a real message, shared with permission, with names covered.", text:"res", label:"Line above the screenshot", more:"New line", bank:RESULTS, key:"bank-results", tip:"Keep it short. Let the screenshot do the talking." }
   };
@@ -5383,6 +5391,73 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   // ── More templates (Olly, 2026-11-02): popular 2026 Story formats blended with ours, one per style button inside its type.
   // Same rules as the banks above: "we/most people", short, no manifestation words, research facts only from RESEARCH_FACTS.
   // Text lives in st.kt[key] (remembered on this device); fields = [name, label, rows]; "New text" rotates the bank.
+  // Love research (Olly, 2026-11-25): a separate Story tab on how emotions shape who we meet. Studies checked
+  // 2026-11-25 (draft: heartattractor/marketing/science-stories-love-research-DRAFT.md). Only these, worded carefully.
+  var LOVE_RESEARCH = "LOVE RESEARCH (only for the lr_ templates; the only extra studies allowed, worded exactly this carefully, no numbers beyond these):\n"
+    + "1. Emotional contagion (Hatfield, Cacioppo & Rapson 1993): people automatically mirror each other's faces, voices and posture, and their feelings start to match. Our own feelings are shaped more by how others act than by what they say.\n"
+    + "2. Expecting rejection (Downey & Feldman 1996): people who anxiously expected rejection were quicker to see it in a new partner's ambiguous behaviour than people who calmly expected acceptance.\n"
+    + "3. Attention (Fredrickson & Branigan 2005, two experiments, 104 people): positive emotions widened attention, negative emotions narrowed it.\n"
+    + "4. Trained security (Carnelley & Rowe 2007): people who repeatedly brought back the feeling of being safe and loved, over several sessions, later expected better things from relationships, saw themselves more positively and felt less anxious about love; a comparison group didn't change.\n"
+    + "5. Positivity resonance (Barbara Fredrickson): love described as small, shared moments of good feeling between two people, with mutual care.\n"
+    + "6. Loving-kindness meditation (Kok et al. 2013, 65 adults, randomly assigned, 6 weeks): practising a meditation that brings up warm, caring feelings went with more positive emotions and feeling more connected to people.\n"
+    + "HOW TO SAY IT: 'in one study', 'research suggests', 'people who…'. None of these measured finding a partner: never say or imply a study's participants found love, never promise a partner. Tie each one to the core message (how we feel, not what we know). No dating tactics.";
+  function lrPara(ctx, text, x, y, maxW, size, min, maxL, weight, color, lhk, align){
+    var f = fit(ctx, String(text || " "), weight, size, min, maxW, maxL); ctx.font = font(weight, f.size); ctx.fillStyle = color;
+    return lines(ctx, f.lines, x, y, f.size * (lhk || 1.3), align);
+  }
+  function lrCard(ctx, x, y, w, h, stroke){
+    ctx.save(); ctx.fillStyle = "rgba(255,255,255,.07)"; ctx.strokeStyle = stroke || "rgba(255,255,255,.18)"; ctx.lineWidth = stroke ? 4 : 2;
+    rrect(ctx, x, y, w, h, 28); ctx.fill(); ctx.stroke(); ctx.restore();
+  }
+  function lrLabel(ctx, text, x, y, color, align){
+    ctx.save(); ctx.font = font(800, 34); ctx.fillStyle = color; ctx.textAlign = align || "center";
+    if (ctx.letterSpacing !== undefined) ctx.letterSpacing = "3px"; ctx.fillText(String(text || "").toUpperCase(), x, y); ctx.restore();
+  }
+  function lrItems(t, max){ return String(t || "").split("\n").map(function(x){ return x.trim(); }).filter(Boolean).slice(0, max || 4); }
+  function lrList(ctx, y, title, col, items){
+    var it = lrItems(items, 4), h = 120 + it.length * 72;
+    lrCard(ctx, 70, y, W - 140, h, col); lrLabel(ctx, title, 120, y + 76, col, "left");
+    it.forEach(function(t, i){ var yy = y + 150 + i * 72;
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(132, yy - 14, 10, 0, Math.PI * 2); ctx.fill();
+      var f = fit(ctx, t, 600, 44, 30, 800, 1); ctx.font = font(600, f.size); ctx.fillStyle = "#ffffff"; ctx.textAlign = "left"; ctx.fillText(f.lines[0] || "", 165, yy); });
+    return y + h;
+  }
+  function lrNote(ctx, label, text, y){
+    if (!String(text || "").trim()) return y;
+    var f = fit(ctx, String(text), 500, 34, 28, 820, 4), h = 96 + f.lines.length * f.size * 1.35;
+    ctx.fillStyle = "rgba(255,255,255,.07)"; rrect(ctx, 70, y, W - 140, h, 24); ctx.fill();
+    lrLabel(ctx, label, W / 2, y + 58, "#cbb8da");
+    ctx.font = font(500, f.size); ctx.fillStyle = "#e9dcf3"; lines(ctx, f.lines, W / 2, y + 112, f.size * 1.35);
+    return y + h;
+  }
+  function lrFoot(ctx, bottom, src){
+    if (String(bottom || "").trim()) lrPara(ctx, bottom, W / 2, 1700, 900, 46, 34, 2, 700, "#ffffff", 1.25);
+    if (String(src || "").trim()){ ctx.font = font(500, 26); ctx.fillStyle = "#cbb8da"; ctx.textAlign = "center"; ctx.fillText(String(src).trim(), W / 2, 1850); }
+  }
+  function lrPerson(ctx, x, y, s, col){
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y - s * 0.62, s * 0.3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x, y + s * 0.1, s * 0.48, s * 0.42, 0, Math.PI, 0); ctx.closePath(); ctx.fill();
+  }
+  function lrDial(ctx, y, pos, v, title, notice, col){
+    lrCard(ctx, 70, y, W - 140, 470, col); lrLabel(ctx, title, W / 2, y + 74, col);
+    var x0 = 150, x1 = W - 150, ly = y + 190;
+    ctx.save(); ctx.fillStyle = "#f3e6d4"; rrect(ctx, x0 - 30, ly - 70, x1 - x0 + 60, 130, 18); ctx.fill();
+    ctx.strokeStyle = "#3a2140"; ctx.lineWidth = 3;
+    for (var i = 0; i <= 40; i++){ var xx = x0 + (x1 - x0) * i / 40, tall = i % 5 === 0;
+      ctx.beginPath(); ctx.moveTo(xx, ly - (tall ? 40 : 22)); ctx.lineTo(xx, ly + 10); ctx.stroke(); }
+    ctx.font = font(700, 26); ctx.fillStyle = "#3a2140"; ctx.textAlign = "left"; ctx.fillText(String(v.sl || "").toUpperCase(), x0 - 10, ly + 46);
+    ctx.textAlign = "right"; ctx.fillText(String(v.el || "").toUpperCase(), x1 + 10, ly + 46);
+    var nx = x0 + (x1 - x0) * pos; ctx.strokeStyle = "#d42a2f"; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(nx, ly - 62); ctx.lineTo(nx, ly + 52); ctx.stroke();
+    ctx.restore();
+    ctx.font = font(500, 32); ctx.fillStyle = "#cbb8da"; ctx.textAlign = "center"; ctx.fillText(String(v.ln || ""), W / 2, y + 330);
+    lrPara(ctx, notice, W / 2, y + 392, 860, 44, 32, 2, 700, "#ffffff", 1.2);
+  }
+  var LR_SRC_HAT = "After Hatfield, Cacioppo & Rapson 1993, emotional contagion", LR_SRC_DOW = "After Downey & Feldman 1996, rejection sensitivity research",
+    LR_SRC_FRB = "After Fredrickson & Branigan 2005, 104 people", LR_SRC_CR = "After Carnelley & Rowe 2007, Personal Relationships", LR_SRC_FR = "After Barbara Fredrickson, positivity resonance";
+  var LR_HAT = "Our feelings are shaped more by how people act than by what they say. We mirror each other's faces, voices and posture.";
+  var LR_DOW = "People who anxiously expect rejection are quicker to see it in moments that could mean anything.";
+  var LR_CR = "People repeatedly brought back the feeling of being safe and loved";
+  var LR_FR = "Researcher Barbara Fredrickson describes love as small, shared moments of good feeling between two people.";
   var KT = {
     e_tot: { nophoto:1, hint:"This or that: two options side by side. Add Instagram's poll sticker in the marked space so people vote with a tap.",
       fields:[["top", "Top line", 1], ["a", "Option 1", 2], ["b", "Option 2", 2]],
@@ -5453,6 +5528,50 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
         { top:"Did you know?", num:"About 100%", fact:"In the same small study, DHEA, a hormone linked with vitality and resilience, rose about 100%.", src:"McCraty et al. 1998, 45 adults" },
         { top:"Did you know?", num:"5 hours", fact:"In one small study, a single burst of anger went with a lower immune marker for up to about 5 hours afterwards. Feeling care boosted it.", src:"Rein, Atkinson and McCraty 1995, 30 people" },
         { top:"Did you know?", num:"4 to 6 weeks", fact:"In a randomised trial with cancer survivors, 4 to 6 weeks of coherence training went with better sleep, stress, fatigue and mood.", src:"Elbers and McCraty 2025 review (HeartMath)" }] },
+    research: { hint:"Our state, not our checklist: what we know next to what people actually feel from us (emotional contagion, LOVE RESEARCH 1). 2 to 4 short items per box.",
+      fields:[["top", "Top line", 2], ["la", "First box label", 1], ["a", "First box (one per line)", 3], ["lb", "Second box label", 1], ["b", "Second box (one per line)", 3], ["nl", "Research label", 1], ["fact", "The research", 3], ["bottom", "Bottom line", 2], ["src", "Source line", 1]],
+      bank:[{ top:"They feel our state, not our checklist", la:"What we know", a:"Clear on what we want\nYears of inner work\nRead every book", lb:"What they feel", b:"Worry\nImpatience\nA tight chest", nl:"The research", fact:LR_HAT, bottom:"That's why knowing more doesn't change who shows up.", src:LR_SRC_HAT },
+        { top:"People feel how we feel, not what we know", la:"What we've learned", a:"Our attachment style\nWhat we want in a partner\nWhere it went wrong before", lb:"What they pick up", b:"Our worry it won't happen\nOur impatience\nOur guard going up", nl:"The research", fact:LR_HAT, bottom:"Who we attract follows how we feel.", src:LR_SRC_HAT },
+        { top:"Our body says it before we do", la:"What we tell ourselves", a:"I'm ready for love\nI know what I want\nI've done the work", lb:"What our body shows", b:"Bracing for it to go wrong\nHolding back\nA racing heart", nl:"The research", fact:LR_HAT, bottom:"People respond to how we feel, not what we know.", src:LR_SRC_HAT }] },
+    lr_believe: { hint:"Two readings: one ordinary moment read by the part of us that doesn't believe love can happen, then by the part that feels it can (expecting rejection, LOVE RESEARCH 2). Never texting, apps or dates: everyday moments.",
+      fields:[["top", "Top line", 2], ["ml", "Moment label", 1], ["moment", "The moment", 2], ["la", "First label", 1], ["a", "First reading", 2], ["lb", "Second label", 1], ["b", "Second reading", 2], ["nl", "Research label", 1], ["fact", "The research", 3], ["bottom", "Bottom line", 2], ["src", "Source line", 1]],
+      bank:[{ top:"When we don't believe it can happen", ml:"The moment", moment:"They seem a bit quiet tonight.", la:"Part of us doesn't believe", a:"“Maybe I'm too much.”", lb:"We feel it can happen", b:"“They've probably had a long day.”", nl:"The research", fact:LR_DOW, bottom:"The belief decides what we see.", src:LR_SRC_DOW },
+        { top:"Same moment. Two different beliefs.", ml:"The moment", moment:"They're busy this weekend.", la:"Part of us doesn't believe", a:"“Here we go again.”", lb:"We feel it can happen", b:"“Fair enough. Next weekend then.”", nl:"The research", fact:LR_DOW, bottom:"We see what we expect to see.", src:LR_SRC_DOW },
+        { top:"What we expect is what we notice", ml:"The moment", moment:"They didn't laugh at our joke.", la:"Part of us doesn't believe", a:"“I've ruined it.”", lb:"We feel it can happen", b:"“Not their kind of humour. That's fine.”", nl:"The research", fact:LR_DOW, bottom:"Feel it can happen and the same moment feels different.", src:LR_SRC_DOW }] },
+    lr_dial: { hint:"Radio dials (the radio analogy): tuned to a survival feeling we notice the wrong people, tuned to an elevated feeling we notice the right ones (attention, LOVE RESEARCH 3). The right person is steady AND fun, never boring.",
+      fields:[["top", "Top line", 2], ["la", "First dial label", 1], ["a", "Who we notice (first)", 2], ["lb", "Second dial label", 1], ["b", "Who we notice (second)", 2], ["ln", "Small line above", 1], ["sl", "Left of the dial", 1], ["el", "Right of the dial", 1], ["fact", "The research", 2], ["bottom", "Bottom line", 2], ["src", "Source line", 1]],
+      bank:[{ top:"Fear decides who we notice", la:"Tuned to worry", a:"The ones who keep us guessing", lb:"Tuned to calm", b:"Kind, steady people who feel the same", ln:"We notice", sl:"Survival", el:"Elevated", fact:"In studies, bad feelings narrowed attention. Good feelings widened it.", bottom:"We only pick up the station we're tuned to.", src:LR_SRC_FRB },
+        { top:"We only hear the station we're on", la:"Tuned to impatience", a:"Whoever gives us a rush", lb:"Tuned to joy", b:"Someone it feels easy to be ourselves with", ln:"We notice", sl:"Survival", el:"Elevated", fact:"In studies, bad feelings narrowed attention. Good feelings widened it.", bottom:"Change the station, not the radio manual.", src:LR_SRC_FRB },
+        { top:"Why the wrong people feel so exciting", la:"Tuned to anxiety", a:"Mixed signals that feel like chemistry", lb:"Tuned to safety", b:"Steady people who are still fun", ln:"We notice", sl:"Survival", el:"Elevated", fact:"In studies, bad feelings narrowed attention. Good feelings widened it.", bottom:"It's not what we know. It's what we're tuned to.", src:LR_SRC_FRB }] },
+    lr_trained: { hint:"Belief is trained: people who repeatedly brought back the feeling of being safe and loved changed how they saw love (LOVE RESEARCH 4). Items start with what changed; an item starting with Less gets a down arrow.",
+      fields:[["top", "Top line", 2], ["intro", "Line under it", 2], ["steps", "Under the dots", 1], ["la", "Box label", 1], ["items", "What changed (one per line)", 3], ["cmp", "Last line in the box", 1], ["bottom", "Bottom line", 2], ["src", "Source line", 1]],
+      bank:[{ top:"Belief in love can be trained", intro:LR_CR, steps:"Again and again, over several sessions", la:"Afterwards", items:"Expected better things from love\nSaw themselves more kindly\nLess anxious about love", cmp:"The comparison group didn't change.", bottom:"Feel it first. The belief follows.", src:LR_SRC_CR },
+        { top:"We don't find belief. We practise it.", intro:LR_CR, steps:"Again and again, over several sessions", la:"Afterwards", items:"Expected better things from love\nSaw themselves more kindly\nLess anxious about love", cmp:"The comparison group didn't change.", bottom:"That's why it's a daily practice, not a one-off.", src:LR_SRC_CR },
+        { top:"What repeating a feeling does", intro:LR_CR, steps:"Again and again, over several sessions", la:"Afterwards", items:"Expected better things from love\nSaw themselves more kindly\nLess anxious about love", cmp:"The comparison group didn't change.", bottom:"The feeling comes first. The belief catches up.", src:LR_SRC_CR }] },
+    lr_friends: { hint:"The crack: our friends did less inner work and found love because they had a connection (positivity resonance, LOVE RESEARCH 5). Never knock the reader's work or their friends.",
+      fields:[["top", "Top line", 2], ["cap", "Under the people", 1], ["la", "Box label", 1], ["items", "Box (one per line)", 2], ["nl", "Research label", 1], ["fact", "The research", 3], ["bottom", "Bottom line", 2], ["src", "Source line", 1]],
+      bank:[{ top:"How our friends found love without the work", cap:"A shared moment of feeling good together", la:"What they had", items:"Less theory\nMore connection", nl:"The research", fact:LR_FR, bottom:"Connection is felt, not learned.", src:LR_SRC_FR },
+        { top:"They didn't read the books. They felt it.", cap:"A shared moment of feeling good together", la:"What they had", items:"No strategy\nJust a real connection", nl:"The research", fact:LR_FR, bottom:"Love is something we feel together, not something we figure out.", src:LR_SRC_FR },
+        { top:"Love isn't a theory. It's a moment.", cap:"A shared moment of feeling good together", la:"What it looks like", items:"Laughing together\nFeeling safe together", nl:"The research", fact:LR_FR, bottom:"Those moments start with how we feel.", src:LR_SRC_FR }] },
+    lr_dyk: { hint:"Did you know: one finding from LOVE RESEARCH with its real number (6 weeks or 104 people only), then a bottom line that bridges to the daily practice.",
+      fields:[["top", "Top line", 1], ["num", "Big number", 1], ["unit", "Under the number", 1], ["fact", "The finding", 4], ["cite", "Study", 1], ["bottom", "Bottom line", 2], ["src", "Small line at the bottom", 1]],
+      bank:[{ top:"Did you know?", num:"6", unit:"weeks", fact:"In one study, adults who practised a meditation that brings up warm, caring feelings for 6 weeks felt more positive emotions and more connected to the people around them.", cite:"Kok et al. 2013, Psychological Science", bottom:"It's not one good meditation. It's the state we practise every day.", src:"65 adults · randomly assigned" },
+        { top:"Did you know?", num:"104", unit:"people", fact:"In two experiments with 104 people, good feelings widened what people noticed. Bad feelings narrowed it.", cite:"Fredrickson & Branigan 2005, Cognition and Emotion", bottom:"Fear decides who we notice.", src:"Positive emotions and attention" }] },
+    intel: { hint:"Intellectualization explained (from Olly's email, 2026-11-25): the panic thought, the two paths it drives (forcing ourselves to date, looking for more to fix), neither leads to love, the psychiatrist's term (never psychologist's), what it does, then how love actually happens. 'We', never 'you'. Short lines. No dating tactics.",
+      fields:[["top", "Top line", 2], ["l1", "First box label", 1], ["q", "The panic thought", 2], ["p1", "First path", 2], ["p2", "Second path", 2], ["no", "Line under the paths", 1], ["tl", "Small line above the term", 1], ["term", "The term", 1], ["what", "What it does", 3], ["bottom", "Bottom line", 2]],
+      bank:[{ top:"Why trying harder hasn't brought love", l1:"Our mind panics", q:"“What if it never happens for me?”", p1:"So we force ourselves to date", p2:"Or we look for more to fix in ourselves", no:"Neither leads to love.", tl:"The psychiatrist's term for this", term:"Intellectualization", what:"It makes it feel like there's always more to do or fix before love can happen.", bottom:"Love happens when two people simply enjoy being together." },
+        { top:"Tired of overthinking love?", l1:"What it sounds like", q:"“Is it even possible for me?”", p1:"Putting ourselves out there, hoping it works", p2:"Another book, another course, another fix", no:"None of it feels like love.", tl:"The psychiatrist's term for this", term:"Intellectualization", what:"Trying to solve love with our head, when love is something we feel.", bottom:"Our friends didn't solve love. They enjoyed being together." },
+        { top:"The real reason love feels so hard", l1:"When we worry it won't happen", q:"“What am I doing wrong?”", p1:"We try to force it", p2:"We try to fix ourselves", no:"Both keep love further away.", tl:"The psychiatrist's term for this", term:"Intellectualization", what:"Our brain stuck in panic and problem-solving mode, so love never feels possible.", bottom:"Love unfolds when we stop solving and start enjoying." }] },
+    eres: { hint:"Emotional Resonance as a journey (Olly, 2026-11-25): feeling it first (a woman with her hand on her heart), what it builds (confidence, energy and belief to meet someone), meeting her person, then the life beyond dating, and the connection without sabotage or worry. 'We', never 'you'. Short lines. No dating tactics. Photos: cig-assets/er-heart.jpg, er-couple.jpg, er-family.jpg.",
+      fields:[["head", "Header (shown in capitals)", 1], ["what1", "Step 1, next to her photo", 3], ["c1", "Step 2, next to the couple photo", 2], ["c2", "Step 3, next to the family photo", 2], ["what2", "Bottom line", 3]],
+      bank:[{ head:"Emotional Resonance", what1:"Builds the confidence, energy and belief we need to meet someone.", c1:"We meet our person", c2:"We build a life together", what2:"And we connect without sabotaging it or worrying it'll go wrong." },
+        { head:"Emotional Resonance", what1:"Feeling the love we want every day gives us the confidence, energy and belief to meet someone.", c1:"Someone we can be ourselves with", c2:"A family of our own", what2:"And when we meet them, we don't overthink it. We just enjoy it." },
+        { head:"Emotional Resonance", what1:"Practicing the feeling first builds the confidence, energy and belief to meet someone.", c1:"Then we meet them", c2:"Then we build our life together", what2:"No sabotaging it. No waiting for it to go wrong. Just a real connection." }] },
+    intelj: { hint:"Intellectualization as a journey, the mirror of the Emotional Resonance Story (Olly, 2026-11-25): step 1 overthinking, catastrophizing and worrying; step 2 time wasters, nothing connecting; step 3 single and lonely for years; bottom line, the worry keeps making it worse. 'We', never 'you'. Short lines. No dating tactics. Photos: cig-assets/ij-overthinking.jpg, ij-time-wasters.jpg, ij-lonely.jpg.",
+      fields:[["head", "Header (shown in capitals)", 1], ["what1", "Step 1, next to the overthinking photo", 3], ["c1", "Step 2, next to the time wasters photo", 2], ["c2", "Step 3, next to the lonely photo", 2], ["what2", "Bottom line", 3]],
+      bank:[{ head:"Intellectualization", what1:"Overthinking, catastrophizing and worrying it'll never happen for us.", c1:"We keep meeting time wasters", c2:"We stay single for years", what2:"And the longer it goes on, the more we worry. So it only gets worse." },
+        { head:"Intellectualization", what1:"Our mind panics: “What if it never happens for me?”", c1:"Nothing ever really connects", c2:"Another year on our own", what2:"Then the worry gets louder. And the loop keeps going round." },
+        { head:"Intellectualization", what1:"Trying to solve love with our head. Overthinking every step.", c1:"People who keep us guessing", c2:"Lonely, and doubting it's possible", what2:"It doesn't fix itself. Worrying more only makes it worse." }] },
     r_imsg: { hook:1, hint:"The screenshot as a message in an iMessage-style chat, with your reply underneath. A real message only, shared with permission, names covered.",
       fields:[["reply", "Your reply (optional)", 1]],
       bank:["This made my whole week", "So proud of you", "This is exactly it", "Love this so much"].map(function(t){ return { reply:t }; }) },
@@ -5465,7 +5584,8 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     engagement:[["", "Question"], ["e_tot", "This or that"], ["e_rate", "Rate it 1-10"]],
     lifestyle:[["", "Photo"], ["l_pov", "POV"], ["l_dump", "Photo dump"]],
     aspire:[["", "Photo"], ["a_ba", "Before / after"], ["a_check", "Checklist"]],
-    results:[["", "Card"], ["r_imsg", "iMessage"]]
+    results:[["", "Card"], ["r_imsg", "iMessage"]],
+    research:[["", "State vs checklist"], ["lr_believe", "Two readings"], ["lr_dial", "Radio dial"], ["lr_trained", "Belief is trained"], ["lr_friends", "Connection"], ["lr_dyk", "Did you know?"]]
   };
   st.ks = store.get("ks") || {}; Object.keys(st.ks).forEach(function(k){ if (st.ks[k] && (!KT[st.ks[k]] || st.ks[k] === "e_flags")) st.ks[k] = ""; });  // e_flags retired 2026-11-17
   st.kt = store.get("kt") || {};
@@ -5711,6 +5831,150 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
         lines(ctx, f.lines, x + s + 64, ry + bh / 2 - (f.lines.length - 1) * f.size * 0.6 + f.size * 0.35, f.size * 1.2, "left");
       });
     },
+    // Love research (2026-11-25): one design per part of the core message, text from KT (editable, New text)
+    research: async function(ctx){
+      var v = ktv("research"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 230, 64, 44, 3);
+      y = lrList(ctx, y + 50, v.la, "#f0abfc", v.a);
+      y = lrList(ctx, y + 40, v.lb, "#fb923c", v.b);
+      lrNote(ctx, v.nl, v.fact, y + 40); lrFoot(ctx, v.bottom, v.src);
+    },
+    lr_believe: async function(ctx){
+      var v = ktv("lr_believe"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 230, 62, 44, 3) + 50;
+      lrCard(ctx, 70, y, W - 140, 220); lrLabel(ctx, v.ml, W / 2, y + 76, "#cbb8da");
+      lrPara(ctx, v.moment, W / 2, y + 160, 860, 54, 36, 1, 700, "#ffffff");
+      [[v.la, v.a, "#fb923c"], [v.lb, v.b, "#f0abfc"]].forEach(function(p, i){ var cy = y + 260 + i * 310;
+        lrCard(ctx, 70, cy, W - 140, 270, p[2]); lrLabel(ctx, p[0], W / 2, cy + 78, p[2]);
+        lrPara(ctx, p[1], W / 2, cy + 165, 820, 54, 34, 2, 600, "#ffffff", 1.2); });
+      lrNote(ctx, v.nl, v.fact, y + 880); lrFoot(ctx, v.bottom, v.src);
+    },
+    lr_dial: async function(ctx){
+      var v = ktv("lr_dial"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 230, 66, 44, 3) + 60;
+      lrDial(ctx, y, 0.16, v, v.la, v.a, "#fb923c");
+      lrDial(ctx, y + 510, 0.84, v, v.lb, v.b, "#f0abfc");
+      lrPara(ctx, v.fact, W / 2, y + 1060, 860, 32, 26, 3, 500, "#e9dcf3", 1.4); lrFoot(ctx, v.bottom, v.src);
+    },
+    lr_trained: async function(ctx){
+      var v = ktv("lr_trained"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 230, 66, 44, 3);
+      var iy = lrPara(ctx, v.intro, W / 2, y + 90, 860, 36, 28, 2, 600, "#e9dcf3", 1.3);
+      var dy = iy + 90, n = 5, gx = 200, step = (W - 400) / (n - 1);
+      ctx.strokeStyle = "rgba(240,171,252,.5)"; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(gx, dy); ctx.lineTo(W - gx, dy); ctx.stroke();
+      for (var i = 0; i < n; i++){ ctx.fillStyle = "rgba(240,171,252," + (0.3 + 0.7 * i / (n - 1)) + ")"; ctx.beginPath(); ctx.arc(gx + i * step, dy, 34 + i * 5, 0, Math.PI * 2); ctx.fill(); }
+      ctx.font = font(500, 28); ctx.fillStyle = "#cbb8da"; ctx.textAlign = "center"; ctx.fillText(String(v.steps || ""), W / 2, dy + 110);
+      var it = lrItems(v.items, 4), cy = dy + 190, ch = 200 + it.length * 120;
+      lrCard(ctx, 70, cy, W - 140, ch, "#f0abfc"); lrLabel(ctx, v.la, W / 2, cy + 80, "#f0abfc");
+      it.forEach(function(t, k){ var yy = cy + 190 + k * 120, down = /^(less|fewer)\b/i.test(t);
+        ctx.font = font(800, 48); ctx.fillStyle = "#86efac"; ctx.textAlign = "left"; ctx.fillText(down ? "▼" : "▲", 130, yy);
+        var f = fit(ctx, t, 600, 42, 30, 740, 1); ctx.font = font(600, f.size); ctx.fillStyle = "#ffffff"; ctx.fillText(f.lines[0] || "", 205, yy); });
+      if (String(v.cmp || "").trim()){ ctx.font = font(500, 32); ctx.fillStyle = "#cbb8da"; ctx.textAlign = "center"; ctx.fillText(String(v.cmp), W / 2, cy + ch - 50); }
+      lrFoot(ctx, v.bottom, v.src);
+    },
+    lr_friends: async function(ctx){
+      var v = ktv("lr_friends"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 230, 60, 44, 3), cy = y + 380;
+      [400, 680].forEach(function(px){
+        var g = ctx.createRadialGradient(px, cy - 60, 20, px, cy - 60, 250); g.addColorStop(0, "rgba(240,171,252,.42)"); g.addColorStop(1, "rgba(240,171,252,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, cy - 60, 250, 0, Math.PI * 2); ctx.fill(); lrPerson(ctx, px, cy, 220, "#f0abfc"); });
+      ctx.font = font(600, 32); ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.fillText(String(v.cap || ""), W / 2, cy + 190);
+      var ey = lrList(ctx, cy + 250, v.la, "#f0abfc", v.items);
+      lrNote(ctx, v.nl, v.fact, ey + 40); lrFoot(ctx, v.bottom, v.src);
+    },
+    lr_dyk: async function(ctx){
+      var v = ktv("lr_dyk"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 300, 72, 48, 2);
+      var nf = fit(ctx, String(v.num || " "), 800, 210, 110, 920, 1);
+      ctx.save(); ctx.font = font(800, nf.size); ctx.fillStyle = "#f0abfc"; ctx.textAlign = "center"; ctx.shadowColor = "rgba(217,70,239,.45)"; ctx.shadowBlur = 40;
+      ctx.fillText(nf.lines[0] || "", W / 2, y + 60 + nf.size * 0.8); ctx.restore();
+      var uy = y + 60 + nf.size * 0.8 + 90;
+      if (String(v.unit || "").trim()){ ctx.font = font(800, 64); ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.fillText(String(v.unit), W / 2, uy); }
+      var fy = lrPara(ctx, v.fact, W / 2, uy + 150, 860, 48, 34, 6, 600, "#ffffff", 1.32);
+      if (String(v.cite || "").trim()){ ctx.font = font(500, 30); var cs = String(v.cite).trim(), sw = ctx.measureText(cs).width + 50;
+        ctx.fillStyle = "rgba(255,255,255,.1)"; rrect(ctx, W / 2 - sw / 2, fy + 10, sw, 64, 32); ctx.fill();
+        ctx.fillStyle = "#e9dcf3"; ctx.textAlign = "center"; ctx.fillText(cs, W / 2, fy + 53); }
+      lrFoot(ctx, v.bottom, v.src);
+    },
+    // Intellectualization explainer (Olly, 2026-11-25, condensed from his email)
+    intel: async function(ctx){
+      var v = ktv("intel"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 240, 62, 44, 2) + 50;
+      var qf = fit(ctx, String(v.q || " "), 600, 52, 36, 860, 2), qh = 130 + qf.lines.length * qf.size * 1.2;
+      lrCard(ctx, 70, y, W - 140, qh, "#fb923c"); lrLabel(ctx, v.l1, W / 2, y + 72, "#fb923c");
+      ctx.font = font(600, qf.size); ctx.fillStyle = "#ffffff"; lines(ctx, qf.lines, W / 2, y + 145, qf.size * 1.2);
+      var a0 = y + qh + 12, a1 = a0 + 80, cw = (W - 170) / 2;
+      [[W / 2, cw / 2 + 70], [W / 2, W - 70 - cw / 2]].forEach(function(p){
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 6; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(p[0], a0); ctx.lineTo(p[1], a1 - 14); ctx.stroke();
+        var dx = p[1] - p[0], dy = a1 - a0, l = Math.hypot(dx, dy); dx /= l; dy /= l;
+        ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.moveTo(p[1] + dx * 12, a1 - 14 + dy * 12);
+        ctx.lineTo(p[1] - dx * 14 - dy * 16, a1 - 14 - dy * 14 + dx * 16); ctx.lineTo(p[1] - dx * 14 + dy * 16, a1 - 14 - dy * 14 - dx * 16); ctx.closePath(); ctx.fill(); });
+      var py = a1 + 14;
+      [[70, v.p1], [70 + cw + 30, v.p2]].forEach(function(p){
+        lrCard(ctx, p[0], py, cw, 210);
+        var f = fit(ctx, String(p[1] || " "), 600, 42, 30, cw - 50, 3), ty = py + 105 - (f.lines.length - 1) * f.size * 0.62 + f.size * 0.35;
+        ctx.font = font(600, f.size); ctx.fillStyle = "#ffffff"; lines(ctx, f.lines, p[0] + cw / 2, ty, f.size * 1.24); });
+      var ny = py + 320;
+      lrPara(ctx, v.no, W / 2, ny, 900, 52, 36, 1, 800, "#fb923c");
+      var ty2 = ny + 70;
+      ctx.save(); ctx.fillStyle = "#ffffff"; ctx.shadowColor = "rgba(0,0,0,.35)"; ctx.shadowBlur = 30; rrect(ctx, 70, ty2, W - 140, 220, 28); ctx.fill(); ctx.restore();
+      ctx.font = font(600, 32); ctx.fillStyle = "#5b3a70"; ctx.textAlign = "center"; ctx.fillText(String(v.tl || ""), W / 2, ty2 + 70);
+      var tf = fit(ctx, String(v.term || " "), 800, 84, 50, 880, 1); ctx.font = font(800, tf.size); ctx.fillStyle = pinkGrad(ctx, 140, 0, W - 140, 0);
+      ctx.fillText(tf.lines[0] || "", W / 2, ty2 + 170);
+      lrPara(ctx, v.what, W / 2, ty2 + 310, 880, 38, 30, 3, 500, "#e9dcf3", 1.35);
+      lrFoot(ctx, v.bottom, "");
+    },
+    // Emotional Resonance journey (Olly, 2026-11-25): a numbered top-to-bottom timeline. Photo on the left, words on the
+    // right, a bold arrow between each photo: 1 feel it first -> 2 meet our person -> 3 the life beyond dating.
+    eres: async function(ctx, o){
+      o = o || { kind:"eres", head:"Emotional Resonance", srcs:["cig-assets/er-heart.jpg", "cig-assets/er-couple.jpg", "cig-assets/er-family.jpg"], fys:[0.3, 0.3, 0.4] };
+      var v = ktv(o.kind); purpleBg(ctx); TX(ctx);
+      var ims = await Promise.all(o.srcs.map(function(s){ return loadImg(s).catch(function(){ return null; }); }));
+      var PX = 70, PW = 450, PH = 300, GAP = 84, TXX = PX + PW + 44, TW = W - 70 - TXX;
+      var y0 = boxes(ctx, String(v.head || o.head).toUpperCase(), 270, 76, 48, 1) + 62;
+      ctx.textBaseline = "alphabetic";
+      function photo(img, y, fy){
+        ctx.save(); ctx.shadowColor = "rgba(0,0,0,.45)"; ctx.shadowBlur = 36; ctx.fillStyle = "#2a1838"; rrect(ctx, PX, y, PW, PH, 28); ctx.fill(); ctx.restore();
+        if (img){ ctx.save(); rrect(ctx, PX, y, PW, PH, 28); ctx.clip();
+          var s = Math.max(PW / img.width, PH / img.height), iw = img.width * s, ih = img.height * s;
+          ctx.drawImage(img, PX + (PW - iw) / 2, y + (PH - ih) * fy, iw, ih); ctx.restore(); }
+        ctx.save(); ctx.strokeStyle = "rgba(240,171,252,.7)"; ctx.lineWidth = 4; rrect(ctx, PX, y, PW, PH, 28); ctx.stroke(); ctx.restore();
+      }
+      function badge(n, y){
+        var cx = PX + 46, cy = y + 46;
+        ctx.save(); ctx.shadowColor = "rgba(0,0,0,.4)"; ctx.shadowBlur = 16; ctx.fillStyle = pinkGrad(ctx, cx - 34, 0, cx + 34, 0);
+        ctx.beginPath(); ctx.arc(cx, cy, 34, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        ctx.save(); ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cx, cy, 34, 0, Math.PI * 2); ctx.stroke();
+        ctx.font = font(800, 40); ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String(n), cx, cy + 2); ctx.restore();
+      }
+      function arrow(yTop){
+        // a bold downward arrow centred under the photo, in the gap between two steps
+        var cx = PX + PW / 2, a = yTop + 10, z = yTop + GAP - 8;
+        ctx.save(); ctx.fillStyle = "#f0abfc"; ctx.shadowColor = "rgba(217,70,239,.55)"; ctx.shadowBlur = 18;
+        ctx.beginPath(); ctx.moveTo(cx - 14, a); ctx.lineTo(cx + 14, a); ctx.lineTo(cx + 14, z - 30); ctx.lineTo(cx + 38, z - 30);
+        ctx.lineTo(cx, z); ctx.lineTo(cx - 38, z - 30); ctx.lineTo(cx - 14, z - 30); ctx.closePath(); ctx.fill(); ctx.restore();
+      }
+      // right-hand words, centred on the photo's height
+      function words(y, parts){
+        var blocks = parts.map(function(q){ var f = fit(ctx, String(q.t || " "), q.w, q.s, q.m, TW, q.l); return { f:f, q:q, h:f.lines.length * f.size * q.lh }; });
+        var total = blocks.reduce(function(s, b, i){ return s + b.h + (i ? 14 : 0); }, 0), yy = y + (PH - total) / 2;
+        blocks.forEach(function(b, i){
+          if (i) yy += 14;
+          ctx.save(); ctx.font = font(b.q.w, b.f.size); ctx.fillStyle = b.q.grad ? pinkGrad(ctx, TXX, 0, TXX + TW, 0) : b.q.c;
+          lines(ctx, b.f.lines, TXX, yy + b.f.size * 0.82, b.f.size * b.q.lh, "left"); ctx.restore();
+          yy += b.h; });
+      }
+      var rows = [y0, y0 + PH + GAP, y0 + 2 * (PH + GAP)];
+      photo(ims[0], rows[0], o.fys[0]); photo(ims[1], rows[1], o.fys[1]); photo(ims[2], rows[2], o.fys[2]);
+      arrow(rows[0] + PH); arrow(rows[1] + PH);
+      badge(1, rows[0]); badge(2, rows[1]); badge(3, rows[2]);
+      words(rows[0], [{ t:v.what1, w:700, s:40, m:28, l:5, lh:1.24, c:"#ffffff" }]);
+      words(rows[1], [{ t:v.c1, w:800, s:46, m:32, l:3, lh:1.18, c:"#ffffff" }]);
+      words(rows[2], [{ t:v.c2, w:800, s:46, m:32, l:3, lh:1.18, c:"#ffffff" }]);
+      lrPara(ctx, v.what2, W / 2, rows[2] + PH + 92, 920, 42, 30, 2, 700, "#f0abfc", 1.25);
+    },
+    // Intellectualization journey (Olly, 2026-11-25): the mirror of eres, same layout. 1 overthinking -> 2 time wasters -> 3 single and lonely
+    intelj: async function(ctx){ await DRAW.eres(ctx, { kind:"intelj", head:"Intellectualization", srcs:["cig-assets/ij-overthinking.jpg", "cig-assets/ij-time-wasters.jpg", "cig-assets/ij-lonely.jpg"], fys:[0.3, 0.3, 0.35] }); },
     // Science: Did you know? (one research finding, big number)
     s_dyk: async function(ctx){
       var v = ktv("s_dyk"), sm = sciM(), a = sm.all, bottom = String(st.sciBottom || "").trim();
@@ -6380,7 +6644,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
 
   // Add to calendar (2026-10-28): sends this image to the Hub's Stories calendar (next free slot, up to 7 a day).
   // Title = the Story idea it was made from, otherwise the image's main text. JPEG keeps the link small enough.
-  var STORY_CAL_TYPE = { lead:"Lead gen", lifestyle:"Lifestyle", aspire:"Aspiration", belief:"Belief breaking", scale:"Emotional scale", science:"Science", engagement:"Questions / entertainment", meme:"Meme", results:"Results share" };
+  var STORY_CAL_TYPE = { lead:"Lead gen", lifestyle:"Lifestyle", aspire:"Aspiration", belief:"Belief breaking", scale:"Emotional scale", science:"Science", research:"Science", intel:"Belief breaking", eres:"Belief breaking", intelj:"Belief breaking", engagement:"Questions / entertainment", meme:"Meme", results:"Results share" };
   function calImage(){
     var url = canvas.toDataURL("image/jpeg", 0.85);
     if (url.length > 1400000){
@@ -6400,7 +6664,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     upbeat: ["Good as Hell - Lizzo", "Levitating - Dua Lipa", "Watermelon Sugar - Harry Styles", "Sunroof - Nicky Youre & dazy", "Shake It Off - Taylor Swift", "Walking on Sunshine - Katrina and the Waves", "Happy - Pharrell Williams", "Can't Stop the Feeling! - Justin Timberlake", "Dance the Night - Dua Lipa", "Juice - Lizzo", "Uptown Funk - Mark Ronson ft. Bruno Mars", "Dancing Queen - ABBA"],
     celebrate: ["Celebration - Kool & The Gang", "On Top of the World - Imagine Dragons", "Best Day of My Life - American Authors", "I Gotta Feeling - Black Eyed Peas", "Golden - Harry Styles", "Don't Stop Me Now - Queen", "September - Earth, Wind & Fire", "Good as Hell - Lizzo", "Higher Love - Kygo & Whitney Houston", "Lovely Day - Bill Withers", "Walking on Sunshine - Katrina and the Waves", "Happy - Pharrell Williams"]
   };
-  var SONG_MOOD = { lead:"forward", lifestyle:"warm", aspire:"warm", belief:"hopeful", scale:"hopeful", science:"calm", engagement:"upbeat", meme:"upbeat", results:"celebrate" };
+  var SONG_MOOD = { lead:"forward", lifestyle:"warm", aspire:"warm", belief:"hopeful", scale:"hopeful", science:"calm", research:"calm", intel:"hopeful", eres:"warm", intelj:"calm", engagement:"upbeat", meme:"upbeat", results:"celebrate" };
   var songOff = (store.get("songOff") && typeof store.get("songOff") === "object") ? store.get("songOff") : {};
   var songFrom = null, songKind = st.kind;
   function songMood(){ return SONG_MOOD[st.kind] || "warm"; }
@@ -6525,14 +6789,24 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     { id:"science_heart_good", kind:"science", sciStyle:"heart", hrt:"good", hint:KINDS.science.hint + " Design: one big smooth, coherent heart rhythm chart on its own (appreciation, love, care): what the right emotional state looks like in the heart.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
     { id:"science_sync", kind:"science", sciStyle:"sync", hint:KINDS.science.hint + " Design: a woman with her brain and heart glowing, linked, above two heart rhythm lines: out of sync (worry, overthinking) and in sync, coherent (appreciation, calm). Topic: heart and brain coherence.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
     { id:"science_table", kind:"science", sciStyle:"table", hint:KINDS.science.hint + " Design: a two-column table, survival state vs elevated state (brainwaves, heart rhythm, body, how it feels, who we notice). The table is already filled in.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
-    { id:"science_photo", kind:"science", sciStyle:"photo", hint:KINDS.science.hint + " Design: a full photo of a woman with her heart glowing and its field around her (heart coherence), text on top.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS }
+    { id:"science_photo", kind:"science", sciStyle:"photo", hint:KINDS.science.hint + " Design: a full photo of a woman with her heart glowing and its field around her (heart coherence), text on top.", fields:[["text", "Top line, under 10 words"], ["bottom", "Bottom line, under 12 words"]], ex:SCI_HOOKS },
+    { id:"lr_state", kind:"research", style:"", hint:KT.research.hint, fields:KT.research.fields.map(function(f){ return [f[0], f[1]]; }), ex:KT.research.bank },
+    { id:"lr_believe", kind:"research", style:"lr_believe" },
+    { id:"lr_dial", kind:"research", style:"lr_dial" },
+    { id:"lr_trained", kind:"research", style:"lr_trained" },
+    { id:"lr_friends", kind:"research", style:"lr_friends" },
+    { id:"lr_dyk", kind:"research", style:"lr_dyk" },
+    { id:"intel", kind:"intel", hint:KT.intel.hint, fields:KT.intel.fields.map(function(f){ return [f[0], f[1]]; }), ex:KT.intel.bank },
+    { id:"eres", kind:"eres", hint:KT.eres.hint, fields:KT.eres.fields.map(function(f){ return [f[0], f[1]]; }), ex:KT.eres.bank },
+    { id:"intelj", kind:"intelj", hint:KT.intelj.hint, fields:KT.intelj.fields.map(function(f){ return [f[0], f[1]]; }), ex:KT.intelj.bank },
   ];
   // the look of each design: no two Stories in one day share a look (Olly, 2026-11-10)
   var DAY_LOOK = { lead_attract:"phone page", lead_video:"phone page", lead_feeling:"phone page", lead_notes:"Notes app", lead_player:"video player",
     question:"photo + sticker", e_tot:"two cards", e_rate:"rating slider", e_flags:"two cards", aspire_photo:"full photo", a_ba:"two cards", a_check:"checklist",
     belief_told:"bold text", belief_crossed:"crossed-out text", belief_mythtruth:"myth / truth card", belief_post:"text post", belief_photo:"full photo",
     belief_dm:"DM chat", belief_notes:"Notes app", b_unpop:"bold text", b_wish:"numbered list", b_xlist:"crossed-off list", b_work:"work vs love", scale:"emotional scale chart",
-    science:"brainwave chart", s_dyk:"big number", science_heart:"heart rhythm chart", science_heart_split:"two big heart rhythms", science_heart_bad:"one jagged heart rhythm", science_heart_good:"one smooth heart rhythm", science_sync:"heart + brain image", science_table:"table", science_photo:"full photo" };
+    science:"brainwave chart", s_dyk:"big number", science_heart:"heart rhythm chart", science_heart_split:"two big heart rhythms", science_heart_bad:"one jagged heart rhythm", science_heart_good:"one smooth heart rhythm", science_sync:"heart + brain image", science_table:"table", science_photo:"full photo",
+    lr_state:"two lists", lr_believe:"two readings", lr_dial:"radio dials", lr_trained:"progress dots + arrows", lr_friends:"two glowing people", lr_dyk:"big number", intel:"intellectualization explainer", eres:"emotional resonance journey", intelj:"intellectualization journey" };
   DAY_T.forEach(function(t){
     var kk = t.style ? t.style : t.bstyle && t.bstyle !== "told" ? "b_" + t.bstyle : t.sciStyle === "dyk" ? "s_dyk" : "";
     if (kk && KT[kk]){ t.kt = kk; t.hint = KT[kk].hint; t.fields = KT[kk].fields.map(function(f){ return [f[0], f[1]]; }); t.ex = KT[kk].bank; }
@@ -6643,6 +6917,13 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       + (other.length ? "\n\nTEMPLATES USED ON RECENT DAYS (rotate away from the ones used most):\n" + other.join("\n") : "")
       + (fb.length ? "\n\nOLLY'S FEEDBACK ON EARLIER STORY BATCHES (most recent first). Apply all of it:\n" + fb.map(function(x){ return "- " + x; }).join("\n") : "");
   }
+  // Olly, 2026-11-26: the Intellectualization + Emotional Resonance Stories go in the general cycle, not every day.
+  // Every other day gets one, rotating intelj -> eres -> intel, so each comes round every 6 days.
+  function dayCycle(date){
+    var k = Math.round(new Date(date + "T00:00:00Z").getTime() / 86400000), slot = ((k % 6) + 6) % 6;
+    var pick = { 0:"intelj", 2:"eres", 4:"intel" }[slot];
+    return pick ? "\n\nTHIS DAY'S CORE STORY: include exactly 1 Story using template " + pick + " (" + DAY_LOOK[pick] + "). Don't use the other two of intel / intelj / eres today." : "\n\nToday don't use the intel, intelj or eres templates (they rotate on other days).";
+  }
   function dayTemplates(){
     return DAY_T.map(function(t){
       return "- " + t.id + " (" + t.type + ", look: " + (DAY_LOOK[t.id] || t.id) + "): " + t.hint + "\n  fields: " + t.fields.map(function(f){ return f[0] + " = " + f[1]; }).join("; ")
@@ -6651,10 +6932,10 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   }
   function dayPrompt(date, n, extra){
     return "You plan Olly Henson's Instagram Stories for one day (The Attraction Formula: he helps singles attract a committed relationship by getting into the right emotional state around love). Each Story becomes a finished 1080 x 1920 image in his Story Image Maker: you pick a template and write its text. The maker sizes and places the text, so your only job is the words.\n\n"
-      + CORE + "\n\n" + RULES + "\n\n" + RESEARCH_FACTS
+      + CORE + "\n\n" + RULES + "\n\n" + RESEARCH_FACTS + "\n\n" + LOVE_RESEARCH
       + "\n\nSTORY TOPICS (Olly, 2026-11-17, overrides every example and bank)\n- NO dating tactics. Never red flags / green flags, texting, texting back, ghosting, matches going quiet, dating apps, first dates, dating rules or what to do on a date. It's deeper than dating.\n- Belief, question and relate Stories are about INTELLECTUALIZATION vs EMOTIONAL RESONANCE, so people recognise themselves. Intellectualization: operating from survival emotions (worrying, doubting and stressing about meeting someone), thinking something might be wrong with us, trying to fix ourselves, learning more and trying to control the outcome. Emotional resonance: embodying our highest emotional state every day, so we build the confidence, energy and belief to meet someone and it unfolds naturally.\n- THE ACHIEVER ANGLE (Olly, 2026-11-19): people who intellectualize love are often into self-development, and very often they're successful in their careers or in business. At work the analytical mind works: strategies, processes, solving problems, working harder, controlling the outcome. So they apply the same thing to relationships, and it doesn't work. Love isn't a problem to solve. It leaves them feeling empty and transactional, and it doesn't create the spark they want. Write these so a successful professional or business owner recognises themselves (career, business, strategy, being good at what they do), with respect, never mocking success. Use 'most successful people' or 'we', never a 'you' call-out. The way out is the same core message: the right emotional state, felt every day.\n- Aspiration Stories show the life they want: their life partner, someone to marry, have children with and build a life with. Ordinary, happy, committed and still fun.\n- Science Stories stay as they are: what the right emotional state looks like in the body (brainwaves, heart rhythm, heart and brain coherence).\n- Questions / entertainment Stories exist to get REPLIES and taps: that's half the point of Stories. Write them for Olly's best-fit people, where they are right now: educated professionals who want marriage, children and a life partner; most have quietly stopped dating, have tried everything (therapy, books, courses, manifesting, inner work) and feel tired or a bit hopeless; hard work got them everything else, but not love; with their person they want to feel belonging, safety and peace. Ask about THEIR inner state and their life right now, so answering feels like being understood, not tested: how love feels at the moment, whether they still believe it will happen, what they've tried that left them tired, love feeling like one more thing to work at, what they long to feel, the ordinary life they picture with their person. One tap, one word or one honest sentence to answer. NEVER dating advice, never asking people to rate love or dating advice, never tips, tactics, 'types', standards, where to meet people, apps, texting, dates or flags. e_rate = 'How true is this for you right now?' with one honest first-person line they'll recognise in themselves; e_tot = two honest states they could be in, or two pictures of the life they want.\n\nSTORY RULES\n- Stories are connection content. Reels carry the argument; Stories make people feel understood and keep them coming back. Show, don't lecture.\n- Use \"we\", \"us\" or \"most people\", never a \"you\" call-out that makes someone feel judged.\n- Every line must be short enough to read in two seconds. Respect each field's word limit; shorter is better.\n- Never the old story: no past relationship, breakup, 2019, years of trying or any teachers. Olly's only story: he worked on his emotional state every day, met his wife Jules and they both just knew.\n- Never say the right partner feels boring, flat or less exciting. Calm love is committed AND fun.\n- No manifestation words. Science only from the research list, worded carefully.\n- The plain question (template question) has NO sticker: people answer by replying to the Story, so ask something they can answer in one word or one honest sentence. This or that and the rating slider still leave space for a poll or slider sticker; write lines that make a tap easy.\n"
       + "\nTHE DAY: " + niceDay(date) + ". " + (n > 1 ? "Plan " + n + " Stories in posting order (first thing to evening). Mix: exactly 1 ACHIEVER Story (the achiever angle above: b_work most days, or the same angle told through belief_post, belief_dm, b_unpop, belief_notes or e_tot), exactly 1 Lead gen (lead_attract most days; lead_feeling, lead_notes, lead_player or lead_video now and then), at least " + Math.min(5, n) + " different types across the " + n + " (Lead gen, Questions / entertainment, Aspiration, Belief breaking, Emotional scale, Science), never the same template twice in the day. VARIETY OF LOOK: every Story in the day must have a different look (the look in brackets below), so the day never feels like the same format repeated. Pick at least 3 templates that weren't used on the recent days listed, and favour the ones used least. Science most days, rotating its looks (heart + brain image, heart rhythm chart, full photo, table, brainwave chart, big number); heart and brain coherence and heart rhythm patterns are good topics. Open with something light that gets a tap, put the Lead gen in the second half, and let the day build: relate, crack a belief, show the vision, invite." : "")
-      + dayContext(date) + (extra || "") + bestAudBrief("stories") + prospectBrief("stories")
+      + (n > 1 ? dayCycle(date) : "") + dayContext(date) + (extra || "") + bestAudBrief("stories") + prospectBrief("stories")
       + "\n\nTEMPLATES (use the id exactly; fill every field it lists):\n" + dayTemplates()
       + "\n\nReply as JSON only: {\"stories\":[{\"t\":\"template id\",\"title\":\"a 3 to 7 word label for the calendar\",\"f\":{\"field name\":\"text\"}}]}. Use \\n inside a field only where the field asks for one item per line.";
   }
