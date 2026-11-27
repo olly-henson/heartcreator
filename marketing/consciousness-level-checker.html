@@ -349,6 +349,10 @@ aside hr{border:0;border-top:1px solid var(--line);margin:6px 0}
                 <button type="button" data-bstyle="wish" aria-pressed="false">Things I wish I knew</button>
                 <button type="button" data-bstyle="xlist" aria-pressed="false">Don't need list</button>
                 <button type="button" data-bstyle="work" aria-pressed="false">Work vs love</button>
+                <button type="button" data-bstyle="search" aria-pressed="false">Search bar</button>
+                <button type="button" data-bstyle="receipt" aria-pressed="false">Receipt</button>
+                <button type="button" data-bstyle="sheet" aria-pressed="false">Love spreadsheet</button>
+                <button type="button" data-bstyle="headheart" aria-pressed="false">Head vs heart</button>
               </div>
               <div class="tsmg" id="tsm-leadWrap">
                 <label class="label" for="tsm-lead">Line at the top</label>
@@ -5572,6 +5576,57 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       bank:[{ head:"Intellectualization", what1:"Overthinking, catastrophizing and worrying it'll never happen for us.", c1:"We keep meeting time wasters", c2:"We stay single for years", what2:"And the longer it goes on, the more we worry. So it only gets worse." },
         { head:"Intellectualization", what1:"Our mind panics: “What if it never happens for me?”", c1:"Nothing ever really connects", c2:"Another year on our own", what2:"Then the worry gets louder. And the loop keeps going round." },
         { head:"Intellectualization", what1:"Trying to solve love with our head. Overthinking every step.", c1:"People who keep us guessing", c2:"Lonely, and doubting it's possible", what2:"It doesn't fix itself. Worrying more only makes it worse." }] },
+    // ---- 10 new designs (Olly, 2026-11-27: "ten more types of story variations"). Lines from our best member first, then the core argument and the best applicants. ----
+    b_search: { nophoto:1, hint:"Search bar, belief breaking: the thing most of us have quietly searched about love (from real pain: done the work and still single, held back in love, attracted to inconsistent people, love feeling complicated), 3 suggestions underneath in the same voice, then the crack as the last line. Never dating tactics or apps.",
+      fields:[["top", "Top line", 2], ["q", "What's typed in the search bar", 2], ["sugg", "Suggestions (one per line, 3)", 3], ["end", "The crack, at the bottom", 2]],
+      bank:[{ top:"What most of us have searched", q:"why am I still single when I've done the work", sugg:"why do I feel held back in love\nhow to stop attracting inconsistent people\nwhat's wrong with me", end:"Nothing's wrong with us. It's how we feel around love, not what we know." },
+        { top:"Searched at midnight. Again.", q:"how do I know if I'm ready for love", sugg:"how to heal before a relationship\nwhat's my attachment style\nhow to become secure", end:"We don't need to be ready. We need to feel it can happen." },
+        { top:"The search that never ends", q:"why does finding love feel so complicated", sugg:"how to stop overthinking love\nwhat's my limiting belief\nwhat am I doing wrong", end:"Love isn't figured out. It's felt." }] },
+    b_receipt: { nophoto:1, hint:"The receipt, belief breaking: what all the inner work has cost us (attachment styles, healing every wound, nervous system regulation, mindset work, manifestation, another course), one item per line as 'item | cost' (time like 2 yrs, or a word like tried / again), the TOTAL (still single), then the crack. Never knock the work, never red flags or dating rules.",
+      fields:[["title", "Title on the receipt", 2], ["items", "Items (one per line: item | cost)", 5], ["tl", "Total label", 1], ["tv", "Total", 1], ["end", "The crack, under the receipt", 2]],
+      bank:[{ title:"What finding love has cost us", items:"Attachment style books | 2 yrs\nHealing every wound | 3 yrs\nNervous system work | 1 yr\nAnother course | $$$", tl:"TOTAL", tv:"Still single", end:"It was never another thing to fix." },
+        { title:"Years of doing the work", items:"Fixing our patterns | 4 yrs\nBecoming secure | 2 yrs\nMindset work | 1 yr\nOne more book | again", tl:"TOTAL", tv:"Still waiting", end:"Love doesn't need more work. It needs the right feeling." },
+        { title:"Everything we tried first", items:"Manifestation | tried\nMindset work | tried\nNervous system regulation | tried\nFeeling it every day | not yet", tl:"MISSING", tv:"How it feels", end:"Who we attract follows how we feel." }] },
+    b_sheet: { nophoto:1, hint:"Love spreadsheet, THE ACHIEVER ANGLE: love planned like a work project in a spreadsheet. Two column headings, then 3 to 4 rows as 'item | value' where everything is done or ticked except the last row, the feeling, which is empty, a question mark or zero (it gets highlighted). Bottom line: love doesn't work like work.",
+      fields:[["title", "Title", 2], ["cols", "Column headings (A | B)", 1], ["rows", "Rows (one per line: item | value; the last row is highlighted)", 4], ["end", "Bottom line", 2]],
+      bank:[{ title:"How we plan love like work", cols:"Love plan | Status", rows:"Know what we want | Done\nRead the books | Done\nWorked on our patterns | Done\nFeel it's possible | Empty", end:"Love doesn't read spreadsheets. It follows how we feel." },
+        { title:"We treat love like a project", cols:"Requirement | Ticked", rows:"Kind | Yes\nWants a family | Yes\nCommitted | Yes\nWe feel safe and excited | ?", end:"The checklist was never the problem. The feeling was missing." },
+        { title:"The achiever's love tracker", cols:"Task | Hours", rows:"Researching love | 200\nAnalysing what went wrong | 150\nPlanning the next step | 100\nFeeling it | 0", end:"At work, effort wins. In love, the feeling does." }] },
+    b_headheart: { nophoto:1, hint:"Head vs heart, belief breaking: what our head knows about love (clear on what we want, a steady person is good for us) on top, what our heart still feels (bracing to get hurt, scared it'll feel like the ick, can't feel it yet) underneath, then the crack: the heart can be trained to feel it too. Never say the right partner feels boring or flat.",
+      fields:[["top", "Top line", 2], ["head", "Our head says", 2], ["heart", "Our heart feels", 2], ["end", "Bottom line", 2]],
+      bank:[{ top:"Most of us know this feeling", head:"We know what's good for us", heart:"We just can't feel it yet", end:"Love starts when the heart catches up with the head." },
+        { top:"Head vs heart", head:"“Steady and available. Perfect on paper.”", heart:"“Part of me is scared it'll give me the ick.”", end:"Consistency can feel attractive. That's a feeling we can train." },
+        { top:"Why knowing isn't enough", head:"Clear on what we want", heart:"Still bracing to get hurt again", end:"Who we attract follows how we feel, not what we know." }] },
+    e_abc: { nophoto:1, hint:"Which one is you? Three honest answers for where the best applicants are right now (quietly stopped dating, tried everything, know what they want but can't feel it, tired of trying, scared it won't happen, held back), short, first person. People reply with a letter. No sticker, no dating tactics.",
+      fields:[["top", "The question", 2], ["a", "A", 2], ["b", "B", 2], ["c", "C", 2], ["cta", "Line at the bottom", 1]],
+      bank:[{ top:"Which one is you right now?", a:"I've quietly stopped dating", b:"I've tried everything", c:"I know what I want but can't feel it", cta:"Reply A, B or C" },
+        { top:"Be honest. Which one?", a:"I'm tired of trying", b:"I'm scared it won't happen for me", c:"I'm ready, but something holds me back", cta:"Reply A, B or C" },
+        { top:"What's in the way for you?", a:"Too much conflicting advice", b:"There's always something else to fix", c:"I don't believe it's possible anymore", cta:"Reply A, B or C" }] },
+    e_blank: { nophoto:1, hint:"Fill in the blank: the start of an honest sentence about love for people to finish in a reply (what would make love feel easier, what they want most, how they'd know they'd met their person). The blank line is drawn for them. No sticker, no dating tactics.",
+      fields:[["top", "Top line", 1], ["pre", "The sentence, before the blank", 3], ["post", "After the blank (optional)", 1], ["cta", "Line at the bottom", 1]],
+      bank:[{ top:"Finish this sentence", pre:"Love would feel easier if I", post:"", cta:"Reply and tell me" },
+        { top:"Finish this sentence", pre:"The thing I want most in a relationship is", post:"", cta:"Reply and tell me" },
+        { top:"Be honest", pre:"I'll know I've met my person when I feel", post:"", cta:"Reply and tell me" }] },
+    a_signs: { nophoto:1, hint:"Signs it's working (journey content our best member asked for): 3 signs the daily practice is changing how we feel around love (old memories of being in love come back, feeling it not just thinking it, feeling magnetic and unattached, it feels possible again, not reaching for the next method). Short lines, never promise a partner by a date.",
+      fields:[["title", "Title", 2], ["bar", "Label on the progress bar", 1], ["s1", "Sign 1", 2], ["s2", "Sign 2", 2], ["s3", "Sign 3", 2], ["end", "Bottom line", 2]],
+      bank:[{ title:"3 signs it's working", bar:"Working", s1:"Old memories of being in love come back", s2:"We stop overthinking every step", s3:"It starts to feel possible again", end:"That's the state that attracts our person." },
+        { title:"Signs the feeling is changing", bar:"Changing", s1:"We feel it, not just think it", s2:"We feel more magnetic, less attached", s3:"We stop looking for the next method", end:"Keep going. It's working." },
+        { title:"How we know it's working", bar:"Working", s1:"The resistance shows up, then fades", s2:"Love feels lighter to think about", s3:"We picture our future and smile", end:"The feeling changes first. Then who we notice." }] },
+    a_normal: { nophoto:1, hint:"What's normal (journey content our best member asked for): what the first days of the daily practice can feel like, as 'label | what happens' per line. The label is a day (Day 1, Day 6) or a word (Then, Keep going). Day 6 is when the body pushes back (restless, can't connect); that resistance is the old self and it means it's working. Never invent results or later day numbers.",
+      fields:[["title", "Title", 2], ["days", "Rows (one per line: Day 6 | what happens)", 4], ["end", "Bottom line", 2]],
+      bank:[{ title:"What's normal at the start", days:"Day 1 | It feels good, even exciting\nDay 6 | Our body pushes back\nThen | The old us gets quieter", end:"The resistance means it's working." },
+        { title:"If it feels hard at first", days:"Day 1 | We feel the emotion, not just think it\nDay 6 | Restless. Can't connect. Want to quit.\nKeep going | The old self stops pushing back", end:"That push back is the old us. It's normal." },
+        { title:"What nobody tells us", days:"Day 1 | We remember what love felt like\nDay 6 | Resistance shows up\nThen | It starts to feel natural", end:"Pushing back means it's changing." }] },
+    a_battery: { nophoto:1, hint:"Heart battery: our emotional state as a phone battery. Low (survival mode: worry it'll never happen, tired of trying, bracing to get hurt) vs full (elevated: safe, calm, excited about love). Bottom line: who we attract depends on which one we're running on, or how we charge it (10 minutes a day). 'We', never 'you'.",
+      fields:[["top", "Top line", 2], ["pa", "Low battery %", 1], ["la", "Low label", 1], ["a", "Low: how it feels", 2], ["pb", "Full battery %", 1], ["lb", "Full label", 1], ["b", "Full: how it feels", 2], ["end", "Bottom line", 2]],
+      bank:[{ top:"Which one are we running on?", pa:"12%", la:"Survival mode", a:"Worrying it'll never happen", pb:"100%", lb:"Elevated", b:"Feeling safe and excited about love", end:"Who we attract depends on which one we're running on." },
+        { top:"Our heart at 12%", pa:"12%", la:"Running on worry", a:"Tired of trying. Bracing to get hurt.", pb:"100%", lb:"Charged", b:"Calm, open and sure it's on its way", end:"10 minutes a day is how we charge it." },
+        { top:"Low battery love", pa:"8%", la:"Drained", a:"Another year of doing the work", pb:"100%", lb:"Full", b:"Feeling how love will feel, every day", end:"It's not more effort. It's a different state." }] },
+    l_jules: { hint:"Before I met Jules: Olly's founder story only, on a polaroid of him (and Jules). The ONLY story: he worked on his emotional state every day, then met Jules and they both just knew. Never the 7-year relationship, a breakup or anything else.",
+      fields:[["top", "Top line", 2], ["cap", "Handwritten caption on the polaroid", 1], ["end", "The story, under the polaroid", 3]],
+      bank:[{ top:"Before I met my wife", cap:"Jules and me", end:"Before I met Jules, I worked on my emotional state every day. Then we met and we both just knew." },
+        { top:"The only thing I did differently", cap:"Us", end:"Every day I worked on my emotional state. When I met Jules, we both just knew." },
+        { top:"How I met my wife", cap:"Jules and me", end:"I worked on how I felt every day. Then I met Jules and we both just knew." }] },
     r_imsg: { hook:1, hint:"The screenshot as a message in an iMessage-style chat, with your reply underneath. A real message only, shared with permission, names covered.",
       fields:[["reply", "Your reply (optional)", 1]],
       bank:["This made my whole week", "So proud of you", "This is exactly it", "Love this so much"].map(function(t){ return { reply:t }; }) },
@@ -5581,9 +5636,9 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   };
   // the Template row inside each type ("" = the type's original design)
   var KSTY = {
-    engagement:[["", "Question"], ["e_tot", "This or that"], ["e_rate", "Rate it 1-10"]],
-    lifestyle:[["", "Photo"], ["l_pov", "POV"], ["l_dump", "Photo dump"]],
-    aspire:[["", "Photo"], ["a_ba", "Before / after"], ["a_check", "Checklist"]],
+    engagement:[["", "Question"], ["e_tot", "This or that"], ["e_rate", "Rate it 1-10"], ["e_abc", "Which one is you?"], ["e_blank", "Fill in the blank"]],
+    lifestyle:[["", "Photo"], ["l_pov", "POV"], ["l_dump", "Photo dump"], ["l_jules", "Before I met Jules"]],
+    aspire:[["", "Photo"], ["a_ba", "Before / after"], ["a_check", "Checklist"], ["a_signs", "Signs it's working"], ["a_normal", "What's normal"], ["a_battery", "Heart battery"]],
     results:[["", "Card"], ["r_imsg", "iMessage"]],
     research:[["", "State vs checklist"], ["lr_believe", "Two readings"], ["lr_dial", "Radio dial"], ["lr_trained", "Belief is trained"], ["lr_friends", "Connection"], ["lr_dyk", "Did you know?"]]
   };
@@ -5599,6 +5654,25 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     ctx.font = font(weight, f.size);
     lines(ctx, f.lines, cx, cy - (f.lines.length - 1) * lh / 2 + f.size * 0.35, lh);
     return f;
+  }
+  // helpers for the 2026-11-27 designs
+  function nl(t){ return String(t || "").split(String.fromCharCode(10)).map(function(q){ return q.trim(); }).filter(Boolean); }
+  function creamBg(ctx){
+    ctx.fillStyle = "#fbf7f2"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(217,70,239,.10)"; ctx.beginPath(); ctx.arc(W * 0.9, 380, 380, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(W * 0.05, 1600, 320, 0, Math.PI * 2); ctx.fill();
+  }
+  function magnifier(ctx, x, y, r, c){
+    ctx.save(); ctx.strokeStyle = c; ctx.lineWidth = Math.max(4, r * 0.26); ctx.lineCap = "round";
+    ctx.beginPath(); ctx.arc(x - r * 0.18, y - r * 0.18, r * 0.62, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + r * 0.28, y + r * 0.28); ctx.lineTo(x + r * 0.85, y + r * 0.85); ctx.stroke(); ctx.restore();
+  }
+  function heartPath(ctx, x, y, s){
+    var t = y - s * 0.3; ctx.beginPath(); ctx.moveTo(x, t + s * 0.25);
+    ctx.bezierCurveTo(x, t, x - s * 0.5, t - s * 0.05, x - s * 0.5, t + s * 0.3);
+    ctx.bezierCurveTo(x - s * 0.5, t + s * 0.6, x - s * 0.1, t + s * 0.75, x, t + s * 0.9);
+    ctx.bezierCurveTo(x + s * 0.1, t + s * 0.75, x + s * 0.5, t + s * 0.6, x + s * 0.5, t + s * 0.3);
+    ctx.bezierCurveTo(x + s * 0.5, t - s * 0.05, x, t, x, t + s * 0.25); ctx.closePath();
   }
   function pinkGrad(ctx, x0, y0, x1, y1){ var g = ctx.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, "#8a2be2"); g.addColorStop(1, "#d946ef"); return g; }
   function flagIcon(ctx, x, y, color){
@@ -5811,6 +5885,242 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       ctx.fillStyle = "#cfc8d6"; ktText(ctx, v.a, W / 2, (aTop + 100 + mid - 40) / 2, 600, 52, 34, 880, 5, 1.25);
       if (String(v.lb || "").trim()) pill(ctx, String(v.lb).trim().toUpperCase(), mid + 70, "#d946ef", "#ffffff");
       ctx.fillStyle = "#1a0524"; ktText(ctx, v.b, W / 2, (mid + 170 + 1660) / 2, 700, 56, 36, 880, 6, 1.25);
+    },
+    // ---- 10 new designs (2026-11-27). All text stays between y 250 and 1720. ----
+    b_search: async function(ctx){
+      var v = ktv("b_search"); creamBg(ctx); TX(ctx);
+      ctx.fillStyle = "#1a0524"; var t = fit(ctx, String(v.top || " "), 800, 68, 44, 900, 2); ctx.font = font(800, t.size);
+      var y = lines(ctx, t.lines, W / 2, 400 + t.size, t.size * 1.15);
+      var x = 50, w = W - 100, top = y + 70;
+      var sugg = nl(v.sugg).slice(0, 4);
+      var q = fit(ctx, String(v.q || " "), 600, 56, 36, w - 180, 3), qlh = q.size * 1.25, qh = Math.max(170, 90 + q.lines.length * qlh);
+      var rowH = 138, ch = qh + 24 + sugg.length * rowH + 24;
+      shadowCard(ctx, x, top, w, ch, 54, "#ffffff", "rgba(60,20,90,.18)");
+      magnifier(ctx, x + 74, top + qh / 2, 26, "#5f6368");
+      ctx.fillStyle = "#202124"; ctx.font = font(600, q.size);
+      var qy = top + qh / 2 - (q.lines.length - 1) * qlh / 2 + q.size * 0.35;
+      lines(ctx, q.lines, x + 130, qy, qlh, "left");
+      var lw = ctx.measureText(q.lines[q.lines.length - 1]).width;
+      ctx.fillStyle = "#d946ef"; ctx.fillRect(x + 136 + lw, qy + (q.lines.length - 1) * qlh - q.size * 0.85, 5, q.size * 1.05);
+      ctx.fillStyle = "#ebe6ef"; ctx.fillRect(x + 44, top + qh, w - 88, 3);
+      sugg.forEach(function(s, i){
+        var ry = top + qh + 24 + i * rowH + rowH / 2;
+        magnifier(ctx, x + 74, ry, 18, "#9aa0a6");
+        ctx.fillStyle = "#3c4043"; var f = fit(ctx, s, 500, 46, 30, w - 180, 2); ctx.font = font(500, f.size);
+        lines(ctx, f.lines, x + 130, ry - (f.lines.length - 1) * f.size * 0.6 + f.size * 0.35, f.size * 1.2, "left");
+      });
+      var end = String(v.end || "").trim();
+      if (end){ ctx.fillStyle = "#7e22ce"; var e = fit(ctx, end, 800, 64, 40, 900, 3); ctx.font = font(800, e.size);
+        lines(ctx, e.lines, W / 2, Math.min(top + ch + 150, 1700 - (e.lines.length - 1) * e.size * 1.15), e.size * 1.15); }
+    },
+    b_receipt: async function(ctx){
+      var v = ktv("b_receipt"); purpleBg(ctx); TX(ctx);
+      try { await document.fonts.load("500 40px 'JetBrains Mono'"); } catch(e){}
+      var MONO = function(s, wt){ return (wt || 500) + " " + s + "px 'JetBrains Mono', ui-monospace, Consolas, monospace"; };
+      var items = nl(v.items).slice(0, 6).map(function(r){ var p = r.split("|"); return [p[0].trim(), (p[1] || "").trim()]; });
+      var x = 120, w = W - 240, pad = 56;
+      var t = fit(ctx, String(v.title || " ").toUpperCase(), 800, 58, 38, w - 2 * pad, 3), tlh = t.size * 1.2;
+      var rh = 100, h = 70 + 50 + t.lines.length * tlh + 30 + 40 + items.length * rh + 40 + 110 + 60;
+      var top = Math.max(290, Math.round((1720 - h - 300) / 2) + 40);
+      // paper with a torn (zig-zag) bottom
+      ctx.save(); ctx.shadowColor = "rgba(0,0,0,.4)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 14; ctx.fillStyle = "#fffdf7";
+      ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x + w, top); ctx.lineTo(x + w, top + h);
+      var tooth = 30, n = Math.round(w / tooth); for (var i = 1; i <= n; i++){ ctx.lineTo(x + w - i * (w / n) + (w / n) / 2, top + h + 22); ctx.lineTo(x + w - i * (w / n), top + h); }
+      ctx.closePath(); ctx.fill(); ctx.restore();
+      ctx.fillStyle = "#1a0524"; ctx.textAlign = "center"; ctx.font = MONO(30); ctx.fillText("* * *  RECEIPT  * * *", W / 2, top + 70);
+      ctx.font = font(800, t.size); var y = lines(ctx, t.lines, W / 2, top + 70 + 50 + t.size * 0.9, tlh);
+      var dash = function(yy){ ctx.save(); ctx.strokeStyle = "#8a7f94"; ctx.lineWidth = 3; ctx.setLineDash([12, 10]); ctx.beginPath(); ctx.moveTo(x + pad, yy); ctx.lineTo(x + w - pad, yy); ctx.stroke(); ctx.restore(); };
+      dash(y + 10); y += 40;
+      items.forEach(function(it){
+        var s = 42; ctx.font = MONO(s); var vw = ctx.measureText(it[1]).width;
+        while (s > 24 && ctx.measureText(it[0]).width > w - 2 * pad - vw - 30){ s -= 2; ctx.font = MONO(s); vw = ctx.measureText(it[1]).width; }
+        ctx.fillStyle = "#2b2233"; ctx.textAlign = "left"; ctx.fillText(it[0], x + pad, y + rh / 2 + s * 0.35);
+        ctx.textAlign = "right"; ctx.fillText(it[1], x + w - pad, y + rh / 2 + s * 0.35);
+        y += rh;
+      });
+      dash(y + 20); y += 40;
+      ctx.font = MONO(50, 700); ctx.fillStyle = "#1a0524"; ctx.textAlign = "left"; ctx.fillText(String(v.tl || "TOTAL"), x + pad, y + 70);
+      var tv = String(v.tv || ""), ts = 50; while (ts > 28 && ctx.measureText(tv).width > w - 2 * pad - 260){ ts -= 2; ctx.font = MONO(ts, 700); }
+      ctx.fillStyle = "#e11d48"; ctx.textAlign = "right"; ctx.fillText(tv, x + w - pad, y + 70);
+      var end = String(v.end || "").trim();
+      if (end) boxes(ctx, end, Math.min(top + h + 100, 1500), 58, 38, 3);
+    },
+    b_sheet: async function(ctx){
+      var v = ktv("b_sheet"); creamBg(ctx); TX(ctx);
+      ctx.fillStyle = "#1a0524"; var t = fit(ctx, String(v.title || " "), 800, 68, 44, 900, 2); ctx.font = font(800, t.size);
+      var y = lines(ctx, t.lines, W / 2, 370 + t.size, t.size * 1.15);
+      var cols = String(v.cols || "A | B").split("|").map(function(s){ return s.trim(); });
+      var rows = nl(v.rows).slice(0, 5).map(function(r){ var p = r.split("|"); return [p[0].trim(), (p[1] || "").trim()]; });
+      var x = 50, nw = 70, aw = 590, bw = W - 100 - nw - aw, top = y + 60, lh = 60, ch = 120, rh = 140;
+      var gh = lh + ch + rows.length * rh;
+      shadowCard(ctx, x, top, W - 100, gh, 10, "#ffffff", "rgba(60,20,90,.16)");
+      ctx.fillStyle = "#f1f3f4"; ctx.fillRect(x, top, W - 100, lh); ctx.fillRect(x, top, nw, gh);
+      ctx.fillStyle = "#e6f4ea"; ctx.fillRect(x + nw, top + lh, W - 100 - nw, ch);
+      var last = rows.length - 1;
+      if (last >= 0){ ctx.fillStyle = "#fde2e7"; ctx.fillRect(x + nw, top + lh + ch + last * rh, W - 100 - nw, rh); }
+      ctx.strokeStyle = "#dadce0"; ctx.lineWidth = 2;
+      var hl = function(yy){ ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + W - 100, yy); ctx.stroke(); };
+      var vl = function(xx){ ctx.beginPath(); ctx.moveTo(xx, top); ctx.lineTo(xx, top + gh); ctx.stroke(); };
+      hl(top + lh); hl(top + lh + ch); rows.forEach(function(r, i){ hl(top + lh + ch + (i + 1) * rh); }); vl(x + nw); vl(x + nw + aw);
+      ctx.fillStyle = "#5f6368"; ctx.font = font(600, 30); ctx.textAlign = "center";
+      ctx.fillText("A", x + nw + aw / 2, top + lh / 2 + 11); ctx.fillText("B", x + nw + aw + bw / 2, top + lh / 2 + 11);
+      for (var i = 0; i <= rows.length; i++) ctx.fillText(String(i + 1), x + nw / 2, top + lh + (i ? ch + (i - 1) * rh + rh / 2 : ch / 2) + 11);
+      var cell = function(text, cx, cy, cw, wt, sz, color, align){
+        ctx.fillStyle = color; var f = fit(ctx, text || " ", wt, sz, 26, cw - 50, 2); ctx.font = font(wt, f.size);
+        lines(ctx, f.lines, align === "left" ? cx - cw / 2 + 26 : cx, cy - (f.lines.length - 1) * f.size * 0.6 + f.size * 0.35, f.size * 1.2, align || "center");
+      };
+      cell(cols[0], x + nw + aw / 2, top + lh + ch / 2, aw, 800, 44, "#137333", "left");
+      cell(cols[1] || "", x + nw + aw + bw / 2, top + lh + ch / 2, bw, 800, 44, "#137333");
+      rows.forEach(function(r, i){
+        var cy = top + lh + ch + i * rh + rh / 2, hot = i === last;
+        cell(r[0], x + nw + aw / 2, cy, aw, hot ? 800 : 600, 48, hot ? "#be123c" : "#202124", "left");
+        cell(r[1], x + nw + aw + bw / 2, cy, bw, 800, 50, hot ? "#be123c" : "#202124");
+      });
+      var end = String(v.end || "").trim();
+      if (end){ ctx.fillStyle = "#7e22ce"; var e = fit(ctx, end, 800, 58, 38, 900, 3); ctx.font = font(800, e.size);
+        lines(ctx, e.lines, W / 2, Math.min(top + gh + 140, 1700 - (e.lines.length - 1) * e.size * 1.15), e.size * 1.15); }
+    },
+    b_headheart: async function(ctx){
+      var v = ktv("b_headheart"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 290, 62, 42, 2);
+      var end = String(v.end || "").trim(), endTop = end ? 1420 : 1640, top = y + 40, gap = 40, chh = (endTop - 50 - top - gap) / 2;
+      [["OUR HEAD", v.head, "#ffffff", "#1a0524", "#7e22ce", 0], ["OUR HEART", v.heart, null, "#ffffff", "#ffe4f3", 1]].forEach(function(c, i){
+        var cy = top + i * (chh + gap), x = 70, cw = W - 140;
+        shadowCard(ctx, x, cy, cw, chh, 40, c[2] || pinkGrad(ctx, x, cy, x + cw, cy + chh));
+        var ic = cy + 86;
+        if (c[5]){ ctx.fillStyle = "#ffffff"; heartPath(ctx, W / 2, ic, 76); ctx.fill(); }
+        else { ctx.save(); ctx.font = "72px system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String.fromCodePoint(0x1F9E0), W / 2, ic + 4); ctx.restore(); }
+        ctx.fillStyle = c[4]; ctx.font = font(800, 34); ctx.textAlign = "center"; ctx.fillText(c[0], W / 2, ic + 90);
+        ctx.fillStyle = c[3]; ktText(ctx, c[1], W / 2, (ic + 120 + cy + chh) / 2, 800, 62, 38, cw - 120, 3, 1.18);
+      });
+      if (end) boxes(ctx, end, endTop, 52, 36, 3);
+    },
+    e_abc: async function(ctx){
+      var v = ktv("e_abc"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 350, 68, 46, 2);
+      var top = y + 70, gap = 36, bh = 250;
+      ["a", "b", "c"].forEach(function(k, i){
+        var cy = top + i * (bh + gap), x = 70, cw = W - 140, r = 58;
+        shadowCard(ctx, x, cy, cw, bh, 36, "#ffffff");
+        ctx.fillStyle = pinkGrad(ctx, x + 40, cy + bh / 2 - r, x + 40 + 2 * r, cy + bh / 2 + r); ctx.beginPath(); ctx.arc(x + 40 + r, cy + bh / 2, r, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#ffffff"; ctx.font = font(800, 62); ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(k.toUpperCase(), x + 40 + r, cy + bh / 2 + 3); ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = "#1a0524"; var f = fit(ctx, String(v[k] || " "), 700, 58, 34, cw - 2 * r - 110, 3); ctx.font = font(700, f.size);
+        lines(ctx, f.lines, x + 2 * r + 76, cy + bh / 2 - (f.lines.length - 1) * f.size * 0.6 + f.size * 0.35, f.size * 1.2, "left");
+      });
+      var cta = String(v.cta || "").trim();
+      if (cta){ ctx.fillStyle = "#ffffff"; ctx.font = font(800, 54); ctx.textAlign = "center"; ctx.fillText(cta, W / 2, Math.min(top + 3 * (bh + gap) + 100, 1640)); }
+    },
+    e_blank: async function(ctx){
+      var v = ktv("e_blank"); purpleBg(ctx); TX(ctx);
+      var top0 = String(v.top || "").trim(), y = 420;
+      if (top0) y = boxes(ctx, top0, 460, 60, 42, 2);
+      var x = 80, cw = W - 160, pad = 80;
+      var f = fit(ctx, String(v.pre || " "), 800, 86, 48, cw - 2 * pad, 4), lh = f.size * 1.22;
+      var post = String(v.post || "").trim(), p = post ? fit(ctx, post, 800, 76, 44, cw - 2 * pad, 2) : null;
+      var ch = pad + f.lines.length * lh + 150 + (p ? p.lines.length * p.size * 1.22 + 30 : 0) + pad;
+      var top = Math.max(y + 70, (y + 1500 - ch) / 2);
+      shadowCard(ctx, x, top, cw, ch, 44, "#ffffff");
+      ctx.fillStyle = "#1a0524"; ctx.font = font(800, f.size);
+      var yy = lines(ctx, f.lines, W / 2, top + pad + f.size * 0.85, lh);
+      ctx.save(); ctx.strokeStyle = pinkGrad(ctx, x + 140, 0, x + cw - 140, 0); ctx.lineWidth = 10; ctx.lineCap = "round";
+      ctx.beginPath(); ctx.moveTo(x + 140, yy + 90); ctx.lineTo(x + cw - 140, yy + 90); ctx.stroke(); ctx.restore();
+      if (p){ ctx.fillStyle = "#1a0524"; ctx.font = font(800, p.size); lines(ctx, p.lines, W / 2, yy + 150 + p.size * 0.85, p.size * 1.22); }
+      var cta = String(v.cta || "").trim();
+      if (cta){ ctx.fillStyle = "#ffffff"; ctx.font = font(800, 54); ctx.textAlign = "center"; ctx.fillText(cta, W / 2, Math.min(top + ch + 130, 1690)); }
+    },
+    a_signs: async function(ctx){
+      var v = ktv("a_signs"); creamBg(ctx); TX(ctx);
+      ctx.fillStyle = "#1a0524"; var t = fit(ctx, String(v.title || " "), 800, 78, 50, 900, 2); ctx.font = font(800, t.size);
+      var y = lines(ctx, t.lines, W / 2, 350 + t.size, t.size * 1.15);
+      // the progress bar: three numbered milestones, filled almost to the end
+      var bx = 110, bw = W - 220, by = y + 90, bh = 34, dots = [0.17, 0.5, 0.83];
+      ctx.fillStyle = "#eadff0"; rrect(ctx, bx, by, bw, bh, bh / 2); ctx.fill();
+      ctx.fillStyle = pinkGrad(ctx, bx, by, bx + bw, by); rrect(ctx, bx, by, bw * 0.9, bh, bh / 2); ctx.fill();
+      dots.forEach(function(d, i){
+        var cx = bx + bw * d, cy = by + bh / 2;
+        ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(cx, cy, 44, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#d946ef"; ctx.lineWidth = 8; ctx.stroke();
+        ctx.fillStyle = "#7e22ce"; ctx.font = font(800, 44); ctx.textAlign = "center"; ctx.fillText(String(i + 1), cx, cy + 16);
+      });
+      var bar = String(v.bar || "").trim().toUpperCase();
+      if (bar){ ctx.fillStyle = "#7e22ce"; ctx.font = font(800, 30); ctx.textAlign = "right"; ctx.fillText(bar + " 90%", bx + bw, by - 66); }
+      var top = by + bh + 90, rh = 230, x = 70, cw = W - 140;
+      ["s1", "s2", "s3"].forEach(function(k, i){
+        var cy = top + i * rh, bh2 = rh - 30, s = 76;
+        shadowCard(ctx, x, cy, cw, bh2, 28, "#ffffff", "rgba(60,20,90,.12)");
+        ctx.fillStyle = pinkGrad(ctx, x + 32, cy, x + 32 + s, cy + s); ctx.beginPath(); ctx.arc(x + 32 + s / 2, cy + bh2 / 2, s / 2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#ffffff"; ctx.font = font(800, 40); ctx.textAlign = "center"; ctx.fillText(String(i + 1), x + 32 + s / 2, cy + bh2 / 2 + 14);
+        ctx.fillStyle = "#1a0524"; var f = fit(ctx, String(v[k] || " "), 700, 54, 32, cw - s - 110, 2); ctx.font = font(700, f.size);
+        lines(ctx, f.lines, x + s + 66, cy + bh2 / 2 - (f.lines.length - 1) * f.size * 0.6 + f.size * 0.35, f.size * 1.2, "left");
+      });
+      var end = String(v.end || "").trim();
+      if (end){ ctx.fillStyle = "#7e22ce"; var e = fit(ctx, end, 800, 58, 38, 900, 2); ctx.font = font(800, e.size);
+        lines(ctx, e.lines, W / 2, Math.min(top + 3 * rh + 70, 1700 - (e.lines.length - 1) * e.size * 1.15), e.size * 1.15); }
+    },
+    a_normal: async function(ctx){
+      var v = ktv("a_normal"); creamBg(ctx); TX(ctx);
+      ctx.fillStyle = "#1a0524"; var t = fit(ctx, String(v.title || " "), 800, 76, 48, 900, 2); ctx.font = font(800, t.size);
+      var y = lines(ctx, t.lines, W / 2, 380 + t.size, t.size * 1.15);
+      var rows = nl(v.days).slice(0, 4).map(function(r){ var p = r.split("|"); return [p[0].trim(), (p[1] || "").trim()]; });
+      var end = String(v.end || "").trim(), top = y + 60, room = (end ? 1560 : 1700) - top, rh = Math.min(290, room / Math.max(1, rows.length));
+      var ts = rh - 40, x = 80;
+      rows.forEach(function(r, i){
+        var cy = top + i * rh, m = r[0].match(/^(day|week|month)\s+(\S+)$/i);
+        shadowCard(ctx, x, cy, ts, ts, 26, "#ffffff", "rgba(60,20,90,.14)");
+        ctx.save(); rrect(ctx, x, cy, ts, ts, 26); ctx.clip(); ctx.fillStyle = pinkGrad(ctx, x, cy, x + ts, cy + 60); ctx.fillRect(x, cy, ts, 58); ctx.restore();
+        ctx.fillStyle = "#ffffff"; ctx.font = font(800, 28); ctx.textAlign = "center"; ctx.fillText(m ? m[1].toUpperCase() : "", x + ts / 2, cy + 40);
+        ctx.fillStyle = "#1a0524";
+        if (m){ ctx.font = font(800, Math.min(96, ts * 0.5)); ctx.fillText(m[2], x + ts / 2, cy + 58 + (ts - 58) / 2 + Math.min(96, ts * 0.5) * 0.36); }
+        else ktText(ctx, r[0], x + ts / 2, cy + 58 + (ts - 58) / 2, 800, 40, 24, ts - 30, 2, 1.1);
+        var tx = x + ts + 30, tw = W - 80 - tx;
+        shadowCard(ctx, tx, cy, tw, ts, 26, "#ffffff", "rgba(60,20,90,.12)");
+        ctx.fillStyle = "#1a0524"; var f = fit(ctx, r[1] || " ", 700, 52, 30, tw - 70, 3); ctx.font = font(700, f.size);
+        lines(ctx, f.lines, tx + 36, cy + ts / 2 - (f.lines.length - 1) * f.size * 0.6 + f.size * 0.35, f.size * 1.2, "left");
+      });
+      if (end){ ctx.fillStyle = "#7e22ce"; var e = fit(ctx, end, 800, 58, 38, 900, 2); ctx.font = font(800, e.size);
+        lines(ctx, e.lines, W / 2, Math.min(top + rows.length * rh + 70, 1700 - (e.lines.length - 1) * e.size * 1.15), e.size * 1.15); }
+    },
+    a_battery: async function(ctx){
+      var v = ktv("a_battery"); purpleBg(ctx); TX(ctx);
+      var y = boxes(ctx, v.top || " ", 280, 60, 42, 2);
+      var pct = function(s, d){ var n = parseFloat(String(s || "").replace(/[^0-9.]/g, "")); return isNaN(n) ? d : Math.max(3, Math.min(100, n)); };
+      var cur = y + 40;
+      [[v.pa, v.la, v.a, 12, "#ef4444", "#f87171"], [v.pb, v.lb, v.b, 100, "#16a34a", "#4ade80"]].forEach(function(c){
+        var p = pct(c[0], c[3]), bx = 200, bw = 620, bh = 210;
+        if (String(c[1] || "").trim()) pill(ctx, String(c[1]).trim().toUpperCase(), cur, "rgba(255,255,255,.14)", "#ffffff");
+        var by = cur + 94;
+        ctx.save(); ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 12; rrect(ctx, bx, by, bw, bh, 44); ctx.stroke();
+        ctx.fillStyle = "#ffffff"; rrect(ctx, bx + bw + 10, by + bh / 2 - 48, 34, 96, 14); ctx.fill();
+        var g = ctx.createLinearGradient(bx, 0, bx + bw, 0); g.addColorStop(0, c[4]); g.addColorStop(1, c[5]);
+        ctx.fillStyle = g; rrect(ctx, bx + 22, by + 22, Math.max(30, (bw - 44) * p / 100), bh - 44, 26); ctx.fill(); ctx.restore();
+        ctx.fillStyle = "#ffffff"; ctx.font = font(800, 92); ctx.textAlign = "center"; ctx.save(); ctx.shadowColor = "rgba(0,0,0,.35)"; ctx.shadowBlur = 12;
+        ctx.fillText(String(c[0] || p + "%").trim(), bx + bw / 2 + (p < 40 ? 80 : 0), by + bh / 2 + 32); ctx.restore();
+        var f = fit(ctx, String(c[2] || " "), 700, 50, 34, 880, 2); ctx.fillStyle = "#f3e8ff"; ctx.font = font(700, f.size);
+        cur = lines(ctx, f.lines, W / 2, by + bh + 50 + f.size, f.size * 1.2) + 40;
+      });
+      var end = String(v.end || "").trim();
+      if (end) boxes(ctx, end, Math.min(cur + 10, 1720 - 2 * 64), 48, 34, 2);
+    },
+    l_jules: async function(ctx){
+      var v = ktv("l_jules"), g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#f6efe6"); g.addColorStop(1, "#eaddcf"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); TX(ctx);
+      try { await document.fonts.load("italic 400 60px 'Instrument Serif'"); } catch(e){}
+      ctx.fillStyle = "#1a0524"; var t = fit(ctx, String(v.top || " "), 800, 70, 46, 900, 2); ctx.font = font(800, t.size);
+      var y = lines(ctx, t.lines, W / 2, 310 + t.size, t.size * 1.15);
+      var im = null; try { im = await loadImg(st.photo); } catch(e){}
+      var pw = 720, ps = 640, ph = ps + 190, cx = W / 2, cy = y + 50 + ph / 2;
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-3 * Math.PI / 180);
+      ctx.shadowColor = "rgba(60,30,10,.3)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 16; ctx.fillStyle = "#ffffff"; ctx.fillRect(-pw / 2, -ph / 2, pw, ph);
+      ctx.shadowColor = "transparent"; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+      if (im){ var c = Math.min(im.width, im.height), sy = Math.max(0, Math.min(im.height - c, (im.height - c) / 2 + (st.dy || 0) * (im.height / H)));
+        ctx.drawImage(im, (im.width - c) / 2, sy, c, c, -ps / 2, -ph / 2 + 40, ps, ps); }
+      else { ctx.fillStyle = "#eee4f3"; ctx.fillRect(-ps / 2, -ph / 2 + 40, ps, ps); }
+      var cap = String(v.cap || "").trim();
+      if (cap){ ctx.fillStyle = "#2b2233"; ctx.font = "italic 400 68px 'Instrument Serif', Georgia, serif"; ctx.textAlign = "center"; ctx.fillText(cap, 0, ph / 2 - 62); }
+      ctx.restore();
+      var end = String(v.end || "").trim();
+      if (end){ ctx.fillStyle = "#1a0524"; var e = fit(ctx, end, 700, 48, 32, 900, 4); ctx.font = font(700, e.size);
+        lines(ctx, e.lines, W / 2, Math.min(cy + ph / 2 + 90 + e.size * 0.4, 1700 - (e.lines.length - 1) * e.size * 1.22), e.size * 1.22); }
     },
     // Aspiration: Checklist (calm-love ticks)
     a_check: async function(ctx){
@@ -6193,7 +6503,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
       box.appendChild(b);
     });
     $("tsm-ktGroup").hidden = !kd;
-    if (st.kind === "belief" && (st.bstyle === "wish" || st.bstyle === "xlist" || st.bstyle === "work")) $("tsm-leadWrap").hidden = true;
+    if (st.kind === "belief" && (st.bstyle === "wish" || st.bstyle === "xlist" || st.bstyle === "work" || st.bstyle === "search" || st.bstyle === "receipt" || st.bstyle === "sheet" || st.bstyle === "headheart")) $("tsm-leadWrap").hidden = true;
     if (!kd) return;
     $("tsm-kindHint").textContent = kd.hint;
     if (!kd.hook) $("tsm-hookGroup").hidden = true;
@@ -6710,7 +7020,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   if (!store.get("pageDefault")){ store.set("pageDefault", true); last = "page"; }
   if (["page", "attractpage", "scalepage", "video", "player", "notes", "myth", "scalecheck", "comment"].indexOf(last) !== -1) st.layout = last;
   var lastK = store.get("kind"); if (KINDS[lastK]) st.kind = lastK;
-  var lastB = store.get("bstyle"); if (["told", "mythtruth", "crossed", "post", "photo", "dm", "unpop", "bnotes", "wish", "xlist", "work"].indexOf(lastB) !== -1) st.bstyle = lastB;
+  var lastB = store.get("bstyle"); if (["told", "mythtruth", "crossed", "post", "photo", "dm", "unpop", "bnotes", "wish", "xlist", "work", "search", "receipt", "sheet", "headheart"].indexOf(lastB) !== -1) st.bstyle = lastB;
   var lastL = store.get("leads"); if (lastL && typeof lastL === "object") Object.keys(LEADS).forEach(function(k){ if (typeof lastL[k] === "string") st.lead[k] = lastL[k]; });
   if (store.get("stk") === false) st.stk = false;
   st.hook = TITLE;
@@ -6796,6 +7106,17 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     { id:"lr_trained", kind:"research", style:"lr_trained" },
     { id:"lr_friends", kind:"research", style:"lr_friends" },
     { id:"lr_dyk", kind:"research", style:"lr_dyk" },
+    // 10 new designs (Olly, 2026-11-27)
+    { id:"b_search", kind:"belief", bstyle:"search" },
+    { id:"b_receipt", kind:"belief", bstyle:"receipt" },
+    { id:"b_sheet", kind:"belief", bstyle:"sheet" },
+    { id:"b_headheart", kind:"belief", bstyle:"headheart" },
+    { id:"e_abc", kind:"engagement", style:"e_abc" },
+    { id:"e_blank", kind:"engagement", style:"e_blank" },
+    { id:"a_signs", kind:"aspire", style:"a_signs" },
+    { id:"a_normal", kind:"aspire", style:"a_normal" },
+    { id:"a_battery", kind:"aspire", style:"a_battery" },
+    { id:"l_jules", kind:"lifestyle", style:"l_jules" },
     { id:"intel", kind:"intel", hint:KT.intel.hint, fields:KT.intel.fields.map(function(f){ return [f[0], f[1]]; }), ex:KT.intel.bank },
     { id:"eres", kind:"eres", hint:KT.eres.hint, fields:KT.eres.fields.map(function(f){ return [f[0], f[1]]; }), ex:KT.eres.bank },
     { id:"intelj", kind:"intelj", hint:KT.intelj.hint, fields:KT.intelj.fields.map(function(f){ return [f[0], f[1]]; }), ex:KT.intelj.bank },
@@ -6806,7 +7127,8 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     belief_told:"bold text", belief_crossed:"crossed-out text", belief_mythtruth:"myth / truth card", belief_post:"text post", belief_photo:"full photo",
     belief_dm:"DM chat", belief_notes:"Notes app", b_unpop:"bold text", b_wish:"numbered list", b_xlist:"crossed-off list", b_work:"work vs love", scale:"emotional scale chart",
     science:"brainwave chart", s_dyk:"big number", science_heart:"heart rhythm chart", science_heart_split:"two big heart rhythms", science_heart_bad:"one jagged heart rhythm", science_heart_good:"one smooth heart rhythm", science_sync:"heart + brain image", science_table:"table", science_photo:"full photo",
-    lr_state:"two lists", lr_believe:"two readings", lr_dial:"radio dials", lr_trained:"progress dots + arrows", lr_friends:"two glowing people", lr_dyk:"big number", intel:"intellectualization explainer", eres:"emotional resonance journey", intelj:"intellectualization journey" };
+    lr_state:"two lists", lr_believe:"two readings", lr_dial:"radio dials", lr_trained:"progress dots + arrows", lr_friends:"two glowing people", lr_dyk:"big number", intel:"intellectualization explainer", eres:"emotional resonance journey", intelj:"intellectualization journey",
+    b_search:"search bar", b_receipt:"receipt", b_sheet:"spreadsheet", b_headheart:"head / heart cards", e_abc:"A / B / C choices", e_blank:"fill in the blank", a_signs:"progress bar", a_normal:"day-by-day calendar", a_battery:"phone battery", l_jules:"polaroid" };
   DAY_T.forEach(function(t){
     var kk = t.style ? t.style : t.bstyle && t.bstyle !== "told" ? "b_" + t.bstyle : t.sciStyle === "dyk" ? "s_dyk" : "";
     if (kk && KT[kk]){ t.kt = kk; t.hint = KT[kk].hint; t.fields = KT[kk].fields.map(function(f){ return [f[0], f[1]]; }); t.ex = KT[kk].bank; }
@@ -6934,7 +7256,7 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     return "You plan Olly Henson's Instagram Stories for one day (The Attraction Formula: he helps singles attract a committed relationship by getting into the right emotional state around love). Each Story becomes a finished 1080 x 1920 image in his Story Image Maker: you pick a template and write its text. The maker sizes and places the text, so your only job is the words.\n\n"
       + CORE + "\n\n" + RULES + "\n\n" + RESEARCH_FACTS + "\n\n" + LOVE_RESEARCH
       + "\n\nSTORY TOPICS (Olly, 2026-11-17, overrides every example and bank)\n- NO dating tactics. Never red flags / green flags, texting, texting back, ghosting, matches going quiet, dating apps, first dates, dating rules or what to do on a date. It's deeper than dating.\n- Belief, question and relate Stories are about INTELLECTUALIZATION vs EMOTIONAL RESONANCE, so people recognise themselves. Intellectualization: operating from survival emotions (worrying, doubting and stressing about meeting someone), thinking something might be wrong with us, trying to fix ourselves, learning more and trying to control the outcome. Emotional resonance: embodying our highest emotional state every day, so we build the confidence, energy and belief to meet someone and it unfolds naturally.\n- THE ACHIEVER ANGLE (Olly, 2026-11-19): people who intellectualize love are often into self-development, and very often they're successful in their careers or in business. At work the analytical mind works: strategies, processes, solving problems, working harder, controlling the outcome. So they apply the same thing to relationships, and it doesn't work. Love isn't a problem to solve. It leaves them feeling empty and transactional, and it doesn't create the spark they want. Write these so a successful professional or business owner recognises themselves (career, business, strategy, being good at what they do), with respect, never mocking success. Use 'most successful people' or 'we', never a 'you' call-out. The way out is the same core message: the right emotional state, felt every day.\n- Aspiration Stories show the life they want: their life partner, someone to marry, have children with and build a life with. Ordinary, happy, committed and still fun.\n- Science Stories stay as they are: what the right emotional state looks like in the body (brainwaves, heart rhythm, heart and brain coherence).\n- Questions / entertainment Stories exist to get REPLIES and taps: that's half the point of Stories. Write them for Olly's best-fit people, where they are right now: educated professionals who want marriage, children and a life partner; most have quietly stopped dating, have tried everything (therapy, books, courses, manifesting, inner work) and feel tired or a bit hopeless; hard work got them everything else, but not love; with their person they want to feel belonging, safety and peace. Ask about THEIR inner state and their life right now, so answering feels like being understood, not tested: how love feels at the moment, whether they still believe it will happen, what they've tried that left them tired, love feeling like one more thing to work at, what they long to feel, the ordinary life they picture with their person. One tap, one word or one honest sentence to answer. NEVER dating advice, never asking people to rate love or dating advice, never tips, tactics, 'types', standards, where to meet people, apps, texting, dates or flags. e_rate = 'How true is this for you right now?' with one honest first-person line they'll recognise in themselves; e_tot = two honest states they could be in, or two pictures of the life they want.\n\nSTORY RULES\n- Stories are connection content. Reels carry the argument; Stories make people feel understood and keep them coming back. Show, don't lecture.\n- Use \"we\", \"us\" or \"most people\", never a \"you\" call-out that makes someone feel judged.\n- Every line must be short enough to read in two seconds. Respect each field's word limit; shorter is better.\n- Never the old story: no past relationship, breakup, 2019, years of trying or any teachers. Olly's only story: he worked on his emotional state every day, met his wife Jules and they both just knew.\n- Never say the right partner feels boring, flat or less exciting. Calm love is committed AND fun.\n- No manifestation words. Science only from the research list, worded carefully.\n- The plain question (template question) has NO sticker: people answer by replying to the Story, so ask something they can answer in one word or one honest sentence. This or that and the rating slider still leave space for a poll or slider sticker; write lines that make a tap easy.\n"
-      + "\nTHE DAY: " + niceDay(date) + ". " + (n > 1 ? "Plan " + n + " Stories in posting order (first thing to evening). Mix: exactly 1 ACHIEVER Story (the achiever angle above: b_work most days, or the same angle told through belief_post, belief_dm, b_unpop, belief_notes or e_tot), exactly 1 Lead gen (lead_attract most days; lead_feeling, lead_notes, lead_player or lead_video now and then), at least " + Math.min(5, n) + " different types across the " + n + " (Lead gen, Questions / entertainment, Aspiration, Belief breaking, Emotional scale, Science), never the same template twice in the day. VARIETY OF LOOK: every Story in the day must have a different look (the look in brackets below), so the day never feels like the same format repeated. Pick at least 3 templates that weren't used on the recent days listed, and favour the ones used least. Science most days, rotating its looks (heart + brain image, heart rhythm chart, full photo, table, brainwave chart, big number); heart and brain coherence and heart rhythm patterns are good topics. Open with something light that gets a tap, put the Lead gen in the second half, and let the day build: relate, crack a belief, show the vision, invite." : "")
+      + "\nTHE DAY: " + niceDay(date) + ". " + (n > 1 ? "Plan " + n + " Stories in posting order (first thing to evening). Mix: exactly 1 ACHIEVER Story (the achiever angle above: b_work or b_sheet most days, or the same angle told through belief_post, belief_dm, b_unpop, belief_notes or e_tot), exactly 1 Lead gen (lead_attract most days; lead_feeling, lead_notes, lead_player or lead_video now and then), at least " + Math.min(5, n) + " different types across the " + n + " (Lead gen, Questions / entertainment, Aspiration, Belief breaking, Emotional scale, Science), never the same template twice in the day. NEW TEMPLATES (added 2026-11-27, Olly wants to see them): include at least 2 of b_search, b_receipt, b_sheet, b_headheart, e_abc, e_blank, a_signs, a_normal, a_battery, l_jules every day, different ones from the days before. VARIETY OF LOOK: every Story in the day must have a different look (the look in brackets below), so the day never feels like the same format repeated. Pick at least 3 templates that weren't used on the recent days listed, and favour the ones used least. Science most days, rotating its looks (heart + brain image, heart rhythm chart, full photo, table, brainwave chart, big number); heart and brain coherence and heart rhythm patterns are good topics. Open with something light that gets a tap, put the Lead gen in the second half, and let the day build: relate, crack a belief, show the vision, invite." : "")
       + (n > 1 ? dayCycle(date) : "") + dayContext(date) + (extra || "") + bestAudBrief("stories") + prospectBrief("stories")
       + "\n\nTEMPLATES (use the id exactly; fill every field it lists):\n" + dayTemplates()
       + "\n\nReply as JSON only: {\"stories\":[{\"t\":\"template id\",\"title\":\"a 3 to 7 word label for the calendar\",\"f\":{\"field name\":\"text\"}}]}. Use \\n inside a field only where the field asks for one item per line.";
@@ -7131,12 +7453,20 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
   }
   function dayDoneText(){ var ds = dayDates(); return day.items.length + " Stories for " + (ds.length > 1 ? shortDay(ds[0]) + " to " + shortDay(ds[ds.length - 1]) : niceDay(ds[0] || day.date)); }
   function dayErr(e){ return e && e.code === "rate_limited" ? "Too many requests just now. Try again in a minute." : e && e.code === "timeout" ? "Claude took too long. Try again." : (e && e.message) || "Something went wrong. Try again."; }
+  // first tap arms the button (red, new label) for 5 seconds; a second tap in that time returns true
+  function dayTapAgain(btn, label){
+    if (btn._armed){ clearTimeout(btn._armed); btn._armed = 0; btn.textContent = btn._label; btn.style.background = btn.style.color = ""; return true; }
+    btn._label = btn.textContent; btn.textContent = label; btn.style.background = "#d33"; btn.style.color = "#fff";
+    btn._armed = setTimeout(function(){ btn._armed = 0; btn.textContent = btn._label; btn.style.background = btn.style.color = ""; }, 5000);
+    return false;
+  }
   dayBox.querySelector("#day-go").onclick = async function(){
     var b = this; if (day.busy) return;
     var date = dDate.value || isoLocal(new Date());
     var note = dayBox.querySelector("#day-note").value.trim();
     var total = dayCount(), days = Math.ceil(total / 7);
-    if (day.items.length && day.items.some(function(i){ return !i.sent; }) && !window.confirm("This replaces the Stories below, and some haven't been added to the calendar yet. Carry on?")) return;
+    // window.confirm is blocked inside the artifact frame (it silently says no), so confirm on the page: tap again
+    if (day.items.length && day.items.some(function(i){ return !i.sent; }) && !dayTapAgain(b, "Tap again: replace the Stories below (some aren't on the calendar yet)")) return;
     b.disabled = true; day.busy = true; dSt.className = "status";
     // one Claude call per day (7 Stories), written in date order: each day sees the days before it as "yesterday" and
     // "already written", so 35 Stories don't repeat. Each day is drawn as soon as it's written.
@@ -7216,7 +7546,10 @@ if (window.claude?.use) claude.use("sample").then(s => { sampleFn = s; if (!s) {
     if (day.busy){ dSt.className = "status"; dSt.textContent = "Wait for the Stories being written to finish, then clear them."; return; }
     if (!day.items.length){ dSt.className = "status"; dSt.textContent = "There are no Stories to clear."; return; }
     var n = day.items.length, sent = day.items.filter(function(i){ return i.sent; }).length;
-    if (!window.confirm("Clear all " + n + " Stories and start again?" + (sent ? "\n\n" + sent + " already sent to the Hub calendar stay there. Delete those in the Hub if you don't want them." : ""))) return;
+    if (!dayTapAgain(this, "Tap again to clear all " + n + " Stories")){
+      dSt.className = "status"; dSt.textContent = "Tap the red button again within 5 seconds to clear all " + n + " Stories." + (sent ? " The " + sent + " already sent to the Hub calendar stay there." : "");
+      return;
+    }
     day.items = []; day.editing = -1; dayAllSeq++;
     daySave(); dayCards();
     dSt.className = "status"; dSt.textContent = "✓ Cleared. Pick a start day and press Write to make new ones.";
