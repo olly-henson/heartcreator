@@ -1,50 +1,50 @@
-# ⚠️ CURRENT APPLICANT PROCESS (2026-11-21, flow v5). Overrides every message order, plan step and follow-up below.
+# ⚠️ CURRENT APPLICANT PROCESS (2026-11-26, flow v6 = VOICE NOTE FIRST). Overrides every message order, plan step and follow-up below.
 
 ## Process (Hub > Sales card)
-1. Open the card, rate them Good / Okay / Not good.
-2. Pick the route tab: **📱 WhatsApp / iMessage** (they gave a phone; default) or **✉️ Email only**.
-3. No video link yet → tap **🎬 Make their video link (woman / man)** (it's their template plan code; the video page is /p/<code>/video).
-4. **Step 1, send the video.** 1a is ONE message, written by the card from their application, which Olly checks then sends:
-   "Hey <Name>," → "Really like your application." → "From what you’ve shared, it sounds like you’ve really been struggling with intellectualization." → "I say that because you’ve been looking for <how long>." → "You’ve tried <tried list>." → "But even after all of this - love is still bringing up a lot of <current emotion as a noun>." → "As you put it: “<their words about love>”" → "Where you want to be: <Relationship Wanted>, with a real sense of <FF Resonance>." → what the video covers → link → "Just let me know if you have any questions." → "Speak soon," → blank line → "Olly Henson". ONE blank line between every paragraph (Olly 2026-11-24). Lines skip when the answer is blank; with no 'how long', the tried line starts "I say that because…".
-   WhatsApp shows the video's "Let's Help You Find Your Person" preview. iMessage twin sits next to WhatsApp.
-   WhatsApp route also sends **1b follow-up email**, subject **"Your application status: pending"** (Olly 2026-11-24), no link: "Hey <Name>, / I’ve just sent you a message on <WhatsApp or iMessage>. / It will take you through exactly how we can help you <Olly writes this line from their application: what they want + how they want it to feel, e.g. find someone to start a marriage and have kids with - whilst feeling secure and sharing lots of laughter (which I love by the way 😎)> / Check it out and let me know if you have any questions. / Olly Henson". The email-only route keeps the subject "Your application for The Heart Attractor Program".
-   Email-only route = the same personalised message as one email.
-5. **Step 2, after the video:** the card shows watched % and Clicked Join. Answer questions, send the checkout link.
-6. **Joined:** tap Monthly $250 or Annual $2,500 → the person moves to the Delivery tab (Current members). Reminders (🔔) on the card for anything time-bound (e.g. a 6-month deal ending).
-7. **Gone cold follow-up** (bottom of the card): "I know you really wanted to meet someone you could marry, have children with and build a life with. Here are the steps…" + template plan link.
-8. **Hesitant after the offer:** write the informal 30-day "do the work" guarantee into the follow-up (memory project_hesitant_applicant_guarantee.md). Monthly is now cancel anytime, so a refund is just the first month.
-9. **Daily follow-up (2026-11-24):** Sales tab > **📅 Follow-up**. Work down **Follow up today** from #1 (ranked by fit + engagement; only people who've had their first video message and haven't heard from Olly for 3+ days, counted from their application date when no message is dated). On each card send the **🎬 Helpful Reel**: the card picks the published Reel that fits their answers and writes the message; the card then shows "🎬 Reel follow-up N". **Send their first message** = new applicants who still need step 1. **Contacted or applied in the last 3 days** = leave alone.
-10. **Adding a client by hand without the welcome email:** GHL > Automation > Workflows > put the workflow triggered by `joined heart attractor program` in **Draft** → add that tag to the contact and remove `daily email list` (Claude can do both via the API) → **Publish + Save** the workflow again straight away (anyone joining while it's in Draft misses their welcome email) → set their plan on their Sales card so they show on the Delivery board.
+1. Open the card, rate them Good / Okay / Not good. Pick the route tab: **📱 WhatsApp / iMessage** (they gave a phone; default) or **✉️ Email only** (no phone = automatic).
+2. **WhatsApp / iMessage route (5 steps on the card):**
+   1. **Open their chat** (WhatsApp button, iMessage twin beside it) and save them as a contact.
+   2. **Send your voice note:** Olly's own summary of what he thinks they need to do to meet their partner. Claude writes nothing for it. iMessage: tap + next to the text box, then Audio. Blue number = iMessage; green = no iMessage, use the email route.
+   3. **Follow-up message** under the voice note (ticks waSent): "Hey <Name>, it's Olly Henson. My voice note above will explain what's going on with your situation right now and what you need to change to meet your life partner."
+   4. **Follow-up email**, subject exactly **"Application status: pending"** (ticks emSent): "Hi <Name>, / It's Olly Henson. / I've just looked through your application for The Heart Attractor Program. / I've sent you a voice note that explains why you're stuck right now and what you need to do to actually meet your life partner. / I'll wait for you to reply there. / Talk soon, / Olly"
+   5. **Voice notes back and forth until they're really excited about the program**, then **Make their video link (woman / man)** and send **the link only** (ticks loom).
+3. **Email-only route (3 steps):** 1 record the voice note in Voice Memos → 2 on the card tap 📋 Copy the email, then Voice Memos > recording > … > Share > Gmail, To = their email, subject "Application status: pending", paste, send, then ✅ Mark email sent (ticks emSent + vnEm) → 3 when they're excited: video link only, as a reply in the same thread. Email text: "Hi <Name>, / It's Olly Henson. / I've just looked through your application for The Heart Attractor Program. / I've recorded you a voice note (attached) that explains why you're stuck right now and what you need to do to actually meet your life partner. / Just reply to this email once you've listened. / Talk soon, / Olly"
+4. **Board columns:** New applications → **Voice note + email sent** (only once BOTH the message and the email are ticked; no email = the message is enough; email only = the email is enough) → Video sent → Video watched → Clicked Join → Joined → Gone quiet / Not a fit. Card checklist: 1 Voice note (Voice note + message sent, Email sent), 2 Their video (Video sent, Watched, Clicked Join).
+5. **After the video:** the card shows watched % and Clicked Join. Answer questions, send the **checkout link**.
+6. **Joined:** tap Monthly $250 or Annual $2,500 → the person moves to the Delivery tab (Current members). Reminders (🔔) for anything time-bound.
+7. **Reaching out later:** the **🎬 Helpful Reel** (Sales tab > 📅 Follow-up, work down Follow up today from #1). Nothing else: the follow-up idea message and the gone cold plan follow-up are gone.
+8. **Hesitant after the offer:** write the informal 30-day "do the work" guarantee into the follow-up (memory project_hesitant_applicant_guarantee.md). Monthly is cancel anytime, so a refund is just the first month.
+9. **Adding a client by hand without the welcome email:** GHL > Automation > Workflows > put the workflow triggered by `joined heart attractor program` in **Draft** → add that tag and remove `daily email list` (API) → **Publish + Save** straight away → set their plan on their Sales card.
 
 ## Rules
-- One message does the whole job: personal + the video. Why: Olly (2026-11-21) "I want to get more people watching this video as quickly as possible… this video is spot on". The old confirm → plan → video steps slowed it down.
-- Pull the personal part from their application, don't leave Olly a blank to fill. Why: he asked for "something like… I can see you're struggling with intellectualization… and this is where you want to be… so I can just send one message and it's personalized".
-- Skip any part whose answer is blank, and turn their words into second person (my → your, I → you). Check the result reads as English before shipping a wording change: noun-phrase answers ("Warm and stable") broke "Where you want to be is …", so it's "Where you want to be: …".
-- Every step has a WhatsApp/iMessage version AND an email-only version. Why: some applicants only give an email.
-- Show only the route that applies on each card. Why: "it's just getting very crowded" on his phone.
+- The voice note does the selling; the texts only point to it. Why: Olly (2026-11-26) "I've just tried one different way and it's worked pretty well": voice note + one short line + pending email, then voice notes until they're excited.
+- The video goes only once they're really excited, and as the bare link. Why: "click the make the video link, and then send them the link. That's it."
+- Keep the card tight: one button per step, nothing he doesn't use. Why: "all these different options, it's a bit muddled, just nice and tight". Removed 2026-11-26: PDF plans / gone cold plan link, the follow-up idea, the long personalised video message, the duplicate WhatsApp button at the top.
+- Build Olly's dictated wording exactly, including casing. He dictates by voice, so read casing instructions literally: "capital A for application… status and pending lowercase" = "Application status: pending". Why: I first wrote "Application Status: Pending" and he had to correct it. If a casing or wording instruction could be read two ways, ask before building.
+- Names in his examples (he says the applicant's real name) are the contact's first name, auto-capitalised. Never hard-code the example name.
+- A card only leaves New when every first-contact step for its route is done. Why: Olly "they don't go in until… both of those buttons have been clicked. Needs to be both."
+- Every step has a WhatsApp/iMessage version AND an email-only version. Email links can't attach files, so the email route is copy the text → share the recording from Voice Memos into Gmail → paste → tap Mark sent.
+- Phone how-tos for Olly = numbered plain-English steps, one tap per line, starting from where he is now (e.g. "I've recorded it, now what?"). Why: "very fiddly on my phone… just make it very layman's terms, bullet points".
+- Follow-ups are helpful content, not a pitch: a Reel that fits what they wrote, naming what they told you. No follow-up within 3 days of the last message or their application.
+- Show only the route that applies on each card, readable at phone width (label, then buttons, then notes).
 - Hesitant/sceptical buyers: answer the real worry with a written conditional guarantee, not a discount. Health conditions: coaching alongside therapy, not instead of it.
-- Follow-ups after the video are helpful content, not a pitch: a Reel that fits what they wrote, as a reminder that this is what they need. Why: Olly (2026-11-24) "I don't want to mention the pitch or what I've sent them. I just want to send them helpful stuff".
-- Every follow-up message must be specific to their application: name what they told you (how long, what they've tried, how love feels), then what the Reel helps with and the outcome they want. Why: Olly rejected "This one made me think of you" as "a bit vague… it needs to be very specific, so it can't be skipped".
-- Give people room: no follow-up within 3 days of the last message or of their application, and nobody gets a follow-up before their first video message. Why: Olly (2026-11-24) "I don't want to harass applicants that have literally applied within the last day".
-- Olly replies from his phone: every card change must read clearly at phone width (label, then buttons, then notes). Why: his screenshots showed rows squashed into one-word columns.
 
 ## Never
 - Never use the 🙏 emoji in applicant messages (2026-11-20).
-- Never send a plan before the video, and never ask "would that be fair to say?" first (overridden 2026-11-21: the video goes in the first message).
+- Never send the video before the voice note conversation, and never wrap the video link in a long message (overrides the 2026-11-21 "one personalised video message" rule).
+- Never send PDF plans for now (Olly 2026-11-26: "I don't think we need the PDF plans anymore right now").
 - Never list deliverables Olly hasn't stated (no weekly live calls, no onboarding call, no price lock).
 - Never mention The Love Scale (retired).
-- Never say monthly is 12 payments: since 2026-11-21 it's $250 a month, cancel anytime (the old "12 payments of $497" rule is overridden).
-- Never delete the old flow's code when the flow changes: it sits behind LM_OLD_FLOW = false in the Hub.
-- Never send a vague follow-up ("thought of you", "this made me think of you") with nothing from their application in it.
-- Never mention the program, the price or the video they were sent in a Helpful Reel follow-up.
-- Never chase someone who applied or was messaged in the last 3 days.
+- Never say monthly is 12 payments: it's $250 a month, cancel anytime.
+- Never delete the old flow's code when the flow changes: hide it (LM_OLD_FLOW = false, if (false) blocks) in the Hub.
+- Never send a vague follow-up ("thought of you") with nothing from their application in it, and never mention the program, the price or the video in a Helpful Reel follow-up.
 - Never write applicants' names into skill files or other committed files: the heartattractor repo is public (use "a test applicant" / Jane).
 
-## Examples (good, current wording 2026-11-24, test applicant)
-**1a video message:** "Hey Jane, / Really like your application. / From what you’ve shared, it sounds like you’ve really been struggling with intellectualization. / I say that because you’ve been looking for more than 5 years. / You’ve tried therapy, healing work, attachment styles and dating apps. / But even after all of this - love is still bringing up a lot of frustration. / As you put it: “Frustrated, I put myself out there, I am trying but I get nothing in return.” / Where you want to be: someone to spend the rest of your life with and have children, with a real sense of peace. / This video takes you through The Heart Attractor Program and how it will help you get there: what we’ll do, what’s included, the investment and how to get started. / [link] / Just let me know if you have any questions. / Speak soon, / Olly Henson"
-
-**Helpful Reel follow-up:** "Hey Jane, / You mentioned you’ve been looking for 1 to 3 years, you’ve tried therapy and healing work and love is bringing up a lot of anxiety. / This Reel I posted recently takes you through how to stop worrying that it’s too late, so you can meet someone to marry and have children with. / [Reel link]"
-Weak (rejected): "Hey Jane, / This one made me think of you. Hope it helps 👇 / [link]" (nothing from their application, easy to skip).
+## Examples (good, current wording 2026-11-26, test applicant)
+**Follow-up message under the voice note:** "Hey Jane, it's Olly Henson. My voice note above will explain what's going on with your situation right now and what you need to change to meet your life partner."
+**Subject:** "Application status: pending" (weak, rejected: "Application Status: Pending"; older: "Your application status: pending").
+**Video step:** just the link, e.g. "https://hub.ollyhenson.com/p/<code>/video". Weak (retired 2026-11-26): the long "Really like your application. From what you've shared…" video message.
+**Helpful Reel follow-up:** "Hey Jane, / You mentioned you've been looking for 1 to 3 years, you've tried therapy and healing work and love is bringing up a lot of anxiety. / This Reel I posted recently takes you through how to stop worrying that it's too late, so you can meet someone to marry and have children with. / [Reel link]"
 ---
 
 # Applicant Looms: the framework
@@ -584,3 +584,5 @@ diagnosis plan built per applicant. Plan v3.1's template pages are overridden fo
 <!-- 2026-11-21 skill review: CURRENT PROCESS replaced with flow v5 (one personalised video message + follow-up email, email-only version; card writes it from the application; old cards in "Spoken to, video not sent yet"). Overridden and removed: confirm-intellectualization-first step, plan before video, "never cancel anytime / 12 payments of $497". New: $250 cancel-anytime price slide, stages slide, slideshow-only previews (only the Full screen button), price-change checklist incl. repainting the Skool images, bitrate formula for longer videos. Example replaced with the personalised first message. Video v3 = 9:32. -->
 
 <!-- 2026-11-24 skill review: step 4 rewritten with Olly's new 1a wording (paragraph per point, "I say that because", "But even after all of this -", sign-off Olly Henson) and the 1b email (subject "Your application status: pending", no link, Olly writes the 'how we can help' line). Step 9 now the daily 📅 Follow-up + Helpful Reel routine (replaces 🏆 Rank applicants); new step 10 for adding a client by hand without the welcome email. Rules added: follow-ups are helpful content not a pitch, must name their answers (vague 'made me think of you' rejected), 3-day gap from last message or application, phone-first card layout. Never list: vague follow-ups, pitching in Reel follow-ups, chasing within 3 days, applicant names in committed files. Example replaced with the current 1a wording + a good and a weak Reel follow-up. Removed a stray note that named an applicant. -->
+
+<!-- 2026-11-26 skill review: CURRENT PROCESS replaced with flow v6 (voice note first -> short follow-up message -> 'Application status: pending' email -> voice notes until excited -> video link only). Added email-only voice note route (Voice Memos share to Gmail), board columns (leave New only when message AND email done), rules on exact dictated casing, example names = merge field, tight cards, plain phone how-tos. Removed/overridden: one personalised video message rule + example, PDF plan / gone cold plan follow-up, follow-up idea, 'Your application status: pending' subject. -->

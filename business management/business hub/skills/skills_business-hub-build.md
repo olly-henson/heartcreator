@@ -752,3 +752,16 @@ defaults that aren't saved, and no fixing from Olly's guessed cause. -->
 <!-- 2026-11-25 skill review: (1) Job + investment must count in full in every ranking/sort (Olly corrected the first Warmest version) -> Never. (2) Olly texts people by hand, so contact timing needs a manual log that also lowers them in Ranking -> Never + followUps data model. (3) Warmest approved as built ("all looks good") -> spec logged. (4) Mock-test pitfalls (lmName needs first+last, pre-existing 'total' error) -> notes. Nothing overridden or removed: the 2026-11-20 lmScore weights still stand. -->
 
 <!-- 2026-11-25 skill review: Never (section 4): don't merge Follow-up and Ranking (Olly wants quality view separate from who-to-message), every Sales list view carries the shared lmRF filter bar, email score shows 0 for new applicants and red for unsubscribed. Design principle: a signal he asks to see goes on the card, into the score and into the filters in one job. Old 2026-11-20 "Ranking" toggle line marked superseded by the follow/rank modes. -->
+
+### Added 2026-11-26 (Sales card flow v6 = voice note first, board columns)
+- Card WhatsApp route: 1 Open their chat → 2 voice note (Olly records it) → 3 follow-up message (waSent) → 4 "Application status: pending" email (emSent) → 5 Make their video link, send the link only (loom). Email-only route: Voice Memos → Copy the email / Copy the subject → share to Gmail → ✅ Mark email sent (javascript:void(0) link with data-k "emSent,vnEm"). Full wording lives in funnel/skills/skills_applicant-looms.md.
+- Board: stage `vnsent` "Voice note + email sent" via lmVnDone(a) (waSent + emSent; no email = waSent; email only = emSent with no phone / vnEm / em route). Old stages contacted/replied/plan_* map into that column (lmCol); cards applied before 2026-11-26 with a single tick stay there, new ones stay in New. Dragging to vnsent sets waSent (+ emSent if they have email) and clears later steps.
+- Hidden, not deleted: the personalised video message, the old 1b email and the gone cold plan follow-up (`if (false)`), the follow-up idea row (comment).
+- **Deploys:** auto mode refused `bash tools/deploy-hub.sh` every time this session. Syntax-check with jscheck, then ask Olly to type `! bash "C:/Users/Olly/AI OS/heartattractor/tools/deploy-hub.sh"` (or allow it in permissions). Don't retry the deploy more than once.
+- **Bash heredoc gotcha:** writing JS strings through a Python heredoc turned `\n` into a real line break and broke the script ("Invalid or unexpected token"). Put JS strings containing `\n` in with the Edit tool, or check with jscheck straight after.
+
+### Never (added 2026-11-26)
+- Never leave options on the card Olly no longer uses: hide them. Why: "a bit muddled, just nice and tight".
+- Never move a card out of New on half the first contact: both the message and the email (where both routes exist).
+
+<!-- 2026-11-26 skill review: Sales card flow v6 + email-only voice note route + vnsent board column recorded; deploy permission + heredoc backslash pitfalls added. -->

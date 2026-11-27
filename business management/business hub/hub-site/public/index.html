@@ -5534,7 +5534,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Flags in state.looms[id]: waSent, emSent, waReply, emReply, product ("monthly" | "annual").
   // Stages v3 (Olly, 2026-11-10): plan + video steps, and "Asked questions / next steps" after the plan is read.
   // Plan sent, Plan read, Video watched and Clicked Join also move on their own from the tracking (lmPV / lmVV).
-  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["confirmed", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"],
+  var LM_STAGES = [["new", "New"], ["contacted", "Contacted"], ["replied", "Replied"], ["confirmed", "Replied"], ["plan_sent", "Plan sent"], ["plan_read", "Plan read"], ["vnsent", "Voice note + email sent"],
     ["loom", "Video sent"], ["watched", "Video watched"], ["joinclick", "Clicked Join"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
   var LM_ORDER = ["new", "contacted", "replied", "confirmed", "plan_sent", "plan_read", "loom", "watched", "joinclick", "joined"];
   // each step = ticked on the card, or seen by the tracking; an explicit false (unticked or dragged back) beats the tracking
@@ -5567,8 +5567,16 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (F.planSent) return "plan_sent";
     if (F.confirmed) return "replied";   // the Confirmed step was removed 2026-11-16
     if (s.waReply || s.emReply) return "replied";
-    if (s.waSent || s.emSent) return "contacted";
+    // Olly, 2026-11-26: they leave New only once the voice note message AND the follow-up email are both done
+    // (no email = the message is enough; email only = the email is enough). Cards from the old flow keep their place.
+    if (lmVnDone(a)) return "vnsent";
+    if ((s.waSent || s.emSent) && String(a.dateAdded || "") < "2026-11-26") return "contacted";
     return "new";
+  }
+  function lmVnDone(a){
+    var s = lmStore(a.id), ph = String(a.phone || "").replace(/[^\d]/g, "");
+    var emOnly = !ph || s.vnEm || (typeof lmRoute === "object" && lmRoute[a.id] === "em");
+    return !!((s.waSent && (s.emSent || !a.email)) || (s.emSent && emOnly));
   }
   function lmLabels(a){
     var s = lmStore(a.id), L = [];
@@ -5598,8 +5606,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       // Olly, 2026-11-17: steps 1 and 2 merged. The first message carries the plan link.
       // Olly, 2026-11-20: reach out first, the steps (plan link) only after the chat.
       // Olly, 2026-11-21: one video message (+ follow-up email), then they watch / ask / join.
-      row("1", "Video message", btn("loom", "Video sent") + btn("emSent", "Email sent") + btn("committed", "They replied")) +
-      row("2", "Their video", btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
+      // Olly, 2026-11-26: voice note flow. 1 voice note message + email (both, or just the one route they have) -> 2 video link.
+      row("1", "Voice note", btn("waSent", "Voice note + message sent") + btn("emSent", "Email sent")) +
+      row("2", "Their video", btn("loom", "Video sent") + btn("watched", "Watched") + btn("joinClick", "Clicked Join")) +
       row("✓", "They joined", btn("monthly", "Monthly $250") + btn("annual", "Annual $2,500")) +
       '<small style="display:block;opacity:.65;margin:2px 0 6px">Plan read, Watched and Clicked Join tick themselves from the tracking. Untick one to override it.</small>' +
       '<div class="lmstep">' + btn("quiet", "Gone quiet") + btn("coldSent", "🧊 Cold follow-up done") + btn("nofit", "Not a fit") + "</div>" +
@@ -5906,8 +5915,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       + '<details class="lmvn" onclick="event.stopPropagation()" style="flex-basis:100%"><summary style="cursor:pointer;opacity:.8">Read it</summary><p style="white-space:pre-line;margin:6px 0 0">' + lmEsc(text) + "</p></details></div>"; }
     // 2026-11-20 (Olly): contact them straight away on any channel, no set message. WhatsApp/iMessage open a blank chat
     // (the iMessage twin is added below by the wa.me replace), Email opens a blank email (Gmail on a computer).
-    if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + "</button>"
-      + '<a href="https://wa.me/' + ph + '?text=" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a></div>';
+    if (ph) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.phone) + '">📱 ' + lmEsc(a.phone) + "</button></div>";   // chat buttons live in step 1 (2026-11-26)
     if (a.email) h += '<div class="lmcon"><button type="button" class="lmcopy" data-copy="' + lmEsc(a.email) + '">✉️ ' + lmEsc(a.email) + "</button>"
       + '<a href="mailto:' + lmEsc(a.email) + '?subject=" onclick="event.stopPropagation()">Email</a></div>';
     // Applicant flow v5 (Olly, 2026-11-21, with the new sales video): plain and simple. ONE message with their video link
@@ -5920,10 +5928,38 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var route = !ph ? "em" : !a.email ? "wa" : (lmRoute[a.id] || "wa");
     if (ph && a.email) h += '<div class="lmcon lmroute">' + [["wa", "📱 WhatsApp / iMessage"], ["em", "✉️ Email only"]].map(function(r){
       return '<button type="button" aria-pressed="' + (route === r[0]) + '" onclick="event.stopPropagation();lmSetRoute(\'' + a.id + '\',\'' + r[0] + '\')">' + r[1] + "</button>"; }).join("") + "</div>";
-    h += lmHead("1. Send the video");
+    // Applicant flow v6 (Olly, 2026-11-26): step 1 on WhatsApp/iMessage = Olly's voice note
+    // (his summary of what they need to do to meet their partner, recorded in the app) + this short text under it,
+    // then the "Application status: pending" email. Then voice notes back and forth until they're excited -> video link only.
+    if (route === "wa"){
+      h += lmHead("1. Open their chat");
+      h += '<div class="lmcon lmmsg"><a href="https://wa.me/' + ph + '?text=" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a><small style="flex-basis:100%;opacity:.75">Save them as a contact.</small></div>';
+      h += lmHead("2. Send your voice note");
+      h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">🎙️ What you think they need to do to meet their partner. On iMessage: tap + next to the text box, then Audio.</small></div>';
+      h += lmHead("3. Follow-up message");
+      var vnTxt = "Hey " + nm + ", it's Olly Henson. My voice note above will explain what's going on with your situation right now and what you need to change to meet your life partner.";
+      h += lmTxt("💬 Follow-up message", vnTxt, lmWa(vnTxt, "waSent"));
+      if (a.email){
+        h += lmHead("4. Follow-up email");
+        var pendMail = "Hi " + nm + ",\n\nIt's Olly Henson.\n\nI've just looked through your application for The Heart Attractor Program.\n\nI've sent you a voice note that explains why you're stuck right now and what you need to do to actually meet your life partner.\n\nI'll wait for you to reply there.\n\nTalk soon,\n\nOlly";
+        h += lmTxt("✉️ Application status: pending", pendMail, lmMail("Application status: pending", pendMail, "emSent"));
+      }
+    }
+    // Email-only route (Olly, 2026-11-26): same flow, the voice note goes as an attachment in ONE email.
+    // Email links can't attach files, so: record in Voice Memos -> copy the email -> share the memo to Gmail -> paste.
+    if (route === "em"){
+      var mailVn = "Hi " + nm + ",\n\nIt's Olly Henson.\n\nI've just looked through your application for The Heart Attractor Program.\n\nI've recorded you a voice note (attached) that explains why you're stuck right now and what you need to do to actually meet your life partner.\n\nJust reply to this email once you've listened.\n\nTalk soon,\n\nOlly";
+      h += lmHead("1. Record your voice note");
+      h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">🎙️ In the Voice Memos app on your iPhone: what you think they need to do to meet their partner.</small></div>';
+      h += lmHead("2. Email it to them");
+      h += lmTxt("📋 Copy the email", mailVn, '<button type="button" class="lmcopy" data-copy="Application status: pending">📋 Copy the subject</button>'
+        + '<a href="javascript:void(0)" data-k="emSent,vnEm" data-id="' + a.id + '" onclick="event.stopPropagation()" style="background:#3f3a48">✅ Mark email sent</a>'
+        + '<small style="flex-basis:100%;opacity:.75">Copy the email, then in Voice Memos tap the recording, … , Share, Gmail. To: ' + lmEsc(a.email || "") + ', subject “Application status: pending”, paste the email, send. Then tap ✅ Mark email sent.</small>');
+    }
+    h += lmHead(route === "wa" ? "5. When they're excited: send their video link" : "3. When they're excited: send their video link");
     if (!vurl){
       h += '<div class="lmcon lmmsg">' + (lmTC[a.id] === null ? '<small style="flex-basis:100%;opacity:.75">Looking for their video link…</small>'
-        : mkT("woman", "🎬 Make their video link (woman)") + mkT("man", "🎬 Make their video link (man)") + '<small style="flex-basis:100%;opacity:.75">Pick their version. The message with their video appears here straight after.</small>') + "</div>";
+        : mkT("woman", "🎬 Make their video link (woman)") + mkT("man", "🎬 Make their video link (man)") + '<small style="flex-basis:100%;opacity:.75">Pick their version. Their video link appears here straight after.</small>') + "</div>";
     } else {
       // Personalised from their application (Olly, 2026-11-21): where they are (intellectualization + their own answers)
       // -> where they want to be -> the video. Every part is skipped when they left that answer blank.
@@ -5937,19 +5973,29 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (triedL.length) where.push((howLong ? "You’ve tried " : "I say that because you’ve tried ") + listAnd(triedL) + ".");
       if (nowEmo && nowEmo.split(/\s+/).length <= 3) where.push(where.length > 1 ? "But even after all of this - love is still bringing up a lot of " + lmEmoNoun(nowEmo) + "." : "Right now love is bringing up a lot of " + lmEmoNoun(nowEmo) + ".");
       var quote = feelsLove && feelsLove.length <= 180 ? "As you put it: “" + feelsLove.trim() + "”" : "";
-      var wantLine = wants ? "Where you want to be: " + low1(wants) + (resWant && resWant.split(/\s+/).length <= 2 ? ", with a real sense of " + resWant.toLowerCase() + "." : ".")
-        : "[✍️ where they want to be, e.g. You want…]";
-      var vmsg = "Hey " + nm + ",\n\nReally like your application.\n\n" + where.join("\n\n") + (quote ? "\n\n" + quote : "") + "\n\n" + wantLine +
-        "\n\nThis video takes you through The Heart Attractor Program and how it will help you get there: what we’ll do, what’s included, the investment and how to get started.\n\n" + vurl +
+      // Emotional Resonance is the fix (Olly, 2026-11-25): their resonance -> use it daily to build confidence, energy and belief
+      // without worrying for another N years -> that opens the door to what they want -> the video shows how.
+      var hl = String(howLong || "").toLowerCase();
+      var yrs = /more than 5|3 to 5/.test(hl) ? "another 5 years" : /1 to 3/.test(hl) ? "another few years" : "years to come";
+      var resOk = resWant && resWant.split(/\s+/).length <= 2;
+      var erLines = (resOk ? ["Your Emotional Resonance is " + resWant.trim().toLowerCase() + "."] : []).concat([
+        "In the program, you’ll use " + (resOk ? "it" : "your Emotional Resonance") + " every day to build the confidence, energy and belief you need to meet someone, without catastrophizing, overthinking and worrying for " + yrs + ".",
+        wants ? "When you do that, it opens the door to what you told me you want: " + low1(wants) + "." : "[✍️ When you do that, it opens the door to… (what they want)]"]);
+      var vmsg = "Hey " + nm + ",\n\nReally like your application.\n\n" + where.join("\n\n") + (quote ? "\n\n" + quote : "") + "\n\n" + erLines.join("\n\n") +
+        "\n\nThis video takes you through how you’ll use your Emotional Resonance to move past intellectualization and meet your person: what we’ll do, what’s included, the investment and how to get started.\n\n" + vurl +
         "\n\nJust let me know if you have any questions.\n\nSpeak soon,\n\nOlly Henson";
       if (route === "wa"){
-        h += lmTxt("🎬 1a. Video message (personalised from their application, check it then send)", vmsg, lmWa(vmsg, "waSent,loom"));
-        if (a.email){
+        // 2026-11-26 (Olly): just the link, the voice notes have done the talking
+        h += lmTxt("🎬 Copy their video link", vurl, lmWa(vurl, "loom"));
+        if (false){   // old personalised video message (kept, not shown)
+        h += lmTxt("🎬 2a. Video message (personalised from their application, check it then send)", vmsg, lmWa(vmsg, "loom"));
+        }
+        if (false && a.email){   // old 1b follow-up email, replaced by the Application Status: Pending email in step 1 (2026-11-26)
           var fuV = function(appName){ return "Hey " + nm + ",\n\nI’ve just sent you a message on " + appName + ".\n\nIt will take you through exactly how we can help you " + (wants ? "[✍ e.g. find someone to start a marriage and have kids with - whilst feeling secure and sharing lots of laughter (which I love by the way 😎). They wrote: “" + wants.trim() + "”]" : "[✍ what they want, from their application]") + "\n\nCheck it out and let me know if you have any questions.\n\nOlly Henson"; };
           var fuB = function(appName){ return lmMail("Your application status: pending", fuV(appName), "emSent").replace(">Email</a>", ">Email: sent on " + appName + "</a>"); };
           h += lmTxt("✉️ 1b. Follow-up email", fuV(app), im ? fuB("iMessage") + fuB("WhatsApp") : fuB("WhatsApp") + fuB("iMessage"));
         }
-      } else h += lmTxt("✉️ 1. Video email (personalised from their application, check it then send)", vmsg, lmMail("Your application for The Heart Attractor Program", vmsg, "emSent,loom"));
+      } else h += lmTxt("🎬 Copy their video link", vurl, lmMail("Re: Application status: pending", vurl, "loom") + '<small style="flex-basis:100%;opacity:.75">Best sent as a reply in your email thread with them.</small>');
       h += '<div class="lmcon lmmsg"><a href="' + vurl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#3f3a48">👀 Preview their video page</a></div>';
     }
     if (LM_OLD_FLOW){
@@ -6082,12 +6128,12 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     h += lmVslRow(a);
     // Email ideas from this applicant (Olly, 2026-11-09): their answers with personal details taken out, for the content generator.
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(lmVoice(a)) + '">💡 Copy for content ideas</button><small style="flex-basis:100%;opacity:.75">Their answers with name, contact details, place and job taken out. Paste into the content generator, Email or Reels tab, “An applicant’s words”: emails use their feelings, Reel hooks are built from their pain and the outcomes they want.</small></div>';
-    h += lmHead("2. After the video");
+    h += lmHead("After the video");
     // Follow-up (2026-11-06, Frankie: "go deeper, never chase"): ONE idea message, only if they watched the video.
     var fol = "Hey " + nm + ", I was thinking about " + (wants ? "what you wrote, that you want " + wants : (a.planRequest ? "your plan" : "your application")) + ". If I were you, "
       + (feel ? "the feeling I'd start practicing first is " + feel + ", because that's the one that" : "I'd start by practicing how you'd feel with them every day, because that's what")
       + " changes who you notice and who you're drawn to.\n\nExcited to help you get there.";
-    h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + lmEsc(fol) + '">💡 Follow-up idea (only if they watched)</button>' + lmWa(fol) + lmMail("An idea for you", fol + "\n\nOlly") + "</div>";
+    // follow-up idea row removed (Olly, 2026-11-26): checkout link + Helpful Reel only
     // Checkout link to send after the Loom (2026-11-03): ollyhenson.com/join redirects to the Skool group, so the target can change later.
     var JOIN = "https://ollyhenson.com/join", joinMail = "Hey " + (a.firstName || "there") + ", great - here's the link to join:\r\n\r\n" + JOIN;
     h += '<div class="lmcon lmmsg"><button type="button" class="lmcopy" data-copy="' + JOIN + '">🔗 Checkout link</button>'
@@ -6135,7 +6181,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       } else h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">You’ve sent them every Reel that fits. Post more and new ones show up here.</small></div>';
       if (rp.sent.length) h += '<div class="lmcon lmmsg"><small style="flex-basis:100%;opacity:.75">Already sent: ' + rp.sent.map(function(x){ return lmEsc(x.hook || x.u) + " (" + String(x.at || "").slice(5, 10).split("-").reverse().join("/") + ")"; }).join(" · ") + "</small></div>";
     }
-    if (!LM_OLD_FLOW && tUrl){
+    if (false && !LM_OLD_FLOW && tUrl){   // 2026-11-26 (Olly): no PDF plans for now, gone cold plan follow-up hidden
       var cold2 = "Hey " + nm + ",\n\nI know you really wanted to meet someone you could marry, have children with and build a life with.\n\nHere are the steps to follow to make that happen:\n\n" + tUrl;
       h += lmHead("If they go quiet");
       h += lmTxt("🧊 Gone cold follow-up", cold2, lmWa(cold2, "coldSent") + lmMail("The steps to meet your person", cold2, "emSent,coldSent"));
@@ -6183,9 +6229,10 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return '<details class="audbox" style="margin:0 0 12px;padding:12px 16px"' + (window.lmProcOpen ? " open" : "") + ' ontoggle="window.lmProcOpen=this.open"><summary style="cursor:pointer;font-weight:700">The sales process, step by step</summary>'
       + '<ol style="margin:12px 0 4px;padding:0">'
       + '<li style="margin:0 0 14px;list-style:none"><b>1. Application comes in</b><br><span style="opacity:.8">Open their card and rate them Good, Okay or Not good.</span></li>'
-      + '<li style="margin:0 0 14px;list-style:none"><b>2. 🎬 Send the video</b><br><span style="opacity:.8">One message on WhatsApp or iMessage with their video, made personal ("I know you want…"), then the follow-up email. No phone number: send it as one email.</span></li>'
-      + '<li style="margin:0 0 14px;list-style:none"><b>3. Answer their questions</b><br><span style="opacity:.8">The card shows when they watch and if they click Join. Send the checkout link when they’re ready.</span></li>'
-      + '<li style="margin:0;list-style:none"><b>4. They join</b><br><span style="opacity:.8">Tap Monthly $250 or Annual $2,500 and they move to the Delivery tab.</span></li></ol></details>';
+      + '<li style="margin:0 0 14px;list-style:none"><b>2. 🎙️ Voice note</b><br><span style="opacity:.8">Open their WhatsApp, save them as a contact, send your voice note, then the follow-up message and the "Application status: pending" email.</span></li>'
+      + '<li style="margin:0 0 14px;list-style:none"><b>3. Talk it through</b><br><span style="opacity:.8">Voice notes back and forth until they’re really excited about the program.</span></li>'
+      + '<li style="margin:0 0 14px;list-style:none"><b>4. 🎬 Send their video link</b><br><span style="opacity:.8">Make their video link on the card and send it. The card shows when they watch and if they click Join. Send the checkout link when they’re ready.</span></li>'
+      + '<li style="margin:0;list-style:none"><b>5. They join</b><br><span style="opacity:.8">Tap Monthly $250 or Annual $2,500 and they move to the Delivery tab.</span></li></ol></details>';
   }
   function lmTop(){
     return '<div class="lmbar" style="margin:0 0 10px"><button type="button" class="copybtn" id="lmRefresh">' + (lmLoading ? "Updating from GHL…" : "Refresh from GHL") + "</button>" +
@@ -6274,8 +6321,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       .catch(function(){ btn.disabled = false; btn.textContent = "Remove from GHL"; window.alert("Couldn't reach the Hub. Reload and try again."); });
   }
   // 2026-11-21: Contacted / Replied / Plan sent / Plan read (the old flow) = one column, "Spoken to, video not sent yet"
-  function lmCol(st){ return /^(contacted|replied|confirmed|plan_sent|plan_read)$/.test(st) ? "talking" : st; }
-  var LM_COLS = [["new", "New applications"], ["talking", "Spoken to, video not sent yet"],
+  // 2026-11-26: that column is now "Voice note + email sent" (old-flow cards stay in it)
+  function lmCol(st){ return /^(contacted|replied|confirmed|plan_sent|plan_read)$/.test(st) ? "vnsent" : st; }
+  var LM_COLS = [["new", "New applications"], ["vnsent", "Voice note + email sent"],
     ["loom", "Video sent"], ["watched", "Video watched"], ["joinclick", "Clicked Join"], ["joined", "Joined"], ["quiet", "Gone quiet"], ["nofit", "Not a fit"]];
   var lmOpen = null, lmView = "info", lmDrag = null;
   function lmMoneyFmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
@@ -6286,6 +6334,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (st === "quiet"){ s.archived = false; return; }
     s.archived = st === "nofit";
     if (st === "nofit") return;
+    if (st === "vnsent"){ s.waSent = true; if (a.email) s.emSent = true; s.waReply = s.emReply = false; s.recorded = false;
+      s.confirmed = s.planSent = s.planRead = s.loom = s.watched = s.joinClick = false; s.product = ""; dvJoinStamp(s); return; }
     var sent = s.waSent || s.emSent, rep = s.waReply || s.emReply;
     s.recorded = false;
     if (st === "new"){ s.waSent = s.emSent = s.waReply = s.emReply = false; }
@@ -6631,7 +6681,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // money + pipeline at a glance
     var K = [
       ["Applications", live.length, counts["new"] + " new" + (function(n){ return n ? " · " + n + " plan requests (DM)" : ""; })(live.filter(function(a){ return a.planRequest; }).length)],
-      ["In progress", counts.contacted + counts.replied + counts.confirmed + counts.plan_sent + counts.plan_read + counts.loom + counts.watched + counts.joinclick,
+      ["In progress", counts.vnsent + counts.contacted + counts.replied + counts.confirmed + counts.plan_sent + counts.plan_read + counts.loom + counts.watched + counts.joinclick,
         (counts.confirmed + counts.plan_sent + counts.plan_read) + " on their plan · " + (counts.loom + counts.watched + counts.joinclick) + " on their video"],
       ["Joined", counts.joined, mo.m + " monthly · " + mo.y + " annual"],
       ["Close rate", vsl ? Math.round(counts.joined / vsl * 100) + "%" : "—", "of videos sent"],
@@ -6687,7 +6737,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     host.querySelectorAll(".lmcol2").forEach(function(col){
       col.addEventListener("dragover", function(e){ if (!lmDrag) return; e.preventDefault(); col.classList.add("over"); });
       col.addEventListener("dragleave", function(e){ if (!col.contains(e.relatedTarget)) col.classList.remove("over"); });
-      col.addEventListener("drop", function(e){ e.preventDefault(); col.classList.remove("over"); var a4 = lmById(lmDrag); lmDrag = null; if (!a4 || lmCol(lmStage(a4)) === col.dataset.st) return; lmSetStage(a4, col.dataset.st === "talking" ? "replied" : col.dataset.st); markDirty(); renderLooms(); });
+      col.addEventListener("drop", function(e){ e.preventDefault(); col.classList.remove("over"); var a4 = lmById(lmDrag); lmDrag = null; if (!a4 || lmCol(lmStage(a4)) === col.dataset.st) return; lmSetStage(a4, col.dataset.st); markDirty(); renderLooms(); });
     });
     var md = document.getElementById("lmModal");
     if (md){
