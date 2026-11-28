@@ -874,6 +874,49 @@
   .lkurl small{ display:block; color: var(--text-muted); font-size:11.5px; margin-top:2px; }
   .lkpending{ display:inline-block; white-space:nowrap; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color: var(--warn); border:1px solid rgba(224,177,104,.45); border-radius:20px; padding:2px 7px; margin-left:6px; }
   @media (max-width:600px){ .lkname{ flex-basis:100%; } }
+  /* Finance tab (2026-11-28) */
+  .fncard{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding:18px 20px; box-shadow: var(--shadow); }
+  .fnform{ display:flex; flex-wrap:wrap; gap:12px; margin:0 0 14px; }
+  .fnform label{ display:flex; flex-direction:column; gap:5px; font-size:12px; color: var(--text-muted); font-weight:600; flex:0 1 150px; }
+  .fnform label.fnwide{ flex:1 1 220px; }
+  .fnform input, .fnform select, .fnexp input, .fnexp select{ background: var(--surface-2); color: var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:9px 10px; font:inherit; font-size:15px; width:100%; }
+  .fnbreak{ border-top:1px solid var(--border-soft); margin:4px 0 14px; }
+  .fnrow{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border-soft); }
+  .fnname{ flex:0 0 130px; font-weight:700; font-size:15px; } .fnname small{ color: var(--text-muted); font-weight:500; margin-left:4px; }
+  .fnwhere{ flex:1; font-size:13px; color: var(--text-muted); }
+  .fnamt{ font-family:'Poppins',sans-serif; font-size:18px; font-variant-numeric:tabular-nums; }
+  .fncash .fnamt{ color: var(--accent-2); }
+  .fnwait{ background: var(--surface-2); border-radius:12px; padding:12px 14px; margin:0 0 14px; font-size:13.5px; }
+  .fnwrow{ display:flex; align-items:center; gap:8px; padding:7px 0; } .fnwrow > span{ flex:1; } .fnwrow small{ color: var(--text-muted); }
+  .fnroute{ font:inherit; font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid var(--border-soft); background:transparent; color: var(--text-muted); cursor:pointer; }
+  .fnroute.out{ color: var(--warn); border-color:rgba(224,177,104,.45); }
+  .fndealt{ opacity:.75; }
+  .fnmode{ display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px; }
+  .fnmodebtn{ font:inherit; font-size:13px; font-weight:700; padding:8px 14px; border-radius:999px; border:1px solid var(--border-soft); background:transparent; color: var(--text-muted); cursor:pointer; }
+  .fnmodebtn.on{ background: var(--accent-grad); color:#1a0524; border-color:transparent; }
+  .fnup > span{ display:block; padding:5px 0; } .fnup > b{ display:block; margin-bottom:4px; }
+  .fnusd{ display:block; font-size:11.5px; font-weight:500; color: var(--text-muted); text-align:right; }
+  .fnlink{ background:none; border:0; color: var(--accent-2); text-decoration:underline; cursor:pointer; font:inherit; padding:0; }
+  .fnwarn{ color: var(--warn); font-size:13.5px; } .fngood{ color: var(--good); font-size:13.5px; }
+  .fnnotes{ display:flex; flex-direction:column; gap:6px; margin:-26px 0 6px; font-size:13.5px; }
+  .audbody .fnnotes{ margin:0 0 12px; }
+  .fncoming{ margin-top:18px; border-color: var(--border-soft); }
+  .fncome{ width:100%; min-width:420px; border-collapse:collapse; font-size:14px; font-variant-numeric:tabular-nums; }
+  .fncome th{ text-align:left; letter-spacing:.02em; font-size:11.5px; color: var(--text-muted); font-weight:600; padding:6px 8px; }
+  .fncome td{ padding:8px; border-top:1px solid var(--border-soft); } .fncome td.fntot{ font-weight:700; color: var(--accent-2); }
+  .fncome tr.fnsum td{ border-top:1px solid var(--border); }
+  @media (max-width:600px){ .fncome{ min-width:0; font-size:12.5px; } .fncome th, .fncome td{ padding:6px 4px; } }
+  .fnkpis{ margin-bottom:34px; } .fnkpis .value{ font-size:22px; }
+  .fnsplit{ border:1px solid var(--border-soft); border-radius:12px; padding:10px 12px; margin:8px 0; }
+  .fnsplit.done{ opacity:.7; }
+  .fnshead{ display:flex; align-items:center; gap:10px; font-size:13.5px; } .fnshead b{ font-size:16px; } .fnshead span{ flex:1; color: var(--text-muted); }
+  .fnticks{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .fntick{ display:inline-flex; align-items:center; gap:6px; font-size:13px; padding:6px 10px; border-radius:999px; background: var(--surface-2); cursor:pointer; }
+  .fntick.on{ background:rgba(143,208,168,.16); color: var(--good); } .fntick.cash{ cursor:default; color: var(--text-muted); }
+  .fnexp{ min-width:760px; } .fnexp td{ padding:4px; } .fnexp tr.fnoff td{ opacity:.45; } .fnexp tr.fnoff td.fnact{ opacity:1; }
+  .fnpm{ white-space:nowrap; font-variant-numeric:tabular-nums; } .fnact{ white-space:nowrap; position:sticky; right:0; background: var(--surface-solid); }
+  .fnratebox{ display:flex; flex-direction:column; justify-content:flex-end; gap:5px; }
+  @media (max-width:600px){ .fnkpis{ grid-template-columns:repeat(2,minmax(0,1fr)); } .fnkpis .value{ font-size:19px; } .fnname{ flex-basis:100px; } .fnwhere{ font-size:12px; } .fncard{ padding:14px; } .fnnotes{ margin-top:-20px; } }
   .audboxes{ display:flex; flex-direction:column; gap:12px; }
   .audbox{ background: var(--surface); border:1px solid var(--border-soft); border-radius:14px; overflow:hidden; }
   .audhead{ display:flex; align-items:center; gap:12px; width:100%; padding:16px 18px; background:transparent; border:0; color: var(--text); font:inherit; text-align:left; cursor:pointer; }
@@ -1680,6 +1723,7 @@
     <button class="tabbtn" data-tab="youtube" role="tab" aria-selected="false" hidden>YouTube</button>
     <button class="tabbtn" data-tab="tiktok" role="tab" aria-selected="false" hidden>TikTok</button>
     <button class="tabbtn" data-tab="delivery" role="tab" aria-selected="false">Delivery</button>
+    <button class="tabbtn" data-tab="finance" role="tab" aria-selected="false">Finance</button>
   </nav>
 
   <div id="tab-audience" class="tabpanel" hidden="">
@@ -2630,6 +2674,10 @@ https://www.instagram.com/attractwitholly
 
   </div>
 
+  <div id="tab-finance" class="tabpanel" hidden="">
+    <div id="financeBody"></div>
+  </div>
+
   <div id="tab-links" class="tabpanel" hidden="">
     <span class="hint" style="display:block; margin:0 0 18px;">Open what you want to send, find where you're sending it, tap Copy. Every link is tracked, so the Hub knows where people came from.</span>
     <div id="linksBody"></div>
@@ -2808,7 +2856,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       o.activeMembers = actM + actA;
       o.newMembers = o.newMonthly + o.newAnnual;
       o.lost = o.lostMonthly + o.lostAnnual;
-      o.mrr = actM * MRR_PRICE_MONTHLY + actA * (MRR_PRICE_ANNUAL / 12);
+      o.mrr = actM * MRR_PRICE_MONTHLY + actA * (MRR_PRICE_ANNUAL / 12) + legacyMrr(o.month);
       // Churn = members lost ÷ members at the start of the month. No
       // starting members (the first month) means there's nothing to churn.
       o.churn = o.startMembers > 0 ? (o.lost / o.startMembers) * 100 : null;
@@ -5630,7 +5678,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       lmLoading = false;
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
       lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
-      lmJoinSync();
+      lmJoinSync(); renderFinance();
       lmPlanViews(); lmVslViews(); lmGuideViews();
       // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
       if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmOpen = w.id; lmView = "info"; lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
@@ -6351,7 +6399,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var m = 0, y = 0;
     lmData.forEach(function(a){ if (lmStage(a) !== "joined" || lmStore(a.id).churned) return; if (lmStore(a.id).product === "annual") y++; else m++; });
     var cash = 0; try { cash = memberPayments().reduce(function(t, x){ return t + x.amount; }, 0); } catch(e){}
-    return { m:m, y:y, cash:cash || (m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL), mrr:m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12 };
+    return { m:m, y:y, cash:cash || (m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL), mrr:m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12 + legacyMrr() };
   }
   // Country in full (Olly, 2026-11-12: "when someone comes through as from CA - where is that?"). Applicants pick their
   // country on the application form (full names, or type their own); GHL stores it as a 2-letter code (Canada -> CA).
@@ -6852,15 +6900,28 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     else { delete s.joinedAt; delete s.churned; }
     try { applyMembersToTabs(); } catch(e){}
   }
+  // Older-price members (Olly 2026-11-28): joined before the price rise, pay via Skool at their old monthly price.
+  // state.legacyMembers = [{ id (GHL contact), name, price ($/month), renew (first renewal we track, YYYY-MM-DD), churned }]
+  // They count in MRR, cash and Finance, never as new sales (they joined long ago); payments start at `renew`.
+  function legacyMembers(){ return state.legacyMembers || []; }
+  function legacyMrr(month){ // their MRR in a given month (YYYY-MM); today's month when left out
+    month = month || todayISO().slice(0, 7);
+    return legacyMembers().reduce(function(a, x){ return a + (x.churned && x.churned.slice(0, 7) <= month ? 0 : (Number(x.price) || 0)); }, 0);
+  }
+  function legacyActive(){ var t = todayISO(); return legacyMembers().filter(function(x){ return !(x.churned && x.churned <= t); }); }
   function hubMembers(){
     var L = state.looms || {}, b = [];
     Object.keys(L).forEach(function(id){ var s = L[id];
       // joined before joinedAt existed (first member, 2026-11-21): today becomes their joined date, editable on the Delivery card
       if (s && s.product && !s.joinedAt && !s.archived){ s.joinedAt = todayISO(); hubMemMig = true; }
       if (s && (s.product === "monthly" || s.product === "annual") && s.joinedAt && !s.archived && !s.removed)
-        b.push({ plan:s.product, joined:s.joinedAt, cancelled:s.churned || "", source:"", medium:"", content:"" });
+        b.push({ id:id, plan:s.product, joined:s.joinedAt, cancelled:s.churned || "", source:"", medium:"", content:"" });
     });
-    return b.length ? b : (state.ghlMembers || []);
+    if (!b.length) b = (state.ghlMembers || []).slice();
+    legacyMembers().forEach(function(x){
+      if (x.renew) b.push({ id:x.id, plan:"monthly", joined:x.renew, cancelled:x.churned || "", price:Number(x.price) || 0, legacy:true, name:x.name, source:"", medium:"", content:"" });
+    });
+    return b;
   }
   function dvMembers(){ return (lmData || []).filter(function(a){ return lmStage(a) === "joined"; }); }
   function dvDate(iso){ if (!iso) return ""; var d = new Date(iso + "T12:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }); }
@@ -6887,7 +6948,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var ms = dvMembers(), cur = ms.filter(function(a){ return !lmStore(a.id).churned; }), gone = ms.filter(function(a){ return !!lmStore(a.id).churned; });
     var m = cur.filter(function(a){ return lmStore(a.id).product !== "annual"; }).length, y = cur.length - m;
     var cash = 0; try { cash = memberPayments().reduce(function(t, x){ return t + x.amount; }, 0); } catch(e){}
-    var K = [["Current members", cur.length, m + " monthly · " + y + " annual"], ["MRR", lmMoneyFmt(m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12), "annual counted as $208/mo"],
+    var lg = legacyActive();
+    var K = [["Current members", cur.length + lg.length, m + " monthly · " + y + " annual" + (lg.length ? " · " + lg.length + " older price" : "")], ["MRR", lmMoneyFmt(m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12 + legacyMrr()), "annual counted as $208/mo"],
       ["Cash collected", lmMoneyFmt(cash), "all payments so far"], ["Churned", gone.length, ms.length ? Math.round(gone.length / ms.length * 100) + "% of everyone who joined" : "nobody yet"]];
     var byJoin = function(p, q){ return String(lmStore(q.id).joinedAt || "").localeCompare(String(lmStore(p.id).joinedAt || "")); };
     var html = lmTop() + rmBanner() + '<div class="lmkpis dvkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
@@ -9688,6 +9750,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       r.loom += Number(g.loom) || 0; r.joined += Number(g.joined) || 0;
     });
     memberPayments().forEach(function(x){
+      if (x.legacy) return; // older members didn't come from this content
       if (week ? !ovDayIn(x.date) : !ovInPeriod(x.date.slice(0,7))) return;
       var k = [x.source, x.medium, x.content].map(function(v){ return String(v || "").toLowerCase(); }).join("|");
       var r = by[k] || (by[k] = { source:String(x.source || "").toLowerCase() || "(unknown)", medium:x.medium, content:x.content, loom:0, joined:0, cash:0 });
@@ -9888,7 +9951,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function ovSalesJourneyTable(){
     var week = ovDaily();
     var rows = hubMembers().filter(function(m){
-      return (m.plan === "monthly" || m.plan === "annual") && m.joined && (week ? ovDayIn(m.joined) : ovInPeriod(m.joined.slice(0, 7)));
+      return (m.plan === "monthly" || m.plan === "annual") && m.joined && !m.legacy && (week ? ovDayIn(m.joined) : ovInPeriod(m.joined.slice(0, 7)));
     }).sort(function(a, b){ return a.joined < b.joined ? 1 : -1; });
     var anyJourney = rows.some(function(m){ return m.lead || m.app; });
     var intro = document.createElement("p"); intro.className = "ovsub";
@@ -9927,9 +9990,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       r.optins += (Number(g.optins) || 0) + (Number(g.scale) || 0);
       r.applied += Number(g.applied) || 0; r.loom += Number(g.loom) || 0; r.joined += Number(g.joined) || 0;
     });
-    memberPayments().forEach(function(x){ row(x.source, x.medium, x.content).cash += x.amount; });
+    memberPayments().forEach(function(x){ if (!x.legacy) row(x.source, x.medium, x.content).cash += x.amount; });
     hubMembers().forEach(function(m){
-      if ((m.plan !== "monthly" && m.plan !== "annual") || !m.joined || m.joined > today) return;
+      if (m.legacy || (m.plan !== "monthly" && m.plan !== "annual") || !m.joined || m.joined > today) return;
       if (m.cancelled && m.cancelled <= today) return;
       row(m.source, m.medium, m.content).mrr += m.plan === "annual" ? MRR_PRICE_ANNUAL / 12 : MRR_PRICE_MONTHLY;
     });
@@ -10441,7 +10504,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       ovCard("Total page visits", fmtInt(vO + vF + vS + vA)),
       ovCard("Opt-ins", fmtInt(sO + sF + sS)),
       ovCard("Applications", fmtInt(sAp)),
-      ovCard("Sales", fmtInt(Math.max(sJ, salesN, hubMembers().filter(function(x){ return x.joined && ovMemIn(x.joined); }).length))),
+      ovCard("Sales", fmtInt(Math.max(sJ, salesN, hubMembers().filter(function(x){ return x.joined && !x.legacy && ovMemIn(x.joined); }).length))),
       hubMembers().some(function(x){ return x.plan === "monthly" || x.plan === "annual"; })
         ? ovCard("Cash collected", fmtMoney(cashIn(function(d){ return ovDaily() ? ovDayIn(d) : ovInPeriod(d.slice(0,7)); })), "", "accent")
         : ovCard("New cash", fmtMoney(cashB), "", "accent")
@@ -11296,15 +11359,15 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var out = [], today = todayISO();
     hubMembers().forEach(function(m){
       if ((m.plan !== "monthly" && m.plan !== "annual") || !m.joined) return;   // free clients and unset plans pay nothing
-      var step = m.plan === "annual" ? 12 : 1, amt = m.plan === "annual" ? MRR_PRICE_ANNUAL : MRR_PRICE_MONTHLY;
+      var step = m.plan === "annual" ? 12 : 1, amt = m.price || (m.plan === "annual" ? MRR_PRICE_ANNUAL : MRR_PRICE_MONTHLY);
       var p = m.joined.split("-").map(Number);
       for (var k = 0; k < 600; k += step){
         var d = new Date(Date.UTC(p[0], p[1] - 1 + k, 1));
         var last = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
         var iso = d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(Math.min(p[2], last)).padStart(2, "0");
         if (iso > today) break;
-        if (m.cancelled && iso >= m.cancelled && k > 0) break;
-        out.push({ date:iso, amount:amt, plan:m.plan, first:k === 0, source:m.source, medium:m.medium, content:m.content });
+        if (m.cancelled && iso >= m.cancelled && (k > 0 || m.legacy)) break;
+        out.push({ legacy:!!m.legacy, id:m.id || "", date:iso, amount:amt, plan:m.plan, first:k === 0, source:m.source, medium:m.medium, content:m.content });
       }
     });
     return out;
@@ -11313,7 +11376,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   // Fill the MRR tab (new/lost per plan) and the Sales tab (monthly/annual sales) from the members, for months that
   // aren't locked. Members without an HA Plan are left out until it's set.
   function applyMembersToTabs(){
-    var ms = hubMembers().filter(function(m){ return (m.plan === "monthly" || m.plan === "annual") && m.joined; });
+    var ms = hubMembers().filter(function(m){ return (m.plan === "monthly" || m.plan === "annual") && m.joined && !m.legacy; });
     if (!ms.length) return;
     var months = {};
     ms.forEach(function(m){ months[m.joined.slice(0,7)] = true; if (m.cancelled) months[m.cancelled.slice(0,7)] = true; });
@@ -11563,6 +11626,498 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (first) first.focus();
   });
 
+  // ── Finance tab (2026-11-28) ──────────────────────────────────────────
+  // Profit First, Olly's version: every payment that lands in Revolut (GBP) is split into
+  // Invest / Salary / Expenses / Tax pockets; what's left stays in the main account as cash flow.
+  // Data: state.finance = { pct:{invest,salary,expenses,tax}, rate (GBP per $1), rateAt, splits:[], expenses:[], skip:{} }
+  var FN_BUCKETS = [
+    { k:"invest",   name:"Profit",   blurb:"Every 3 months, send it to your personal account to invest", where:"Move to your Profit pocket (Pro)" }, // key stays "invest" (saved data); renamed Profit 2026-11-28
+    { k:"salary",   name:"Salary",   blurb:"Paid to your personal account: that's you paying yourself", where:"Send to your personal account" },
+    { k:"expenses", name:"Expenses", blurb:"The Expenses card pays your subscriptions from here", where:"Move to your Expenses pocket (Pro)" },
+    { k:"tax",      name:"Tax",      blurb:"Don't touch: this is your tax bill", where:"Move to your Tax pocket (Pro)" }
+  ];
+  var FN_CATS = ["Software", "Ads", "Contractors", "Learning", "Equipment", "Bank fees", "Other"];
+  var fnOpen = (function(){ try { return JSON.parse(localStorage.getItem("hub-fn-open") || "{}"); } catch(e){ return {}; } })();
+  var fnDraft = { gbp:"", usd:"", cur:"GBP", date:"", note:"", keys:[] }; // cur USD (Olly 2026-11-28): Skool shows payouts in $
+  function fnDraftCur(){ try { return localStorage.getItem("hub-fn-cur") === "USD" ? "USD" : "GBP"; } catch(e){ return "GBP"; } }
+  fnDraft.cur = fnDraftCur();
+  function fnUSD(n){ var v = Math.round((Number(n) || 0) * 100) / 100; return "$" + v.toLocaleString("en-US", { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+  function fnSetDraftUsd(v){ fnDraft.usd = v; fnDraft.gbp = v === "" ? "" : String(Math.round((Number(v) || 0) * fnState().rate * 100) / 100); }
+  function fnState(){
+    if (!state.finance) state.finance = {};
+    var f = state.finance;
+    if (!f.pct) f.pct = { invest:10, salary:30, expenses:25, tax:25 };
+    if (f.cashPct === undefined) f.cashPct = Math.max(0, 100 - f.pct.invest - f.pct.salary - f.pct.expenses - f.pct.tax);
+    if (f.profitPct === undefined) f.profitPct = 5; // Olly 2026-11-28: Profit fixed at 5%, Salary takes the rest
+    if (f.salShare === undefined) f.salShare = (f.pct.salary + f.pct.invest) ? Math.round(f.pct.salary / (f.pct.salary + f.pct.invest) * 100) : 75;
+    if (!f.rate) f.rate = 0.79;
+    if (!f.splits) f.splits = [];
+    if (!f.expenses) f.expenses = [];
+    if (!f.skip) f.skip = {};
+    if (!f.moves) f.moves = []; // [{id, date, from, to, gbp, note}]: money moved between pockets, or out (paid to you / spent)
+    if (!f.names) f.names = {};
+    if (!f.route) f.route = {};
+    if (!f.fee) f.fee = {};
+    if (f.fee.stripePct === undefined){ f.fee.stripePct = 2.9; f.fee.stripeFixed = 0.30; }
+    if (!f.term) f.term = {};
+    // Per-member setup (Stripe route, fixed terms, already-dealt-with payments) is stored in the KV record (seeded
+    // 2026-11-28, seed1/seed2). Member names and ids are kept out of this file: the repo is public.
+    if (f.profitPaid){ f.moves.push({ id:fnId(), date:f.profitPaidAt || todayISO(), from:"invest", to:"out", gbp:Math.round(f.profitPaid * 100) / 100, note:"Profit payout to personal account" }); delete f.profitPaid; }
+    return f;
+  }
+  function fnGBP(n){ var v = Math.round((Number(n) || 0) * 100) / 100; return (v < 0 ? "-£" : "£") + Math.abs(v).toLocaleString("en-GB", { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+  function fnId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  // Expenses % from real costs (Olly 2026-11-28: keep costs very low, margins high). This month's costs ÷ the money
+  // expected in a month (members after Skool/Stripe fees, in £), rounded up so the costs are always covered.
+  // Tax and cash flow stay fixed; what Expenses doesn't need goes to Salary and Invest (salShare % to Salary).
+  function fnAuto(){
+    var f = fnState(), ym = todayISO().slice(0, 7), today = todayISO(), n = 0, usd = 0;
+    var cost = f.expenses.reduce(function(a, x){ return a + (x.active === false ? 0 : fnExpInMonth(x, ym)); }, 0);
+    hubMembers().forEach(function(m){
+      if ((m.plan !== "monthly" && m.plan !== "annual") || !m.joined || (m.cancelled && m.cancelled <= today)) return;
+      n++; usd += m.plan === "annual" ? fnNet(m.price || MRR_PRICE_ANNUAL, m.id) / 12 : fnNet(m.price || MRR_PRICE_MONTHLY, m.id);
+    });
+    return { cost:cost, income:usd * f.rate, members:n };
+  }
+  function fnIsAuto(){ return fnState().expAuto !== false; }
+  function fnPct(){
+    var f = fnState(); if (!fnIsAuto()) return f.pct;
+    var a = fnAuto(), tax = Number(f.pct.tax) || 0, cash = Number(f.cashPct) || 0, room = Math.max(0, 100 - tax - cash);
+    var exp = a.income > 0 ? Math.min(room, Math.ceil(a.cost / a.income * 100 - 1e-9)) : (Number(f.pct.expenses) || 0);
+    exp = Math.min(room, Math.max(0, exp));
+    var rest = room - exp, prof = Math.min(rest, Math.max(0, Number(f.profitPct) || 0)), sal = rest - prof;
+    return { invest:prof, salary:sal, expenses:exp, tax:tax };
+  }
+  function fnPctSum(){ var p = fnPct(); return FN_BUCKETS.reduce(function(a, b){ return a + (Number(p[b.k]) || 0); }, 0); }
+  // Each pocket rounded to the penny; cash flow takes the rest so it always adds up to the payment.
+  function fnAmounts(gbp, pct){
+    gbp = Number(gbp) || 0; pct = pct || fnPct();
+    var out = {}, used = 0;
+    FN_BUCKETS.forEach(function(b){ var v = Math.round(gbp * (Number(pct[b.k]) || 0)) / 100; out[b.k] = v; used += v; });
+    out.cash = Math.round((gbp - used) * 100) / 100;
+    return out;
+  }
+  function fnPayKey(p){ return (p.id || p.plan) + "|" + p.date; }
+  function fnName(id){
+    var f = fnState(), a = id && typeof lmById === "function" && lmData ? lmById(id) : null;
+    if (a){ var n = lmName(a); if (n && f.names[id] !== n) f.names[id] = n; return n; }
+    var lg = legacyMembers().filter(function(x){ return x.id === id; })[0];
+    return f.names[id] || (lg && lg.name) || "A member";
+  }
+  // Skool pays out every Wednesday; a payment is usually ready about a week after it's taken (Skool help, 2026-11-28).
+  // Rough guide only: the first payout after a bank change can take 8-14 days.
+  function fnSkoolLands(date){ var d = new Date(date + "T12:00:00"); d.setDate(d.getDate() + 7); while (d.getDay() !== 3) d.setDate(d.getDate() + 1); return isoDate(d); }
+  function fnLandsTxt(id, date){ return fnRoute(id) === "skool" ? " · lands about Wed " + dvDate(fnSkoolLands(date)) : ""; }
+  // Payments due after today up to `until` (same rules as memberPayments, which stops at today)
+  function fnFuturePayments(until){
+    var out = [], today = todayISO();
+    hubMembers().forEach(function(m){
+      if ((m.plan !== "monthly" && m.plan !== "annual") || !m.joined) return;
+      var step = m.plan === "annual" ? 12 : 1, amt = m.price || (m.plan === "annual" ? MRR_PRICE_ANNUAL : MRR_PRICE_MONTHLY), p = m.joined.split("-").map(Number);
+      for (var k = 0; k < 600; k += step){
+        var d = new Date(Date.UTC(p[0], p[1] - 1 + k, 1)), last = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+        var iso = d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(Math.min(p[2], last)).padStart(2, "0");
+        if (iso > until) break;
+        if (m.cancelled && iso >= m.cancelled && (k > 0 || m.legacy)) break;
+        if (iso > today) out.push({ id:m.id || "", date:iso, usd:amt });
+      }
+    });
+    return out;
+  }
+  // What's coming (Olly 2026-11-28): money taken but not split yet + payments due in the next 31 days, split at today's %
+  function fnComingHtml(){
+    var f = fnState(), until = isoDate(new Date(Date.now() + 31 * 864e5)), p = fnPct();
+    var items = fnWaiting().filter(function(w){ return !w.dealt; }).map(function(w){ return { id:w.id, date:w.date, usd:w.usd, taken:true }; })
+      .concat(fnFuturePayments(until));
+    var gbp = items.reduce(function(a, x){ return a + fnNet(x.usd, x.id) * f.rate; }, 0), a = fnAmounts(gbp, p), done = fnBalances();
+    done.gbp = FN_PLACES.reduce(function(t, x){ return t + done[x[0]]; }, 0);
+    var nTaken = items.filter(function(x){ return x.taken; }).length;
+    var h = '<div class="fncard fncoming"><p class="section-label" style="margin-bottom:6px">What\'s coming</p>' +
+      '<span class="hint" style="display:block;margin:0 0 12px">' + (items.length
+        ? "About <b>" + fnGBP(gbp) + "</b> (" + fnUSD(items.reduce(function(t, x){ return t + fnNet(x.usd, x.id); }, 0)) + ") on the way from " + items.length + (items.length === 1 ? " payment" : " payments") + (nTaken ? " (" + nTaken + " already taken, not split yet)" : "") + " up to " + dvDate(until) + ", after fees, split at today's percentages."
+        : "Nothing due in the next 31 days.") + "</span>";
+    h += '<div class="tablewrap"><table class="fncome"><thead><tr><th>Pocket</th><th>%</th><th>So far</th><th>Coming</th><th>Total</th></tr></thead><tbody>';
+    FN_BUCKETS.concat([{ k:"cash", name:"Cash flow" }]).forEach(function(b){
+      var pc = b.k === "cash" ? Math.max(0, 100 - fnPctSum()) : p[b.k], have = b.k === "cash" ? done.cash : done[b.k];
+      h += "<tr><td><b>" + b.name + "</b></td><td>" + pc + "%</td><td>" + fnGBP(have) + "</td><td>" + fnGBP(a[b.k]) + '</td><td class="fntot">' + fnGBP(have + a[b.k]) + "</td></tr>";
+    });
+    h += '<tr class="fnsum"><td><b>Total</b></td><td>100%</td><td>' + fnGBP(done.gbp) + "</td><td>" + fnGBP(gbp) + '</td><td class="fntot">' + fnGBP(done.gbp + gbp) + "</td></tr></tbody></table></div>";
+    h += '<small class="hint" style="display:block;margin-top:8px">So far = what should be in each place now: your splits plus or minus the moves you\'ve recorded in Pocket balances (Profit payouts and salary paid to you come off there). Coming is a guess: the real amounts are what you type in when each payout lands.</small></div>';
+    return h;
+  }
+  function fnRoute(id){ return fnState().route[id] === "outside" ? "outside" : "skool"; }
+  // Skool's transaction fee (Olly 2026-11-28): 2.9% + $0.30 up to $899, 3.9% + $0.30 above. Outside Skool: his own % (blank = unknown).
+  function fnSkoolFee(usd){ return usd ? Math.round((usd * (usd > 899 ? 0.039 : 0.029) + 0.30) * 100) / 100 : 0; }
+  function fnStripeFee(usd){ var fe = fnState().fee; return usd ? Math.round((usd * (Number(fe.stripePct) || 0) / 100 + (Number(fe.stripeFixed) || 0)) * 100) / 100 : 0; }
+  function fnNet(usd, id){ return usd - (fnRoute(id) === "skool" ? fnSkoolFee(usd) : fnStripeFee(usd)); }
+  // payment number for members on a fixed term (finance.term[id]), counted from their first payment
+  function fnPayNo(id, date){ return memberPayments().filter(function(p){ return p.id === id && p.date <= date; }).length; }
+  function fnTermLine(id, date){ var t = fnState().term[id]; if (!t) return ""; var n = fnPayNo(id, date); return n > t ? "after her " + t + " months" : "payment " + n + " of " + t; }
+  // Member payments (from the Sales/Delivery records) in the last 60 days that haven't been split or skipped yet.
+  function fnWaiting(){
+    var f = fnState(), used = {}, from = isoDate(new Date(Date.now() - 60 * 864e5));
+    f.splits.forEach(function(s){ (s.keys || []).forEach(function(k){ used[k] = true; }); });
+    fnDraft.keys.forEach(function(k){ used[k] = true; });
+    var out = [];
+    memberPayments().forEach(function(p){
+      var key = fnPayKey(p);
+      if (p.date >= from && !used[key]) out.push({ key:key, id:p.id, date:p.date, usd:p.amount, plan:p.plan, dealt:f.skip[key] || "" });
+    });
+    return out.sort(function(a, b){ return a.date < b.date ? 1 : -1; });
+  }
+  function fnExpMonthly(e){
+    var gbp = (Number(e.amount) || 0) * (e.cur === "USD" ? fnState().rate : 1);
+    return e.every === "year" ? gbp / 12 : e.every === "month" ? gbp : 0;
+  }
+  function fnExpInMonth(e, ym){ // what this expense costs in a given month, in £
+    var gbp = (Number(e.amount) || 0) * (e.cur === "USD" ? fnState().rate : 1);
+    if (e.every === "month") return gbp;
+    if (e.every === "year") return gbp / 12;
+    return (e.date || "").slice(0, 7) === ym ? gbp : 0;
+  }
+  function fnTotals(filter){
+    var t = { gbp:0, cash:0, toMove:0 };
+    FN_BUCKETS.forEach(function(b){ t[b.k] = 0; });
+    fnState().splits.forEach(function(s){
+      if (filter && !filter(s)) return;
+      var a = fnAmounts(s.gbp, s.pct); t.gbp += Number(s.gbp) || 0; t.cash += a.cash;
+      FN_BUCKETS.forEach(function(b){ t[b.k] += a[b.k]; if (!(s.moved || {})[b.k]) t.toMove += a[b.k]; });
+    });
+    return t;
+  }
+  var FN_PLACES = [["invest", "Profit"], ["salary", "Salary"], ["expenses", "Expenses"], ["tax", "Tax"], ["cash", "Cash flow"]];
+  function fnPlaceName(k){ if (k === "out") return "Out of the business"; var p = FN_PLACES.filter(function(x){ return x[0] === k; })[0]; return p ? p[1] : k; }
+  // What should be in each place now: split in + moved in - moved out (Profit payouts are moves out)
+  function fnBalances(){
+    var t = fnTotals(), b = { invest:t.invest, salary:t.salary, expenses:t.expenses, tax:t.tax, cash:t.cash };
+    var bi = {}, bo = {}; FN_PLACES.forEach(function(p){ bi[p[0]] = 0; bo[p[0]] = 0; });
+    fnState().moves.forEach(function(m){ var g = Number(m.gbp) || 0;
+      if (b[m.from] !== undefined){ b[m.from] -= g; bo[m.from] += g; }
+      if (b[m.to] !== undefined){ b[m.to] += g; bi[m.to] += g; } });
+    // Salary ticked on a split = sent to his personal account, so it leaves the business
+    fnState().splits.forEach(function(sp){ if ((sp.moved || {}).salary){ var g = fnAmounts(sp.gbp, sp.pct).salary; b.salary -= g; bo.salary += g; } });
+    b.split = t; b.movedIn = bi; b.movedOut = bo;
+    return b;
+  }
+  var fnMoveDraft = { from:"cash", to:"invest", gbp:"", date:"", note:"" };
+  function fnSaveOpen(){ try { localStorage.setItem("hub-fn-open", JSON.stringify(fnOpen)); } catch(e){} }
+  function fnBox(key, title, sub, bodyHtml){
+    var open = !!fnOpen[key];
+    return '<div class="audbox"><button type="button" class="audhead" data-fnbox="' + key + '" aria-expanded="' + open + '"><span class="audname">' + title + '</span><span class="audsub">' + sub + '</span><span class="audchev">' + (open ? "▴" : "▾") + "</span></button>" +
+      (open ? '<div class="audbody">' + bodyHtml + "</div>" : "") + "</div>";
+  }
+  function fnBreakdownHtml(gbp){
+    var a = fnAmounts(gbp), p = fnPct(), h = "", r = fnState().rate, inUsd = fnDraft.cur === "USD";
+    var amt = function(k){ return fnGBP(a[k]) + (inUsd && r ? ' <small class="fnusd">' + fnUSD(a[k] / r) + "</small>" : ""); };
+    FN_BUCKETS.forEach(function(b){
+      h += '<div class="fnrow"><span class="fnname">' + b.name + ' <small>' + (Number(p[b.k]) || 0) + '%</small></span><span class="fnwhere">' + b.where + '</span><b class="fnamt" data-fnamt="' + b.k + '">' + amt(b.k) + "</b></div>";
+    });
+    h += '<div class="fnrow fncash"><span class="fnname">Cash flow <small>' + Math.max(0, 100 - fnPctSum()) + '%</small></span><span class="fnwhere">Stays in your Pro main balance</span><b class="fnamt" data-fnamt="cash">' + amt("cash") + "</b></div>";
+    if (inUsd) h += '<p class="hint" style="margin:8px 0 0">' + fnUSD(fnDraft.usd) + " is about <b>" + fnGBP(gbp) + "</b> at $1 = £" + r + ". When it lands, check the £ in Revolut: you can switch to £ and type the real amount.</p>";
+    return h;
+  }
+  function fnAutoLine(){
+    if (!fnIsAuto()) return "";
+    var a = fnAuto(), p = fnPct();
+    if (!(a.income > 0)) return '<p class="hint" style="margin:-6px 0 14px">No paying members yet, so Expenses uses your fixed ' + p.expenses + '%.</p>';
+    return '<p class="hint" style="margin:-6px 0 14px">Expenses is ' + p.expenses + '% because your costs this month are ' + fnGBP(a.cost) + ' and about ' + fnGBP(a.income) + ' comes in a month from ' + a.members + (a.members === 1 ? " member" : " members") + ' (after fees). Profit stays at ' + p.invest + '% and Salary gets the rest.</p>';
+  }
+  function renderFinance(){
+    var host = document.getElementById("financeBody"); if (!host) return;
+    var f = fnState(), today = todayISO(), ym = today.slice(0, 7);
+    if (!fnDraft.date) fnDraft.date = today;
+    var over = fnPctSum() > 100, h = "";
+
+    // 1. Split a payment (the main action, always open at the top)
+    var allWait = fnWaiting(), wait = allWait.filter(function(w){ return !w.dealt; }), dealt = allWait.filter(function(w){ return w.dealt; });
+    h += '<div class="fncard"><p class="section-label" style="margin-bottom:6px">Split a payment</p>' +
+      '<span class="hint" style="display:block;margin:0 0 14px">When a payout lands in your Revolut Pro account, type the amount in £. Move each amount where it says, then tick it off below.</span>';
+    if (wait.length){
+      h += '<div class="fnwait"><b>Waiting to be split</b>';
+      wait.forEach(function(w){
+        var out = fnRoute(w.id) === "outside";
+        h += '<div class="fnwrow"><span><b>' + lmEsc(fnName(w.id)) + '</b> · $' + w.usd.toLocaleString("en-US") + ' · ' + (w.plan === "annual" ? "Annual" : "Monthly") + ' · ' + dvDate(w.date) +
+          ' <button type="button" class="fnroute' + (out ? " out" : "") + '" data-fnroute="' + lmEsc(w.id || "") + '" title="Tap to change how they pay">' + (out ? "Stripe checkout" : "Via Skool") + '</button>' + (fnTermLine(w.id, w.date) ? ' <small>' + fnTermLine(w.id, w.date) + '</small>' : "") +
+          ' <small>(about ' + fnGBP(fnNet(w.usd, w.id) * f.rate) + fnLandsTxt(w.id, w.date) + ')</small></span>' +
+          '<button type="button" class="copybtn" data-fnuse="' + w.key + '" data-usd="' + w.usd + '" data-mid="' + lmEsc(w.id || "") + '">Split</button>' +
+          '<button type="button" class="copybtn" data-fnskip="' + w.key + '" title="Already dealt with: leave it out of splitting">Dealt with</button></div>';
+      });
+      h += '<small class="hint" style="display:block;margin-top:6px">From your members in the Sales tab. The £ is a guess from the exchange rate minus the fee: type what actually landed. Skool pays out every Wednesday, often several members in one payout: tap Split on each one in it and they add up into one split.</small></div>';
+    }
+    var up = [], ms = hubMembers();
+    var soon = isoDate(new Date(Date.now() + 31 * 864e5)), upList = [];
+    ms.forEach(function(m){
+      var id = m.id; if (!id || !m.joined || (m.plan !== "monthly" && m.plan !== "annual") || (m.cancelled && m.cancelled <= today)) return;
+      var paid = memberPayments().filter(function(p){ return p.id === id; }), t = f.term[id], amt = m.price || (m.plan === "annual" ? MRR_PRICE_ANNUAL : MRR_PRICE_MONTHLY);
+      var stripe = fnRoute(id) === "outside";
+      if (t && paid.length >= t){ up.push('<span class="fnwarn"><b>' + lmEsc(fnName(id)) + "</b>: her " + t + " Stripe payments are done. Time to review her plan.</span>"); return; }
+      var next;
+      if (m.joined > today) next = m.joined;
+      else {
+        var last = paid.length ? paid[paid.length - 1].date : m.joined, d = new Date(last + "T12:00:00"), day = Number(m.joined.slice(8, 10));
+        d.setDate(1); d.setMonth(d.getMonth() + (m.plan === "annual" ? 12 : 1));
+        d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate())); next = isoDate(d);
+      }
+      if (next > soon) return;
+      upList.push({ d:next, h:"<span><b>" + lmEsc(fnName(id)) + "</b> · " + dvDate(next) + " · $" + amt + (m.legacy ? " (older price)" : "") + " → about $" + fnNet(amt, id).toFixed(2) + " after " + (stripe ? "Stripe's" : "Skool's") + " fee" + fnLandsTxt(id, next) + (t ? " · payment " + (paid.length + 1) + " of " + t : "") + "</span>" });
+    });
+    // Profit payout (Olly 2026-11-28): every quarter end, the Profit pocket goes to his personal account to invest
+    var qd = new Date(today + "T12:00:00"), qm = Math.floor(qd.getMonth() / 3) * 3 + 2, qEnd = isoDate(new Date(qd.getFullYear(), qm + 1, 0, 12));
+    if (qEnd <= soon) upList.push({ d:qEnd, h:"<span><b>Profit payout</b> · " + dvDate(qEnd) + " · send everything in your Profit pocket to your personal account (about " + fnGBP(fnBalances().invest) + " in it now" + ') <button type="button" class="copybtn" data-fnprofitpaid="1">Paid out</button></span>' });
+    upList.sort(function(a, b){ return a.d < b.d ? -1 : 1; });
+    if (upList.length || up.length) h += '<div class="fnwait fnup"><b>Coming up (next 31 days)</b>' + up.join("") + upList.map(function(x){ return x.h; }).join("") + "</div>";
+    if (dealt.length){
+      h += '<div class="fnwait fndealt"><b>Already dealt with</b> <small>(still counted in your member payments, not split here)</small>';
+      dealt.forEach(function(w){
+        h += '<div class="fnwrow"><span><b>' + lmEsc(fnName(w.id)) + '</b> · $' + w.usd.toLocaleString("en-US") + ' · ' + dvDate(w.date) + ' · ' + lmEsc(w.dealt === true ? "Already dealt with" : w.dealt) + '</span>' +
+          '<button type="button" class="copybtn" data-fnunskip="' + w.key + '">Undo</button></div>';
+      });
+      h += "</div>";
+    }
+    if (fnDraft.keys.length) h += '<div class="hint" style="margin:0 0 8px">Linked to ' + fnDraft.keys.length + ' member payment' + (fnDraft.keys.length > 1 ? "s" : "") + '. <button type="button" class="fnlink" data-fnunlink="1">Unlink</button></div>';
+    var inUsd = fnDraft.cur === "USD";
+    h += '<div class="fnmode"><button type="button" class="fnmodebtn' + (!inUsd ? " on" : "") + '" data-fncur="GBP">£ landed in Revolut</button><button type="button" class="fnmodebtn' + (inUsd ? " on" : "") + '" data-fncur="USD">$ Skool payout</button></div>';
+    h += '<div class="fnform"><label>' + (inUsd ? "Payout ($)" : "Amount landed (£)") + '<input type="number" inputmode="decimal" step="0.01" min="0" id="fnGbp" value="' + lmEsc(inUsd ? fnDraft.usd : fnDraft.gbp) + '" placeholder="0.00"></label>' +
+      '<label>Date<input type="date" id="fnDate" value="' + lmEsc(fnDraft.date) + '"></label>' +
+      '<label class="fnwide">Note (optional)<input type="text" id="fnNote" value="' + lmEsc(fnDraft.note) + '" placeholder="e.g. Skool payout"></label></div>' +
+      (over ? '<p class="fnwarn">Your percentages add up to more than 100%. Fix them in Percentages below.</p>' : "") +
+      '<div class="fnbreak" id="fnBreak">' + fnBreakdownHtml(fnDraft.gbp) + "</div>" + fnAutoLine() +
+      '<button type="button" class="addbtn" id="fnSaveSplit"' + (over ? " disabled" : "") + '>Save this split</button></div>';
+
+    h += fnComingHtml();
+
+    // 2. This month at a glance
+    var mt = fnTotals(function(s){ return (s.date || "").slice(0, 7) === ym; });
+    var monthCost = f.expenses.reduce(function(a, e){ return a + (e.active === false ? 0 : fnExpInMonth(e, ym)); }, 0);
+    var monthName = new Date(today + "T12:00:00").toLocaleDateString("en-GB", { month:"long" });
+    h += '<p class="section-label" style="margin:26px 0 12px">' + monthName + ' so far</p><div class="kpigrid fnkpis">' +
+      '<div class="kpi accent"><span class="label">Money in</span><span class="value">' + fnGBP(mt.gbp) + "</span></div>";
+    FN_BUCKETS.forEach(function(b){ h += '<div class="kpi"><span class="label">' + b.name + '</span><span class="value">' + fnGBP(mt[b.k]) + "</span></div>"; });
+    h += '<div class="kpi"><span class="label">Cash flow (stays in main)</span><span class="value">' + fnGBP(mt.cash) + "</span></div>";
+    var mp = memberPayments().filter(function(p){ return p.date.slice(0, 7) === ym; }), mpDealt = mp.filter(function(p){ return f.skip[fnPayKey(p)]; }).length;
+    h += '<div class="kpi"><span class="label">Member payments ($)</span><span class="value">$' + mp.reduce(function(a, p){ return a + p.amount; }, 0).toLocaleString("en-US") + '</span><span class="label">' + mp.length + (mp.length === 1 ? " payment" : " payments") + (mpDealt ? ", " + mpDealt + " already dealt with" : "") + "</span></div></div>";
+    var notes = [];
+    if (mt.toMove > 0.004) notes.push('<span class="fnwarn">' + fnGBP(mt.toMove) + " still to move into pockets this month (not ticked yet below).</span>");
+    if (monthCost > 0){
+      var gap = mt.expenses - monthCost;
+      notes.push(gap >= 0 ? '<span class="fngood">Your expenses this month (' + fnGBP(monthCost) + ") are covered by the Expenses pocket share (" + fnGBP(mt.expenses) + ").</span>"
+        : '<span class="fnwarn">Your expenses this month cost ' + fnGBP(monthCost) + " but only " + fnGBP(mt.expenses) + " has gone into the Expenses pocket so far: " + fnGBP(-gap) + " short.</span>");
+    }
+    if (notes.length) h += '<div class="fnnotes">' + notes.join("") + "</div>";
+
+    // 3. Every split, newest first, with a tick per pocket once it's moved
+    var list = f.splits.slice().sort(function(a, b){ return (a.date || "") < (b.date || "") ? 1 : -1; });
+    var sh = "";
+    if (!list.length) sh = '<p class="hint">No splits yet. Your first one will show here.</p>';
+    var lastMonth = "";
+    list.forEach(function(s){
+      var m = (s.date || "").slice(0, 7);
+      if (m !== lastMonth){
+        lastMonth = m; var mtot = fnTotals(function(x){ return (x.date || "").slice(0, 7) === m; });
+        sh += '<p class="lksec">' + new Date(m + "-15T12:00:00").toLocaleDateString("en-GB", { month:"long", year:"numeric" }) + " · " + fnGBP(mtot.gbp) + " in</p>";
+      }
+      var a = fnAmounts(s.gbp, s.pct), mv = s.moved || {};
+      var all = FN_BUCKETS.every(function(b){ return mv[b.k] || !a[b.k]; });
+      sh += '<div class="fnsplit' + (all ? " done" : "") + '"><div class="fnshead"><b>' + fnGBP(s.gbp) + "</b><span>" + lmEsc(dvDate(s.date)) + (s.usd ? " · from " + fnUSD(s.usd) + " at £" + s.rate : "") + (s.note ? " · " + lmEsc(s.note) : "") + ((s.keys || []).length ? " · " + lmEsc(s.keys.map(function(k){ return fnName(k.split("|")[0]); }).join(", ")) : "") + (all ? ' · <span class="fngood">all moved</span>' : "") + '</span><button type="button" class="rowdel-btn" data-fndel="' + s.id + '" title="Delete this split">✕</button></div><div class="fnticks">';
+      FN_BUCKETS.forEach(function(b){
+        sh += '<label class="fntick' + (mv[b.k] ? " on" : "") + '"><input type="checkbox" data-fnmove="' + s.id + '" data-b="' + b.k + '"' + (mv[b.k] ? " checked" : "") + "> " + b.name + " " + fnGBP(a[b.k]) + "</label>";
+      });
+      sh += '<span class="fntick cash">Cash flow ' + fnGBP(a.cash) + "</span></div></div>";
+    });
+    h += '<div class="audboxes" style="margin-top:18px">' + fnBox("splits", "Payments split", list.length ? list.length + (list.length === 1 ? " split" : " splits") : "None yet", sh);
+
+    // 4. Pocket balances: splits + moves, and a history of every move (Olly 2026-11-28)
+    var bal = fnBalances();
+    var ph = '<span class="hint" style="display:block;margin:12px 0">What should be in each place now: everything you\'ve split, plus or minus any money you\'ve moved. Salary counts as paid to you once it\'s ticked on a split. Cash flow is what\'s free to move somewhere else.</span>' +
+      '<div class="tablewrap"><table class="fncome"><thead><tr><th>Place</th><th>Splits</th><th>In</th><th>Out</th><th>Now</th></tr></thead><tbody>';
+    FN_PLACES.forEach(function(p){
+      ph += "<tr><td><b>" + p[1] + "</b></td><td>" + fnGBP(bal.split[p[0]]) + "</td><td>" + fnGBP(bal.movedIn[p[0]]) + "</td><td>" + fnGBP(bal.movedOut[p[0]]) + '</td><td class="fntot">' + fnGBP(bal[p[0]]) + "</td></tr>";
+    });
+    ph += "</tbody></table></div>";
+    var opts = function(sel, withOut){ return FN_PLACES.concat(withOut ? [["out", "Out (paid to you or spent)"]] : []).map(function(p){ return '<option value="' + p[0] + '"' + (sel === p[0] ? " selected" : "") + ">" + p[1] + "</option>"; }).join(""); };
+    ph += '<p class="section-label" style="margin:20px 0 8px">Move money</p><span class="hint" style="display:block;margin:0 0 10px">Moved money between pockets in Revolut, or paid yourself? Record it here so the balances stay right.</span>' +
+      '<div class="fnform"><label>From<select id="fnMoveFrom">' + opts(fnMoveDraft.from, false) + '</select></label><label>To<select id="fnMoveTo">' + opts(fnMoveDraft.to, true) + '</select></label>' +
+      '<label>Amount (£)<input type="number" inputmode="decimal" step="0.01" min="0" id="fnMoveGbp" value="' + lmEsc(fnMoveDraft.gbp) + '" placeholder="0.00"></label>' +
+      '<label>Date<input type="date" id="fnMoveDate" value="' + lmEsc(fnMoveDraft.date || todayISO()) + '"></label>' +
+      '<label class="fnwide">Note (optional)<input type="text" id="fnMoveNote" value="' + lmEsc(fnMoveDraft.note) + '" placeholder="e.g. spare cash flow into Tax"></label></div>' +
+      '<button type="button" class="addbtn" id="fnMoveSave">Save this move</button>';
+    var mv = f.moves.slice().sort(function(a, b){ return (a.date || "") < (b.date || "") ? 1 : -1; });
+    if (mv.length){
+      ph += '<p class="section-label" style="margin:20px 0 8px">Moves so far</p>';
+      mv.forEach(function(m){ ph += '<div class="fnwrow"><span><b>' + fnGBP(m.gbp) + "</b> · " + fnPlaceName(m.from) + " → " + fnPlaceName(m.to) + " · " + lmEsc(dvDate(m.date)) + (m.note ? " · " + lmEsc(m.note) : "") + '</span><button type="button" class="rowdel-btn" data-fnmovedel="' + m.id + '" title="Delete">✕</button></div>'; });
+    }
+    h += fnBox("pockets", "Pocket balances", "Cash flow free: " + fnGBP(bal.cash), ph);
+
+    // 5. Expenses
+    var perMonth = f.expenses.reduce(function(a, e){ return a + (e.active === false ? 0 : fnExpMonthly(e)); }, 0);
+    var eh = '<span class="hint" style="display:block;margin:12px 0">Everything the business pays for. Yearly costs count as a twelfth each month, one-offs count in the month you pay them. $ costs are turned into £ at your exchange rate.' + (fnIsAuto() ? " These costs set your Expenses %." : "") + '</span>' +
+      '<div class="fnnotes"><span>Regular costs: <b>' + fnGBP(perMonth) + "</b> a month · <b>" + fnGBP(perMonth * 12) + "</b> a year</span></div>";
+    if (f.expenses.length){
+      eh += '<div class="tablewrap"><table class="fnexp"><thead><tr><th>What</th><th>Amount</th><th>Currency</th><th>How often</th><th>Date</th><th>Type</th><th>£ a month</th><th></th></tr></thead><tbody>';
+      f.expenses.forEach(function(e){
+        var off = e.active === false;
+        eh += '<tr' + (off ? ' class="fnoff"' : "") + '><td><input type="text" data-fnexp="' + e.id + '" data-f="name" value="' + lmEsc(e.name || "") + '" placeholder="e.g. GoHighLevel"></td>' +
+          '<td><input type="number" inputmode="decimal" step="0.01" min="0" data-fnexp="' + e.id + '" data-f="amount" value="' + lmEsc(e.amount == null ? "" : e.amount) + '"></td>' +
+          '<td><select data-fnexp="' + e.id + '" data-f="cur"><option value="GBP"' + (e.cur !== "USD" ? " selected" : "") + '>£</option><option value="USD"' + (e.cur === "USD" ? " selected" : "") + ">$</option></select></td>" +
+          '<td><select data-fnexp="' + e.id + '" data-f="every">' + [["month", "Monthly"], ["year", "Yearly"], ["once", "One-off"]].map(function(o){ return '<option value="' + o[0] + '"' + (e.every === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></td>" +
+          '<td><input type="date" data-fnexp="' + e.id + '" data-f="date" value="' + lmEsc(e.date || "") + '" title="Renewal date, or the day a one-off was paid"></td>' +
+          '<td><select data-fnexp="' + e.id + '" data-f="cat">' + FN_CATS.map(function(c){ return "<option" + (e.cat === c ? " selected" : "") + ">" + c + "</option>"; }).join("") + "</select></td>" +
+          '<td class="fnpm" data-fnpm="' + e.id + '">' + (e.every === "once" ? "one-off" : fnGBP(fnExpMonthly(e))) + "</td>" +
+          '<td class="fnact"><button type="button" class="copybtn" data-fnoff="' + e.id + '" title="' + (off ? "Turn back on" : "Cancelled: stop counting it") + '">' + (off ? "Off" : "On") + '</button> <button type="button" class="rowdel-btn" data-fnexpdel="' + e.id + '" title="Delete">✕</button></td></tr>';
+      });
+      eh += "</tbody></table></div>";
+      var cats = {};
+      f.expenses.forEach(function(e){ if (e.active !== false && e.every !== "once"){ cats[e.cat || "Other"] = (cats[e.cat || "Other"] || 0) + fnExpMonthly(e); } });
+      var ck = Object.keys(cats).sort(function(a, b){ return cats[b] - cats[a]; });
+      if (ck.length) eh += '<p class="hint" style="margin:10px 0 0">A month by type: ' + ck.map(function(c){ return lmEsc(c) + " " + fnGBP(cats[c]); }).join(" · ") + "</p>";
+    } else eh += '<p class="hint">No expenses yet. Add your subscriptions and tools.</p>';
+    eh += '<button type="button" class="addbtn" id="fnAddExp" style="margin-top:12px">+ Add expense</button>';
+    h += fnBox("expenses", "Expenses", fnGBP(perMonth) + " a month", eh);
+
+    // 5b. Older-price members
+    var lgh = '<span class="hint" style="display:block;margin:12px 0">Members who joined before the price rise. They pay through Skool every month until they leave, and count in your MRR.</span>';
+    legacyMembers().forEach(function(x){
+      lgh += '<div class="fnwrow"><span><b>' + lmEsc(x.name) + '</b> · $' + x.price + '/month · renews on the ' + Number((x.renew || "").slice(8, 10)) + (x.churned ? ' · <span class="fnwarn">left ' + lmEsc(dvDate(x.churned)) + "</span>" : "") + '</span>' +
+        '<button type="button" class="copybtn" data-fnlgchurn="' + lmEsc(x.id) + '">' + (x.churned ? "Undo left" : "Left") + "</button></div>";
+    });
+    h += fnBox("legacy", "Older-price members", legacyActive().length + " paying · $" + legacyMrr() + "/month", lgh);
+
+    // 6. Percentages + exchange rate
+    var sum = fnPctSum(), auto = fnIsAuto(), ep = fnPct();
+    var sp = '<span class="hint" style="display:block;margin:12px 0">How each payment is split. Changing these only affects new splits.</span>' +
+      '<div class="fnmode"><button type="button" class="fnmodebtn' + (auto ? " on" : "") + '" data-fnauto="1">Expenses % from my costs</button><button type="button" class="fnmodebtn' + (!auto ? " on" : "") + '" data-fnauto="0">Fixed percentages</button></div>';
+    if (auto){
+      sp += '<div class="fnform"><label>Tax %<input type="number" inputmode="decimal" min="0" max="100" step="1" data-fnpct="tax" value="' + (Number(f.pct.tax) || 0) + '"></label>' +
+        '<label>Cash flow %<input type="number" inputmode="decimal" min="0" max="100" step="1" data-fncfg="cashPct" value="' + (Number(f.cashPct) || 0) + '"></label>' +
+        '<label>Profit %<input type="number" inputmode="decimal" min="0" max="100" step="1" data-fncfg="profitPct" value="' + (Number(f.profitPct) || 0) + '"></label></div>' +
+        '<p id="fnPctMsg" class="hint">Right now: ' + FN_BUCKETS.map(function(b){ return b.name + " " + ep[b.k] + "%"; }).join(" · ") + " · Cash flow " + Math.max(0, 100 - sum) + "%. Salary gets whatever is left.</p>" + fnAutoLine();
+    } else {
+      sp += '<div class="fnform">';
+      FN_BUCKETS.forEach(function(b){ sp += '<label>' + b.name + ' %<input type="number" inputmode="decimal" min="0" max="100" step="1" data-fnpct="' + b.k + '" value="' + (Number(f.pct[b.k]) || 0) + '"></label>'; });
+      sp += '</div><p id="fnPctMsg" class="' + (sum > 100 ? "fnwarn" : "hint") + '">' + (sum > 100 ? "That's " + sum + "%: bring it down to 100% or less." : "Cash flow keeps " + (100 - sum) + "%.") + "</p>";
+    }
+    sp += "" +
+      '<p class="hint" style="margin:6px 0 0">Tax: 25% is a safe set-aside, not advice. Check the figure with your accountant.</p>' +
+      '<p class="section-label" style="margin:18px 0 8px">Fees taken before it lands</p><span class="hint" style="display:block;margin:0 0 10px">Used for the £ guesses on waiting payments.</span>' +
+      '<p class="hint" style="margin:0 0 10px">Via Skool: 2.9% + $0.30 on payments up to $899, 3.9% + $0.30 above (a $250 payment lands as $' + (250 - fnSkoolFee(250)).toFixed(2) + ', $2,500 as $' + (2500 - fnSkoolFee(2500)).toLocaleString("en-US", { minimumFractionDigits:2 }) + ').</p>' +
+      '<div class="fnform"><label>Stripe fee %<input type="number" inputmode="decimal" min="0" max="100" step="0.01" data-fnfee="stripePct" value="' + lmEsc(f.fee.stripePct) + '"></label>' +
+      '<label>Stripe fixed fee ($)<input type="number" inputmode="decimal" min="0" step="0.01" data-fnfee="stripeFixed" value="' + lmEsc(f.fee.stripeFixed) + '"></label></div>' +
+      '<p class="hint" style="margin:-4px 0 0">Stripe checkout: a $250 payment lands as about $' + (250 - fnStripeFee(250)).toFixed(2) + '. Check one real payment in your Stripe dashboard (it shows the exact fee) and change these to match.</p>' +
+
+      '<div class="fnform" style="margin-top:16px"><label>$1 in £<input type="number" inputmode="decimal" step="0.0001" min="0" id="fnRate" value="' + f.rate + '"></label>' +
+      '<div class="fnratebox"><button type="button" class="copybtn" id="fnRateGet">Get today\'s rate</button><small class="hint" id="fnRateMsg">' + (f.rateAt ? "Last updated " + lmEsc(dvDate(f.rateAt)) : "Used for $ expenses and the guesses above") + "</small></div></div>";
+    h += fnBox("pct", "Percentages", FN_BUCKETS.map(function(b){ return b.name + " " + ep[b.k] + "%"; }).join(" · ") + (auto ? " (auto)" : ""), sp);
+    h += "</div>";
+
+    host.innerHTML = h;
+  }
+  function fnRefreshBreak(){ var el = document.getElementById("fnBreak"); if (el) el.innerHTML = fnBreakdownHtml(fnDraft.gbp); }
+  (function(){
+    var host = document.getElementById("financeBody"); if (!host) return;
+    host.addEventListener("click", function(e){
+      var t = e.target.closest("button"); if (!t) return;
+      var f = fnState();
+      if (t.dataset.fnbox){ fnOpen[t.dataset.fnbox] = !fnOpen[t.dataset.fnbox]; fnSaveOpen(); renderFinance(); return; }
+      if (t.dataset.fnuse){
+        if (fnDraft.keys.indexOf(t.dataset.fnuse) < 0) fnDraft.keys.push(t.dataset.fnuse);
+        if (fnDraft.cur === "USD") fnSetDraftUsd(String(Math.round(((Number(fnDraft.usd) || 0) + fnNet(Number(t.dataset.usd), t.dataset.mid)) * 100) / 100));
+        else { var est = (Number(fnDraft.gbp) || 0) + fnNet(Number(t.dataset.usd), t.dataset.mid) * f.rate; fnDraft.gbp = String(Math.round(est * 100) / 100); } if (!fnDraft.note) fnDraft.note = "Skool payout";
+        renderFinance(); var g = document.getElementById("fnGbp"); if (g){ g.focus(); g.select(); } return;
+      }
+      if (t.dataset.fnskip){ f.skip[t.dataset.fnskip] = "Already dealt with"; markDirty(); renderFinance(); return; }
+      if (t.dataset.fnlgchurn){
+        legacyMembers().forEach(function(x){ if (x.id !== t.dataset.fnlgchurn) return;
+          if (x.churned) delete x.churned; else if (confirm(x.name + " has left? Her payments stop from today.")) x.churned = todayISO(); });
+        markDirty(); renderFinance(); return;
+      }
+      if (t.dataset.fnprofitpaid){ var pb = Math.round(fnBalances().invest * 100) / 100; if (!(pb > 0)){ alert("There's nothing in Profit to pay out yet."); return; }
+        if (!confirm("Record " + fnGBP(pb) + " paid out from Profit to your personal account today?")) return;
+        f.moves.push({ id:fnId(), date:todayISO(), from:"invest", to:"out", gbp:pb, note:"Profit payout to personal account" }); markDirty(); renderFinance(); return; }
+      if (t.id === "fnMoveSave"){
+        var mg = Number(fnMoveDraft.gbp);
+        if (!(mg > 0) || fnMoveDraft.from === fnMoveDraft.to){ var mi = document.getElementById("fnMoveGbp"); if (mi) mi.focus(); return; }
+        f.moves.push({ id:fnId(), date:fnMoveDraft.date || todayISO(), from:fnMoveDraft.from, to:fnMoveDraft.to, gbp:Math.round(mg * 100) / 100, note:fnMoveDraft.note.trim() });
+        fnMoveDraft = { from:fnMoveDraft.from, to:fnMoveDraft.to, gbp:"", date:"", note:"" }; markDirty(); renderFinance(); return;
+      }
+      if (t.dataset.fnmovedel){ if (!confirm("Delete this move? (Only the record here. Nothing changes in Revolut.)")) return; f.moves = f.moves.filter(function(m){ return m.id !== t.dataset.fnmovedel; }); markDirty(); renderFinance(); return; }
+      if (t.dataset.fnauto){ f.expAuto = t.dataset.fnauto === "1"; markDirty(); renderFinance(); return; }
+      if (t.dataset.fnunskip){ delete f.skip[t.dataset.fnunskip]; markDirty(); renderFinance(); return; }
+      if (t.dataset.fnroute !== undefined){ if (!t.dataset.fnroute) return; f.route[t.dataset.fnroute] = fnRoute(t.dataset.fnroute) === "outside" ? "skool" : "outside"; markDirty(); renderFinance(); return; }
+      if (t.dataset.fncur){
+        var nc = t.dataset.fncur; if (nc === fnDraft.cur) return;
+        if (nc === "USD") fnSetDraftUsd(fnDraft.gbp === "" ? "" : String(Math.round((Number(fnDraft.gbp) || 0) / (f.rate || 1) * 100) / 100));
+        fnDraft.cur = nc; try { localStorage.setItem("hub-fn-cur", nc); } catch(e2){}
+        renderFinance(); return;
+      }
+      if (t.dataset.fnunlink){ fnDraft.keys = []; renderFinance(); return; }
+      if (t.id === "fnSaveSplit"){
+        var gbp = Number(fnDraft.gbp);
+        if (!(gbp > 0)){ var gi = document.getElementById("fnGbp"); if (gi) gi.focus(); return; }
+        var sp = { id:fnId(), date:fnDraft.date || todayISO(), gbp:Math.round(gbp * 100) / 100, note:fnDraft.note.trim(), keys:fnDraft.keys.slice(), pct:JSON.parse(JSON.stringify(fnPct())), moved:{} };
+        if (fnDraft.cur === "USD"){ sp.usd = Math.round((Number(fnDraft.usd) || 0) * 100) / 100; sp.rate = f.rate; }
+        f.splits.push(sp);
+        fnDraft = { gbp:"", usd:"", cur:fnDraft.cur, date:"", note:"", keys:[] }; fnOpen.splits = true; fnSaveOpen();
+        markDirty(); renderFinance(); return;
+      }
+      if (t.dataset.fndel){
+        if (!confirm("Delete this split? (Only the record here. Nothing changes in Revolut.)")) return;
+        f.splits = f.splits.filter(function(s){ return s.id !== t.dataset.fndel; }); markDirty(); renderFinance(); return;
+      }
+      if (t.id === "fnAddExp"){ f.expenses.push({ id:fnId(), name:"", amount:"", cur:"GBP", every:"month", date:"", cat:"Software", active:true }); markDirty(); renderFinance();
+        var ins = host.querySelectorAll('input[data-f="name"]'); if (ins.length) ins[ins.length - 1].focus(); return; }
+      if (t.dataset.fnexpdel){
+        var ex = f.expenses.filter(function(x){ return x.id === t.dataset.fnexpdel; })[0];
+        if (ex && ex.name && !confirm("Delete " + ex.name + "?")) return;
+        f.expenses = f.expenses.filter(function(x){ return x.id !== t.dataset.fnexpdel; }); markDirty(); renderFinance(); return;
+      }
+      if (t.dataset.fnoff){ f.expenses.forEach(function(x){ if (x.id === t.dataset.fnoff) x.active = x.active === false; }); markDirty(); renderFinance(); return; }
+      if (t.id === "fnRateGet"){
+        var msg = document.getElementById("fnRateMsg"); if (msg) msg.textContent = "Getting the rate…";
+        fetch("https://api.frankfurter.dev/v1/latest?from=USD&to=GBP").then(function(r){ return r.json(); }).then(function(d){
+          var r = d && d.rates && d.rates.GBP; if (!r) throw 0;
+          f.rate = Math.round(r * 10000) / 10000; f.rateAt = todayISO(); markDirty(); renderFinance();
+        }).catch(function(){ if (msg) msg.textContent = "Couldn't get the rate. Type it in instead."; });
+        return;
+      }
+    });
+    host.addEventListener("input", function(e){
+      var t = e.target, f = fnState();
+      if (t.id === "fnGbp"){ if (fnDraft.cur === "USD") fnSetDraftUsd(t.value); else fnDraft.gbp = t.value; fnRefreshBreak(); return; }
+      if (t.id === "fnNote"){ fnDraft.note = t.value; return; }
+      if (t.id === "fnMoveGbp"){ fnMoveDraft.gbp = t.value; return; }
+      if (t.id === "fnMoveNote"){ fnMoveDraft.note = t.value; return; }
+      if (t.id === "fnMoveDate"){ fnMoveDraft.date = t.value; return; }
+      if (t.id === "fnDate"){ fnDraft.date = t.value; return; }
+      if (t.dataset.fnpct){
+        f.pct[t.dataset.fnpct] = Math.max(0, Number(t.value) || 0); markDirty();
+        var sum = fnPctSum(), m = document.getElementById("fnPctMsg");
+        if (m && !fnIsAuto()){ m.className = sum > 100 ? "fnwarn" : "hint"; m.textContent = sum > 100 ? "That's " + sum + "%: bring it down to 100% or less." : "Cash flow keeps " + (100 - sum) + "%."; }
+        var btn = document.getElementById("fnSaveSplit"); if (btn) btn.disabled = sum > 100;
+        fnRefreshBreak(); return;
+      }
+      if (t.id === "fnRate"){ f.rate = Number(t.value) || f.rate; if (fnDraft.cur === "USD") fnSetDraftUsd(fnDraft.usd); markDirty(); return; }
+      if (t.dataset.fnfee){ f.fee[t.dataset.fnfee] = Math.max(0, Number(t.value) || 0); markDirty(); return; }
+      if (t.dataset.fncfg){ f[t.dataset.fncfg] = Math.min(100, Math.max(0, Number(t.value) || 0)); markDirty(); fnRefreshBreak(); return; }
+      if (t.dataset.fnexp){
+        f.expenses.forEach(function(x){ if (x.id !== t.dataset.fnexp) return;
+          x[t.dataset.f] = t.dataset.f === "amount" ? (t.value === "" ? "" : Number(t.value)) : t.value;
+          var pm = host.querySelector('[data-fnpm="' + x.id + '"]'); if (pm) pm.textContent = x.every === "once" ? "one-off" : fnGBP(fnExpMonthly(x));
+        });
+        markDirty();
+      }
+    });
+    host.addEventListener("change", function(e){
+      var t = e.target, f = fnState();
+      if (t.id === "fnMoveFrom" || t.id === "fnMoveTo"){ fnMoveDraft[t.id === "fnMoveFrom" ? "from" : "to"] = t.value; return; }
+      if (t.dataset.fnmove){
+        f.splits.forEach(function(s){ if (s.id === t.dataset.fnmove){ if (!s.moved) s.moved = {}; s.moved[t.dataset.b] = t.checked; } });
+        markDirty(); renderFinance(); return;
+      }
+      // dropdowns, the rate and amounts: redraw the totals once the edit is finished
+      if (t.tagName === "SELECT" || t.id === "fnRate" || t.dataset.f === "amount" || t.dataset.fnpct || t.dataset.fnfee || t.dataset.fncfg || t.dataset.fnexp) renderFinance();
+    });
+  })();
+
   // ── Wire up ────────────────────────────────────────────────────────────
   document.querySelectorAll(".tabbtn[data-tab]").forEach(function(btn){ // the Content generator link has no panel
     btn.addEventListener("click", function(){
@@ -11580,6 +12135,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (btn.dataset.tab === "record") { recIdx = 0; recList = []; renderRecord(); }
       if (btn.dataset.tab === "looms") { lmFilter = "newest"; if (lmData && !lmLoading) lmLoadAuto(); else renderLooms(); }
       if (btn.dataset.tab === "delivery") renderDeliveryBoard("tab");
+      if (btn.dataset.tab === "finance"){ if (!lmData && !lmLoading) lmLoad(); renderFinance(); }
       uiSave({ tab: btn.dataset.tab });
     });
   });
@@ -11648,6 +12204,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return lines.join("\n");
   }
   function migrateState(){
+    // Finance (2026-11-28): older-price members (state.legacyMembers) and the per-member Finance setup were
+    // seeded once and now live only in the KV record. No member data in this file: the repo is public.
+    if (state.finance) fnState();
     // Outlier hashtags (Olly, 2026-10-30): every saved caption and every unposted Reel gets them
     // 2026-10-30 (Olly: "in the calendar there's still the old ones"): every unposted Reel from today on gets the Perfect Reel caption,
     // for its picked platform or Instagram, unless it already has it
@@ -11858,6 +12417,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderLinks();
     renderOverview();
     renderToday();
+    renderFinance();
   }
 
   function boot(){

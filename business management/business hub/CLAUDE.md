@@ -81,6 +81,6 @@ Then tell Olly to hard-refresh `hub.ollyhenson.com` (Ctrl/Cmd+Shift+R) once. The
 
 1. **Never fabricate** data — MRR figures, video stats, follower counts are Olly's real business numbers
 2. **Never silently delete** real logged data — confirm first (the app already does this for videos with real stats)
-3. **Currency is always USD ($)** for Heart Attractor — never GBP
+3. **Currency is always USD ($)** for Heart Attractor — never GBP (exception: the **Finance** tab is in GBP £, because Olly's Revolut account is GBP; incoming member payments show in $ there)
 4. **Flag data-model changes** before making them — anything that changes what's stored needs a backward-compatible migration in `boot()`, never a breaking change that loses existing rows
 5. **The Override Principle** — Olly can always pause, override, review, or revoke any change

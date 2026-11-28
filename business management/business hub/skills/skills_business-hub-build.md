@@ -202,6 +202,8 @@ Notes on fields that aren't obvious:
 - Never show a country as GHL's 2-letter code (2026-11-12, Olly: "from CA - where is that?"). Use `lmCountry(c)` (Intl.DisplayNames, GB/US/HK spelled out) everywhere a city/country is shown; the pop-up header adds "(their answer on the application)".
 
 ### Design principles from past corrections
+- **Money views show the end result ahead of time (2026-11-28).** Olly asked to "see ultimately the end result, like what's in profit, what's in tax ... ahead of time": a forecast (What's coming) sits under the action, next to what's already happened, and any "left over" figure includes moves and payouts, not just splits.
+- **Ask how each person pays before counting their money (2026-11-28).** Three corrections in one session (one member on Stripe, not Skool, paying on a different day; two members on older prices) came from assuming every member was the same. Every payment row shows name, route, price and fee.
 - **Every new signal Olly asks to "see" goes on the card AND into the score (2026-11-25).** Email engagement went on each Sales card (📧 tag) and into `lmEngage`, the follow-up ranking and the filters in one job; he shouldn't have to ask for each place separately.
 - **Every follow-up asset on a Sales card gets its own tracked status (2026-11-12).** The Step-by-step guide: `/api/guideviews` makes the per-person code (reuses the plan code), `/p/<code>/guide` serves `guide-view.html`, `POST /p/<code>/gseen` logs opens, furthest page and seconds per page into `guideview:<id>` (owner skipped, push on first open); the card shows a tag and a heat bar. Same pattern for any future follow-up.
 
@@ -372,6 +374,34 @@ Notes on fields that aren't obvious:
 ### Never (added 2026-11-23)
 - Never show a default value on a card (plan, price, date) that isn't saved in the record. Counts read the record, so the screen and the totals disagree. Save the default instead.
 - Never fix a wrong total from Olly's guess about the cause. Check the live record and tell him what it actually was.
+
+### Added 2026-11-28 (Finance tab) — CURRENT STATE
+**Never put member names, GHL contact ids or what a named person pays in this file, NEXT.md or index.html.** The repo is public. Per-member Finance data (routes, terms, older-price members) lives only in the KV record. In notes, refer to people by role ("a Stripe-checkout member", "two older-price members").
+
+- **What it is:** the last tab (`#tab-finance`, `renderFinance()`, code block "Finance tab (2026-11-28)"). It's Olly's Profit First version for his **Revolut Pro (GBP)** account. Every payout is split into **Profit / Salary / Expenses / Tax, in that order**, and what's left stays in the Pro main balance as **Cash flow**. Each bucket has a `where` line: Profit, Expenses and Tax are Pro pockets, Salary is sent to his personal account, and Cash flow stays in Pro main. Only the Expenses pocket has a card (a Pro virtual card that pays the subscriptions). The tab is in **£**, the only exception to the Hub's USD rule; member payments show in $ there.
+- **How the split is worked out (`fnPct()` is the only source of the %):** Tax `pct.tax` (25) and Cash flow `cashPct` (10) are fixed. Profit `profitPct` is fixed at **5**. Expenses = ceil(this month's costs ÷ expected monthly income × 100), where income = active members after fees, annual ÷ 12, in £. **Salary gets whatever is left.** With no paying members it falls back to `pct.expenses`. The "Fixed percentages" mode (`expAuto === false`) uses the four typed `pct` values instead. The data key for Profit is still `invest`, because it was called Invest for a while.
+- **Data** `state.finance`: `pct`, `cashPct`, `profitPct`, `expAuto`, `rate` (GBP per $1) + `rateAt`, `splits:[{id,date,gbp,usd?,rate?,note,keys:[id|date],pct (copy at the time),moved:{bucket:true}}]`, `moves:[{id,date,from,to,gbp,note}]` (`to` may be `"out"`), `expenses:[{id,name,amount,cur,every:"month"|"year"|"once",date,cat,active}]`, `skip:{payKey:label}`, `names`, `route:{id:"outside"}`, `term:{id:n}`, `fee:{stripePct,stripeFixed}`. `fnState()` fills in any missing fields. Old splits keep their own `pct`, so changing the % never rewrites history.
+- **Payments:** `hubMembers()` / `memberPayments()` carry the member `id` and `price`. The pay key is `id|date`. Names come from `lmData` (the tab calls `lmLoad()`) and are cached in `finance.names`. "Waiting to be split" = payments from the last 60 days that haven't been split or skipped. **"Dealt with"** keeps a payment out of splitting but in the month's "Member payments ($)" card, with Undo.
+- **Fees:** Skool = `fnSkoolFee()`: 2.9% + $0.30 up to $899, 3.9% + $0.30 above (Olly's research). Stripe checkout (`route[id]="outside"`) = `fee.stripePct` % + `fee.stripeFixed` $, default 2.9 + 0.30 and not confirmed by Olly. `term[id]` = a fixed number of Stripe payments: rows say "payment n of N" and a review warning shows after the last one.
+- **Older-price members:** `state.legacyMembers = [{id, name, price, renew, churned}]`. They pay via Skool at their old price. They count in MRR (`legacyMrr()` in `computeRows`, `lmMoney`, Delivery KPIs), cash and Finance, but **never as new sales** (`applyMembersToTabs`, Overview Sales card, sales journey and where-from tables). Payments start at `renew`. The "Left" button is in Finance → Older-price members. Never add them to `state.looms` as well, or they're counted twice.
+- **Boxes, top to bottom:** Split a payment (always open; **£ landed / $ Skool payout** switch, `fnDraft.cur`, remembered in localStorage `hub-fn-cur`; $ is converted at `rate` and both are shown) → **What's coming** (`fnComingHtml()`: unsplit + `fnFuturePayments(today+31d)` after fees, per pocket: % · So far (`fnBalances()`) · Coming · Total, £ and $ totals) → Coming up list (every member's next payment, the fee, Skool "lands about Wed …" = `fnSkoolLands()`, the quarterly Profit payout with a **Paid out** button that records a move invest→out) → this month's cards → Payments split (the permanent history, tick per pocket) → **Pocket balances** (Splits / In / Out / Now, where **ticked Salary counts as paid out**, a Move money form and a Moves so far list) → Expenses → Older-price members → Percentages (mode, Tax %, Cash flow %, Profit %, fees, rate). Fold boxes remember open/closed in localStorage `hub-fn-open`.
+- **Skool payouts** (help.skool.com): the first payout comes 8 to 14 days after the first payment, then automatically every Wednesday. A bank change can bring the first-payout checks back. The Stripe payout schedule hasn't been checked.
+- **Migrations:** member-specific seeds ran once on 2026-11-28 and were then removed from the code (the data stays in KV). Keep any future per-member setup in the KV record or the UI, not in code.
+
+### Never (added 2026-11-28, Finance)
+- Never hard-code a split percentage for Expenses. Olly: "I don't want to have a set like I need to use 30% on expenses. I think I can keep my costs incredibly low." Expenses % comes from his real costs; Profit is a fixed % he sets; Salary takes the rest.
+- Never assume every member pays $250 through Skool. Check how each one pays (Skool or Stripe checkout), their price (older-price members pay $29/$30) and any fixed term, and take off the matching fee.
+- Never take a Stripe-checkout member's payment day from the Skool zap's joined date. The zap date was a day late; use the day the payment actually goes through.
+- Never count older-price members as new sales or in "where sales came from". They joined long ago; they only add to MRR, cash and Finance.
+- Never show only £ for a payout Olly sees in $. Skool shows payouts in $, so the split takes either and shows both.
+- Never present the tax %, Stripe fee or Revolut features as certain. Say what's unconfirmed and how to check it (accountant, the Stripe dashboard, the Revolut app).
+- Never forecast or show "what's left" from splits alone. Moves between pockets, payouts to him and ticked Salary all change the balance, so use `fnBalances()`.
+- Never commit member names, contact ids or payment amounts to this repo. Check with grep before a commit.
+- Never leave a Finance table wider than the phone screen. Use short headers ("So far", "In", "Out", "Now") and `.fnform select{width:100%}`, then check at 390px.
+
+### Examples (Finance, 2026-11-28)
+- Good split line: `Expenses is 19% because your costs this month are £116.08 and about £619.39 comes in a month from 5 members (after fees). Profit stays at 5% and Salary gets the rest.`
+- Good forecast row (phone): `Profit | 5% | £40.00 | £50.12 | £90.12`. Bad (replaced): column headers "Split so far / Total ahead", which pushed the Total column off a 390px screen.
 
 ## 6. Quick reference — where things are in the code
 
@@ -765,3 +795,8 @@ defaults that aren't saved, and no fixing from Olly's guessed cause. -->
 - Never move a card out of New on half the first contact: both the message and the email (where both routes exist).
 
 <!-- 2026-11-26 skill review: Sales card flow v6 + email-only voice note route + vnsent board column recorded; deploy permission + heredoc backslash pitfalls added. -->
+
+
+**2026-11-28 pitfall: deploy copies are public.** Every deploy also lives at <id>.hub-ollyhenson.pages.dev, which Cloudflare Access does NOT cover. functions/_middleware.js 404s every host except hub.ollyhenson.com / hub-ollyhenson.pages.dev / localhost. Never delete it; a new function needing another host must be added to ALLOWED.
+
+<!-- 2026-11-28 skill review (Finance tab): rewrote "Added 2026-11-28 (Finance tab)" as a CURRENT STATE section and removed rules that were overridden the same day (Invest name -> Profit, fixed 10/30/25/25 defaults, Salary 75 : Invest 25 share, fee.outside, profitPaid). Added Never (Finance) rules: no fixed Expenses %, check each member's route/price/term/fee, real Stripe payment day, older-price members never new sales, $ + £ for Skool payouts, no claims of certainty, balances include moves, no member data in the public repo, phone-width tables. Added 2 design principles and Finance examples. Removed member names and GHL ids from this file and index.html (data stays in KV). -->
