@@ -612,6 +612,38 @@ Steps 9-11 (added 2026-11-12, after the eyes-closed recap): Sense The Space Comp
 - Never add "It's me, not AI" or any other AI disclaimer to a slide. Olly removed it from the last slide.
 - Never leave an exercise sheet as a long multi-page document when it can be fitted onto one or two phone pages.
 
+### Bonus exercise trainings built by a script: Talk To The Heart, Embody Your Symbol (approved 2026-11-27)
+`training/build_bonus_trainings.py` builds `talk-to-the-heart.html` (11 slides) and `embody-your-symbol.html` (8 slides), using the frame from the-emotional-resonance-method.html. Each training ships as a launch kit: the deck, a one-page exercise sheet (`python training/build_worksheets.py tth eys`), two Skool post images (`training/build_bonus_thumbnails.py` then `node tools/export_carousel.js training/bonus-thumbnails.html "training/bonus thumbnails"`) and the member announcement post.
+
+**Process**
+1. **Olly's steps, in his order, become one slide each.** Before them come one "why" slide and one compare slide ("When They Don't Agree"). After them come a "What You Might Say" or "Use It Through Your Day" slide, then "It's That Simple" as the last slide.
+2. **Show a spot on the body with a torso crop, not a full stick figure.** Use `torso()` and `anatomy()`: a crop from mid-neck to just above the belly button, in a white crew-neck t-shirt, with the symbol tight on the breastbone. Why: Olly, "we need to see more of a human anatomy… so they can see the centre of the chest". Then: "have it with a t-shirt on as well, rather than pure anatomy".
+3. **Draw everyday scenes the way the viewer would be sitting.** A sofa is drawn front-on, with the person sat facing you. Why: the side-on sofa was rejected ("make a better picture… almost like a front-on view").
+4. **Put a line Olly adds later on the step it belongs to, in bold.** "Keep your attention on your heart as you do it" went on Step 3 (Talk To Your Heart), the step he called "the fourth step". Read his step numbers against what he is describing, not against the slide numbers.
+5. **Exercise sheet = exactly one phone page.** When it runs into the footer, cut the longest list first and make the pictures bigger, rather than adding a page. The Talk To The Heart 4-phrase list was cut. The Embody Your Symbol worksheet picture was dropped and the card titles shortened.
+6. **Skool post images: 1600x900.** Use the tag "New Bonus Exercise", the title with a purple `<em>`, one short sub line, the numbered steps on the left and the key drawing from the deck on the right, cropped with a tighter viewBox. The thumbnail page has to override the deck's `.slide` positioning (`position:relative; left:auto; top:auto; transform:none`), or the picture comes out offset. Shorten any sub line that leaves an orphan word.
+
+**Rules (with why)**
+- **"Imprint your subconscious" is allowed.** Olly: "That's not manifestation, that's reality." The science-not-manifestation rule bans manifestation language, not the subconscious.
+- **The symbol is felt, not seen.** Write "Feel it right in the centre of your chest", never "See it". Why: Olly corrected the slide.
+- **No breathing instruction unless Olly gives one.** Talk To The Heart says "no special breathing", because he said "no need to breathe in or out in any way".
+- **Bonus trainings end on "It's That Simple".** There is no "Message Me Any Time" closing slide: Olly removed it from both decks.
+- **Announcement post (Skool, to current members): keep his words and sell the benefit.** Keep his opening and his emojis (1️⃣ 2️⃣) word for word. For each exercise, name what members struggled with before they joined, then say what the exercise changes. Don't explain how to do it, because the training does that. Keep it plain and to the point, not over the top. Leave the links and the classroom folder as placeholders, since he adds the hyperlinks. Why: the first draft explained the steps, and Olly said "It's the benefit of the exercise and how it's going to help them… Just not over the top".
+
+**Example (approved post section, 2026-11-27)**
+> 2️⃣ Embody Your Symbol
+> You know that feeling you get in the meditation? Calm, open, already with your person?
+> The hard part has always been keeping it. Work gets busy, someone says something, you scroll on your phone and the old feelings creep back in.
+> This exercise lets you bring that feeling back in seconds, wherever you are. …
+> 👉 Watch Embody Your Symbol here
+
+**Never**
+- Never write "see" or "visualize" for the symbol in the chest.
+- Never draw bare anatomy for a body-location step. Always use the t-shirt torso.
+- Never put a step-by-step how-to in the announcement post.
+- Never let a body line, the shirt fill or a glow cover the symbol. The symbol always sits on its white disc, drawn last.
+- Never add a closing "message me" slide to a bonus training.
+
 ## Variant: Stick-Figure Explainer Deck (no webcam) — "the master explanation", 2026-11-12
 
 **Use this to explain what we do** (the argument as a story). Approved file: `training/meet-your-person-simple.html`, built by `tools/build_simple_explainer.py` (which reuses all drawing helpers from `tools/build_argument_explainer.py`). Edit the builder, re-run, then publish the HTML (slideshow artifact SN4cagEnMgnHisy1yNrEyu) and `python tools/training_preview.py <html> <out>` (desktop+phone preview 7Y6ghuPPZHWDzLsRK2QjJR). Olly: "this will be like the template now of explaining everything that we do".
@@ -744,6 +776,9 @@ Square step images are 1024x1024 and show at 300px. Tall slide images (the emoti
 
 ## Gotchas Log (read before repeating any of these)
 
+- **`.furn` has `fill:none`, so a `fill=` attribute on a furniture shape is ignored.** Use `style="fill:#efe6fa"`. This is why the sofa came out see-through.
+- **A glow drawn before an opaque shape disappears under it.** The "melt" spread glow vanished under the white t-shirt fill. Draw glows inside the same layer, after the fill and before the symbol (`torso(chest)` adds `chest` last).
+- **`tools/shot.js` writing to `$TEMP` silently produced nothing.** Write screenshots to the scratchpad path, with forward slashes.
 - **Arrow/SVG z-index**: any arrow or connector SVG drawn over photos must have a higher `z-index` than the photo card, or its tip renders invisibly underneath. Always check this first if an arrowhead "disappears."
 - **Don't hand-guess curve/arrow coordinates** — measure real element positions with `getBoundingClientRect()` in JS instead. Every hand-guessed attempt needed multiple rounds of correction; the JS-measured version worked first time.
 - **Worksheet content is black**, not brand colors — colored handwriting looked wrong once actually rendered.
@@ -931,3 +966,16 @@ teaching-slides variant. All edits go through the builder (PARTS, DROP), exercis
 slide design, fewest pages, fill the page), stick-figure day examples, bullets down columns within 840px, his
 replacement steps in his order, no AI disclaimer. Rule 23 updated: recording links now include slide counts and skip the
 lessons he makes himself (overrides "1-4"). Two gotchas: Python % with CSS, artifact republish refused until read. -->
+
+### 2026-11-27 — Bonus trainings (Talk To The Heart, Embody Your Symbol)
+- Built by `training/build_bonus_trainings.py` (frame taken from the-emotional-resonance-method.html). Exercise wording = Olly's words: "Feel it" in the centre of your chest, never "See it".
+- The symbol/heart sits small and tight on the breastbone (Olly: "more focused into the centre of the chest"), on a white disc so the body line never runs through the R.
+- Gotcha: `.wallglow` animates `opacity` and overrides an `opacity` attribute (the glow turned solid and hid the R). Use `fill-opacity` on glows that sit under something.
+
+### 2026-11-28: Skill review of the bonus trainings session
+- Added the "Bonus exercise trainings built by a script" subsection under Teaching Slides. It covers:
+  - Process: steps as slides, the t-shirt torso crop for a spot on the body, front-on everyday scenes, late additions in bold on the right step, a one-page sheet cut down to fit, and the 1600x900 Skool post images.
+  - Rules: "imprint your subconscious" is OK (Olly: "that's reality"), "feel" not "see", no breathing instruction, no closing "message me" slide, and benefit-led announcement posts that keep his opening and emojis.
+  - Never list and an approved post example.
+- Gotchas: `.furn` fill needs `style=`, glows get hidden under the shirt fill, and shot.js output goes to the scratchpad.
+- Overridden in this session (not left as rules): bare anatomy (replaced by the t-shirt), the side-on sofa (replaced by front-on), the explaining-the-steps post draft (replaced by benefit-led).
