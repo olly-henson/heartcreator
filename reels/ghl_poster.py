@@ -157,7 +157,8 @@ def shrink(path):
     small = os.path.splitext(path)[0] + ".small.mp4"
     for enc in (["-c:v", "h264_qsv", "-preset", "medium"], ["-c:v", "libx264", "-preset", "veryfast"]):
         r = subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, *enc, "-b:v", "17M", "-maxrate", "19M", "-bufsize", "38M",
-                            "-c:a", "copy", "-movflags", "+faststart", small], capture_output=True)
+                            "-c:a", "copy", "-movflags", "+faststart", small], capture_output=True,
+                           creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))  # no black window popping up on approve (2026-11-28)
         if r.returncode == 0 and os.path.exists(small) and os.path.getsize(small) < GHL_MAX_BYTES:
             return small
     raise RuntimeError("Reel is over 450 MB and couldn't be made smaller for GHL")

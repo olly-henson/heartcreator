@@ -15,6 +15,7 @@
 7. **Reaching out later:** the **🎬 Helpful Reel** (Sales tab > 📅 Follow-up, work down Follow up today from #1). Nothing else: the follow-up idea message and the gone cold plan follow-up are gone.
 8. **Hesitant after the offer:** write the informal 30-day "do the work" guarantee into the follow-up (memory project_hesitant_applicant_guarantee.md). Monthly is cancel anytime, so a refund is just the first month.
 9. **Adding a client by hand without the welcome email:** GHL > Automation > Workflows > put the workflow triggered by `joined heart attractor program` in **Draft** → add that tag and remove `daily email list` (API) → **Publish + Save** straight away → set their plan on their Sales card.
+10. **Joined through Stripe (not Skool), e.g. to avoid Skool's VAT (Olly 2026-11-28):** treat exactly like a Skool join. (a) Hub record: `state.looms[id].product="monthly"` (or annual), `joinedAt` = pay date, `state.finance.route[id]="outside"` (= "Stripe checkout"); no `finance.term` unless a fixed number of payments was agreed (blank = continuous). (b) GHL: add `joined heart attractor program` (fires the welcome workflow, like Zapier does for Skool) + remove `daily email list`. (c) Tell Olly to let them into Skool free. Overview, Targets, Finance (new cash to split) and Delivery all read hubMembers(), so nothing else to do. Refresh the Hub before editing after a direct KV write (rev conflict).
 
 ## Rules
 - The voice note does the selling; the texts only point to it. Why: Olly (2026-11-26) "I've just tried one different way and it's worked pretty well": voice note + one short line + pending email, then voice notes until they're excited.
@@ -27,6 +28,8 @@
 - Phone how-tos for Olly = numbered plain-English steps, one tap per line, starting from where he is now (e.g. "I've recorded it, now what?"). Why: "very fiddly on my phone… just make it very layman's terms, bullet points".
 - Follow-ups are helpful content, not a pitch: a Reel that fits what they wrote, naming what they told you. No follow-up within 3 days of the last message or their application.
 - Show only the route that applies on each card, readable at phone width (label, then buttons, then notes).
+- A Stripe joiner is a member like any other: the welcome workflow runs (step 10), unlike a hand-added client (step 9). Why: Olly 2026-11-28 "just follow the workflow process [as] if she joined the Skool community".
+- Repeat Join clicks with the video page re-opening in between = they're stuck at checkout. Message them (voice note: "anything I can help with?") and offer the Stripe link if Skool's VAT is the block. Why: 2026-11-28 an applicant clicked Join 5 times, then joined through Stripe to avoid the VAT.
 - Hesitant/sceptical buyers: answer the real worry with a written conditional guarantee, not a discount. Health conditions: coaching alongside therapy, not instead of it.
 
 ## Never
@@ -38,6 +41,7 @@
 - Never say monthly is 12 payments: it's $250 a month, cancel anytime.
 - Never delete the old flow's code when the flow changes: hide it (LM_OLD_FLOW = false, if (false) blocks) in the Hub.
 - Never send a vague follow-up ("thought of you") with nothing from their application in it, and never mention the program, the price or the video in a Helpful Reel follow-up.
+- Never give a Stripe joiner a fixed number of payments unless Olly says one was agreed. Monthly is continuous by default (Olly 2026-11-28: "it's just continuous. It's not six months like" the member who agreed 6).
 - Never write applicants' names into skill files or other committed files: the heartattractor repo is public (use "a test applicant" / Jane).
 
 ## Examples (good, current wording 2026-11-26, test applicant)
@@ -586,3 +590,5 @@ diagnosis plan built per applicant. Plan v3.1's template pages are overridden fo
 <!-- 2026-11-24 skill review: step 4 rewritten with Olly's new 1a wording (paragraph per point, "I say that because", "But even after all of this -", sign-off Olly Henson) and the 1b email (subject "Your application status: pending", no link, Olly writes the 'how we can help' line). Step 9 now the daily 📅 Follow-up + Helpful Reel routine (replaces 🏆 Rank applicants); new step 10 for adding a client by hand without the welcome email. Rules added: follow-ups are helpful content not a pitch, must name their answers (vague 'made me think of you' rejected), 3-day gap from last message or application, phone-first card layout. Never list: vague follow-ups, pitching in Reel follow-ups, chasing within 3 days, applicant names in committed files. Example replaced with the current 1a wording + a good and a weak Reel follow-up. Removed a stray note that named an applicant. -->
 
 <!-- 2026-11-26 skill review: CURRENT PROCESS replaced with flow v6 (voice note first -> short follow-up message -> 'Application status: pending' email -> voice notes until excited -> video link only). Added email-only voice note route (Voice Memos share to Gmail), board columns (leave New only when message AND email done), rules on exact dictated casing, example names = merge field, tight cards, plain phone how-tos. Removed/overridden: one personalised video message rule + example, PDF plan / gone cold plan follow-up, follow-up idea, 'Your application status: pending' subject. -->
+
+<!-- 2026-11-28 skill review: step 10 added (Stripe joiner = Hub record + route Stripe + GHL tag joined heart attractor program + remove daily email list + let them into Skool free) and moved after step 9; Rules: Stripe joiners get the welcome workflow, repeat Join clicks = stuck at checkout; Never: no fixed term for Stripe joiners unless agreed. -->

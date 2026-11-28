@@ -11,6 +11,7 @@
 
 import { pushAll } from "../../lib/webpush.js";
 import { isOwner } from "../../lib/owner.js";
+import { logFeed } from "../../lib/feed.js";
 // Olly's own opens never count (2026-11-10): the Hub login cookie, OR his internet address (saved each time he opens
 // the Hub, lib/owner.js), which also catches links he taps inside WhatsApp's own browser (no Hub cookie there).
 async function ownerView(env, request) {
@@ -26,6 +27,25 @@ function json(body, status) {
     status: status || 200,
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" },
   });
+}
+// Who a notification is about (2026-11-28, Olly: "Hub notification" pushes didn't say who, and opened the plain Sales page).
+// First name + last name from GHL (env.GHL_TOKEN), so the push can name them and open their own card.
+async function nameFor(env, id) {
+  if (!id || !env.GHL_TOKEN) return "";
+  try {
+    const r = await fetch("https://services.leadconnectorhq.com/contacts/" + encodeURIComponent(id), { headers: { Authorization: "Bearer " + env.GHL_TOKEN, Version: "2021-07-28", Accept: "application/json" } });
+    if (!r.ok) return "";
+    const c = ((await r.json()) || {}).contact || {};
+    return (String(c.firstName || "") + " " + String(c.lastName || "")).trim() || String(c.contactName || c.name || "").trim();
+  } catch (e) { return ""; }
+}
+async function sendNote(env, id, note) {
+  const who = await nameFor(env, id);
+  const n = Object.assign({}, note, { url: "/#looms" + (id ? "=" + String(id).replace(/[^A-Za-z0-9_-]/g, "") : "") });
+  n.title = n.title.replace("{who}", who || "An applicant");
+  n.body = n.body.replace("{who}", who || "An applicant");
+  try { await pushAll(env, n); } catch (e) {}
+  await logFeed(env, { cid: id, who: who || "An applicant", what: note.what || "" });
 }
 async function contactFor(env, code) {
   if (!/^[a-z0-9]{10}$/.test(code || "")) return "";
@@ -76,11 +96,11 @@ export async function onRequest({ request, env, params }) {
     if (b.ev === "open") {
       m.opens++; m.first = m.first || now; m.dev = device(request);
       v.visits.push({ t: now, dev: m.dev }); v.visits = v.visits.slice(-30);
-      if (m.opens === 1) note = { title: "Guide opened", body: "Someone just opened their step-by-step guide. Tap to see who.", url: "/#looms", tag: "guide-" + id };
+      if (m.opens === 1) note = { title: "{who} opened their guide", what: "opened their step-by-step guide", body: "{who} just opened their step-by-step guide. Tap to open their card.", tag: "guide-" + id };
     }
     if (b.ev === "pdf") m.pdf = (m.pdf || 0) + 1;
     await env.HUB_KV.put(key, JSON.stringify(v), { metadata: m });
-    if (note) { try { await pushAll(env, note); } catch (e) {} }
+    if (note) await sendNote(env, id, note);
     return json({ ok: true });
   }
 
@@ -318,17 +338,17 @@ export async function onRequest({ request, env, params }) {
     if (b.ev === "open") {
       m.opens++; m.first = m.first || now; m.dev = String(b.dev || "").slice(0, 10);
       v.visits.push({ t: now, dev: m.dev }); v.visits = v.visits.slice(-30);
-      if (m.opens === 1) note = { title: "Video opened", body: "Someone just opened their sales video. Tap to see who.", url: "/#looms", tag: "vsl-" + id };
+      if (m.opens === 1) note = { title: "{who} opened their video", what: "opened their sales video", body: "{who} just opened their sales video. Tap to open their card.", tag: "vsl-" + id };
     }
     // Finished = 90% of the video actually played. Reaching the end alone doesn't count: skipping to the end fires
     // "end" too (2026-11-17: an applicant played 7%, skipped to the end and showed as "finished").
-    if (m.pct >= 90 && !m.done) { m.done = true; note = { title: "Video watched to the end", body: "An applicant just finished their sales video (" + m.pct + "% watched). Tap to see who.", url: "/#looms", tag: "vsl-" + id }; }
+    if (m.pct >= 90 && !m.done) { m.done = true; note = { title: "{who} watched their video to the end", what: "watched their sales video to the end (" + m.pct + "%)", body: "{who} just finished their sales video (" + m.pct + "% watched). Tap to open their card.", tag: "vsl-" + id }; }
     if (b.ev === "join") {
       m.join++; m.joinAt = m.joinAt || now; v.joins.push({ t: now, at: Math.round(pos) }); v.joins = v.joins.slice(-20);
-      note = { title: "Someone clicked Join 🎉", body: "An applicant just clicked Join on their sales video. Tap to see who.", url: "/#looms", tag: "vsl-join-" + id };
+      note = { title: "{who} clicked Join 🎉", what: "clicked Join 🎉", body: "{who} just clicked Join on their sales video. Tap to open their card.", tag: "vsl-join-" + id };
     }
     await env.HUB_KV.put(key, JSON.stringify(v), { metadata: m });
-    if (note) { try { await pushAll(env, note); } catch (e) {} }
+    if (note) await sendNote(env, id, note);
     return json({ ok: true });
   }
 

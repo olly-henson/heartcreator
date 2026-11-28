@@ -350,7 +350,7 @@ def place(hook_text, head, head_hook=None):
     if not head:
         return BOX_TOP - 4, BOX_TOP
     own = END_EMOJI.search(hook_text)
-    words = tidy_hook(hook_text[:own.start()] if own else hook_text).replace("'", "\u2019").split()
+    words = hook_words(hook_text[:own.start()] if own else hook_text)
     n = len(hook_fit(words)[0]) if words else 1
     # Olly 2026-11-16 (final rule, overrides the centring): the SAME distance from the top of his head to the bottom of
     # the hook, and to the bottom of the captions, as on his best Reel "How to stop doubting that you'll meet someone"
@@ -431,8 +431,20 @@ def merge_hook(spoken, calendar):
     text = " ".join(out).strip().rstrip(",;:.-–— ")
     # a filler he says straight after the hook ("...won't work, okay") is not part of it (2026-11-16)
     text = re.sub(r"(?:[\s,]+(?:okay|ok|so|right|um|uh|yeah|alright))+$", "", text, flags=re.I).rstrip(",;:.-–— ")
+    text = num_range(text)
     text = text[:1].upper() + text[1:]
     return text + (" " + emo if emo else "")
+
+
+NUMW = {w: str(i) for i, w in enumerate("zero one two three four five six seven eight nine ten eleven twelve".split())}
+
+
+def num_range(t):
+    """Olly 2026-11-28: "two to three months" crowds the hook. A number range shows as digits with a space either
+    side of the hyphen: "2 - 3 months" (also "2-3" / "2 to 3" from the calendar)."""
+    n = r"(\d+|" + "|".join(NUMW) + r")"
+    d = lambda w: NUMW.get(w.lower(), w)
+    return re.sub(r"\b" + n + r"\s*(?:to|-|–)\s*" + n + r"\b", lambda m: d(m.group(1)) + " - " + d(m.group(2)), t, flags=re.I)
 
 
 END_EMOJI = re.compile(r"\s*((?:[☀-➿\U0001F000-\U0001FAFF][️‍]?)+)\s*$")
@@ -443,13 +455,19 @@ def tidy_hook(t):
     return re.sub(r"(\w) +-(?=\w)|(\w)- +(?=\w)", lambda m: (m.group(1) or m.group(2)) + "-", t)
 
 
+def hook_words(t):
+    """Hook text -> layout words. A number range ("2 - 3", Olly 2026-11-28) is one word, so a line never breaks inside it."""
+    t = re.sub(r"(\d+) - (\d+)", "\\1\x00-\x00\\2", tidy_hook(t).replace("'", "\u2019"))
+    return [w.replace("\x00", " ") for w in t.split()]
+
+
 def hook_png(text, path, top=None):
     # a calendar hook can carry its own end emoji (Olly 2026-11-04: the emoji drives the first-3-second click):
     # use it as the box's end emoji instead of the default rule below
     own = END_EMOJI.search(text)
     if own:
         text = text[:own.start()].rstrip()
-    words = tidy_hook(text).replace("'", "’").split()
+    words = hook_words(text)
     lines, f = hook_fit(words)
     # end emoji, as on Olly's posted Reels: test tube when the hook says "scientifically"/"science", else red heart
     emo = own.group(1) if own else "🧪" if re.search(r"scien", text, re.I) else "❤️"

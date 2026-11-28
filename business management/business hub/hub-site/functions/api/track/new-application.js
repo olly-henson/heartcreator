@@ -7,6 +7,7 @@
 // Returns nothing about the contact: only how many devices were notified.
 
 import { pushAll } from "../../../lib/webpush.js";
+import { logFeed } from "../../../lib/feed.js";
 
 function json(body, status) {
   return new Response(JSON.stringify(body), { status: status || 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
@@ -30,5 +31,6 @@ export async function onRequestPost({ request, env }) {
     url: "/#looms" + (id ? "=" + id : ""),
     tag: "app-" + (id || Date.now()),
   });
+  await logFeed(env, { cid: id, who: name === "someone new" ? "Someone new" : name, what: plan ? "asked for a plan" : "applied 📝" });
   return json({ ok: r.ok, devices: r.devices || 0 });
 }

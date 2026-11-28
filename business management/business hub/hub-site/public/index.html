@@ -906,6 +906,54 @@
   .fncome td{ padding:8px; border-top:1px solid var(--border-soft); } .fncome td.fntot{ font-weight:700; color: var(--accent-2); }
   .fncome tr.fnsum td{ border-top:1px solid var(--border); }
   @media (max-width:600px){ .fncome{ min-width:0; font-size:12.5px; } .fncome th, .fncome td{ padding:6px 4px; } }
+  /* Targets tab (2026-11-28) */
+  .tgbig{ font-size:19px; line-height:1.45; color:var(--text); margin:0 0 14px; } .tgbig b{ color:var(--accent-2); }
+  .tgbar{ height:10px; border-radius:999px; background:var(--surface-2); overflow:hidden; margin:0 0 10px; }
+  .tgbar span{ display:block; height:100%; background:var(--accent-grad); border-radius:999px; min-width:3px; }
+  .tgbar.sm{ height:4px; margin:5px 0 0; }
+  .tgscroll{ overflow-x:auto; }
+  .tgtable{ min-width:0; } .tgtable td:first-child{ white-space:nowrap; } .tgtable tr.tgon td{ background:rgba(184,79,232,.14); font-weight:700; }
+  .tgtable td.fntot{ min-width:84px; }
+  .tgkpis .value{ font-size:24px; }
+  .tgflow{ display:flex; align-items:stretch; gap:6px; flex-wrap:wrap; }
+  .tgstep{ flex:1 1 120px; background:var(--surface-2); border:1px solid var(--border-soft); border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:3px; }
+  .tgstep b{ font-size:16px; color:var(--text); } .tgstep small{ font-size:12px; color:var(--text-muted); line-height:1.35; } .tgico{ font-size:18px; }
+  .tgarrow{ align-self:center; color:var(--accent-2); font-weight:700; }
+  .tgshift td small{ display:block; font-size:11.5px; color:var(--good); font-weight:600; } .tgshift td.tgno small{ color:var(--critical); } .tgshift td.tgok{ color:var(--good); font-weight:600; }
+  .tgshift td:first-child{ white-space:normal; min-width:120px; }
+  .tgplan{ border-color:rgba(184,79,232,.5); }
+  .tgplanbar{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:0 0 12px; }
+  .tgdl{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted); font-weight:600; }
+  .tgdl input{ background:var(--surface-2); color:var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:7px 9px; font:inherit; font-size:15px; color-scheme:dark; }
+  .tgrates{ display:flex; flex-wrap:wrap; gap:8px; } .tgrates span{ background:var(--surface-2); border-radius:10px; padding:7px 10px; font-size:13px; } .tgrates small{ color:var(--text-muted); }
+  .tgshift td.tgno b{ color:var(--warn); }
+  .tgplanwrap{ display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:14px; align-items:start; }
+  .tgplanwrap #tgPlanOut{ order:2; position:sticky; top:12px; } .tgplanwrap #tgPlanOut .tgresult{ margin-top:0; }
+  .tgsliders{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; }
+  @media (max-width:900px){ .tgplanwrap{ grid-template-columns:1fr; } .tgplanwrap #tgPlanOut{ order:0; top:0; z-index:5; }
+    .tgplanwrap .tgresult{ padding:10px 12px; background:var(--surface-solid, #1d1226); box-shadow:0 10px 24px -12px rgba(0,0,0,.8); }
+    .tgplanwrap .tgresbig{ margin:0 0 4px; } .tgplanwrap .tgresbig b{ font-size:26px; } .tgplanwrap .tgresult p{ font-size:13px; margin:0 0 6px; } .tgplanwrap .tgresrow span{ padding:4px 8px; font-size:12px; } }
+  .tgsl{ background:var(--surface-2); border:1px solid var(--border-soft); border-radius:14px; padding:12px 14px; }
+  .tgslhead{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; } .tgslhead b{ font-size:15px; color:var(--text); }
+  .tgslval{ font-family:'Poppins',sans-serif; font-size:20px; font-weight:700; color:var(--accent-2); white-space:nowrap; }
+  .tgsl input[type=range]{ width:100%; margin:10px 0 6px; accent-color:#B84FE8; height:28px; }
+  .tgslfoot{ display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--text-muted); } .tgslfoot b{ color:var(--text); } .tgno2{ color:var(--warn); }
+  .tgresult{ margin-top:14px; border:1px solid var(--border); border-radius:14px; padding:14px 16px; background:rgba(184,79,232,.08); }
+  .tgresult.tggood{ border-color:rgba(143,208,168,.6); background:rgba(143,208,168,.08); }
+  .tgresbig{ display:flex; align-items:baseline; gap:8px; margin:4px 0 8px; } .tgresbig b{ font-family:'Poppins',sans-serif; font-size:34px; color:var(--text); } .tgresbig span{ color:var(--text-muted); }
+  .tgresult p{ margin:0 0 10px; font-size:14.5px; line-height:1.5; color:var(--text-body); } .tgresult small{ color:var(--text-muted); }
+  .tgresrow{ display:flex; flex-wrap:wrap; gap:8px; } .tgresrow span{ background:var(--surface-2); border-radius:10px; padding:7px 10px; font-size:13px; } .tgresrow b{ color:var(--text); }
+  .tgpages{ display:flex; flex-direction:column; gap:0; }
+  .tgpage{ background:var(--surface-2); border:1px solid var(--border-soft); border-radius:14px; padding:12px 14px; }
+  .tgpagehead{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 8px; } .tgpagehead b{ font-size:16px; color:var(--text); } .tgpagehead small{ color:var(--text-muted); font-size:12.5px; }
+  .tgstepno{ display:inline-grid; place-items:center; width:22px; height:22px; border-radius:50%; background:var(--accent-grad); color:#1a0524; font-weight:800; font-size:12px; }
+  .tgrate{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 8px; }
+  .tgrate > div{ display:flex; flex-direction:column; gap:2px; } .tgrate b{ font-size:24px; font-family:'Poppins',sans-serif; color:var(--text); } .tgneed b{ color:var(--accent-2); } .tgover b{ color:var(--critical); }
+  .tgrate small{ font-size:12px; color:var(--text-muted); line-height:1.35; } .tglbl{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); }
+  .tgbridge{ text-align:center; font-size:12.5px; color:var(--accent-2); padding:7px 0; }
+  .tggrp{ font-size:13px; font-weight:700; color:var(--accent-2); margin:6px 0 8px; }
+  .tgform label{ flex:1 1 230px; } .tgsrc{ font-weight:500; font-size:12px; line-height:1.4; color:var(--text-muted); }
+  @media (max-width:600px){ .tgwide{ display:none; } .tgflow{ flex-direction:column; } .tgarrow{ transform:rotate(90deg); line-height:.6; } .tgstep{ flex-basis:auto; } .tgbig{ font-size:17px; } .tgkpis{ grid-template-columns:repeat(2,minmax(0,1fr)); } .tgkpis .value{ font-size:20px; } .tgtable{ font-size:12px; } .tgform label{ flex-basis:100%; } }
   .fnkpis{ margin-bottom:34px; } .fnkpis .value{ font-size:22px; }
   .fnsplit{ border:1px solid var(--border-soft); border-radius:12px; padding:10px 12px; margin:8px 0; }
   .fnsplit.done{ opacity:.7; }
@@ -919,6 +967,24 @@
   @media (max-width:600px){ .fnkpis{ grid-template-columns:repeat(2,minmax(0,1fr)); } .fnkpis .value{ font-size:19px; } .fnname{ flex-basis:100px; } .fnwhere{ font-size:12px; } .fncard{ padding:14px; } .fnnotes{ margin-top:-20px; } }
   .audboxes{ display:flex; flex-direction:column; gap:12px; }
   .audbox{ background: var(--surface); border:1px solid var(--border-soft); border-radius:14px; overflow:hidden; }
+  /* Latest activity list, top of the Sales tab (Olly, 2026-11-28) */
+  .nf{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin:0 0 14px; }
+  .nfh{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 6px; }
+  .nfh b{ font-size:16px; color:var(--text); }
+  .nfn{ background:var(--accent); color:#fff; border-radius:999px; font-size:12px; font-weight:700; padding:1px 8px; }
+  .nfh .copybtn{ margin-left:auto; }
+  .nfi{ display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--border-soft); }
+  .nfi:first-of-type{ border-top:0; }
+  .nfd{ width:8px; height:8px; border-radius:50%; background:var(--accent-2); flex:none; }
+  .nfi.seen .nfd{ background:transparent; border:1px solid var(--text-muted); }
+  .nft{ flex:1; min-width:0; font-size:15px; line-height:1.35; color:var(--text-body); }
+  .nft a{ color:var(--text); font-weight:700; text-decoration:none; cursor:pointer; }
+  .nft a:hover{ text-decoration:underline; }
+  .nft small{ display:block; color:var(--text-muted); font-size:12.5px; margin-top:2px; }
+  .nfi .copybtn{ flex:none; }
+  .nfi.seen .nft{ opacity:.7; }
+  .nf details summary{ cursor:pointer; color:var(--text-muted); font-size:13.5px; padding:8px 0 2px; }
+  .nfe{ color:var(--text-muted); font-size:14px; padding:4px 0; }
   .audhead{ display:flex; align-items:center; gap:12px; width:100%; padding:16px 18px; background:transparent; border:0; color: var(--text); font:inherit; text-align:left; cursor:pointer; }
   .audhead:hover{ background: var(--surface-2); }
   .audname{ flex:1; font-weight:700; font-size:15px; }
@@ -1724,6 +1790,7 @@
     <button class="tabbtn" data-tab="tiktok" role="tab" aria-selected="false" hidden>TikTok</button>
     <button class="tabbtn" data-tab="delivery" role="tab" aria-selected="false">Delivery</button>
     <button class="tabbtn" data-tab="finance" role="tab" aria-selected="false">Finance</button>
+    <button class="tabbtn" data-tab="targets" role="tab" aria-selected="false">Targets</button>
   </nav>
 
   <div id="tab-audience" class="tabpanel" hidden="">
@@ -2678,6 +2745,11 @@ https://www.instagram.com/attractwitholly
     <div id="financeBody"></div>
   </div>
 
+  <div id="tab-targets" class="tabpanel" hidden="">
+    <span class="hint" style="display:block; margin:0 0 14px;">When you can realistically reach your monthly target, from your live numbers, with members leaving each month taken into account.</span>
+    <div id="targetsBody"></div>
+  </div>
+
   <div id="tab-links" class="tabpanel" hidden="">
     <span class="hint" style="display:block; margin:0 0 18px;">Open what you want to send, find where you're sending it, tap Copy. Every link is tracked, so the Hub knows where people came from.</span>
     <div id="linksBody"></div>
@@ -2685,6 +2757,7 @@ https://www.instagram.com/attractwitholly
 
   <div id="tab-looms" class="tabpanel" hidden="">
     <span class="hint" style="display:block; margin:0 0 14px;">Everyone who's applied, by stage. Tap a card for their details, messages and mind map. On desktop, drag a card to another column to move them.</span>
+    <div id="nfFeed"></div>
     <div id="lmNotify" class="lmnotify"></div>
     <div id="loomsBody"></div>
   </div>
@@ -5678,7 +5751,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       lmLoading = false;
       if (!d || !d.ok){ lmErr = (d && d.error) || "Couldn't reach GHL."; renderLooms(); return; }
       lmData = d.applicants || []; if (!lmSel && lmData[0]) lmSel = lmData[0].id;
-      lmJoinSync(); renderFinance();
+      lmJoinSync(); renderFinance(); renderTargets();
       lmPlanViews(); lmVslViews(); lmGuideViews();
       // GHL can take a few seconds to make a brand-new contact searchable, so keep checking for ~30s
       if (lmWant){ var w = lmById(lmWant); if (w){ lmSel = w.id; lmOpen = w.id; lmView = "info"; lmWant = null; lmTries = 0; } else if (lmTries++ < 6) setTimeout(function(){ if (lmWant && !lmLoading) lmLoad(); }, 5000); else { lmWant = null; lmTries = 0; } }
@@ -6302,6 +6375,57 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     openLoomsFor(m[1]);
   }
   window.addEventListener("hashchange", loomsFromHash);
+  // Latest activity (Olly, 2026-11-28): every applicant notification (applied, opened video, watched to the end,
+  // clicked Join, opened guide) also lands in KV feed:notes; shown at the top of the Sales tab with a Seen button.
+  // /api/notes (functions/api/notes.js, lib/feed.js). Tapping a name opens their card.
+  var nfItems = null, nfBusy = false;
+  function nfAgo(t){
+    var d = new Date(t), s = (Date.now() - d) / 1000;
+    if (s < 60) return "just now";
+    if (s < 3600) return Math.floor(s / 60) + " min ago";
+    var hm = d.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" });
+    var today = new Date(); today.setHours(0,0,0,0);
+    if (d >= today) return Math.floor(s / 3600) + " h ago · " + hm;
+    if (d >= today - 864e5) return "Yesterday " + hm;
+    return d.toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"short" }) + " " + hm;
+  }
+  function nfRow(n){
+    var who = n.cid ? '<a data-nfopen="' + lmEsc(n.cid) + '">' + lmEsc(n.who) + "</a>" : "<b>" + lmEsc(n.who) + "</b>";
+    var btn = n.seen ? '<button type="button" class="copybtn" data-nfundo="' + lmEsc(n.id) + '">Undo</button>'
+                     : '<button type="button" class="copybtn" data-nfseen="' + lmEsc(n.id) + '">✓ Seen</button>';
+    return '<div class="nfi' + (n.seen ? " seen" : "") + '"><span class="nfd"></span><div class="nft">' + who + " " + lmEsc(n.what) + "<small>" + nfAgo(n.t) + "</small></div>" + btn + "</div>";
+  }
+  function nfRender(){
+    var host = document.getElementById("nfFeed"); if (!host) return;
+    if (!nfItems){ host.innerHTML = ""; return; }
+    var fresh = nfItems.filter(function(n){ return !n.seen; }), old = nfItems.filter(function(n){ return n.seen; }).slice(0, 20);
+    var html = '<div class="nf"><div class="nfh"><b>Latest activity</b>' + (fresh.length ? '<span class="nfn">' + fresh.length + " new</span>" : "")
+      + (fresh.length > 1 ? '<button type="button" class="copybtn" data-nfseen="all">✓ Mark all seen</button>' : "") + "</div>";
+    html += fresh.length ? fresh.map(nfRow).join("") : '<div class="nfe">Nothing new. You’re up to date.</div>';
+    if (old.length) html += '<details' + (window.nfOldOpen ? " open" : "") + ' ontoggle="window.nfOldOpen=this.open"><summary>Seen earlier (' + old.length + ")</summary>" + old.map(nfRow).join("") + "</details>";
+    host.innerHTML = html + "</div>";
+  }
+  function nfLoad(){
+    if (nfBusy) return; nfBusy = true;
+    fetch("/api/notes", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(j){ if (j && j.ok){ nfItems = j.items || []; nfRender(); } })
+      .catch(function(){}).then(function(){ nfBusy = false; });
+  }
+  function nfPost(body){
+    fetch("/api/notes", { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(body), cache:"no-store" })
+      .then(function(r){ return r.json(); }).then(function(j){ if (j && j.ok){ nfItems = j.items || []; nfRender(); } }).catch(function(){});
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest("[data-nfseen],[data-nfundo],[data-nfopen]"); if (!b || !nfItems) return;
+    var now = new Date().toISOString(), v;
+    if ((v = b.getAttribute("data-nfseen"))){ nfItems.forEach(function(n){ if (!n.seen && (v === "all" || n.id === v)) n.seen = now; }); nfRender(); nfPost({ seen:v }); }
+    else if ((v = b.getAttribute("data-nfundo"))){ nfItems.forEach(function(n){ if (n.id === v) n.seen = null; }); nfRender(); nfPost({ unseen:v }); }
+    else if ((v = b.getAttribute("data-nfopen"))){ openLoomsFor(v); }
+  });
+  function nfOnSales(){ var t = document.getElementById("tab-looms"); return t && !t.hidden && !document.hidden; }
+  document.addEventListener("click", function(e){ if (e.target.closest && e.target.closest('.tabbtn[data-tab="looms"]')) setTimeout(nfLoad, 0); });
+  document.addEventListener("visibilitychange", function(){ if (nfOnSales()) nfLoad(); });
+  setInterval(function(){ if (nfOnSales()) nfLoad(); }, 60000);
+  setTimeout(function(){ if (nfOnSales()) nfLoad(); }, 800);
   function pushOk(){ return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window; }
   function pushBytes(s){ s = String(s).replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; var r = atob(s), a = new Uint8Array(r.length); for (var i = 0; i < r.length; i++) a[i] = r.charCodeAt(i); return a; }
   function pushPost(body){ return fetch("/api/push", { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(body), cache:"no-store" }).then(function(r){ return r.json(); }); }
@@ -6932,7 +7056,18 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     return '<button type="button" class="lmbc2 dvc" draggable="true" data-id="' + a.id + '"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' + lmEsc([s.joinedAt ? "Joined " + dvDate(s.joinedAt) : "Joined (date not set)", place].filter(Boolean).join(" · ")) + "</span>" +
       '<span class="lmbcrow">' + tags + "</span>" + (s.note ? '<span class="lmbcnote">' + lmEsc(String(s.note).slice(0, 90)) + "</span>" : "") + "</button>";
   }
-  function dvSetChurn(id, on){ var s = lmStore(id); if (on){ if (!s.churned) s.churned = todayISO(); } else delete s.churned; dvJoinStamp(s); markDirty(); renderDeliveryBoard("force"); }
+  // Older-price members on the Delivery board (Olly 2026-11-28): cards from state.legacyMembers, id "lg:<contact id>".
+  // Churn here = the same x.churned the Finance "Left" button sets, so payments, MRR, Overview and Targets all follow.
+  function dvLg(id){ id = String(id || "").replace(/^lg:/, ""); return legacyMembers().filter(function(x){ return x.id === id; })[0] || null; }
+  function dvLgGone(x){ return !!(x.churned && x.churned <= todayISO()); }
+  function dvLgCardHtml(x){
+    var tags = '<span class="lmtag" style="margin:0;background:rgba(74,222,128,.18);color:#4ade80">Older price $' + lmEsc(x.price) + "/month</span>" +
+      (x.churned ? '<span class="lmtag" style="margin:0;background:rgba(248,113,113,.18);color:#f87171">Churned ' + lmEsc(dvDate(x.churned)) + "</span>" : "");
+    return '<button type="button" class="lmbc2 dvc" draggable="true" data-id="lg:' + lmEsc(x.id) + '"><b>' + lmEsc(x.name) + '</b><span class="sub">Via Skool' + (x.renew ? " · next renewal " + lmEsc(dvDate(x.renew)) : "") + "</span>" +
+      '<span class="lmbcrow">' + tags + "</span>" + (x.note ? '<span class="lmbcnote">' + lmEsc(String(x.note).slice(0, 90)) + "</span>" : "") + "</button>";
+  }
+  function dvLgSetChurn(x, on){ if (on){ if (!x.churned) x.churned = todayISO(); } else delete x.churned; markDirty(); renderDeliveryBoard("force"); try { renderFinance(); } catch(e){} }
+  function dvSetChurn(id, on){ if (/^lg:/.test(id)){ var x = dvLg(id); if (x) dvLgSetChurn(x, on); return; } var s = lmStore(id); if (on){ if (!s.churned) s.churned = todayISO(); } else delete s.churned; dvJoinStamp(s); markDirty(); renderDeliveryBoard("force"); }
   // mode "tab" = the tab was opened (refresh from GHL), "force" = redraw now, none = skip while he's typing in a box here
   function renderDeliveryBoard(mode){
     var host = document.getElementById("dvBody"); if (!host) return;
@@ -6948,18 +7083,33 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     var ms = dvMembers(), cur = ms.filter(function(a){ return !lmStore(a.id).churned; }), gone = ms.filter(function(a){ return !!lmStore(a.id).churned; });
     var m = cur.filter(function(a){ return lmStore(a.id).product !== "annual"; }).length, y = cur.length - m;
     var cash = 0; try { cash = memberPayments().reduce(function(t, x){ return t + x.amount; }, 0); } catch(e){}
-    var lg = legacyActive();
+    var lg = legacyActive(), lgGone = legacyMembers().filter(dvLgGone);
     var K = [["Current members", cur.length + lg.length, m + " monthly · " + y + " annual" + (lg.length ? " · " + lg.length + " older price" : "")], ["MRR", lmMoneyFmt(m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12 + legacyMrr()), "annual counted as $208/mo"],
-      ["Cash collected", lmMoneyFmt(cash), "all payments so far"], ["Churned", gone.length, ms.length ? Math.round(gone.length / ms.length * 100) + "% of everyone who joined" : "nobody yet"]];
+      ["Cash collected", lmMoneyFmt(cash), "all payments so far"], ["Churned", gone.length + lgGone.length, (ms.length + legacyMembers().length) ? Math.round((gone.length + lgGone.length) / (ms.length + legacyMembers().length) * 100) + "% of all members" : "nobody yet"]];
     var byJoin = function(p, q){ return String(lmStore(q.id).joinedAt || "").localeCompare(String(lmStore(p.id).joinedAt || "")); };
     var html = lmTop() + rmBanner() + '<div class="lmkpis dvkpis">' + K.map(function(k){ return '<div class="lmkpi"><small>' + k[0] + "</small><b>" + k[1] + "</b><span>" + lmEsc(k[2]) + "</span></div>"; }).join("") + "</div>";
-    html += '<div class="lmboard2 dvboard">' + [["cur", "Current members", cur], ["churn", "Churned", gone]].map(function(c){
-      var items = c[2].slice().sort(byJoin);
-      return '<div class="lmcol2" data-st="' + c[0] + '"><h4><span>' + c[1] + "</span><b>" + items.length + '</b></h4><div class="lmcards">' +
-        (items.length ? items.map(dvCardHtml).join("") : '<span class="lmempty">' + (c[0] === "cur" ? "Nobody yet. Tap Monthly $250 or Annual $2,500 on a Sales card and they show up here." : "Nobody has churned.") + "</span>") + "</div></div>";
+    html += '<div class="lmboard2 dvboard">' + [["cur", "Current members", cur, lg], ["churn", "Churned", gone, lgGone]].map(function(c){
+      var items = c[2].slice().sort(byJoin), n = items.length + c[3].length;
+      return '<div class="lmcol2" data-st="' + c[0] + '"><h4><span>' + c[1] + "</span><b>" + n + '</b></h4><div class="lmcards">' +
+        (n ? items.map(dvCardHtml).join("") + c[3].map(dvLgCardHtml).join("") : '<span class="lmempty">' + (c[0] === "cur" ? "Nobody yet. Tap Monthly $250 or Annual $2,500 on a Sales card and they show up here." : "Nobody has churned.") + "</span>") + "</div></div>";
     }).join("") + "</div>";
-    var a = dvOpen ? lmById(dvOpen) : null;
-    if (dvOpen && !a) dvOpen = null;
+    var lgx = dvOpen && /^lg:/.test(dvOpen) ? dvLg(dvOpen) : null;
+    var a = dvOpen && !lgx ? lmById(dvOpen) : null;
+    if (dvOpen && !a && !lgx) dvOpen = null;
+    if (lgx){
+      var la = lmById(lgx.id), lph = la ? String(la.phone || "").replace(/[^\d+]/g, "") : "", lnum = lph.replace(/\D/g, "");
+      html += '<div class="lmmodal" id="dvModal"><div class="lmsheet" role="dialog" aria-label="' + lmEsc(lgx.name) + '"><div class="lmsheethead"><div class="lmwho"><b>' + lmEsc(lgx.name) + '</b><span class="sub">' +
+        (dvLgGone(lgx) ? "Churned" : "Current member") + " · older price</span></div><button type=\"button\" class=\"lmx\" aria-label=\"Close\">✕</button></div>" +
+        '<div class="lmsheetbody"><div class="lmdetail dvdetail dvlg"><div class="lmdcol">' +
+        '<small class="lmdh">Plan</small><div class="dvbtns"><button type="button" aria-pressed="true" disabled>$' + lmEsc(lgx.price) + " a month via Skool (older price)</button></div>" +
+        '<span class="hint" style="display:block;margin:6px 0 0">Next renewal ' + lmEsc(dvDate(lgx.renew)) + ". Payments count in Finance from then on, every month.</span>" +
+        '<small class="lmdh">Status</small><div class="dvbtns"><button type="button" data-dvlg="cur" aria-pressed="' + !lgx.churned + '">Current member</button><button type="button" data-dvlg="churn" aria-pressed="' + !!lgx.churned + '">Churned</button></div>' +
+        (lgx.churned ? '<div class="dvfield">Churned on <input type="date" data-dvlg="churned" value="' + lmEsc(lgx.churned) + '" aria-label="Date they churned"></div>' : "") +
+        '<small class="lmdh">Notes</small><textarea class="lmnote dvnote" rows="4" placeholder="Notes, e.g. how they’re getting on…" aria-label="Notes">' + lmEsc(lgx.note || "") + "</textarea></div>" +
+        '<div class="lmdcol"><small class="lmdh">Contact</small><div class="dvbtns">' +
+        (lnum ? '<a href="https://wa.me/' + lnum + '" target="_blank" rel="noopener">WhatsApp</a><a href="sms:+' + lnum + '">iMessage</a>' : "") + (la && la.email ? '<a href="mailto:' + lmEsc(la.email) + '">Email</a>' : "") + "</div>" +
+        (la ? "" : '<span class="hint" style="display:block;margin-top:6px">Contact details are in GHL.</span>') + "</div></div></div></div></div>";
+    }
     if (a){
       var s = lmStore(a.id), ph = String(a.phone || "").replace(/[^\d+]/g, ""), num = ph.replace(/\D/g, "");
       html += '<div class="lmmodal" id="dvModal"><div class="lmsheet" role="dialog" aria-label="' + lmEsc(lmName(a)) + '"><div class="lmsheethead"><div class="lmwho"><b>' + lmEsc(lmName(a)) + '</b><span class="sub">' +
@@ -6990,7 +7140,17 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       col.addEventListener("drop", function(e){ e.preventDefault(); col.classList.remove("over"); var id = dvDrag; dvDrag = null; if (id) dvSetChurn(id, col.dataset.st === "churn"); });
     });
     var md = document.getElementById("dvModal");
-    if (md){
+    if (md && lgx){
+      md.addEventListener("click", function(e){ if (e.target === md){ dvOpen = null; renderDeliveryBoard("force"); } });
+      md.querySelector(".lmx").addEventListener("click", function(){ dvOpen = null; renderDeliveryBoard("force"); });
+      md.querySelectorAll("[data-dvlg]").forEach(function(b){
+        var k = b.dataset.dvlg;
+        if (k === "churned"){ b.addEventListener("change", function(){ if (!b.value) return; lgx.churned = b.value; markDirty(); renderDeliveryBoard("force"); try { renderFinance(); } catch(e){} }); return; }
+        b.addEventListener("click", function(){ dvLgSetChurn(lgx, k === "churn"); });
+      });
+      var lnt = md.querySelector(".dvnote"); if (lnt) lnt.addEventListener("input", function(){ lgx.note = lnt.value; markDirty(); });
+    }
+    else if (md){
       md.addEventListener("click", function(e){ if (e.target === md){ dvOpen = null; renderDeliveryBoard("force"); } });
       md.querySelector(".lmx").addEventListener("click", function(){ dvOpen = null; renderDeliveryBoard("force"); });
       var el = md.querySelector(".dvdetail"), id = el.dataset.id, s5 = lmStore(id);
@@ -11822,6 +11982,376 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (!(a.income > 0)) return '<p class="hint" style="margin:-6px 0 14px">No paying members yet, so Expenses uses your fixed ' + p.expenses + '%.</p>';
     return '<p class="hint" style="margin:-6px 0 14px">Expenses is ' + p.expenses + '% because your costs this month are ' + fnGBP(a.cost) + ' and about ' + fnGBP(a.income) + ' comes in a month from ' + a.members + (a.members === 1 ? " member" : " members") + ' (after fees). Profit stays at ' + p.invest + '% and Salary gets the rest.</p>';
   }
+  // ===== Targets tab (Olly, 2026-11-28): "when can we realistically get to $40,000 a month", month by month, with churn.
+  // v2 same day: the whole chain, from content. Reels a month x views per Reel = views; views x opt-ins per 1,000 views
+  // + Stories a month x opt-ins per Story = opt-ins; x applications per 100 opt-ins = applications; x joins per 100 = new
+  // members; members - churn% a month; x price = income. Live numbers: Reels/Stories ticked posted in the Hub (last 30
+  // days), views = GHL Social Planner impressions (last 7 days x 30.4/7), opt-ins = GHL training + Feeling Finder tags
+  // (last 30 days, /api/ghl-sources, Stories = utm medium "stories"), applications + joins from lmData, members from
+  // hubMembers(). Every number can be overridden; blank = live. Saved in state.targets.
+  // "What to shift": for a target date, each level's number needed if every level improves by the same %, or if only
+  // that one level changes.
+  var TG_CHURN_GUESS = 10;   // % a month, used until there are 12+ member-months to measure it
+  var tgSrc = null, tgSrcBusy = false, tgSocBusy = false, tgPv = null, tgPvBusy = false, tgVvAsked = false;
+  function tgState(){ state.targets = state.targets || {}; return state.targets; }
+  function tgUsd(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+  function tgPct(n){ n = +n || 0; return Math.abs(n) >= 10 ? String(Math.round(n)) : String(Math.round(n * 10) / 10); }
+  function tgNum(n){ n = +n || 0; return n >= 10000 ? (Math.round(n / 100) / 10) + "k" : n >= 10 ? Math.round(n).toLocaleString("en-US") : n > 0 && n < 1 ? String(Math.round(n * 100) / 100) : String(Math.round(n * 10) / 10); }
+  function tgMonthName(ym, short){ var d = new Date(ym + "-15T12:00:00"); return d.toLocaleDateString("en-GB", short ? { month:"short", year:"2-digit" } : { month:"long", year:"numeric" }); }
+  function tgAddMonths(ym, n){ var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1 + n; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; return y + "-" + String(m + 1).padStart(2, "0"); }
+  // the live data it needs beyond the Hub record: GHL opt-ins (kept here only, never saved) and the socials
+  function tgFetch(){
+    if (!lmData && !lmLoading) lmLoad();
+    if (!tgSrc && !tgSrcBusy){ tgSrcBusy = true;
+      fetch("/api/ghl-sources", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ tgSrc = (d && d.ok) ? d : { ok:false, error:(d && d.error) || "no data" }; })
+        .catch(function(e){ tgSrc = { ok:false, error:String(e) }; }).then(function(){ tgSrcBusy = false; renderTargets(); }); }
+    if (!tgPv && !tgPvBusy){ tgPvBusy = true;
+      fetch("/api/pageviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ tgPv = (d && d.ok) ? d : { ok:false }; })
+        .catch(function(){ tgPv = { ok:false }; }).then(function(){ tgPvBusy = false; renderTargets(); }); }
+    if (!tgVvAsked){ tgVvAsked = true;
+      fetch("/api/vslviews", { cache:"no-store" }).then(function(r){ return r.json(); }).then(function(d){ if (d && d.ok) lmVV = d.views || {}; }).catch(function(){}).then(function(){ renderTargets(); }); }
+    if (!socialStats && !tgSocBusy){ tgSocBusy = true;
+      fetch("/api/social-stats", { cache:"no-store", credentials:"same-origin" }).then(function(r){ return r.json(); }).then(function(d){ socialStats = d; })
+        .catch(function(e){ socialStats = { ok:false, error:String(e) }; }).then(function(){ tgSocBusy = false; renderTargets(); }); }
+  }
+  function tgLive(){
+    var today = todayISO(), now = Date.now(), from = addDaysISO(today, -29);
+    var mem = hubMembers().filter(function(x){ return !x.legacy; });
+    var active = mem.filter(function(x){ return !(x.cancelled && x.cancelled <= today); });
+    var y = active.filter(function(x){ return x.plan === "annual"; }).length, m = active.length - y;
+    var memMonths = 0, left = 0;
+    mem.forEach(function(x){
+      var a = Date.parse(x.joined + "T12:00:00"), b = (x.cancelled && x.cancelled <= today) ? Date.parse(x.cancelled + "T12:00:00") : now;
+      if (a) memMonths += Math.max(0, (b - a) / (30.44 * 864e5));
+      if (x.cancelled && x.cancelled <= today) left++;
+    });
+    var measured = memMonths >= 12;
+    var o = { m:m, y:y, legacy:legacyMrr(), legacyN:legacyActive().length, memMonths:memMonths, left:left, measured:measured,
+      churn: measured ? Math.max(1, left / memMonths * 100) : TG_CHURN_GUESS, annual: active.length ? y / active.length * 100 : 0, loaded: !!lmData };
+    o.members = active.length + o.legacyN;
+    o.mrr = m * MRR_PRICE_MONTHLY + y * MRR_PRICE_ANNUAL / 12 + o.legacy;
+    // content, last 30 days (ticked posted in the Hub)
+    var cc = contentCounts(from, today);
+    o.reels = cc.Reels.done; o.stories = cc.Stories.done;
+    // views: GHL gives the last 7 days
+    o.viewsOk = !!(socialStats && socialStats.ok && socialStats.impressions);
+    o.views = o.viewsOk ? socialStats.impressions.total * 30.44 / 7 : 0;
+    // opt-ins, last 30 days
+    o.srcOk = !!(tgSrc && tgSrc.ok);
+    o.optins = 0; o.storyOptins = 0;
+    if (o.srcOk) (tgSrc.rows || []).forEach(function(r){ if (!r.day || r.day < from || r.day > today) return;
+      var n = (r.optins || 0) + (r.feeling || 0); o.optins += n; if (r.medium === "stories") o.storyOptins += n; });
+    o.apps30 = o.apps90 = o.joined90 = o.conv = 0;
+    if (lmData){
+      var apps = lmData.filter(function(a){ return !lmRemoved(a) && a.dateAdded; });
+      var d30 = apps.filter(function(a){ return now - Date.parse(a.dateAdded) <= 30 * 864e5; });
+      var d90 = apps.filter(function(a){ return now - Date.parse(a.dateAdded) <= 90 * 864e5; });
+      var ids = {}; mem.forEach(function(x){ ids[x.id] = true; });
+      o.apps30 = d30.length; o.apps90 = d90.length;
+      o.joined90 = d90.filter(function(a){ return ids[a.id]; }).length;
+      o.conv = d90.length ? o.joined90 / d90.length * 100 : 0;
+    }
+    // page conversion (Your plan): Hub page counter, last 30 days
+    o.optinViews = 0; o.applyViews = 0; o.pvOk = !!(tgPv && tgPv.ok);
+    if (o.pvOk) Object.keys(tgPv.days || {}).forEach(function(d){ if (d < from || d > today) return; var x = tgPv.days[d] || {};
+      o.optinViews += (x.optin || 0) + (x.feeling || 0); o.applyViews += x.apply || 0; });
+    // join page = their sales video: people who first opened it in the last 90 days, and how many of them joined
+    o.openers90 = 0; o.openJoined = 0;
+    var ninety = new Date(now - 90 * 864e5).toISOString(), memIds = {}; mem.forEach(function(x){ memIds[x.id] = true; });
+    Object.keys(lmVV || {}).forEach(function(id){ var v = lmVV[id] || {}; if (!v.opens || !v.first || v.first < ninety) return; o.openers90++; if (memIds[id]) o.openJoined++; });
+    o.pg1 = o.optinViews ? o.optins / o.optinViews * 100 : 0;
+    o.pg2 = o.applyViews ? o.apps30 / o.applyViews * 100 : 0;
+    o.pg3 = o.openers90 ? o.openJoined / o.openers90 * 100 : 0;
+    // the rates between the levels
+    o.vpr = o.reels ? o.views / o.reels : 0;
+    o.opr = o.views ? (o.optins - o.storyOptins) / o.views * 1000 : 0;
+    o.ops = o.stories ? o.storyOptins / o.stories : 0;
+    o.apr = o.optins ? o.apps30 / o.optins * 100 : 0;
+    return o;
+  }
+  function tgInputs(L){
+    var t = tgState();
+    function pick(k, live){ var v = t[k]; return (v === "" || v == null || isNaN(+v)) ? live : +v; }
+    return { goal: pick("goal", 40000), reels: pick("reels", L.reels), vpr: pick("vpr", L.vpr), opr: pick("opr", L.opr), stories: pick("stories", L.stories),
+      ops: pick("ops", L.ops), apr: pick("apr", L.apr), conv: pick("conv", L.conv), churn: pick("churn", L.churn),
+      growth: pick("growth", 0), annual: pick("annual", L.annual), by: pick("by", 12),
+      pg1: pick("pg1", L.pg1), pg2: pick("pg2", L.pg2), pg3: pick("pg3", L.pg3) };
+  }
+  // one month of the chain; g = how much views per Reel have grown by then (1 = same)
+  function tgChain(I, g){
+    var views = I.reels * I.vpr * g, optins = views / 1000 * I.opr + I.stories * I.ops, apps = optins * I.apr / 100;
+    return { views:views, optins:optins, apps:apps, nw:apps * I.conv / 100 };
+  }
+  function tgRun(L, I, growth, max){
+    var arpm = MRR_PRICE_MONTHLY * (1 - I.annual / 100) + (MRR_PRICE_ANNUAL / 12) * (I.annual / 100);
+    var M = L.members - L.legacyN, G = L.legacyN, gPrice = L.legacyN ? L.legacy / L.legacyN : 0, c = I.churn / 100;
+    var ym = todayISO().slice(0, 7), rows = [], hit = null, g = 1;
+    for (var i = 1; i <= (max || 60); i++){
+      ym = tgAddMonths(ym, 1);
+      var ch = tgChain(I, g), gone = (M + G) * c;
+      M = Math.max(0, M - M * c + ch.nw); G = G * (1 - c);
+      var mrr = M * arpm + G * gPrice;
+      rows.push({ ym:ym, views:ch.views, optins:ch.optins, apps:ch.apps, nw:ch.nw, gone:gone, members:M + G, mrr:mrr });
+      if (!hit && mrr >= I.goal) hit = rows[rows.length - 1];
+      g = g * (1 + growth / 100);
+    }
+    return { rows:rows, hit:hit, arpm:arpm };
+  }
+  // the levels, in funnel order: key, label, unit shown after the number, cap (a rate can't go past it)
+  var TG_LEVELS = [["reels", "Reels a month", "", 0], ["vpr", "Views per Reel", "", 0], ["opr", "Opt-ins per 1,000 views", "", 1000],
+    ["stories", "Stories a month", "", 0], ["ops", "Opt-ins per Story", "", 0], ["apr", "Applications per 100 opt-ins", "", 0], ["conv", "Join per 100 applications", "", 100]];
+  // new members a month needed -> each level's number: spread (every level x the same f) and "only this one"
+  function tgShift(I, perMonth){
+    var now = tgChain(I, 1).nw, out = { f:null, rows:[] };
+    if (now > 0 && perMonth > now){
+      var lo = 1, hi = 1000;
+      for (var k = 0; k < 60; k++){ var f = (lo + hi) / 2, J = {}; Object.keys(I).forEach(function(x){ J[x] = I[x]; });
+        TG_LEVELS.forEach(function(l){ J[l[0]] = I[l[0]] * f; }); if (tgChain(J, 1).nw < perMonth) lo = f; else hi = f; }
+      out.f = hi;
+    }
+    var need = perMonth / Math.max(1e-9, I.conv / 100), needOpt = need / Math.max(1e-9, I.apr / 100);
+    var reelOpt = I.reels * I.vpr / 1000 * I.opr, storyOpt = I.stories * I.ops;
+    TG_LEVELS.forEach(function(l){
+      var k = l[0], v = I[k], only = null;
+      if (k === "reels") only = I.vpr * I.opr > 0 ? (needOpt - storyOpt) / (I.vpr * I.opr / 1000) : null;
+      if (k === "vpr") only = I.reels * I.opr > 0 ? (needOpt - storyOpt) / (I.reels * I.opr / 1000) : null;
+      if (k === "opr") only = I.reels * I.vpr > 0 ? (needOpt - storyOpt) / (I.reels * I.vpr / 1000) : null;
+      if (k === "stories") only = I.ops > 0 ? (needOpt - reelOpt) / I.ops : null;
+      if (k === "ops") only = I.stories > 0 ? (needOpt - reelOpt) / I.stories : null;
+      if (k === "apr") only = (reelOpt + storyOpt) > 0 ? need / (reelOpt + storyOpt) * 100 : null;
+      if (k === "conv") only = tgChain(I, 1).apps > 0 ? perMonth / tgChain(I, 1).apps * 100 : null;
+      out.rows.push({ k:k, label:l[1], cap:l[3], now:v, spread: out.f ? v * out.f : null, only: only });
+    });
+    return out;
+  }
+  var TG_PER = { month:[1, "a month"], week:[12 / 52.18, "a week"], day:[1 / 30.44, "a day"] };
+  function tgMonthsTo(ym){ var a = todayISO().slice(0, 7), n = 0; while (a < ym && n < 120){ a = tgAddMonths(a, 1); n++; } return n; }
+  function tgDeadline(){ var t = tgState(); return /^\d{4}-\d{2}$/.test(t.deadline || "") ? t.deadline : "2027-12"; }
+  // the numbers needed at each level to reach the goal by the end of the deadline month, from these inputs
+  // v4 (Olly, 2026-11-28: "the opt-in rate and the application rate the same as they currently are ... toggle them
+  // left or right ... the join rate per applicant ... I want to see the totals for December 2027 based off what I move").
+  // Five sliders, each starting at the live number: opt-in page visitors a month, opt-in rate, application rate
+  // (application page visitors per opt-in stays as it is now), join rate per applicant, members who stay each month.
+  // Moving one redraws only the results (tgPlanOut), so the slider keeps working while dragged. Slider values are in
+  // state.targets.sl (blank = live); "Set as my target" saves them + the results in state.targets.plan.
+  var TG_SL = [
+    ["vis", "Opt-in page visitors a month", "training + Feeling Finder pages"],
+    ["r1", "Opt-in rate", "% of opt-in page visitors who opt in"],
+    ["r2", "Application rate", "% of application page visitors who apply"],
+    ["conv", "Join rate", "% of applicants who join"],
+    ["stay", "Members who stay each month", "in every 100"]];
+  function tgSlLive(L, I){
+    return { vis: Math.round(L.optinViews), r1: Math.round(L.pg1 * 10) / 10, r2: Math.round(L.pg2 * 10) / 10, conv: Math.round(I.conv * 10) / 10, stay: Math.round((100 - I.churn) * 10) / 10 };
+  }
+  function tgSlVals(L, I){
+    var live = tgSlLive(L, I), sl = tgState().sl || {}, o = {};
+    TG_SL.forEach(function(x){ var k = x[0], v = sl[k]; o[k] = (v === "" || v == null || isNaN(+v)) ? live[k] : +v; });
+    return o;
+  }
+  function tgSlRange(k, live){
+    if (k === "vis") return [0, Math.max(1000, Math.ceil(live * 5 / 100) * 100), Math.max(10, Math.round(Math.max(1000, live * 5) / 200 / 10) * 10)];
+    if (k === "stay") return [50, 99, 1];
+    if (k === "conv") return [0, Math.max(50, Math.ceil(live * 4)), 0.5];
+    return [0, Math.max(10, Math.ceil(live * 4)), 0.1];
+  }
+  // month by month to the deadline with these slider values
+  function tgSim(L, arpm, v, deadline, goal){
+    var b1 = L.optins ? L.applyViews / L.optins : 0, appsPerOptin = b1 * v.r2 / 100;
+    if (!L.applyViews && L.optins) appsPerOptin = L.apps30 / L.optins;   // no page counts: use applications per opt-in
+    var optins = v.vis * v.r1 / 100, apps = optins * appsPerOptin, nw = apps * v.conv / 100, c = 1 - v.stay / 100;
+    var D = Math.max(1, tgMonthsTo(deadline)), M = L.members - L.legacyN, G = L.legacyN, gp = L.legacyN ? L.legacy / L.legacyN : 0, ym = todayISO().slice(0, 7), hit = null, mrr = L.mrr;
+    for (var i = 1; i <= 120; i++){
+      ym = tgAddMonths(ym, 1); M = M - M * c + nw; G = G * (1 - c); mrr = M * arpm + G * gp;
+      if (!hit && mrr >= goal) hit = ym;
+      if (i === D) var endM = M + G, endMrr = mrr;
+      if (i >= D && (hit || i >= 120)) break;
+    }
+    return { optins:optins, apps:apps, nw:nw, members:endM, mrr:endMrr, hit:hit, appsPerOptin:appsPerOptin };
+  }
+  // what one slider alone would need to be to hit the goal by the deadline (the others as they are)
+  function tgSlNeed(L, arpm, v, k, deadline, goal){
+    var r = tgSlRange(k, 0), lo = 0, hi = k === "vis" ? Math.max(1e6, v.vis * 100) : k === "stay" ? 100 : 100, w = {};
+    Object.keys(v).forEach(function(x){ w[x] = v[x]; });
+    w[k] = hi; if (tgSim(L, arpm, w, deadline, goal).mrr < goal) return null;
+    for (var i = 0; i < 50; i++){ var m = (lo + hi) / 2; w[k] = m; if (tgSim(L, arpm, w, deadline, goal).mrr >= goal) hi = m; else lo = m; }
+    return hi;
+  }
+  function tgFmt(k, n){ return k === "vis" ? tgNum(n) : tgPct(n) + (k === "stay" ? " in 100" : "%"); }
+  function tgPlanHtml(L, I, arpm){
+    var t = tgState(), live = tgSlLive(L, I), v = tgSlVals(L, I), deadline = tgDeadline(), per = TG_PER[t.per] ? t.per : "month";
+    var h = '<div class="fncard tgplan" style="margin-top:16px"><p class="section-label" style="margin-bottom:8px">Your plan: ' + tgUsd(I.goal) + " a month by the end of " + tgMonthName(deadline) + "</p>";
+    h += '<div class="tgplanbar"><label class="tgdl">Deadline <input type="month" data-tgdl="1" value="' + lmEsc(deadline) + '"></label><div class="fnmode" style="margin:0">' +
+      ["month", "week", "day"].map(function(k){ return '<button type="button" class="fnmodebtn' + (k === per ? " on" : "") + '" data-tgper="' + k + '">Per ' + k + "</button>"; }).join("") + "</div></div>";
+    h += '<span class="hint" style="display:block;margin:0 0 12px">Every slider starts at where you are now. Move them to see what you’d have by the end of ' + tgMonthName(deadline) + ".</span>";
+    h += '<div class="tgplanwrap"><div id="tgPlanOut"></div><div class="tgsliders">' + TG_SL.map(function(x){
+      var k = x[0], rg = tgSlRange(k, live[k]), val = Math.min(rg[1], Math.max(rg[0], v[k]));
+      return '<div class="tgsl"><div class="tgslhead"><b>' + x[1] + '</b><span class="tgslval" id="tgv-' + k + '">' + tgFmt(k, v[k]) + '</span></div>' +
+        '<input type="range" data-tgsl="' + k + '" min="' + rg[0] + '" max="' + rg[1] + '" step="' + rg[2] + '" value="' + val + '">' +
+        '<div class="tgslfoot"><span>' + x[2] + " · now " + tgFmt(k, live[k]) + '</span><span id="tgn-' + k + '"></span></div></div>';
+    }).join("") + "</div></div>";
+    h += '<div class="fnmode" style="margin:14px 0 0"><button type="button" class="fnmodebtn" data-tgslreset="1">Back to where I am now</button>' +
+      (t.plan && t.plan.sl ? '<button type="button" class="fnmodebtn" data-tgslload="1">Back to my target</button>' : "") +
+      '<button type="button" class="fnmodebtn on" data-tgset="1">✓ ' + (t.plan && t.plan.sl ? "Save these as my target" : "Set as my target") + "</button></div></div>";
+    return h;
+  }
+  function tgPlanOut(){
+    var out = document.getElementById("tgPlanOut"); if (!out) return;
+    var L = tgLive(), I = tgInputs(L), arpm = tgRun(L, I, 0, 1).arpm, v = tgSlVals(L, I), deadline = tgDeadline(), t = tgState();
+    var per = TG_PER[t.per] ? t.per : "month", P = TG_PER[per][0], perTxt = TG_PER[per][1];
+    var r = tgSim(L, arpm, v, deadline, I.goal), live = tgSlLive(L, I), base = tgSim(L, arpm, live, deadline, I.goal);
+    var pct = Math.min(100, r.mrr / I.goal * 100), good = r.mrr >= I.goal;
+    var h = '<div class="tgresult' + (good ? " tggood" : "") + '"><span class="tglbl">By the end of ' + tgMonthName(deadline) + "</span>" +
+      '<div class="tgresbig"><b>' + tgUsd(r.mrr) + '</b><span>a month</span></div>' +
+      '<div class="tgbar"><span style="width:' + pct.toFixed(1) + '%"></span></div>' +
+      "<p>" + Math.round(r.members) + " members · " + tgPct(pct) + "% of " + tgUsd(I.goal) + (good ? " 🎯" : "") + "<br>" +
+      (r.hit ? "You reach " + tgUsd(I.goal) + " a month in <b>" + tgMonthName(r.hit) + "</b>." : "You don’t reach " + tgUsd(I.goal) + " a month within 10 years.") +
+      (Math.abs(r.mrr - base.mrr) > 1 ? '<br><small>Where you are now gets you ' + tgUsd(base.mrr) + " a month by then.</small>" : "") + "</p>" +
+      '<div class="tgresrow"><span><b>' + tgNum(r.optins * P) + "</b> opt-ins " + perTxt + "</span><span><b>" + tgNum(r.apps * P) + "</b> applications " + perTxt + "</span><span><b>" + tgNum(r.nw * P) + "</b> new members " + perTxt + "</span></div></div>";
+    out.innerHTML = h;
+    TG_SL.forEach(function(x){ var k = x[0], el = document.getElementById("tgn-" + k); if (!el) return;
+      if (good){ el.textContent = ""; return; }
+      var n = tgSlNeed(L, arpm, v, k, deadline, I.goal), cap = k === "stay" ? 100 : k === "vis" ? Infinity : 100;
+      el.innerHTML = n == null || n > cap - 1e-6 ? '<span class="tgno2">Can’t hit it with this one alone</span>' : "On its own: <b>" + tgFmt(k, n) + "</b> hits it";
+    });
+  }
+  function renderTargets(){
+    var host = document.getElementById("targetsBody"); if (!host) return;
+    var ae = document.activeElement; if (ae && host.contains(ae) && ae.tagName === "INPUT" && ae.type !== "range") return;
+    var L = tgLive(), I = tgInputs(L), t = tgState(), h = "";
+    if (!L.loaded){ host.innerHTML = '<div class="fncard"><span class="hint">Loading your applications from GHL…</span></div>'; return; }
+    var run = tgRun(L, I, I.growth, 60), arpm = run.arpm, c = I.churn / 100, need = Math.ceil(I.goal / arpm), ch = tgChain(I, 1);
+    var waiting = (!L.viewsOk && (tgSocBusy || !socialStats)) || (!L.srcOk && (tgSrcBusy || !tgSrc));
+
+    // 1. the answer
+    var head;
+    if (run.hit){
+      var n = run.rows.indexOf(run.hit) + 1;
+      head = "At this pace you reach <b>" + tgUsd(I.goal) + " a month in " + tgMonthName(run.hit.ym) + "</b>, " + n + (n === 1 ? " month" : " months") + " from now, with about " + Math.round(run.hit.members) + " members.";
+    } else if (I.growth > 0){
+      head = "At this pace you <b>don't reach " + tgUsd(I.goal) + " a month within 5 years</b>. You'd be at " + tgUsd(run.rows[run.rows.length - 1].mrr) + " a month.";
+    } else {
+      var cap = c > 0 ? ch.nw / c * arpm : 0;
+      head = "At this pace you <b>don't reach " + tgUsd(I.goal) + " a month</b>. It levels off at about <b>" + tgUsd(cap) + " a month</b> (" + Math.round(cap / arpm) + " members), where as many members leave each month as join.";
+    }
+    h += '<div class="fncard"><p class="section-label" style="margin-bottom:8px">Your target</p><p class="tgbig">' + head + "</p>" +
+      '<div class="tgbar"><span style="width:' + Math.min(100, L.mrr / I.goal * 100).toFixed(1) + '%"></span></div>' +
+      '<span class="hint">Today: ' + tgUsd(L.mrr) + " a month from " + L.members + (L.members === 1 ? " member" : " members") + " (" + tgPct(L.mrr / I.goal * 100) + "% of the way). " +
+      tgUsd(I.goal) + " a month = about " + need + " members at " + tgUsd(arpm) + " a month each.</span>" +
+      (waiting ? '<span class="hint" style="display:block;margin-top:6px">Still loading views and opt-ins from GHL…</span>' : "") + "</div>";
+
+    // 1b. Your plan (Olly, 2026-11-28): "$40,000 a month by the end of 2027" -> what each level needs per month / week / day.
+    // Every level lifted by the same % (tgShift), retention = his churn setting. "Set as my target" saves a copy in
+    // state.targets.plan so the numbers stay fixed while the live ones move; Now = the live last 30 days.
+    h += tgPlanHtml(L, I, arpm);
+    // 2. your funnel, a month
+    var steps = [
+      ["🎬", tgNum(I.reels) + " Reels", "+ " + tgNum(I.stories) + " Stories"],
+      ["👀", tgNum(ch.views) + " views", tgNum(I.vpr) + " per Reel"],
+      ["✍️", tgNum(ch.optins) + " opt-ins", tgPct(I.opr) + " per 1,000 views + " + tgPct(I.ops) + " per Story"],
+      ["📝", tgNum(ch.apps) + " applications", tgPct(I.apr) + " per 100 opt-ins"],
+      ["🎉", tgNum(ch.nw) + " new members", tgPct(I.conv) + " per 100 applications"],
+      ["👋", tgPct(I.churn) + "% leave", "each month"]];
+    h += '<div class="fncard" style="margin-top:16px"><p class="section-label" style="margin-bottom:10px">Your funnel, a month</p><div class="tgflow">' +
+      steps.map(function(s, i){ return (i ? '<span class="tgarrow">→</span>' : "") + '<div class="tgstep"><span class="tgico">' + s[0] + "</span><b>" + s[1] + "</b><small>" + lmEsc(s[2]) + "</small></div>"; }).join("") +
+      '</div><span class="hint" style="display:block;margin-top:10px">Live from the last 30 days: Reels and Stories you ticked as posted, views from GHL (Instagram, TikTok, Facebook: the last 7 days, scaled to a month), opt-ins = the training + Feeling Finder sign-ups in GHL.</span></div>';
+
+    // 3. what it takes by a date + what to shift
+    var D = I.by, keep = Math.pow(1 - c, D), M0 = L.members - L.legacyN, gLeft = L.legacy * keep;
+    var needM = Math.max(0, (I.goal - gLeft) / arpm);
+    var perMonth = c > 0 ? Math.max(0, (needM - M0 * keep) * c / (1 - keep)) : Math.max(0, (needM - M0) / D);
+    var byYm = tgAddMonths(todayISO().slice(0, 7), D), sh = tgShift(I, perMonth);
+    h += '<div class="fncard" style="margin-top:16px"><p class="section-label" style="margin-bottom:8px">What to shift to get there by ' + tgMonthName(byYm) + "</p>" +
+      '<div class="fnmode">' + [6, 12, 18, 24, 36].map(function(m){ return '<button type="button" class="fnmodebtn' + (m === D ? " on" : "") + '" data-tgby="' + m + '">' + m + " months</button>"; }).join("") + "</div>" +
+      '<p class="tgbig" style="font-size:16.5px">You need about <b>' + Math.ceil(perMonth) + " new members a month</b> (you get " + tgNum(ch.nw) + " now)" +
+      (sh.f ? ". If you lift every level by the same amount, each one goes up by <b>" + tgPct((sh.f - 1) * 100) + "%</b>." : perMonth <= ch.nw ? ". You're already on track." : ". Fill in the numbers below to see what to shift.") + "</p>";
+    function cell(v, now, capv){
+      if (v == null || !isFinite(v)) return "<td>?</td>";
+      if (v <= now + 1e-9) return '<td class="tgok">Enough now</td>';
+      var up = now > 0 ? "+" + tgPct((v / now - 1) * 100) + "%" : "from 0";
+      return "<td" + (capv && v > capv ? ' class="tgno"' : "") + "><b>" + tgNum(v) + "</b><small>" + (capv && v > capv ? "not possible" : up) + "</small></td>";
+    }
+    h += '<div class="tgscroll"><table class="fncome tgtable tgshift"><thead><tr><th>Level</th><th>Now</th><th>Every level</th><th>Only this one</th></tr></thead><tbody>' +
+      sh.rows.map(function(r){ return "<tr><td>" + r.label + "</td><td>" + tgNum(r.now) + "</td>" + cell(r.spread, r.now, r.cap) + cell(r.only, r.now, r.cap) + "</tr>"; }).join("") +
+      '</tbody></table></div><span class="hint" style="display:block;margin-top:10px"><b>Every level</b> = all seven go up by the same %. <b>Only this one</b> = everything else stays as it is and just this level changes. With ' + tgPct(I.churn) + "% of members leaving each month, you need about " + Math.round(needM + L.legacyN * keep) + " members by then.</span></div>";
+
+    // 4. three ways it could go
+    var sc = [[0, "Stay the same"], [10, "Grow 10% a month"], [20, "Grow 20% a month"]];
+    if (I.growth && [0, 10, 20].indexOf(I.growth) < 0) sc.push([I.growth, "Grow " + tgPct(I.growth) + "% a month (yours)"]);
+    h += '<div class="fncard" style="margin-top:16px"><p class="section-label" style="margin-bottom:8px">Three ways it could go</p><div class="tgscroll"><table class="fncome tgtable"><thead><tr><th>Views per Reel</th><th>Hit ' + tgUsd(I.goal) + "</th><th>In a year</th></tr></thead><tbody>" +
+      sc.map(function(s){ var r = tgRun(L, I, s[0], 60), y1 = r.rows[11];
+        return "<tr" + (s[0] === I.growth ? ' class="tgon"' : "") + "><td>" + s[1] + "</td><td>" + (r.hit ? tgMonthName(r.hit.ym, true) : "Not in 5 years") + "</td><td>" + tgUsd(y1.mrr) + "</td></tr>"; }).join("") +
+      "</tbody></table></div></div>";
+
+    // 5. month by month
+    var upto = run.hit ? run.rows.indexOf(run.hit) + 3 : 24, shown = run.rows.slice(0, Math.max(12, Math.min(60, upto)));
+    h += '<div class="fncard" style="margin-top:16px"><p class="section-label" style="margin-bottom:8px">Month by month</p>' +
+      '<span class="hint" style="display:block;margin:0 0 10px">Each month: views bring opt-ins, opt-ins bring applications, some join and ' + tgPct(I.churn) + "% of members leave. Part numbers (like 0.4) are averages: over a few months they add up to whole people.</span>" +
+      '<div class="tgscroll"><table class="fncome tgtable"><thead><tr><th>Month</th><th>Views</th><th class="tgwide">Opt-ins</th><th>Apps</th><th>Join</th><th class="tgwide">Leave</th><th>Members</th><th>A month</th></tr></thead><tbody>' +
+      shown.map(function(r){ var pct = Math.min(100, r.mrr / I.goal * 100);
+        return "<tr" + (r === run.hit ? ' class="tgon"' : "") + "><td>" + tgMonthName(r.ym, true) + (r === run.hit ? " 🎯" : "") + "</td><td>" + tgNum(r.views) + '</td><td class="tgwide">' + tgNum(r.optins) + "</td><td>" + tgNum(r.apps) + "</td><td>" + tgNum(r.nw) +
+          '</td><td class="tgwide">' + tgNum(r.gone) + "</td><td>" + Math.round(r.members) + '</td><td class="fntot">' + tgUsd(r.mrr) + '<div class="tgbar sm"><span style="width:' + pct.toFixed(1) + '%"></span></div></td></tr>'; }).join("") +
+      "</tbody></table></div></div>";
+
+    // 6. the numbers it uses
+    var r1 = function(n){ return Math.round(n * 10) / 10; };
+    function box(k, label, live, liveTxt){
+      var v = t[k]; v = (v === "" || v == null) ? "" : v;
+      return "<label>" + label + '<input type="number" inputmode="decimal" step="any" data-tg="' + k + '" value="' + lmEsc(v) + '" placeholder="' + lmEsc(live) + '"><small class="tgsrc">' +
+        (v === "" ? lmEsc(liveTxt) : "Your number. Live: " + lmEsc(live) + ' · <button type="button" class="fnlink" data-tgclear="' + k + '">use live</button>') + "</small></label>";
+    }
+    var vTxt = L.viewsOk ? fmtInt(socialStats.impressions.total) + " views in the last 7 days, about " + fmtInt(L.views) + " a month" : "Views not loaded from GHL yet";
+    var oTxt = L.srcOk ? fmtInt(L.optins) + " opt-ins in the last 30 days (" + fmtInt(L.storyOptins) + " from Stories)" : "Opt-ins not loaded from GHL yet";
+    h += '<div class="fncard" style="margin-top:16px"><p class="section-label" style="margin-bottom:8px">The numbers it uses</p>' +
+      '<span class="hint" style="display:block;margin:0 0 14px">Filled in from your live numbers. Type your own to try a “what if”, or clear the box to go back to the live number.</span>' +
+      '<p class="tggrp">Content</p><div class="fnform tgform">' +
+      box("reels", "Reels a month", L.reels, L.reels + " ticked posted in the last 30 days") +
+      box("stories", "Stories a month", L.stories, L.stories + " ticked posted in the last 30 days") +
+      box("vpr", "Views per Reel", r1(L.vpr), vTxt) +
+      box("growth", "Views per Reel grow each month (%)", 0, "0 = they stay where they are") +
+      '</div><p class="tggrp">Opt-ins and applications</p><div class="fnform tgform">' +
+      box("opr", "Opt-ins per 1,000 views", r1(L.opr), oTxt) +
+      box("ops", "Opt-ins per Story", r1(L.ops), L.srcOk ? fmtInt(L.storyOptins) + " opt-ins from " + L.stories + " Stories" : oTxt) +
+      box("apr", "Applications per 100 opt-ins", r1(L.apr), L.apps30 + " applications in the last 30 days" + (L.srcOk ? " ÷ " + fmtInt(L.optins) + " opt-ins" : "")) +
+      '</div><p class="tggrp">Members and money</p><div class="fnform tgform">' +
+      box("conv", "Join per 100 applications", r1(L.conv), L.joined90 + " of the " + L.apps90 + " who applied in the last 90 days joined") +
+      box("churn", "Members who leave each month (%)", r1(L.churn), L.measured ? L.left + " left out of " + Math.round(L.memMonths) + " months of membership" : "A guess for now: too few months of membership to measure yet (" + tgPct(L.memMonths) + " so far)") +
+      box("annual", "Out of every 100 who join, how many pick Annual", r1(L.annual), L.y + " of your " + (L.m + L.y) + " members are on Annual") +
+      box("goal", "Target ($ a month)", 40000, "Your goal") +
+      "</div></div>";
+    host.innerHTML = h;
+    tgPlanOut();
+  }
+  (function(){
+    var host = document.getElementById("targetsBody"); if (!host) return;
+    host.addEventListener("click", function(e){
+      var b = e.target.closest("[data-tgby],[data-tgclear],[data-tgper],[data-tgset],[data-tgunset],[data-tgslreset],[data-tgslload]"); if (!b) return;
+      var t = tgState();
+      if (b.dataset.tgby){ t.by = +b.dataset.tgby; markDirty(); renderTargets(); }
+      if (b.dataset.tgclear){ delete t[b.dataset.tgclear]; markDirty(); renderTargets(); }
+      if (b.dataset.tgper){ t.per = b.dataset.tgper; markDirty(); renderTargets(); return; }
+      if (b.dataset.tgset){ var L = tgLive(), I = tgInputs(L), arpm = tgRun(L, I, 0, 1).arpm, v = tgSlVals(L, I);
+        t.sl = {}; Object.keys(v).forEach(function(x){ t.sl[x] = v[x]; });
+        t.plan = { setAt: todayISO(), deadline: tgDeadline(), goal: I.goal, sl: t.sl, res: tgSim(L, arpm, v, tgDeadline(), I.goal) };
+        markDirty(); renderTargets(); b = null; return; }
+      if (b.dataset.tgslreset){ delete t.sl; markDirty(); renderTargets(); return; }
+      if (b.dataset.tgslload){ if (t.plan && t.plan.sl){ t.sl = {}; Object.keys(t.plan.sl).forEach(function(x){ t.sl[x] = t.plan.sl[x]; }); } markDirty(); renderTargets(); return; }
+      if (b.dataset.tgunset){ if (!confirm("Remove your saved target?")) return; delete t.plan; markDirty(); renderTargets(); }
+    });
+    host.addEventListener("input", function(e){
+      var k = e.target.dataset && e.target.dataset.tgsl; if (!k) return;
+      var t = tgState(); t.sl = t.sl || {}; t.sl[k] = +e.target.value;
+      var lbl = document.getElementById("tgv-" + k); if (lbl) lbl.textContent = tgFmt(k, +e.target.value);
+      tgPlanOut();
+    });
+    host.addEventListener("change", function(e){
+      if (e.target.dataset && e.target.dataset.tgsl){ markDirty(); return; }
+      if (e.target.dataset && e.target.dataset.tgdl){ var tt = tgState(); if (/^\d{4}-\d{2}$/.test(e.target.value)) tt.deadline = e.target.value; else delete tt.deadline; markDirty(); e.target.blur(); renderTargets(); return; }
+      var k = e.target.dataset && e.target.dataset.tg; if (!k) return;
+      var t = tgState(), v = String(e.target.value).trim();
+      if (v === "" || isNaN(+v)) delete t[k]; else t[k] = +v;
+      markDirty(); e.target.blur(); renderTargets();
+    });
+  })();
   function renderFinance(){
     var host = document.getElementById("financeBody"); if (!host) return;
     var f = fnState(), today = todayISO(), ym = today.slice(0, 7);
@@ -12136,6 +12666,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       if (btn.dataset.tab === "looms") { lmFilter = "newest"; if (lmData && !lmLoading) lmLoadAuto(); else renderLooms(); }
       if (btn.dataset.tab === "delivery") renderDeliveryBoard("tab");
       if (btn.dataset.tab === "finance"){ if (!lmData && !lmLoading) lmLoad(); renderFinance(); }
+      if (btn.dataset.tab === "targets"){ tgFetch(); renderTargets(); }
       uiSave({ tab: btn.dataset.tab });
     });
   });
@@ -12418,6 +12949,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     renderOverview();
     renderToday();
     renderFinance();
+    renderTargets();
   }
 
   function boot(){
@@ -12463,6 +12995,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     }
     syncTabMenu();
     rerenderAll();
+    // Targets reopened as the last tab: it needs the applicants to draw (2026-11-28)
+    var tgP = document.getElementById("tab-targets"); if (tgP && !tgP.hidden) tgFetch();
     closeDayModal();   // never boot with the day panel open, whatever the saved HTML had
     closeStoryModal();
     importEmailFromHash();

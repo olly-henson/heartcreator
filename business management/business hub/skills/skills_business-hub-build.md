@@ -128,6 +128,8 @@ Notes on fields that aren't obvious:
 ## 4. House conventions (follow these, don't reinvent)
 
 ### Never
+- Never delete or loosen `functions/_middleware.js`. Why (2026-11-28): every deploy also lives at `<id>.hub-ollyhenson.pages.dev` and `main.hub-ollyhenson.pages.dev`, which Cloudflare Access does NOT cover, so `/api/applicants` (names, emails, phones) was open to anyone with the address. The middleware 404s every host except `hub.ollyhenson.com`, `hub-ollyhenson.pages.dev` and localhost. A new caller on another host goes in `ALLOWED`, never a wildcard.
+- Never tell Olly a GHL feed is broken before testing the feed itself. Why (2026-11-28): "the Hub isn't pulling my GHL stats" was his expired Access login, not GHL; all 4 endpoints were fine. Test first, then name the cause.
 - Never merge "who to message" and "how good is this lead" into one view. 📅 Follow-up (groups + contact timing, for messaging) and 🏆 Ranking (everyone who applied, best first, quality only) are separate, and Olly switches between them (2026-11-25: "I'm not going to follow up based off that, I just want to see the quality of leads").
 - Never add a list view to the Sales tab without the shared filter bar (`lmRFhtml` + `lmRFpass`): email score, video, rating, fit, invest, wants, country, job title. Olly: "both of those need the ability to filter across all those different metrics". Filters live in one `lmRF` object so a filter set in one view stays on in the other.
 - Never show a missing email score as blank on a Sales card. New applicants show 0 (Olly: "on the very moment they join, obviously that's going to be 0"); unsubscribed shows red and earns no engagement points.
@@ -266,6 +268,15 @@ Notes on fields that aren't obvious:
 ---
 
 ## 5. Known pitfalls (already hit once — don't repeat)
+
+### "The Hub isn't pulling my stats" (2026-11-28): check in this order
+1. Run the same GHL call with the local key (`marketing/.env` GHL_PIT_TOKEN): social = GET `/social-media-posting/<loc>/accounts` then POST `/social-media-posting/statistics?locationId=<loc>` with `{profileIds}`; email = `/emails/schedule?showStats=true`. 200 with numbers = GHL is fine.
+2. Check the Hub's own endpoints (`/api/social-stats`, `/api/track/email-stats`, `/api/ghl-sources`, `/api/applicants`). Deploy URLs now 404 (by design), so use `npx wrangler pages dev public` with the secrets in `.dev.vars` (git-ignored, delete after), or `wrangler pages deployment tail` while Olly opens the tab. Never reopen a public URL to test.
+3. Endpoints fine = his login expired: the fetch gets the Access login page, `r.json()` fails, and the card says "Couldn't load". Open hub.ollyhenson.com for him (email code), then Pull from GHL. Ask for the exact tab + wording only if that doesn't fix it.
+4. Only after that, suspect the secret in Cloudflare (`wrangler pages secret list` shows the names: GHL_TOKEN, GHL_WRITE_TOKEN, GHL_EMAIL_TOKEN). Values can't be read; Olly re-pastes a key with `wrangler pages secret put`.
+
+### Deleting old deployments
+`wrangler pages deployment list --json` returns 24 at a time, so loop: list → delete all but the live one (`delete <id> --force`, the newest has the production alias) → list again until empty. Old deploys keep their OLD code (a fix in functions/ doesn't reach them), so after any security fix delete them all. Another session may deploy meanwhile: re-check what's left and test it before deleting.
 
 - **Anything outside the page that changes Hub data goes in its own KV key, never the record (2026-11-04).** A laptop write would bump `rev` and pop "changed on another device" on Olly's phone, forcing overwrite-or-lose. Pattern: separate key + a read endpoint + the page applying it to state itself (`reelstatus`).
 - **A python patch must match the file's real characters (2026-11-04).** Text first written with `…` / `•` escapes from a non-raw string landed as the real "…" / "•", so later matches on the escape failed. Grep the file for the exact line before writing the match. Edits with backslashes: Edit tool, never a bash heredoc (mangled again 3 times this session).
@@ -797,6 +808,32 @@ defaults that aren't saved, and no fixing from Olly's guessed cause. -->
 <!-- 2026-11-26 skill review: Sales card flow v6 + email-only voice note route + vnsent board column recorded; deploy permission + heredoc backslash pitfalls added. -->
 
 
-**2026-11-28 pitfall: deploy copies are public.** Every deploy also lives at <id>.hub-ollyhenson.pages.dev, which Cloudflare Access does NOT cover. functions/_middleware.js 404s every host except hub.ollyhenson.com / hub-ollyhenson.pages.dev / localhost. Never delete it; a new function needing another host must be added to ALLOWED.
-
 <!-- 2026-11-28 skill review (Finance tab): rewrote "Added 2026-11-28 (Finance tab)" as a CURRENT STATE section and removed rules that were overridden the same day (Invest name -> Profit, fixed 10/30/25/25 defaults, Salary 75 : Invest 25 share, fee.outside, profitPaid). Added Never (Finance) rules: no fixed Expenses %, check each member's route/price/term/fee, real Stripe payment day, older-price members never new sales, $ + £ for Skool payouts, no claims of certainty, balances include moves, no member data in the public repo, phone-width tables. Added 2 design principles and Finance examples. Removed member names and GHL ids from this file and index.html (data stays in KV). -->
+
+<!-- 2026-11-28 skill review (stats + privacy): no corrections from Olly this session. Added Never: keep functions/_middleware.js (deploy copies were public, applicant data exposed; 468 old deploys deleted) and test the feed before blaming GHL. Added pitfalls: 4-step "not pulling stats" check (usual cause = expired Access login) and how to delete old deployments (24 per list page). Removed the loose 2026-11-28 note at the bottom (now in the sections above). Nothing overridden. -->
+
+### Added 2026-11-28 (Targets tab + Latest activity)
+- **Targets** (`#tab-targets`, after Finance, `renderTargets()` / `tgLive()` / `tgRun()`): forecast to the monthly goal. `state.targets` holds only Olly's overrides; a blank box means the live number. Churn uses `TG_CHURN_GUESS` (10%) until there are 12+ member-months, and says it's a guess. Redraws from rerenderAll, tab click and when applicants load (lmLoad → renderTargets); boot calls lmLoad when Targets is the restored tab.
+- **Latest activity** (top of Sales): KV `feed:notes` written by `lib/feed.js logFeed()` from every applicant push (`functions/p/[[path]].js sendNote()`, `new-application.js`); `/api/notes` GET/POST seen/unseen. Push titles now name the person (GHL lookup) and open `/#looms=<id>`.
+- Never let a table on Targets run wider than 390px: short headers ("If applications…", "A month in a year").
+- **Targets v2 (same day):** funnel chain `tgChain()`, levels `TG_LEVELS`, `tgShift()` (Every level = same multiplier on all 7 found by bisection; Only this one = solve for that level alone, capped rates show 'not possible'). Data fetched by `tgFetch()` on tab open: applicants, /api/ghl-sources (kept in `tgSrc`, never written to state, so no markDirty), /api/social-stats (shared `socialStats`).
+
+### Targets "Your plan" v4 + Delivery older-price cards (2026-11-28, later) — CURRENT
+- **Your plan = sliders** (`TG_SL`: vis, r1, r2, conv, stay; `tgSlVals()` reads `state.targets.sl`, blank = live; `tgSim()` runs month by month to `tgDeadline()`, default "2027-12"). Each slider STARTS at Olly's live number and he moves it. The sticky result box (`#tgPlanOut`, `tgPlanOut()`) shows $ a month + members at the deadline, the month the goal is hit, "Where you are now gets you $X", and opt-ins / applications / new members per month, week or day (`TG_PER`). Under each slider: "On its own: X hits it" (`tgSlNeed()`, bisection). "✓ Set as my target" saves `t.plan = {setAt, deadline, goal, sl, res}`. v2's "Every level" table stays lower down.
+- **Delivery shows older-price members** (`dvLg()`, `dvLgCardHtml()`, card id `lg:<contact id>`): "Older price $X/month · Via Skool · next renewal". Their Churn switch writes the SAME `x.churned` as the Finance "Left" button, so MRR, cash, Overview and Targets follow. Drag to Churned works too (`dvSetChurn` routes `lg:` ids).
+- **Churn flows everywhere from one field:** `state.looms[id].churned` (or `legacyMembers[].churned`) -> `hubMembers().cancelled` -> `memberPayments()` / `fnFuturePayments()` stop, Overview Churned card, Targets measured churn (after 12+ member-months). Finance never predicts churn (31-day look-ahead); only Targets does.
+- **Setting a member by hand when Olly asks** (e.g. a Stripe joiner): `wrangler kv key get --remote record` -> edit `state.looms[id]` (`product`, `joinedAt`) and `state.finance.route[id]="outside"` -> put with `rev + 1` -> read back after ~45s. Then tell him to refresh first and, if the Hub asks to overwrite, say no.
+- **Latest activity logs every Join click.** Repeat clicks are real: one applicant clicked Join 5 times with the video page re-opening in between = she went to checkout and came back (she was stuck on Skool's VAT and joined through Stripe). Read `vslview:<id>` (`joins`, `visits`) before calling it a bug.
+
+### Never (added 2026-11-28, Targets + Delivery)
+- Never build a goal plan that lifts every funnel level by the same big %. Olly: "I don't see bumping up the opt-in rate and the application rate to that high... the most obvious low-hanging fruit here is the conversion process from someone applying to joining." Start each lever at its live value and let him move it.
+- Never answer "what do I need to hit X" with a wide needs table at each level. Olly: "that's a bit difficult to understand". Show page conversion rates (opt-in page, application page, join) and the end-of-deadline total that changes as he moves them.
+- Never leave a group of paying members off the Delivery board. Older-price members were counted in MRR and Finance but had no cards, so Olly couldn't mark them churned.
+- Never check a KV write with an immediate read: it came back with the old record. Wait ~45s and read again.
+- Never dedupe or hide repeat applicant notifications without asking. Repeat Join clicks are a buying signal (stuck at checkout), not noise.
+
+### Examples (Targets v4, mock data)
+- Good result box: "$7,962 a month by the end of December 2027 · Where you are now gets you $1,694 a month by then". Under the join slider: "On its own: 78% hits it".
+- Weak (replaced): "To get there, every level goes up by about 140%..." followed by a 7-row Target / Now / Gap table.
+
+<!-- 2026-11-28 skill review (2nd): Targets plan v3 ("difficult to understand") -> per-page rates -> v4 sliders fixed at live rates ("I don't see bumping up the opt-in rate and the application rate that high"); Delivery now shows older-price members; churn = one field feeds every tab; KV hand edits = rev+1 + delayed read-back; repeat Join clicks are real. -->
