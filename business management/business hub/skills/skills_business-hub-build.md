@@ -838,6 +838,11 @@ defaults that aren't saved, and no fixing from Olly's guessed cause. -->
 - Never check a KV write with an immediate read: it came back with the old record. Wait ~45s and read again.
 - Never dedupe or hide repeat applicant notifications without asking. Repeat Join clicks are a buying signal (stuck at checkout), not noise.
 
+### Never (added 2026-11-28, Overview MRR)
+- Never let a tab show a number from a stored copy (state.mrrRows, state.sales.rows) that only re-syncs on certain actions. Olly asked for the Overview to show the latest MRR; it still said $809 (3 members) while Sales showed 4, even after a hard refresh. Every tab that shows members, MRR or cash rebuilds from the live members (applyMembersToTabs() / hubMembers()) when it draws, and saves only if something changed.
+- Never answer "it's still wrong after a hard refresh" with "refresh again". A hard refresh only reloads the code; a wrong number that survives it is stale saved data (KV). Pull the KV record (wrangler kv key get record --remote) and compare the stored rows with the live members first.
+- When two tabs show different values for the same thing, the live-computed one (Sales/Delivery KPIs) is the truth; fix the other tab to use the same source, never the other way round.
+
 ### Examples (Targets v4, mock data)
 - Good result box: "$7,962 a month by the end of December 2027 · Where you are now gets you $1,694 a month by then". Under the join slider: "On its own: 78% hits it".
 - Weak (replaced): "To get there, every level goes up by about 140%..." followed by a 7-row Target / Now / Gap table.
@@ -845,3 +850,5 @@ defaults that aren't saved, and no fixing from Olly's guessed cause. -->
 <!-- 2026-11-28 skill review (2nd): Targets plan v3 ("difficult to understand") -> per-page rates -> v4 sliders fixed at live rates ("I don't see bumping up the opt-in rate and the application rate that high"); Delivery now shows older-price members; churn = one field feeds every tab; KV hand edits = rev+1 + delayed read-back; repeat Join clicks are real. -->
 
 <!-- Changelog 2026-11-28 (ad budget levels): Olly asked for ad budgets unlocked by income, shown "gamified" (locked/unlocked) with notifications when a level unlocks and when churn drops him below one. Added: Ad budget levels notes (Finance section), two Never rules (gamified thresholds + notifications both ways), a Never on flagging the GHL subscription, and a good unlock card + alert example. Known limit: tgAdCheck() runs when the Hub loads the live record, not on the server. -->
+
+<!-- Changelog 2026-11-28 (Overview MRR): Olly: Overview still showed $809 after a hard refresh while Sales had the newest member. Cause: Overview read state.mrrRows, re-synced only on some actions. Fix: renderOverview() runs applyMembersToTabs() each draw (markDirty if changed). Added 3 Never rules (live source on every draw, hard refresh != stale KV data, live-computed tab is the truth). No rules overridden. -->

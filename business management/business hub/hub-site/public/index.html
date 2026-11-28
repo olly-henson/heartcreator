@@ -10640,6 +10640,9 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   function ovMemIn(d){ return ovDaily() ? ovDayIn(d) : ovInPeriod(String(d).slice(0, 7)); }
   function renderOverview(){
     hubMemFix();
+    // MRR always from the live members (Olly 2026-11-28: Overview said $809 while Sales showed the newest member)
+    try { var mrrWas = JSON.stringify(state.mrrRows) + JSON.stringify(state.sales && state.sales.rows); applyMembersToTabs();
+      if (JSON.stringify(state.mrrRows) + JSON.stringify(state.sales && state.sales.rows) !== mrrWas) markDirty(); } catch(e){}
     var host = document.getElementById("ovBody");
     if (!host) return;
     renderGoal(computeRows(state));   // the MRR goal bar at the top of the Overview
