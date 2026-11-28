@@ -399,18 +399,24 @@ Notes on fields that aren't obvious:
 - **Skool payouts** (help.skool.com): the first payout comes 8 to 14 days after the first payment, then automatically every Wednesday. A bank change can bring the first-payout checks back. The Stripe payout schedule hasn't been checked.
 - **Migrations:** member-specific seeds ran once on 2026-11-28 and were then removed from the code (the data stays in KV). Keep any future per-member setup in the KV record or the UI, not in code.
 
+- **Ad budget levels (Targets tab, 2026-11-28):** `tgAdHtml()`, under Your plan. Level unlocks when `fnAuto().cost` + ad £ (day × 30 × rate) ≤ 19% (`TG_AD_EXP_PCT`, override `state.targets.adExpPct`) of `fnAuto().income`. Levels `TG_AD_LEVELS` = $5/10/20/40 a day. `state.targets.adTop` = highest reached; below it the box says go back down. Level 1 = organic; ad members count after. Cards locked 🔒 / unlocked 🔓 (`.tgad`). `tgAdCheck()` (after each live `/api/state` load, never the seed) compares with `state.targets.adLvl` and on a change pushes a reminder `{tab:"targets", cid:""}` due now; reminders.js routes tab targets to `#targets`. First run just records the level (no alert).
+
 ### Never (added 2026-11-28, Finance)
 - Never hard-code a split percentage for Expenses. Olly: "I don't want to have a set like I need to use 30% on expenses. I think I can keep my costs incredibly low." Expenses % comes from his real costs; Profit is a fixed % he sets; Salary takes the rest.
 - Never assume every member pays $250 through Skool. Check how each one pays (Skool or Stripe checkout), their price (older-price members pay $29/$30) and any fixed term, and take off the matching fee.
 - Never take a Stripe-checkout member's payment day from the Skool zap's joined date. The zap date was a day late; use the day the payment actually goes through.
 - Never count older-price members as new sales or in "where sales came from". They joined long ago; they only add to MRR, cash and Finance.
 - Never show only £ for a payout Olly sees in $. Skool shows payouts in $, so the split takes either and shows both.
+- Never show a money threshold as a plain table when it's something Olly is working towards. Olly 2026-11-28: "to keep it sort of gamified… show it as locked currently". Targets he unlocks = 🔒/🔓 cards, the next one highlighted, a progress bar and a notification when it unlocks or is lost.
+- Never add a threshold or target without a notification both ways (phone + email through `state.reminders` → reminders.js): one when it's reached, one when he drops back below it.
+- Never flag the main GoHighLevel subscription as missing from Finance expenses (Olly: "that's all sorted").
 - Never present the tax %, Stripe fee or Revolut features as certain. Say what's unconfirmed and how to check it (accountant, the Stripe dashboard, the Revolut app).
 - Never forecast or show "what's left" from splits alone. Moves between pockets, payouts to him and ticked Salary all change the balance, so use `fnBalances()`.
 - Never commit member names, contact ids or payment amounts to this repo. Check with grep before a commit.
 - Never leave a Finance table wider than the phone screen. Use short headers ("So far", "In", "Out", "Now") and `.fnform select{width:100%}`, then check at 390px.
 
 ### Examples (Finance, 2026-11-28)
+- Good unlock card (Targets, Ad budget levels): `🔒 Level 1: $5 a day · £118.50 a month in ads · needs £1,234.63 a month coming in · Next: +4 members`. Good alert: `🔓 Ad budget unlocked. You've reached Level 1. You can start running ads at $5 a day now.`
 - Good split line: `Expenses is 19% because your costs this month are £116.08 and about £619.39 comes in a month from 5 members (after fees). Profit stays at 5% and Salary gets the rest.`
 - Good forecast row (phone): `Profit | 5% | £40.00 | £50.12 | £90.12`. Bad (replaced): column headers "Split so far / Total ahead", which pushed the Total column off a 390px screen.
 
@@ -837,3 +843,5 @@ defaults that aren't saved, and no fixing from Olly's guessed cause. -->
 - Weak (replaced): "To get there, every level goes up by about 140%..." followed by a 7-row Target / Now / Gap table.
 
 <!-- 2026-11-28 skill review (2nd): Targets plan v3 ("difficult to understand") -> per-page rates -> v4 sliders fixed at live rates ("I don't see bumping up the opt-in rate and the application rate that high"); Delivery now shows older-price members; churn = one field feeds every tab; KV hand edits = rev+1 + delayed read-back; repeat Join clicks are real. -->
+
+<!-- Changelog 2026-11-28 (ad budget levels): Olly asked for ad budgets unlocked by income, shown "gamified" (locked/unlocked) with notifications when a level unlocks and when churn drops him below one. Added: Ad budget levels notes (Finance section), two Never rules (gamified thresholds + notifications both ways), a Never on flagging the GHL subscription, and a good unlock card + alert example. Known limit: tgAdCheck() runs when the Hub loads the live record, not on the server. -->

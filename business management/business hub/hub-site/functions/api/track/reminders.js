@@ -25,7 +25,7 @@ async function emailOlly(env, r, link) {
   const when = new Date(r.at).toLocaleString("en-GB", { timeZone: "Africa/Johannesburg", weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const html = '<div style="font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:#1d1527">' +
     "<p><b>" + esc(r.name || "Reminder") + "</b></p><p>" + esc(r.text) + '</p><p style="color:#6b5f7d;font-size:14px">Set for ' + esc(when) + "</p>" +
-    '<p><a href="' + link + '" style="display:inline-block;background:#6b21a8;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 18px;border-radius:8px">Open their card in the Hub</a></p></div>';
+    '<p><a href="' + link + '" style="display:inline-block;background:#6b21a8;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 18px;border-radius:8px">' + (link.indexOf("#targets") > -1 ? "Open Targets in the Hub" : "Open their card in the Hub") + '</a></p></div>';
   const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
     method: "POST",
     headers: { Authorization: "Bearer " + env.GHL_WRITE_TOKEN, Version: "2021-07-28", Accept: "application/json", "Content-Type": "application/json" },
@@ -46,8 +46,8 @@ async function run(env) {
   let devices = 0, emailed = 0;
   const emailErrors = [];
   for (const r of due) {
-    const tab = r.tab === "delivery" ? "delivery" : "looms";
-    const hash = "#" + tab + (r.cid ? "=" + String(r.cid).replace(/[^A-Za-z0-9_-]/g, "") : "");
+    const tab = r.tab === "delivery" ? "delivery" : r.tab === "targets" ? "targets" : "looms";   // targets = ad budget levels (2026-11-28)
+    const hash = "#" + tab + (r.cid && tab !== "targets" ? "=" + String(r.cid).replace(/[^A-Za-z0-9_-]/g, "") : "");
     const res = await pushAll(env, { title: "🔔 " + (r.name ? r.name : "Reminder"), body: String(r.text || "Reminder").slice(0, 180), url: "/" + hash, tag: "rm-" + r.id });
     devices = res.devices || devices;
     let err = "";

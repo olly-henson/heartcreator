@@ -1,5 +1,13 @@
 # Meta Ads Strategy: First Campaign
 
+**⚠️ CURRENT PLAN (Olly, 2026-11-28): Leads ad with a button + comment CTA kept. This replaces the 2026-11-10 Engagement/ManyChat setup below (ManyChat cancelled 2026-11-17).**
+- Objective **Leads**, conversion location **Website**, optimise for the **Lead** event (Feeling Finder opt-in).
+- Creative = a Reel that performed really well and has since died down, used as an **existing post** (comments + likes land on the real Reel). Button **Sign up** (or Learn more) → `https://ollyhenson.com/feeling?utm_source=meta&utm_medium=paid&utm_campaign=feeling_finder&utm_content=button-<reel short name>`.
+- The Reel keeps its own "comment FEELING" ending: comments still drive engagement. Olly replies to FEELING comments by hand and sends that Reel's `comment-<reel short name>` paid link (table in section 9) so comment leads are tracked as ad leads too. Ad vs organic comments can't be fully split; the Reel can.
+- Meta optimises for sign-ups, so expect fewer comments than a boost. Fine: sign-ups are the goal.
+- **First job: Pixel + Conversions API through GHL with a Lead event on the Feeling Finder opt-in** (verify ollyhenson.com, fire a test event). Without it the Leads objective has nothing to optimise for. Then: check the ad account, connect Page + Instagram, pick the Reel, build.
+- **Budget = Hub Targets 'Ad budget levels' (Olly, 2026-11-28):** start at $5/day once income reaches ~£1,235/mo (costs + ads inside 19% Expenses), then $10 / $20 / $40 as each level unlocks. Kill rules and the under $8 per sign-up target below still apply. Pixel already set up (Olly).
+
 Drafted 2026-11-10. **Changed the same day (Olly):** ads are now ManyChat comment/DM ads for the Feeling Finder, replacing the 2026-11-02 plan of click ads to /training. Still fixed from 2026-11-02: Pixel + CAPI via GHL, CAC/LTV in the Hub, LTV at least 3x CAC.
 
 ## 1. The goal
@@ -28,7 +36,7 @@ Unlike website ads, ManyChat and Olly's own DMs now help get them to apply, and 
 | Ad build | **Use existing post**: the live Reel itself, so comments land on the real post (ManyChat's comment trigger fires, comments + likes build up as social proof) |
 | Budget | $10/day at campaign level |
 | Ad sets | **1** broad ad set |
-| Countries | United States, Canada, United Kingdom, Australia, New Zealand, Ireland |
+| Countries | United States, Canada, United Kingdom, Ireland, Australia, New Zealand + Netherlands, Sweden, Denmark, Norway, Finland (added 2026-11-28: strong English, high income; not Germany/France while ads + Feeling Finder are English only) |
 | Age | 28–55 (hard minimum 28) |
 | Gender | All (Meta will lean to women on its own) |
 | Interests | None. Advantage+ audience on |

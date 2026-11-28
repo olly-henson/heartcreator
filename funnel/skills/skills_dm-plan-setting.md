@@ -70,7 +70,7 @@ After the form, their Hub Sales card (tag `plan request`, label '📩 Plan reque
 
 ### Flow
 
-0. **Check-in (ManyChat, automatic, unchanged):** "Hey, hope that link came through all right 🙏 How are things for you right now with love and dating?"
+0. **Check-in (sent by hand since ManyChat was cancelled):** "Hey, hope that link came through all right. How are things for you right now with love and dating?"
 
 1. **Where things are.** Reflect, then one level deeper:
    > Thanks for sharing that, I really appreciate it. How long have you been single now?
@@ -168,7 +168,7 @@ After the form, their Hub Sales card (tag `plan request`, label '📩 Plan reque
 
 ## Message 1: the check-in (was automatic in ManyChat; ManyChat cancelled 2026-11-17, now sent by hand)
 
-> Hey, hope that link came through all right 🙏
+> Hey, hope that link came through all right
 >
 > How are things for you right now with love and dating?
 
@@ -275,6 +275,8 @@ Existing steps (webhook → contact + HA fields → tag `plan request` → Hub p
 Hub Overview: plan requests = own column beside applications ('Where your applications and plan requests came from'), and a NEW lead only when no freebie tag came first (ghl-sources.js plans / planLeads; label 'Instagram DM: asked for a free plan of action').
 
 ### Never (Olly's corrections, 2026-11-13)
+- Never put 🙏 in the check-in or any DM (Olly 2026-11-20). The old check-in still had it; removed 2026-11-28.
+- Never suggest an Instagram API, MCP or GHL automation for following up people who went quiet days ago: Meta only lets businesses message within 24 hours of the person's last message (7 days with the human agent tag). Old FEELING requesters are followed up by hand in the Instagram app (or by Claude in Chrome on instagram.com with Olly approving each send). Never suggest unofficial Instagram connectors that log in as him: account-ban risk.
 - Never build or send a plan before they've replied to the check-in. Why: Olly: "just reply to this message so I know it's reached you, and I'll put it together"; a plan sent to a dead number or an unread DM is wasted work.
 - Never put the program, its steps or screenshots in part 1. Part 1 makes them think "this person knows me better than I do", ends on "What I'd Do If I Were You" in Olly's order (new belief → daily thought + feeling in a meditation → anchor it when the doubt comes up → act from that place → meet someone from a good place) and a soft offer. Why: the first build showed the program and Olly said it should be the plan only, with the program as a separate step they ask for.
 - Never give a plan requester the applicant 20-page plan (or the other way round). Check the tag: an applicant once got split into part 1 / part 2 by mistake.
@@ -316,3 +318,8 @@ questions and permission step removed as overridden. -->
 <!-- 2026-11-17 skill review: ManyChat cancelled (Olly). Added "Entry point" under v3: hand replies outperform auto-DMs, so any automation
 must read like Olly (plain text, no buttons, delay) and only covers the first reply; Claude drafts the rest, Olly approves each send.
 Meta's one-auto-DM rule stated exactly after Olly corrected a vague version. "ManyChat sends it" references marked overridden. -->
+
+## Changelog
+
+- **2026-11-28:** Olly asked to follow up FEELING requesters who never did the Feeling Finder. Lesson: GHL still can't see IG DMs and Meta's 24-hour window rules out any API follow-up, so the answer is the one check-in by hand. Removed 🙏 from both copies of the check-in (it broke the no-prayer-emoji rule) and marked it as sent by hand. Added two Never rules (no 🙏; no API/unofficial-connector follow-ups).
+

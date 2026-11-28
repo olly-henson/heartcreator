@@ -919,6 +919,12 @@
   .tgstep{ flex:1 1 120px; background:var(--surface-2); border:1px solid var(--border-soft); border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:3px; }
   .tgstep b{ font-size:16px; color:var(--text); } .tgstep small{ font-size:12px; color:var(--text-muted); line-height:1.35; } .tgico{ font-size:18px; }
   .tgarrow{ align-self:center; color:var(--accent-2); font-weight:700; }
+  .tgads{ display:grid; gap:8px; }
+  .tgad{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; border:1px solid var(--border, rgba(255,255,255,.12)); opacity:.55; }
+  .tgad b{ display:block; } .tgad small{ display:block; font-size:12.5px; color:var(--text-muted); margin-top:2px; }
+  .tgad > div{ flex:1; min-width:0; } .tgadico{ font-size:22px; } .tgadst{ font-size:12.5px; font-weight:600; text-align:right; white-space:nowrap; }
+  .tgad.next{ opacity:1; border-style:dashed; } .tgad.on{ opacity:1; border-color:var(--good); background:rgba(74,222,128,.08); } .tgad.on .tgadst{ color:var(--good); }
+  @media (max-width:480px){ .tgadst{ white-space:normal; max-width:90px; } }
   .tgshift td small{ display:block; font-size:11.5px; color:var(--good); font-weight:600; } .tgshift td.tgno small{ color:var(--critical); } .tgshift td.tgok{ color:var(--good); font-weight:600; }
   .tgshift td:first-child{ white-space:normal; min-width:120px; }
   .tgplan{ border-color:rgba(184,79,232,.5); }
@@ -3075,6 +3081,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
         rerenderAll();
         setSaveState("saved");
         if (migSave){ migSave = false; markDirty(); saveNow(); } // a one-off data migration ran: store it
+        try { tgAdCheck(); } catch(e){}   // ad budget level changed -> notification (2026-11-28)
       })
       .catch(function(){ /* offline — local copy is fine */ })
       .then(function(){ hubContentReady = true; placePendingReel(); placePendingStory(); placePendingBatch(); placePendingEmail(); placePendingYt(); placePendingCar(); emAutoPublish(); emYtOnLoad(); ytAutoPublish(); carAutoPublish(); }); // content sent from the generator lands on the freshest data
@@ -7000,7 +7007,8 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     if (k === "done"){ r.done = new Date().toISOString(); markDirty(); rmRefresh(); return; }
     if (k === "del"){ if (!window.confirm("Delete this reminder?")) return; state.reminders = rmAll().filter(function(x){ return x !== r; }); markDirty(); saveNow(); rmRefresh(); return; }
     if (k === "open"){
-      if (r.tab === "delivery"){ dvOpen = r.cid; goTab("delivery"); renderDeliveryBoard("force"); }
+      if (r.tab === "targets"){ goTab("targets"); }
+      else if (r.tab === "delivery"){ dvOpen = r.cid; goTab("delivery"); renderDeliveryBoard("force"); }
       else { lmOpen = r.cid; lmSel = r.cid; lmView = "info"; goTab("looms"); renderLooms(); }
     }
   });
@@ -12214,6 +12222,53 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
       el.innerHTML = n == null || n > cap - 1e-6 ? '<span class="tgno2">Can’t hit it with this one alone</span>' : "On its own: <b>" + tgFmt(k, n) + "</b> hits it";
     });
   }
+  // Ad budget levels (Olly, 2026-11-28): each ad budget unlocks once monthly income (members after fees, in GBP) is high
+  // enough that this month's costs + the ad spend stay within the Expenses share agreed today (19%), so Tax 25, Cash
+  // flow 10 and Profit 5 stay fixed and Salary's share never shrinks to pay for ads. Level 1 is unlocked organically;
+  // after that ad-sourced members count too. state.targets.adTop = the highest level reached, so a drop below it
+  // shows "go back down a level". state.targets.adExpPct overrides the 19%.
+  var TG_AD_LEVELS = [5, 10, 20, 40], TG_AD_EXP_PCT = 19, TG_AD_DAYS = 30;
+  function tgAdCalc(){
+    var f = fnState(), a = fnAuto(), t = tgState(), share = (Number(t.adExpPct) || TG_AD_EXP_PCT) / 100, rate = Number(f.rate) || 0.79;
+    var perNew = fnNet(MRR_PRICE_MONTHLY) * rate, inc = a.income, lv = 0;
+    var rows = TG_AD_LEVELS.map(function(d, i){
+      var gbp = d * TG_AD_DAYS * rate, need = (a.cost + gbp) / share, more = Math.max(0, Math.ceil((need - inc) / perNew - 1e-9));
+      if (inc >= need) lv = i + 1;
+      return { d:d, usd:d * TG_AD_DAYS, gbp:gbp, need:need, more:more };
+    });
+    return { a:a, inc:inc, share:share, perNew:perNew, rows:rows, lv:lv };
+  }
+  // Notifications (Olly, 2026-11-28): "almost get a notification ... you can start running ads at $5 a day now", and
+  // one when churn drops income below the level he's on. Runs after every load of the live record (never the seed).
+  // state.targets.adLvl = the level last told about. A change adds a reminder due now (tab "targets") to
+  // state.reminders, so functions/api/track/reminders.js pushes it to his phone + emails him within 10 minutes.
+  function tgAdCheck(){
+    var t = tgState(), c = tgAdCalc(), lv = c.lv, was = t.adLvl;
+    if (was === undefined){ t.adLvl = lv; t.adTop = Math.max(Number(t.adTop) || 0, lv); markDirty(); saveNow(); return; }   // first run: no alert for where he already is
+    if (lv === was) return;
+    var r = lv ? c.rows[lv - 1] : null, text, name;
+    if (lv > was){ name = "🔓 Ad budget unlocked"; text = "You've reached Level " + lv + ". You can start running ads at $" + r.d + " a day now (" + fnGBP(c.inc) + " a month coming in)."; }
+    else { name = "📉 Ads: below Level " + was; text = "Income has dropped to " + fnGBP(c.inc) + " a month, under the " + fnGBP(c.rows[was - 1].need) + " Level " + was + " needs. " + (lv ? "Turn ads down to $" + r.d + " a day" : "Pause your ads") + " until it's back over."; }
+    rmAll().push({ id:"r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), cid:"", name:name, tab:"targets", at:new Date().toISOString(), text:text, done:false, created:new Date().toISOString() });
+    t.adLvl = lv; if (lv > (Number(t.adTop) || 0)) t.adTop = lv;
+    markDirty(); saveNow();
+  }
+  function tgAdHtml(){
+    var c = tgAdCalc(), t = tgState(), a = c.a, inc = c.inc, rows = c.rows, lv = c.lv, share = c.share;
+    var top = Math.max(Number(t.adTop) || 0, lv), next = rows[lv], cur = lv ? rows[lv - 1] : null, head;
+    if (top > lv) head = "📉 Your income has dropped below Level " + top + ". <b>" + (lv ? "Turn ads down to $" + cur.d + " a day" : "Pause your ads") + "</b> until it's back over " + fnGBP(rows[top - 1].need) + ' a month. <button type="button" class="fnlink" data-tgaddone="1">Done, I\'ve changed it</button>';
+    else if (next) head = (lv ? "🔓 <b>Level " + lv + " unlocked: run ads at $" + cur.d + " a day.</b> " : "🔒 Ads are locked. ") + "Next: <b>" + fnGBP(next.need - inc) + " more a month</b> (about " + next.more + " more " + (next.more === 1 ? "member" : "members") + ") unlocks <b>$" + next.d + " a day</b>.";
+    else head = "🏆 <b>Every level unlocked: run ads at $" + cur.d + " a day.</b>";
+    var pct = next ? Math.min(100, inc / next.need * 100) : 100;
+    return '<div class="fncard" style="margin-top:16px"><p class="section-label" style="margin-bottom:8px">Ad budget levels</p><p class="tgbig" style="font-size:16.5px">' + head + "</p>" +
+      '<div class="tgbar"><span style="width:' + pct.toFixed(1) + '%"></span></div>' +
+      '<span class="hint" style="display:block;margin:0 0 12px">Coming in now: ' + fnGBP(inc) + " a month from " + a.members + (a.members === 1 ? " member" : " members") + " after fees. Costs this month: " + fnGBP(a.cost) + ".</span>" +
+      '<div class="tgads">' + rows.map(function(r, i){
+        var on = i + 1 <= lv, isNext = i === lv, cls = on ? " on" : isNext ? " next" : "";
+        return '<div class="tgad' + cls + '"><span class="tgadico">' + (on ? "🔓" : "🔒") + '</span><div><b>Level ' + (i + 1) + ": $" + r.d + " a day</b><small>" + fnGBP(r.gbp) + " a month in ads · needs " + fnGBP(r.need) + " a month coming in</small></div>" +
+          '<span class="tgadst">' + (on ? "Unlocked" : isNext ? "Next: +" + r.more + (r.more === 1 ? " member" : " members") : "+" + r.more + " members") + "</span></div>"; }).join("") +
+      '</div><span class="hint" style="display:block;margin-top:10px">A level unlocks when your costs plus that ad budget fit inside ' + Math.round(share * 100) + "% Expenses, so Tax, Cash flow and Profit stay fixed and your Salary share stays the same. Level 1 comes from organic members; after that, members from ads count too. Each new member adds about " + fnGBP(c.perNew) + " a month after Skool's fee. You get a phone notification and an email when a level unlocks, and when income drops below the level you're on.</span></div>";
+  }
   function renderTargets(){
     var host = document.getElementById("targetsBody"); if (!host) return;
     var ae = document.activeElement; if (ae && host.contains(ae) && ae.tagName === "INPUT" && ae.type !== "range") return;
@@ -12243,6 +12298,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
     // Every level lifted by the same % (tgShift), retention = his churn setting. "Set as my target" saves a copy in
     // state.targets.plan so the numbers stay fixed while the live ones move; Now = the live last 30 days.
     h += tgPlanHtml(L, I, arpm);
+    h += tgAdHtml();
     // 2. your funnel, a month
     var steps = [
       ["🎬", tgNum(I.reels) + " Reels", "+ " + tgNum(I.stories) + " Stories"],
@@ -12324,6 +12380,7 @@ Comment ‘COMMUNITY’ below to find out more about how you can realistically a
   (function(){
     var host = document.getElementById("targetsBody"); if (!host) return;
     host.addEventListener("click", function(e){
+      var ad = e.target.closest("[data-tgaddone]"); if (ad){ var tt = tgState(); tt.adTop = tgAdCalc().lv; markDirty(); renderTargets(); return; }
       var b = e.target.closest("[data-tgby],[data-tgclear],[data-tgper],[data-tgset],[data-tgunset],[data-tgslreset],[data-tgslload]"); if (!b) return;
       var t = tgState();
       if (b.dataset.tgby){ t.by = +b.dataset.tgby; markDirty(); renderTargets(); }
